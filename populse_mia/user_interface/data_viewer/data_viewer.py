@@ -32,12 +32,17 @@ class named ``MiaViewer`` which:
 ##########################################################################
 
 from abc import ABC, abstractmethod
+
 from soma.qt_gui.qt_backend import Qt
 
 
-# Custom metaclass that combines ABC and QWidget's metaclasses
 class MetaDataViewer(type(Qt.QWidget), type(ABC)):
+    """
+    Custom metaclass that combines ABC and QWidget's metaclasses
+    """
+
     pass
+
 
 class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
     """
