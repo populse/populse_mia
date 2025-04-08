@@ -122,7 +122,6 @@ class _ProcDeleter(threading.Thread):
             self.o.communicate()
         except Exception as e:
             print("exception in ipython process:", e)
-        global _ipsubprocs
         try:
             with _ipsubprocs_lock:
                 _ipsubprocs.remove(self)
@@ -1416,7 +1415,6 @@ class MainWindow(QMainWindow):
             ipConsole = self.run_ipconsole_kernel(mode)
 
             if ipConsole:
-                global _ipsubprocs
                 qt_api = qt_backend.get_qt_backend()
                 qt_apis = {
                     "PyQt4": "pyqt",
