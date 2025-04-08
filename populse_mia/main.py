@@ -56,7 +56,7 @@ def add_to_sys_path(path, name, index=0):
         return True
 
     else:
-        logger.warning(f"{name} package not found!")
+        logger.info(f"{name} package was not found from {path}!")
         return False
 
 
@@ -73,7 +73,7 @@ def check_package(name):
 
     try:
         mod = importlib.import_module(name)
-        mod_dir = Path(mod.__file__).resolve().parent[1]
+        mod_dir = Path(mod.__file__).resolve().parents[1]
         logger.info(f"  . Using {name} package from {mod_dir}")
         return True
 

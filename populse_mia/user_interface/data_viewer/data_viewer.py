@@ -32,9 +32,14 @@ class named ``MiaViewer`` which:
 ##########################################################################
 
 from abc import ABC, abstractmethod
+from soma.qt_gui.qt_backend import Qt
 
 
-class DataViewer(ABC):
+# Custom metaclass that combines ABC and QWidget's metaclasses
+class MetaDataViewer(type(Qt.QWidget), type(ABC)):
+    pass
+
+class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
     """
     An abstract base class for data viewers with a minimal, extensible API.
 
