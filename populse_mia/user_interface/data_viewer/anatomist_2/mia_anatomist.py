@@ -42,7 +42,7 @@ from populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 import 
 from ..data_viewer import DataViewer
 
 
-class MiaViewer(Qt.QWidget, DataViewer):
+class MiaViewer(DataViewer):
     """
     A PyQt-based viewer using PyAnatomist.
 

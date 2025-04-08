@@ -40,7 +40,7 @@ except ImportError:
     )
 
 
-class MiaViewer(Qt.QWidget, DataViewer):
+class MiaViewer(DataViewer):
     """
     A data viewer for Mia (Multiparametric Image Analysis) using PyAnatomist.
 
@@ -85,6 +85,7 @@ class MiaViewer(Qt.QWidget, DataViewer):
         self._setup_ui()
         # Initialize project-related attributes
         self.project = None
+        self.displayed = []
         self.documents = []
         self.disp_find_childlayed = []
 
