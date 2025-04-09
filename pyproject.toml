@@ -14,6 +14,7 @@ description = "populse_mia"
 readme = "README.md"
 requires-python = ">=3.9"
 license = "CECILL-B"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -106,6 +107,3 @@ verbose = 2
 quiet = false
 color = true
 omit-covered-files = false
-
-[tool.setuptools]
-license-files = ["LICENSE"]
