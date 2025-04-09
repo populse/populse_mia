@@ -82,9 +82,9 @@ install:
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=master https://github.com/populse/mia_processes.git /Users/appveyor/projects/mia_processes; fi
 
 # Download data for unit tests
-  - cmd: git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git C:\\projects\\populse-mia\\miautdata
-  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git /home/appveyor/projects/populse-mia/miautdata; fi
-  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/miautdata.git /Users/appveyor/projects/populse-mia/miautdata; fi
+  - cmd: git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git C:\\projects\\populse-mia\\mia_ut_data
+  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /home/appveyor/projects/populse-mia/mia_ut_data; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=main https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
 
   - cd populse-mia
 
