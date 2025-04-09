@@ -88,16 +88,16 @@ from traits.api import TraitListObject, Undefined
 uts_dir = os.path.isdir(
     os.path.join(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-        "miautdata",
+        "mia_ut_data",
     )
 )
 
 if not uts_dir:
     print(
         "\nTo work properly, unit tests need data in the populse_mia(or "
-        "populse-mia)/miautdata directory. Please use:\n"
-        "git clone https://gricad-gitlab.univ-grenoble-alpes.fr/condamie/"
-        "miautdata.git\n"
+        "populse-mia)/mia_ut_data directory. Please use:\n"
+        "git clone https://gricad-gitlab.univ-grenoble-alpes.fr/mia/"
+        "mia_ut_data.git\n"
         "in populse_mia directory to download it...\n"
     )
     sys.exit()
@@ -560,7 +560,7 @@ class TestMIACase(unittest.TestCase):
 
         test_proj = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "light_test_project" if light else "project_8",
@@ -669,23 +669,18 @@ class TestMIACase(unittest.TestCase):
           Mia preferences.
         """
 
-        self.main_window.close()
+        # Close current window
+        if self.main_window:
+            self.main_window.close()
+            self.main_window.deleteLater()
+            QApplication.processEvents()
 
-        # Removing the opened projects (in CI, the tests are run twice)
+        # Reset config/state
         config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
-        config.saveConfig()
-        QApplication.processEvents()
-        self.app.exit()
-        del self.app
-
-        config = Config(properties_path=self.properties_path)
         config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
-
+        config.saveConfig()
+        # Reset internal app state (without recreating QApplication)
         self.project = Project(None, True)
         self.main_window = MainWindow(self.project, test=True)
 
@@ -695,10 +690,6 @@ class TestMIACase(unittest.TestCase):
         # All the tests are run in admin mode
         config = Config(properties_path=self.properties_path)
         config.set_user_mode(False)
-        self.app = QApplication.instance()
-
-        if self.app is None:
-            self.app = QApplication(sys.argv)
 
         self.project = Project(None, True)
         self.main_window = MainWindow(self.project, test=True)
@@ -778,17 +769,22 @@ class TestMIACase(unittest.TestCase):
                     )
                 ).touch()
 
+        cls._app = QApplication.instance() or QApplication(sys.argv)
+
     def tearDown(self):
         """Called after each test"""
 
-        self.main_window.close()
+        if self.main_window:
+            self.main_window.close()
+            self.main_window.deleteLater()
+
         # Removing the opened projects (in CI, the tests are run twice)
         config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
         config.saveConfig()
         QApplication.processEvents()
-        self.app.exit()
-        del self.app
+        self.project = None
+        self.main_window = None
 
     @classmethod
     def tearDownClass(cls):
@@ -799,6 +795,9 @@ class TestMIACase(unittest.TestCase):
 
         if os.path.exists(cls.project_path):
             shutil.rmtree(cls.project_path)
+
+        cls._app.quit()
+        del cls._app
 
 
 class TestMIADataBrowser(TestMIACase):
@@ -1916,7 +1915,7 @@ class TestMIADataBrowser(TestMIACase):
         # Gets a document filepath
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "project_8",
@@ -9326,7 +9325,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Gets the paths of 2 documents
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "project_8",
@@ -9414,7 +9413,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Gets the path of one document
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "project_8",
@@ -9584,7 +9583,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "project_8",
@@ -10252,7 +10251,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Gets the path of one document
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "miautdata",
+            "mia_ut_data",
             "resources",
             "mia",
             "project_8",
