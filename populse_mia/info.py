@@ -20,8 +20,8 @@ import sys
 
 # Current version
 version_major = 2
-version_minor = 5
-version_micro = 3
+version_minor = 6
+version_micro = 1
 version_extra = "dev"  # leave empty for release
 # version_extra = ""
 

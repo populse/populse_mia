@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "populse_mia"
-#version = "2.5.3_dev"
+#version = "2.6.1"
 dynamic = ["version"]
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
@@ -13,12 +13,12 @@ authors = [
 description = "populse_mia"
 readme = "README.md"
 requires-python = ">=3.9"
-license = {text = "CeCILL-B"}
+license = "CECILL-B"
+license-files = ["LICENSE"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
     "Intended Audience :: Developers",
-    "License :: OSI Approved",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
