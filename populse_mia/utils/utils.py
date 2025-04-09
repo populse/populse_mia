@@ -1278,7 +1278,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_nipypeVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
+                    "\n\n** Installation in Mia of the {0} processes "
                     "library, {1} version ...".format(pckg, nipypeVer)
                 )
 
@@ -1295,7 +1295,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_miaProcVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
+                    "\n\n** Installation in Mia of the {0} processes "
                     "library, {1} version ...".format(pckg, miaProcVer)
                 )
 
@@ -1312,7 +1312,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
             if old_capsulVer is None:
                 print(
-                    "\n\n** Installation in mia of the {0} processes "
+                    "\n\n** Installation in Mia of the {0} processes "
                     "library, {1} version ...".format(pckg, capsulVer)
                 )
 
