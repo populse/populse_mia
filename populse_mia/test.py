@@ -201,8 +201,18 @@ from capsul.qt_gui.widgets.settings_editor import SettingsEditor  # noqa: E402
 # Mia_processes import
 from mia_processes.bricks.tools import Input_Filter  # noqa: E402
 
-# Populse_db import
-from populse_db.database import (  # noqa: E402
+# soma import
+from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
+    QItemSelectionModel,
+    QTreeView,
+)
+from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
+
+from populse_mia.data_manager import (  # noqa: E402
+    COLLECTION_BRICK,
+    COLLECTION_CURRENT,
+    COLLECTION_HISTORY,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -217,25 +227,6 @@ from populse_db.database import (  # noqa: E402
     FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
-)
-
-# soma import
-from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
-    QItemSelectionModel,
-    QTreeView,
-)
-from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
-
-# Populse_mia import
-from populse_mia.data_manager.data_loader import (  # noqa: E402
-    ImportProgress,
-    ImportWorker,
-)
-from populse_mia.data_manager.project import (  # noqa: E402
-    COLLECTION_BRICK,
-    COLLECTION_CURRENT,
-    COLLECTION_HISTORY,
-    COLLECTION_INITIAL,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_EXP_TYPE,
@@ -244,8 +235,14 @@ from populse_mia.data_manager.project import (  # noqa: E402
     TAG_ORIGIN_USER,
     TAG_TYPE,
     TYPE_NII,
-    Project,
 )
+
+# Populse_mia import
+from populse_mia.data_manager.data_loader import (  # noqa: E402
+    ImportProgress,
+    ImportWorker,
+)
+from populse_mia.data_manager.project import Project  # noqa: E402
 from populse_mia.data_manager.project_properties import (  # noqa: E402
     SavedProjects,
 )
