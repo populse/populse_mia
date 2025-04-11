@@ -896,7 +896,6 @@ class Config:
             .get("engine", {})
             .get("global", {})
             .get("capsul.engine.module.axon", {})
-            .get("axon")
             .get("user_level", 0)
         )
 
