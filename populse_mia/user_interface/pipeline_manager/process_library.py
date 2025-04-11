@@ -2512,7 +2512,7 @@ class PackageLibraryDialog(QDialog):
         """
         Loads and returns the configuration from 'process_config.yml'.
 
-        :return (dict | None): The configuration dictionary if successfully
+        :return (dict | {}): The configuration dictionary if successfully
                                loaded, otherwise None in case of an error.
         """
         # import verCmp only here to prevent circular import issue
@@ -2528,14 +2528,14 @@ class PackageLibraryDialog(QDialog):
             with open(config_path) as stream:
 
                 if verCmp(yaml.__version__, "5.1", "sup"):
-                    return yaml.load(stream, Loader=yaml.FullLoader)
+                    return yaml.load(stream, Loader=yaml.FullLoader) or {}
 
                 else:
-                    return yaml.load(stream)
+                    return yaml.load(stream) or {}
 
         except (yaml.YAMLError, OSError) as exc:
             logger.warning(f"Failed to load config: {exc}")
-            return None
+            return {}
 
     def load_packages(self):
         """Update the tree of the process library."""
@@ -3063,10 +3063,10 @@ class ProcessLibraryWidget(QWidget):
             try:
 
                 if verCmp(yaml.__version__, "5.1", "sup"):
-                    return yaml.load(stream, Loader=yaml.FullLoader)
+                    return yaml.load(stream, Loader=yaml.FullLoader) or {}
 
                 else:
-                    return yaml.load(stream)
+                    return yaml.load(stream) or {}
 
             except yaml.YAMLError as exc:
                 logger.warning(exc)
