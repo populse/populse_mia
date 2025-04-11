@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """This module is dedicated to populse_mia unit tests.
 
 :Contains:
@@ -148,7 +147,7 @@ if (
     # Adding capsul:
     if os.path.isdir(os.path.join(root_dev_dir, "capsul")):
         capsul_dev_dir = os.path.join(root_dev_dir, "capsul")
-        print("- Using capsul package from {} ...".format(capsul_dev_dir))
+        print(f"- Using capsul package from {capsul_dev_dir} ...")
         sys.path.insert(1, capsul_dev_dir)
         del capsul_dev_dir
 
@@ -202,8 +201,18 @@ from capsul.qt_gui.widgets.settings_editor import SettingsEditor  # noqa: E402
 # Mia_processes import
 from mia_processes.bricks.tools import Input_Filter  # noqa: E402
 
-# Populse_db import
-from populse_db.database import (  # noqa: E402
+# soma import
+from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
+    QItemSelectionModel,
+    QTreeView,
+)
+from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
+
+from populse_mia.data_manager import (  # noqa: E402
+    COLLECTION_BRICK,
+    COLLECTION_CURRENT,
+    COLLECTION_HISTORY,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -218,25 +227,6 @@ from populse_db.database import (  # noqa: E402
     FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
-)
-
-# soma import
-from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
-    QItemSelectionModel,
-    QTreeView,
-)
-from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
-
-# Populse_mia import
-from populse_mia.data_manager.data_loader import (  # noqa: E402
-    ImportProgress,
-    ImportWorker,
-)
-from populse_mia.data_manager.project import (  # noqa: E402
-    COLLECTION_BRICK,
-    COLLECTION_CURRENT,
-    COLLECTION_HISTORY,
-    COLLECTION_INITIAL,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_EXP_TYPE,
@@ -245,8 +235,14 @@ from populse_mia.data_manager.project import (  # noqa: E402
     TAG_ORIGIN_USER,
     TAG_TYPE,
     TYPE_NII,
-    Project,
 )
+
+# Populse_mia import
+from populse_mia.data_manager.data_loader import (  # noqa: E402
+    ImportProgress,
+    ImportWorker,
+)
+from populse_mia.data_manager.project import Project  # noqa: E402
 from populse_mia.data_manager.project_properties import (  # noqa: E402
     SavedProjects,
 )
@@ -421,7 +417,7 @@ class TestMIACase(unittest.TestCase):
 
         :param path: the full path of the executable, ending by '.jar'
 
-        :returns: 0 if success or 1 if failure
+        :return: 0 if success or 1 if failure
         """
 
         (folder, name) = os.path.split(path)
@@ -573,13 +569,13 @@ class TestMIACase(unittest.TestCase):
 
         :param proc_lib_view: the process library view object
 
-        :returns: the state of nipype proc_lib_view:
-                  - None: proc_lib_view is empty or nipype is not loaded.
-                  - 'nipype': 'nipype' is loaded but 'interfaces' not.
-                  - 'nipype.interface': 'nipype.interface' is loaded but
-                                        'DataGrabber' not.
-                  - 'process_enabled': 'nipype.interface.DataGrabber' is
-                                       loaded.
+        :return: the state of nipype proc_lib_view:
+                 - None: proc_lib_view is empty or nipype is not loaded.
+                 - 'nipype': 'nipype' is loaded but 'interfaces' not.
+                 - 'nipype.interface': 'nipype.interface' is loaded but
+                                       'DataGrabber' not.
+                 - 'process_enabled': 'nipype.interface.DataGrabber' is
+                                      loaded.
         """
 
         if proc_lib_view.to_dict():
@@ -870,7 +866,6 @@ class TestMIADataBrowser(TestMIACase):
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
-        session = ppl_manager.project.session
         table_data = self.main_window.data_browser.table_data
 
         # Creates a new project folder and adds one document to the
@@ -908,9 +903,11 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
-        filename = os.path.split(
-            session.get_documents_names(COLLECTION_CURRENT)[0]
-        )[-1]
+        with ppl_manager.project.database.data() as database_data:
+            filename = os.path.split(
+                database_data.get_document_names(COLLECTION_CURRENT)[0]
+            )[-1]
+
         self.assertTrue(filename in DOCUMENT_1)
 
         self.assertEqual(table_data.rowCount(), 1)
@@ -924,7 +921,9 @@ class TestMIADataBrowser(TestMIACase):
 
         # Adds a document into the database and tries to save the same
         # one once again
-        self.project.session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        with self.project.database.data(write=True) as database_data:
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+
         add_path.file_line_edit.setText(str([DOCUMENT_1]))
         add_path.save_path()
 
@@ -973,38 +972,34 @@ class TestMIADataBrowser(TestMIACase):
         QTest.qWait(500)
 
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_fields_names(
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_fields_names(COLLECTION_CURRENT)
+            )
+            self.assertTrue(
+                "Test" in database_data.get_fields_names(COLLECTION_INITIAL)
+            )
+
+            for document in database_data.get_document_names(
                 COLLECTION_CURRENT
-            )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_fields_names(
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_CURRENT, document, "Test"
+                    ),
+                    "def_value",
+                )
+
+            for document in database_data.get_document_names(
                 COLLECTION_INITIAL
-            )
-        )
-
-        for document in self.main_window.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_CURRENT, document, "Test"
-                ),
-                "def_value",
-            )
-
-        for document in self.main_window.project.session.get_documents_names(
-            COLLECTION_INITIAL
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_INITIAL, document, "Test"
-                ),
-                "def_value",
-            )
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_INITIAL, document, "Test"
+                    ),
+                    "def_value",
+                )
 
         test_column = self.main_window.data_browser.table_data.get_tag_column(
             "Test"
@@ -1373,16 +1368,18 @@ class TestMIADataBrowser(TestMIACase):
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         bw_item.setSelected(True)
         self.assertEqual(float(bw_item.text()[1:-1]), 50000.0)
-        self.assertEqual(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT,
-                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                "pvm-000220_000.nii",
-                "BandWidth",
-            ),
-            [50000.0],
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertEqual(
+                database_data.get_value(
+                    COLLECTION_CURRENT,
+                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                    "pvm-000220_000.nii",
+                    "BandWidth",
+                ),
+                [50000.0],
+            )
 
         # Clearing the cell
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
@@ -1396,15 +1393,17 @@ class TestMIADataBrowser(TestMIACase):
         # Checking that it's empty
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         self.assertEqual(bw_item.text(), "*Not Defined*")
-        self.assertIsNone(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT,
-                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                "pvm-000220_000.nii",
-                "BandWidth",
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertIsNone(
+                database_data.get_value(
+                    COLLECTION_CURRENT,
+                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                    "pvm-000220_000.nii",
+                    "BandWidth",
+                )
             )
-        )
 
     def test_clone_tag(self):
         """Tests the pop up cloning a tag."""
@@ -1477,7 +1476,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
         self.assertEqual(test_row.visibility, True)
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_CURRENT
         ):
             self.assertEqual(
@@ -1489,7 +1488,7 @@ class TestMIADataBrowser(TestMIACase):
                 ),
             )
 
-        for document in self.main_window.project.session.get_documents_names(
+        for document in self.main_window.project.session.get_document_names(
             COLLECTION_INITIAL
         ):
             self.assertEqual(
@@ -1747,7 +1746,7 @@ class TestMIADataBrowser(TestMIACase):
         mod = ModifyTable(
             self.main_window.project,
             value,
-            [type("string")],
+            [str],
             scans_displayed,
             tag_name,
         )
@@ -1980,7 +1979,7 @@ class TestMIADataBrowser(TestMIACase):
             "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
-        documents = self.main_window.project.session.get_documents_names(
+        documents = self.main_window.project.session.get_document_names(
             COLLECTION_CURRENT
         )
 
@@ -2030,7 +2029,7 @@ class TestMIADataBrowser(TestMIACase):
             "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
             "pvm-000220_000.nii" in documents
         )
-        documents = self.main_window.project.session.get_documents_names(
+        documents = self.main_window.project.session.get_document_names(
             COLLECTION_INITIAL
         )
         self.assertEqual(len(documents), 9)
@@ -3686,7 +3685,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             9,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3694,7 +3693,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             9,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3708,7 +3707,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3716,7 +3715,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3731,7 +3730,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_CURRENT
                 )
             ),
@@ -3739,7 +3738,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             8,
             len(
-                self.main_window.project.session.get_documents_names(
+                self.main_window.project.session.get_document_names(
                     COLLECTION_INITIAL
                 )
             ),
@@ -3954,13 +3953,13 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_BRICKS in tags)
         self.assertTrue(TAG_HISTORY in tags)
         self.assertEqual(
-            self.main_window.project.session.get_documents_names(
+            self.main_window.project.session.get_document_names(
                 COLLECTION_CURRENT
             ),
             [],
         )
         self.assertEqual(
-            self.main_window.project.session.get_documents_names(
+            self.main_window.project.session.get_document_names(
                 COLLECTION_INITIAL
             ),
             [],
@@ -4531,7 +4530,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Gets information regarding the fist scan, located in the
         # 'derived_data' of the project
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
         DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split(".")[0]
@@ -5200,9 +5199,7 @@ class TestMIAMainWindow(TestMIACase):
                 os.path.join(mock_proc_fldr, "unit_test_2.py"),
             )
 
-            with open(
-                os.path.join(mock_proc_fldr, "unit_test_2.py"), "r"
-            ) as file:
+            with open(os.path.join(mock_proc_fldr, "unit_test_2.py")) as file:
                 filedata = file.read()
                 filedata = filedata.replace(
                     "Unit_test_pipeline", "Unit_test_2"
@@ -5962,9 +5959,9 @@ class TestMIAMainWindow(TestMIACase):
             system = platform.system()
 
             if system == "Linux":
-                exc_content = '#!/bin/bash\necho "{}"'.format(output)
+                exc_content = f'#!/bin/bash\necho "{output}"'
                 if failing:
-                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                    exc_content += f'\necho "{err_msg}" 1>&2\nexit 1'
                 exc_path = os.path.join(exc_dir, exc_name)
                 exc = open(exc_path, "w")
                 exc.write(exc_content)
@@ -5974,7 +5971,7 @@ class TestMIAMainWindow(TestMIACase):
             elif system == "Darwin":
                 exc_content = '#!/usr/bin/env bash\necho "mock executable"'
                 if failing:
-                    exc_content += '\necho "{}" 1>&2\nexit 1'.format(err_msg)
+                    exc_content += f'\necho "{err_msg}" 1>&2\nexit 1'
                 exc_path = os.path.join(exc_dir, exc_name)
                 exc = open(exc_path, "w")
                 exc.write(exc_content)
@@ -6778,7 +6775,7 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
 
@@ -6935,10 +6932,10 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
             "current"
         )[1]
 
@@ -7059,7 +7056,7 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
 
@@ -7174,10 +7171,10 @@ class TestMIANodeController(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Get the 2 first documents/records
-        DOCUMENT_1 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
             "current"
         )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_documents_names)(
+        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
             "current"
         )[1]
 
@@ -7275,7 +7272,7 @@ class TestMIANodeController(TestMIACase):
 
         # Opens a filter for the plug "in_files", now with a "scans_list"
         node_controller.scan_list = (
-            self.main_window.project.session.get_documents_names
+            self.main_window.project.session.get_document_names
         )("current")
         node_controller.display_filter(
             "inputs", "in_files", parameters, input_process
@@ -8288,10 +8285,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
-        DOCUMENT_2 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_2 = self.main_window.project.session.get_document_names(
             "current"
         )[1]
 
@@ -8380,7 +8377,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
 
@@ -9478,7 +9475,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_documents_names(
+        DOCUMENT_1 = self.main_window.project.session.get_document_names(
             "current"
         )[0]
 
@@ -10317,7 +10314,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         req = {"capsul_engine": {"uses": Mock()}}
 
         for pkg in pkgs:
-            req["capsul.engine.module.{}".format(pkg)] = {"directory": False}
+            req[f"capsul.engine.module.{pkg}"] = {"directory": False}
 
         req["capsul_engine"]["uses"].get = Mock(return_value=1)
         proc = Mock()
@@ -10349,7 +10346,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Deletes an attribute of each package requirement
         for pkg in pkgs:
-            del req[proc]["capsul.engine.module.{}".format(pkg)]
+            del req[proc][f"capsul.engine.module.{pkg}"]
 
         # QTimer.singleShot(1000, self.execute_QDialogAccept)
         init_result = ppl_manager.init_pipeline()
@@ -10533,7 +10530,7 @@ class Test_Z_MIAOthers(TestMIACase):
 
         # Sends the data browser scans to the pipeline manager and updates the
         # iterated tags
-        SCANS_LIST = iter_table.project.session.get_documents_names("current")
+        SCANS_LIST = iter_table.project.session.get_document_names("current")
         ppl_manager.scan_list = SCANS_LIST
         iter_table.update_iterated_tag()
 

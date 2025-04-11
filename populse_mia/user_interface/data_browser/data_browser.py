@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Module to define data browser tab appearance, settings and methods.
 
@@ -22,27 +21,13 @@ Contains:
 ##########################################################################
 
 import ast
+import logging
 import os
 import subprocess
-import traceback
 from functools import partial
+from pathlib import Path
 from sys import platform
-
-# Populse_db imports
-from populse_db.database import (
-    FIELD_TYPE_DATE,
-    FIELD_TYPE_DATETIME,
-    FIELD_TYPE_FLOAT,
-    FIELD_TYPE_LIST_BOOLEAN,
-    FIELD_TYPE_LIST_DATE,
-    FIELD_TYPE_LIST_DATETIME,
-    FIELD_TYPE_LIST_FLOAT,
-    FIELD_TYPE_LIST_INTEGER,
-    FIELD_TYPE_LIST_STRING,
-    FIELD_TYPE_LIST_TIME,
-    FIELD_TYPE_STRING,
-    FIELD_TYPE_TIME,
-)
+from typing import get_origin
 
 # PyQt5 imports
 from PyQt5 import QtCore, QtWidgets
@@ -73,19 +58,32 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-from populse_mia.data_manager.database_mia import (
-    TAG_ORIGIN_BUILTIN,
-    TAG_ORIGIN_USER,
-)
-from populse_mia.data_manager.project import (
+from populse_mia.data_manager import (
+    BRICK_INPUTS,
     BRICK_NAME,
+    BRICK_OUTPUTS,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,
+    FIELD_TYPE_DATE,
+    FIELD_TYPE_DATETIME,
+    FIELD_TYPE_FLOAT,
+    FIELD_TYPE_LIST_BOOLEAN,
+    FIELD_TYPE_LIST_DATE,
+    FIELD_TYPE_LIST_DATETIME,
+    FIELD_TYPE_LIST_FLOAT,
+    FIELD_TYPE_LIST_INTEGER,
+    FIELD_TYPE_LIST_STRING,
+    FIELD_TYPE_LIST_TIME,
+    FIELD_TYPE_STRING,
+    FIELD_TYPE_TIME,
+    NOT_DEFINED_VALUE,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_HISTORY,
+    TAG_ORIGIN_BUILTIN,
+    TAG_ORIGIN_USER,
 )
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.advanced_search import (
@@ -111,15 +109,7 @@ from populse_mia.user_interface.pop_ups import (
     PopUpShowHistory,
 )
 
-# from populse_mia.utils.utils import (
-#     check_value_type,
-#     set_item_data,
-#     table_to_database,
-# )
-
-
-# Variable shown everywhere when no value for the tag
-not_defined_value = "*Not Defined*"
+logger = logging.getLogger(__name__)
 
 
 class DataBrowser(QWidget):
@@ -165,9 +155,7 @@ class DataBrowser(QWidget):
         self.project = project
         self.main_window = main_window
         self.data_sent = False
-
-        super(DataBrowser, self).__init__()
-
+        super().__init__()
         # Define actions
         self.add_tag_action = QAction("Add tag", self, shortcut="Ctrl+A")
         self.clone_tag_action = QAction("Clone tag", self)
@@ -176,12 +164,10 @@ class DataBrowser(QWidget):
         self.open_filter_action = QAction(
             "Open filter", self, shortcut="Ctrl+F"
         )
-
         # Initialize MIA functions
         self.search_bar = RapidSearch(self)
         self.viewer = MiniViewer(self.project)
         self.advanced_search = AdvancedSearch(self.project, self)
-
         # Initialize Qt objects
         self.addRowLabel = ClickableLabel()
         self.frame_table_data = QtWidgets.QFrame(self)
@@ -197,17 +183,18 @@ class DataBrowser(QWidget):
         self.frame_test = QFrame()
         self.visualized_tags_button = QPushButton()
         self.count_table_button = QPushButton()
-
         # Main table that will display the tags
+
+        with self.project.database.data() as database_data:
+            shown_tags = database_data.get_shown_tags()
+
         self.table_data = TableDataBrowser(
-            project, self, self.project.session.get_shown_tags(), True, True
+            project, self, shown_tags, True, True
         )
         self.table_data.setObjectName("table_data")
-
-        # LAYOUTS #
+        # Layout
         self.create_toolbar_view()
         self.create_layout()
-
         # Image viewer updated
         self.connect_toolbar()
         self.connect_actions()
@@ -235,48 +222,64 @@ class DataBrowser(QWidget):
         values = []
 
         # We add the tag and a value for each scan in the Database
-        self.project.session.add_field(
-            COLLECTION_CURRENT,
-            new_tag_name,
-            tag_type,
-            new_tag_description,
-            True,
-            TAG_ORIGIN_USER,
-            new_tag_unit,
-            new_default_value,
-        )
-        self.project.session.add_field(
-            COLLECTION_INITIAL,
-            new_tag_name,
-            tag_type,
-            new_tag_description,
-            True,
-            TAG_ORIGIN_USER,
-            new_tag_unit,
-            new_default_value,
-        )
-        for scan in self.project.session.get_documents(COLLECTION_CURRENT):
-            self.project.unsavedModifications = True
-            self.project.session.add_value(
-                COLLECTION_CURRENT,
-                getattr(scan, TAG_FILENAME),
-                new_tag_name,
-                table_to_database(new_default_value, tag_type),
+        with self.project.database.schema() as database_schema:
+            database_schema.add_field(
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": new_tag_name,
+                    "field_type": tag_type,
+                    "description": new_tag_description,
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_USER,
+                    "unit": new_tag_unit,
+                    "default_value": new_default_value,
+                }
             )
-            self.project.session.add_value(
-                COLLECTION_INITIAL,
-                getattr(scan, TAG_FILENAME),
-                new_tag_name,
-                table_to_database(new_default_value, tag_type),
+            database_schema.add_field(
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": new_tag_name,
+                    "field_type": tag_type,
+                    "description": new_tag_description,
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_USER,
+                    "unit": new_tag_unit,
+                    "default_value": new_default_value,
+                }
             )
-            values.append(
-                [
-                    getattr(scan, TAG_FILENAME),
-                    new_tag_name,
-                    table_to_database(new_default_value, tag_type),
-                    table_to_database(new_default_value, tag_type),
-                ]
-            )
+
+        with self.project.database.data(write=True) as database_data:
+
+            for scan in database_data.get_document(
+                collection_name=COLLECTION_CURRENT
+            ):
+                self.project.unsavedModifications = True
+                database_data.set_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan[TAG_FILENAME],
+                    values_dict={
+                        new_tag_name: table_to_database(
+                            new_default_value, tag_type
+                        )
+                    },
+                )
+                database_data.set_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=scan[TAG_FILENAME],
+                    values_dict={
+                        new_tag_name: table_to_database(
+                            new_default_value, tag_type
+                        )
+                    },
+                )
+                values.append(
+                    [
+                        scan[TAG_FILENAME],
+                        new_tag_name,
+                        table_to_database(new_default_value, tag_type),
+                        table_to_database(new_default_value, tag_type),
+                    ]
+                )
 
         # For history
         history_maker = [
@@ -290,7 +293,6 @@ class DataBrowser(QWidget):
         ]
         self.project.undos.append(history_maker)
         self.project.redos.clear()
-
         # New tag added to the table
         column = self.table_data.get_index_insertion(new_tag_name)
         self.table_data.add_column(column, new_tag_name)
@@ -322,9 +324,12 @@ class DataBrowser(QWidget):
             self.table_data.scans_to_visualize = (
                 self.advanced_search.scans_list
             )
-            self.table_data.scans_to_search = (
-                self.project.session.get_documents_names(COLLECTION_CURRENT)
-            )
+
+            with self.project.database.data() as database_data:
+                self.table_data.scans_to_search = (
+                    database_data.get_document_names(COLLECTION_CURRENT)
+                )
+
             self.project.currentFilter.nots = []
             self.project.currentFilter.values = []
             self.project.currentFilter.fields = []
@@ -343,77 +348,95 @@ class DataBrowser(QWidget):
         values = []
 
         # We add the new tag in the Database
-        tag_cloned = self.project.session.get_field(
-            COLLECTION_CURRENT, tag_to_clone
-        )
-        tag_cloned_init = self.project.session.get_field(
-            COLLECTION_INITIAL, tag_to_clone
-        )
-        self.project.session.add_field(
-            COLLECTION_CURRENT,
-            new_tag_name,
-            tag_cloned.field_type,
-            tag_cloned.description,
-            True,
-            TAG_ORIGIN_USER,
-            tag_cloned.unit,
-            tag_cloned.default_value,
-        )
-        self.project.session.add_field(
-            COLLECTION_INITIAL,
-            new_tag_name,
-            tag_cloned.field_type,
-            tag_cloned_init.description,
-            True,
-            TAG_ORIGIN_USER,
-            tag_cloned.unit,
-            tag_cloned.default_value,
-        )
+        with self.project.database.data() as database_data:
+            tag_cloned_curr = database_data.get_field_attributes(
+                COLLECTION_CURRENT, tag_to_clone
+            )
+            tag_cloned_init = database_data.get_field_attributes(
+                COLLECTION_INITIAL, tag_to_clone
+            )
+
+        with self.project.database.schema() as database_schema:
+            database_schema.add_field(
+                {
+                    "collection_name": COLLECTION_CURRENT,
+                    "field_name": new_tag_name,
+                    "field_type": tag_cloned_curr["field_type"],
+                    "description": tag_cloned_curr["description"],
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_USER,
+                    "unit": tag_cloned_curr["unit"],
+                    "default_value": tag_cloned_curr["default_value"],
+                }
+            )
+            database_schema.add_field(
+                {
+                    "collection_name": COLLECTION_INITIAL,
+                    "field_name": new_tag_name,
+                    "field_type": tag_cloned_init["field_type"],
+                    "description": tag_cloned_init["description"],
+                    "visibility": True,
+                    "origin": TAG_ORIGIN_USER,
+                    "unit": tag_cloned_init["unit"],
+                    "default_value": tag_cloned_init["default_value"],
+                }
+            )
+
         self.project.unsavedModifications = True
-        for scan in self.project.session.get_documents(COLLECTION_CURRENT):
-            # If the tag to clone has a value, we add this value with the
-            # new tag name in the Database
-            cloned_cur_value = self.project.session.get_value(
-                COLLECTION_CURRENT, getattr(scan, TAG_FILENAME), tag_to_clone
-            )
-            cloned_init_value = self.project.session.get_value(
-                COLLECTION_INITIAL, getattr(scan, TAG_FILENAME), tag_to_clone
-            )
-            if cloned_cur_value is not None or cloned_init_value is not None:
-                self.project.session.add_value(
-                    COLLECTION_CURRENT,
-                    getattr(scan, TAG_FILENAME),
-                    new_tag_name,
-                    cloned_cur_value,
+
+        with self.project.database.data(write=True) as database_data:
+
+            for scan in database_data.get_document(
+                collection_name=COLLECTION_CURRENT
+            ):
+                # If the tag to clone has a value, we add this value with the
+                # new tag name in the Database
+                cloned_cur_value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan[TAG_FILENAME],
+                    field=tag_to_clone,
                 )
-                self.project.session.add_value(
-                    COLLECTION_INITIAL,
-                    getattr(scan, TAG_FILENAME),
-                    new_tag_name,
-                    cloned_init_value,
+                cloned_init_value = database_data.get_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=scan[TAG_FILENAME],
+                    field=tag_to_clone,
                 )
-                values.append(
-                    [
-                        getattr(scan, TAG_FILENAME),
-                        new_tag_name,
-                        cloned_cur_value,
-                        cloned_init_value,
-                    ]
-                )
+
+                if (
+                    cloned_cur_value is not None
+                    or cloned_init_value is not None
+                ):
+                    database_data.set_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan[TAG_FILENAME],
+                        values_dict={new_tag_name: cloned_cur_value},
+                    )
+                    database_data.set_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=scan[TAG_FILENAME],
+                        values_dict={new_tag_name: cloned_init_value},
+                    )
+                    values.append(
+                        [
+                            scan[TAG_FILENAME],
+                            new_tag_name,
+                            cloned_cur_value,
+                            cloned_init_value,
+                        ]
+                    )
 
         # For history
         history_maker = [
             "add_tag",
             new_tag_name,
-            tag_cloned.field_type,
-            tag_cloned.unit,
-            tag_cloned.default_value,
-            tag_cloned.description,
+            tag_cloned_curr["field_type"],
+            tag_cloned_curr["unit"],
+            tag_cloned_curr["default_value"],
+            tag_cloned_curr["description"],
             values,
         ]
         self.project.undos.append(history_maker)
         self.project.redos.clear()
-
         # New tag added to the table
         column = self.table_data.get_index_insertion(new_tag_name)
         self.table_data.add_column(column, new_tag_name)
@@ -444,21 +467,26 @@ class DataBrowser(QWidget):
             self.splitter_vertical.minimumHeight()
         ):
             self.viewer.setHidden(True)
+
         else:
             self.viewer.setHidden(False)
             items = self.table_data.selectedItems()
-
             full_names = []
+
             for item in items:
                 row = item.row()
                 full_name = self.table_data.item(row, 0).text()
+
                 if full_name.endswith(".nii"):
-                    if not os.path.isfile(os.sep + full_name):
+
+                    if not Path(full_name).is_file():
                         full_name = os.path.relpath(
                             os.path.join(self.project.folder, full_name)
                         )
+
                     else:
-                        full_name = os.sep + full_name
+                        full_name = os.path.join(os.sep, full_name)
+
                     if full_name not in full_names:
                         full_names.append(full_name)
 
@@ -489,7 +517,6 @@ class DataBrowser(QWidget):
         tags_menu.addAction(self.clone_tag_action)
         tags_menu.addAction(self.remove_tag_action)
         tags_tool_button.setMenu(tags_menu)
-
         filters_tool_button = QToolButton()
         filters_tool_button.setText("Filters")
         filters_tool_button.setPopupMode(QToolButton.MenuButtonPopup)
@@ -497,26 +524,19 @@ class DataBrowser(QWidget):
         filters_menu.addAction(self.save_filter_action)
         filters_menu.addAction(self.open_filter_action)
         filters_tool_button.setMenu(filters_menu)
-
         sources_images_dir = Config().getSourceImageDir()
         self.button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
         self.button_cross.setIcon(
             QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
         )
-
         search_bar_layout = QHBoxLayout()
         search_bar_layout.setSpacing(0)
         search_bar_layout.addWidget(self.search_bar)
         search_bar_layout.addWidget(self.button_cross)
-
         self.advanced_search_button.setText("Advanced search")
-
         self.frame_test.setLayout(search_bar_layout)
-
         self.visualized_tags_button.setText("Visualized tags")
-
         self.count_table_button.setText("Count table")
-
         self.menu_toolbar.addWidget(tags_tool_button)
         self.menu_toolbar.addSeparator()
         self.menu_toolbar.addWidget(filters_tool_button)
@@ -534,15 +554,11 @@ class DataBrowser(QWidget):
         self.frame_table_data.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_table_data.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_table_data.setObjectName("frame_table_data")
-
         vbox_table = QVBoxLayout()
         vbox_table.addWidget(self.table_data)
-
         # Add path button under the table
         hbox_layout = QHBoxLayout()
-
         sources_images_dir = Config().getSourceImageDir()
-
         self.addRowLabel.setObjectName("plus")
         add_row_picture = QPixmap(
             os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
@@ -554,63 +570,46 @@ class DataBrowser(QWidget):
             "Add data without using the MRI converter tool (File>Import)"
         )
         self.addRowLabel.clicked.connect(self.table_data.add_path)
-
         hbox_layout.addWidget(self.addRowLabel)
-
         hbox_layout.addStretch(1)
-
         self.send_documents_to_pipeline_button.clicked.connect(
             self.send_documents_to_pipeline
         )
         hbox_layout.addWidget(self.send_documents_to_pipeline_button)
-
         vbox_table.addLayout(hbox_layout)
-
         self.frame_table_data.setLayout(vbox_table)
-
-        # VISUALIZATION
-
+        # Visualization:
         # Visualization frame, label and text edit (bot.0tom left of the
         # screen in the application)
-
         self.frame_visualization.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_visualization.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_visualization.setObjectName("frame_5")
-
         self.viewer.setObjectName("viewer")
         self.viewer.adjustSize()
-
         hbox_viewer = QHBoxLayout()
         hbox_viewer.addWidget(self.viewer)
-
         self.frame_visualization.setLayout(hbox_viewer)
-
-        # ADVANCED SEARCH
-
+        # Advanced search:
         self.frame_advanced_search.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_advanced_search.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_advanced_search.setObjectName("frame_search")
         self.frame_advanced_search.setHidden(True)
-
         layout_search = QGridLayout()
         layout_search.addWidget(self.advanced_search)
         self.frame_advanced_search.setLayout(layout_search)
-
-        # SPLITTER AND LAYOUT
-
+        # Splitter and layout:
         self.splitter_vertical.addWidget(self.frame_advanced_search)
         self.splitter_vertical.addWidget(self.frame_table_data)
         self.splitter_vertical.addWidget(self.frame_visualization)
         self.splitter_vertical.splitterMoved.connect(self.move_splitter)
-
         vbox_splitter = QVBoxLayout(self)
         vbox_splitter.addWidget(self.menu_toolbar)
         vbox_splitter.addWidget(self.splitter_vertical)
-
         self.setLayout(vbox_splitter)
 
     def move_splitter(self):
         """Check if the viewer's splitter is at its lowest position."""
+
         if self.splitter_vertical.sizes()[1] != (
             self.splitter_vertical.minimumHeight()
         ):
@@ -626,16 +625,15 @@ class DataBrowser(QWidget):
         """Apply the current filter."""
 
         filter_to_apply = self.project.currentFilter
-
         # We open the advanced search + search_bar
         old_scans = self.table_data.scans_to_visualize
-        documents = self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        )
+
+        with self.project.database.data() as database_data:
+            documents = database_data.get_document_names(COLLECTION_CURRENT)
+
         self.table_data.scans_to_visualize = documents
         self.table_data.scans_to_search = documents
         self.table_data.update_visualized_rows(old_scans)
-
         self.search_bar.setText(filter_to_apply.search_bar)
 
         if len(filter_to_apply.nots) > 0:
@@ -653,51 +651,62 @@ class DataBrowser(QWidget):
         """
 
         self.table_data.itemSelectionChanged.disconnect()
-
         # For history
         history_maker = []
         history_maker.append("remove_tags")
         tags_removed = []
 
-        # Each Tag row to remove is put in the history
-        for tag in tag_names_to_remove:
-            self.project.unsavedModifications = True
-            tag_object = self.project.session.get_field(
-                COLLECTION_CURRENT, tag
-            )
-            tags_removed.append([tag_object])
-        history_maker.append(tags_removed)
+        with self.project.database.data() as database_data:
 
-        # Each value of the tags to remove are stored in the history
-        values_removed = []
-        for tag in tag_names_to_remove:
-            for scan in self.project.session.get_documents_names(
-                COLLECTION_CURRENT
-            ):
-                current_value = self.project.session.get_value(
-                    COLLECTION_CURRENT, scan, tag
+            # Each tag row to remove is put in the history
+            for tag in tag_names_to_remove:
+                self.project.unsavedModifications = True
+                tag_attrib = database_data.get_field_attributes(
+                    COLLECTION_CURRENT, tag
                 )
-                initial_value = self.project.session.get_value(
-                    COLLECTION_INITIAL, scan, tag
-                )
-                if current_value is not None or initial_value is not None:
-                    values_removed.append(
-                        [scan, tag, current_value, initial_value]
+                tags_removed.append([tag_attrib])
+
+            history_maker.append(tags_removed)
+            # Each value of the tags to remove are stored in the history
+            values_removed = []
+
+            for tag in tag_names_to_remove:
+
+                for scan in database_data.get_document_names(
+                    COLLECTION_CURRENT
+                ):
+                    current_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan,
+                        field=tag,
                     )
-        history_maker.append(values_removed)
+                    initial_value = database_data.get_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=scan,
+                        field=tag,
+                    )
 
+                    if current_value is not None or initial_value is not None:
+                        values_removed.append(
+                            [scan, tag, current_value, initial_value]
+                        )
+
+        history_maker.append(values_removed)
         self.project.undos.append(history_maker)
         self.project.redos.clear()
 
         # Tags removed from the Database and table
-        for tag in tag_names_to_remove:
-            self.project.session.remove_field(COLLECTION_CURRENT, tag)
-            self.project.session.remove_field(COLLECTION_INITIAL, tag)
-            self.table_data.removeColumn(self.table_data.get_tag_column(tag))
+        with self.project.database.schema() as database_schema:
+
+            for tag in tag_names_to_remove:
+                database_schema.remove_field(COLLECTION_CURRENT, tag)
+                database_schema.remove_field(COLLECTION_INITIAL, tag)
+                self.table_data.removeColumn(
+                    self.table_data.get_tag_column(tag)
+                )
 
         # Selection updated
         self.table_data.update_selection()
-
         self.table_data.itemSelectionChanged.connect(
             self.table_data.selection_changed
         )
@@ -725,41 +734,41 @@ class DataBrowser(QWidget):
         # Every scan taken if empty search
         if str_search == "":
             return_list = self.table_data.scans_to_search
+
         else:
-            # Scans with at least a not defined value
-            if str_search == not_defined_value:
-                filter = self.search_bar.prepare_not_defined_filter(
-                    self.project.session.get_shown_tags()
-                )
-            # Scans matching the search
-            else:
-                filter = self.search_bar.prepare_filter(
-                    str_search,
-                    self.project.session.get_shown_tags(),
-                    self.table_data.scans_to_search,
-                )
 
-            generator = self.project.session.filter_documents(
-                COLLECTION_CURRENT, filter
-            )
+            with self.project.database.data() as database_data:
 
-            # Creating the list of scans
-            return_list = [getattr(scan, TAG_FILENAME) for scan in generator]
+                # Scans with at least a not defined value
+                if str_search == NOT_DEFINED_VALUE:
+                    filter = self.search_bar.prepare_not_defined_filter(
+                        database_data.get_shown_tags()
+                    )
+
+                # Scans matching the search
+                else:
+                    filter = self.search_bar.prepare_filter(
+                        str_search,
+                        database_data.get_shown_tags(),
+                        self.table_data.scans_to_search,
+                    )
+
+                filtered_scans = database_data.filter_documents(
+                    COLLECTION_CURRENT, filter
+                )
+                # Creating the list of scans
+                return_list = [scan[TAG_FILENAME] for scan in filtered_scans]
 
         self.table_data.scans_to_visualize = return_list
-
         # Rows updated
         self.table_data.update_visualized_rows(old_scan_list)
-
         self.project.currentFilter.search_bar = str_search
 
     def send_documents_to_pipeline(self):
         """Send the current list of scans to the Pipeline Manager."""
 
         current_scans = self.table_data.get_current_filter()
-
         # Displays a popup with the list of scans
-
         self.show_selection = PopUpDataBrowserCurrentSelection(
             self.project, self, current_scans, self.main_window
         )
@@ -777,7 +786,6 @@ class DataBrowser(QWidget):
         self.table_data.project = database
         self.viewer.project = database
         self.advanced_search.project = database
-
         # We hide the advanced search when switching project
         self.frame_advanced_search.setHidden(True)
 
@@ -906,7 +914,6 @@ class TableDataBrowser(QTableWidget):
         """
 
         super().__init__()
-
         self.project = project
         self.data_browser = data_browser
         self.tags_to_display = tags_to_display
@@ -914,31 +921,31 @@ class TableDataBrowser(QTableWidget):
         self.activate_selection = activate_selection
         self.link_viewer = link_viewer
         self.bricks = {}
-
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
-
         # It allows to move the columns (except the first column name)
         self.horizontalHeader().setSectionsMovable(True)
-
         # It allows the automatic sort
         self.setSortingEnabled(True)
-
         # Adding a custom context menu
         self.setContextMenuPolicy(Qt.CustomContextMenu)
+
         if self.activate_selection and link_viewer:
             self.customContextMenuRequested.connect(self.context_menu_table)
+
         self.itemChanged.connect(self.change_cell_color)
+
         if activate_selection:
             self.itemSelectionChanged.connect(self.selection_changed)
+
         else:
             self.setSelectionMode(QAbstractItemView.NoSelection)
+
         self.horizontalHeader().sortIndicatorChanged.connect(self.sort_updated)
         self.horizontalHeader().sectionDoubleClicked.connect(
             self.select_all_column
         )
         self.horizontalHeader().sectionMoved.connect(self.section_moved)
         self.verticalHeader().setMinimumSectionSize(30)
-
         self.update_table(True)
 
         if not self.update_values:
@@ -954,180 +961,185 @@ class TableDataBrowser(QTableWidget):
         from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
-
         self.itemSelectionChanged.disconnect()
-
         # Adding the column to the table
         self.insertColumn(column)
         item = QtWidgets.QTableWidgetItem()
         self.setHorizontalHeaderItem(column, item)
-        tag_object = self.project.session.get_field(COLLECTION_CURRENT, tag)
-        item.setText(tag)
-        item.setToolTip(
-            "Description: "
-            + str(tag_object.description)
-            + "\nUnit: "
-            + str(tag_object.unit)
-            + "\nType: "
-            + str(tag_object.field_type)
-        )
 
-        # Set column type
-        if tag_object.field_type == FIELD_TYPE_FLOAT:
-            self.setItemDelegateForColumn(column, NumberFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_DATETIME:
-            self.setItemDelegateForColumn(column, DateTimeFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_DATE:
-            self.setItemDelegateForColumn(column, DateFormatDelegate(self))
-        elif tag_object.field_type == FIELD_TYPE_TIME:
-            self.setItemDelegateForColumn(column, TimeFormatDelegate(self))
-        else:
-            self.setItemDelegateForColumn(column, None)
-
-        for row in range(0, self.rowCount()):
-            item = QtWidgets.QTableWidgetItem()
-            self.setItem(row, column, item)
-            scan = self.item(row, 0).text()
-            cur_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan, tag
+        with self.project.database.data() as database_data:
+            tag_attrib = database_data.get_field_attributes(
+                COLLECTION_CURRENT, tag
             )
-            if cur_value is not None:
-                set_item_data(item, cur_value, tag_object.field_type)
+            item.setText(tag)
+            item.setToolTip(
+                f"Description: {tag_attrib['description']}\n"
+                f"Unit: {tag_attrib['unit']}\n"
+                f"Type: {tag_attrib['field_type']}"
+            )
+
+            # Set column type
+            if tag_attrib["field_type"] == FIELD_TYPE_FLOAT:
+                self.setItemDelegateForColumn(
+                    column, NumberFormatDelegate(self)
+                )
+
+            elif tag_attrib["field_type"] == FIELD_TYPE_DATETIME:
+                self.setItemDelegateForColumn(
+                    column, DateTimeFormatDelegate(self)
+                )
+
+            elif tag_attrib["field_type"] == FIELD_TYPE_DATE:
+                self.setItemDelegateForColumn(column, DateFormatDelegate(self))
+
+            elif tag_attrib["field_type"] == FIELD_TYPE_TIME:
+                self.setItemDelegateForColumn(column, TimeFormatDelegate(self))
+
             else:
-                set_item_data(item, not_defined_value, FIELD_TYPE_STRING)
-                font = item.font()
-                font.setItalic(True)
-                font.setBold(True)
-                item.setFont(font)
+                self.setItemDelegateForColumn(column, None)
+
+            for row in range(0, self.rowCount()):
+                item = QtWidgets.QTableWidgetItem()
+                self.setItem(row, column, item)
+                scan = self.item(row, 0).text()
+                cur_value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan,
+                    field=tag,
+                )
+
+                if cur_value is not None:
+                    set_item_data(item, cur_value, tag_attrib["field_type"])
+
+                else:
+                    set_item_data(item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING)
+                    font = item.font()
+                    font.setItalic(True)
+                    font.setBold(True)
+                    item.setFont(font)
 
         self.resizeColumnsToContents()  # New column re-sized
-
         # Selection updated
         self.update_selection()
-
         self.update_colors()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.itemChanged.connect(self.change_cell_color)
 
     def add_columns(self):
         """Add columns."""
-
         # import set_item_data only here to prevent circular import issue
         from populse_mia.utils import set_item_data
 
         self.itemChanged.disconnect()
-
         self.itemSelectionChanged.disconnect()
 
-        tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
-        tags.remove(TAG_CHECKSUM)
-        tags.remove(TAG_FILENAME)
-        tags.remove(TAG_HISTORY)
-        tags = sorted(tags)
-        tags.insert(0, TAG_FILENAME)
+        with self.project.database.data() as database_data:
 
-        visible = self.project.session.get_shown_tags()
+            tags = database_data.get_field_names(COLLECTION_CURRENT)
+            tags.remove(TAG_CHECKSUM)
+            tags.remove(TAG_FILENAME)
+            tags.remove(TAG_HISTORY)
+            tags = sorted(tags)
+            tags.insert(0, TAG_FILENAME)
+            visible = database_data.get_shown_tags()
 
-        # Adding missing columns
+            # Adding missing columns
+            for tag in tags:
 
-        for tag in tags:
-            # Tag added only if it's not already in the table
+                # Tag added only if it's not already in the table
+                if self.get_tag_column(tag) is None:
+                    column_index = self.get_index_insertion(tag)
+                    self.insertColumn(column_index)
 
-            if self.get_tag_column(tag) is None:
-                column_index = self.get_index_insertion(tag)
-                self.insertColumn(column_index)
-
-                item = QtWidgets.QTableWidgetItem()
-                self.setHorizontalHeaderItem(column_index, item)
-                item.setText(tag)
-                tag_object = self.project.session.get_field(
-                    COLLECTION_CURRENT, tag
-                )
-
-                if tag_object is not None:
-                    item.setToolTip(
-                        "Description: "
-                        + str(tag_object.description)
-                        + "\nUnit: "
-                        + str(tag_object.unit)
-                        + "\nType: "
-                        + str(tag_object.field_type)
-                    )
-
-                # Set column type
-
-                if tag_object.field_type == FIELD_TYPE_FLOAT:
-                    self.setItemDelegateForColumn(
-                        column_index, NumberFormatDelegate(self)
-                    )
-                elif tag_object.field_type == FIELD_TYPE_DATETIME:
-                    self.setItemDelegateForColumn(
-                        column_index, DateTimeFormatDelegate(self)
-                    )
-                elif tag_object.field_type == FIELD_TYPE_DATE:
-                    self.setItemDelegateForColumn(
-                        column_index, DateFormatDelegate(self)
-                    )
-                elif tag_object.field_type == FIELD_TYPE_TIME:
-                    self.setItemDelegateForColumn(
-                        column_index, TimeFormatDelegate(self)
-                    )
-
-                # Hide the column if not visible
-
-                if tag in visible:
-                    self.setColumnHidden(column_index, True)
-
-                # Rows filled for the column being added
-
-                for row in range(0, self.rowCount()):
                     item = QtWidgets.QTableWidgetItem()
-                    self.setItem(row, column_index, item)
-                    scan = self.item(row, 0).text()
-                    cur_value = self.project.session.get_value(
-                        COLLECTION_CURRENT, scan, tag
+                    self.setHorizontalHeaderItem(column_index, item)
+                    item.setText(tag)
+                    tag_attrib = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag
                     )
 
-                    if cur_value is not None:
-                        set_item_data(item, cur_value, tag_object.field_type)
-                    else:
-                        set_item_data(
-                            item, not_defined_value, FIELD_TYPE_STRING
+                    if tag_attrib is not None:
+                        from populse_mia.utils import type_name
+
+                        item.setToolTip(
+                            f"Description: {tag_attrib['description']}"
+                            f"\nUnit: {tag_attrib['unit']}"
+                            f"\nType: {type_name(tag_attrib['field_type'])}"
                         )
-                        font = item.font()
-                        font.setItalic(True)
-                        font.setBold(True)
-                        item.setFont(font)
 
-                # Removing useless columns
-                tags_to_remove = []
-
-                for column in range(0, self.columnCount()):
-                    tag_name = self.horizontalHeaderItem(column).text()
-
-                    if (
-                        tag_name
-                        not in self.project.session.get_fields_names(
-                            COLLECTION_CURRENT
+                    # Set column type
+                    if tag_attrib["field_type"] == FIELD_TYPE_FLOAT:
+                        self.setItemDelegateForColumn(
+                            column_index, NumberFormatDelegate(self)
                         )
-                        and tag_name != TAG_FILENAME
-                    ):
-                        tags_to_remove.append(tag_name)
 
-                    for tag in tags_to_remove:
-                        self.removeColumn(self.get_tag_column(tag))
+                    elif tag_attrib["field_type"] == FIELD_TYPE_DATETIME:
+                        self.setItemDelegateForColumn(
+                            column_index, DateTimeFormatDelegate(self)
+                        )
+
+                    elif tag_attrib["field_type"] == FIELD_TYPE_DATE:
+                        self.setItemDelegateForColumn(
+                            column_index, DateFormatDelegate(self)
+                        )
+
+                    elif tag_attrib["field_type"] == FIELD_TYPE_TIME:
+                        self.setItemDelegateForColumn(
+                            column_index, TimeFormatDelegate(self)
+                        )
+
+                    # Hide the column if not visible
+                    if tag in visible:
+                        self.setColumnHidden(column_index, True)
+
+                    # Rows filled for the column being added
+                    for row in range(0, self.rowCount()):
+                        item = QtWidgets.QTableWidgetItem()
+                        self.setItem(row, column_index, item)
+                        scan = self.item(row, 0).text()
+                        cur_value = database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            field=tag,
+                        )
+
+                        if cur_value is not None:
+                            set_item_data(
+                                item, cur_value, tag_attrib["field_type"]
+                            )
+
+                        else:
+                            set_item_data(
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                            )
+                            font = item.font()
+                            font.setItalic(True)
+                            font.setBold(True)
+                            item.setFont(font)
+
+                    # Removing useless columns
+                    tags_to_remove = []
+
+                    for column in range(0, self.columnCount()):
+                        tag_name = self.horizontalHeaderItem(column).text()
+
+                        if (
+                            tag_name
+                            not in database_data.get_field_names(
+                                COLLECTION_CURRENT
+                            )
+                            and tag_name != TAG_FILENAME
+                        ):
+                            tags_to_remove.append(tag_name)
+
+                        for tag in tags_to_remove:
+                            self.removeColumn(self.get_tag_column(tag))
 
         self.resizeColumnsToContents()
-
         # Selection updated
         self.update_selection()
-
         self.update_colors()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.itemChanged.connect(self.change_cell_color)
 
     def add_path(self):
@@ -1148,7 +1160,6 @@ class TableDataBrowser(QTableWidget):
         self.setSortingEnabled(False)
         self.itemSelectionChanged.disconnect()
         self.itemChanged.disconnect()
-
         cells_number = len(rows) * self.columnCount()
         self.progress = QProgressDialog(
             "Please wait while the paths are being added...",
@@ -1166,101 +1177,113 @@ class TableDataBrowser(QTableWidget):
         self.progress.setModal(True)
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
-
         self.setVisible(False)
         idx = 0
-        for scan in rows:
-            # Scan added only if it's not already in the table
-            if self.get_scan_row(scan) is None:
-                rowCount = self.rowCount()
-                self.insertRow(rowCount)
 
-                # Columns filled for the row being added
-                for column in range(0, self.columnCount()):
-                    idx += 1
-                    self.progress.setValue(idx)
-                    QApplication.processEvents()
+        with self.project.database.data() as database_data:
 
-                    item = QtWidgets.QTableWidgetItem()
-                    tag = self.horizontalHeaderItem(column).text()
+            for scan in rows:
 
-                    if column == 0:
-                        # name tag, not editable
-                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                        set_item_data(item, scan, FIELD_TYPE_STRING)
-                    else:
-                        cur_value = self.project.session.get_value(
-                            COLLECTION_CURRENT, scan, tag
-                        )
-                        if cur_value is not None:
-                            if tag != TAG_BRICKS:
-                                set_item_data(
-                                    item,
-                                    cur_value,
-                                    self.project.session.get_field(
-                                        COLLECTION_CURRENT, tag
-                                    ).field_type,
-                                )
-                            else:
-                                # Tag bricks, display list with buttons
-                                widget = QWidget()
-                                widget.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-                                layout = QVBoxLayout()
+                # Scan added only if it's not already in the table
+                if self.get_scan_row(scan) is None:
+                    rowCount = self.rowCount()
+                    self.insertRow(rowCount)
 
-                                brick_uuid = cur_value[-1]
-                                brick_name = self.project.session.get_value(
-                                    COLLECTION_BRICK, brick_uuid, BRICK_NAME
-                                )
-                                brick_name_button = QPushButton(brick_name)
-                                brick_name_button.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-                                self.bricks[brick_name_button] = brick_uuid
-                                if "FileName" in scan:
-                                    brick_name_button.clicked.connect(
-                                        partial(
-                                            self.show_brick_history,
-                                            scan["FileName"],
-                                        )
-                                    )
-                                layout.addWidget(brick_name_button)
-                                widget.setLayout(layout)
-                                self.setCellWidget(rowCount, column, widget)
+                    # Columns filled for the row being added
+                    for column in range(0, self.columnCount()):
+                        idx += 1
+                        self.progress.setValue(idx)
+                        QApplication.processEvents()
+                        item = QtWidgets.QTableWidgetItem()
+                        tag = self.horizontalHeaderItem(column).text()
+
+                        if column == 0:
+                            # name tag, not editable
+                            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                            set_item_data(item, scan, FIELD_TYPE_STRING)
 
                         else:
-                            if tag != TAG_BRICKS:
-                                set_item_data(
-                                    item, not_defined_value, FIELD_TYPE_STRING
-                                )
-                                font = item.font()
-                                font.setItalic(True)
-                                font.setBold(True)
-                                item.setFont(font)
+                            cur_value = database_data.get_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan,
+                                field=tag,
+                            )
+
+                            if cur_value is not None:
+
+                                if tag != TAG_BRICKS:
+                                    set_item_data(
+                                        item,
+                                        cur_value,
+                                        database_data.get_field_attributes(
+                                            COLLECTION_CURRENT, tag
+                                        )["field_type"],
+                                    )
+
+                                else:
+                                    # Tag bricks, display list with buttons
+                                    widget = QWidget()
+                                    widget.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    layout = QVBoxLayout()
+                                    brick_uuid = cur_value[-1]
+                                    brick_name = database_data.get_value(
+                                        collection_name=COLLECTION_BRICK,
+                                        primary_key=brick_uuid,
+                                        field=BRICK_NAME,
+                                    )
+                                    brick_name_button = QPushButton(brick_name)
+                                    brick_name_button.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    self.bricks[brick_name_button] = brick_uuid
+
+                                    if TAG_FILENAME in scan:
+                                        brick_name_button.clicked.connect(
+                                            partial(
+                                                self.show_brick_history,
+                                                scan[TAG_FILENAME],
+                                            )
+                                        )
+
+                                    layout.addWidget(brick_name_button)
+                                    widget.setLayout(layout)
+                                    self.setCellWidget(
+                                        rowCount, column, widget
+                                    )
+
                             else:
-                                set_item_data(item, "", FIELD_TYPE_STRING)
-                                # bricks not editable
-                                item.setFlags(
-                                    item.flags() & ~Qt.ItemIsEditable
-                                )
-                    self.setItem(rowCount, column, item)
+
+                                if tag != TAG_BRICKS:
+                                    set_item_data(
+                                        item,
+                                        NOT_DEFINED_VALUE,
+                                        FIELD_TYPE_STRING,
+                                    )
+                                    font = item.font()
+                                    font.setItalic(True)
+                                    font.setBold(True)
+                                    item.setFont(font)
+
+                                else:
+                                    set_item_data(item, "", FIELD_TYPE_STRING)
+                                    # bricks not editable
+                                    item.setFlags(
+                                        item.flags() & ~Qt.ItemIsEditable
+                                    )
+
+                        self.setItem(rowCount, column, item)
 
         # Crash if self.setSortingEnabled(True) because it calls sortByColumn()
         # self.setSortingEnabled(False)
-
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
-
         # Selection updated
         self.update_selection()
-
         self.update_colors()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.itemChanged.connect(self.change_cell_color)
-
         self.progress.close()
         self.setVisible(True)
 
@@ -1281,168 +1304,175 @@ class TableDataBrowser(QTableWidget):
 
         self.itemChanged.disconnect()
         new_value = item_origin.data(Qt.EditRole)
-
-        cells_types = []  # Will contain the type list of the selection
-
+        # Will contain the type list of the selection
+        cells_types = []
         # To reset the first cell already changed
         # self.fill_cells_update_table()
 
-        # For each item selected, we check the validity of the types
-        for item in self.selectedItems():
-            row = item.row()
-            col = item.column()
-            tag_name = self.horizontalHeaderItem(col).text()
+        with self.project.database.data(write=True) as database_data:
 
-            #  We don't want spaces in PatientName (used by Mia to define
-            #  subfolders when writing calculation results)
-            if tag_name == "PatientName":
-                new_value = new_value.replace(" ", "")
-
-            tag_object = self.project.session.get_field(
-                COLLECTION_CURRENT, tag_name
-            )
-            tag_type = tag_object.field_type
-
-            if tag_name == TAG_BRICKS or tag_name == TAG_FILENAME:
-                self.update_colors()
-                self.itemChanged.connect(self.change_cell_color)
-                return
-
-            # Type added to types list
-            if tag_type not in cells_types:
-                cells_types.append(tag_type)
-
-        # Error if list with other types
-        if (
-            (FIELD_TYPE_LIST_DATE in cells_types)
-            or (FIELD_TYPE_LIST_DATETIME in cells_types)
-            or (FIELD_TYPE_LIST_TIME in cells_types)
-            or (FIELD_TYPE_LIST_INTEGER in cells_types)
-            or (FIELD_TYPE_LIST_STRING in cells_types)
-            or (FIELD_TYPE_LIST_FLOAT in cells_types)
-            or (FIELD_TYPE_LIST_BOOLEAN in cells_types)
-        ) and (len(cells_types) > 1):
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText("Incompatible types")
-            msg.setInformativeText(
-                "The following types in the selection are not compatible: "
-                + str(cells_types)
-            )
-            msg.setWindowTitle("Warning")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(msg.close)
-            msg.exec()
-            self.itemChanged.connect(self.change_cell_color)
-            return
-
-        # Nothing to do if list
-        if (
-            FIELD_TYPE_LIST_DATE in cells_types
-            or FIELD_TYPE_LIST_DATETIME in cells_types
-            or FIELD_TYPE_LIST_TIME in cells_types
-            or FIELD_TYPE_LIST_INTEGER in cells_types
-            or FIELD_TYPE_LIST_STRING in cells_types
-            or FIELD_TYPE_LIST_FLOAT in cells_types
-            or FIELD_TYPE_LIST_BOOLEAN in cells_types
-        ):
-            self.itemChanged.connect(self.change_cell_color)
-            return
-
-        # We check that the value is compatible with all the types
-        types_compatibles = True
-        for cell_type in cells_types:
-            if not check_value_type(new_value, cell_type):
-                types_compatibles = False
-                type_problem = cell_type
-                break
-
-        # Error if invalid value
-        if not types_compatibles:
-            msg = QMessageBox()
-            msg.setIcon(QMessageBox.Warning)
-            msg.setText("Invalid value")
-            msg.setInformativeText(
-                "The value "
-                + str(new_value)
-                + " is invalid with the type "
-                + type_problem
-            )
-            msg.setWindowTitle("Warning")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(msg.close)
-            msg.exec()
-
-        # Otherwise we update the values
-        else:
-            # For history
-            history_maker = list()
-            history_maker.append("modified_values")
-            modified_values = []
-
+            # For each item selected, we check the validity of the types
             for item in self.selectedItems():
                 row = item.row()
                 col = item.column()
-                scan_path = self.item(row, 0).text()
                 tag_name = self.horizontalHeaderItem(col).text()
-                database_value = table_to_database(
-                    new_value,
-                    self.project.session.get_field(
-                        COLLECTION_CURRENT, tag_name
-                    ).field_type,
+
+                #  We don't want spaces in PatientName (used by Mia to define
+                #  subfolders when writing calculation results)
+                if tag_name == "PatientName":
+                    new_value = new_value.replace(" ", "")
+
+                tag_attrib = database_data.get_field_attributes(
+                    COLLECTION_CURRENT, tag_name
                 )
+                tag_type = tag_attrib["field_type"]
 
-                # We only set the cell if it's not the tag name
-                if tag_name != TAG_FILENAME:
-                    old_value = self.project.session.get_value(
-                        COLLECTION_CURRENT, scan_path, tag_name
-                    )
-                    # The scan already has a value for the tag: we update it
-                    if old_value is not None:
-                        modified_values.append(
-                            [scan_path, tag_name, old_value, database_value]
-                        )
-                        self.project.session.set_value(
-                            COLLECTION_CURRENT,
-                            scan_path,
-                            tag_name,
-                            database_value,
-                        )
-                    # The scan does not have a value for the tag yet: we add it
-                    else:
-                        modified_values.append(
-                            [scan_path, tag_name, None, database_value]
-                        )
-                        self.project.session.add_value(
-                            COLLECTION_CURRENT,
-                            scan_path,
-                            tag_name,
-                            database_value,
-                        )
+                if tag_name == TAG_BRICKS or tag_name == TAG_FILENAME:
+                    self.update_colors()
+                    self.itemChanged.connect(self.change_cell_color)
+                    return
 
-                        # Font reset in case it was a not defined cell
-                        font = item.font()
-                        font.setItalic(False)
-                        font.setBold(False)
-                        item.setFont(font)
+                # Type added to types list
+                if tag_type not in cells_types:
+                    cells_types.append(tag_type)
 
-                    set_item_data(
-                        item,
+            # Error if list with other types
+            if (
+                (FIELD_TYPE_LIST_DATE in cells_types)
+                or (FIELD_TYPE_LIST_DATETIME in cells_types)
+                or (FIELD_TYPE_LIST_TIME in cells_types)
+                or (FIELD_TYPE_LIST_INTEGER in cells_types)
+                or (FIELD_TYPE_LIST_STRING in cells_types)
+                or (FIELD_TYPE_LIST_FLOAT in cells_types)
+                or (FIELD_TYPE_LIST_BOOLEAN in cells_types)
+            ) and (len(cells_types) > 1):
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText("Incompatible types")
+                msg.setInformativeText(
+                    f"The following types in the selection are not "
+                    f"compatible: {cells_types}"
+                )
+                msg.setWindowTitle("Warning")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.buttonClicked.connect(msg.close)
+                msg.exec()
+                self.itemChanged.connect(self.change_cell_color)
+                return
+
+            # Nothing to do if list
+            if (
+                FIELD_TYPE_LIST_DATE in cells_types
+                or FIELD_TYPE_LIST_DATETIME in cells_types
+                or FIELD_TYPE_LIST_TIME in cells_types
+                or FIELD_TYPE_LIST_INTEGER in cells_types
+                or FIELD_TYPE_LIST_STRING in cells_types
+                or FIELD_TYPE_LIST_FLOAT in cells_types
+                or FIELD_TYPE_LIST_BOOLEAN in cells_types
+            ):
+                self.itemChanged.connect(self.change_cell_color)
+                return
+
+            # We check that the value is compatible with all the types
+            types_compatibles = True
+
+            for cell_type in cells_types:
+
+                if not check_value_type(new_value, cell_type):
+                    types_compatibles = False
+                    type_problem = cell_type
+                    break
+
+            # Error if invalid value
+            if not types_compatibles:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText("Invalid value")
+                msg.setInformativeText(
+                    f"The value {str(new_value)} is invalid "
+                    f"with the type {str(type_problem)}"
+                )
+                msg.setWindowTitle("Warning")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.buttonClicked.connect(msg.close)
+                msg.exec()
+
+            # Otherwise we update the values
+            else:
+                # For history
+                history_maker = list()
+                history_maker.append("modified_values")
+                modified_values = []
+
+                for item in self.selectedItems():
+                    row = item.row()
+                    col = item.column()
+                    scan_path = self.item(row, 0).text()
+                    tag_name = self.horizontalHeaderItem(col).text()
+                    database_value = table_to_database(
                         new_value,
-                        self.project.session.get_field(
+                        database_data.get_field_attributes(
                             COLLECTION_CURRENT, tag_name
-                        ).field_type,
+                        )["field_type"],
                     )
 
-            # For history
-            history_maker.append(modified_values)
-            self.project.undos.append(history_maker)
-            self.project.redos.clear()
+                    # We only set the cell if it's not the tag name
+                    if tag_name != TAG_FILENAME:
+                        old_value = database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan_path,
+                            field=tag_name,
+                        )
 
-            self.resizeColumnsToContents()  # Columns re-sized
+                        # The scan already has a value for the tag:
+                        # we update it
+                        if old_value is not None:
+                            modified_values.append(
+                                [
+                                    scan_path,
+                                    tag_name,
+                                    old_value,
+                                    database_value,
+                                ]
+                            )
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan_path,
+                                values_dict={tag_name: database_value},
+                            )
+
+                        # The scan does not have a value for the tag yet:
+                        # we add it
+                        else:
+                            modified_values.append(
+                                [scan_path, tag_name, None, database_value]
+                            )
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan_path,
+                                values_dict={tag_name: database_value},
+                            )
+                            # Font reset in case it was a not defined cell
+                            font = item.font()
+                            font.setItalic(False)
+                            font.setBold(False)
+                            item.setFont(font)
+
+                        set_item_data(
+                            item,
+                            new_value,
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, tag_name
+                            )["field_type"],
+                        )
+
+                # For history
+                history_maker.append(modified_values)
+                self.project.undos.append(history_maker)
+                self.project.redos.clear()
+                self.resizeColumnsToContents()  # Columns re-sized
 
         self.update_colors()
-
         self.itemChanged.connect(self.change_cell_color)
 
     def clear_cell(self):
@@ -1454,28 +1484,34 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-        for point in points:
-            row = point.row()
-            col = point.column()
-            tag_name = self.horizontalHeaderItem(col).text()
-            scan_name = self.item(row, 0).text()
-            # We get the FileName of the scan from the first row
-            current_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, tag_name
-            )
-            # For history
-            modified_values.append([scan_name, tag_name, current_value, None])
-            self.project.session.remove_value(
-                COLLECTION_CURRENT, scan_name, tag_name
-            )
-            item = self.item(row, col)
-            set_item_data(item, not_defined_value, FIELD_TYPE_STRING)
-            font = item.font()
-            font.setItalic(True)
-            font.setBold(True)
-            item.setFont(font)
+
+        with self.project.database.data() as database_data:
+
+            for point in points:
+                row = point.row()
+                col = point.column()
+                tag_name = self.horizontalHeaderItem(col).text()
+                scan_name = self.item(row, 0).text()
+                # We get the FileName of the scan from the first row
+                current_value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan_name,
+                    field=tag_name,
+                )
+                # For history
+                modified_values.append(
+                    [scan_name, tag_name, current_value, None]
+                )
+                database_data.remove_value(
+                    COLLECTION_CURRENT, scan_name, tag_name
+                )
+                item = self.item(row, col)
+                set_item_data(item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING)
+                font = item.font()
+                font.setItalic(True)
+                font.setBold(True)
+                item.setFont(font)
 
         # For history
         history_maker.append(modified_values)
@@ -1489,9 +1525,7 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.disconnect()
-
         self.menu = QMenu(self)
-
         self.action_reset_cell = self.menu.addAction("Reset cell(s)")
         self.action_reset_column = self.menu.addAction("Reset column(s)")
         self.action_reset_row = self.menu.addAction("Reset row(s)")
@@ -1509,7 +1543,6 @@ class TableDataBrowser(QTableWidget):
             "Send documents to the Pipeline Manager"
         )
         self.action_display_file = self.menu.addAction("Tries to read a file")
-
         action = self.menu.exec_(self.mapToGlobal(position))
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
@@ -1521,25 +1554,30 @@ class TableDataBrowser(QTableWidget):
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_cell)
             msg.exec()
+
         elif action == self.action_reset_column:
             msg.setText("You are about to reset columns.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_column)
             msg.exec()
+
         elif action == self.action_reset_row:
             msg.setText("You are about to reset rows.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.reset_row)
             msg.exec()
+
         if action == self.action_clear_cell:
             msg.setText("You are about to clear cells.")
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.clear_cell)
             msg.exec()
+
         elif action == self.action_add_scan:
             self.itemChanged.connect(self.change_cell_color)
             self.add_path()
             self.itemChanged.disconnect()
+
         elif action == self.action_remove_scan:
             msg.setText(
                 "You are about to remove a scan from the project."
@@ -1549,23 +1587,29 @@ class TableDataBrowser(QTableWidget):
             msg.buttonClicked.connect(msg.close)
             msg.buttons()[0].clicked.connect(self.remove_scan)
             msg.exec()
+
         elif action == self.action_sort_column:
             self.sort_column(0)
+
         elif action == self.action_sort_column_descending:
             self.sort_column(1)
+
         elif action == self.action_visualized_tags:
             self.visualized_tags_pop_up()
+
         elif action == self.action_select_column:
             self.select_all_columns()
+
         elif action == self.action_multiple_sort:
             self.multiple_sort_pop_up()
+
         elif action == self.action_send_documents_to_pipeline:
             self.data_browser.send_documents_to_pipeline()
+
         elif action == self.action_display_file:
             self.display_file()
 
         self.update_colors()
-
         # Signals reconnected
         self.itemChanged.connect(self.change_cell_color)
 
@@ -1578,63 +1622,83 @@ class TableDataBrowser(QTableWidget):
 
         :param name: string of the brick id
         """
-        doc = self.project.session.get_document(COLLECTION_BRICK, name)
-        if doc is not None:
-            inputs = set()
-            todo = list(doc["Input(s)"].values())
-            while todo:
-                value = todo.pop(0)
-                if isinstance(value, str):
-                    inputs.add(value)
-                elif isinstance(value, list):
-                    todo += value
-            outputs = set()
-            todo = list(doc["Output(s)"].values())
-            while todo:
-                value = todo.pop(0)
-                if isinstance(value, str):
-                    outputs.add(value)
-                elif isinstance(value, list):
-                    todo += value
 
-            for output in outputs:
-                if (output != "") and (output not in inputs):
-                    doc_delete = os.path.relpath(value, self.project.folder)
-                    scan_object = self.project.session.get_document(
-                        COLLECTION_CURRENT,
-                        doc_delete,
-                        fields=[TAG_FILENAME, TAG_BRICKS],
-                        as_list=True,
-                    )
-                    row = None
-                    if scan_object is not None:
-                        bricks = scan_object[1]
-                        if bricks and name in bricks:
-                            bricks = [
-                                brick for brick in bricks if brick != name
-                            ]
-                        if not bricks or len(bricks) == 0:
-                            row = self.get_scan_row(doc_delete)
-                        else:
-                            self.project.session.set_value(
-                                COLLECTION_CURRENT,
-                                doc_delete,
-                                TAG_BRICKS,
-                                bricks,
-                            )
-                    if row is not None:
-                        self.removeRow(row)
-                        self.project.session.remove_document(
-                            COLLECTION_CURRENT, doc_delete
+        with self.project.database.data(write=True) as database_data:
+            doc = database_data.get_document(
+                collection_name=COLLECTION_BRICK, primary_keys=name
+            )
+
+            if doc:
+                inputs = set()
+                todo = list(doc[0][BRICK_INPUTS].values())
+
+                while todo:
+                    value = todo.pop(0)
+
+                    if isinstance(value, str):
+                        inputs.add(value)
+
+                    elif isinstance(value, list):
+                        todo += value
+
+                outputs = set()
+                todo = list(doc[0][BRICK_OUTPUTS].values())
+
+                while todo:
+                    value = todo.pop(0)
+
+                    if isinstance(value, str):
+                        outputs.add(value)
+
+                    elif isinstance(value, list):
+                        todo += value
+
+                for output in outputs:
+
+                    if (output != "") and (output not in inputs):
+                        doc_delete = os.path.relpath(
+                            value, self.project.folder
                         )
-                        try:
-                            self.project.session.remove_document(
-                                COLLECTION_INITIAL, doc_delete
-                            )
-                        except ValueError:
-                            pass
+                        scan_object = database_data.get_document(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_keys=doc_delete,
+                            fields=[TAG_FILENAME, TAG_BRICKS],
+                        )
+                        row = None
 
-            self.project.session.remove_document(COLLECTION_BRICK, name)
+                        if scan_object:
+                            bricks = scan_object[0][TAG_BRICKS]
+
+                            if bricks and name in bricks:
+                                bricks = [
+                                    brick for brick in bricks if brick != name
+                                ]
+
+                            if not bricks or len(bricks) == 0:
+                                row = self.get_scan_row(doc_delete)
+
+                            else:
+                                database_data.set_value(
+                                    collection_name=COLLECTION_CURRENT,
+                                    primary_key=doc_delete,
+                                    values_dict={TAG_BRICKS: bricks},
+                                )
+
+                        if row is not None:
+                            self.removeRow(row)
+                            database_data.remove_document(
+                                COLLECTION_CURRENT, doc_delete
+                            )
+
+                            try:
+                                database_data.remove_document(
+                                    COLLECTION_INITIAL, doc_delete
+                                )
+
+                            except KeyError:
+                                pass
+
+                database_data.remove_document(COLLECTION_BRICK, name)
 
         self.resizeColumnsToContents()
 
@@ -1692,150 +1756,162 @@ class TableDataBrowser(QTableWidget):
         self.tags = []  # List of table tags
 
         try:
-            for item in self.selectedItems():
-                column = item.column()
-                row = item.row()
-                self.coordinates.append([row, column])
-                tag_name = self.horizontalHeaderItem(column).text()
-                tag_object = self.project.session.get_field(
-                    COLLECTION_CURRENT, tag_name
-                )
-                tag_type = tag_object.field_type
-                scan_name = self.item(row, 0).text()
 
-                if tag_name == TAG_BRICKS:
-                    self.setMouseTracking(True)
-                    return
+            with self.project.database.data() as database_data:
 
-                # Scan and tag added
-                self.tags.append(tag_name)
-                self.scans_list.append(scan_name)
-
-                # Type checked
-                if tag_type not in self.types:
-                    self.types.append(tag_type)
-
-                if tag_type.startswith("list_"):
-                    database_value = self.project.session.get_value(
-                        COLLECTION_CURRENT, scan_name, tag_name
+                for item in self.selectedItems():
+                    column = item.column()
+                    row = item.row()
+                    self.coordinates.append([row, column])
+                    tag_name = self.horizontalHeaderItem(column).text()
+                    tag_attrib = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
                     )
-                    self.old_database_values.append(database_value)
+                    tag_type = tag_attrib["field_type"]
+                    scan_name = self.item(row, 0).text()
 
-                    table_value = item.data(Qt.EditRole)
+                    if tag_name == TAG_BRICKS:
+                        self.setMouseTracking(True)
+                        return
 
-                    try:
-                        table_value = ast.literal_eval(table_value)
+                    # Scan and tag added
+                    self.tags.append(tag_name)
+                    self.scans_list.append(scan_name)
 
-                    except (ValueError, SyntaxError):
-                        table_value = None
+                    # Type checked
+                    if tag_type not in self.types:
+                        self.types.append(tag_type)
 
-                    self.old_table_values.append(table_value)
+                    # if tag_type is a list:
+                    if get_origin(tag_type) is list:
+                        database_value = database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan_name,
+                            field=tag_name,
+                        )
+                        self.old_database_values.append(database_value)
+                        table_value = item.data(Qt.EditRole)
 
-                    try:
-                        size = len(database_value)
+                        try:
+                            table_value = ast.literal_eval(table_value)
 
-                    except TypeError:
-                        size = None
+                        except (ValueError, SyntaxError):
+                            table_value = None
 
-                    if size not in self.lengths:
-                        self.lengths.append(size)
+                        self.old_table_values.append(table_value)
 
-                else:
-                    self.setMouseTracking(True)
-                    return
+                        try:
+                            size = len(database_value)
 
-            # Error if lists of different lengths
-            self.lengths = [x for x in self.lengths if x is not None]
+                        except TypeError:
+                            size = None
 
-            if self.lengths == []:
-                self.lengths = [1]
+                        if size not in self.lengths:
+                            self.lengths.append(size)
 
-            if len(self.lengths) > 1:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setText("Incompatible list lengths")
-                msg.setInformativeText("The lists can't have several lengths")
-                msg.setWindowTitle("Warning")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+                    else:
+                        self.setMouseTracking(True)
+                        return
 
-            # Ok
-            elif len(self.old_table_values) > 0:
-                if len(self.coordinates) > 1:
-                    value = []
-                    for i in range(0, self.lengths[0]):
-                        value.append(0)
-                else:
-                    value = self.old_table_values[0]
+                # Error if lists of different lengths
+                self.lengths = [x for x in self.lengths if x is not None]
 
-                if value is None:
-                    value = [0]
+                if self.lengths == []:
+                    self.lengths = [1]
 
-                # Window to change list values displayed
-                self.popup = ModifyTable(
-                    self.project, value, self.types, self.scans_list, self.tags
-                )
-                # self.popup.show()
+                if len(self.lengths) > 1:
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Warning)
+                    msg.setText("Incompatible list lengths")
+                    msg.setInformativeText(
+                        "The lists can't have several lengths"
+                    )
+                    msg.setWindowTitle("Warning")
+                    msg.setStandardButtons(QMessageBox.Ok)
+                    msg.buttonClicked.connect(msg.close)
+                    msg.exec()
 
-                if self.popup.exec_():
-                    self.popup.deleteLater()
-                    del self.popup
+                # Ok
+                elif len(self.old_table_values) > 0:
 
-                # For history
-                history_maker = []
-                history_maker.append("modified_values")
-                modified_values = []
+                    if len(self.coordinates) > 1:
+                        value = []
 
-                self.itemChanged.disconnect()
+                        for i in range(0, self.lengths[0]):
+                            value.append(0)
 
-                # Lists updated
-                for i in range(0, len(self.coordinates)):
-                    new_item = QTableWidgetItem()
-                    old_value = self.old_database_values[i]
-                    new_cur_value = self.project.session.get_value(
-                        COLLECTION_CURRENT, self.scans_list[i], self.tags[i]
+                    else:
+                        value = self.old_table_values[0]
+
+                    if value is None:
+                        value = [0]
+
+                    # Window to change list values displayed
+                    self.popup = ModifyTable(
+                        self.project,
+                        value,
+                        self.types,
+                        self.scans_list,
+                        self.tags,
                     )
 
-                    if new_cur_value is None:
-                        new_cur_value = "*Not Defined*"
+                    if self.popup.exec_():
+                        self.popup.deleteLater()
+                        del self.popup
 
-                    modified_values.append(
-                        [
-                            self.scans_list[i],
-                            self.tags[i],
-                            old_value,
+                    # For history
+                    history_maker = []
+                    history_maker.append("modified_values")
+                    modified_values = []
+                    self.itemChanged.disconnect()
+
+                    # Lists updated
+                    for i in range(0, len(self.coordinates)):
+                        new_item = QTableWidgetItem()
+                        old_value = self.old_database_values[i]
+                        new_cur_value = database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=self.scans_list[i],
+                            field=self.tags[i],
+                        )
+
+                        if new_cur_value is None:
+                            new_cur_value = NOT_DEFINED_VALUE
+
+                        modified_values.append(
+                            [
+                                self.scans_list[i],
+                                self.tags[i],
+                                old_value,
+                                new_cur_value,
+                            ]
+                        )
+                        set_item_data(
+                            new_item,
                             new_cur_value,
-                        ]
-                    )
-                    set_item_data(
-                        new_item,
-                        new_cur_value,
-                        self.project.session.get_field(
-                            COLLECTION_CURRENT, self.tags[i]
-                        ).field_type,
-                    )
-                    self.setItem(
-                        self.coordinates[i][0],
-                        self.coordinates[i][1],
-                        new_item,
-                    )
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, self.tags[i]
+                            )["field_type"],
+                        )
+                        self.setItem(
+                            self.coordinates[i][0],
+                            self.coordinates[i][1],
+                            new_item,
+                        )
 
-                # For history
-                history_maker.append(modified_values)
-                self.project.undos.append(history_maker)
-                self.project.redos.clear()
+                    # For history
+                    history_maker.append(modified_values)
+                    self.project.undos.append(history_maker)
+                    self.project.redos.clear()
+                    self.update_colors()
+                    self.itemChanged.connect(self.change_cell_color)
 
-                self.update_colors()
-
-                self.itemChanged.connect(self.change_cell_color)
-
-            self.setMouseTracking(True)
-
-            self.resizeColumnsToContents()  # Columns re-sized
+                self.setMouseTracking(True)
+                self.resizeColumnsToContents()  # Columns re-sized
+                self.resizeRowsToContents()
 
         except Exception as e:
-            print(e)
+            logger.warning(e)
             self.setMouseTracking(True)
 
     def fill_cells_update_table(self):
@@ -1862,144 +1938,150 @@ class TableDataBrowser(QTableWidget):
         self.progress.setModal(True)
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
-
-        # Quick fix for #168 populse_mia issue
-        # try:
-        #
-        #    if getattr(self.data_browser.main_window, 'test', False):
-        #        from PyQt5.QtTest import QTest
-        #        QTest.qWait(100)
-        #
-        # except AttributeError:
-        #    # Not a unit test case!
-        #    pass
-
         idx = 0
         row = 0
 
-        dbs = self.project.session
-
-        collection_row = dbs.get_collection(COLLECTION_CURRENT)
-        primary_key = collection_row.primary_key
-        if self.scans_to_visualize:
-            req = "%s IN [%s]" % (
-                primary_key,
-                ", ".join(
-                    [
-                        '"%s"' % x.replace("\\", "\\\\").replace('"', '"')
-                        for x in self.scans_to_visualize
-                    ]
-                ),
+        with self.project.database.data() as database_data:
+            primary_key = database_data.get_primary_key_name(
+                COLLECTION_CURRENT
             )
-            scans = dbs.filter_documents(COLLECTION_CURRENT, req)
-        else:
-            scans = []
-        tags = [
-            self.horizontalHeaderItem(column).text()
-            for column in range(len(self.horizontalHeader()))
-        ]
-        tag_types = {
-            field.field_name: field.field_type
-            for field in dbs.get_fields(COLLECTION_CURRENT)
-        }
-        tag_types = [tag_types[tag] for tag in tags]
 
-        self.setVisible(False)
-        for scan in scans:
-            for column, current_tag in enumerate(tags):
-                idx += 1
-                self.progress.setValue(idx)
-                QApplication.processEvents()
+            if self.scans_to_visualize:
+                escaped_scans = [
+                    scan.replace("\\", "\\\\").replace('"', '\\"')
+                    for scan in self.scans_to_visualize
+                ]
+                joined_scans = ", ".join(f'"{scan}"' for scan in escaped_scans)
+                req = f"{primary_key} IN [{joined_scans}]"
+                scans = database_data.filter_documents(COLLECTION_CURRENT, req)
 
-                item = QTableWidgetItem()
+            else:
+                scans = []
 
-                if column == 0:
-                    # name tag
-                    item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                    # name not editable
-                    set_item_data(item, scan[current_tag], FIELD_TYPE_STRING)
-                else:
-                    # Other tags
-                    col_type = tag_types[column]
-                    current_value = scan[current_tag]
-                    # The scan has a value for the tag
-                    if current_value:
-                        if current_tag != TAG_BRICKS:
-                            set_item_data(item, current_value, col_type)
-                        else:
-                            # Tag bricks, display list with buttons
-                            # Initialization of a widget, it is necessary
-                            # to remove it after a sort
-                            # current_value = eval(current_value)
-                            widget = QWidget()
-                            widget.moveToThread(
-                                QApplication.instance().thread()
-                            )
-                            layout = QVBoxLayout()
+            tags = [
+                self.horizontalHeaderItem(column).text()
+                for column in range(len(self.horizontalHeader()))
+            ]
+            tag_types = {
+                field_name: (
+                    database_data.get_field_attributes(
+                        COLLECTION_CURRENT, field_name
+                    )
+                    or {}
+                ).get("field_type", str)
+                for field_name in database_data.get_field_names(
+                    COLLECTION_CURRENT
+                )
+            }
+            tag_types = [tag_types[tag] for tag in tags]
+            self.setVisible(False)
 
-                            brick_uuid = current_value[-1]
+            for scan in scans:
 
-                            brick_name = self.project.session.get_value(
-                                COLLECTION_BRICK, brick_uuid, BRICK_NAME
-                            )
-                            if brick_name:
-                                brick_name_button = QPushButton(brick_name)
-                                brick_name_button.moveToThread(
+                for column, current_tag in enumerate(tags):
+                    idx += 1
+                    self.progress.setValue(idx)
+                    QApplication.processEvents()
+                    item = QTableWidgetItem()
+
+                    if column == 0:
+                        # name tag
+                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                        # name not editable
+                        set_item_data(
+                            item, scan[current_tag], FIELD_TYPE_STRING
+                        )
+
+                    else:
+                        # Other tags
+                        col_type = tag_types[column]
+                        current_value = scan[current_tag]
+                        # The scan has a value for the tag
+
+                        if current_value:
+
+                            if current_tag != TAG_BRICKS:
+                                set_item_data(item, current_value, col_type)
+
+                            else:
+                                # Tag bricks, display list with buttons
+                                # Initialization of a widget, it is necessary
+                                # to remove it after a sort
+                                widget = QWidget()
+                                widget.moveToThread(
                                     QApplication.instance().thread()
                                 )
-                                self.bricks[brick_name_button] = brick_uuid
-                                brick_name_button.clicked.connect(
-                                    partial(
-                                        self.show_brick_history,
-                                        scan["FileName"],
-                                    )
+                                layout = QVBoxLayout()
+                                brick_uuid = current_value[-1]
+                                brick_name = database_data.get_value(
+                                    collection_name=COLLECTION_BRICK,
+                                    primary_key=brick_uuid,
+                                    field=BRICK_NAME,
                                 )
-                                layout.addWidget(brick_name_button)
-                            widget.setLayout(layout)
-                            self.setCellWidget(row, column, widget)
 
-                    # The scan does not have a value for the tag
-                    else:
-                        if current_tag != TAG_BRICKS:
-                            set_item_data(
-                                item, not_defined_value, FIELD_TYPE_STRING
-                            )
-                            font = item.font()
-                            font.setItalic(True)
-                            font.setBold(True)
-                            item.setFont(font)
+                                if brick_name:
+                                    brick_name_button = QPushButton(brick_name)
+                                    brick_name_button.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    self.bricks[brick_name_button] = brick_uuid
+                                    brick_name_button.clicked.connect(
+                                        partial(
+                                            self.show_brick_history,
+                                            scan[TAG_FILENAME],
+                                        )
+                                    )
+                                    layout.addWidget(brick_name_button)
+
+                                widget.setLayout(layout)
+                                self.setCellWidget(row, column, widget)
+
+                        # The scan does not have a value for the tag
                         else:
-                            # The scan does not have a brick
-                            # Remove previous initialization of QWidget in cell
-                            self.setCellWidget(row, column, None)
-                            set_item_data(item, "", FIELD_TYPE_STRING)
-                            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                            # bricks not editable
 
-                self.setItem(row, column, item)
+                            if current_tag != TAG_BRICKS:
+                                set_item_data(
+                                    item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                                )
+                                font = item.font()
+                                font.setItalic(True)
+                                font.setBold(True)
+                                item.setFont(font)
 
-            row += 1
+                            else:
+                                # The scan does not have a brick
+                                # Remove previous initialization of
+                                # QWidget in cell
+                                self.setCellWidget(row, column, None)
+                                set_item_data(item, "", FIELD_TYPE_STRING)
+                                item.setFlags(
+                                    item.flags() & ~Qt.ItemIsEditable
+                                )
+                                # bricks not editable
+
+                    self.setItem(row, column, item)
+
+                row += 1
+
         # We apply the saved sort when the project is opened or after the
         # tab is changed
         # Saved sort applied if it exists
         self.setSortingEnabled(True)
-
         tag_to_sort = self.project.getSortedTag()
         column_to_sort = self.get_tag_column(tag_to_sort)
         sort_order = self.project.getSortOrder()
-
         self.itemChanged.connect(self.change_cell_color)
 
         if column_to_sort is not None:
             self.horizontalHeader().setSortIndicator(
                 column_to_sort, sort_order
             )
+
         else:
             self.horizontalHeader().setSortIndicator(0, 0)
 
         self.resizeRowsToContents()
         self.resizeColumnsToContents()
-
         self.progress.close()
         self.setVisible(True)
 
@@ -2011,70 +2093,77 @@ class TableDataBrowser(QTableWidget):
 
         # Sorting the list of tags in alphabetical order,
         # but keeping FileName first
-        tags = self.project.session.get_fields_names(COLLECTION_CURRENT)
+        with self.project.database.data() as database_data:
+            tags = database_data.get_field_names(COLLECTION_CURRENT)
+
         tags.remove(TAG_CHECKSUM)
         tags.remove(TAG_FILENAME)
         tags.remove(TAG_HISTORY)
         tags = sorted(tags)
         tags.insert(0, TAG_FILENAME)
-
         self.setColumnCount(len(tags))
-
         column = 0
-        # Filling the headers
-        for tag_name in tags:
-            item = QtWidgets.QTableWidgetItem()
 
-            self.setHorizontalHeaderItem(column, item)
+        with self.project.database.data() as database_data:
 
-            item.setText(tag_name)
-            element = self.project.session.get_field(
-                COLLECTION_CURRENT, tag_name
-            )
-            if element is not None:
-                item.setToolTip(
-                    "Description: "
-                    + str(element.description)
-                    + "\nUnit: "
-                    + str(element.unit)
-                    + "\nType: "
-                    + str(element.field_type)
+            # Filling the headers
+            for tag_name in tags:
+                item = QtWidgets.QTableWidgetItem()
+                self.setHorizontalHeaderItem(column, item)
+                item.setText(tag_name)
+                tag_attrib = database_data.get_field_attributes(
+                    COLLECTION_CURRENT, tag_name
                 )
 
-                # Set column type
-                if element.field_type == FIELD_TYPE_FLOAT:
-                    self.setItemDelegateForColumn(
-                        column, NumberFormatDelegate(self)
-                    )
-                elif element.field_type == FIELD_TYPE_DATETIME:
-                    self.setItemDelegateForColumn(
-                        column, DateTimeFormatDelegate(self)
-                    )
-                elif element.field_type == FIELD_TYPE_DATE:
-                    self.setItemDelegateForColumn(
-                        column, DateFormatDelegate(self)
-                    )
-                elif element.field_type == FIELD_TYPE_TIME:
-                    self.setItemDelegateForColumn(
-                        column, TimeFormatDelegate(self)
+                if tag_attrib is not None:
+                    from populse_mia.utils import type_name
+
+                    item.setToolTip(
+                        f"Description: {tag_attrib['description']}"
+                        f"\nUnit: {tag_attrib['unit']}"
+                        f"\nType: {type_name(tag_attrib['field_type'])}"
                     )
 
-                # Hide the column if not visible
-                if take_tags_to_update:
-                    if tag_name in self.tags_to_display:
-                        self.setColumnHidden(column, False)
+                    # Set column type
+                    if tag_attrib["field_type"] == FIELD_TYPE_FLOAT:
+                        self.setItemDelegateForColumn(
+                            column, NumberFormatDelegate(self)
+                        )
+
+                    elif tag_attrib["field_type"] == FIELD_TYPE_DATETIME:
+                        self.setItemDelegateForColumn(
+                            column, DateTimeFormatDelegate(self)
+                        )
+
+                    elif tag_attrib["field_type"] == FIELD_TYPE_DATE:
+                        self.setItemDelegateForColumn(
+                            column, DateFormatDelegate(self)
+                        )
+
+                    elif tag_attrib["field_type"] == FIELD_TYPE_TIME:
+                        self.setItemDelegateForColumn(
+                            column, TimeFormatDelegate(self)
+                        )
+
+                    # Hide the column if not visible
+                    if take_tags_to_update:
+
+                        if tag_name in self.tags_to_display:
+                            self.setColumnHidden(column, False)
+
+                        else:
+                            self.setColumnHidden(column, True)
 
                     else:
-                        self.setColumnHidden(column, True)
-                else:
-                    if element.visibility:
-                        self.setColumnHidden(column, False)
 
-                    else:
-                        self.setColumnHidden(column, True)
+                        if tag_attrib["visibility"]:
+                            self.setColumnHidden(column, False)
 
-            self.setHorizontalHeaderItem(column, item)
-            column += 1
+                        else:
+                            self.setColumnHidden(column, True)
+
+                self.setHorizontalHeaderItem(column, item)
+                column += 1
 
     def get_current_filter(self):
         """Get the current data browser selection (list of paths).
@@ -2089,11 +2178,15 @@ class TableDataBrowser(QTableWidget):
         """
 
         return_list = []
+
         if self.activate_selection and len(self.scans) > 0:
+
             for scan in self.scans:
                 return_list.append(scan[0])
+
         else:
             return_list = self.scans_to_visualize
+
         return return_list
 
     def get_index_insertion(self, to_insert):
@@ -2104,8 +2197,10 @@ class TableDataBrowser(QTableWidget):
         """
 
         for column in range(1, len(self.horizontalHeader())):
+
             if self.horizontalHeaderItem(column).text() > to_insert:
                 return column
+
         return self.columnCount()
 
     def get_scan_row(self, scan):
@@ -2115,10 +2210,11 @@ class TableDataBrowser(QTableWidget):
         :param scan: scan filename
         :return: index of the row of the scan
         """
-        # for row in range(0, len(self.scans_to_visualize)):
+
         for row in range(0, self.rowCount()):
             item = self.item(row, 0)
             scan_name = item.text()
+
             if scan_name == scan:
                 return row
 
@@ -2132,6 +2228,7 @@ class TableDataBrowser(QTableWidget):
         for column in range(0, self.columnCount()):
             item = self.horizontalHeaderItem(column)
             tag_name = item.text()
+
             if tag_name == tag:
                 return column
 
@@ -2141,7 +2238,7 @@ class TableDataBrowser(QTableWidget):
         :param event: event
         """
 
-        super(TableDataBrowser, self).mouseReleaseEvent(event)
+        super().mouseReleaseEvent(event)
         self.edit_table_data_values()
 
     def multiple_sort_infos(self, list_tags, order):
@@ -2157,176 +2254,198 @@ class TableDataBrowser(QTableWidget):
         list_tags_name = list_tags
         list_tags = []
 
-        for tag_name in list_tags_name:
-            list_tags.append(
-                self.project.session.get_field(COLLECTION_CURRENT, tag_name)
-            )
-        list_sort = []
+        with self.project.database.data() as database_data:
 
-        for scan in self.scans_to_visualize:
-            tags_value = []
-
-            for tag in list_tags:
-                current_value = str(
-                    self.project.session.get_value(
-                        COLLECTION_CURRENT, scan, tag.field_name
+            for tag_name in list_tags_name:
+                list_tags.append(
+                    database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
                     )
                 )
 
-                if current_value is not None:
-                    tags_value.append(current_value)
+            list_sort = []
 
-                else:
-                    tags_value.append(not_defined_value)
+            for scan in self.scans_to_visualize:
+                tags_value = []
 
-            list_sort.append(tags_value)
+                for tag in list_tags:
+                    current_value = str(
+                        database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            field=tag["index"].split("|")[1],
+                        )
+                    )
 
-        if order == "Descending":
-            self.scans_to_visualize = [
-                x
-                for _, x in sorted(
-                    zip(list_sort, self.scans_to_visualize), reverse=True
-                )
-            ]
-
-        else:
-            self.scans_to_visualize = [
-                x for _, x in sorted(zip(list_sort, self.scans_to_visualize))
-            ]
-
-        # Table updated
-        self.setSortingEnabled(False)
-
-        for row in range(0, self.rowCount()):
-            scan = self.scans_to_visualize[row]
-            old_row = self.get_scan_row(scan)
-
-            if old_row != row:
-                for column in range(0, self.columnCount()):
-                    if self.horizontalHeaderItem(column).text() == TAG_BRICKS:
-                        widget_to_move = self.cellWidget(old_row, column)
-                        item_to_move = self.takeItem(old_row, column)
-                        widget_wrong_row = self.cellWidget(row, column)
-                        item_wrong_row = self.takeItem(row, column)
-
-                        if widget_to_move:
-                            widget = QWidget()
-                            widget.moveToThread(
-                                QApplication.instance().thread()
-                            )
-                            layout = QVBoxLayout()
-                            cur_val = self.project.session.get_value(
-                                COLLECTION_CURRENT, scan, TAG_BRICKS
-                            )
-                            brick_uuid = cur_val[0]
-                            brick_name = self.project.session.get_value(
-                                COLLECTION_BRICK, brick_uuid, BRICK_NAME
-                            )
-
-                            if brick_name:
-                                brick_name_button = QPushButton(brick_name)
-                                brick_name_button.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-
-                                bricks_copy = {**self.bricks}
-
-                                for key, value in bricks_copy.items():
-                                    if (
-                                        value == brick_uuid
-                                        and key
-                                        == widget_to_move.findChildren(
-                                            QPushButton
-                                        )[0]
-                                    ):
-                                        del self.bricks[key]
-                                        self.bricks[brick_name_button] = (
-                                            brick_uuid
-                                        )
-
-                                del bricks_copy
-
-                                brick_name_button.clicked.connect(
-                                    partial(self.show_brick_history, scan)
-                                )
-                                layout.addWidget(brick_name_button)
-                            widget.setLayout(layout)
-                            self.setCellWidget(row, column, widget)
-                            self.setItem(row, column, item_to_move)
-
-                        else:
-                            self.setCellWidget(row, column, None)
-                            set_item_data(item_to_move, "", FIELD_TYPE_STRING)
-                            item_to_move.setFlags(
-                                item_to_move.flags() & ~Qt.ItemIsEditable
-                            )
-                            self.setItem(row, column, item_to_move)
-
-                        if widget_wrong_row:
-                            widget = QWidget()
-                            widget.moveToThread(
-                                QApplication.instance().thread()
-                            )
-                            layout = QVBoxLayout()
-                            cur_val = self.project.session.get_value(
-                                COLLECTION_CURRENT,
-                                self.item(old_row, 0).text(),
-                                TAG_BRICKS,
-                            )
-                            brick_uuid = cur_val[0]
-                            brick_name = self.project.session.get_value(
-                                COLLECTION_BRICK, brick_uuid, BRICK_NAME
-                            )
-
-                            if brick_name:
-                                brick_name_button = QPushButton(brick_name)
-                                brick_name_button.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-
-                                bricks_copy = {**self.bricks}
-
-                                for key, value in bricks_copy.items():
-                                    if (
-                                        value == brick_uuid
-                                        and key
-                                        == widget_wrong_row.findChildren(
-                                            QPushButton
-                                        )[0]
-                                    ):
-                                        del self.bricks[key]
-                                        self.bricks[brick_name_button] = (
-                                            brick_uuid
-                                        )
-
-                                del bricks_copy
-
-                                brick_name_button.clicked.connect(
-                                    partial(
-                                        self.show_brick_history,
-                                        self.item(old_row, 0).text(),
-                                    )
-                                )
-                                layout.addWidget(brick_name_button)
-                            widget.setLayout(layout)
-                            self.setCellWidget(old_row, column, widget)
-                            self.setItem(old_row, column, item_wrong_row)
-
-                        else:
-                            self.setCellWidget(old_row, column, None)
-                            set_item_data(
-                                item_wrong_row, "", FIELD_TYPE_STRING
-                            )
-                            item_wrong_row.setFlags(
-                                item_wrong_row.flags() & ~Qt.ItemIsEditable
-                            )
-                            self.setItem(old_row, column, item_wrong_row)
+                    if current_value is not None:
+                        tags_value.append(current_value)
 
                     else:
-                        item_to_move = self.takeItem(old_row, column)
-                        item_wrong_row = self.takeItem(row, column)
-                        self.setItem(row, column, item_to_move)
-                        self.setItem(old_row, column, item_wrong_row)
+                        tags_value.append(NOT_DEFINED_VALUE)
+
+                list_sort.append(tags_value)
+
+            if order == "Descending":
+                self.scans_to_visualize = [
+                    x
+                    for _, x in sorted(
+                        zip(list_sort, self.scans_to_visualize), reverse=True
+                    )
+                ]
+
+            else:
+                self.scans_to_visualize = [
+                    x
+                    for _, x in sorted(zip(list_sort, self.scans_to_visualize))
+                ]
+
+            # Table updated
+            self.setSortingEnabled(False)
+
+            for row in range(0, self.rowCount()):
+                scan = self.scans_to_visualize[row]
+                old_row = self.get_scan_row(scan)
+
+                if old_row != row:
+
+                    for column in range(0, self.columnCount()):
+
+                        if (
+                            self.horizontalHeaderItem(column).text()
+                            == TAG_BRICKS
+                        ):
+                            widget_to_move = self.cellWidget(old_row, column)
+                            item_to_move = self.takeItem(old_row, column)
+                            widget_wrong_row = self.cellWidget(row, column)
+                            item_wrong_row = self.takeItem(row, column)
+
+                            if widget_to_move:
+                                widget = QWidget()
+                                widget.moveToThread(
+                                    QApplication.instance().thread()
+                                )
+                                layout = QVBoxLayout()
+                                cur_val = database_data.get_value(
+                                    collection_name=COLLECTION_CURRENT,
+                                    primary_key=scan,
+                                    field=TAG_BRICKS,
+                                )
+                                brick_uuid = cur_val[0]
+                                brick_name = database_data.get_value(
+                                    collection_name=COLLECTION_BRICK,
+                                    primary_key=brick_uuid,
+                                    field=BRICK_NAME,
+                                )
+
+                                if brick_name:
+                                    brick_name_button = QPushButton(brick_name)
+                                    brick_name_button.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    bricks_copy = {**self.bricks}
+
+                                    for key, value in bricks_copy.items():
+
+                                        if (
+                                            value == brick_uuid
+                                            and key
+                                            == widget_to_move.findChildren(
+                                                QPushButton
+                                            )[0]
+                                        ):
+                                            del self.bricks[key]
+                                            self.bricks[brick_name_button] = (
+                                                brick_uuid
+                                            )
+
+                                    del bricks_copy
+                                    brick_name_button.clicked.connect(
+                                        partial(self.show_brick_history, scan)
+                                    )
+                                    layout.addWidget(brick_name_button)
+
+                                widget.setLayout(layout)
+                                self.setCellWidget(row, column, widget)
+                                self.setItem(row, column, item_to_move)
+
+                            else:
+                                self.setCellWidget(row, column, None)
+                                set_item_data(
+                                    item_to_move, "", FIELD_TYPE_STRING
+                                )
+                                item_to_move.setFlags(
+                                    item_to_move.flags() & ~Qt.ItemIsEditable
+                                )
+                                self.setItem(row, column, item_to_move)
+
+                            if widget_wrong_row:
+                                widget = QWidget()
+                                widget.moveToThread(
+                                    QApplication.instance().thread()
+                                )
+                                layout = QVBoxLayout()
+                                cur_val = database_data.get_value(
+                                    collection_name=COLLECTION_CURRENT,
+                                    primary_key=self.item(old_row, 0).text(),
+                                    field=TAG_BRICKS,
+                                )
+                                brick_uuid = cur_val[0]
+                                brick_name = database_data.get_value(
+                                    collection_name=COLLECTION_BRICK,
+                                    primary_key=brick_uuid,
+                                    field=BRICK_NAME,
+                                )
+
+                                if brick_name:
+                                    brick_name_button = QPushButton(brick_name)
+                                    brick_name_button.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+
+                                    bricks_copy = {**self.bricks}
+
+                                    for key, value in bricks_copy.items():
+
+                                        if (
+                                            value == brick_uuid
+                                            and key
+                                            == widget_wrong_row.findChildren(
+                                                QPushButton
+                                            )[0]
+                                        ):
+                                            del self.bricks[key]
+                                            self.bricks[brick_name_button] = (
+                                                brick_uuid
+                                            )
+
+                                    del bricks_copy
+                                    brick_name_button.clicked.connect(
+                                        partial(
+                                            self.show_brick_history,
+                                            self.item(old_row, 0).text(),
+                                        )
+                                    )
+                                    layout.addWidget(brick_name_button)
+
+                                widget.setLayout(layout)
+                                self.setCellWidget(old_row, column, widget)
+                                self.setItem(old_row, column, item_wrong_row)
+
+                            else:
+                                self.setCellWidget(old_row, column, None)
+                                set_item_data(
+                                    item_wrong_row, "", FIELD_TYPE_STRING
+                                )
+                                item_wrong_row.setFlags(
+                                    item_wrong_row.flags() & ~Qt.ItemIsEditable
+                                )
+                                self.setItem(old_row, column, item_wrong_row)
+
+                        else:
+                            item_to_move = self.takeItem(old_row, column)
+                            item_wrong_row = self.takeItem(row, column)
+                            self.setItem(row, column, item_to_move)
+                            self.setItem(old_row, column, item_wrong_row)
 
         self.itemChanged.connect(self.change_cell_color)
         self.horizontalHeader().setSortIndicator(-1, 0)
@@ -2345,84 +2464,95 @@ class TableDataBrowser(QTableWidget):
         """Remove documents from table and project."""
 
         points = self.selectedIndexes()
-
-        # history_maker = []
-        # history_maker.append("remove_scans")
         scans_removed = []
         values_removed = []
         scan_list = self.data_browser.main_window.pipeline_manager.scan_list
         repeat_pop_up = False
         cancel = False
 
-        for point in points:
-            row = point.row()
-            scan_path = self.item(row, 0).text()
-            scan_object = self.project.session.get_document(
-                COLLECTION_CURRENT, scan_path
-            )
+        with self.project.database.data(write=True) as database_data:
 
-            if scan_object is not None:
-                if (scan_path in scan_list) and (
-                    self.data_browser.data_sent is True
-                ):
-                    if not repeat_pop_up:
-                        self.pop = PopUpRemoveScan(scan_path, len(points))
-                        self.pop.exec()
-                        cancel = self.pop.stop
-                        repeat_pop_up = self.pop.repeat
+            for point in points:
+                row = point.row()
+                scan_path = self.item(row, 0).text()
+                scan_object = database_data.get_document(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_keys=scan_path,
+                )
 
-                    if cancel:
-                        continue
+                if scan_object:
 
-                scans_removed.append(scan_object)
+                    if (scan_path in scan_list) and (
+                        self.data_browser.data_sent is True
+                    ):
 
-                # Adding removed values to history
-                for tag in self.project.session.get_fields_names(
-                    COLLECTION_CURRENT
-                ):
-                    if tag != TAG_FILENAME:
-                        current_value = self.project.session.get_value(
-                            COLLECTION_CURRENT, scan_path, tag
-                        )
-                        initial_value = self.project.session.get_value(
-                            COLLECTION_INITIAL, scan_path, tag
-                        )
+                        if not repeat_pop_up:
+                            self.pop = PopUpRemoveScan(scan_path, len(points))
+                            self.pop.exec()
+                            cancel = self.pop.stop
+                            repeat_pop_up = self.pop.repeat
 
-                        if (current_value is not None) or (
-                            initial_value is not None
-                        ):
-                            values_removed.append(
-                                [scan_path, tag, current_value, initial_value]
+                        if cancel:
+                            continue
+
+                    scans_removed.append(scan_object[0])
+
+                    # Adding removed values to history
+                    for tag in database_data.get_field_names(
+                        COLLECTION_CURRENT
+                    ):
+
+                        if tag != TAG_FILENAME:
+                            current_value = database_data.get_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan_path,
+                                field=tag,
+                            )
+                            initial_value = database_data.get_value(
+                                collection_name=COLLECTION_INITIAL,
+                                primary_key=scan_path,
+                                field=tag,
                             )
 
-                self.scans_to_visualize.remove(scan_path)
-                self.project.session.remove_document(
-                    COLLECTION_CURRENT, scan_path
-                )
-                self.project.session.remove_document(
-                    COLLECTION_INITIAL, scan_path
-                )
+                            if (current_value is not None) or (
+                                initial_value is not None
+                            ):
+                                values_removed.append(
+                                    [
+                                        scan_path,
+                                        tag,
+                                        current_value,
+                                        initial_value,
+                                    ]
+                                )
 
-                full_scan_paths = [
-                    os.path.join(self.project.folder, scan_path)
-                ]
+                    self.scans_to_visualize.remove(scan_path)
+                    database_data.remove_document(
+                        COLLECTION_CURRENT, scan_path
+                    )
+                    database_data.remove_document(
+                        COLLECTION_INITIAL, scan_path
+                    )
 
-                if scan_path.endswith(".nii"):
-                    full_scan_paths.append(full_scan_paths[0][:-4] + ".json")
+                    full_scan_paths = [
+                        os.path.join(self.project.folder, scan_path)
+                    ]
 
-                for full_scan_path in full_scan_paths:
-                    if os.path.isfile(full_scan_path):
-                        os.remove(full_scan_path)
+                    if scan_path.endswith(".nii"):
+                        full_scan_paths.append(
+                            full_scan_paths[0][:-4] + ".json"
+                        )
+
+                    for full_scan_path in full_scan_paths:
+
+                        if os.path.isfile(full_scan_path):
+                            os.remove(full_scan_path)
 
         for scan in scans_removed:
-            scan_name = getattr(scan, TAG_FILENAME)
+            scan_name = scan[TAG_FILENAME]
             self.removeRow(self.get_scan_row(scan_name))
             self.project.unsavedModifications = True
 
-        # history_maker.append(scans_removed)
-        # history_maker.append(values_removed)
-        # self.project.undos.append(history_maker)
-        # self.project.redos.clear()
         self.resizeColumnsToContents()
 
     def reset_cell(self):
@@ -2434,45 +2564,54 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        for point in points:
-            row = point.row()
-            col = point.column()
-            tag_name = self.horizontalHeaderItem(col).text()
-            # We get the FileName of the scan from the first row
-            scan_name = self.item(row, 0).text()
+        with self.project.database.data(write=True) as database_data:
 
-            current_value = self.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, tag_name
-            )
-            initial_value = self.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, tag_name
-            )
-            if initial_value is not None:
-                try:
-                    self.project.session.set_value(
-                        COLLECTION_CURRENT, scan_name, tag_name, initial_value
-                    )
-                    set_item_data(
-                        self.item(row, col),
-                        initial_value,
-                        self.project.session.get_field(
-                            COLLECTION_CURRENT, tag_name
-                        ).field_type,
-                    )
-                    # For history
-                    modified_values.append(
-                        [scan_name, tag_name, current_value, initial_value]
-                    )
-                except ValueError:
+            for point in points:
+                row = point.row()
+                col = point.column()
+                tag_name = self.horizontalHeaderItem(col).text()
+                # We get the FileName of the scan from the first row
+                scan_name = self.item(row, 0).text()
+                current_value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=scan_name,
+                    field=tag_name,
+                )
+                initial_value = database_data.get_value(
+                    collection_name=COLLECTION_INITIAL,
+                    primary_key=scan_name,
+                    field=tag_name,
+                )
+
+                if initial_value is not None:
+
+                    try:
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan_name,
+                            values_dict={tag_name: initial_value},
+                        )
+                        set_item_data(
+                            self.item(row, col),
+                            initial_value,
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, tag_name
+                            )["field_type"],
+                        )
+                        # For history
+                        modified_values.append(
+                            [scan_name, tag_name, current_value, initial_value]
+                        )
+
+                    except ValueError:
+                        has_unreset_values = True
+
+                else:
                     has_unreset_values = True
-            else:
-                has_unreset_values = True
 
         # For history
         history_maker.append(modified_values)
@@ -2495,45 +2634,54 @@ class TableDataBrowser(QTableWidget):
         history_maker = list()
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        for point in points:
-            col = point.column()
-            tag_name = self.horizontalHeaderItem(col).text()
+        with self.project.database.data(write=True) as database_data:
 
-            for row_iter in range(0, len(self.scans_to_visualize)):
-                # We get the FileName of the scan from the first column
-                scan = self.item(row_iter, 0).text()
-                initial_value = self.project.session.get_value(
-                    COLLECTION_INITIAL, scan, tag_name
-                )
-                current_value = self.project.session.get_value(
-                    COLLECTION_CURRENT, scan, tag_name
-                )
-                if initial_value is not None:
-                    try:
-                        self.project.session.set_value(
-                            COLLECTION_CURRENT, scan, tag_name, initial_value
-                        )
-                        set_item_data(
-                            self.item(row_iter, col),
-                            initial_value,
-                            self.project.session.get_field(
-                                COLLECTION_CURRENT, tag_name
-                            ).field_type,
-                        )
-                        # For history
-                        modified_values.append(
-                            [scan, tag_name, current_value, initial_value]
-                        )
-                    except ValueError:
+            for point in points:
+                col = point.column()
+                tag_name = self.horizontalHeaderItem(col).text()
+
+                for row_iter in range(0, len(self.scans_to_visualize)):
+                    # We get the FileName of the scan from the first column
+                    scan = self.item(row_iter, 0).text()
+                    initial_value = database_data.get_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=scan,
+                        field=tag_name,
+                    )
+                    current_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan,
+                        field=tag_name,
+                    )
+                    if initial_value is not None:
+
+                        try:
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan,
+                                values_dict={tag_name: initial_value},
+                            )
+                            set_item_data(
+                                self.item(row_iter, col),
+                                initial_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag_name
+                                )["field_type"],
+                            )
+                            # For history
+                            modified_values.append(
+                                [scan, tag_name, current_value, initial_value]
+                            )
+
+                        except ValueError:
+                            has_unreset_values = True
+
+                    else:
                         has_unreset_values = True
-                else:
-                    has_unreset_values = True
 
         # For history
         history_maker.append(modified_values)
@@ -2555,50 +2703,58 @@ class TableDataBrowser(QTableWidget):
         history_maker = []
         history_maker.append("modified_values")
         modified_values = []
-
         points = self.selectedIndexes()
-
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
 
-        # For each selected cell
-        for point in points:
-            row = point.row()
-            # FileName is always the first column
-            scan_name = self.item(row, 0).text()
+        with self.project.database.data(write=True) as database_data:
 
-            for column in range(0, len(self.horizontalHeader())):
-                # We get the tag name from the header
-                tag = self.horizontalHeaderItem(column).text()
-                current_value = self.project.session.get_value(
-                    COLLECTION_CURRENT, scan_name, tag
-                )
-                initial_value = self.project.session.get_value(
-                    COLLECTION_INITIAL, scan_name, tag
-                )
-                if initial_value is not None:
-                    # We reset the value only if it exists
+            # For each selected cell
+            for point in points:
+                row = point.row()
+                # FileName is always the first column
+                scan_name = self.item(row, 0).text()
 
-                    try:
-                        self.project.session.set_value(
-                            COLLECTION_CURRENT, scan_name, tag, initial_value
-                        )
-                        set_item_data(
-                            self.item(row, column),
-                            initial_value,
-                            self.project.session.get_field(
-                                COLLECTION_CURRENT, tag
-                            ).field_type,
-                        )
-                        # For history
-                        modified_values.append(
-                            [scan_name, tag, current_value, initial_value]
-                        )
-                    except ValueError:
+                for column in range(0, len(self.horizontalHeader())):
+                    # We get the tag name from the header
+                    tag = self.horizontalHeaderItem(column).text()
+                    current_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan_name,
+                        field=tag,
+                    )
+                    initial_value = database_data.get_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=scan_name,
+                        field=tag,
+                    )
+
+                    if initial_value is not None:
+                        # We reset the value only if it exists
+
+                        try:
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan_name,
+                                values_dict={tag: initial_value},
+                            )
+                            set_item_data(
+                                self.item(row, column),
+                                initial_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag
+                                )["field_type"],
+                            )
+                            # For history
+                            modified_values.append(
+                                [scan_name, tag, current_value, initial_value]
+                            )
+
+                        except ValueError:
+                            has_unreset_values = True
+
+                    else:
                         has_unreset_values = True
-
-                else:
-                    has_unreset_values = True
 
         # For history
         history_maker.append(modified_values)
@@ -2621,9 +2777,7 @@ class TableDataBrowser(QTableWidget):
         """
         # The logical index is not used in this method but it is returned by
         # the event we're connected to.
-
         self.itemSelectionChanged.disconnect()
-
         # We need to disconnect the sectionMoved signal, otherwise infinite
         # call to this function
         self.horizontalHeader().sectionMoved.disconnect()
@@ -2636,12 +2790,9 @@ class TableDataBrowser(QTableWidget):
 
         # We reconnect the signal
         self.horizontalHeader().sectionMoved.connect(self.section_moved)
-
         # Selection updated
         self.update_selection()
-
         self.itemSelectionChanged.connect(self.selection_changed)
-
         self.update()
 
     def select_all_column(self, col):
@@ -2657,9 +2808,11 @@ class TableDataBrowser(QTableWidget):
         self.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
         points = self.selectedIndexes()
         self.clearSelection()
+
         for point in points:
             col = point.column()
             self.selectColumn(col)
+
         self.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def selection_changed(self):
@@ -2674,7 +2827,9 @@ class TableDataBrowser(QTableWidget):
             scan_name = self.item(row, 0).text()
             tag_name = self.horizontalHeaderItem(column).text()
             scan_already_in_list = False
+
             for scan in self.scans:
+
                 if scan[0] == scan_name:
                     # Scan already in the list, we append the column
                     scan[1].append(tag_name)
@@ -2710,11 +2865,9 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.connect(self.change_cell_color)
-
         self.horizontalHeader().setSortIndicator(
             self.currentItem().column(), order
         )
-
         self.itemChanged.disconnect()
 
     def sort_updated(self, column, order):
@@ -2747,28 +2900,39 @@ class TableDataBrowser(QTableWidget):
             self.item(row, 0).text() if self.item(row, 0) else None
             for row in range(self.rowCount())
         ]
-        dbs = self.project.session
-        collection_row = dbs.get_collection(COLLECTION_CURRENT)
-        primary_key = collection_row.primary_key
 
-        if scans:
-            req = "%s IN [%s]" % (
-                primary_key,
-                ", ".join(
-                    [
-                        '"%s"' % x.replace("\\", "\\\\").replace('"', '"')
-                        for x in self.scans_to_visualize
-                    ]
-                ),
+        with self.project.database.data() as database_data:
+            primary_key = database_data.get_primary_key_name(
+                COLLECTION_CURRENT
             )
-            documents = dbs.filter_documents(COLLECTION_CURRENT, req)
-            documents_init = dbs.filter_documents(COLLECTION_INITIAL, req)
 
-        else:
-            documents = []
-            documents_init = []
+            if scans:
+                escaped_scans = [
+                    scan.replace("\\", "\\\\")
+                    for scan in self.scans_to_visualize
+                ]
+                joined_scans = ", ".join(f'"{scan}"' for scan in escaped_scans)
+                req = f"{primary_key} IN [{joined_scans}]"
+                documents_curr = database_data.filter_documents(
+                    COLLECTION_CURRENT, req
+                )
+                documents_init = database_data.filter_documents(
+                    COLLECTION_INITIAL, req
+                )
 
-        fields = {f.field_name: f for f in dbs.get_fields(COLLECTION_CURRENT)}
+            else:
+                documents_curr = []
+                documents_init = []
+
+            fields = {
+                field_name: database_data.get_field_attributes(
+                    COLLECTION_CURRENT, field_name
+                )
+                for field_name in database_data.get_field_names(
+                    COLLECTION_CURRENT
+                )
+            }
+
         table_scans = {
             self.item(row, 0).text(): row for row in range(self.rowCount())
         }
@@ -2788,8 +2952,7 @@ class TableDataBrowser(QTableWidget):
             if not self.isRowHidden(ro):
                 even = not even
 
-        for scan_row, scan_i in enumerate(zip(documents, documents_init)):
-            scan, scan_init = scan_i
+        for scan, scan_init in zip(documents_curr, documents_init):
 
             try:
                 row = table_scans[scan[tags[0]]]
@@ -2797,25 +2960,26 @@ class TableDataBrowser(QTableWidget):
             except KeyError:
                 break
 
-            except Exception as e:
-                print(
-                    "\nAn unexpected exception was raised when updating the "
-                    "DataBrowser. DataBrowser could be in a degraded display "
-                    "state...!\nTraceback:"
+            except Exception:
+                logger.warning(
+                    "An unexpected exception was raised when updating "
+                    "the DataBrowser. DataBrowser could be in a degraded "
+                    "display state...!",
+                    exc_info=True,
                 )
-                print("".join(traceback.format_tb(e.__traceback__)), end="")
-                print("{0}: {1}\n".format(e.__class__.__name__, e))
                 break
 
             if not self.isRowHidden(row):
                 even = row_even[row]
 
                 for column, tag in zip(table_tags, tags):
+
                     if not self.isColumnHidden(column):
                         item = self.item(row, column)
                         color = QColor()
 
                         if column == 0:
+
                             if even:
                                 color.setRgb(255, 255, 255)  # White
 
@@ -2824,6 +2988,7 @@ class TableDataBrowser(QTableWidget):
 
                         # Avoid issues after switching tab and not saving
                         elif scan[tag] is None:
+
                             if even:
                                 color.setRgb(245, 215, 215)  # Pink
 
@@ -2831,11 +2996,12 @@ class TableDataBrowser(QTableWidget):
                                 color.setRgb(245, 175, 175)  # Red
 
                         # Raw tag
-                        elif fields[tag].origin == TAG_ORIGIN_BUILTIN:
+                        elif fields[tag]["origin"] == TAG_ORIGIN_BUILTIN:
                             current_value = scan[tag]
                             initial_value = scan_init[tag]
 
                             if current_value != initial_value:
+
                                 if even:
                                     color.setRgb(200, 230, 245)  # Cyan
 
@@ -2843,6 +3009,7 @@ class TableDataBrowser(QTableWidget):
                                     color.setRgb(150, 215, 230)  # Blue
 
                             else:
+
                                 if even:
                                     color.setRgb(255, 255, 255)  # White
 
@@ -2851,6 +3018,7 @@ class TableDataBrowser(QTableWidget):
 
                         # User tag
                         else:
+
                             if even:
                                 color.setRgb(245, 215, 215)  # Pink
 
@@ -2876,7 +3044,9 @@ class TableDataBrowser(QTableWidget):
             row = self.get_scan_row(scan_selected)
             # We select the columns of the row if it was selected
             tags = scan[1]
+
             for tag in tags:
+
                 if self.get_tag_column(tag) is not None:
                     item_to_select = self.item(row, self.get_tag_column(tag))
                     item_to_select.setSelected(True)
@@ -2892,9 +3062,11 @@ class TableDataBrowser(QTableWidget):
         self.setSortingEnabled(False)
         self.clearSelection()  # Selection cleared when switching project
         # The list of scans to visualize
-        self.scans_to_visualize = self.project.session.get_documents_names(
-            COLLECTION_CURRENT
-        )
+
+        with self.project.database.data() as database_data:
+            self.scans_to_visualize = database_data.get_document_names(
+                COLLECTION_CURRENT
+            )
         self.scans_to_search = list(self.scans_to_visualize)
 
         # The list of selected scans
@@ -2902,21 +3074,16 @@ class TableDataBrowser(QTableWidget):
             self.scans = []
 
         self.itemChanged.disconnect()
-
         self.setRowCount(len(self.scans_to_visualize))
-
         # Sort visual management
         self.fill_headers(take_tags_to_update)
         # Cells filled
         self.fill_cells_update_table()
-
         self.itemChanged.disconnect()
-
         # Columns and rows resized
         self.resizeColumnsToContents()
         self.resizeRowsToContents()
         self.update_colors()
-
         # When the user changes one item of the table, the background
         # will change
         self.itemChanged.connect(self.change_cell_color)
@@ -2929,11 +3096,13 @@ class TableDataBrowser(QTableWidget):
         """
 
         self.itemChanged.disconnect()
+
         if self.activate_selection:
             self.itemSelectionChanged.disconnect()
 
         # Tags that are not visible anymore are hidden
         for tag in old_tags:
+
             if tag not in showed:
                 self.setColumnHidden(self.get_tag_column(tag), True)
 
@@ -2946,6 +3115,7 @@ class TableDataBrowser(QTableWidget):
             hasattr(self.data_browser, "frame_advanced_search")
             and not self.data_browser.frame_advanced_search.isHidden()
         ):
+
             for row in self.data_browser.advanced_search.rows:
                 fields = row[2]
                 fields.clear()
@@ -2978,14 +3148,17 @@ class TableDataBrowser(QTableWidget):
 
         # Scans that are not visible anymore are hidden
         for scan in old_scans:
+
             if scan not in self.scans_to_visualize:
                 row = self.get_scan_row(scan)
+
                 if row is not None:
                     self.setRowHidden(row, True)
 
         # Scans that became visible must be visible
         for scan in self.scans_to_visualize:
             row = self.get_scan_row(scan)
+
             if row is not None:
                 self.setRowHidden(row, False)
 
@@ -3005,8 +3178,10 @@ class TableDataBrowser(QTableWidget):
     def visualized_tags_pop_up(self):
         """Display the visualized tags pop-up."""
 
-        # Old list of columns
-        old_tags = self.project.session.get_shown_tags()
+        with self.project.database.data() as database_data:
+            # Old list of columns
+            old_tags = database_data.get_shown_tags()
+
         self.pop_up = PopUpProperties(
             self.project, self.data_browser, old_tags
         )
