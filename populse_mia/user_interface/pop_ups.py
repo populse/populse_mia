@@ -523,12 +523,12 @@ class PopUpAddPath(QDialog):
             path_list = (
                 ast.literal_eval(self.file_line_edit.text())
                 if self.file_line_edit.text()
-                else []
+                else [""]
             )
             path_type_list = (
                 ast.literal_eval(self.type_line_edit.text())
                 if self.type_line_edit.text()
-                else []
+                else [""]
             )
 
         except (SyntaxError, ValueError):
