@@ -903,8 +903,6 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
-        # session = ppl_manager.project.session
-
         with ppl_manager.project.database.data() as database_data:
             filename = os.path.split(
                 database_data.get_document_names(COLLECTION_CURRENT)[0]
@@ -974,38 +972,34 @@ class TestMIADataBrowser(TestMIACase):
         QTest.qWait(500)
 
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_fields_names(
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_fields_names(COLLECTION_CURRENT)
+            )
+            self.assertTrue(
+                "Test" in database_data.get_fields_names(COLLECTION_INITIAL)
+            )
+
+            for document in database_data.get_document_names(
                 COLLECTION_CURRENT
-            )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_fields_names(
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_CURRENT, document, "Test"
+                    ),
+                    "def_value",
+                )
+
+            for document in database_data.get_document_names(
                 COLLECTION_INITIAL
-            )
-        )
-
-        for document in self.main_window.project.session.get_document_names(
-            COLLECTION_CURRENT
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_CURRENT, document, "Test"
-                ),
-                "def_value",
-            )
-
-        for document in self.main_window.project.session.get_document_names(
-            COLLECTION_INITIAL
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_INITIAL, document, "Test"
-                ),
-                "def_value",
-            )
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_INITIAL, document, "Test"
+                    ),
+                    "def_value",
+                )
 
         test_column = self.main_window.data_browser.table_data.get_tag_column(
             "Test"
@@ -1374,16 +1368,18 @@ class TestMIADataBrowser(TestMIACase):
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         bw_item.setSelected(True)
         self.assertEqual(float(bw_item.text()[1:-1]), 50000.0)
-        self.assertEqual(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT,
-                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                "pvm-000220_000.nii",
-                "BandWidth",
-            ),
-            [50000.0],
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertEqual(
+                database_data.get_value(
+                    COLLECTION_CURRENT,
+                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                    "pvm-000220_000.nii",
+                    "BandWidth",
+                ),
+                [50000.0],
+            )
 
         # Clearing the cell
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
@@ -1397,15 +1393,17 @@ class TestMIADataBrowser(TestMIACase):
         # Checking that it's empty
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
         self.assertEqual(bw_item.text(), "*Not Defined*")
-        self.assertIsNone(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT,
-                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                "pvm-000220_000.nii",
-                "BandWidth",
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertIsNone(
+                database_data.get_value(
+                    COLLECTION_CURRENT,
+                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                    "pvm-000220_000.nii",
+                    "BandWidth",
+                )
             )
-        )
 
     def test_clone_tag(self):
         """Tests the pop up cloning a tag."""
