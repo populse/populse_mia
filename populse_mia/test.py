@@ -866,7 +866,6 @@ class TestMIADataBrowser(TestMIACase):
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
-        session = ppl_manager.project.session
         table_data = self.main_window.data_browser.table_data
 
         # Creates a new project folder and adds one document to the
@@ -904,9 +903,13 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the document was added into the data browser
         # A regular '.split('/')' will not work in Windows OS
-        filename = os.path.split(
-            session.get_documents_names(COLLECTION_CURRENT)[0]
-        )[-1]
+        # session = ppl_manager.project.session
+
+        with ppl_manager.project.database.data() as database_data:
+            filename = os.path.split(
+                database_data.get_documents_names(COLLECTION_CURRENT)[0]
+            )[-1]
+
         self.assertTrue(filename in DOCUMENT_1)
 
         self.assertEqual(table_data.rowCount(), 1)
@@ -920,7 +923,9 @@ class TestMIADataBrowser(TestMIACase):
 
         # Adds a document into the database and tries to save the same
         # one once again
-        self.project.session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        with self.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+
         add_path.file_line_edit.setText(str([DOCUMENT_1]))
         add_path.save_path()
 
