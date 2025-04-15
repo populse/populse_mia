@@ -955,7 +955,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Testing with wrong type
         add_tag.text_edit_tag_name.setText("Test")
-        add_tag.combo_box_type.setCurrentText(FIELD_TYPE_INTEGER)
+        add_tag.combo_box_type.setCurrentText("Integer")
         add_tag.type = FIELD_TYPE_INTEGER
         add_tag.text_edit_default_value.setText("Should be integer")
         # QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
@@ -975,10 +975,10 @@ class TestMIADataBrowser(TestMIACase):
 
         with self.main_window.project.database.data() as database_data:
             self.assertTrue(
-                "Test" in database_data.get_fields_names(COLLECTION_CURRENT)
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
             self.assertTrue(
-                "Test" in database_data.get_fields_names(COLLECTION_INITIAL)
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
 
             for document in database_data.get_document_names(
@@ -1441,13 +1441,13 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -2541,10 +2541,10 @@ class TestMIADataBrowser(TestMIACase):
         add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        old_tags_current = self.main_window.project.session.get_fields_names(
+        old_tags_current = self.main_window.project.session.get_field_names(
             COLLECTION_CURRENT
         )
-        old_tags_initial = self.main_window.project.session.get_fields_names(
+        old_tags_initial = self.main_window.project.session.get_field_names(
             COLLECTION_INITIAL
         )
 
@@ -2552,10 +2552,10 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
-        new_tags_current = self.main_window.project.session.get_fields_names(
+        new_tags_current = self.main_window.project.session.get_field_names(
             COLLECTION_CURRENT
         )
-        new_tags_initial = self.main_window.project.session.get_fields_names(
+        new_tags_initial = self.main_window.project.session.get_field_names(
             COLLECTION_INITIAL
         )
 
@@ -2563,10 +2563,10 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(old_tags_current == new_tags_current)
         self.assertTrue(old_tags_initial == new_tags_initial)
 
-        old_tags_current = self.main_window.project.session.get_fields_names(
+        old_tags_current = self.main_window.project.session.get_field_names(
             COLLECTION_CURRENT
         )
-        old_tags_initial = self.main_window.project.session.get_fields_names(
+        old_tags_initial = self.main_window.project.session.get_field_names(
             COLLECTION_INITIAL
         )
         # Check that "Test" tag is in the list of tags
@@ -2578,10 +2578,10 @@ class TestMIADataBrowser(TestMIACase):
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         remove_tag.list_widget_tags.setCurrentRow(0)  # Test tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
-        new_tags_current = self.main_window.project.session.get_fields_names(
+        new_tags_current = self.main_window.project.session.get_field_names(
             COLLECTION_CURRENT
         )
-        new_tags_initial = self.main_window.project.session.get_fields_names(
+        new_tags_initial = self.main_window.project.session.get_field_names(
             COLLECTION_INITIAL
         )
         # Check that "Test" tag is no longer in the list of tags
@@ -3748,13 +3748,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check we don't have 'Test' tag in the db
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3768,13 +3768,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check the 'Test' tag is in the db
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3785,13 +3785,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is not in the db
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3802,13 +3802,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check the 'Test' tag is in the db
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3823,13 +3823,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is not in the db
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3840,13 +3840,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is in the db
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3857,13 +3857,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is not in the db
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3884,13 +3884,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is in the db
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertTrue(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3923,13 +3923,13 @@ class TestMIADataBrowser(TestMIACase):
         # Check 'Test' tag is not in the db and not in the DataBrowser
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_CURRENT
             )
         )
         self.assertFalse(
             "Test"
-            in self.main_window.project.session.get_fields_names(
+            in self.main_window.project.session.get_field_names(
                 COLLECTION_INITIAL
             )
         )
@@ -3942,7 +3942,7 @@ class TestMIADataBrowser(TestMIACase):
 
         self.assertIsInstance(self.project, Project)
         self.assertEqual(self.main_window.project.getName(), "Unnamed project")
-        tags = self.main_window.project.session.get_fields_names(
+        tags = self.main_window.project.session.get_field_names(
             COLLECTION_CURRENT
         )
         self.assertEqual(len(tags), 6)
