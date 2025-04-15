@@ -1489,177 +1489,182 @@ class Project:
         # or modified_values)
         action = to_redo[0]
 
-        with self.database.schema() as database_schema:
+        if action == "add_tag":
+            # For adding the tag, we need the tag name,
+            # and all its attributes
+            (
+                tag_name,
+                tag_type,
+                tag_unit,
+                tag_default_value,
+                tag_description,
+                values,
+            ) = to_redo[1:]
 
-            with database_schema.data() as database_data:
+            with self.database.schema() as database_schema:
 
-                if action == "add_tag":
-                    # For adding the tag, we need the tag name,
-                    # and all its attributes
-                    (
-                        tag_name,
-                        tag_type,
-                        tag_unit,
-                        tag_default_value,
-                        tag_description,
-                        values,
-                    ) = to_redo[1:]
-
-                    # Adding the tag
-                    for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
-                        database_schema.add_field(
-                            {
-                                "collection_name": collection,
-                                "field_name": tag_name,
-                                "field_type": tag_type,
-                                "description": tag_description,
-                                "visibility": True,
-                                "origin": TAG_ORIGIN_USER,
-                                "unit": tag_unit,
-                                "default_value": tag_default_value,
-                            }
-                        )
-
-                    # Adding all the values associated
-                    for value in values:
-                        (
-                            primary_key,
-                            field_name,
-                            current_value,
-                            initial_value,
-                        ) = value
-                        database_data.set_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=primary_key,
-                            values_dict={field_name: current_value},
-                        )
-                        database_data.set_value(
-                            collection_name=COLLECTION_INITIAL,
-                            primary_key=primary_key,
-                            values_dict={field_name: initial_value},
-                        )
-
-                    column = table.get_index_insertion(tag_name)
-                    table.add_column(column, tag_name)
-
-                elif action == "remove_tags":
-                    # To remove the tags, we need the names
-                    # The second element is a list of the removed
-                    # tags (Tag class)
-                    tags_removed = to_redo[1]
-
-                    for tag in tags_removed:
-                        # We reput each tag in the tag list, keeping
-                        # all the tags params
-                        tag_name = tag[0].field_name
-                        database_schema.remove_field(
-                            COLLECTION_CURRENT, tag_name
-                        )
-                        database_schema.remove_field(
-                            COLLECTION_INITIAL, tag_name
-                        )
-                        column_to_remove = table.get_tag_column(tag_name)
-                        table.removeColumn(column_to_remove)
-
-                elif action == "add_scans":
-                    # To add the scans, we need the FileNames and the values
-                    # associated to the scans
-                    # The second element is a list of the scans to add
-                    scans_added, values_added = to_redo[1], to_redo[2]
-
-                    # We add all the scans
-                    for scan in scans_added:
-                        # We remove each scan added
-                        database_data.add_document(COLLECTION_CURRENT, scan)
-                        database_data.add_document(COLLECTION_INITIAL, scan)
-                        table.scans_to_visualize.append(scan)
-
-                    # We add all the values.
-                    # The third element is a list of the values to add
-                    for value in values_added:
-                        (
-                            primary_key,
-                            field_name,
-                            current_value,
-                            initial_value,
-                        ) = value
-                        database_data.set_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=primary_key,
-                            values_dict={field_name: current_value},
-                        )
-                        database_data.set_value(
-                            collection_name=COLLECTION_INITIAL,
-                            primary_key=primary_key,
-                            values_dict={field_name: initial_value},
-                        )
-
-                    table.add_rows(
-                        database_data.get_document_names(COLLECTION_CURRENT)
+                # Adding the tag
+                for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+                    database_schema.add_field(
+                        {
+                            "collection_name": collection,
+                            "field_name": tag_name,
+                            "field_type": tag_type,
+                            "description": tag_description,
+                            "visibility": True,
+                            "origin": TAG_ORIGIN_USER,
+                            "unit": tag_unit,
+                            "default_value": tag_default_value,
+                        }
                     )
 
-                elif action == "modified_values":
-                    # Not working?
-                    # To modify the values, we need the cells,
-                    # and the updated values
+            with self.database.data() as database_data:
 
-                    # The second element is a list of modified values
-                    # (reset or value changed)
-                    modified_values = to_redo[1]
-                    table.itemChanged.disconnect()
+                # Adding all the values associated
+                for value in values:
+                    (
+                        primary_key,
+                        field_name,
+                        current_value,
+                        initial_value,
+                    ) = value
+                    database_data.set_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=primary_key,
+                        values_dict={field_name: current_value},
+                    )
+                    database_data.set_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=primary_key,
+                        values_dict={field_name: initial_value},
+                    )
 
-                    for scan, tag, old_value, new_value in modified_values:
-                        # Each modified value is a list of 3 elements:
-                        # scan, tag, old_value and new_value
-                        item = table.item(
-                            table.get_scan_row(scan), table.get_tag_column(tag)
+            column = table.get_index_insertion(tag_name)
+            table.add_column(column, tag_name)
+
+        elif action == "remove_tags":
+            # To remove the tags, we need the names
+            # The second element is a list of the removed
+            # tags (Tag class)
+            tags_removed = to_redo[1]
+
+            with self.database.schema() as database_schema:
+
+                for tag in tags_removed:
+                    # We reput each tag in the tag list, keeping
+                    # all the tags params
+                    tag_name = tag[0]["index"].split("|")[-1]
+                    database_schema.remove_field(COLLECTION_CURRENT, tag_name)
+                    database_schema.remove_field(COLLECTION_INITIAL, tag_name)
+                    column_to_remove = table.get_tag_column(tag_name)
+                    table.removeColumn(column_to_remove)
+
+        elif action == "add_scans":
+            # To add the scans, we need the FileNames and the values
+            # associated to the scans
+            # The second element is a list of the scans to add
+            scans_added, values_added = to_redo[1], to_redo[2]
+
+            with self.database.data() as database_data:
+
+                # We add all the scans
+                for scan in scans_added:
+                    # We remove each scan added
+                    database_data.add_document(COLLECTION_CURRENT, scan)
+                    database_data.add_document(COLLECTION_INITIAL, scan)
+                    table.scans_to_visualize.append(scan)
+
+                # We add all the values.
+                # The third element is a list of the values to add
+                for value in values_added:
+                    (
+                        primary_key,
+                        field_name,
+                        current_value,
+                        initial_value,
+                    ) = value
+                    database_data.set_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=primary_key,
+                        values_dict={field_name: current_value},
+                    )
+                    database_data.set_value(
+                        collection_name=COLLECTION_INITIAL,
+                        primary_key=primary_key,
+                        values_dict={field_name: initial_value},
+                    )
+
+                table.add_rows(
+                    database_data.get_document_names(COLLECTION_CURRENT)
+                )
+
+        elif action == "modified_values":
+            # Not working?
+            # To modify the values, we need the cells,
+            # and the updated values
+
+            # The second element is a list of modified values
+            # (reset or value changed)
+            modified_values = to_redo[1]
+            table.itemChanged.disconnect()
+
+            with self.database.data(write=True) as database_data:
+
+                for scan, tag, old_value, new_value in modified_values:
+                    # Each modified value is a list of 3 elements:
+                    # scan, tag, old_value and new_value
+                    item = table.item(
+                        table.get_scan_row(scan), table.get_tag_column(tag)
+                    )
+
+                    if old_value is None:
+                        # Font reput to normal in case it was a not
+                        # defined cell
+                        font = item.font()
+                        font.setItalic(False)
+                        font.setBold(False)
+                        item.setFont(font)
+
+                    database_data.set_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan,
+                        values_dict={tag: new_value},
+                    )
+
+                    if new_value is None:
+                        font = item.font()
+                        font.setItalic(True)
+                        font.setBold(True)
+                        item.setFont(font)
+                        set_item_data(
+                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
                         )
 
-                        if old_value is None:
-                            # Font reput to normal in case it was a not
-                            # defined cell
-                            font = item.font()
-                            font.setItalic(False)
-                            font.setBold(False)
-                            item.setFont(font)
-
-                        database_data.set_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=scan,
-                            values_dict={tag: new_value},
+                    else:
+                        set_item_data(
+                            item,
+                            new_value,
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, tag
+                            )["field_type"],
                         )
 
-                        if new_value is None:
-                            font = item.font()
-                            font.setItalic(True)
-                            font.setBold(True)
-                            item.setFont(font)
-                            set_item_data(
-                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
-                            )
+            table.update_colors()
+            table.itemChanged.connect(table.change_cell_color)
 
-                        else:
-                            set_item_data(
-                                item,
-                                new_value,
-                                database_data.get_field_attributes(
-                                    COLLECTION_CURRENT, tag
-                                )["field_type"],
-                            )
+        elif action == "modified_visibilities":
+            # To revert the modifications of the visualized tags
 
-                    table.update_colors()
-                    table.itemChanged.connect(table.change_cell_color)
+            with self.database.data(write=True) as database_data:
+                # Old list of columns
+                old_tags = database_data.get_shown_tags()
+                # List of the tags shown before the modification
+                # (Tag objects)
+                showed_tags = to_redo[2]
+                database_data.set_shown_tags(showed_tags)
 
-                elif action == "modified_visibilities":
-                    # To revert the modifications of the visualized tags
-                    # Old list of columns
-                    old_tags = database_data.get_shown_tags()
-                    # List of the tags shown before the modification
-                    # (Tag objects)
-                    showed_tags = to_redo[2]
-                    database_data.set_shown_tags(showed_tags)
-                    # Columns updated
-                    table.update_visualized_columns(old_tags, showed_tags)
+            # Columns updated
+            table.update_visualized_columns(old_tags, showed_tags)
 
     def reput_values(self, values):
         """
@@ -1838,144 +1843,148 @@ class Project:
         action = to_undo[0]
         self.unsavedModifications = True
 
-        with self.database.schema() as database_schema:
+        if action == "add_tag":
+            # For removing the tag added, we just have to memorize
+            # the tag name, and remove it
+            tag_to_remove = to_undo[1]
 
-            with database_schema.data() as database_data:
+            with self.database.schema() as database_schema:
+                database_schema.remove_field(COLLECTION_CURRENT, tag_to_remove)
+                database_schema.remove_field(COLLECTION_INITIAL, tag_to_remove)
 
-                if action == "add_tag":
-                    # For removing the tag added, we just have to memorize
-                    # the tag name, and remove it
-                    tag_to_remove = to_undo[1]
-                    database_schema.remove_field(
-                        COLLECTION_CURRENT, tag_to_remove
-                    )
-                    database_schema.remove_field(
-                        COLLECTION_INITIAL, tag_to_remove
-                    )
-                    column_to_remove = table.get_tag_column(tag_to_remove)
-                    table.removeColumn(column_to_remove)
+            column_to_remove = table.get_tag_column(tag_to_remove)
+            table.removeColumn(column_to_remove)
 
-                elif action == "remove_tags":
-                    # To reput the removed tags, we need to reput the
-                    # tag in the tag list, and all the tags values associated
-                    # to this tag. The second element is a list of the
-                    # removed tags([Tag row, origin, unit, default_value]).
-                    # The third element is a list of tags values (Value class)
-                    tags_removed = to_undo[1]
-                    values_removed = to_undo[2]
+        elif action == "remove_tags":
+            # To reput the removed tags, we need to reput the
+            # tag in the tag list, and all the tags values associated
+            # to this tag. The second element is a list of the
+            # removed tags([Tag row, origin, unit, default_value]).
+            # The third element is a list of tags values (Value class)
+            tags_removed = to_undo[1]
+            values_removed = to_undo[2]
 
-                    for tag in tags_removed:
-                        tag_to_reput = tag[0]
+            for tag in tags_removed:
+                tag_to_reput = tag[0]
 
-                        for collection in (
-                            COLLECTION_CURRENT,
-                            COLLECTION_INITIAL,
-                        ):
-                            database_schema.add_field(
-                                {
-                                    "collection_name": collection,
-                                    "field_name": tag_to_reput["field_name"],
-                                    "field_type": tag_to_reput["field_type"],
-                                    "description": tag_to_reput["description"],
-                                    "visibility": tag_to_reput["visibility"],
-                                    "origin": tag_to_reput["origin"],
-                                    "unit": tag_to_reput["unit"],
-                                    "default_value": tag_to_reput[
-                                        "default_value"
-                                    ],
-                                }
-                            )
+                with self.database.schema() as database_schema:
 
-                        column = table.get_index_insertion(
-                            tag_to_reput["field_name"]
-                        )
-                        table.add_column(column, tag_to_reput["field_name"])
-
-                    self.reput_values(values_removed)
-
-                elif action == "add_scans":
-                    # To remove added scans, we just need their file name
-                    # The second element is a list of added scans to remove
-                    scans_added = to_undo[1]
-
-                    for scan in scans_added:
-                        # We remove each scan added
-                        database_data.remove_document(COLLECTION_CURRENT, scan)
-                        database_data.remove_document(COLLECTION_INITIAL, scan)
-                        table.removeRow(table.get_scan_row(scan))
-                        table.scans_to_visualize.remove(scan)
-
-                    table.itemChanged.disconnect()
-                    table.update_colors()
-                    table.itemChanged.connect(table.change_cell_color)
-
-                elif action == "modified_values":
-                    # To revert a value changed in the databrowser,
-                    # we need two things:
-                    # the cell (scan and tag, and the old value)
-                    # The second element is a list of modified values (reset,
-                    # or value changed)
-                    modified_values = to_undo[1]
-                    table.itemChanged.disconnect()
-
-                    for scan, tag, old_value, new_value in modified_values:
-                        item = table.item(
-                            table.get_scan_row(scan), table.get_tag_column(tag)
+                    for collection in (
+                        COLLECTION_CURRENT,
+                        COLLECTION_INITIAL,
+                    ):
+                        database_schema.add_field(
+                            {
+                                "collection_name": collection,
+                                "field_name": tag_to_reput["index"].split("|")[
+                                    -1
+                                ],
+                                "field_type": tag_to_reput["field_type"],
+                                "description": tag_to_reput["description"],
+                                "visibility": tag_to_reput["visibility"],
+                                "origin": tag_to_reput["origin"],
+                                "unit": tag_to_reput["unit"],
+                                "default_value": tag_to_reput["default_value"],
+                            }
                         )
 
-                        if old_value is None:
-                            # If the cell was not defined before, we reput it
-                            database_data.remove_value(
-                                COLLECTION_CURRENT, scan, tag
-                            )
-                            database_data.remove_value(
-                                COLLECTION_INITIAL, scan, tag
-                            )
-                            set_item_data(
-                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
-                            )
+                column = table.get_index_insertion(
+                    tag_to_reput["index"].split("|")[-1]
+                )
+                table.add_column(column, tag_to_reput["index"].split("|")[-1])
+
+            self.reput_values(values_removed)
+
+        elif action == "add_scans":
+            # To remove added scans, we just need their file name
+            # The second element is a list of added scans to remove
+            scans_added = to_undo[1]
+
+            with self.database.data(write=True) as database_data:
+
+                for scan in scans_added:
+                    # We remove each scan added
+                    database_data.remove_document(COLLECTION_CURRENT, scan)
+                    database_data.remove_document(COLLECTION_INITIAL, scan)
+                    table.removeRow(table.get_scan_row(scan))
+                    table.scans_to_visualize.remove(scan)
+
+            table.itemChanged.disconnect()
+            table.update_colors()
+            table.itemChanged.connect(table.change_cell_color)
+
+        elif action == "modified_values":
+            # To revert a value changed in the databrowser,
+            # we need two things:
+            # the cell (scan and tag, and the old value)
+            # The second element is a list of modified values (reset,
+            # or value changed)
+            modified_values = to_undo[1]
+            table.itemChanged.disconnect()
+
+            with self.database.data(write=True) as database_data:
+
+                for scan, tag, old_value, new_value in modified_values:
+                    item = table.item(
+                        table.get_scan_row(scan), table.get_tag_column(tag)
+                    )
+
+                    if old_value is None:
+                        # If the cell was not defined before, we reput it
+                        database_data.remove_value(
+                            COLLECTION_CURRENT, scan, tag
+                        )
+                        database_data.remove_value(
+                            COLLECTION_INITIAL, scan, tag
+                        )
+                        set_item_data(
+                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                        )
+                        font = item.font()
+                        font.setItalic(True)
+                        font.setBold(True)
+                        item.setFont(font)
+
+                    else:
+                        # If the cell was there before,
+                        # we just set it to the old value
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            values_dict={tag: old_value},
+                        )
+                        set_item_data(
+                            item,
+                            old_value,
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, tag
+                            )["field_type"],
+                        )
+
+                        # If the new value is None,
+                        # the not defined font must be removed
+                        if new_value is None:
                             font = item.font()
-                            font.setItalic(True)
-                            font.setBold(True)
+                            font.setItalic(False)
+                            font.setBold(False)
                             item.setFont(font)
 
-                        else:
-                            # If the cell was there before,
-                            # we just set it to the old value
-                            database_data.set_value(
-                                collection_name=COLLECTION_CURRENT,
-                                primary_key=scan,
-                                values_dict={tag: old_value},
-                            )
-                            set_item_data(
-                                item,
-                                old_value,
-                                database_data.get_field_attributes(
-                                    COLLECTION_CURRENT, tag
-                                )["field_type"],
-                            )
+            table.update_colors()
+            table.itemChanged.connect(table.change_cell_color)
 
-                            # If the new value is None,
-                            # the not defined font must be removed
-                            if new_value is None:
-                                font = item.font()
-                                font.setItalic(False)
-                                font.setBold(False)
-                                item.setFont(font)
+        elif action == "modified_visibilities":
+            # To revert the modifications of the visualized tags
 
-                    table.update_colors()
-                    table.itemChanged.connect(table.change_cell_color)
+            with self.database.data(write=True) as database_data:
+                # Old list of columns
+                old_tags = database_data.get_shown_tags()
+                # List of the tags visible before the modification
+                # (Tag objects)
+                visible_tags = to_undo[1]
+                database_data.set_shown_tags(visible_tags)
 
-                elif action == "modified_visibilities":
-                    # To revert the modifications of the visualized tags
-                    # Old list of columns
-                    old_tags = database_data.get_shown_tags()
-                    # List of the tags visible before the modification
-                    # (Tag objects)
-                    visible_tags = to_undo[1]
-                    database_data.set_shown_tags(visible_tags)
-                    # Columns updated
-                    table.update_visualized_columns(old_tags, visible_tags)
+            # Columns updated
+            table.update_visualized_columns(old_tags, visible_tags)
 
     @property
     def unsavedModifications(self):
