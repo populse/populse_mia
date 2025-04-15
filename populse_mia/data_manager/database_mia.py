@@ -23,7 +23,9 @@ from populse_db.storage import Storage
 
 # Special attributes for the database
 from populse_mia.data_manager import (
+    COLLECTION_CURRENT,
     FIELD_ATTRIBUTES_COLLECTION,
+    FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_STRING,
 )
 
@@ -353,14 +355,14 @@ class DatabaseMiaSchema:
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="visibility",
-                field_type=bool,
+                field_type=FIELD_TYPE_BOOLEAN,
                 description="Visibility of the index field in "
                 "the DataBrowser",
             )
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="origin",
-                field_type=str,
+                field_type=FIELD_TYPE_STRING,
                 description="Define the origin of the index "
                 "field, TAG_ORIGIN_BUILTIN or "
                 "TAG_ORIGIN_USER",
@@ -368,25 +370,25 @@ class DatabaseMiaSchema:
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="unit",
-                field_type=str,
+                field_type=FIELD_TYPE_STRING,
                 description="Unit of the index field",
             )
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="default_value",
-                field_type=str,
+                field_type=FIELD_TYPE_STRING,
                 description="Default value of the index field",
             )
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="description",
-                field_type=str,
+                field_type=FIELD_TYPE_STRING,
                 description="Description of the index field",
             )
             self.storage_schema.add_field(
                 collection_name=FIELD_ATTRIBUTES_COLLECTION,
                 field_name="field_type",
-                field_type=str,
+                field_type=FIELD_TYPE_STRING,
                 description="Type of the index field",
             )
 
@@ -897,7 +899,7 @@ class DatabaseMiaData:
         for doc_name in doc_names:
             collection, field = doc_name.split("|")
 
-            if collection == "current":
+            if collection == COLLECTION_CURRENT:
                 self.storage_data[FIELD_ATTRIBUTES_COLLECTION][doc_name][
                     "visibility"
                 ] = (field in fields_shown)
