@@ -1321,14 +1321,14 @@ class TestMIADataBrowser(TestMIACase):
         )
         self.assertEqual(
             brick_table.cellWidget(0, 2).children()[1].text(),
-            "2022-04-05 14:22:30.298043",
+            "2025-04-15 14:48:41",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 3).children()[1].text(), "Done"
         )
         self.assertEqual(
             brick_table.cellWidget(0, 4).children()[1].text(),
-            "2022-04-05 14:22:30.298043",
+            "2025-04-15 14:48:41",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 5).children()[1].text(), "0"
@@ -1348,8 +1348,7 @@ class TestMIADataBrowser(TestMIACase):
         )
         self.assertEqual(
             brick_table.cellWidget(0, 9).children()[1].text(),
-            "/usr/local/SPM/spm12_standalone/run_spm12.sh "
-            "/usr/local/MATLAB/MATLAB_Runtime/v95 script",
+            "/usr/local/MATLAB/R2020b/bin/matlab",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 10).children()[1].text(), "True"
