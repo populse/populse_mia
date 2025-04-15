@@ -4715,7 +4715,7 @@ class PopUpProperties(QDialog):
         ]
         new_visibilities.append(TAG_FILENAME)
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
             database_data.set_shown_tags(new_visibilities)
 
         history_maker.append(new_visibilities)

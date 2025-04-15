@@ -1486,7 +1486,7 @@ class TableDataBrowser(QTableWidget):
         modified_values = []
         points = self.selectedIndexes()
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for point in points:
                 row = point.row()
