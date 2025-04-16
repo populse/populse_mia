@@ -778,6 +778,16 @@ class TestMIACase(unittest.TestCase):
         config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
         config.saveConfig()
+
+        for widget in QApplication.topLevelWidgets():
+
+            try:
+                widget.close()
+                widget.deleteLater()
+
+            except Exception as e:
+                print(f"Error closing widget: {e}")
+
         QApplication.processEvents()
         self.project = None
         self.main_window = None
@@ -1438,66 +1448,74 @@ class TestMIADataBrowser(TestMIACase):
         clone_tag.search_bar.setText("BandWidth")
         clone_tag.list_widget_tags.setCurrentRow(0)  # BandWidth tag selected
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
+
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
+            )
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
+            )
+            test_row = database_data.get_field_attributes(
+                COLLECTION_CURRENT, "Test"
+            )
+            bandwidth_row = database_data.get_field_attributes(
+                COLLECTION_CURRENT, "BandWidth"
+            )
+            self.assertEqual(
+                test_row["description"], bandwidth_row["description"]
+            )
+            self.assertEqual(test_row["unit"], bandwidth_row["unit"])
+            self.assertEqual(
+                test_row["default_value"], bandwidth_row["default_value"]
+            )
+            self.assertEqual(
+                test_row["field_type"], bandwidth_row["field_type"]
+            )
+            self.assertEqual(test_row["origin"], TAG_ORIGIN_USER)
+            self.assertEqual(test_row["visibility"], True)
+            test_row = database_data.get_field_attributes(
+                COLLECTION_INITIAL, "Test"
+            )
+            bandwidth_row = database_data.get_field_attributes(
+                COLLECTION_INITIAL, "BandWidth"
+            )
+            self.assertEqual(
+                test_row["description"], bandwidth_row["description"]
+            )
+            self.assertEqual(test_row["unit"], bandwidth_row["unit"])
+            self.assertEqual(
+                test_row["default_value"], bandwidth_row["default_value"]
+            )
+            self.assertEqual(
+                test_row["field_type"], bandwidth_row["field_type"]
+            )
+            self.assertEqual(test_row["origin"], TAG_ORIGIN_USER)
+            self.assertEqual(test_row["visibility"], True)
+
+            for document in database_data.get_document_names(
                 COLLECTION_CURRENT
-            )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_CURRENT, document, "Test"
+                    ),
+                    database_data.get_value(
+                        COLLECTION_CURRENT, document, "BandWidth"
+                    ),
+                )
+
+            for document in database_data.get_document_names(
                 COLLECTION_INITIAL
-            )
-        )
-        test_row = self.main_window.project.session.get_field(
-            COLLECTION_CURRENT, "Test"
-        )
-        bandwidth_row = self.main_window.project.session.get_field(
-            COLLECTION_CURRENT, "BandWidth"
-        )
-        self.assertEqual(test_row.description, bandwidth_row.description)
-        self.assertEqual(test_row.unit, bandwidth_row.unit)
-        self.assertEqual(test_row.default_value, bandwidth_row.default_value)
-        self.assertEqual(test_row.field_type, bandwidth_row.field_type)
-        self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
-        self.assertEqual(test_row.visibility, True)
-        test_row = self.main_window.project.session.get_field(
-            COLLECTION_INITIAL, "Test"
-        )
-        bandwidth_row = self.main_window.project.session.get_field(
-            COLLECTION_INITIAL, "BandWidth"
-        )
-        self.assertEqual(test_row.description, bandwidth_row.description)
-        self.assertEqual(test_row.unit, bandwidth_row.unit)
-        self.assertEqual(test_row.default_value, bandwidth_row.default_value)
-        self.assertEqual(test_row.field_type, bandwidth_row.field_type)
-        self.assertEqual(test_row.origin, TAG_ORIGIN_USER)
-        self.assertEqual(test_row.visibility, True)
-
-        for document in self.main_window.project.session.get_document_names(
-            COLLECTION_CURRENT
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_CURRENT, document, "Test"
-                ),
-                self.main_window.project.session.get_value(
-                    COLLECTION_CURRENT, document, "BandWidth"
-                ),
-            )
-
-        for document in self.main_window.project.session.get_document_names(
-            COLLECTION_INITIAL
-        ):
-            self.assertEqual(
-                self.main_window.project.session.get_value(
-                    COLLECTION_INITIAL, document, "Test"
-                ),
-                self.main_window.project.session.get_value(
-                    COLLECTION_INITIAL, document, "BandWidth"
-                ),
-            )
+            ):
+                self.assertEqual(
+                    database_data.get_value(
+                        COLLECTION_INITIAL, document, "Test"
+                    ),
+                    database_data.get_value(
+                        COLLECTION_INITIAL, document, "BandWidth"
+                    ),
+                )
 
         test_column = self.main_window.data_browser.table_data.get_tag_column(
             "Test"
@@ -1738,9 +1756,10 @@ class TestMIADataBrowser(TestMIACase):
             scans_displayed.append(scan_name)
 
         # Test that the value will not change if the tag's type is incorrect
-        old_value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scans_displayed[0], "FOV"
-        )
+        with self.main_window.project.database.data() as database_data:
+            old_value = database_data.get_value(
+                COLLECTION_CURRENT, scans_displayed[0], "FOV"
+            )
 
         mod = ModifyTable(
             self.main_window.project,
@@ -1752,26 +1771,34 @@ class TestMIADataBrowser(TestMIACase):
         mod.update_table_values(True)
         mod.deleteLater()
         del mod
-        new_value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scans_displayed[0], "FOV"
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            new_value = database_data.get_value(
+                COLLECTION_CURRENT, scans_displayed[0], "FOV"
+            )
+
         self.assertEqual(old_value, new_value)
 
         # Test that the value will change when all parameters are correct
-        tag_object = self.main_window.project.session.get_field(
-            COLLECTION_CURRENT, "FOV"
-        )
+        with self.main_window.project.database.data() as database_data:
+            tag_object = database_data.get_field_attributes(
+                COLLECTION_CURRENT, "FOV"
+            )
+
         mod = ModifyTable(
             self.main_window.project,
             value,
-            [tag_object.field_type],
+            [tag_object["field_type"]],
             scans_displayed,
             tag_name,
         )
         mod.update_table_values(True)
-        new_value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scans_displayed[0], "FOV"
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            new_value = database_data.get_value(
+                COLLECTION_CURRENT, scans_displayed[0], "FOV"
+            )
+
         self.assertEqual(mod.table.columnCount(), 2)
         mod.deleteLater()
         del mod
@@ -1978,105 +2005,102 @@ class TestMIADataBrowser(TestMIACase):
             "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
-        documents = self.main_window.project.session.get_document_names(
-            COLLECTION_CURRENT
-        )
+        with self.main_window.project.data() as database_data:
+            documents = database_data.get_document_names(COLLECTION_CURRENT)
 
-        self.assertEqual(len(documents), 9)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in documents
-        )
-        documents = self.main_window.project.session.get_document_names(
-            COLLECTION_INITIAL
-        )
-        self.assertEqual(len(documents), 9)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in documents
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in documents
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in documents
-        )
+            self.assertEqual(len(documents), 9)
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                "pvm-000220_000.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
+                "pvm-000940_800.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
+                "pvm-000940_800.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                "pvm-000220_000.nii" in documents
+            )
+            documents = database_data.get_document_names(COLLECTION_INITIAL)
+            self.assertEqual(len(documents), 9)
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                "pvm-000220_000.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
+                "pvm-000940_800.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
+                "pvm-000940_800.nii" in documents
+            )
+            self.assertTrue(
+                "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
+                "pvm-000142_400.nii" in documents
+            )
+            self.assertTrue(
+                "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+                "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                "pvm-000220_000.nii" in documents
+            )
 
     def test_project_filter(self):
         """Creates a project, saves a filter and opens it.
@@ -2368,7 +2392,7 @@ class TestMIADataBrowser(TestMIACase):
         )
 
     def test_remove_scan(self):
-        """Creates a new project, adds scans to the session and remove them.
+        """Creates a new project, adds scans to the database and remove them.
 
         - Tests:
             - PipelineManagerTab.remove_scan
@@ -2382,7 +2406,6 @@ class TestMIADataBrowser(TestMIACase):
         ppl_manager = self.main_window.pipeline_manager
         data_browser = self.main_window.data_browser
         tb_data = data_browser.table_data
-        session = self.main_window.project.session
 
         # Creates a new project folder
         project_8_path = self.get_new_test_project()
@@ -2400,11 +2423,13 @@ class TestMIADataBrowser(TestMIACase):
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
         DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
 
-        # Adds 2 scans to the current session
-        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
-        session.add_document(COLLECTION_INITIAL, DOCUMENT_1)
-        session.add_document(COLLECTION_CURRENT, DOCUMENT_2)
-        session.add_document(COLLECTION_INITIAL, DOCUMENT_2)
+        # Adds 2 scans to the current database
+        with self.main_window.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+            database_data.add_document(COLLECTION_INITIAL, DOCUMENT_1)
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_2)
+            database_data.add_document(COLLECTION_INITIAL, DOCUMENT_2)
+
         ppl_manager.scan_list.append(DOCUMENT_1)
         ppl_manager.scan_list.append(DOCUMENT_2)
         data_browser.data_sent = True
@@ -2433,9 +2458,11 @@ class TestMIADataBrowser(TestMIACase):
         # Asserts that the scans were deleted
         self.assertEqual(len(tb_data.scans), 0)
 
-        # Adds one scan to the current session
-        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
-        session.add_document(COLLECTION_INITIAL, DOCUMENT_1)
+        with self.main_window.project.database.data() as database_data:
+            # Adds one scan to the current database
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+            database_data.add_document(COLLECTION_INITIAL, DOCUMENT_1)
+
         self.main_window.update_project(project_8_path)
         ppl_manager.scan_list.append(DOCUMENT_1)
 
@@ -2540,34 +2567,40 @@ class TestMIADataBrowser(TestMIACase):
         add_tag = self.main_window.data_browser.pop_up_add_tag
         add_tag.text_edit_tag_name.setText("Test")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        old_tags_current = self.main_window.project.session.get_field_names(
-            COLLECTION_CURRENT
-        )
-        old_tags_initial = self.main_window.project.session.get_field_names(
-            COLLECTION_INITIAL
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            old_tags_current = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+            old_tags_initial = database_data.get_field_names(
+                COLLECTION_INITIAL
+            )
 
         # Open the "Remove a tag" pop-up but do nothing
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
-        new_tags_current = self.main_window.project.session.get_field_names(
-            COLLECTION_CURRENT
-        )
-        new_tags_initial = self.main_window.project.session.get_field_names(
-            COLLECTION_INITIAL
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            new_tags_current = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+            new_tags_initial = database_data.get_field_names(
+                COLLECTION_INITIAL
+            )
 
         # Check that the list of tags has not changed
         self.assertTrue(old_tags_current == new_tags_current)
         self.assertTrue(old_tags_initial == new_tags_initial)
 
-        old_tags_current = self.main_window.project.session.get_field_names(
-            COLLECTION_CURRENT
-        )
-        old_tags_initial = self.main_window.project.session.get_field_names(
-            COLLECTION_INITIAL
-        )
+        with self.main_window.project.database.data() as database_data:
+            old_tags_current = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+            old_tags_initial = database_data.get_field_names(
+                COLLECTION_INITIAL
+            )
+
         # Check that "Test" tag is in the list of tags
         self.assertTrue("Test" in old_tags_current)
         self.assertTrue("Test" in old_tags_initial)
@@ -2577,12 +2610,15 @@ class TestMIADataBrowser(TestMIACase):
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
         remove_tag.list_widget_tags.setCurrentRow(0)  # Test tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
-        new_tags_current = self.main_window.project.session.get_field_names(
-            COLLECTION_CURRENT
-        )
-        new_tags_initial = self.main_window.project.session.get_field_names(
-            COLLECTION_INITIAL
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            new_tags_current = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+            new_tags_initial = database_data.get_field_names(
+                COLLECTION_INITIAL
+            )
+
         # Check that "Test" tag is no longer in the list of tags
         self.assertTrue("Test" not in new_tags_current)
         self.assertTrue("Test" not in new_tags_initial)
@@ -2599,16 +2635,17 @@ class TestMIADataBrowser(TestMIACase):
 
         # Test for a list:
         # Values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, "BandWidth"
+                )[0]
+            )
 
         # Value in the DataBrowser
         bandwidth_column = (
@@ -2633,16 +2670,18 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Check again the equality between DataBrowser and db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, "BandWidth"
+                )[0]
+            )
+
         item = self.main_window.data_browser.table_data.item(
             0, bandwidth_column
         )
@@ -2664,16 +2703,18 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         # Check whether the data has been reset
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, "BandWidth"
+                )[0]
+            )
+
         item = self.main_window.data_browser.table_data.item(
             0, bandwidth_column
         )
@@ -2684,12 +2725,13 @@ class TestMIADataBrowser(TestMIACase):
 
         # Test for a string:
         # Values in the db
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Type"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Type"
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Type"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Type"
+            )
 
         # Value in the DataBrowser
         type_column = (
@@ -2709,12 +2751,14 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         # Check again the equality between DataBrowser and db
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Type"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Type"
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Type"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Type"
+            )
+
         item = self.main_window.data_browser.table_data.item(0, type_column)
 
         databrowser = item.text()
@@ -2734,12 +2778,13 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         # Check whether the data has been reset
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Type"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Type"
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Type"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Type"
+            )
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
         self.assertEqual(value, "Scan")
@@ -2757,16 +2802,17 @@ class TestMIADataBrowser(TestMIACase):
         scan_name2 = item.text()
 
         # Second document; values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name2, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name2, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name2, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name2, "BandWidth"
+                )[0]
+            )
 
         # Second document; value in the DataBrowser
         bandwidth_column = (
@@ -2788,16 +2834,17 @@ class TestMIADataBrowser(TestMIACase):
         scan_name3 = item.text()
 
         # Third document; values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name3, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name3, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name3, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name3, "BandWidth"
+                )[0]
+            )
 
         # Third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(
@@ -2819,16 +2866,18 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Second document; values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name2, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name2, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name2, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name2, "BandWidth"
+                )[0]
+            )
+
         # Second document; value in the DataBrowser
         item2 = self.main_window.data_browser.table_data.item(
             1, bandwidth_column
@@ -2842,16 +2891,17 @@ class TestMIADataBrowser(TestMIACase):
         item2.setSelected(True)
 
         # Third document; values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name3, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name3, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name3, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name3, "BandWidth"
+                )[0]
+            )
 
         # Third document; value in the DataBrowser
         item3 = self.main_window.data_browser.table_data.item(
@@ -2874,16 +2924,18 @@ class TestMIADataBrowser(TestMIACase):
 
         # Check the value in the db and DataBrowser for the second document
         # has been reset
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name2, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name2, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name2, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name2, "BandWidth"
+                )[0]
+            )
+
         item2 = self.main_window.data_browser.table_data.item(
             1, bandwidth_column
         )
@@ -2894,16 +2946,18 @@ class TestMIADataBrowser(TestMIACase):
 
         # Check the value in the db and DataBrowser for the third document
         # has been reset
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name3, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name3, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name3, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name3, "BandWidth"
+                )[0]
+            )
+
         item3 = self.main_window.data_browser.table_data.item(
             2, bandwidth_column
         )
@@ -3178,16 +3232,17 @@ class TestMIADataBrowser(TestMIACase):
 
         # Test for a list:
         # Values in the db
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, "BandWidth"
+                )[0]
+            )
 
         # Value in the DataBrowser
         bandwidth_column = (
@@ -3210,16 +3265,18 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.table_data.edit_table_data_values()
 
         # Check if value was changed in db and DataBrowser
-        value = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_CURRENT, scan_name, "BandWidth"
-            )[0]
-        )
-        value_initial = float(
-            self.main_window.project.session.get_value(
-                COLLECTION_INITIAL, scan_name, "BandWidth"
-            )[0]
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = float(
+                database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, "BandWidth"
+                )[0]
+            )
+            value_initial = float(
+                database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, "BandWidth"
+                )[0]
+            )
+
         item = self.main_window.data_browser.table_data.item(
             1, bandwidth_column
         )
@@ -3231,12 +3288,13 @@ class TestMIADataBrowser(TestMIACase):
 
         # Test for a string:
         # Values in the db
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Type"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Type"
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Type"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Type"
+            )
 
         # Value in the DataBrowser
         type_column = (
@@ -3256,12 +3314,14 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         # Check if value in DataBrowser and db as been changed
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Type"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Type"
-        )
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Type"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Type"
+            )
+
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
         self.assertEqual(value, "Test")
@@ -3283,10 +3343,12 @@ class TestMIADataBrowser(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
-        session = self.main_window.project.session
 
         # Gets the input file path of the input scan
-        INPUT_SCAN = session.get_documents(COLLECTION_CURRENT)[0]["FileName"]
+        with self.main_window.project.database.data() as database_data:
+            INPUT_SCAN = database_data.get_documents(COLLECTION_CURRENT)[0][
+                "FileName"
+            ]
 
         # Opens the history pop-up for the scan related to 'smooth_1'
         hist_index = data_browser.table_data.get_tag_column("History")
@@ -3406,7 +3468,7 @@ class TestMIADataBrowser(TestMIACase):
         table_data = self.main_window.data_browser.table_data
 
         # Adds a tag, of the types float, datetime, date and time, to
-        # the project session
+        # the database
         tags = [
             "mock_tag_float",
             "mock_tag_datetime",
@@ -3419,10 +3481,22 @@ class TestMIADataBrowser(TestMIACase):
             FIELD_TYPE_DATE,
             FIELD_TYPE_TIME,
         ]
-        for tag, tag_type in zip(tags, types):
-            table_data.project.session.add_field(
-                COLLECTION_CURRENT, tag, tag_type, "", True, "", "", ""
-            )
+
+        with table_data.project.database.schema() as database_schema:
+
+            for tag, tag_type in zip(tags, types):
+                database_schema.add_field(
+                    {
+                        "collection_name": COLLECTION_CURRENT,
+                        "field_name": tag,
+                        "field_type": tag_type,
+                        "description": "",
+                        "visibility": True,
+                        "origin": "",
+                        "unit": "",
+                        "default_value": "",
+                    }
+                )
 
         table_data.add_columns()  # Adds the tags to table view
 
@@ -3450,12 +3524,10 @@ class TestMIADataBrowser(TestMIACase):
         # TESTS CHANGE_CELL_COLOR
         # Adds a new document to the collection
         NEW_DOC = {"FileName": "mock_file_name"}
-        self.main_window.project.session.add_document(
-            COLLECTION_CURRENT, NEW_DOC
-        )
-        self.main_window.project.session.add_document(
-            COLLECTION_INITIAL, NEW_DOC
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_CURRENT, NEW_DOC)
+            database_data.add_document(COLLECTION_INITIAL, NEW_DOC)
 
         # Selects the 'Filename' of the first scan and changes its value
         # to this document filename
@@ -3681,44 +3753,30 @@ class TestMIADataBrowser(TestMIACase):
 
         # 2. Remove a scan (document)
         # Check there are 9 documents in db (current and initial)
-        self.assertEqual(
-            9,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_CURRENT
-                )
-            ),
-        )
-        self.assertEqual(
-            9,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_INITIAL
-                )
-            ),
-        )
+        with self.main_window.project.database.data() as database_data:
+            self.assertEqual(
+                9,
+                len(database_data.get_document_names(COLLECTION_CURRENT)),
+            )
+            self.assertEqual(
+                9,
+                len(database_data.get_document_names(COLLECTION_INITIAL)),
+            )
 
         # Remove the eighth document
         self.main_window.data_browser.table_data.selectRow(8)
         self.main_window.data_browser.table_data.remove_scan()
 
         # Check if there are now 8 documents in db (current and initial)
-        self.assertEqual(
-            8,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_CURRENT
-                )
-            ),
-        )
-        self.assertEqual(
-            8,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_INITIAL
-                )
-            ),
-        )
+        with self.main_window.project.database.data() as database_data:
+            self.assertEqual(
+                8,
+                len(database_data.get_document_names(COLLECTION_CURRENT)),
+            )
+            self.assertEqual(
+                8,
+                len(database_data.get_document_names(COLLECTION_INITIAL)),
+            )
 
         # Undo
         self.main_window.action_undo.trigger()
@@ -3726,37 +3784,25 @@ class TestMIADataBrowser(TestMIACase):
         # Check there are still only 8 documents in the database
         # (current and initial). In fact the document has been permanently
         # deleted and we cannot recover it in this case
-        self.assertEqual(
-            8,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_CURRENT
-                )
-            ),
-        )
-        self.assertEqual(
-            8,
-            len(
-                self.main_window.project.session.get_document_names(
-                    COLLECTION_INITIAL
-                )
-            ),
-        )
+        with self.main_window.project.database.data() as database_data:
+            self.assertEqual(
+                8,
+                len(database_data.get_document_names(COLLECTION_CURRENT)),
+            )
+            self.assertEqual(
+                8,
+                len(database_data.get_document_names(COLLECTION_INITIAL)),
+            )
 
         # 3. Add a tag
         # Check we don't have 'Test' tag in the db
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Add the Test tag
         self.main_window.data_browser.add_tag_action.trigger()
@@ -3765,52 +3811,37 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
         # Check the 'Test' tag is in the db
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Undo
         self.main_window.action_undo.trigger()
 
         # Check 'Test' tag is not in the db
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Redo
         self.main_window.action_redo.trigger()
 
         # Check the 'Test' tag is in the db
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # 4. Remove tag
         # Remove the 'Test' tag
@@ -3820,52 +3851,37 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
 
         # Check 'Test' tag is not in the db
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Undo
         self.main_window.action_undo.trigger()
 
         # Check 'Test' tag is in the db
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Redo
         self.main_window.action_redo.trigger()
 
         # Check 'Test' tag is not in the db
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # 4. clone tag
         self.main_window.data_browser.clone_tag_action.trigger()
@@ -3881,28 +3897,25 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
 
         # Check 'Test' tag is in the db
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertTrue(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertTrue(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
 
         # Value in the db
         item = self.main_window.data_browser.table_data.item(1, 0)
         scan_name = item.text()
-        value = self.main_window.project.session.get_value(
-            COLLECTION_CURRENT, scan_name, "Test"
-        )
-        value_initial = self.main_window.project.session.get_value(
-            COLLECTION_INITIAL, scan_name, "Test"
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            value = database_data.get_value(
+                COLLECTION_CURRENT, scan_name, "Test"
+            )
+            value_initial = database_data.get_value(
+                COLLECTION_INITIAL, scan_name, "Test"
+            )
 
         # Value in the DataBrowser
         test_column = (
@@ -3920,18 +3933,14 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.action_undo.trigger()
 
         # Check 'Test' tag is not in the db and not in the DataBrowser
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_CURRENT
+        with self.main_window.project.database.data() as database_data:
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
             )
-        )
-        self.assertFalse(
-            "Test"
-            in self.main_window.project.session.get_field_names(
-                COLLECTION_INITIAL
+            self.assertFalse(
+                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
             )
-        )
+
         self.assertIsNone(
             (self.main_window.data_browser.table_data.get_tag_column)("Test")
         )
