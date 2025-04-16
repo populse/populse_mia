@@ -339,6 +339,8 @@ class MainWindow(QMainWindow):
         :return (bool): True if there are unsaved modifications,
                         False otherwise
         """
+        if self.project is None:
+            return True
 
         if self.project.isTempProject:
 
@@ -377,7 +379,9 @@ class MainWindow(QMainWindow):
             config = Config()
             opened_projects = config.get_opened_projects()
 
-            if self.project.folder in opened_projects:
+            folder = getattr(getattr(self, "project", None), "folder", None)
+
+            if folder and folder in opened_projects:
                 opened_projects.remove(self.project.folder)
 
             config.set_opened_projects(opened_projects)
@@ -407,7 +411,10 @@ class MainWindow(QMainWindow):
                 self.msg.close()
 
             config.saveConfig()
-            self.remove_raw_files_useless()
+
+            if self.project is not None:
+                self.remove_raw_files_useless()
+
             event.accept()
 
         else:
@@ -1076,10 +1083,11 @@ class MainWindow(QMainWindow):
             self.pipeline_manager.redo()
 
     def remove_raw_files_useless(self):
-        """Remove the useless raw files of the current project, close the
-        database connection. The project is not valid any longer after this
-        call."""
+        """Remove the useless raw files of the current project.
 
+        Close the database connection. The project is not valid any longer
+        after this call.
+        """
         folder = self.project.folder
         self.project.database.close()
         self.project.database = None
