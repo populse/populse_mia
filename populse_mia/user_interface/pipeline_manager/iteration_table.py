@@ -218,7 +218,13 @@ class IterationTable(QWidget):
             self.values_list.append([])
 
         # Reset and fill values for this tag
-        self.values_list[idx] = list(set(values))
+        if self.values_list[idx] is not None:
+            self.values_list[idx] = []
+
+        for value in values:
+
+            if value not in self.values_list[idx]:
+                self.values_list[idx].append(value)
 
     def filter_values(self):
         """Open a dialog to select specific tag values for iteration."""
@@ -313,9 +319,12 @@ class IterationTable(QWidget):
             .pipelineEditorTabs.get_current_editor()
         )
         # fmt: on
-        available_fields = self.project.session.get_fields_names(
-            COLLECTION_CURRENT
-        )
+
+        with self.project.database.data() as database_data:
+            available_fields = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+
         ui_select = PopUpSelectTagCountTable(
             self.project,
             available_fields,
@@ -337,9 +346,12 @@ class IterationTable(QWidget):
 
         :param idx (int): Index of the clicked push button.
         """
-        available_fields = self.project.session.get_fields_names(
-            COLLECTION_CURRENT
-        )
+
+        with self.project.database.data() as database_data:
+            available_fields = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
+
         current_tag = self.push_buttons[idx].text()
         popUp = PopUpSelectTagCountTable(
             self.project,
