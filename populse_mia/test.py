@@ -1287,7 +1287,7 @@ class TestMIADataBrowser(TestMIACase):
 
         bricks_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )(COLLECTION_HISTORY)
+        )("History")
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
             0, bricks_column
         )
@@ -1764,7 +1764,7 @@ class TestMIADataBrowser(TestMIACase):
         mod = ModifyTable(
             self.main_window.project,
             value,
-            [str],
+            [FIELD_TYPE_LIST_STRING],
             scans_displayed,
             tag_name,
         )
@@ -1827,27 +1827,27 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
-            "-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+            "-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940"
             "_800.nii",
         )
         scan = self.main_window.data_browser.table_data.item(1, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
-            "-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+            "-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm-000940"
             "_800.nii",
         )
         scan = self.main_window.data_browser.table_data.item(2, 0).text()
         self.assertEqual(
             scan,
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
             "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
             "-000220_000.nii",
         )
         scan = self.main_window.data_browser.table_data.item(3, 0).text()
         self.assertEqual(
             scan,
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
             "-2014-02-14102317-01-G1_Guerbet_Anat-RAREpvm"
             "-000220_000.nii",
         )
@@ -1855,14 +1855,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(5, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(6, 0).text()
@@ -1876,14 +1876,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(8, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
 
@@ -10573,7 +10573,7 @@ class Test_Z_MIAOthers(TestMIACase):
 
         with iter_table.project.database.data() as database_data:
             DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
-            database_data.filter_documents = Mock(return_value=[DOC_1][0])
+            database_data.filter_documents = Mock(return_value=[DOC_1])
 
             ppl_editor.iterated_tag = "BandWidth"
 
