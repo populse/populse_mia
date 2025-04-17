@@ -1287,7 +1287,7 @@ class TestMIADataBrowser(TestMIACase):
 
         bricks_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )("History")
+        )(COLLECTION_HISTORY)
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
             0, bricks_column
         )
@@ -3950,39 +3950,35 @@ class TestMIADataBrowser(TestMIACase):
 
         self.assertIsInstance(self.project, Project)
         self.assertEqual(self.main_window.project.getName(), "Unnamed project")
-        tags = self.main_window.project.session.get_field_names(
-            COLLECTION_CURRENT
-        )
-        self.assertEqual(len(tags), 6)
-        self.assertTrue(TAG_CHECKSUM in tags)
-        self.assertTrue(TAG_FILENAME in tags)
-        self.assertTrue(TAG_TYPE in tags)
-        self.assertTrue(TAG_EXP_TYPE in tags)
-        self.assertTrue(TAG_BRICKS in tags)
-        self.assertTrue(TAG_HISTORY in tags)
-        self.assertEqual(
-            self.main_window.project.session.get_document_names(
-                COLLECTION_CURRENT
-            ),
-            [],
-        )
-        self.assertEqual(
-            self.main_window.project.session.get_document_names(
-                COLLECTION_INITIAL
-            ),
-            [],
-        )
-        collections = self.main_window.project.session.get_collections_names()
-        self.assertEqual(len(collections), 5)
-        self.assertTrue(COLLECTION_INITIAL in collections)
-        self.assertTrue(COLLECTION_CURRENT in collections)
-        self.assertTrue(COLLECTION_BRICK in collections)
-        self.assertTrue(COLLECTION_HISTORY in collections)
-        self.assertEqual(
-            self.main_window.windowTitle(),
-            "MIA - Multiparametric Image Analysis "
-            "(Admin mode) - Unnamed project",
-        )
+
+        with self.main_window.project.database.data() as database_data:
+            tags = database_data.get_field_names(COLLECTION_CURRENT)
+            self.assertEqual(len(tags), 6)
+            self.assertTrue(TAG_CHECKSUM in tags)
+            self.assertTrue(TAG_FILENAME in tags)
+            self.assertTrue(TAG_TYPE in tags)
+            self.assertTrue(TAG_EXP_TYPE in tags)
+            self.assertTrue(TAG_BRICKS in tags)
+            self.assertTrue(TAG_HISTORY in tags)
+            self.assertEqual(
+                database_data.get_document_names(COLLECTION_CURRENT),
+                [],
+            )
+            self.assertEqual(
+                database_data.get_document_names(COLLECTION_INITIAL),
+                [],
+            )
+            collections = database_data.get_collection_names()
+            self.assertEqual(len(collections), 5)
+            self.assertTrue(COLLECTION_INITIAL in collections)
+            self.assertTrue(COLLECTION_CURRENT in collections)
+            self.assertTrue(COLLECTION_BRICK in collections)
+            self.assertTrue(COLLECTION_HISTORY in collections)
+            self.assertEqual(
+                self.main_window.windowTitle(),
+                "MIA - Multiparametric Image Analysis "
+                "(Admin mode) - Unnamed project",
+            )
 
     def test_update_data_history(self):
         """Updates the history of data that have been re-written.
@@ -4138,7 +4134,9 @@ class TestMIADataBrowser(TestMIACase):
         """Tests the popup modifying the visualized tags."""
 
         # Testing default tags visibility
-        visible = self.main_window.project.session.get_shown_tags()
+        with self.main_window.project.database.data() as database_data:
+            visible = database_data.get_shown_tags()
+
         self.assertEqual(len(visible), 4)
         self.assertTrue(TAG_FILENAME in visible)
         self.assertTrue(TAG_BRICKS in visible)
@@ -4221,7 +4219,9 @@ class TestMIADataBrowser(TestMIACase):
         self.assertTrue(TAG_EXP_TYPE in visible_tags)
         QTest.mouseClick(settings.push_button_ok, Qt.LeftButton)
 
-        new_visibles = self.main_window.project.session.get_shown_tags()
+        with self.main_window.project.database.data() as database_data:
+            new_visibles = database_data.get_shown_tags()
+
         self.assertEqual(len(new_visibles), 3)
         self.assertTrue(TAG_FILENAME in new_visibles)
         self.assertTrue(TAG_EXP_TYPE in new_visibles)
@@ -4258,7 +4258,9 @@ class TestMIADataBrowser(TestMIACase):
         )
         QTest.mouseClick(settings.push_button_ok, Qt.LeftButton)
 
-        new_visibles = self.main_window.project.session.get_shown_tags()
+        with self.main_window.project.database.data() as database_data:
+            new_visibles = database_data.get_shown_tags()
+
         self.assertEqual(len(new_visibles), 4)
         self.assertTrue(TAG_FILENAME in new_visibles)
         self.assertTrue(TAG_EXP_TYPE in new_visibles)
@@ -4385,9 +4387,9 @@ class TestMIAMainWindow(TestMIACase):
 
         # Gets the UID of the first brick in the brick collection, which is
         # composed of the bricks appearing in the scan history.
-        bricks_coll = ppl_manager.project.session.get_documents(
-            COLLECTION_BRICK
-        )
+        with ppl_manager.project.database.data() as database_data:
+            bricks_coll = database_data.get_documents(COLLECTION_BRICK)
+
         brick = bricks_coll[0]
 
         # Appends it to the 'brick_list'
@@ -4417,10 +4419,6 @@ class TestMIAMainWindow(TestMIACase):
             - QMessageBox.exec
             - PopUpNewProject.exec
         """
-
-        # Sets shortcuts for often used objects
-        session = self.main_window.project.session
-
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
         folder = os.path.join(new_proj_path, "data", "downloaded_data")
@@ -4431,7 +4429,8 @@ class TestMIAMainWindow(TestMIACase):
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Adds a document to the collection
-        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        with self.main_window.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of the pop-up quit
         PopUpQuit.exec = lambda self_, *args: self_.show()
@@ -4443,7 +4442,8 @@ class TestMIAMainWindow(TestMIACase):
         self.assertTrue(hasattr(self.main_window, "pop_up_close"))
         self.main_window.pop_up_close.accept()
 
-        session.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
+        with self.main_window.project.database.data() as database_data:
+            database_data.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of a pop-up
         QMessageBox.exec = lambda self_, *args: self_.show()
@@ -4538,9 +4538,11 @@ class TestMIAMainWindow(TestMIACase):
 
         # Gets information regarding the fist scan, located in the
         # 'derived_data' of the project
-        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[0]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
+
         DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split(".")[0]
 
         # Gets the 'raw_data' folder path, where the scan will be import
@@ -6783,9 +6785,10 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[0]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
@@ -6940,12 +6943,13 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[1]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
+            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
+                1
+            ]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
@@ -7064,9 +7068,10 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[0]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
@@ -7179,12 +7184,13 @@ class TestMIANodeController(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Get the 2 first documents/records
-        DOCUMENT_1 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[0]
-        DOCUMENT_2 = (self.main_window.project.session.get_document_names)(
-            "current"
-        )[1]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
+            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
+                1
+            ]
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -7279,9 +7285,11 @@ class TestMIANodeController(TestMIACase):
         )
 
         # Opens a filter for the plug "in_files", now with a "scans_list"
-        node_controller.scan_list = (
-            self.main_window.project.session.get_document_names
-        )("current")
+        with self.main_window.project.database.data() as database_data:
+            node_controller.scan_list = database_data.get_document_names(
+                COLLECTION_CURRENT
+            )
+
         node_controller.display_filter(
             "inputs", "in_files", parameters, input_process
         )
@@ -8293,12 +8301,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_document_names(
-            "current"
-        )[0]
-        DOCUMENT_2 = self.main_window.project.session.get_document_names(
-            "current"
-        )[1]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
+            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
+                1
+            ]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
 
@@ -8326,9 +8335,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        pipeline_manager.project.session.add_document(
-            COLLECTION_BRICK, brick_id
-        )
+        with pipeline_manager.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values corresponding to "inputs" node
         trait_list_inlist = TraitListObject(
@@ -8364,15 +8372,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in
         # the database
-        pipeline_manager.project.session.get_document(
-            COLLECTION_CURRENT, DOCUMENT_1
-        )
-        pipeline_manager.project.session.get_document(
-            COLLECTION_CURRENT, DOCUMENT_2
-        )
-        has_document = pipeline_manager.project.session.has_document
-        self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
-        self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_2))
+        with pipeline_manager.project.database.data() as database_data:
+            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_2)
+            self.assertTrue(
+                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
+            )
+            self.assertTrue(
+                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_2)
+            )
 
     def test_add_plug_value_to_database_non_list_type(self):
         """Opens a project, adds a 'Rename' process, exports a non list type
@@ -8385,9 +8393,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        DOCUMENT_1 = self.main_window.project.session.get_document_names(
-            "current"
-        )[0]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -8428,9 +8437,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        pipeline_manager.project.session.add_document(
-            COLLECTION_BRICK, brick_id
-        )
+        with pipeline_manager.project.database.data() as database_data:
+            database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values in the "inputs" node
         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
@@ -8448,8 +8456,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         if completion:
             attributes = completion.get_attribute_values().export_to_dict()
 
-        has_document = pipeline_manager.project.session.has_document
-
         # Plug value is file location outside project directory
         pipeline_manager.add_plug_value_to_database(
             DOCUMENT_1,
@@ -8463,10 +8469,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
             inputs,
             attributes,
         )
-        pipeline_manager.project.session.get_document(
-            COLLECTION_CURRENT, DOCUMENT_1
-        )
-        self.assertTrue(has_document(COLLECTION_CURRENT, DOCUMENT_1))
+
+        with pipeline_manager.project.database.data() as database_data:
+            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+            self.assertTrue(
+                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
+            )
+
         # Plug values outside the directory are not registered into the
         # database, therefore only plug values inside the project will be used
         # from now on.
@@ -8690,18 +8699,26 @@ class TestMIAPipelineManagerTab(TestMIACase):
         def reset_collections():
             """Blabla"""
 
-            if session.has_document(COLLECTION_CURRENT, P_VALUE):
-                session.remove_document(COLLECTION_CURRENT, P_VALUE)
-            if session.has_document(COLLECTION_CURRENT, DOCUMENT_1):
-                session.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
-            if session.has_document(COLLECTION_INITIAL, P_VALUE):
-                session.remove_document(COLLECTION_INITIAL, P_VALUE)
-            if session.has_document(COLLECTION_INITIAL, DOCUMENT_1):
-                session.remove_document(COLLECTION_INITIAL, DOCUMENT_1)
+            with ppl_manager.project.database.data() as database_data:
+
+                if database_data.has_document(COLLECTION_CURRENT, P_VALUE):
+                    database_data.remove_document(COLLECTION_CURRENT, P_VALUE)
+
+                if database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1):
+                    database_data.remove_document(
+                        COLLECTION_CURRENT, DOCUMENT_1
+                    )
+
+                if database_data.has_document(COLLECTION_INITIAL, P_VALUE):
+                    database_data.remove_document(COLLECTION_INITIAL, P_VALUE)
+
+                if database_data.has_document(COLLECTION_INITIAL, DOCUMENT_1):
+                    database_data.remove_document(
+                        COLLECTION_INITIAL, DOCUMENT_1
+                    )
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
-        session = ppl_manager.project.session
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
 
@@ -8717,7 +8734,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
         P_VALUE = DOCUMENT_1.replace(os.path.abspath(project_8_path), "")[1:]
 
-        session.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+        with ppl_manager.project.database.data(write=True) as database_data:
+            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Adds the processes Rename, creates the "rename_1" node
         ppl_edt_tab.click_pos = QPoint(450, 500)
@@ -8747,7 +8765,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         ppl_manager.brick_list.append(brick_id)
 
-        ppl_manager.project.session.add_document(COLLECTION_BRICK, brick_id)
+        with ppl_manager.project.database.data(write=True) as database_data:
+            database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values in the "inputs" node
         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
@@ -8766,37 +8785,39 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes = completion.get_attribute_values().export_to_dict()
 
         # Mocks the document getter to always return a scan
-        SCAN_1 = session.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-        session.get_document = mock_get_document
+        with ppl_manager.project.database.data() as database_data:
+            SCAN_1 = database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+            database_data.get_document = mock_get_document
 
-        # Mocks the value setter on the session
-        session.set_values = Mock()
+            # Mocks the value setter on the database
+            database_data.set_values = Mock()
 
-        # 1) 'parent_files' is a dict with 2 keys and identical values
-        parent_files = {
-            "mock_key_1": os.path.join(
-                ppl_manager.project.folder, "mock_val_1"
-            ),
-            "mock_key_2": os.path.join(
-                ppl_manager.project.folder, "mock_val_1"
-            ),
-        }
+            # 1) 'parent_files' is a dict with 2 keys and identical values
+            parent_files = {
+                "mock_key_1": os.path.join(
+                    ppl_manager.project.folder, "mock_val_1"
+                ),
+                "mock_key_2": os.path.join(
+                    ppl_manager.project.folder, "mock_val_1"
+                ),
+            }
 
-        reset_inheritance_dicts()
-        reset_collections()
+            reset_inheritance_dicts()
+            reset_collections()
 
-        args = [
-            DOCUMENT_1,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        ]
+            args = [
+                DOCUMENT_1,
+                brick_id,
+                "",
+                "rename_1",
+                plug_name,
+                "rename_1",
+                job,
+                trait,
+                inputs,
+                attributes,
+            ]
+
         ppl_manager.add_plug_value_to_database(*args)
 
         # Mocks the execution of 'PopUpInheritanceDict' to avoid
@@ -9483,9 +9504,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        DOCUMENT_1 = self.main_window.project.session.get_document_names(
-            "current"
-        )[0]
+        with self.main_window.project.database.data() as database_data:
+            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+                0
+            ]
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -9533,9 +9555,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        pipeline_manager.project.session.add_document(
-            COLLECTION_BRICK, brick_id
-        )
+        with pipeline_manager.project.database.data(
+            write=True
+        ) as database_data:
+            database_data.add_document(COLLECTION_BRICK, brick_id)
 
         pipeline_manager._register_node_io_in_database(job, job.process())
 
@@ -10485,7 +10508,6 @@ class Test_Z_MIAOthers(TestMIACase):
 
         # Sets shortcuts for objects that are often used
         iter_table = self.main_window.pipeline_manager.iterationTable
-        session = iter_table.project.session
         ppl_manager = self.main_window.pipeline_manager
         ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
 
@@ -10538,7 +10560,9 @@ class Test_Z_MIAOthers(TestMIACase):
 
         # Sends the data browser scans to the pipeline manager and updates the
         # iterated tags
-        SCANS_LIST = iter_table.project.session.get_document_names("current")
+        with iter_table.project.database.data() as database_data:
+            SCANS_LIST = database_data.get_document_names(COLLECTION_CURRENT)
+
         ppl_manager.scan_list = SCANS_LIST
         iter_table.update_iterated_tag()
 
@@ -10546,12 +10570,14 @@ class Test_Z_MIAOthers(TestMIACase):
         # mocking the execution of 'filter_documents'
 
         DOC_1_NAME = SCANS_LIST[0]
-        DOC_1 = iter_table.project.session.get_document("current", DOC_1_NAME)
 
-        session.filter_documents = Mock(return_value=[DOC_1])
-        ppl_editor.iterated_tag = "BandWidth"
+        with iter_table.project.database.data() as database_data:
+            DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
+            database_data.filter_documents = Mock(return_value=[DOC_1][0])
 
-        iter_table.update_table()
+            ppl_editor.iterated_tag = "BandWidth"
+
+            iter_table.update_table()
 
         # Asserts that the iteration table has one item
         self.assertIsNotNone(iter_table.iteration_table.item(0, 0))
