@@ -2007,7 +2007,7 @@ class PopUpMultipleSort(QDialog):
 
         with self.project.database.data() as database_data:
 
-            for scan in database_data.get_field_names(COLLECTION_CURRENT):
+            for scan in database_data.get_document_names(COLLECTION_CURRENT):
                 current_value = database_data.get_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
