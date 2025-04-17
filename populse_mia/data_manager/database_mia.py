@@ -515,6 +515,8 @@ class DatabaseMiaData:
         - add_document: Adds a document to a collection.
         - filter_documents: Retrieves documents from a specified collection
                             that match a given filter.
+        - get_collection_names: Retrieves a list of all collection names in
+                                the database.
         - get_document: Retrieves documents from a specified collection with
                         optional filtering.
         - get_document_names: Retrieves a list of all document names in the
@@ -618,6 +620,14 @@ class DatabaseMiaData:
         #       likely need to be implemented later for memory
         #       management reasons.
         return self.storage_data[collection_name].search(filter_query)
+
+    def get_collection_names(self):
+        """
+        Retrieves a list of all collection names in the database.
+
+        :return (list): All collection names in the database.
+        """
+        return self.storage_data.collection_names()
 
     def get_document(self, collection_name, primary_keys=None, fields=None):
         """
