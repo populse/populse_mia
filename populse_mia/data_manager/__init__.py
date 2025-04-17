@@ -2,11 +2,13 @@
 
 Contains:
     Module:
-      - data_loader
-      - database_mia
-      - filter
-      - project
-      - project_properties
+        - data_history_inspect
+        - data_loader
+        - database_mia
+        - filter
+        - project
+        - project_properties
+        - project
 
 """
 
