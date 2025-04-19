@@ -229,7 +229,7 @@ class CountTable(QDialog):
         Add a new tag to visualize in the count table.
         """
         idx = len(self.push_buttons)
-        new_button = self._create_push_button(f"Tag n°{idx +1 }", idx)
+        new_button = self._create_push_button(f"Tag n°{idx + 1}", idx)
         self.push_buttons.append(new_button)
         self.refresh_layout()
 
