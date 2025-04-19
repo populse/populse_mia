@@ -13,15 +13,15 @@ environment:
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-      PYTHON: "C:\\Python39-x64"
+      PYTHON: "C:\\Python310-x64"
 #      APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
-      PYTHON: "$HOME/venv3.9"
+      PYTHON: "$HOME/venv3.10"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr1EjtvZSme00z56yV2c0WWlhKyVUbz56w893WHTjvqgeZuezzGM1vdeD+fQDPBn3WhhOQHNmL2VxDo+f1CFE7ybT6epYPrvdz4B7MqORX8lIOIVVL82GclpDxnJkM7LzMWbOvJ7Gjf12Ob45Nx2ESZxHVv5Z9GeAmMyX2gHu3dlhJQoq6YQ0U/aqkFzfYLbEI5/H78Xmd2YzlxDnzNPB9xbjNqub1KTS+p3JhhSXJgWHeRn/kqwwkOdTnjG1yZoCWgSzCHsQx9oacYciY49Lo5falgIIw3ORJWgk/vjedxDFjBLgYj5NPzGcaxgzsFmMDWyynTSZyysb3HKbydODXV9i40dEnC9gfBQER0m9/cXPcxBK7oVZdZwrxXm0Ke3QGYtRLmh9N2lTUm51/IPBRaDH6/L1se4NgVuT2uytHEYN2t30r14CJhzJ2QGCoas8sxFS9Pt0BWzC4C1WQyZlDN0= econdami@irmage-pteric
 
     - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-      PYTHON: "~/venv3.9"
+      PYTHON: "~/venv3.10"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
 
 install:
@@ -32,31 +32,113 @@ install:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
 
-  - cmd: SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
-  - sh: export PATH=~/venv3.9/bin:~/venv3.9/lib:$PATH
+  - cmd: set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%
+  - sh: export PATH=~/venv3.10/bin:~/venv3.10/lib:$PATH
   - sh: if [[ $(uname -s) == Linux ]]; then export QT_LOGGING_RULES='*.debug=false;qt.qpa.*=false'; fi
+
+  - cd ..
+
+  # Force recent SQLite version
+  - sh: |
+      if [[ $(uname -s) == Linux ]]; then
+        echo "     ** Removing older SQLite versions **"
+        sudo apt-get remove --purge -y sqlite3 libsqlite3-dev
+        sudo apt-get autoremove -y
+        sudo apt-get update
+        echo "     ** Installing SQLite 3.47 for linux **"
+        sudo apt-get install -y build-essential wget
+        wget https://www.sqlite.org/2024/sqlite-autoconf-3470100.tar.gz
+        tar -xvzf sqlite-autoconf-3470100.tar.gz
+        cd sqlite-autoconf-3470100
+        ./configure --prefix=/usr/local
+        make
+        sudo make install
+        export PATH=/usr/local/bin:$PATH
+        export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+        cd ..
+      fi
+  - sh: |
+      if [[ $(uname -s) == Darwin ]]; then
+        echo "** Installing SQLite 3.47 for macOS **"
+        curl -L https://www.sqlite.org/2024/sqlite-autoconf-3470100.tar.gz -o sqlite-autoconf-3470100.tar.gz
+        tar -xvzf sqlite-autoconf-3470100.tar.gz
+        cd sqlite-autoconf-3470100
+        ./configure --prefix=/usr/local
+        make
+        sudo make install
+        export PATH=/usr/local/bin:$PATH
+        export DYLD_LIBRARY_PATH=/usr/local/lib:$DYLD_LIBRARY_PATH
+        sqlite3 --version
+        cd ..
+        # Now download and rebuild Python
+        echo "** Rebuilding Python with new SQLite **"
+
+        # Determine current Python version
+        PYTHON_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')")
+        PYTHON_MAJOR_MINOR=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')")
+
+        # Download Python source of the same version
+        curl -L https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz -o Python-${PYTHON_VERSION}.tgz
+        tar -xzf Python-${PYTHON_VERSION}.tgz
+        cd Python-${PYTHON_VERSION}
+
+        # Configure with SQLite paths and optimizations
+        ./configure --prefix=/usr/local/opt/python-rebuild \
+        --with-openssl=/usr/local/opt/openssl \
+        --enable-optimizations \
+        --with-system-ffi \
+        LDFLAGS="-L/usr/local/lib" \
+        CPPFLAGS="-I/usr/local/include"
+
+        # Build and install Python
+        make -j $(sysctl -n hw.ncpu)
+        sudo make install
+
+        # Update PATH to use the rebuilt Python
+        export PATH=/usr/local/opt/python-rebuild/bin:$PATH
+
+        # Create symlinks for python3 and pip3
+        sudo ln -sf /usr/local/opt/python-rebuild/bin/python${PYTHON_MAJOR_MINOR} /usr/local/bin/python3
+        sudo ln -sf /usr/local/opt/python-rebuild/bin/pip${PYTHON_MAJOR_MINOR} /usr/local/bin/pip3
+
+        # Verify the SQLite version
+        python3 -c "import sqlite3; print(f'Python is now using SQLite version: {sqlite3.sqlite_version}')"
+
+        # Remove old venv and create a new one with the rebuilt Python
+        echo "** Creating new virtual environment with rebuilt Python **"
+        rm -rf ~/venv3.10
+        /usr/local/opt/python-rebuild/bin/python3 -m venv ~/venv3.10
+        source ~/venv3.10/bin/activate
+
+        cd ..
+      fi
+  - cmd: |
+      echo "     ** Installing SQLite 3.47 for Windows **"
+      mkdir C:\sqlite
+      curl -L -o sqlite-tools-win-x64-3470100.zip https://www.sqlite.org/2024/sqlite-tools-win-x64-3470100.zip
+      tar -xf sqlite-tools-win-x64-3470100.zip -C C:\sqlite
+      set PATH=C:\sqlite;%PATH%
 
   - python --version
   - python -m pip install pip --upgrade
-  - pip -V
-  - pip install --upgrade setuptools wheel
-  - pip install cython --upgrade
-  - pip install psutil
+  - python -m pip -V
+  - python -m pip install --upgrade setuptools wheel
+  - python -m pip install cython --upgrade
+  - python -m pip install psutil
+  - python -m pip show psutil
+  - python -c "import psutil; print(psutil.__path__)"
   - cmd: pip install pypiwin32
-  - pip install pyparsing --upgrade
+  - python -m pip install pyparsing --upgrade
 
-# This is a patch to avoid the "AttributeError: 'PathMetadata' object has no attribute 'isdir'" observed since pip-22.0.2 (see for example UT for commit 50187200b6):
-#  - pip install capsul soma-workflow
+  - cd populse-mia
+  - python -m pip install .
 
-  - pip install .
-#  - git lfs install
-#  - git lfs pull
-  - echo y | pip uninstall PyQt5
-  - echo y | pip uninstall PyQt5-sip
-  - pip install PyQt5
+  - echo y | python -m pip uninstall PyQt5
+  - echo y | python -m pip uninstall PyQt5-sip
+  - python -m pip install PyQt5
 
   # We want to use the last github versions instead of the pypi version:
-  - pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
+  - python -m pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
 
   - cmd: git clone --depth=50 --branch=%POPULSE_DB_BRANCH% https://github.com/populse/populse_db.git C:\\projects\\populse_db
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$POPULSE_DB_BRANCH https://github.com/populse/populse_db.git /home/appveyor/projects/populse_db; fi
@@ -66,7 +148,7 @@ install:
   - sh: if [[ $(uname -s) == Linux ]]; then cd /home/appveyor/projects/populse_db; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then cd /Users/appveyor/projects/populse_db; fi
 
-  - pip install -e .[postgres]
+  - python -m pip install -e .[postgres]
   - cd ..
 
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/soma-base.git C:\\projects\\soma-base
@@ -106,7 +188,7 @@ test_script:
   - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./populse_mia/test.py -v; fi
 
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python3 ./populse_mia/test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./populse_mia/test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then coverage xml -i; fi
 
