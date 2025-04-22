@@ -1331,14 +1331,14 @@ class TestMIADataBrowser(TestMIACase):
         )
         self.assertEqual(
             brick_table.cellWidget(0, 2).children()[1].text(),
-            "2025-04-15 14:48:41",
+            "2025-04-22 15:55:59",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 3).children()[1].text(), "Done"
         )
         self.assertEqual(
             brick_table.cellWidget(0, 4).children()[1].text(),
-            "2025-04-15 14:48:41",
+            "2025-04-22 15:55:59",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 5).children()[1].text(), "0"
@@ -1358,7 +1358,7 @@ class TestMIADataBrowser(TestMIACase):
         )
         self.assertEqual(
             brick_table.cellWidget(0, 9).children()[1].text(),
-            "/usr/local/MATLAB/R2020b/bin/matlab",
+            "/data/softs/MATLAB/R2024a/bin/matlab",
         )
         self.assertEqual(
             brick_table.cellWidget(0, 10).children()[1].text(), "True"
@@ -1568,36 +1568,36 @@ class TestMIADataBrowser(TestMIACase):
             count_table.table.horizontalHeaderItem(0).text(), "BandWidth"
         )
         self.assertEqual(
-            count_table.table.horizontalHeaderItem(1).text()[1:-1], "75.0"
-        )
-        self.assertAlmostEqual(
-            float(count_table.table.horizontalHeaderItem(2).text()[1:-1]),
-            5.8239923,
+            count_table.table.horizontalHeaderItem(1).text()[1:-1], "5.0"
         )
         self.assertEqual(
-            count_table.table.horizontalHeaderItem(3).text()[1:-1], "5.0"
+            float(count_table.table.horizontalHeaderItem(2).text()[1:-1]),
+            75.0,
+        )
+        self.assertEqual(
+            count_table.table.horizontalHeaderItem(3).text()[1:-1], "5.8239923"
         )
         self.assertEqual(
             count_table.table.verticalHeaderItem(3).text(), "Total"
         )
-        self.assertEqual(count_table.table.item(0, 0).text()[1:-1], "50000.0")
-        self.assertEqual(count_table.table.item(1, 0).text()[1:-1], "25000.0")
-        self.assertAlmostEqual(
-            float(count_table.table.item(2, 0).text()[1:-1]), 65789.48
+        self.assertEqual(count_table.table.item(0, 0).text()[1:-1], "65789.48")
+        self.assertEqual(count_table.table.item(1, 0).text()[1:-1], "50000.0")
+        self.assertEqual(
+            float(count_table.table.item(2, 0).text()[1:-1]), 25000.0
         )
         self.assertEqual(count_table.table.item(3, 0).text(), "3")
-        self.assertEqual(count_table.table.item(0, 1).text(), "2")
+        self.assertEqual(count_table.table.item(0, 1).text(), "5")
         self.assertEqual(count_table.table.item(1, 1).text(), "")
         self.assertEqual(count_table.table.item(2, 1).text(), "")
-        self.assertEqual(count_table.table.item(3, 1).text(), "2")
+        self.assertEqual(count_table.table.item(3, 1).text(), "5")
         self.assertEqual(count_table.table.item(0, 2).text(), "")
         self.assertEqual(count_table.table.item(1, 2).text(), "2")
         self.assertEqual(count_table.table.item(2, 2).text(), "")
         self.assertEqual(count_table.table.item(3, 2).text(), "2")
         self.assertEqual(count_table.table.item(0, 3).text(), "")
         self.assertEqual(count_table.table.item(1, 3).text(), "")
-        self.assertEqual(count_table.table.item(2, 3).text(), "5")
-        self.assertEqual(count_table.table.item(3, 3).text(), "5")
+        self.assertEqual(count_table.table.item(2, 3).text(), "2")
+        self.assertEqual(count_table.table.item(3, 3).text(), "2")
 
     def test_mia_preferences(self):
         """Tests the MIA preferences popup."""
@@ -1764,7 +1764,7 @@ class TestMIADataBrowser(TestMIACase):
         mod = ModifyTable(
             self.main_window.project,
             value,
-            [FIELD_TYPE_LIST_STRING],
+            FIELD_TYPE_LIST_BOOLEAN,
             scans_displayed,
             tag_name,
         )
@@ -1827,14 +1827,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
-            "-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+            "-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm-000940"
             "_800.nii",
         )
         scan = self.main_window.data_browser.table_data.item(1, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014"
-            "-02-14102317-10-G3_Guerbet_MDEFT-MDEFTpvm-000940"
+            "-02-14102317-04-G3_Guerbet_MDEFT-MDEFTpvm-000940"
             "_800.nii",
         )
         scan = self.main_window.data_browser.table_data.item(2, 0).text()
@@ -1855,14 +1855,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(5, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(6, 0).text()
@@ -1876,14 +1876,14 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
         scan = self.main_window.data_browser.table_data.item(8, 0).text()
         self.assertEqual(
             scan,
             "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RAREpvm"
+            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RAREpvm"
             "-000142_400.nii",
         )
 
@@ -2005,7 +2005,7 @@ class TestMIADataBrowser(TestMIACase):
             "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
-        with self.main_window.project.data() as database_data:
+        with self.main_window.project.database.data() as database_data:
             documents = database_data.get_document_names(COLLECTION_CURRENT)
 
             self.assertEqual(len(documents), 9)
@@ -2424,7 +2424,9 @@ class TestMIADataBrowser(TestMIACase):
         DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
 
         # Adds 2 scans to the current database
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data(
+            write=True
+        ) as database_data:
             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
             database_data.add_document(COLLECTION_INITIAL, DOCUMENT_1)
             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_2)
@@ -2458,7 +2460,9 @@ class TestMIADataBrowser(TestMIACase):
         # Asserts that the scans were deleted
         self.assertEqual(len(tb_data.scans), 0)
 
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data(
+            write=True
+        ) as database_data:
             # Adds one scan to the current database
             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
             database_data.add_document(COLLECTION_INITIAL, DOCUMENT_1)
