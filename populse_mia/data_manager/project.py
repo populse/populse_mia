@@ -1089,15 +1089,17 @@ class Project:
 
         return jobs
 
-    def getFilter(self, filter):
+    def getFilter(self, target_filter):
         """Return a Filter object from its name.
 
-        :param filter (str): Filter name
+        :param target_filter (str): Filter name
 
         :return (Filter): Filter object corresponding to the given name or
                           None if not found
         """
-        next((obj for obj in self.filters if obj.name == filter), None)
+        return next(
+            (obj for obj in self.filters if obj.name == target_filter), None
+        )
 
     def getFilterName(self):
         """
@@ -1769,12 +1771,12 @@ class Project:
         self.saveConfig()
         self.unsavedModifications = False
 
-    def setCurrentFilter(self, filter):
+    def setCurrentFilter(self, new_filter):
         """Set the current filter of the project.
 
-        :param filter: New Filter object
+        :param new_filter: New Filter object
         """
-        self.currentFilter = filter
+        self.currentFilter = new_filter
 
     def setDate(self, date):
         """Set the date of the project.
