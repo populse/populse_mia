@@ -790,7 +790,7 @@ class DatabaseMiaData:
         names_set = set()
 
         for i in self.filter_documents(
-            FIELD_ATTRIBUTES_COLLECTION, "{visibility} == true"
+            FIELD_ATTRIBUTES_COLLECTION, "{visibility} == True"
         ):
 
             if i:
@@ -799,11 +799,11 @@ class DatabaseMiaData:
                 #       key. Indeed, we know that it is the primary key for
                 #       the collection FIELD_ATTRIBUTES_COLLECTION.
                 tag = i[next(iter(i))]
-                tag = tag.split("|")[1]
+                collection, field = tag.split("|")
 
-                if tag not in names_set:
-                    names_set.add(tag)
-                    visible_names.append(tag)
+                if field not in names_set and collection == COLLECTION_CURRENT:
+                    names_set.add(field)
+                    visible_names.append(field)
 
         return visible_names
 
