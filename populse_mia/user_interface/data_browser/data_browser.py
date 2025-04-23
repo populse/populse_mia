@@ -1813,58 +1813,57 @@ class TableDataBrowser(QTableWidget):
                         self.setMouseTracking(True)
                         return
 
-                # Error if lists of different lengths
-                self.lengths = [x for x in self.lengths if x is not None]
+            # Error if lists of different lengths
+            self.lengths = [x for x in self.lengths if x is not None]
 
-                if self.lengths == []:
-                    self.lengths = [1]
+            if self.lengths == []:
+                self.lengths = [1]
 
-                if len(self.lengths) > 1:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Warning)
-                    msg.setText("Incompatible list lengths")
-                    msg.setInformativeText(
-                        "The lists can't have several lengths"
-                    )
-                    msg.setWindowTitle("Warning")
-                    msg.setStandardButtons(QMessageBox.Ok)
-                    msg.buttonClicked.connect(msg.close)
-                    msg.exec()
+            if len(self.lengths) > 1:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Warning)
+                msg.setText("Incompatible list lengths")
+                msg.setInformativeText("The lists can't have several lengths")
+                msg.setWindowTitle("Warning")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.buttonClicked.connect(msg.close)
+                msg.exec()
 
-                # Ok
-                elif len(self.old_table_values) > 0:
+            # Ok
+            elif len(self.old_table_values) > 0:
 
-                    if len(self.coordinates) > 1:
-                        value = []
+                if len(self.coordinates) > 1:
+                    value = []
 
-                        for i in range(0, self.lengths[0]):
-                            value.append(0)
+                    for i in range(0, self.lengths[0]):
+                        value.append(0)
 
-                    else:
-                        value = self.old_table_values[0]
+                else:
+                    value = self.old_table_values[0]
 
-                    if value is None:
-                        value = [0]
+                if value is None:
+                    value = [0]
 
-                    # Window to change list values displayed
-                    self.popup = ModifyTable(
-                        self.project,
-                        value,
-                        self.types,
-                        self.scans_list,
-                        self.tags,
-                    )
+                # Window to change list values displayed
+                self.popup = ModifyTable(
+                    self.project,
+                    value,
+                    self.types,
+                    self.scans_list,
+                    self.tags,
+                )
 
-                    if self.popup.exec_():
-                        self.popup.deleteLater()
-                        del self.popup
+                if self.popup.exec_():
+                    self.popup.deleteLater()
+                    del self.popup
 
-                    # For history
-                    history_maker = []
-                    history_maker.append("modified_values")
-                    modified_values = []
-                    self.itemChanged.disconnect()
+                # For history
+                history_maker = []
+                history_maker.append("modified_values")
+                modified_values = []
+                self.itemChanged.disconnect()
 
+                with self.project.database.data() as database_data:
                     # Lists updated
                     for i in range(0, len(self.coordinates)):
                         new_item = QTableWidgetItem()
@@ -1899,16 +1898,16 @@ class TableDataBrowser(QTableWidget):
                             new_item,
                         )
 
-                    # For history
-                    history_maker.append(modified_values)
-                    self.project.undos.append(history_maker)
-                    self.project.redos.clear()
-                    self.update_colors()
-                    self.itemChanged.connect(self.change_cell_color)
+                # For history
+                history_maker.append(modified_values)
+                self.project.undos.append(history_maker)
+                self.project.redos.clear()
+                self.update_colors()
+                self.itemChanged.connect(self.change_cell_color)
 
-                self.setMouseTracking(True)
-                self.resizeColumnsToContents()  # Columns re-sized
-                self.resizeRowsToContents()
+            self.setMouseTracking(True)
+            self.resizeColumnsToContents()  # Columns re-sized
+            self.resizeRowsToContents()
 
         except Exception as e:
             logger.warning(e)

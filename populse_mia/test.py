@@ -209,6 +209,7 @@ from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
 from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 
 from populse_mia.data_manager import (  # noqa: E402
+    BRICK_ID,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
@@ -1764,7 +1765,7 @@ class TestMIADataBrowser(TestMIACase):
         mod = ModifyTable(
             self.main_window.project,
             value,
-            FIELD_TYPE_LIST_BOOLEAN,
+            [FIELD_TYPE_LIST_BOOLEAN],
             scans_displayed,
             tag_name,
         )
@@ -3350,7 +3351,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Gets the input file path of the input scan
         with self.main_window.project.database.data() as database_data:
-            INPUT_SCAN = database_data.get_documents(COLLECTION_CURRENT)[0][
+            INPUT_SCAN = database_data.get_document(COLLECTION_CURRENT)[0][
                 "FileName"
             ]
 
@@ -3527,16 +3528,19 @@ class TestMIADataBrowser(TestMIACase):
 
         # TESTS CHANGE_CELL_COLOR
         # Adds a new document to the collection
-        NEW_DOC = {"FileName": "mock_file_name"}
+        # NEW_DOC = {"FileName": "mock_file_name"}
+        NEW_DOC = "mock_file_name"
 
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data(
+            write=True
+        ) as database_data:
             database_data.add_document(COLLECTION_CURRENT, NEW_DOC)
             database_data.add_document(COLLECTION_INITIAL, NEW_DOC)
 
         # Selects the 'Filename' of the first scan and changes its value
         # to this document filename
         table_data.item(0, 0).setSelected(True)
-        table_data.item(0, 0).setText(NEW_DOC["FileName"])
+        table_data.item(0, 0).setText(NEW_DOC)
         table_data.item(0, 0).setSelected(False)
 
         # Selects 'FOV' and changes its value
@@ -4392,12 +4396,12 @@ class TestMIAMainWindow(TestMIACase):
         # Gets the UID of the first brick in the brick collection, which is
         # composed of the bricks appearing in the scan history.
         with ppl_manager.project.database.data() as database_data:
-            bricks_coll = database_data.get_documents(COLLECTION_BRICK)
+            bricks_coll = database_data.get_document(COLLECTION_BRICK)
 
         brick = bricks_coll[0]
 
         # Appends it to the 'brick_list'
-        ppl_manager.brick_list.append(brick.ID)
+        ppl_manager.brick_list.append(brick[BRICK_ID])
 
         # Mocks having initialized the pipeline
         ppl_manager.init_clicked = True
@@ -4433,7 +4437,9 @@ class TestMIAMainWindow(TestMIACase):
         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Adds a document to the collection
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data(
+            write=True
+        ) as database_data:
             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of the pop-up quit
@@ -8339,7 +8345,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        with pipeline_manager.project.database.data() as database_data:
+        with pipeline_manager.project.database.data(
+            write=True
+        ) as database_data:
             database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values corresponding to "inputs" node
@@ -8441,7 +8449,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        with pipeline_manager.project.database.data() as database_data:
+        with pipeline_manager.project.database.data(
+            write=True
+        ) as database_data:
             database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values in the "inputs" node
