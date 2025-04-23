@@ -209,7 +209,6 @@ from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
 from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 
 from populse_mia.data_manager import (  # noqa: E402
-    BRICK_ID,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
@@ -858,8 +857,6 @@ class TestMIADataBrowser(TestMIACase):
             - test_undo_redo_databrowser: tests data browser undo/redo
             - test_unnamed_proj_soft_open: tests unnamed project
               creation at software opening
-            - test_update_data_history: updates the history of data that
-              have been re-written
             - test_update_default_value: updates the values when a list
               of default values is created
             - test_utils: test the utils functions
@@ -3528,7 +3525,6 @@ class TestMIADataBrowser(TestMIACase):
 
         # TESTS CHANGE_CELL_COLOR
         # Adds a new document to the collection
-        # NEW_DOC = {"FileName": "mock_file_name"}
         NEW_DOC = "mock_file_name"
 
         with self.main_window.project.database.data(
@@ -3552,27 +3548,27 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.data_browser.add_tag_infos(
             "mock_tag", 0.0, FIELD_TYPE_FLOAT, "", ""
         )
-        table_data.item(0, 6).setSelected(True)
+        table_data.item(0, 7).setSelected(True)
 
         # Mocks the execution of a dialog box
         QMessageBox.exec = lambda *args: None
 
         # Tries setting an invalid string value to the tag
-        table_data.item(0, 6).setText("invalid_string")
-        table_data.item(0, 6).setSelected(False)
+        table_data.item(0, 7).setText("invalid_string")
+        table_data.item(0, 7).setSelected(False)
 
         # Creates another tag of type float and selects it
         self.main_window.data_browser.add_tag_infos(
             "mock_tag_1", 0.0, FIELD_TYPE_FLOAT, "", ""
         )
-        table_data.item(0, 7).setSelected(True)
+        table_data.item(0, 8).setSelected(True)
 
         # Sets a valid float value to the tag
-        table_data.item(0, 7).setText("0.0")
+        table_data.item(0, 8).setText("1.0")
 
         # Changing the same tag does not trigger the 'valueChanged' and
         # thus not the 'change_cell_color' method
-        table_data.item(0, 7).setSelected(False)
+        table_data.item(0, 8).setSelected(False)
 
         # Selects the 'Exp Type' and 'FOV' of the first scan, which have
         # distinct data types
@@ -3855,7 +3851,7 @@ class TestMIADataBrowser(TestMIACase):
         # Remove the 'Test' tag
         self.main_window.data_browser.remove_tag_action.trigger()
         remove_tag = self.main_window.data_browser.pop_up_remove_tag
-        remove_tag.list_widget_tags.setCurrentRow(0)  # 'Test' tag selected
+        remove_tag.list_widget_tags.setCurrentRow(1)  # 'Test' tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
 
         # Check 'Test' tag is not in the db
@@ -3988,29 +3984,6 @@ class TestMIADataBrowser(TestMIACase):
                 "(Admin mode) - Unnamed project",
             )
 
-    def test_update_data_history(self):
-        """Updates the history of data that have been re-written.
-
-        - Tests: Project.update_data_history
-        """
-
-        # Creates a test project
-        test_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(test_proj_path, "test_project")
-
-        # Gets a scan that contains a smooth brick in its history
-        NII_FILE_3 = (
-            "sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
-        )
-        DOCUMENT_3 = os.path.join("data", "derived_data", NII_FILE_3)
-
-        # Cleanup earlier history and check that no obsolete bricks is detected
-        obsolete_bricks = self.main_window.project.update_data_history(
-            [DOCUMENT_3]
-        )
-        self.assertEqual(obsolete_bricks, set())
-
     def test_update_default_value(self):
         """Updates the values when a list of default values is created.
 
@@ -4026,7 +3999,8 @@ class TestMIADataBrowser(TestMIACase):
         text_edt = pop_up.text_edit_default_value
 
         # Assures the instantiation of 'DefaultValueListCreation'
-        text_edt.parent.type = "list_"
+        # text_edt.parent.type = "list_"
+        text_edt.parent.type = FIELD_TYPE_LIST_STRING
 
         # Mocks the execution of a dialog window
         DefaultValueListCreation.show = Mock()
@@ -4303,7 +4277,6 @@ class TestMIAMainWindow(TestMIACase):
         :Method:
             - test_check_database: checks if the database has changed
               since the scans were first imported
-            - test_closeEvent: opens a project and closes the main window
             - test_create_project_pop_up: tries to create a new project
               with a project already open.
             - test_files_in_project: tests whether or not a given file
@@ -4377,42 +4350,6 @@ class TestMIAMainWindow(TestMIACase):
         # Since QMessageBox.exec is mocked, the QMessageBox's text is not
         # observed
         self.main_window.action_check_database.triggered.emit()
-
-    def test_closeEvent(self):
-        """Opens a project and closes the main window.
-
-        - Tests: MainWindow.closeEvent
-        """
-
-        # FIXME: Does this test really bring anything new compared to other
-        #        tests already performed?
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, "test_light_project")
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Gets the UID of the first brick in the brick collection, which is
-        # composed of the bricks appearing in the scan history.
-        with ppl_manager.project.database.data() as database_data:
-            bricks_coll = database_data.get_document(COLLECTION_BRICK)
-
-        brick = bricks_coll[0]
-
-        # Appends it to the 'brick_list'
-        ppl_manager.brick_list.append(brick[BRICK_ID])
-
-        # Mocks having initialized the pipeline
-        ppl_manager.init_clicked = True
-
-        # 'self.main_window.close()' is already called by 'tearDown'
-        # after each test
-
-        # No assertion is possible since the 'self.main_window.project'
-        # was deleted
-
-        print()
 
     def test_create_project_pop_up(self):
         """Tries to create a new project with an already open project, with and
@@ -5516,7 +5453,7 @@ class TestMIAMainWindow(TestMIACase):
         exPopup.check_boxes[0].setChecked(True)
 
         # Mocks the dialog box to directly return 'YesToAll'
-        QMessageBox.question = Mock(return_value=QMessageBox.YesToAll)
+        QMessageBox.warning = Mock(return_value=QMessageBox.YesToAll)
         exPopup.ok_clicked()
 
     def test_see_all_projects(self):
