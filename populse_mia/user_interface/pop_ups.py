@@ -1452,7 +1452,7 @@ class PopUpDeleteProject(QDialog):
         super().__init__()
         self.setWindowTitle("Delete project")
         config = Config()
-        self.project_path = config.getPathToProjectsFolder()
+        self.project_path = config.get_projects_save_path()
         self.main_window = main_window
         self._setup_ui()
 
