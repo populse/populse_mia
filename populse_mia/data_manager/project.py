@@ -1520,7 +1520,7 @@ class Project:
                         }
                     )
 
-            with self.database.data() as database_data:
+            with self.database.data(write=True) as database_data:
 
                 # Adding all the values associated
                 for value in values:
@@ -1567,7 +1567,7 @@ class Project:
             # The second element is a list of the scans to add
             scans_added, values_added = to_redo[1], to_redo[2]
 
-            with self.database.data() as database_data:
+            with self.database.data(write=True) as database_data:
 
                 # We add all the scans
                 for scan in scans_added:
