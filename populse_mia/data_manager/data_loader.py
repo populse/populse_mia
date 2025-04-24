@@ -241,7 +241,6 @@ class ImportWorker(QThread):
         :param documents (dict): Dictionary containing document information
         :param values_added (list): List to track added values
         """
-
         with self.project.database.data() as database_data:
 
             for tag in database_data.get_field_attributes(COLLECTION_CURRENT):
@@ -268,12 +267,14 @@ class ImportWorker(QThread):
                     values_added.append(
                         [
                             scan,
-                            tag["field_name"],
+                            tag["index"].split("|")[-1],
                             tag["default_value"],
                             tag["default_value"],
                         ]
                     )
-                    documents[scan][tag["field_name"]] = tag["default_value"]
+                    documents[scan][tag["index"].split("|")[-1]] = tag[
+                        "default_value"
+                    ]
 
     def _convert_datetime_values(self, tag_info):
         """

@@ -370,10 +370,13 @@ class MainWindow(QMainWindow):
         if can_exit:
 
             if self.pipeline_manager.init_clicked:
-                self.project.unsaveModifications()
+
+                if self.project is not None:
+                    self.project.unsaveModifications()
 
                 for brick in self.pipeline_manager.brick_list:
-                    self.data_browser.table_data.delete_from_brick(brick)
+                    if self.project is not None:
+                        self.data_browser.table_data.delete_from_brick(brick)
 
             # Clean up
             config = Config()
@@ -420,8 +423,9 @@ class MainWindow(QMainWindow):
         else:
             event.ignore()
 
-        if self.data_browser.viewer:
+        if self.data_browser.viewer is not None:
             self.data_browser.viewer.clear()
+            self.data_browser.viewer = None
 
         if self.data_viewer:
             self.data_viewer.clear()
