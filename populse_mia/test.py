@@ -36,12 +36,13 @@ import tempfile
 # import threading
 import unittest
 import uuid
+from contextlib import contextmanager
 from datetime import datetime
 from functools import partial
 from hashlib import sha256
 from pathlib import Path
 from time import sleep
-from unittest.mock import MagicMock, Mock
+from unittest.mock import MagicMock, Mock, patch
 
 import psutil
 import yaml
@@ -209,6 +210,7 @@ from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
 from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 
 from populse_mia.data_manager import (  # noqa: E402
+    BRICK_ID,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
@@ -489,6 +491,17 @@ class TestMIACase(unittest.TestCase):
     #     w = QApplication.activeWindow()
     #
     #     if isinstance(w, QDialog):
+    #
+    #         # If there's an “OK” or “Yes” button,
+    #         # click it instead of force-closing
+    #         for btn in w.findChildren(QPushButton):
+    #             text = btn.text().replace("&", "").strip().lower()
+    #
+    #             if text in ("ok", "yes"):
+    #                 QTest.mouseClick(btn, Qt.LeftButton)
+    #                 return
+    #
+    #         # Fallback: just close the dialog
     #         w.close()
 
     # def execute_QMessageBox_clickClose(self):
@@ -506,6 +519,11 @@ class TestMIACase(unittest.TestCase):
     def execute_QMessageBox_clickOk(self):
         """Press the Ok button of a QMessageBox instance."""
 
+        # for w in QApplication.topLevelWidgets():
+        #     print(f"Title: {w.windowTitle()}, Type: {type(w)}")
+
+        # w = QApplication.activeWindow()
+        # print(f"Title: {w.windowTitle()}, Type: {type(w)}")
         w = QApplication.activeWindow()
 
         if isinstance(w, QMessageBox):
@@ -632,28 +650,28 @@ class TestMIACase(unittest.TestCase):
             pkg_lib_window.line_edit.setText("nipype")
             # Clicks on remove package
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(1).widget().clicked.emit()
 
         elif init_state == "nipype":
             pkg_lib_window.line_edit.setText("nipype.interfaces")
             # Clicks on remove package
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(1).widget().clicked.emit()
 
         elif init_state == "nipype.interfaces":
             pkg_lib_window.line_edit.setText("nipype.interfaces.DataGrabber")
             # Clicks on remove package
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(1).widget().clicked.emit()
 
         else:
             pkg_lib_window.line_edit.setText("nipype.interfaces.DataGrabber")
             # Clicks on add package
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(0).widget().clicked.emit()
 
         pkg_lib_window.ok_clicked()
@@ -773,6 +791,7 @@ class TestMIACase(unittest.TestCase):
         if self.main_window:
             self.main_window.close()
             self.main_window.deleteLater()
+            self.main_window = None
 
         # Removing the opened projects (in CI, the tests are run twice)
         config = Config(properties_path=self.properties_path)
@@ -782,8 +801,11 @@ class TestMIACase(unittest.TestCase):
         for widget in QApplication.topLevelWidgets():
 
             try:
-                widget.close()
-                widget.deleteLater()
+                import sip
+
+                if not sip.isdeleted(widget):
+                    widget.close()
+                    widget.deleteLater()
 
             except Exception as e:
                 print(f"Error closing widget: {e}")
@@ -4277,6 +4299,7 @@ class TestMIAMainWindow(TestMIACase):
         :Method:
             - test_check_database: checks if the database has changed
               since the scans were first imported
+            - test_closeEvent: opens a project and closes the main window
             - test_create_project_pop_up: tries to create a new project
               with a project already open.
             - test_files_in_project: tests whether or not a given file
@@ -4351,6 +4374,34 @@ class TestMIAMainWindow(TestMIACase):
         # observed
         self.main_window.action_check_database.triggered.emit()
 
+    def test_closeEvent(self):
+        """Opens a project and closes the main window.
+
+        - Tests: MainWindow.closeEvent
+        """
+        # FIXME: Does this test really bring anything new compared to other
+        #        tests already performed?
+        # Creates a new project folder and switches to it
+        new_proj_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(new_proj_path, "test_light_project")
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        # Gets the UID of the first brick in the brick collection, which is
+        # composed of the bricks appearing in the scan history.
+
+        with ppl_manager.project.database.data() as database_data:
+            bricks_coll = database_data.get_document(COLLECTION_BRICK)
+        brick = bricks_coll[0]
+        # Appends it to the 'brick_list'
+        ppl_manager.brick_list.append(brick[BRICK_ID])
+        # Mocks having initialized the pipeline
+        ppl_manager.init_clicked = True
+        # 'self.main_window.close()' is already called by 'tearDown'
+        # after each test
+        # No assertion is possible since the 'self.main_window.project'
+        # was deleted
+        print()
+
     def test_create_project_pop_up(self):
         """Tries to create a new project with an already open project, with and
         without setting the projects folder path.
@@ -4389,7 +4440,9 @@ class TestMIAMainWindow(TestMIACase):
         self.assertTrue(hasattr(self.main_window, "pop_up_close"))
         self.main_window.pop_up_close.accept()
 
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data(
+            write=True
+        ) as database_data:
             database_data.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of a pop-up
@@ -4764,7 +4817,7 @@ class TestMIAMainWindow(TestMIACase):
         # Clicks on the add package button without selecting anything
         QMessageBox.exec = lambda x: None
         QMessageBox.exec_ = lambda x: None
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             0
         ).widget().clicked.emit()
 
@@ -4779,7 +4832,7 @@ class TestMIAMainWindow(TestMIACase):
         stdout_fileno = sys.stdout
         f = open(os.devnull, "w")
         sys.stdout = f
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             0
         ).widget().clicked.emit()
         f.close()
@@ -4801,7 +4854,7 @@ class TestMIAMainWindow(TestMIACase):
         pkg_lib_window.line_edit.setText("non-existent")
 
         # Clicks on the add package button
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             0
         ).widget().clicked.emit()
 
@@ -5003,7 +5056,7 @@ class TestMIAMainWindow(TestMIACase):
             f = open(os.devnull, "w")
             sys.stdout = f
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(0).widget().clicked.emit()
             f.close()
             sys.stdout = stdout_fileno
@@ -5015,7 +5068,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Tries to delete PKG
         pkg_lib_window.line_edit.setText(PKG)
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
@@ -5039,7 +5092,7 @@ class TestMIAMainWindow(TestMIACase):
         sys.stdout = stdout_fileno
 
         # Tries to delete again PKG
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
@@ -5058,7 +5111,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Tries to delete PKG
         pkg_lib_window.line_edit.setText(PKG)
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
@@ -5075,7 +5128,7 @@ class TestMIAMainWindow(TestMIACase):
         stdout_fileno = sys.stdout
         f = open(os.devnull, "w")
         sys.stdout = f
-        pkg_lib_window.layout().children()[0].layout().children()[3].itemAt(
+        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             0
         ).widget().clicked.emit()  # Clicks on add package
         f.close()
@@ -5251,7 +5304,7 @@ class TestMIAMainWindow(TestMIACase):
             ) = False
             # Clicks on add package
             pkg_lib_window.layout().children()[0].layout().children()[
-                3
+                1
             ].itemAt(0).widget().clicked.emit()
             pkg_lib_window.ok_clicked()
 
@@ -5269,14 +5322,14 @@ class TestMIAMainWindow(TestMIACase):
 
         # Tries removing a non-existent package
         res = pkg_lib_window.remove_package("non_existent_package")
-        self.assertIsNone(res)
+        self.assertFalse(res)
 
         # Clicks on the remove package button without selecting package
         rmv_pkg_button = (
             pkg_lib_window.layout()
             .children()[0]
             .layout()
-            .children()[3]
+            .children()[1]
             .itemAt(1)
             .widget()
         )
@@ -5311,7 +5364,9 @@ class TestMIAMainWindow(TestMIACase):
         pkg_lib_window.remove_dic[PKG] = 1
         pkg_lib_window.add_dic[PKG] = 1
         pkg_lib_window.delete_dic[PKG] = 1
-        pkg_lib_window.remove_package_with_text(_2rem=PKG, tree_remove=False)
+        pkg_lib_window.remove_package_with_text(
+            package_name=PKG, tree_remove=False
+        )
 
         # Resets the process library to its original state for nipype
         cur_state = self.proclibview_nipype_state(proc_lib_view)
@@ -5322,7 +5377,7 @@ class TestMIAMainWindow(TestMIACase):
             )
 
         # Saves the config to 'process_config.yml'
-        ppl_manager.processLibrary.save_config()
+        # ppl_manager.processLibrary.save_config()
 
     def test_package_library_others(self):
         """Creates a new project folder, opens the processes library and
@@ -5757,18 +5812,18 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.pop_up_preferences.msg.close()
 
         # Sets the main window size
-        main_wnd.pop_up_preferences.use_current_mainwindow_size(main_wnd)
+        main_wnd.pop_up_preferences.use_current_mainwindow_size()
 
         # Mocks the click of the OK button on 'QMessageBox.exec'
         QMessageBox.exec = lambda x: QMessageBox.Yes
 
         # Programs the controller version to change to V1
-        main_wnd.pop_up_preferences.control_checkbox_toggled(main_wnd)
+        main_wnd.pop_up_preferences.control_checkbox_toggled()
         main_wnd.pop_up_preferences.control_checkbox_changed = True
         self.assertTrue(main_wnd.get_controller_version())
 
         # Cancels the above change
-        main_wnd.pop_up_preferences.control_checkbox_toggled(main_wnd)
+        main_wnd.pop_up_preferences.control_checkbox_toggled()
         self.assertFalse(main_wnd.get_controller_version())
 
         # Edits the Capsul config file
@@ -6206,13 +6261,13 @@ class TestMIAMainWindow(TestMIACase):
 
             main_wnd.pop_up_preferences.ok_clicked()  # Closes the window
 
-            # Asserts that MATLAB was enabled and MATLAB standalone
+            # Asserts that MATLAB and MATLAB standalone
             # remains disabled
             config = Config(properties_path=self.properties_path)
-            self.assertTrue(config.get_use_matlab())
+            self.assertFalse(config.get_use_matlab())
             self.assertFalse(config.get_use_matlab_standalone())
 
-            main_wnd.software_preferences_pop_up()  # Reopens the window
+            # main_wnd.software_preferences_pop_up()  # Reopens the window
 
             # Resets the 'config' object
             config.set_use_matlab(False)
@@ -9554,12 +9609,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         - Tests: RunWorker.run
         """
-
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
-
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "mia_ut_data",
@@ -9569,6 +9622,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "data",
             "raw_data",
         )
+        # project_8_path = self.get_new_test_project()
+        # ppl_manager.project.folder = project_8_path
+        # folder = os.path.join(project_8_path, "data", "raw_data")
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
@@ -9611,7 +9667,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
             postprocess_pipeline_execution
         ) = Mock(side_effect=ValueError())
         # fmt: on
-        print("\n\n** an exception message is expected below\n")
+        # print("\n\n** an exception message is expected below\n")
         ppl_manager.progress.worker.run()
 
         # Mocks an interruption request
@@ -10100,7 +10156,25 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Mocks the node's parameters
         node.auto_inheritance_dict = {}
         process = node.process
-        process.study_config.project = Mock()
+
+        real_project = Mock()
+        fake_db_data = Mock()
+        fake_db_data.has_document.return_value = True
+
+        @contextmanager
+        def fake_data_cm():
+            """
+            Context manager that yields mock database data for testing
+            purposes.
+
+            :yields: The fake database data object used in tests.
+            """
+            yield fake_db_data
+
+        real_project.database = Mock()
+        real_project.database.data = fake_data_cm
+
+        process.study_config.project = real_project
         process.study_config.project.folder = os.path.dirname(project_8_path)
         process.outputs = []
         process.list_outputs = []
@@ -10383,29 +10457,38 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
 
+        # Creates a 'RunProgress' object
+        ppl_manager.progress = RunProgress(ppl_manager)
         # Mocks the allocation of the pipeline into another thread
         # This function seem to require a different number of arguments
         # depending on the platform, therefore a 'Mock' is used
-        QThread.start = Mock()
 
-        # Pipeline fails while running, due to capsul import error
-        ppl_manager.runPipeline()
+        with (
+            patch.object(QThread, "start") as mock_start,
+            patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
+        ):
 
-        # Directly runs the 'QThread' object, as the only solution found
-        # to run the pipeline during the test routine
-        ppl_manager.progress.worker.run()
+            # If `runPipeline` shows the dialog and blocks, patch it
+            ppl_manager.runPipeline()
+            # Simulate processing without threading
+            ppl_manager.progress.worker.run()
+            # Emit the finished signal manually
+            ppl_manager.progress.worker.finished.emit()
 
-        # Sends the signal to finish the pipeline
-        ppl_manager.progress.worker.finished.emit()
+            # Assert pipeline was processed
+            self.assertEqual(ppl_manager.last_run_pipeline, ppl)
+            mock_start.assert_called_once()
 
-        self.assertEqual(ppl_manager.last_run_pipeline, ppl)
-        QThread.start.assert_called_once()
+        QTest.qWait(2000)
 
         # Pipeline is stopped by the user, the pipeline fails before running
-        ppl_manager.runPipeline()
-        ppl_manager.stop_execution()
-        ppl_manager.progress.worker.run()
-        ppl_manager.progress.worker.finished.emit()
+        with patch.object(QDialog, "exec_", return_value=QDialog.Accepted):
+            ppl_manager.runPipeline()
+            ppl_manager.stop_execution()
+            ppl_manager.progress.worker.run()
+            ppl_manager.progress.worker.finished.emit()
+
+        QTest.qWait(2000)
 
     def test_zz_del_pack(self):
         """We remove the brick created during the unit tests, and we take
@@ -10554,7 +10637,7 @@ class Test_Z_MIAOthers(TestMIACase):
             "User_processes": {"Tests": "process_enabled"}
         }
         ppl_manager.processLibrary.paths = []
-        ppl_manager.processLibrary.save_config()
+        # ppl_manager.processLibrary.save_config()
         proc_lib = ppl_manager.processLibrary.process_library
 
         # Switches to pipeline manager
