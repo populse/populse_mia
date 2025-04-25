@@ -844,11 +844,8 @@ class DatabaseMiaData:
         :param primary_key (str): The primary key of the document to check.
         :return (bool): `True` if the document exists, `False` otherwise.
         """
-
-        if not self.has_collection(collection_name):
-            return False
-
-        return primary_key in self.storage_data[collection_name].get()
+        documents = self.get_document_names(collection_name)
+        return primary_key in documents
 
     def remove_document(self, collection_name, primary_key):
         """

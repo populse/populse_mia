@@ -301,7 +301,9 @@ class IterationTable(QWidget):
         if self.push_buttons:
             # Remove the last button
             button = self.push_buttons.pop()
+            button.close()
             button.deleteLater()
+            button = None
 
             # Remove corresponding values
             if len(self.values_list) > 0:
@@ -447,8 +449,8 @@ class IterationTable(QWidget):
                     print(f"{header_name} not in the project's tags")
                     return
 
-                    item = QTableWidgetItem(header_name)
-                    self.iteration_table.setHorizontalHeaderItem(idx, item)
+                item = QTableWidgetItem(header_name)
+                self.iteration_table.setHorizontalHeaderItem(idx, item)
 
             # Get current filter value
             current_filter = self.combo_box.currentText().replace("&", "")
