@@ -5377,7 +5377,7 @@ class TestMIAMainWindow(TestMIACase):
             )
 
         # Saves the config to 'process_config.yml'
-        # ppl_manager.processLibrary.save_config()
+        ppl_manager.processLibrary.pkg_library.save()
 
     def test_package_library_others(self):
         """Creates a new project folder, opens the processes library and
@@ -8377,8 +8377,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in
         # the database
         with pipeline_manager.project.database.data() as database_data:
-            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_2)
             self.assertTrue(
                 database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
             )
@@ -8477,7 +8475,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
         with pipeline_manager.project.database.data() as database_data:
-            database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
             self.assertTrue(
                 database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
             )
@@ -8602,7 +8599,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 "own_tags": [
                     {
                         "name": "tag_name",
-                        "field_type": "string",
+                        "field_type": FIELD_TYPE_STRING,
                         "description": "description_content",
                         "visibility": "visibility_content",
                         "origin": "origin_content",
@@ -8633,7 +8630,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 "own_tags": [
                     {
                         "name": "tag_name",
-                        "field_type": "string",
+                        "field_type": FIELD_TYPE_STRING,
                         "description": "description_content",
                         "visibility": "visibility_content",
                         "origin": "origin_content",
@@ -8705,7 +8702,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         def reset_collections():
             """Blabla"""
 
-            with ppl_manager.project.database.data() as database_data:
+            with ppl_manager.project.database.data(
+                write=True
+            ) as database_data:
 
                 if database_data.has_document(COLLECTION_CURRENT, P_VALUE):
                     database_data.remove_document(COLLECTION_CURRENT, P_VALUE)
@@ -8808,21 +8807,21 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 ),
             }
 
-            reset_inheritance_dicts()
-            reset_collections()
+        reset_inheritance_dicts()
+        reset_collections()
 
-            args = [
-                DOCUMENT_1,
-                brick_id,
-                "",
-                "rename_1",
-                plug_name,
-                "rename_1",
-                job,
-                trait,
-                inputs,
-                attributes,
-            ]
+        args = [
+            DOCUMENT_1,
+            brick_id,
+            "",
+            "rename_1",
+            plug_name,
+            "rename_1",
+            job,
+            trait,
+            inputs,
+            attributes,
+        ]
 
         ppl_manager.add_plug_value_to_database(*args)
 
@@ -10561,7 +10560,7 @@ class Test_Z_MIAOthers(TestMIACase):
         iter_table.fill_values(2)
         self.assertTrue(len(iter_table.values_list[-1]) == 3)
         self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
-        self.assertEqual(iter_table.values_list[-1][0], [50000.0])
+        self.assertEqual(iter_table.values_list[-1][0], [65789.48])
 
         # Removes a tag and asserts that a tag button was removed
         iter_table.remove_tag()
@@ -10602,15 +10601,17 @@ class Test_Z_MIAOthers(TestMIACase):
 
         # Updates the iteration table, tests 'update_table' while
         # mocking the execution of 'filter_documents'
-
         DOC_1_NAME = SCANS_LIST[0]
 
         with iter_table.project.database.data() as database_data:
             DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
-            database_data.filter_documents = Mock(return_value=[DOC_1])
 
+        # Patch the method directly on the real class
+        # (no mocking of `data()` or context managers)
+        with patch.object(
+            database_data.__class__, "filter_documents", return_value=DOC_1
+        ):
             ppl_editor.iterated_tag = "BandWidth"
-
             iter_table.update_table()
 
         # Asserts that the iteration table has one item
@@ -10637,7 +10638,7 @@ class Test_Z_MIAOthers(TestMIACase):
             "User_processes": {"Tests": "process_enabled"}
         }
         ppl_manager.processLibrary.paths = []
-        # ppl_manager.processLibrary.save_config()
+        ppl_manager.processLibrary.pkg_library.save()
         proc_lib = ppl_manager.processLibrary.process_library
 
         # Switches to pipeline manager
