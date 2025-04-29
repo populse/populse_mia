@@ -90,7 +90,6 @@ CLASSIFIERS = [
     "Logiciel Libre License, version 2.1 (CeCILL-2.1)",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only",
