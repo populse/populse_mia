@@ -19,9 +19,9 @@ import subprocess
 import sys
 
 # Current version
-version_major = 2
-version_minor = 6
-version_micro = 1
+version_major = 3
+version_minor = 0
+version_micro = 0
 version_extra = "dev"  # leave empty for release
 # version_extra = ""
 
@@ -124,14 +124,14 @@ CLASSIFIERS = CLASSIFIERS
 PLATFORMS = "OS Independent"
 
 REQUIRES = [
-    "capsul >= 2.5.0, < 3.0.0",
+    "capsul >= 2.6.1, < 3.0.0",
     "cryptography",
     "matplotlib",
-    "mia-processes >= 2.5.0, < 3.0.0",
+    "mia-processes >= 2.7.1, < 3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 2.5.0, < 3.0.0",
+    "populse-db >= 3.0.0, < 4.0.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
@@ -139,8 +139,8 @@ REQUIRES = [
     "scikit-image",
     "scipy",
     "snakeviz",
-    "soma-base >= 5.2.0, < 6.0.0",
-    "soma-workflow >= 3.2.2",
+    "soma-base >= 5.3.0, < 6.0.0",
+    "soma-workflow >= 3.3.0",
     "six >= 1.13",
     "traits",
 ]
