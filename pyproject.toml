@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "populse_mia"
-#version = "2.6.1"
+#version = "3.0.0"
 dynamic = ["version"]
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
 ]
 description = "populse_mia"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "CECILL-B"
 license-files = ["LICENSE"]
 classifiers = [
@@ -22,20 +22,19 @@ classifiers = [
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 dependencies = [
-    "capsul >= 2.5.0, < 3.0.0",
+    "capsul >= 2.6.1, < 3.0.0",
     "cryptography",
     "matplotlib",
-    "mia-processes >= 2.5.0, < 3.0.0",
+    "mia-processes >= 2.7.1, < 3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 2.5.0, < 3.0.0",
+    "populse-db >= 3.0.0, < 3.0.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
