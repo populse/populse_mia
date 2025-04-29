@@ -5847,6 +5847,16 @@ class TestMIAMainWindow(TestMIACase):
         # Close the software preferences window
         main_wnd.pop_up_preferences.close()
 
+        # Return certain parameters to their default configuration values
+        config.set_use_spm_standalone(True)
+        config.set_use_spm(False)
+        config.set_use_matlab(False)
+        config.set_use_matlab_standalone(False)
+        config.set_use_fsl(False)
+        config.set_use_afni(False)
+        config.set_use_ants(False)
+        config.set_use_mrtrix(False)
+
     def test_software_preferences_pop_up_config_file(self):
         """Opens the preferences pop up and changes parameters to edit the
         config file and capsul config file.
