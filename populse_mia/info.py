@@ -124,14 +124,14 @@ CLASSIFIERS = CLASSIFIERS
 PLATFORMS = "OS Independent"
 
 REQUIRES = [
-    "capsul >= 2.6.1, < 3.0.0",
+    "capsul >= 2.6.0, < 3.0.0",
     "cryptography",
     "matplotlib",
-    "mia-processes >= 2.7.1, < 3.0.0",
+    "mia-processes >= 2.7.0, < 3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 3.0.0, < 4.0.0",
+    "populse-db >= 2.6.0, < 4.0.0",
     "pre-commit",
     "pyqt5",
     "python-dateutil",
