@@ -87,7 +87,9 @@ from traits.api import TraitListObject, Undefined
 
 uts_dir = os.path.isdir(
     os.path.join(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+        os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        ),
         "mia_ut_data",
     )
 )
@@ -103,13 +105,17 @@ if not uts_dir:
     sys.exit()
 
 if (
-    not os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    not os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    )
     in sys.path
 ):
     # "developer" mode
     os.environ["MIA_DEV_MODE"] = "1"
     root_dev_dir = os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+        )
     )
 
     # Adding populse_mia
@@ -573,7 +579,9 @@ class TestMIACase(unittest.TestCase):
             shutil.rmtree(new_test_proj)
 
         test_proj = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+            ),
             "mia_ut_data",
             "resources",
             "mia",
@@ -1959,7 +1967,9 @@ class TestMIADataBrowser(TestMIACase):
 
         # Gets a document filepath
         folder = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+            ),
             "mia_ut_data",
             "resources",
             "mia",

@@ -183,13 +183,13 @@ install:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 test_script:
-  - cmd: python .\\populse_mia\\test.py -v
+  - cmd: python .\\populse_mia\\tests\\run_mia_test.py -v
 
-  - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./populse_mia/test.py -v; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./populse_mia/tests/run_mia_test.py -v; fi
 
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/test.py -v; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./populse_mia/test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/tests/run_mia_test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./populse_mia/tests/run_mia_test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then coverage xml -i; fi
 
 
