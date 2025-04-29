@@ -175,7 +175,7 @@ install:
   - cd populse-mia
 
   - sh: if [[ $(uname -s) == Linux ]]; then Xvfb & fi
-  - sh: if [[ $(uname -s) == Linux ]]; then pip3 install coverage[toml]; fi # Fix: Can't read 'pyproject.toml' without TOML support. Install with [toml] extra
+  - sh: if [[ $(uname -s) == Linux ]]; then python -m pip install coverage[toml]; fi # Fix: Can't read 'pyproject.toml' without TOML support. Install with [toml] extra
   - sh: if [[ $(uname -s) == Linux ]]; then sleep 3; fi # give xvfb some time to start
 
 #  - sh: export APPVEYOR_SSH_BLOCK=true
@@ -189,8 +189,8 @@ test_script:
 
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/tests/run_mia_test.py -v; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run coverage run ./populse_mia/tests/run_mia_test.py -v; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then coverage xml -i; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python -m coverage run ./populse_mia/tests/run_mia_test.py -v; fi
+  - sh: if [[ $(uname -s) == Linux ]]; then python -m coverage xml -i; fi
 
 
 after_test:
