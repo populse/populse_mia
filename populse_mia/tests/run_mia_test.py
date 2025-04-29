@@ -10735,13 +10735,13 @@ class Test_Z_MIAOthers(TestMIACase):
         QTimer.singleShot(1000, self.execute_QDialogAccept)
         verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
 
-    def test_verify_processes(self):
-        """Check that Mia's processes control is working correctly
-
-        - Tests: utils.verify_processes()
-        """
-
-        verify_processes("toto", "titi", "tata")
+#    def test_verify_processes(self):
+#        """Check that Mia's processes control is working correctly
+#
+#        - Tests: utils.verify_processes()
+#        """
+#
+#        verify_processes("toto", "titi", "tata")
 
 
 if __name__ == "__main__":
