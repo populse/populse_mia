@@ -9,7 +9,7 @@ environment:
   POPULSE_DB_BRANCH: master
   CAPSUL_BRANCH: master
   MIA_PROCESSES_BRANCH: master
-  MIA_UT_DATA_BRANCH: mater
+  MIA_UT_DATA_BRANCH: bv_v3
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
