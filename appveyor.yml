@@ -6,10 +6,10 @@ build: off
 environment:
   GIT_CLONE_PROTECTION_ACTIVE: false
   GIT_LFS_SKIP_SMUDGE: 1
-  POPULSE_DB_BRANCH: 3.0
-  CAPSUL_BRANCH: populsedb3
-  MIA_PROCESSES_BRANCH: db_v3
-  MIA_UT_DATA_BRANCH: bv_v3
+  POPULSE_DB_BRANCH: master
+  CAPSUL_BRANCH: master
+  MIA_PROCESSES_BRANCH: master
+  MIA_UT_DATA_BRANCH: mater
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
