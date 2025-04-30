@@ -285,10 +285,9 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpSelectTag,
     PopUpSelectTagCountTable,
 )
-from populse_mia.utils import (  # noqa: E402
+from populse_mia.utils import (  # noqa: E402; verify_processes,
     check_value_type,
     table_to_database,
-    verify_processes,
     verify_setup,
 )
 
@@ -10734,6 +10733,7 @@ class Test_Z_MIAOthers(TestMIACase):
 
         QTimer.singleShot(1000, self.execute_QDialogAccept)
         verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
+
 
 #    def test_verify_processes(self):
 #        """Check that Mia's processes control is working correctly
