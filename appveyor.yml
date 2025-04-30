@@ -129,8 +129,8 @@ install:
   - python -c "import psutil; print(psutil.__path__)"
   - cmd: pip install pypiwin32
   - python -m pip install pyparsing --upgrade
-  # We install populse_db from pip first because requirements in github is not compatible with pip
-  - python -m pip install populse_db
+  # We install populse_db from github first because requirements in github is not compatible with pip
+  - python -m pip install git+https://github.com/populse/populse_db@master
 
   - cd populse-mia
   - python -m pip install .
