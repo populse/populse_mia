@@ -125,34 +125,17 @@ install:
   - python -m pip install --upgrade setuptools wheel
   - python -m pip install cython --upgrade
   - python -m pip install psutil
-  - python -m pip show psutil
-  - python -c "import psutil; print(psutil.__path__)"
   - cmd: pip install pypiwin32
   - python -m pip install pyparsing --upgrade
-  # We install populse_db and capsul from github first because requirements in github is not compatible with pip
-  - python -m pip install git+https://github.com/populse/populse_db@master
-  - python -m pip install git+https://github.com/populse/capsul@master
 
-  - cd populse-mia
-  - python -m pip install .
-
-  - echo y | python -m pip uninstall PyQt5
-  - echo y | python -m pip uninstall PyQt5-sip
-  - python -m pip install PyQt5
+  # - echo y | python -m pip uninstall PyQt5
+  # - echo y | python -m pip uninstall PyQt5-sip
+  # - python -m pip install PyQt5
 
   # We want to use the last github versions instead of the pypi version:
-  - python -m pip uninstall -y populse_db soma-base soma-workflow capsul mia_processes
-
   - cmd: git clone --depth=50 --branch=%POPULSE_DB_BRANCH% https://github.com/populse/populse_db.git C:\\projects\\populse_db
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$POPULSE_DB_BRANCH https://github.com/populse/populse_db.git /home/appveyor/projects/populse_db; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$POPULSE_DB_BRANCH https://github.com/populse/populse_db.git /Users/appveyor/projects/populse_db; fi
-
-  - cmd: cd C:\\projects\\populse_db
-  - sh: if [[ $(uname -s) == Linux ]]; then cd /home/appveyor/projects/populse_db; fi
-  - sh: if [[ $(uname -s) == Darwin ]]; then cd /Users/appveyor/projects/populse_db; fi
-
-  - python -m pip install -e .[postgres]
-  - cd ..
 
   - cmd: git clone --depth=50 --branch=master https://github.com/populse/soma-base.git C:\\projects\\soma-base
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=master https://github.com/populse/soma-base.git /home/appveyor/projects/soma-base; fi
@@ -170,11 +153,15 @@ install:
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$MIA_PROCESSES_BRANCH https://github.com/populse/mia_processes.git /home/appveyor/projects/mia_processes; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_PROCESSES_BRANCH https://github.com/populse/mia_processes.git /Users/appveyor/projects/mia_processes; fi
 
-# Download data for unit tests
+  # Download data for unit tests
   - cmd: git clone --depth=50 --branch=%MIA_UT_DATA_BRANCH% https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git C:\\projects\\populse-mia\\mia_ut_data
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /home/appveyor/projects/populse-mia/mia_ut_data; fi
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
 
+  - cd populse-mia
+  - python -m generate_requirements.py
+  - cd ..
+  - python -m pip install -r requirements-all.txt
   - cd populse-mia
 
   - sh: if [[ $(uname -s) == Linux ]]; then Xvfb & fi
