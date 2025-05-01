@@ -6,7 +6,7 @@ This script collects dependencies from either `pyproject.toml` or
 `setup.py` (with an associated info file) for a set of packages.
 It then deduplicates, filters out local packages, and writes
 a cleaned list of external dependencies to a `requirements-all.txt`
-file in the parent directory.
+file in the parent directory. We use this module in the UTs.
 """
 
 ###############################################################################
@@ -153,9 +153,9 @@ def main():
     deps = collect_dependencies([p.resolve() for p in package_dirs], info_path)
     # Packages to exclude from final requirements
     local_packages = {
-        "populse-mia",
+        "populse_mia",
         "populse-db",
-        "mia_processes",
+        "mia-processes",
         "soma-workflow",
         "soma-base",
         "capsul",

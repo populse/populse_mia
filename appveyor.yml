@@ -12,16 +12,16 @@ environment:
   MIA_UT_DATA_BRANCH: bv_v3
 
   matrix:
-#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
-#      PYTHON: "C:\\Python310-x64"
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      PYTHON: "C:\\Python310-x64"
 #      APPVEYOR_RDP_PASSWORD: 5fh'D*
 
     - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu2204
       PYTHON: "$HOME/venv3.10"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCinsCtblP8Dlo0IyeE3chxy7Opt1nrrhLWQCUFJBtWr1EjtvZSme00z56yV2c0WWlhKyVUbz56w893WHTjvqgeZuezzGM1vdeD+fQDPBn3WhhOQHNmL2VxDo+f1CFE7ybT6epYPrvdz4B7MqORX8lIOIVVL82GclpDxnJkM7LzMWbOvJ7Gjf12Ob45Nx2ESZxHVv5Z9GeAmMyX2gHu3dlhJQoq6YQ0U/aqkFzfYLbEI5/H78Xmd2YzlxDnzNPB9xbjNqub1KTS+p3JhhSXJgWHeRn/kqwwkOdTnjG1yZoCWgSzCHsQx9oacYciY49Lo5falgIIw3ORJWgk/vjedxDFjBLgYj5NPzGcaxgzsFmMDWyynTSZyysb3HKbydODXV9i40dEnC9gfBQER0m9/cXPcxBK7oVZdZwrxXm0Ke3QGYtRLmh9N2lTUm51/IPBRaDH6/L1se4NgVuT2uytHEYN2t30r14CJhzJ2QGCoas8sxFS9Pt0BWzC4C1WQyZlDN0= econdami@irmage-pteric
 
-#    - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
-#      PYTHON: "~/venv3.10"
+    - APPVEYOR_BUILD_WORKER_IMAGE: macos-monterey
+      PYTHON: "~/venv3.10"
 #      APPVEYOR_SSH_KEY: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCdDYk1yZyk/W/2UtL1oBEDzX9Mk6YUXJKS3gTrZaK+ScAzPUkm7UlXwwpzSYZjKIkYzpi3WKSRKuDc7VRVk43hIhmwaIzcmpHAXtbgxAGRYembgz+kLDGtkhlP4i8n5GfNWvkkfbS0pu2w2dZQB7EGFFtopfvzBokKltjAYOnP89GCAo4MTfx6kmv1tpm1SDbCAGHJPuN+81B47+v0uGw3KG+AX+1ezPv1MCBQl5V2J4MI6vomyaHz6/UNBZ6rpsrZBYRljwWbyH5E5fqLdep/kO9sEuiXxTrCTLnUPSrR0+h0f8HlgWCaqxO+OUyDoQMI3xsUn4sMpoASi8jkDgd51vGbzkQHyjy2hYzjs47GAvLLtGfTJYQBVcfXEoZaKQUJhqjR7TUdY4bSBOxIPR9qlA9fLFwlQsC3++0m4roM/0SyoDVTz0I6lp1TsYRMKxEJSM90ewCAK8UnN6gEqmOz5ezOFpVsnpz4bZ7vCGaJa/6ODfOhEvl5bFUK40+GxSk= otavio@otavio-UX430UAR
 
 install:
@@ -127,6 +127,7 @@ install:
   - python -m pip install psutil
   - cmd: pip install pypiwin32
   - python -m pip install pyparsing --upgrade
+  - python -m pip install tomli
 
   # - echo y | python -m pip uninstall PyQt5
   # - echo y | python -m pip uninstall PyQt5-sip
@@ -159,7 +160,7 @@ install:
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
 
   - cd populse-mia
-  - python -m generate_requirements.py
+  - python generate_requirements.py
   - cd ..
   - python -m pip install -r requirements-all.txt
   - cd populse-mia
@@ -178,7 +179,7 @@ test_script:
   - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./populse_mia/tests/run_mia_test.py -v; fi
 
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
-  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/tests/run_mia_test.py -v; fi
+#  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/tests/run_mia_test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python -m coverage run ./populse_mia/tests/run_mia_test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then python -m coverage xml -i; fi
 

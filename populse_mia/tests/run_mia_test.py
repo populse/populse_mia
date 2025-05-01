@@ -66,7 +66,6 @@ from PyQt5.QtCore import (
     QModelIndex,
     QPoint,
     Qt,
-    QThread,
     QTimer,
     qInstallMessageHandler,
 )
@@ -85,6 +84,7 @@ from traits.api import TraitListObject, Undefined
 # can be replaced by a function call to have an effect, e.g. sys.settrace()
 # sys.settrace
 
+print("__file__ in run_mia_test.py: ", __file__)
 uts_dir = os.path.isdir(
     os.path.join(
         os.path.dirname(
@@ -93,7 +93,7 @@ uts_dir = os.path.isdir(
         "mia_ut_data",
     )
 )
-
+print("uts_dir in run_mia_test.py: ", uts_dir)
 if not uts_dir:
     print(
         "\nTo work properly, unit tests need data in the populse_mia(or "
@@ -104,23 +104,21 @@ if not uts_dir:
     )
     sys.exit()
 
-if (
-    not os.path.dirname(
+populse_mia_dir = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+)
+print("populse_mia_dir in run_mia_test.py: ", populse_mia_dir)
+print("sys.path in run_mia_test.py 1: ", sys.path)
+# UTs are always in developer mode
+os.environ["MIA_DEV_MODE"] = "1"
+root_dev_dir = os.path.dirname(
+    os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
-    in sys.path
-):
-    # "developer" mode
-    os.environ["MIA_DEV_MODE"] = "1"
-    root_dev_dir = os.path.dirname(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        )
-    )
-
+)
+print("root_dev_dir in run_mia_test.py: ", root_dev_dir)
+if populse_mia_dir not in sys.path:
     # Adding populse_mia
-    print('\n- Unit testing in "developer" mode\n')
-
     if os.path.isdir(os.path.join(root_dev_dir, "populse-mia")):
         mia_dev_dir = os.path.join(root_dev_dir, "populse-mia")
 
@@ -131,57 +129,55 @@ if (
     sys.path.insert(0, mia_dev_dir)
     del mia_dev_dir
 
-    # Adding mia_processes:
-    if os.path.isdir(os.path.join(root_dev_dir, "mia_processes")):
-        mia_processes_dev_dir = os.path.join(root_dev_dir, "mia_processes")
+mia_processes_dir = os.path.join(root_dev_dir, "mia_processes")
+if mia_processes_dir not in sys.path:
+    if os.path.isdir(mia_processes_dir):
+        # Adding mia_processes
         print(
             "- Using mia_processes package from {} "
-            "...".format(mia_processes_dev_dir)
+            "...".format(mia_processes_dir)
         )
-        sys.path.insert(1, mia_processes_dev_dir)
-        del mia_processes_dev_dir
+        sys.path.insert(1, mia_processes_dir)
+        del mia_processes_dir
 
-    # Adding populse_db:
-    if os.path.isdir(os.path.join(root_dev_dir, "populse_db")):
-        populse_db_dev_dir = os.path.join(root_dev_dir, "populse_db", "python")
+populse_db_dir = os.path.join(root_dev_dir, "populse_db", "python")
+if populse_db_dir not in sys.path:
+    if os.path.isdir(populse_db_dir):
+        # Adding populse_db
         print(
-            "- Using populse_db package from {} "
-            "...".format(populse_db_dev_dir)
+            "- Using populse_db package from {} " "...".format(populse_db_dir)
         )
-        sys.path.insert(1, populse_db_dev_dir)
-        del populse_db_dev_dir
+        sys.path.insert(1, populse_db_dir)
+        del populse_db_dir
 
-    # Adding capsul:
-    if os.path.isdir(os.path.join(root_dev_dir, "capsul")):
-        capsul_dev_dir = os.path.join(root_dev_dir, "capsul")
-        print(f"- Using capsul package from {capsul_dev_dir} ...")
-        sys.path.insert(1, capsul_dev_dir)
-        del capsul_dev_dir
+capsul_dir = os.path.join(root_dev_dir, "capsul")
+if capsul_dir not in sys.path:
+    if os.path.isdir(capsul_dir):
+        # Adding capsul
+        print(f"- Using capsul package from {capsul_dir} ...")
+        sys.path.insert(1, capsul_dir)
+        del capsul_dir
 
-    # Adding soma-base:
-    if os.path.isdir(os.path.join(root_dev_dir, "soma-base")):
-        soma_base_dev_dir = os.path.join(root_dev_dir, "soma-base", "python")
-        print(
-            "- Using soma-base package from {} "
-            "...".format(soma_base_dev_dir)
-        )
-        sys.path.insert(1, soma_base_dev_dir)
-        del soma_base_dev_dir
+soma_base_dir = os.path.join(root_dev_dir, "soma-base", "python")
+if soma_base_dir not in sys.path:
+    if os.path.isdir(soma_base_dir):
+        # Adding soma-base
+        print("- Using soma-base package from {} " "...".format(soma_base_dir))
+        sys.path.insert(1, soma_base_dir)
+        del soma_base_dir
 
-    # Adding soma-workflow:
-    if os.path.isdir(os.path.join(root_dev_dir, "soma-workflow")):
-        soma_workflow_dev_dir = os.path.join(
-            root_dev_dir, "soma-workflow", "python"
-        )
+soma_workflow_dir = os.path.join(root_dev_dir, "soma-workflow", "python")
+if soma_workflow_dir not in sys.path:
+    if os.path.isdir(soma_workflow_dir):
+        # Adding soma-workflow:
         print(
             "- Using soma-workflow package from {} "
-            "...".format(soma_workflow_dev_dir)
+            "...".format(soma_workflow_dir)
         )
-        sys.path.insert(1, soma_workflow_dev_dir)
-        del soma_workflow_dev_dir
+        sys.path.insert(1, soma_workflow_dir)
+        del soma_workflow_dir
 
-else:
-    os.environ["MIA_DEV_MODE"] = "0"
+print("sys.path in run_mia_test.py 2: ", sys.path)
 
 # Imports after defining the location of populse packages in the case of a
 # developer configuration:
@@ -10475,36 +10471,36 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
 
-        # Creates a 'RunProgress' object
-        ppl_manager.progress = RunProgress(ppl_manager)
-        # Mocks the allocation of the pipeline into another thread
-        # This function seem to require a different number of arguments
-        # depending on the platform, therefore a 'Mock' is used
-
+        # Test successful pipeline run with patched thread start
         with (
-            patch.object(QThread, "start") as mock_start,
             patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
+            patch(
+                "populse_mia.user_interface.pipeline_manager."
+                "pipeline_manager_tab.RunWorker.start"
+            ) as mock_start,
         ):
-
-            # If `runPipeline` shows the dialog and blocks, patch it
             ppl_manager.runPipeline()
-            # Simulate processing without threading
-            ppl_manager.progress.worker.run()
-            # Emit the finished signal manually
-            ppl_manager.progress.worker.finished.emit()
 
-            # Assert pipeline was processed
             self.assertEqual(ppl_manager.last_run_pipeline, ppl)
             mock_start.assert_called_once()
 
         QTest.qWait(2000)
 
-        # Pipeline is stopped by the user, the pipeline fails before running
-        with patch.object(QDialog, "exec_", return_value=QDialog.Accepted):
+        # Test pipeline run with manual interruption
+        # (simulate failure before execution)
+        with (
+            patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
+            patch(
+                "populse_mia.user_interface.pipeline_manager."
+                "pipeline_manager_tab.RunWorker.start"
+            ) as mock_start,
+        ):
             ppl_manager.runPipeline()
             ppl_manager.stop_execution()
-            ppl_manager.progress.worker.run()
-            ppl_manager.progress.worker.finished.emit()
+
+            # Simulate the worker finishing
+            worker = ppl_manager.progress.worker
+            worker.finished.emit()
 
         QTest.qWait(2000)
 
