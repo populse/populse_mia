@@ -1,4 +1,4 @@
-version: 2.5.3.{build}
+version: 3.0.0.{build}
 
 # Disable the default automatic build phase
 build: off
@@ -9,7 +9,7 @@ environment:
   POPULSE_DB_BRANCH: master
   CAPSUL_BRANCH: master
   MIA_PROCESSES_BRANCH: master
-  MIA_UT_DATA_BRANCH: bv_v3
+  MIA_UT_DATA_BRANCH: main
 
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
@@ -38,7 +38,7 @@ install:
 
   - cd ..
 
-  # Force recent SQLite version
+  # Force recent SQLite version (3.47)
   - sh: |
       if [[ $(uname -s) == Linux ]]; then
         echo "     ** Removing older SQLite versions **"
@@ -129,10 +129,6 @@ install:
   - python -m pip install pyparsing --upgrade
   - python -m pip install tomli
 
-  # - echo y | python -m pip uninstall PyQt5
-  # - echo y | python -m pip uninstall PyQt5-sip
-  # - python -m pip install PyQt5
-
   # We want to use the last github versions instead of the pypi version:
   - cmd: git clone --depth=50 --branch=%POPULSE_DB_BRANCH% https://github.com/populse/populse_db.git C:\\projects\\populse_db
   - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$POPULSE_DB_BRANCH https://github.com/populse/populse_db.git /home/appveyor/projects/populse_db; fi
@@ -179,16 +175,13 @@ test_script:
   - sh: if [[ $(uname -s) == Darwin ]]; then python3 ./populse_mia/tests/run_mia_test.py -v; fi
 
   - sh: if [[ $(uname -s) == Linux ]]; then if [ -z $XDG_RUNTIME_DIR ]; then export XDG_RUNTIME_DIR="/tmp/runtime-$(id -un)"; if [ ! -d "/tmp/runtime-$(id -un)" ]; then mkdir "/tmp/runtime-$(id -un)"; chmod 0700 "/tmp/runtime-$(id -un)"; fi; fi; fi
-#  - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python ./populse_mia/tests/run_mia_test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then xvfb-run python -m coverage run ./populse_mia/tests/run_mia_test.py -v; fi
   - sh: if [[ $(uname -s) == Linux ]]; then python -m coverage xml -i; fi
 
 
 after_test:
-#  - sh: if [[ $(uname -s) == Linux ]]; then codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then curl -Os https://uploader.codecov.io/latest/linux/codecov; fi
   - sh: if [[ $(uname -s) == Linux ]]; then chmod +x codecov; fi
-#  - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3" -r "populse/populse_mia"; fi
   - sh: if [[ $(uname -s) == Linux ]]; then ./codecov -f "coverage.xml" -t "1e992817-cb19-4bc5-9d0b-2ad36295e6b3"; fi
 
 notifications:
