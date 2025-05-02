@@ -8,8 +8,11 @@ Module that contains multiple functions used across Mia.
         - _is_valid_date(date_str, date_format)
         - check_python_version
         - check_value_type
+        - dict4runtime_update
+        - get_dbFieldValue
         - launch_mia
         - message_already_exists
+        - set_db_field_value
         - set_filters_directory_as_default
         - set_item_data
         - set_projects_directory_as_default
@@ -69,7 +72,9 @@ from PyQt5.QtWidgets import (
 from soma.qt_gui.qtThread import QtThreadCall  # noqa E402
 
 # Populse_mia imports
-from populse_mia.data_manager import (
+from populse_mia.data_manager import (  # noqa E402
+    COLLECTION_CURRENT,
+    COLLECTION_INITIAL,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -241,20 +246,6 @@ class PackagesInstall:
             return self.packages
 
 
-def check_python_version():
-    """
-    Checks if the Python version is at least 3.10.
-
-    :raises RuntimeError: If the Python version is lower than 3.10.
-    """
-
-    if sys.version_info[:2] < (3, 10):
-        raise RuntimeError(
-            f"Mia requires Python >= 3.10 (current version: "
-            f"{sys.version_info.major}.{sys.version_info.minor})."
-        )
-
-
 def _is_valid_date(date_str, date_format):
     """
     Checks if a string matches the given date format.
@@ -270,6 +261,20 @@ def _is_valid_date(date_str, date_format):
 
     except ValueError:
         return False
+
+
+def check_python_version():
+    """
+    Checks if the Python version is at least 3.10.
+
+    :raises RuntimeError: If the Python version is lower than 3.10.
+    """
+
+    if sys.version_info[:2] < (3, 10):
+        raise RuntimeError(
+            f"Mia requires Python >= 3.10 (current version: "
+            f"{sys.version_info.major}.{sys.version_info.minor})."
+        )
 
 
 def check_value_type(value, value_type, is_subvalue=False):
@@ -337,6 +342,60 @@ def check_value_type(value, value_type, is_subvalue=False):
     }
 
     return type_validators.get(value_type, lambda _: False)(value)
+
+
+def dict4runtime_update(runtime_dict, project, db_filename, *tags):
+    """
+    Update a dictionary with tag values from the project's current collection.
+
+    This function populates the `runtime_dict` with values associated with
+    the specified tags from the `COLLECTION_CURRENT` database collection. If
+    a tag is not present or its value is `None`, it is assigned the string
+    "Undefined". Date values are converted to ISO-formatted strings.
+
+    :param runtime_dict (dict): Dictionary used to transfer data from
+                                `list_outputs` to `run_process_mia`.
+    :param project: The project instance containing the database.
+    :param db_filename (str): The name of the database file to query.
+    :param tags: Variable number of tag names to retrieve from the database.
+    """
+
+    with project.database.data() as database_data:
+        field_names = database_data.get_field_names(COLLECTION_CURRENT)
+
+        for tag in tags:
+            value = (
+                database_data.get_value(COLLECTION_CURRENT, db_filename, tag)
+                if tag in field_names
+                else None
+            )
+
+            if isinstance(value, datetime.date):
+                value = value.isoformat()
+
+            runtime_dict[tag] = value if value is not None else "Undefined"
+
+
+def get_db_field_value(project, document, field):
+    """
+    Retrieve the value of a specific field for a document from the project's
+    database.
+
+    :param project (Project): The current project instance containing the
+                              database.
+    :param document (str): The absolute path to the document.
+    :param field (str): The name of the field whose value should be retrieved.
+
+    :returns: The value of the specified field for the document in the current
+              collection.
+    """
+    project_name = project.getName()
+    start_index = document.find(project_name) + len(project_name) + 1
+    db_filename = document[start_index:]
+
+    with project.database.data() as database_data:
+
+        return database_data.get_value(COLLECTION_CURRENT, db_filename, field)
 
 
 def launch_mia(app, args):
@@ -478,6 +537,63 @@ def message_already_exists():
     msg.setStandardButtons(QMessageBox.Ok)
     msg.buttonClicked.connect(msg.close)
     msg.exec()
+
+
+def set_db_field_value(project, document, tag_to_add):
+    """
+    Create or update a field and its value for a document in the project's
+    database.
+
+    If the specified field does not exist in the current and initial
+    collections, it is added to both. The field is then assigned a value for
+    the given document.
+
+    :param project (Project): The project instance containing the database
+                              and schema.
+    :param document (str): The absolute path of the document.
+    :param tag_to_add (dict): A dictionary describing the field with keys:
+                              'name', 'value', 'default_value',
+                              'description', 'field_type', 'origin',
+                              'unit', and 'visibility'.
+    """
+    tag_name = tag_to_add["name"]
+    project_name = project.getName()
+    # fmt: off
+    db_filename = document[
+        document.find(project_name) + len(project_name) + 1:
+    ]
+    # fmt: on
+
+    with (
+        project.database.schema() as database_schema,
+        database_schema.data() as database_data,
+    ):
+
+        for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+
+            if tag_name not in database_data.get_field_names(collection):
+                database_schema.add_field(
+                    {
+                        "collection_name": collection,
+                        "field_name": tag_name,
+                        "field_type": tag_to_add["field_type"],
+                        "description": tag_to_add["description"],
+                        "visibility": tag_to_add["visibility"],
+                        "origin": tag_to_add["origin"],
+                        "unit": tag_to_add["unit"],
+                        "default_value": tag_to_add["default_value"],
+                    }
+                )
+
+        if not database_data.has_document(COLLECTION_CURRENT, db_filename):
+
+            for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+                database_data.add_document(collection, db_filename)
+
+        for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+            database_data.set_value(
+                collection, db_filename, {tag_name: tag_to_add["value"]}
+            )
 
 
 def set_filters_directory_as_default(dialog):

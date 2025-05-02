@@ -47,9 +47,6 @@ from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
-# Mia_processes imports
-from mia_processes.utils import del_dbFieldValue
-
 # nipype imports
 from nipype.interfaces.base import File, InputMultiObject, traits_extension
 
@@ -1106,7 +1103,22 @@ class ProcessMIA(Process):
             initial_values.pop(tag_to_del, None)
 
         # If tag_to_del is only in out_file, remove it from database
-        del_dbFieldValue(self.project, out_file, tags2del)
+        relative_path = out_file.split(self.project.getName() + os.sep, 1)[-1]
+
+        with self.project.database.data() as database_data:
+
+            for tag in tags2del:
+
+                for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
+
+                    try:
+                        database_data.remove_value(
+                            collection, relative_path, tag
+                        )
+
+                    except ValueError:
+                        # Collection, field, or document may not exist — ignore
+                        pass
 
     def _resolve_inheritance_ambiguity(
         self,
