@@ -881,6 +881,7 @@ class DatabaseMiaData:
         :param primary_key (str): The primary key of the document in the
                                   collection.
         :param field (str): The field to be removed from the document.
+
         :raises KeyError: If the collection or document cannot be found.
         """
 
