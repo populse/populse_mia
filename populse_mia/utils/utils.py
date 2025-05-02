@@ -101,7 +101,6 @@ class PackagesInstall:
 
     # These classes should not appear in available processes
     _already_loaded = {
-        "mia_processes.process_matlab.ProcessMatlab",
         "populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA",
         "capsul.process.process.Process",
         "capsul.process.process.NipypeProcess",
