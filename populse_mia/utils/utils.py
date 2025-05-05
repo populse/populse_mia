@@ -37,6 +37,7 @@ Module that contains multiple functions used across Mia.
 ##########################################################################
 
 import ast
+import datetime
 import inspect
 import logging
 import os
@@ -46,7 +47,6 @@ import sys
 import traceback
 import types
 import typing
-from datetime import datetime
 from functools import partial
 from pathlib import Path
 from typing import get_args, get_origin
@@ -261,7 +261,7 @@ def _is_valid_date(date_str, date_format):
     :return (bool): True if the string matches the format, False otherwise.
     """
     try:
-        datetime.strptime(date_str, date_format)
+        datetime.datetime.strptime(date_str, date_format)
         return True
 
     except ValueError:
@@ -851,7 +851,9 @@ def table_to_database(value, value_type):
         if isinstance(value, str):
 
             try:
-                return datetime.strptime(value, "%d/%m/%Y %H:%M:%S.%f")
+                return datetime.datetime.strptime(
+                    value, "%d/%m/%Y %H:%M:%S.%f"
+                )
 
             except ValueError:
                 return dateutil.parser.parse(value)
@@ -862,7 +864,7 @@ def table_to_database(value, value_type):
             return value.toPyDate()
 
         if isinstance(value, str):
-            return datetime.strptime(value, "%d/%m/%Y").date()
+            return datetime.datetime.strptime(value, "%d/%m/%Y").date()
 
     elif value_type == FIELD_TYPE_TIME:
 
@@ -870,7 +872,7 @@ def table_to_database(value, value_type):
             return value.toPyTime()
 
         if isinstance(value, str):
-            return datetime.strptime(value, "%H:%M:%S.%f").time()
+            return datetime.datetime.strptime(value, "%H:%M:%S.%f").time()
 
     elif get_origin(value_type) is list:
         list_type = get_args(value_type)[0]
