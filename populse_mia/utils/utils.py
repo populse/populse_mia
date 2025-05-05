@@ -9,9 +9,14 @@ Module that contains multiple functions used across Mia.
         - check_python_version
         - check_value_type
         - dict4runtime_update
-        - get_dbFieldValue
+        - get_db_field_value
+        - get_document_names
+        - get_field_names
+        - get_shown_tags
+        - get_value
         - launch_mia
         - message_already_exists
+        - remove_document
         - set_db_field_value
         - set_filters_directory_as_default
         - set_item_data
@@ -398,6 +403,68 @@ def get_db_field_value(project, document, field):
         return database_data.get_value(COLLECTION_CURRENT, db_filename, field)
 
 
+def get_document_names(project, collection):
+    """
+    Retrieves the names of all documents in the specified collection
+    from the project's database.
+
+    :param project: The project instance containing the database.
+    :param collection (str): The name of the collection to query.
+
+    :returns (list[str]): A list of document names in the collection.
+    """
+
+    with project.database.data() as database_data:
+        return database_data.get_document_names(collection)
+
+
+def get_field_names(project, collection):
+    """
+    Retrieves the list of field names (i.e., column names) for documents
+    in the specified collection of the project's database.
+
+    :param project: The project instance containing the database.
+    :param collection (str): The name of the collection to inspect.
+
+    :returns (list[str]): A list of field names in the collection.
+    """
+
+    with project.database.data() as database_data:
+        return database_data.get_field_names(collection)
+
+
+def get_shown_tags(project):
+    """
+    Retrieves the list of tags that are marked as 'shown' in the project's
+    database.
+
+    :param project: The project instance containing the database.
+
+    :returns (list[str]): A list of tag names marked as shown.
+    """
+
+    with project.database.data() as database_data:
+        return database_data.get_shown_tags()
+
+
+def get_value(project, collection, file_name, field):
+    """
+    Retrieves the value of a specific field from a document in the given
+    collection.
+
+    :param project: The project instance containing the database.
+    :param collection (str): The name of the collection containing the
+                             document.
+    :param file_name (str): The name of the document (typically the file name).
+    :param field (str): The name of the field whose value is to be retrieved.
+
+    :returns: The value of the specified field, or None if not found.
+    """
+
+    with project.database.data() as database_data:
+        return database_data.get_value(collection, file_name, field)
+
+
 def launch_mia(app, args):
     """
     Launches the Mia software application.
@@ -537,6 +604,26 @@ def message_already_exists():
     msg.setStandardButtons(QMessageBox.Ok)
     msg.buttonClicked.connect(msg.close)
     msg.exec()
+
+
+def remove_document(project, collection, documents):
+    """
+    Removes one or multiple documents from the specified collection
+    in the given project's database.
+
+    :param project: The project instance containing the database.
+    :param collection (str): The name of the collection from which documents
+                             will be removed.
+    :param documents (str or list[str]): A single document name or a list of
+                                         document names to remove.
+    """
+    if isinstance(documents, str):
+        documents = [documents]
+
+    with project.database.data() as database_data:
+
+        for document in documents:
+            database_data.remove_document(collection, document)
 
 
 def set_db_field_value(project, document, tag_to_add):
