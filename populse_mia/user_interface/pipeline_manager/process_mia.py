@@ -1105,7 +1105,7 @@ class ProcessMIA(Process):
         # If tag_to_del is only in out_file, remove it from database
         relative_path = out_file.split(self.project.getName() + os.sep, 1)[-1]
 
-        with self.project.database.data() as database_data:
+        with self.project.database.data(write=True) as database_data:
 
             for tag in tags2del:
 
@@ -1116,7 +1116,7 @@ class ProcessMIA(Process):
                             collection, relative_path, tag
                         )
 
-                    except ValueError:
+                    except KeyError:
                         # Collection, field, or document may not exist — ignore
                         pass
 
