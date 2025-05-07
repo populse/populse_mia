@@ -212,7 +212,12 @@ from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
 from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 
 from populse_mia.data_manager import (  # noqa: E402
+    BRICK_EXEC,
+    BRICK_EXEC_TIME,
     BRICK_ID,
+    BRICK_INIT,
+    BRICK_INIT_TIME,
+    BRICK_NAME,
     COLLECTION_BRICK,
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
@@ -231,6 +236,7 @@ from populse_mia.data_manager import (  # noqa: E402
     FIELD_TYPE_LIST_TIME,
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
+    NOT_DEFINED_VALUE,
     TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_EXP_TYPE,
@@ -238,6 +244,7 @@ from populse_mia.data_manager import (  # noqa: E402
     TAG_HISTORY,
     TAG_ORIGIN_USER,
     TAG_TYPE,
+    TAG_UNIT_MHZ,
     TYPE_NII,
 )
 
@@ -979,7 +986,7 @@ class TestMIADataBrowser(TestMIACase):
         QApplication.processEvents()
 
         # Testing with tag name already existing
-        add_tag.text_edit_tag_name.setText("Type")
+        add_tag.text_edit_tag_name.setText(TAG_TYPE)
         # QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(add_tag.msg.text(), "This tag name already exists")
@@ -1310,7 +1317,7 @@ class TestMIADataBrowser(TestMIACase):
 
         bricks_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )("History")
+        )(TAG_BRICKS)
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
             0, bricks_column
         )
@@ -1321,14 +1328,20 @@ class TestMIADataBrowser(TestMIACase):
             self.main_window.data_browser.table_data.brick_history_popup
         )
         brick_table = brick_history.table
-        self.assertEqual(brick_table.horizontalHeaderItem(0).text(), "Name")
-        self.assertEqual(brick_table.horizontalHeaderItem(1).text(), "Init")
         self.assertEqual(
-            brick_table.horizontalHeaderItem(2).text(), "Init Time"
+            brick_table.horizontalHeaderItem(0).text(), BRICK_NAME
         )
-        self.assertEqual(brick_table.horizontalHeaderItem(3).text(), "Exec")
         self.assertEqual(
-            brick_table.horizontalHeaderItem(4).text(), "Exec Time"
+            brick_table.horizontalHeaderItem(1).text(), BRICK_INIT
+        )
+        self.assertEqual(
+            brick_table.horizontalHeaderItem(2).text(), BRICK_INIT_TIME
+        )
+        self.assertEqual(
+            brick_table.horizontalHeaderItem(3).text(), BRICK_EXEC
+        )
+        self.assertEqual(
+            brick_table.horizontalHeaderItem(4).text(), BRICK_EXEC_TIME
         )
         self.assertEqual(
             brick_table.horizontalHeaderItem(5).text(), "data_type"
@@ -1424,7 +1437,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Checking that it's empty
         bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
-        self.assertEqual(bw_item.text(), "*Not Defined*")
+        self.assertEqual(bw_item.text(), NOT_DEFINED_VALUE)
 
         with self.main_window.project.database.data() as database_data:
             self.assertIsNone(
@@ -1461,7 +1474,7 @@ class TestMIADataBrowser(TestMIACase):
         # Testing with tag name already existing
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
-        clone_tag.line_edit_new_tag_name.setText("Type")
+        clone_tag.line_edit_new_tag_name.setText(TAG_TYPE)
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(clone_tag.msg.text(), "This tag name already exists")
 
@@ -1842,7 +1855,7 @@ class TestMIADataBrowser(TestMIACase):
 
         multiple_sort.push_buttons[0].setText("BandWidth")
         multiple_sort.fill_values(0)
-        multiple_sort.push_buttons[1].setText("Exp Type")
+        multiple_sort.push_buttons[1].setText(TAG_EXP_TYPE)
         multiple_sort.fill_values(1)
         QTest.mouseClick(multiple_sort.push_button_sort, Qt.LeftButton)
 
@@ -1934,7 +1947,7 @@ class TestMIADataBrowser(TestMIACase):
         # Mocks the execution of 'PopUpSelectTagCountTable'
         def mock_select_tags(self):
             """blabla"""
-            self.selected_tag = "Exp Type"
+            self.selected_tag = TAG_EXP_TYPE
             return True
 
         PopUpSelectTagCountTable.exec_ = mock_select_tags
@@ -2005,7 +2018,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertFalse(viewer.popUp.list_widget_tags.item(1).isHidden())
 
         # Searches for the tag 'Exp Type'
-        data_browser.viewer.popUp.search_str("Exp Type")
+        data_browser.viewer.popUp.search_str(TAG_EXP_TYPE)
 
         # Asserts that the second tag is hidden, the first is not
         self.assertFalse(viewer.popUp.list_widget_tags.item(0).isHidden())
@@ -2395,7 +2408,7 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(
             self.main_window.data_browser.button_cross, Qt.LeftButton
         )
-        self.main_window.data_browser.search_bar.setText("*Not Defined*")
+        self.main_window.data_browser.search_bar.setText(NOT_DEFINED_VALUE)
         scans_displayed = []
 
         for row in range(
@@ -2756,21 +2769,21 @@ class TestMIADataBrowser(TestMIACase):
         # Values in the db
         with self.main_window.project.database.data() as database_data:
             value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Type"
+                COLLECTION_CURRENT, scan_name, TAG_TYPE
             )
             value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Type"
+                COLLECTION_INITIAL, scan_name, TAG_TYPE
             )
 
         # Value in the DataBrowser
         type_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )("Type")
+        )(TAG_TYPE)
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
 
         # Check equality between DataBrowser and db
-        self.assertEqual(value, "Scan")
+        self.assertEqual(value, TYPE_NII)
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
@@ -2782,10 +2795,10 @@ class TestMIADataBrowser(TestMIACase):
         # Check again the equality between DataBrowser and db
         with self.main_window.project.database.data() as database_data:
             value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Type"
+                COLLECTION_CURRENT, scan_name, TAG_TYPE
             )
             value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Type"
+                COLLECTION_INITIAL, scan_name, TAG_TYPE
             )
 
         item = self.main_window.data_browser.table_data.item(0, type_column)
@@ -2794,7 +2807,7 @@ class TestMIADataBrowser(TestMIACase):
 
         self.assertEqual(value, "Test")
         self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, "Scan")
+        self.assertEqual(value_initial, TYPE_NII)
 
         # Reset the current value to the initial value
         item = self.main_window.data_browser.table_data.item(0, type_column)
@@ -2809,14 +2822,14 @@ class TestMIADataBrowser(TestMIACase):
         # Check whether the data has been reset
         with self.main_window.project.database.data() as database_data:
             value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Type"
+                COLLECTION_CURRENT, scan_name, TAG_TYPE
             )
             value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Type"
+                COLLECTION_INITIAL, scan_name, TAG_TYPE
             )
         item = self.main_window.data_browser.table_data.item(0, type_column)
         databrowser = item.text()
-        self.assertEqual(value, "Scan")
+        self.assertEqual(value, TYPE_NII)
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
@@ -3004,14 +3017,14 @@ class TestMIADataBrowser(TestMIACase):
         # Value in DataBrowser for the second document
         type_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )("Type")
+        )(TAG_TYPE)
         type_item = self.main_window.data_browser.table_data.item(
             1, type_column
         )
         old_type = type_item.text()
 
         # Check value in DataBrowser for the second document
-        self.assertEqual(old_type, "Scan")
+        self.assertEqual(old_type, TYPE_NII)
 
         # Change the value
         type_item.setSelected(True)
@@ -3039,7 +3052,7 @@ class TestMIADataBrowser(TestMIACase):
             1, type_column
         )
         new_type = type_item.text()
-        self.assertEqual(new_type, "Scan")
+        self.assertEqual(new_type, TYPE_NII)
 
     def test_save_project(self):
         """Test opening & saving of a project."""
@@ -3319,21 +3332,21 @@ class TestMIADataBrowser(TestMIACase):
         # Values in the db
         with self.main_window.project.database.data() as database_data:
             value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Type"
+                COLLECTION_CURRENT, scan_name, TAG_TYPE
             )
             value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Type"
+                COLLECTION_INITIAL, scan_name, TAG_TYPE
             )
 
         # Value in the DataBrowser
         type_column = (
             self.main_window.data_browser.table_data.get_tag_column
-        )("Type")
+        )(TAG_TYPE)
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
 
         # Check equality between DataBrowser and db
-        self.assertEqual(value, "Scan")
+        self.assertEqual(value, TYPE_NII)
         self.assertEqual(value, databrowser)
         self.assertEqual(value, value_initial)
 
@@ -3345,17 +3358,17 @@ class TestMIADataBrowser(TestMIACase):
         # Check if value in DataBrowser and db as been changed
         with self.main_window.project.database.data() as database_data:
             value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Type"
+                COLLECTION_CURRENT, scan_name, TAG_TYPE
             )
             value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Type"
+                COLLECTION_INITIAL, scan_name, TAG_TYPE
             )
 
         item = self.main_window.data_browser.table_data.item(1, type_column)
         databrowser = item.text()
         self.assertEqual(value, "Test")
         self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, "Scan")
+        self.assertEqual(value_initial, TYPE_NII)
 
     def test_show_brick_history(self):
         """Opens the history pop-up for scans with history related to
@@ -3376,11 +3389,11 @@ class TestMIADataBrowser(TestMIACase):
         # Gets the input file path of the input scan
         with self.main_window.project.database.data() as database_data:
             INPUT_SCAN = database_data.get_document(COLLECTION_CURRENT)[0][
-                "FileName"
+                TAG_FILENAME
             ]
 
         # Opens the history pop-up for the scan related to 'smooth_1'
-        hist_index = data_browser.table_data.get_tag_column("History")
+        hist_index = data_browser.table_data.get_tag_column(TAG_BRICKS)
         hist_button = data_browser.table_data.cellWidget(
             0, hist_index
         ).children()[-1]
@@ -4571,7 +4584,7 @@ class TestMIAMainWindow(TestMIACase):
             "BandWidth": {
                 "format": None,
                 "description": "",
-                "units": "MHz",
+                "units": TAG_UNIT_MHZ,
                 "type": "float",
                 "value": [[50000.0]],
             },
@@ -7053,7 +7066,7 @@ class TestMIANodeController(TestMIACase):
         # Updates the tag to filter with
         input_filter.update_tag_to_filter()
 
-        input_filter.push_button_tag_filter.setText("FileName")
+        input_filter.push_button_tag_filter.setText(TAG_FILENAME)
         # TODO: select tag to filter with
 
         # Closes the filter
@@ -7289,7 +7302,7 @@ class TestMIANodeController(TestMIACase):
         )
 
         plug_filter.update_tag_to_filter()
-        plug_filter.push_button_tag_filter.setText("FileName")
+        plug_filter.push_button_tag_filter.setText(TAG_FILENAME)
         # TODO: select tag to filter with
 
         # Closes the filter for the plug "in_files"
@@ -9503,7 +9516,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
 
         # Mocks attributes values that are in the tags list
-        attributes = {"Checksum": "Checksum_value"}
+        attributes = {TAG_CHECKSUM: "Checksum_value"}
         (
             ProcessCompletionEngine.get_completion_engine(
                 ppl

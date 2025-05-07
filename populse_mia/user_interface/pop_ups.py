@@ -848,7 +848,7 @@ class PopUpAddTag(QDialog):
         # Special validation for PatientName tag
         if tag_name == "PatientName":
 
-            if self.type != "string":
+            if self.type is not FIELD_TYPE_STRING:
                 self._show_error(
                     "PatientName is a special tag that must be a character "
                     "string containing no spaces!",
@@ -5596,7 +5596,7 @@ class PopUpTagSelection(QDialog):
         filtered_tags = [
             tag
             for tag in field_names
-            if tag not in ["checksum", "history"]
+            if tag not in [TAG_CHECKSUM, COLLECTION_HISTORY]
             and (not str_search or str_search.upper() in tag.upper())
         ]
 
