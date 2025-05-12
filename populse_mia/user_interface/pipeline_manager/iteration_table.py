@@ -537,7 +537,10 @@ class IterationTable(QWidget):
                     primary_key=scan_name,
                     field=selected_tag,
                 )
-                tag_values.add(str(tag_value))
+
+                # Skip None values
+                if tag_value is not None:
+                    tag_values.add(str(tag_value))
 
         tag_values_list = sorted(list(tag_values))
         # Get current editor and update its tag value lists
