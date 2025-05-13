@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.rapid_search &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.user_interface.data_browser.rapid_search &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.rapid_search</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,9 +30,16 @@
         
         
   <h1>Source code for populse_mia.user_interface.data_browser.rapid_search</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module to define the rapid search.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Rapid Search Widget Module</span>
+
+<span class="sd">This module provides the RapidSearch widget, a specialized QLineEdit</span>
+<span class="sd">component for performing quick searches across visualized tags in the</span>
+<span class="sd">data browser table.</span>
+
+<span class="sd">The RapidSearch widget enables users to filter DataBrowser using various</span>
+<span class="sd">search patterns and wildcards. It supports searching for specific text</span>
+<span class="sd">patterns as well as finding entries with undefined or missing values.</span>
 
 <span class="sd">Contains:</span>
 <span class="sd">    Class:</span>
@@ -51,117 +58,97 @@
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QLineEdit</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">TAG_BRICKS</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
 
 
 <div class="viewcode-block" id="RapidSearch">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.rapid_search.RapidSearch">[docs]</a>
 <span class="k">class</span> <span class="nc">RapidSearch</span><span class="p">(</span><span class="n">QLineEdit</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Widget used to search for a pattern in the table (for all the visualized</span>
-<span class="sd">       tags).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget for pattern searching in table data across visualized tags.</span>
 
-<span class="sd">    Enter % to replace any string, _ to replace any character , *Not Defined*</span>
-<span class="sd">    for the scans with missing value(s).</span>
-<span class="sd">    Dates are in the following format: yyyy-mm-dd hh:mm:ss.fff”</span>
+<span class="sd">    Supports special search syntax:</span>
+<span class="sd">    - &#39;%&#39;: Wildcard for any string</span>
+<span class="sd">    - &#39;_&#39;: Wildcard for any single character</span>
+<span class="sd">    - &#39;*Not Defined*&#39;: Matches scans with missing values</span>
 
-<span class="sd">    :param databrowser: parent data browser widget</span>
+<span class="sd">    Dates should be formatted as: yyyy-mm-dd hh:mm:ss.fff</span>
 
 <span class="sd">    .. Methods:</span>
-<span class="sd">        - prepare_filter: prepares the rapid search filter</span>
-<span class="sd">        - prepare_not_defined_filter: prepares the rapid search filter for not</span>
-<span class="sd">          defined values</span>
+<span class="sd">        - prepare_filter: Prepares the rapid search filter</span>
+<span class="sd">        - prepare_not_defined_filter: Prepares the rapid search filter for</span>
+<span class="sd">                                      not defined values</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RapidSearch.__init__">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">databrowser</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization of RapidSearch class.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the RapidSearch widget.</span>
 
-<span class="sd">        :param databrowser: parent data browser widget</span>
+<span class="sd">        :param databrowser: Parent data browser widget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span>
-            <span class="s2">&quot;Rapid search, enter % to replace any string,&quot;</span>
-            <span class="s2">&quot; _ to replace any character, *Not Defined* &quot;</span>
-            <span class="s2">&quot;for the scans with missing value(s), &quot;</span>
-            <span class="s2">&quot;dates are in the following format: &quot;</span>
-            <span class="s2">&quot;yyyy-mm-dd hh:mm:ss.fff&quot;</span>
+            <span class="s2">&quot;Rapid search: % (any string), _ (any character), &quot;</span>
+            <span class="s2">&quot;*Not Defined* (missing values), &quot;</span>
+            <span class="s2">&quot;dates as yyyy-mm-dd hh:mm:ss.fff&quot;</span>
         <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="RapidSearch.prepare_not_defined_filter">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_not_defined_filter">[docs]</a>
     <span class="k">def</span> <span class="nf">prepare_not_defined_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the rapid search filter for not defined values.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a filter for finding entries with undefined values.</span>
 
-<span class="sd">        :param tags: list of tags to take into account</span>
-<span class="sd">        :return: str filter corresponding to the rapid search for not defined</span>
-<span class="sd">          values</span>
+<span class="sd">        :param tags (list): List of tags to check for null values</span>
+
+<span class="sd">        :return (str): QL-like filter expression for finding null values</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-        <span class="n">or_to_write</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+
             <span class="k">if</span> <span class="n">tag</span> <span class="o">!=</span> <span class="n">TAG_BRICKS</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">or_to_write</span><span class="p">:</span>
-                    <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; OR &quot;</span>
+                <span class="n">conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;(</span><span class="se">{{</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="se">}}</span><span class="s2"> == null)&quot;</span><span class="p">)</span>
 
-                <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot;({&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s2">&quot;} == null)&quot;</span>
-
-                <span class="n">or_to_write</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="n">query</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="s2">&quot; AND ({&quot;</span>
-            <span class="o">+</span> <span class="n">TAG_FILENAME</span>
-            <span class="o">+</span> <span class="s2">&quot;} IN &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-                <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span>
-            <span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="c1"># Join all conditions with OR</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot; OR &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span>
+        <span class="c1"># Add filename constraint</span>
+        <span class="n">scans_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span>
         <span class="p">)</span>
-
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="n">query</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
-
-        <span class="k">return</span> <span class="n">query</span></div>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">) AND (</span><span class="se">{{</span><span class="si">{</span><span class="n">TAG_FILENAME</span><span class="si">}</span><span class="se">}}</span><span class="s2"> IN </span><span class="si">{</span><span class="n">scans_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">)&quot;</span></div>
 
 
 <div class="viewcode-block" id="RapidSearch.prepare_filter">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.rapid_search.RapidSearch.prepare_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">prepare_filter</span><span class="p">(</span><span class="n">search</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">scans</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Prepare the rapid search filter.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a filter for searching text across specified tags.</span>
 
-<span class="sd">        :param search: Search (str)</span>
-<span class="sd">        :param tags: List of tags to take into account</span>
-<span class="sd">        :param scans: List of scans to search into</span>
-<span class="sd">        :return: str filter corresponding to the rapid search</span>
+<span class="sd">        :param search (str): Search pattern to look for</span>
+<span class="sd">        :param tags (list): List of tags to search within</span>
+<span class="sd">        :param scans (list): List of scans to restrict the search to</span>
+
+<span class="sd">        :return (str): SQL-like filter expression for the search</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
-
-        <span class="n">or_to_write</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">conditions</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">:</span>
+
             <span class="k">if</span> <span class="n">tag</span> <span class="o">!=</span> <span class="n">TAG_BRICKS</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">or_to_write</span><span class="p">:</span>
-                    <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; OR &quot;</span>
+                <span class="n">conditions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="se">{{</span><span class="si">{</span><span class="n">tag</span><span class="si">}</span><span class="se">}}</span><span class="s1"> LIKE &quot;%</span><span class="si">{</span><span class="n">search</span><span class="si">}</span><span class="s1">%&quot;)&#39;</span><span class="p">)</span>
 
-                <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot;({&quot;</span> <span class="o">+</span> <span class="n">tag</span> <span class="o">+</span> <span class="s1">&#39;} LIKE &quot;%&#39;</span> <span class="o">+</span> <span class="n">search</span> <span class="o">+</span> <span class="s1">&#39;%&quot;)&#39;</span>
-
-                <span class="n">or_to_write</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="n">query</span> <span class="o">+=</span> <span class="p">(</span>
-            <span class="s2">&quot;) AND ({&quot;</span>
-            <span class="o">+</span> <span class="n">TAG_FILENAME</span>
-            <span class="o">+</span> <span class="s2">&quot;} IN &quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">scans</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
-            <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
-        <span class="p">)</span>
-
+        <span class="c1"># Join all conditions with OR</span>
+        <span class="n">tag_query</span> <span class="o">=</span> <span class="s2">&quot; OR &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">conditions</span><span class="p">)</span>
+        <span class="c1"># Add filename constraint</span>
+        <span class="n">scans_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">scans</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">tag_query</span><span class="si">}</span><span class="s2">) AND (</span><span class="se">{{</span><span class="si">{</span><span class="n">TAG_FILENAME</span><span class="si">}</span><span class="se">}}</span><span class="s2"> IN </span><span class="si">{</span><span class="n">scans_str</span><span class="si">}</span><span class="s2">)&quot;</span>
         <span class="k">return</span> <span class="n">query</span></div>
 </div>
 

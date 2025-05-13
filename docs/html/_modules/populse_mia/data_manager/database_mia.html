@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,17 +30,14 @@
         
         
   <h1>Source code for populse_mia.data_manager.database_mia</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;Module that contains class to override the default behaviour of</span>
-<span class="sd">populse_db and some of its methods</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module containing a class that provides tools adapted to Mia for</span>
+<span class="sd">interacting with the populse_db API.</span>
 
 <span class="sd">:Contains:</span>
 <span class="sd">   Class:</span>
 <span class="sd">      - DatabaseMIA</span>
-<span class="sd">      - DatabaseSessionMIA</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
-
 
 <span class="c1">##########################################################################</span>
 <span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
@@ -50,272 +47,1025 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+
 <span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="n">str_to_type</span><span class="p">,</span> <span class="n">type_to_str</span>
+<span class="kn">from</span> <span class="nn">populse_db.storage</span> <span class="kn">import</span> <span class="n">Storage</span>
+
+<span class="c1"># Special attributes for the database</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
-    <span class="n">Database</span><span class="p">,</span>
-    <span class="n">DatabaseSession</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">TAG_ORIGIN_BUILTIN</span> <span class="o">=</span> <span class="s2">&quot;builtin&quot;</span>
-<span class="n">TAG_ORIGIN_USER</span> <span class="o">=</span> <span class="s2">&quot;user&quot;</span>
+<span class="c1"># Shema (not in use currently)</span>
+<span class="c1"># schemas = [</span>
+<span class="c1">#     {</span>
+<span class="c1">#         &quot;version&quot;: &quot;1.0.0&quot;,</span>
+<span class="c1">#         &quot;schema&quot;: {</span>
+<span class="c1">#             FIELD_ATTRIBUTES_COLLECTION: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     &quot;index&quot;: [str, {</span>
+<span class="c1">#                         &quot;primary_key&quot;: True,</span>
+<span class="c1">#                         &quot;description&quot;: &quot;The index name of the field as: &quot;</span>
+<span class="c1">#                         &quot;collection name|collection primary_key column name&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                     &quot;visibility&quot;: [bool, {</span>
+<span class="c1">#                         &quot;description&quot;: &quot;Visibility of the index field in &quot;</span>
+<span class="c1">#                         &quot;the DataBrowser&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                     &quot;origin&quot;: [str, {</span>
+<span class="c1">#                         &quot;description&quot;: &quot;Define the origin of the index &quot;</span>
+<span class="c1">#                         &quot;field, TAG_ORIGIN_BUILTIN or TAG_ORIGIN_USER&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                     &quot;unit&quot;: [str, {</span>
+<span class="c1">#                         &quot;description&quot;: &quot;Unit of the index field&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                     &quot;default_value&quot;: [str, {</span>
+<span class="c1">#                         &quot;description&quot;: &quot;Default value of the index field&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                     &quot;description&quot;: [str, {</span>
+<span class="c1">#                         &quot;description&quot;: &quot;I still don&#39;t know if we need this &quot;</span>
+<span class="c1">#                         &quot;field?&quot;</span>
+<span class="c1">#                         }</span>
+<span class="c1">#                         ],</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             COLLECTION_CURRENT: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     TAG_FILENAME: [str, {&quot;primary_key&quot;: True}],</span>
+<span class="c1">#                     TAG_CHECKSUM: str,</span>
+<span class="c1">#                     TAG_TYPE: str,</span>
+<span class="c1">#                     TAG_EXP_TYPE: str,</span>
+<span class="c1">#                     TAG_BRICKS: list[str],</span>
+<span class="c1">#                     TAG_HISTORY: str,</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             COLLECTION_INITIAL: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     TAG_FILENAME: [str, {&quot;primary_key&quot;: True}],</span>
+<span class="c1">#                     TAG_CHECKSUM: str,</span>
+<span class="c1">#                     TAG_TYPE: str,</span>
+<span class="c1">#                     TAG_EXP_TYPE: str,</span>
+<span class="c1">#                     TAG_BRICKS: list[str],</span>
+<span class="c1">#                     TAG_HISTORY: str,</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             COLLECTION_BRICK: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     BRICK_ID: [str, {&quot;primary_key&quot;: True}],</span>
+<span class="c1">#                     BRICK_NAME: str,</span>
+<span class="c1">#                     BRICK_INPUTS: dict,</span>
+<span class="c1">#                     BRICK_OUTPUTS: dict,</span>
+<span class="c1">#                     BRICK_INIT: str,</span>
+<span class="c1">#                     BRICK_INIT_TIME: datetime,</span>
+<span class="c1">#                     BRICK_EXEC: str,</span>
+<span class="c1">#                     BRICK_EXEC_TIME: datetime,</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#             COLLECTION_HISTORY: [</span>
+<span class="c1">#                 {</span>
+<span class="c1">#                     HISTORY_ID: [str, {&quot;primary_key&quot;: True}],</span>
+<span class="c1">#                     HISTORY_PIPELINE: str,</span>
+<span class="c1">#                     HISTORY_BRICKS: list[str],</span>
+<span class="c1">#                 }</span>
+<span class="c1">#             ],</span>
+<span class="c1">#         },</span>
+<span class="c1">#     },</span>
+<span class="c1"># ]</span>
 
-<span class="c1"># Tag unit</span>
-<span class="n">TAG_UNIT_MS</span> <span class="o">=</span> <span class="s2">&quot;ms&quot;</span>
-<span class="n">TAG_UNIT_MM</span> <span class="o">=</span> <span class="s2">&quot;mm&quot;</span>
-<span class="n">TAG_UNIT_DEGREE</span> <span class="o">=</span> <span class="s2">&quot;degree&quot;</span>
-<span class="n">TAG_UNIT_HZPIXEL</span> <span class="o">=</span> <span class="s2">&quot;Hz/pixel&quot;</span>
-<span class="n">TAG_UNIT_MHZ</span> <span class="o">=</span> <span class="s2">&quot;MHz&quot;</span>
 
-<span class="n">ALL_UNITS</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">TAG_UNIT_MS</span><span class="p">,</span>
-    <span class="n">TAG_UNIT_MM</span><span class="p">,</span>
-    <span class="n">TAG_UNIT_DEGREE</span><span class="p">,</span>
-    <span class="n">TAG_UNIT_HZPIXEL</span><span class="p">,</span>
-    <span class="n">TAG_UNIT_MHZ</span><span class="p">,</span>
-<span class="p">]</span>
-
-<span class="n">FIELD_ATTRIBUTES_COLLECTION</span> <span class="o">=</span> <span class="s2">&quot;mia_field_attributes&quot;</span>
-
-
-<div class="viewcode-block" id="DatabaseSessionMIA">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA">[docs]</a>
-<span class="k">class</span> <span class="nc">DatabaseSessionMIA</span><span class="p">(</span><span class="n">DatabaseSession</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class overriding the database session of populse_db</span>
+<div class="viewcode-block" id="DatabaseMIA">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseMIA</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class providing tools for interacting with a database,</span>
+<span class="sd">    under the supervision of populse_db.</span>
 
 <span class="sd">    .. Methods:</span>
-<span class="sd">        - add_collection: overrides the method adding a collection</span>
-<span class="sd">        - add_field: adds a field to the database, if it does not already exist</span>
-<span class="sd">        - add_fields: adds the list of fields</span>
-<span class="sd">        - get_shown_tags: gives the list of visible tags</span>
-<span class="sd">        - set_shown_tags: sets the list of visible tags</span>
+<span class="sd">        __enter__: Make a database connection and return it.</span>
+<span class="sd">        __exit__: Make sure the database connection gets closed.</span>
+<span class="sd">        - close: Releases database resources.</span>
+<span class="sd">        - data: Context manager for accessing the database data</span>
+<span class="sd">        - schema: Context manager for accessing the database schema.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DatabaseSessionMIA.add_collection">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_collection">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_collection</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">visibility</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span> <span class="n">unit</span><span class="p">,</span> <span class="n">default_value</span>
+<div class="viewcode-block" id="DatabaseMIA.__init__">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">database_engine</span><span class="p">,</span>
+        <span class="c1"># schema_name=&quot;populse_mia.data_manager.database_mia&quot;,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Override the method adding a collection of populse_db.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a DatabaseMIA instance with the given database file.</span>
 
-<span class="sd">        :param name: New collection name</span>
-<span class="sd">        :param primary_key: New collection primary_key column</span>
-<span class="sd">        :param visibility: Primary key visibility</span>
-<span class="sd">        :param origin: Primary key origin</span>
-<span class="sd">        :param unit: Primary key unit</span>
-<span class="sd">        :param default_value: Primary key default value</span>
+<span class="sd">        :param database_engine (str): Path to the database file (e.g.,</span>
+<span class="sd">                                      &#39;/a/folder/path/file.db&#39;).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Initialize the storage with the provided database engine</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">Storage</span><span class="p">(</span><span class="n">database_engine</span><span class="p">)</span></div>
+
+
+        <span class="c1"># with self.storage.schema() as schema:</span>
+        <span class="c1">#     schema.add_schema(schema_name)</span>
+
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make a database connection and return it.</span>
+
+<span class="sd">        Enables the use of `with DatabaseMIA(...) as foo:` for automatic</span>
+<span class="sd">        resource management.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make sure the database connection gets closed.</span>
+
+<span class="sd">        Ensures the database is properly closed when exiting a `with`</span>
+<span class="sd">        statement.</span>
+
+<span class="sd">        :param exc_type (Type[BaseException]): The exception type if an</span>
+<span class="sd">                                               exception occurred, otherwise</span>
+<span class="sd">                                               None.</span>
+<span class="sd">        :param exc_value (BaseException): The exception instance if an</span>
+<span class="sd">                                          exception occurred, otherwise None.</span>
+<span class="sd">        :param traceback (TracebackType: The traceback object if an exception</span>
+<span class="sd">                                         occurred, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<div class="viewcode-block" id="DatabaseMIA.close">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.close">[docs]</a>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes any open resources or connections held by the instance.</span>
+
+<span class="sd">        This method sets the `storage` attribute to `None`, effectively</span>
+<span class="sd">        releasing any held references and cleaning up the object&#39;s state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMIA.data">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.data">[docs]</a>
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a context manager for accessing the database data layer.</span>
+
+<span class="sd">        This method allows safe read and write access to the database data,</span>
+<span class="sd">        ensuring proper resource management.</span>
+
+<span class="sd">        :param write (bool): If True, enables write mode.</span>
+<span class="sd">        :param create (bool): If True, allows creating new records.</span>
+
+<span class="sd">        :yields (DatabaseMiaData): The data interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_field_attributes_collection</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
-            <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">),</span>
-                <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">primary_key</span><span class="p">,</span>
-                <span class="s2">&quot;visibility&quot;</span><span class="p">:</span> <span class="n">visibility</span><span class="p">,</span>
-                <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
-                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
-                <span class="s2">&quot;default_value&quot;</span><span class="p">:</span> <span class="n">default_value</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">)</span></div>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="n">write</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="n">create</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">DatabaseMiaData</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DatabaseSessionMIA.add_field_attributes_collection">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field_attributes_collection">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blabla&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DatabaseMIA.schema">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.schema">[docs]</a>
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a context manager for accessing the database schema.</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">):</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span>
-            <span class="p">)</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;visibility&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_BOOLEAN</span>
-            <span class="p">)</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
-            <span class="p">)</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
-            <span class="p">)</span>
-            <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;default_value&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
-            <span class="p">)</span></div>
+<span class="sd">        This method allows safe access to the database schema,</span>
+<span class="sd">        ensuring proper resource management.</span>
+
+<span class="sd">        :yields (DatabaseMiaSchema): The schema interface for the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">schema</span><span class="p">()</span> <span class="k">as</span> <span class="n">schema</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">DatabaseMiaSchema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="DatabaseSessionMIA.add_field">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_field</span><span class="p">(</span>
+
+<div class="viewcode-block" id="DatabaseMiaSchema">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseMiaSchema</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Provides tools for managing the schema of a MIA database.</span>
+
+<span class="sd">    This class allows users to manipulate database collections, fields, and</span>
+<span class="sd">    field attributes under the supervision of populse_db.</span>
+
+<span class="sd">    .. Methods:</span>
+<span class="sd">        - __init__: Initializes the schema interface.</span>
+<span class="sd">        - add_collection: Adds a new collection to the database.</span>
+<span class="sd">        - add_field: Adds one or more fields to a collection.</span>
+<span class="sd">        - add_field_attributes_collection: Ensures that the</span>
+<span class="sd">                                           `FIELD_ATTRIBUTES_COLLECTION`</span>
+<span class="sd">                                           collection is available in the</span>
+<span class="sd">                                           database (for internal</span>
+<span class="sd">                                           operations).</span>
+<span class="sd">        - data: Provides a context manager for accessing database data.</span>
+<span class="sd">        - remove_field: Removes a field from a collection.</span>
+<span class="sd">        - remove_field_attributes: Removes attributes associated with a</span>
+<span class="sd">                                   specific field in a collection.</span>
+<span class="sd">        - update_field_attributes: Updates the attributes of a field in</span>
+<span class="sd">                                   the database.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="DatabaseMiaSchema.__init__">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_schema</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DatabaseMiaSchema instance.</span>
+
+<span class="sd">        :param storage_schema (populse_db.storage.Storage): The schema storage</span>
+<span class="sd">                                                            interface for the</span>
+<span class="sd">                                                            database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span> <span class="o">=</span> <span class="n">storage_schema</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaSchema.add_collection">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_collection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">collection</span><span class="p">,</span>
-        <span class="n">name</span><span class="p">,</span>
-        <span class="n">field_type</span><span class="p">,</span>
-        <span class="n">description</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">,</span>
+        <span class="n">primary_key</span><span class="p">,</span>
         <span class="n">visibility</span><span class="p">,</span>
         <span class="n">origin</span><span class="p">,</span>
         <span class="n">unit</span><span class="p">,</span>
         <span class="n">default_value</span><span class="p">,</span>
-        <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a field to the database, if it does not already exist.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new collection to the storage database, if it does not</span>
+<span class="sd">        already exist.</span>
 
-<span class="sd">        :param collection: field collection (str)</span>
-<span class="sd">        :param name: field name (str)</span>
-<span class="sd">        :param field_type: field type (string, int, float, boolean, date,</span>
-<span class="sd">                           datetime, time, list_string, list_int, list_float,</span>
-<span class="sd">                           list_boolean, list_date, list_datetime or list_time)</span>
-<span class="sd">        :param description: field description (str or None)</span>
-<span class="sd">        :param visibility: Bool to know if the field is visible in the</span>
-<span class="sd">                           databrowser</span>
-<span class="sd">        :param origin: To know the origin of a field,</span>
-<span class="sd">                       in [TAG_ORIGIN_BUILTIN, TAG_ORIGIN_USER]</span>
-<span class="sd">        :param unit: Origin of the field, in [TAG_UNIT_MS, TAG_UNIT_MM,</span>
-<span class="sd">                     TAG_UNIT_DEGREE, TAG_UNIT_HZPIXEL, TAG_UNIT_MHZ]</span>
-<span class="sd">        :param default_value: Default_value of the field, can be str or None</span>
-<span class="sd">        :param flush: bool to know if the table classes must be updated (put</span>
-<span class="sd">                      False if in the middle of filling fields) =&gt; True by</span>
-<span class="sd">                      default</span>
+<span class="sd">        This method overrides the default behavior to add a collection with</span>
+<span class="sd">        additional field attributes, ensuring proper schema updates and</span>
+<span class="sd">        collection initialization.</span>
+
+<span class="sd">        :param collection_name (str): The name of the new collection.</span>
+<span class="sd">        :param primary_key (str): The primary key column for the collection.</span>
+<span class="sd">        :param visibility (bool): Visibility of the primary key field.</span>
+<span class="sd">        :param origin (str): Origin of the primary key field.</span>
+<span class="sd">        :param unit (str): Unit of the primary key field.</span>
+<span class="sd">        :param default_value (Any): Default value for the primary key field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-            <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">field_type</span><span class="p">,</span> <span class="n">description</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_document</span><span class="p">(</span>
-            <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">),</span>
-                <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;visibility&quot;</span><span class="p">:</span> <span class="n">visibility</span><span class="p">,</span>
-                <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
-                <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
-                <span class="s2">&quot;default_value&quot;</span><span class="p">:</span> <span class="n">default_value</span><span class="p">,</span>
-            <span class="p">},</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_field_attributes_collection</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">storage_data</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+                <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_field_attributes</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">collection_name</span><span class="p">,</span>
+            <span class="n">field_name</span><span class="o">=</span><span class="n">primary_key</span><span class="p">,</span>
+            <span class="n">visibility</span><span class="o">=</span><span class="n">visibility</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span>
+            <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span>
+            <span class="n">default_value</span><span class="o">=</span><span class="n">default_value</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Primary_key of the document &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;collection </span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DatabaseSessionMIA.add_fields">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_fields">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the list of fields.</span>
-
-<span class="sd">        :param fields: list of fields (collection, name, type, description,</span>
-<span class="sd">                       visibility, origin, unit, default_value)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="c1"># Adding each field</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span>
-                <span class="n">field</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>
-                <span class="kc">False</span><span class="p">,</span>
-            <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="DatabaseSessionMIA.remove_field">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.remove_field">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+<div class="viewcode-block" id="DatabaseMiaSchema.add_field">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Removes a field in the collection</span>
+<span class="sd">        Adds one or more fields to the collection.</span>
 
-<span class="sd">        :param collection: Field collection (str, must be existing)</span>
+<span class="sd">        Each field should be represented as a dictionary containing</span>
+<span class="sd">        the following keys:</span>
 
-<span class="sd">        :param field: Field name (str, must be existing), or list of fields</span>
-<span class="sd">         (list of str, must all be existing)</span>
+<span class="sd">        - `collection_name` (str): The collection to which the field belongs.</span>
+<span class="sd">        - `field_name` (str): The name of the field.</span>
+<span class="sd">        - `field_type` (str): The data type of the field.</span>
+<span class="sd">        - `description` (str): A brief description of the field.</span>
+<span class="sd">        - `visibility` (bool): The visibility status of the field.</span>
+<span class="sd">        - `origin` (str): The origin of the field.</span>
+<span class="sd">        - `unit` (str): The unit associated with the field.</span>
+<span class="sd">        - `default_value` (Any): The default value of the field.</span>
 
-<span class="sd">        :raise ValueError: - If the collection does not exist</span>
-<span class="sd">                           - If the field does not exist</span>
+<span class="sd">        :param fields (dict | list[dict]): A dictionary representing a single</span>
+<span class="sd">                                           field&#39;s attributes, or a list of</span>
+<span class="sd">                                           dictionaries representing multiple</span>
+<span class="sd">                                           fields&#39; attributes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">remove_field</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">fields</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="c1"># Ensure fields is always a list for consistent processing</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">fields</span><span class="p">]</span>
+
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span>
-                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;collection_name&quot;</span><span class="p">],</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;field_name&quot;</span><span class="p">],</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_field_attributes</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;collection_name&quot;</span><span class="p">],</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;field_name&quot;</span><span class="p">],</span>
+                <span class="n">visibility</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;visibility&quot;</span><span class="p">],</span>
+                <span class="n">origin</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;origin&quot;</span><span class="p">],</span>
+                <span class="n">unit</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;unit&quot;</span><span class="p">],</span>
+                <span class="n">default_value</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;default_value&quot;</span><span class="p">],</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DatabaseSessionMIA.get_field">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_field">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blabla&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DatabaseMiaSchema.add_field_attributes_collection">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in</span>
+<span class="sd">        the database.</span>
 
-        <span class="n">field</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">field</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-            <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;visibility&quot;</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;default_value&quot;</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">field</span></div>
-
-
-<div class="viewcode-block" id="DatabaseSessionMIA.get_fields">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_fields">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blabla&quot;&quot;&quot;</span>
-
-        <span class="n">fields</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DatabaseSessionMIA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">get_fields</span><span class="p">(</span><span class="n">collection</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">field_name</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">|</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-            <span class="n">attrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;visibility&quot;</span><span class="p">,</span> <span class="s2">&quot;origin&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="s2">&quot;default_value&quot;</span><span class="p">):</span>
-                <span class="nb">setattr</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">attrs</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">fields</span></div>
-
-
-<div class="viewcode-block" id="DatabaseSessionMIA.get_shown_tags">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_shown_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Give the list of visible tags.</span>
-
-<span class="sd">        :return: the list of visible tags</span>
+<span class="sd">        If it does not exist, it creates the collection and adds specific</span>
+<span class="sd">        fields to it such as &#39;visibility&#39;, &#39;origin&#39;, &#39;unit&#39;, and</span>
+<span class="sd">        &#39;default_value&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">visible_names</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">names_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
-            <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{visibility}</span><span class="s2"> == true&quot;</span>
-        <span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_set</span><span class="p">:</span>
-                <span class="n">names_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>
-                <span class="n">visible_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>  <span class="c1"># respect list order</span>
-        <span class="k">return</span> <span class="n">visible_names</span></div>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">storage_data</span><span class="p">:</span>
+            <span class="n">has_collection</span> <span class="o">=</span> <span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span>
+                <span class="n">FIELD_ATTRIBUTES_COLLECTION</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">has_collection</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_collection</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">primary_key</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">,</span>
+                <span class="c1"># description=&quot;The primary key name of the &quot;</span>
+                <span class="c1">#             &quot;collection as: &quot;</span>
+                <span class="c1">#             &quot;collection name|collection primary_key &quot;</span>
+                <span class="c1">#             &quot;column name&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;visibility&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Visibility of the index field in &quot;</span>
+                <span class="s2">&quot;the DataBrowser&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;origin&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Define the origin of the index &quot;</span>
+                <span class="s2">&quot;field, TAG_ORIGIN_BUILTIN or &quot;</span>
+                <span class="s2">&quot;TAG_ORIGIN_USER&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;unit&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Unit of the index field&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;default_value&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Default value of the index field&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;description&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Description of the index field&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">add_field</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
+                <span class="n">field_name</span><span class="o">=</span><span class="s2">&quot;field_type&quot;</span><span class="p">,</span>
+                <span class="n">field_type</span><span class="o">=</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Type of the index field&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="DatabaseSessionMIA.set_shown_tags">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_shown</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the list of visible tags.</span>
+<div class="viewcode-block" id="DatabaseMiaSchema.data">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.data">[docs]</a>
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Provides a context manager for accessing the database data.</span>
 
-<span class="sd">        :param fields_shown: list of visible tags</span>
+<span class="sd">        This method ensures safe access to the database data layer,</span>
+<span class="sd">        managing resources properly.</span>
+
+<span class="sd">        :yields (DatabaseMiaData): The data interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">storage_data</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">DatabaseMiaData</span><span class="p">(</span><span class="n">storage_data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaSchema.remove_field">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes a specified field in the collection_name</span>
+
+<span class="sd">        This method updates the schema to remove the specified field from the</span>
+<span class="sd">        collection and handles associated attributes cleanup.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection from which</span>
+<span class="sd">                                      the field will be removed (must exist).</span>
+<span class="sd">        :param field_name (str): The name of the field to remove (must exist).</span>
+<span class="sd">        :raises ValueError: If the `collection_name` does not exist or if</span>
+<span class="sd">                            the `field_name` does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">remove_field</span><span class="p">(</span><span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Error removing field &#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&#39; from &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;collection &#39;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_field_attributes</span><span class="p">(</span><span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaSchema.remove_field_attributes">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove attributes associated with a specific field in a collection.</span>
+
+<span class="sd">        This method deletes the document storing metadata or attributes for</span>
+<span class="sd">        the specified field in the given collection.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection containing</span>
+<span class="sd">                                      the field.</span>
+<span class="sd">        :param field_name (str): The name of the field whose attributes are</span>
+<span class="sd">                                 to be removed.</span>
+<span class="sd">        :raises ValueError: If the attributes document does not exist or</span>
+<span class="sd">                            cannot be removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">mia_data</span><span class="p">:</span>
+                <span class="n">mia_data</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to remove attributes for &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;field &#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&#39; in &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;collection &#39;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaSchema.update_field_attributes">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.update_field_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_field_attributes</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">collection_name</span><span class="p">,</span>
+        <span class="n">field_name</span><span class="p">,</span>
+        <span class="n">visibility</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">,</span>
+        <span class="n">unit</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="p">,</span>
+        <span class="n">description</span><span class="p">,</span>
+        <span class="n">field_type</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the attributes of a field in the database for a specific</span>
+<span class="sd">        collection.</span>
+
+<span class="sd">        This method constructs an index using the provided collection and</span>
+<span class="sd">        field_name (&#39;collection|field_name&#39;), and then updates the field&#39;s</span>
+<span class="sd">        attributes in the FIELD_ATTRIBUTES_COLLECTION.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection the field</span>
+<span class="sd">                                      belongs to.</span>
+<span class="sd">        :param field_name (str): The name of the field to update.</span>
+<span class="sd">        :param visibility (bool): The visibility status of the field.</span>
+<span class="sd">        :param origin (str): The origin or source of the field.</span>
+<span class="sd">        :param unit (str): The unit of measurement for the field.</span>
+<span class="sd">        :param default_value (Any): The default value to assign to the field.</span>
+<span class="sd">        :param description (str): The description of the field.</span>
+<span class="sd">        :param field_type (Any): The type of the field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">mia_data</span><span class="p">:</span>
+            <span class="n">mia_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
                 <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
-                <span class="n">field</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
-                <span class="s2">&quot;visibility&quot;</span><span class="p">,</span>
-                <span class="n">field</span><span class="o">.</span><span class="n">field</span> <span class="ow">in</span> <span class="n">fields_shown</span><span class="p">,</span>
+                <span class="n">index</span><span class="p">,</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;visibility&quot;</span><span class="p">:</span> <span class="n">visibility</span><span class="p">,</span>
+                    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin</span><span class="p">,</span>
+                    <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="n">unit</span><span class="p">,</span>
+                    <span class="s2">&quot;default_value&quot;</span><span class="p">:</span> <span class="n">default_value</span><span class="p">,</span>
+                    <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">description</span><span class="p">,</span>
+                    <span class="s2">&quot;field_type&quot;</span><span class="p">:</span> <span class="n">type_to_str</span><span class="p">(</span><span class="n">field_type</span><span class="p">),</span>
+                <span class="p">},</span>
             <span class="p">)</span></div>
 </div>
 
 
 
-<div class="viewcode-block" id="DatabaseMIA">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA">[docs]</a>
-<span class="k">class</span> <span class="nc">DatabaseMIA</span><span class="p">(</span><span class="n">Database</span><span class="p">):</span>
+<div class="viewcode-block" id="DatabaseMiaData">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData">[docs]</a>
+<span class="k">class</span> <span class="nc">DatabaseMiaData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class overriding the default behavior of populse_db</span>
+<span class="sd">    Managing database interactions within the MIA framework.</span>
+
+<span class="sd">    This class provides methods to handle collections and documents within the</span>
+<span class="sd">    database, allowing operations such as retrieving, adding, updating, and</span>
+<span class="sd">    removing records.</span>
+
+<span class="sd">    .. Methods:</span>
+<span class="sd">        - add_document: Adds a document to a collection.</span>
+<span class="sd">        - filter_documents: Retrieves documents from a specified collection</span>
+<span class="sd">                            that match a given filter.</span>
+<span class="sd">        - get_collection_names: Retrieves a list of all collection names in</span>
+<span class="sd">                                the database.</span>
+<span class="sd">        - get_document: Retrieves documents from a specified collection with</span>
+<span class="sd">                        optional filtering.</span>
+<span class="sd">        - get_document_names: Retrieves a list of all document names in the</span>
+<span class="sd">                              specified collection.</span>
+<span class="sd">        - get_field_attributes: Retrieves attributes of a specific field or</span>
+<span class="sd">                                all fields in a collection.</span>
+<span class="sd">        - get_field_names: Retrieves the list of all field names in the</span>
+<span class="sd">                           specified collection.</span>
+<span class="sd">        - get_primary_key_name: Retrieves the primary key of the specified</span>
+<span class="sd">                                collection.</span>
+<span class="sd">        - get_shown_tags: Returns the list of visible tags.</span>
+
+<span class="sd">        - get_value: Retrieves the current value of a specific field.</span>
+<span class="sd">        - has_collection: Checks if a collection exists in the database.</span>
+<span class="sd">        - has_document: checks if a document exists in a collection.</span>
+<span class="sd">        - remove_document: Removes a document from a specified collection.</span>
+<span class="sd">        - remove_value: Removes the value for a field.</span>
+<span class="sd">        - set_shown_tags: Sets the list of visible tags.</span>
+<span class="sd">        - set_value: Stores or updates a record in the specified collection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">database_session_class</span> <span class="o">=</span> <span class="n">DatabaseSessionMIA</span></div>
+<div class="viewcode-block" id="DatabaseMiaData.__init__">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new instance of the DatabaseMiaData class.</span>
+
+<span class="sd">        :param storage_data (populse_db.storage.Storage): The data storage</span>
+<span class="sd">                                                          interface for the</span>
+<span class="sd">                                                          database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span> <span class="o">=</span> <span class="n">storage_data</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.add_document">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.add_document">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds a document to a specified collection in the storage.</span>
+
+<span class="sd">        If the specified collection exists, the document is added to it.</span>
+<span class="sd">        The method assigns a primary key to the document based on the</span>
+<span class="sd">        collection&#39;s primary key configuration. The changes are saved</span>
+<span class="sd">        to the storage.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection where the</span>
+<span class="sd">                                      document should be added.</span>
+<span class="sd">        :param document (str): The document name to be added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+            <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_primary_key_name</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">document</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">primary_key</span><span class="p">:</span> <span class="n">document</span>
+            <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.filter_documents">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.filter_documents">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">filter_query</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve documents from a specified collection that match a given</span>
+<span class="sd">        filter.</span>
+
+<span class="sd">        This method searches for documents in the specified collection based</span>
+<span class="sd">        on the provided filter query. It returns the results as a list of</span>
+<span class="sd">        rows from the collection table.</span>
+
+<span class="sd">        The `filter_query` can either be:</span>
+<span class="sd">            - The result of `self.filter_query()`.</span>
+<span class="sd">            - A string defining a filter.</span>
+
+<span class="sd">        **Filter Query Format:**</span>
+<span class="sd">            - A filter condition must follow this syntax:</span>
+<span class="sd">                `{&lt;field&gt;} &lt;operator&gt; &quot;&lt;value&gt;&quot;`.</span>
+<span class="sd">            - Supported operators:</span>
+<span class="sd">                `==`, `!=`, `&lt;=`, `&gt;=`, `&lt;`, `&gt;`, `IN`, `ILIKE`, `LIKE`.</span>
+<span class="sd">            - Multiple filter conditions can be combined using `AND` or `OR`.</span>
+<span class="sd">            - Example:</span>
+<span class="sd">                ```</span>
+<span class="sd">                &quot;((({BandWidth} == &quot;50000&quot;)) AND (({FileName} LIKE &quot;%G1%&quot;)))&quot;</span>
+<span class="sd">                ```</span>
+
+<span class="sd">        **Note:**</span>
+<span class="sd">        Due to potential database access issues such as</span>
+<span class="sd">        `&quot;database already open.&quot;`, this implementation currently returns a</span>
+<span class="sd">        list instead of using `yield`. However, using `yield` may be</span>
+<span class="sd">        reconsidered in the future for better memory management.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection to filter</span>
+<span class="sd">                                      (must exist).</span>
+<span class="sd">        :param filter_query (str): The filter query to apply.</span>
+
+<span class="sd">        :return (list): A list of rows matching the filter criteria.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The collection </span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2"> does not exist...&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># with self.storage.data() as dbs:</span>
+        <span class="c1">#     for i in dbs[collection_name].search(filter_query):</span>
+        <span class="c1">#         yield i</span>
+        <span class="c1"># TODO: We do not use yield because it causes errors such as</span>
+        <span class="c1">#       &quot;database already open.&quot; I believe the code should be</span>
+        <span class="c1">#       improved to prevent this exception. For now, to save time,</span>
+        <span class="c1">#       we are not exploring the use of yield. However, it will</span>
+        <span class="c1">#       likely need to be implemented later for memory</span>
+        <span class="c1">#       management reasons.</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">filter_query</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_collection_names">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_collection_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_collection_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves a list of all collection names in the database.</span>
+
+<span class="sd">        :return (list): All collection names in the database.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">collection_names</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_document">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve documents from the specified collection with optional</span>
+<span class="sd">        filtering.</span>
+
+<span class="sd">        This method checks if the specified collection exists. If it does, it</span>
+<span class="sd">        retrieves documents from the collection, optionally filtering by</span>
+<span class="sd">        primary keys and selecting specific fields. If the collection does not</span>
+<span class="sd">        exist, an empty list is returned.</span>
+
+<span class="sd">        :param collection_name (str): Name of the document collection. The</span>
+<span class="sd">                                      collection must already exist in the</span>
+<span class="sd">                                      database.</span>
+<span class="sd">        :param primary_keys (str | list[str], optional): A single primary key</span>
+<span class="sd">                                                         or a list of primary</span>
+<span class="sd">                                                         keys to filter</span>
+<span class="sd">                                                         documents. If None,</span>
+<span class="sd">                                                         no filtering by</span>
+<span class="sd">                                                         primary keys is</span>
+<span class="sd">                                                         applied.</span>
+<span class="sd">        :param fields (str | list[str], optional): A single field or a list of</span>
+<span class="sd">                                                   fields to include in the</span>
+<span class="sd">                                                   result. If None, all fields</span>
+<span class="sd">                                                   are included.</span>
+<span class="sd">        :return (list): A list of documents matching the specified criteria,</span>
+<span class="sd">                        or an empty list if the collection does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+        <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="c1"># Filter by primary keys if provided</span>
+        <span class="k">if</span> <span class="n">primary_keys</span><span class="p">:</span>
+            <span class="n">primary_key_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_primary_key_name</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+            <span class="n">primary_keys</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">set</span><span class="p">(</span><span class="n">primary_keys</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">primary_keys</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                <span class="k">else</span> <span class="p">{</span><span class="n">primary_keys</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">doc</span>
+                <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">primary_key_field</span><span class="p">)</span> <span class="ow">in</span> <span class="n">primary_keys</span>
+            <span class="p">]</span>
+
+        <span class="c1"># Select specific fields if provided</span>
+        <span class="k">if</span> <span class="n">fields</span><span class="p">:</span>
+            <span class="n">fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="n">fields</span><span class="p">}</span>
+            <span class="n">documents</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">{</span><span class="n">field</span><span class="p">:</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">documents</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">documents</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_document_names">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_document_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve a list of all document names in the specified collection.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
+<span class="sd">                                      document names from. The collection must</span>
+<span class="sd">                                      already exist.</span>
+<span class="sd">        :return (list[str]): A list of document names if the collection</span>
+<span class="sd">                             exists, otherwise an empty list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+            <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_primary_key_name</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">item</span><span class="p">[</span><span class="n">primary_key</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_field_attributes">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve attributes of a specific field or all fields in a collection</span>
+<span class="sd">        from the storage.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection.</span>
+<span class="sd">        :param field_name (str, optional): The name of a specific field within</span>
+<span class="sd">                                           the collection. If not provided,</span>
+<span class="sd">                                           attributes for all fields in the</span>
+<span class="sd">                                           collection will be retrieved.</span>
+<span class="sd">        :return (dict | list[dict]): Attributes of the specified field as a</span>
+<span class="sd">                                     dictionary, or a list of dictionaries</span>
+<span class="sd">                                     with attributes for all fields if</span>
+<span class="sd">                                     `field_name` is not provided.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">field_name</span><span class="p">:</span>
+            <span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">][</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">attributes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">str_to_type</span><span class="p">(</span>
+                    <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">attributes</span>
+
+        <span class="k">elif</span> <span class="n">field_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attributes_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">field_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_field_names</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
+                <span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">][</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">attributes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">str_to_type</span><span class="p">(</span>
+                        <span class="n">attributes</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="n">attributes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">attributes_list</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_field_names">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_names">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_field_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the list of all field names in the specified collection.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
+<span class="sd">                                      field names from. The collection must</span>
+<span class="sd">                                      exist in the database.</span>
+<span class="sd">        :return (list | None): A list of all field names in the collection</span>
+<span class="sd">                               if it exists, or `None` if the collection has</span>
+<span class="sd">                               no fields or does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">field_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">field_names</span> <span class="k">if</span> <span class="n">field_names</span> <span class="k">else</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_primary_key_name">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_primary_key_name">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_primary_key_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the primary key of the specified collection.</span>
+
+<span class="sd">        This method returns the first key from the specified collection within</span>
+<span class="sd">        the database.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
+<span class="sd">                                      the primary key from.</span>
+<span class="sd">        :return (str): The first key in the collection, representing the</span>
+<span class="sd">                       primary key.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">primary_key</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_shown_tags">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_shown_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Give the list of visible tags.</span>
+
+<span class="sd">        :return (list): The list of visible tags.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">visible_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">names_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
+            <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{visibility}</span><span class="s2"> == True&quot;</span>
+        <span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">i</span><span class="p">:</span>
+                <span class="c1"># TODO: The first key in the dict is the primary key ?</span>
+                <span class="c1">#       Another safer solution would be to use the &quot;index&quot;</span>
+                <span class="c1">#       key. Indeed, we know that it is the primary key for</span>
+                <span class="c1">#       the collection FIELD_ATTRIBUTES_COLLECTION.</span>
+                <span class="n">tag</span> <span class="o">=</span> <span class="n">i</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">i</span><span class="p">))]</span>
+                <span class="n">collection</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">field</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">names_set</span> <span class="ow">and</span> <span class="n">collection</span> <span class="o">==</span> <span class="n">COLLECTION_CURRENT</span><span class="p">:</span>
+                    <span class="n">names_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+                    <span class="n">visible_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">visible_names</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.get_value">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieves the current value of a specific field in a document from</span>
+<span class="sd">        the specified collection.</span>
+
+<span class="sd">        This method accesses the underlying storage to fetch the value of a</span>
+<span class="sd">        given field within a document, identified by its primary key, in the</span>
+<span class="sd">        specified collection.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection containing</span>
+<span class="sd">                                      the document.</span>
+<span class="sd">        :param primary_key (str): The unique identifier (primary key) of the</span>
+<span class="sd">                                  document.</span>
+<span class="sd">        :param field (str): The name of the field within the document to</span>
+<span class="sd">                            retrieve.</span>
+<span class="sd">        :return (Any): The current value of the specified field.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">][</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.has_collection">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Checks if a collection with the specified name exists in the database.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection to check.</span>
+<span class="sd">        :return (bool): `True` if the collection exists, otherwise `False`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.has_document">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_document">[docs]</a>
+    <span class="k">def</span> <span class="nf">has_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if a document with the specified primary key exists in the</span>
+<span class="sd">        given collection.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection.</span>
+<span class="sd">        :param primary_key (str): The primary key of the document to check.</span>
+<span class="sd">        :return (bool): `True` if the document exists, `False` otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">primary_key</span> <span class="ow">in</span> <span class="n">documents</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.remove_document">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_document">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove a document from a specified collection.</span>
+
+<span class="sd">        This method deletes the document identified by `primary_key` from</span>
+<span class="sd">        the given collection in the storage.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection containing</span>
+<span class="sd">                                      the document.</span>
+<span class="sd">        :param primary_key (str): The unique identifier of the document to be</span>
+<span class="sd">                                  removed.</span>
+<span class="sd">        :raises KeyError: If the collection or the document does not exist.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to remove document with &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;ID &#39;</span><span class="si">{</span><span class="n">primary_key</span><span class="si">}</span><span class="s2">&#39; from &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;collection &#39;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.remove_value">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Removes the specified field from a document in the given collection,</span>
+<span class="sd">        if it exists. Raises a KeyError if the field, collection, or document</span>
+<span class="sd">        is not found.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection containing</span>
+<span class="sd">                                      the document.</span>
+<span class="sd">        :param primary_key (str): The primary key of the document in the</span>
+<span class="sd">                                  collection.</span>
+<span class="sd">        :param field (str): The field to be removed from the document.</span>
+
+<span class="sd">        :raises KeyError: If the collection or document cannot be found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">][</span><span class="n">field</span><span class="p">]</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to remove the &#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&#39; for &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;document ID &#39;</span><span class="si">{</span><span class="n">primary_key</span><span class="si">}</span><span class="s2">&#39; in &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;collection &#39;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.set_shown_tags">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_shown_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_shown</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the list of visible tags.</span>
+
+<span class="sd">        :param fields_shown (list): A list of visible tags.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">doc_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">doc_name</span> <span class="ow">in</span> <span class="n">doc_names</span><span class="p">:</span>
+            <span class="n">collection</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">doc_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">collection</span> <span class="o">==</span> <span class="n">COLLECTION_CURRENT</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">][</span><span class="n">doc_name</span><span class="p">][</span>
+                    <span class="s2">&quot;visibility&quot;</span>
+                <span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">field</span> <span class="ow">in</span> <span class="n">fields_shown</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DatabaseMiaData.set_value">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store or update a record in the specified collection.</span>
+
+<span class="sd">        This method either stores a new record or updates an existing record</span>
+<span class="sd">        in the specified collection, using the provided primary key. The</span>
+<span class="sd">        fields of the record are set according to the data in the provided</span>
+<span class="sd">        dictionary.</span>
+
+<span class="sd">        :param collection_name (str): The name of the collection where the</span>
+<span class="sd">                                      record will be stored or updated.</span>
+<span class="sd">        :param primary_key (str): The unique key used to identify the record.</span>
+<span class="sd">        :param values_dict (dict): A dictionary containing the data to store</span>
+<span class="sd">                                   or update in the record. Keys represent</span>
+<span class="sd">                                   field names, and values represent the</span>
+<span class="sd">                                   corresponding data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">existing_record</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="p">)</span>
+        <span class="c1"># Preserve non-null values from the existing record and update with</span>
+        <span class="c1"># new values</span>
+        <span class="n">filtered_record</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">existing_record</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">}</span>
+        <span class="n">updated_record</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">filtered_record</span><span class="p">,</span> <span class="o">**</span><span class="n">values_dict</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">updated_record</span></div>
+</div>
 
 </pre></div>
 

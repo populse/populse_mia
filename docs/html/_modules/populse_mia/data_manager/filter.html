@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.filter &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.data_manager.filter &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,8 +30,7 @@
         
         
   <h1>Source code for populse_mia.data_manager.filter</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;Module that handle the filter class which contains the results of both</span>
+<span></span><span class="sd">&quot;&quot;&quot;Module that handle the filter class which contains the results of both</span>
 <span class="sd">rapid and advanced search</span>
 
 <span class="sd">:Contains:</span>
@@ -48,11 +47,10 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+
 <span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span> <span class="nn">populse_mia.user_interface</span> <span class="kn">import</span> <span class="n">data_browser</span>
-
-<span class="c1"># don&#39;t import project here to avoid cyclic import</span>
-<span class="c1"># from populse_mia.data_manager import project</span>
 
 
 <div class="viewcode-block" id="Filter">
@@ -102,13 +100,13 @@
 <span class="sd">         BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</span>
 <span class="sd">        :param search_bar: value in the rapid search bar</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nots</span> <span class="o">=</span> <span class="n">nots</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">links</span> <span class="o">=</span> <span class="n">links</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="n">conditions</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span> <span class="o">=</span> <span class="n">search_bar</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span> <span class="o">=</span> <span class="n">search_bar</span></div>
 
 
 <div class="viewcode-block" id="Filter.generate_filter">
@@ -116,39 +114,37 @@
     <span class="k">def</span> <span class="nf">generate_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_project</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the filter to the given list of scans.</span>
 
-<span class="sd">        :param current_project: Current project</span>
-<span class="sd">        :param scans: List of scans to apply the filter into</span>
-<span class="sd">        :param tags: List of tags to search in</span>
-<span class="sd">        :returns: The list of scans matching the filter</span>
+<span class="sd">        :param current_project: Current project.</span>
+<span class="sd">        :param scans: List of scans to apply the filter into.</span>
+<span class="sd">        :param tags: List of tags to search in.</span>
+
+<span class="sd">        :return (list): The list of scans matching the filter.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">project</span>
 
         <span class="n">rapid_filter</span> <span class="o">=</span> <span class="n">data_browser</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">RapidSearch</span><span class="o">.</span><span class="n">prepare_filter</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">scans</span>
         <span class="p">)</span>
-        <span class="n">rapid_result</span> <span class="o">=</span> <span class="n">current_project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
-            <span class="n">project</span><span class="o">.</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">rapid_filter</span>
-        <span class="p">)</span>
-        <span class="n">rapid_list</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="nb">getattr</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">TAG_FILENAME</span><span class="p">)</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">rapid_result</span>
-        <span class="p">]</span>
-        <span class="n">advanced_filter</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">data_browser</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">AdvancedSearch</span><span class="o">.</span><span class="n">prepare_filters</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">nots</span><span class="p">,</span>
-                <span class="n">rapid_list</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="n">advanced_result</span> <span class="o">=</span> <span class="n">current_project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
-            <span class="n">project</span><span class="o">.</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">advanced_filter</span>
-        <span class="p">)</span>
 
-        <span class="n">final_result</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="nb">getattr</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="n">project</span><span class="o">.</span><span class="n">TAG_FILENAME</span><span class="p">)</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">advanced_result</span>
-        <span class="p">]</span>
+        <span class="k">with</span> <span class="n">current_project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="n">rapid_result</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
+                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">rapid_filter</span>
+            <span class="p">)</span>
+            <span class="n">rapid_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">scan</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">rapid_result</span><span class="p">]</span>
+            <span class="n">advanced_filter</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">data_browser</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">AdvancedSearch</span><span class="o">.</span><span class="n">prepare_filters</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">links</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">conditions</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nots</span><span class="p">,</span>
+                    <span class="n">rapid_list</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">advanced_result</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
+                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">advanced_filter</span>
+            <span class="p">)</span>
+
+        <span class="n">final_result</span> <span class="o">=</span> <span class="p">[</span><span class="n">scan</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">advanced_result</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">final_result</span></div>
 
 
@@ -157,7 +153,7 @@
     <span class="k">def</span> <span class="nf">json_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the filter as a dictionary.</span>
 
-<span class="sd">        :returns: the filter as a dictionary</span>
+<span class="sd">        :return (dict): The filter as a dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Filter dictionary</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>

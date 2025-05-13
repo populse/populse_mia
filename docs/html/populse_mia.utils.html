@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.utils package &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.utils package &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=dfa0e015" />
-    <script src="_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="_static/documentation_options.js?v=a73ba755"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -56,14 +56,24 @@
 </dd>
 <dt class="field-even">Functions<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
+<li><p>_is_valid_date(date_str, date_format)</p></li>
 <li><p>check_python_version</p></li>
 <li><p>check_value_type</p></li>
+<li><p>dict4runtime_update</p></li>
+<li><p>get_db_field_value</p></li>
+<li><p>get_document_names</p></li>
+<li><p>get_field_names</p></li>
+<li><p>get_shown_tags</p></li>
+<li><p>get_value</p></li>
 <li><p>launch_mia</p></li>
 <li><p>message_already_exists</p></li>
+<li><p>remove_document</p></li>
+<li><p>set_db_field_value</p></li>
 <li><p>set_filters_directory_as_default</p></li>
 <li><p>set_item_data</p></li>
 <li><p>set_projects_directory_as_default</p></li>
 <li><p>table_to_database</p></li>
+<li><p>type_name</p></li>
 <li><p>verCmp</p></li>
 <li><p>verify_processes</p></li>
 <li><p>verify_setup</p></li>
@@ -75,9 +85,9 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.PackagesInstall">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">PackagesInstall</span></span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#PackagesInstall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.PackagesInstall" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Help to make available a pipeline package in the Mia pipeline library,
-in a recursive way.</p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Helps make a pipeline package available in the Mia pipeline library
+recursively.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="field-list simple">
@@ -93,20 +103,22 @@ in a recursive way.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.PackagesInstall.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#PackagesInstall.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.PackagesInstall.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>Initialise the packages instance attribute.</p>
+<dd><p>Initializes the package registry.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.PackagesInstall.add_package">
 <span class="sig-name descname"><span class="pre">add_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#PackagesInstall.add_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.PackagesInstall.add_package" title="Link to this definition">¶</a></dt>
-<dd><p>Provide recursive representation of a package and its
-subpackages/modules, to construct the Mia’s pipeline library.</p>
+<dd><p>Recursively adds a package and its subpackages/modules to the Mia
+pipeline library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module_name</strong> – name of the module to add in the pipeline library</p></li>
-<li><p><strong>class_name</strong> – only this pipeline will be added to the pipeline
-library (optional)</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>class_name</em>) – Name of the module to add to the pipeline
+library.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Specific class to add (optional). Only this
+pipeline will be added to the pipeline
+library.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -122,8 +134,12 @@ ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.check_python_version">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">check_python_version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#check_python_version"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.check_python_version" title="Link to this definition">¶</a></dt>
-<dd><p>Check Python version used.</p>
-<p>Returns an AssertionError exception if the version is lower than 3.5.</p>
+<dd><p>Checks if the Python version is at least 3.10.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/exceptions.html#RuntimeError" title="(in Python v3.12)"><strong>RuntimeError</strong></a> – If the Python version is lower than 3.10.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -133,39 +149,165 @@ ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – Value of the cell</p></li>
-<li><p><strong>value_type</strong> – Type expected</p></li>
-<li><p><strong>is_subvalue</strong> – To know if the value is a subvalue of a list</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>value</em>) – Value of the cell (always a str, can be a string
+representation of a list)</p></li>
+<li><p><strong>(</strong><strong>type</strong><strong>)</strong> (<em>value_type</em>) – Expected type (can be list[str], list[int], etc.)</p></li>
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>is_subvalue</em>) – Whether the value is a subvalue of a list.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the value is valid to replace the old
-one, False otherwise</p>
+<dd class="field-even"><p>True if the value is valid to replace the old one,
+False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.dict4runtime_update">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">dict4runtime_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runtime_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_filename</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#dict4runtime_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.dict4runtime_update" title="Link to this definition">¶</a></dt>
+<dd><p>Update a dictionary with tag values from the project’s current collection.</p>
+<p>This function populates the <cite>runtime_dict</cite> with values associated with
+the specified tags from the <cite>COLLECTION_CURRENT</cite> database collection. If
+a tag is not present or its value is <cite>None</cite>, it is assigned the string
+“Undefined”. Date values are converted to ISO-formatted strings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>runtime_dict</em>) – Dictionary used to transfer data from
+<cite>list_outputs</cite> to <cite>run_process_mia</cite>.</p></li>
+<li><p><strong>project</strong> – The project instance containing the database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>db_filename</em>) – The name of the database file to query.</p></li>
+<li><p><strong>tags</strong> – Variable number of tag names to retrieve from the database.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.get_db_field_value">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_db_field_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#get_db_field_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_db_field_value" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the value of a specific field for a document from the project’s
+database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>Project</strong><strong>)</strong> (<em>project</em>) – The current project instance containing the
+database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field</em>) – The absolute path to the document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field whose value should be retrieved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the specified field for the document in the current
+collection.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.get_document_names">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_document_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#get_document_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_document_names" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the names of all documents in the specified collection
+from the project’s database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – The project instance containing the database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection</em>) – The name of the collection to query.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns (list[str])<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of document names in the collection.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.get_field_names">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_field_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#get_field_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_field_names" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the list of field names (i.e., column names) for documents
+in the specified collection of the project’s database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – The project instance containing the database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection</em>) – The name of the collection to inspect.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns (list[str])<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of field names in the collection.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.get_shown_tags">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_shown_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#get_shown_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_shown_tags" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the list of tags that are marked as ‘shown’ in the project’s
+database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>project</strong> – The project instance containing the database.</p>
+</dd>
+<dt class="field-even">Returns (list[str])<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of tag names marked as shown.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.get_value">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_value" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the value of a specific field from a document in the given
+collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – The project instance containing the database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field</em>) – The name of the collection containing the
+document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the document (typically the file name).</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field whose value is to be retrieved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value of the specified field, or None if not found.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.launch_mia">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">launch_mia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#launch_mia"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.launch_mia" title="Link to this definition">¶</a></dt>
-<dd><p>Actual launch of the Mia software.</p>
-<p>Overload the sys.excepthook handler with the _my_excepthook private
-function. Check if the software is already opened in another instance.
-If not, the list of opened projects is cleared. Checks if saved projects
-known in the Mia software still exist, and updates if necessary.
-Instantiates a ‘project’ object that handles projects and their
-associated database and finally launch of the Mia’s GUI.</p>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">launch_mia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#launch_mia"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.launch_mia" title="Link to this definition">¶</a></dt>
+<dd><p>Launches the Mia software application.</p>
+<p>This function:
+- Overloads the sys.excepthook handler with the _my_excepthook function</p>
+<blockquote>
+<div><p>to log uncaught exceptions in non-interactive mode.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>Checks if Mia is already running in another instance, and prevents
+multiple instances from opening.</p></li>
+<li><p>Verifies if saved projects still exist, updating the list of opened
+projects if necessary.</p></li>
+<li><p>Instantiates the ‘project’ object and launches Mia’s GUI.</p></li>
+</ul>
 <dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Private function<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>_my_excepthook: log all uncaught exceptions in non-interactive
-mode</p></li>
-<li><p>_verify_saved_projects: checks if the projects are still existing</p></li>
+<li><p><strong>(</strong><strong>QApplication</strong><strong>)</strong> (<em>app</em>) – The Qt application instance.</p></li>
+<li><p><strong>(</strong><strong>Namespace</strong><strong>)</strong> (<em>args</em>) – Command line arguments.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Private functions<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p>_my_excepthook: Logs uncaught exceptions in non-interactive mode.</p></li>
+<li><dl class="simple">
+<dt>_verify_saved_projects: Checks if saved projects still exist and</dt><dd><p>updates the list.</p>
+</dd>
 </dl>
+</li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -177,12 +319,53 @@ mode</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.remove_document">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">remove_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#remove_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.remove_document" title="Link to this definition">¶</a></dt>
+<dd><p>Removes one or multiple documents from the specified collection
+in the given project’s database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – The project instance containing the database.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection</em>) – The name of the collection from which documents
+will be removed.</p></li>
+<li><p><strong>list</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>documents</em><em> (</em><em>str or</em>) – A single document name or a list of
+document names to remove.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.set_db_field_value">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">set_db_field_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_to_add</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_db_field_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.set_db_field_value" title="Link to this definition">¶</a></dt>
+<dd><p>Create or update a field and its value for a document in the project’s
+database.</p>
+<p>If the specified field does not exist in the current and initial
+collections, it is added to both. The field is then assigned a value for
+the given document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>Project</strong><strong>)</strong> (<em>project</em>) – The project instance containing the database
+and schema.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>document</em>) – The absolute path of the document.</p></li>
+<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>tag_to_add</em>) – A dictionary describing the field with keys:
+‘name’, ‘value’, ‘default_value’,
+‘description’, ‘field_type’, ‘origin’,
+‘unit’, and ‘visibility’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.set_filters_directory_as_default">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">set_filters_directory_as_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dialog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_filters_directory_as_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.set_filters_directory_as_default" title="Link to this definition">¶</a></dt>
 <dd><p>Sets the filters directory as default (Json files)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dialog</strong> – current file dialog</p>
+<dd class="field-odd"><p><strong>(</strong><strong>QFileDialog</strong><strong>)</strong> (<em>dialog</em>) – current file dialog</p>
 </dd>
 </dl>
 </dd></dl>
@@ -190,13 +373,22 @@ mode</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.set_item_data">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">set_item_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#set_item_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.set_item_data" title="Link to this definition">¶</a></dt>
-<dd><p>Sets the item data in the data browser.</p>
+<dd><p>Sets the data for a given item in the data browser based on the
+expected type.</p>
+<p>This function prepares the input <cite>value</cite> according to the specified
+<cite>value_type</cite>, converting it into a format suitable for PyQt’s <cite>QVariant</cite>.
+It supports both primitive types (e.g., <cite>int</cite>, <cite>str</cite>, <cite>float</cite>) and more
+complex types like <cite>datetime</cite>, <cite>date</cite>, <cite>time</cite>, and lists of these types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – item to set</p></li>
-<li><p><strong>value</strong> – new item value</p></li>
-<li><p><strong>value_type</strong> – new value type</p></li>
+<li><p><strong>(</strong><strong>QStandardItem</strong><strong>)</strong> (<em>item</em>) – The item to update (expected to
+support <cite>setData</cite> method).</p></li>
+<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>value</em>) – The new value to set for the item.</p></li>
+<li><p><strong>(</strong><strong>Type</strong><strong>)</strong> (<em>value_type</em>) – The expected type of the value, which can be a
+standard Python type (e.g., <cite>str</cite>, <cite>int</cite>,
+<cite>float</cite>, <cite>bool</cite>) or a <cite>typing</cite>-based list
+type (e.g., <cite>list[int]</cite>, <cite>list[datetime]</cite>).</p></li>
 </ul>
 </dd>
 </dl>
@@ -208,7 +400,7 @@ mode</p></li>
 <dd><p>Sets the projects directory as default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dialog</strong> – current file dialog</p>
+<dd class="field-odd"><p><strong>(</strong><strong>QFileDialog</strong><strong>)</strong> (<em>dialog</em>) – current file dialog.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -216,16 +408,34 @@ mode</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.table_to_database">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">table_to_database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#table_to_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.table_to_database" title="Link to this definition">¶</a></dt>
-<dd><p>Prepares the value to the database.</p>
+<dd><p>Prepares the value to the database based on its type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – Value to convert</p></li>
-<li><p><strong>value_type</strong> – Value type</p></li>
+<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>value</em>) – Value to convert.</p></li>
+<li><p><strong>(</strong><strong>Type</strong><strong>)</strong> (<em>value_type</em>) – Value type.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return (Any)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The value converted for the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.utils.utils.type_name">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#type_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.type_name" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the name of a type or a string representation for generic
+aliases.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>t</em>) – The type to get the name or representation for.
+This can be a regular type (e.g., <cite>str</cite>, <cite>list</cite>) or a
+generic alias (e.g., <cite>list[str]</cite>).</p>
+</dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The value converted for the database</p>
+<dd class="field-even"><p>The name of the type (e.g., ‘str’) or the string representation
+of the generic alias (e.g., ‘list[str]’).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -234,29 +444,32 @@ mode</p></li>
 <dt class="sig sig-object py" id="populse_mia.utils.utils.verCmp">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">verCmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sec_ver</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#verCmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.verCmp" title="Link to this definition">¶</a></dt>
 <dd><p>Version comparator.</p>
-<p>The verCmp() function returns a boolean value to indicate whether its
-first argument (first_ver) is equal to, less or equal to, or greater or
-equal to its second argument (sec_ver), as follows:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>if third argument (comp) is ‘eq’: when the first argument is equal to
-the second argument, return True (False if not).</p></li>
-<li><p>if third argument (comp) is ‘sup’: when the first argument is greater
-than the second argument, return True (False if not).</p></li>
-<li><p>if third argument (comp) is ‘inf’: when the first argument is less than
-the second argument, return True (False if not).</p></li>
+<dl class="simple">
+<dt>Compares two versions according to the specified comparator:</dt><dd><ul class="simple">
+<li><p>‘eq’: Returns True if the first version is equal to the second.</p></li>
+<li><dl class="simple">
+<dt>‘sup’: Returns True if the first version is greater than or equal</dt><dd><p>to the second.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>‘inf’: Returns True if the first version is less than or equal to</dt><dd><p>the second.</p>
+</dd>
+</dl>
+</li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>first_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
-<li><p><strong>sec_ver</strong> – the version of a package (a string; ex. ‘0.13.0’)</p></li>
-<li><p><strong>comp</strong> – comparator argument (accepted values: ‘sup’, ‘inf’ and ‘eq’ )</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>comp</em>) – The first version to compare (e.g., ‘0.13.0’).</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The second version to compare (e.g., ‘0.13.0’).</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The comparator to use (‘sup’, ‘inf’, ‘eq’).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>False or True</p>
+<dd class="field-even"><p>True if the comparison condition is satisfied, False otherwise.</p>
 </dd>
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="field-list simple">
@@ -321,31 +534,35 @@ update</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.verify_setup">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">verify_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dev_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pypath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_mia_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/gourieuxe/.populse_mia/configuration_path.yml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#verify_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.verify_setup" title="Link to this definition">¶</a></dt>
-<dd><p>check whether the configuration is valid and try to correct it
-if it is not.</p>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">verify_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dev_mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pypath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dot_mia_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/econdami/.populse_mia/configuration_path.yml'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/utils/utils.html#verify_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.verify_setup" title="Link to this definition">¶</a></dt>
+<dd><p>Check and try to correct the configuration if necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dev_mode</strong> – the current developer mode (bool).
-(if True: dev, if False: user)</p></li>
-<li><p><strong>pypath</strong> – a list of path for the capsul config (list)</p></li>
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>dev_mode</em>) – the current developer mode.
+(True: dev, False: user)</p></li>
+<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>pypath</em>) – List of paths for the capsul config.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Dot_mia_config<span class="colon">:</span></dt>
-<dd class="field-even"><p>the path to the configuration_path.yml file</p>
+<dd class="field-even"><p>Path to the configuration_path.yml file.</p>
 </dd>
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-<dt class="field-even">Private function<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p>_browse_properties_path: the user define the properties_path
-parameter</p></li>
+<dd class="field-odd"><dl class="field-list simple">
+<dt class="field-odd">Private function<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt>_browse_properties_path: the user define the properties_path</dt><dd><p>parameter</p>
+</dd>
+</dl>
+</li>
 <li><p>_cancel_clicked: exit form Mia</p></li>
 <li><p>_make_default_config: make default configuration</p></li>
 <li><p>_save_yml_file: save data in a YAML file</p></li>
 <li><p>_verify_miaConfig: check the config and try to fix if necessary</p></li>
 </ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>

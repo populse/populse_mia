@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.modify_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,9 +30,16 @@
         
         
   <h1>Source code for populse_mia.user_interface.data_browser.modify_table</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module to handle updates of the databrowser table after modifications.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Database cell editor module for list-type values.</span>
+
+<span class="sd">This module provides dialog interfaces for editing complex data types</span>
+<span class="sd">in the Mia data browser. It specifically handles the editing of list-type</span>
+<span class="sd">values such as arrays of numbers, strings, or dates.</span>
+
+<span class="sd">The ModifyTable dialog creates an interactive table representation of lists,</span>
+<span class="sd">allowing users to add, edit, or remove items while ensuring type safety</span>
+<span class="sd">and database consistency.</span>
 
 <span class="sd">Contains:</span>
 <span class="sd">    Class:</span>
@@ -47,18 +54,8 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-
-<span class="c1"># Populse_db imports</span>
-<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
-    <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
-<span class="p">)</span>
 
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
@@ -72,89 +69,142 @@
 <span class="p">)</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
+    <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="ModifyTable">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable">[docs]</a>
 <span class="k">class</span> <span class="nc">ModifyTable</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Used to modify the contents of cells which contains lists.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dialog to modify cell contents containing lists in the data browser tab.</span>
 
-<span class="sd">    When the user wishes to modify a cell which contains a list in the</span>
-<span class="sd">    databrowser tab, a popup will appear to help the user to change the</span>
-<span class="sd">    content of the cell.</span>
+<span class="sd">    This dialog provides a user interface to edit cells that contain list</span>
+<span class="sd">    values. It displays the list elements in a table and allows users to add</span>
+<span class="sd">    or remove elements.</span>
 
 <span class="sd">    .. Methods:</span>
-<span class="sd">        - add_item: add one more element to self.value</span>
-<span class="sd">        - fill_table: fill the table</span>
-<span class="sd">        - rem_last_item: remove last element of self.value</span>
-<span class="sd">        - update_table_values: update the table in the database</span>
+<span class="sd">        - _convert_value: Convert a text value to the appropriate type</span>
+<span class="sd">        - _show_error_message: Display an error message</span>
+<span class="sd">        - add_item: Add one more element to self.value</span>
+<span class="sd">        - fill_table: Fill the table</span>
+<span class="sd">        - rem_last_item: Remove last element of self.value</span>
+<span class="sd">        - update_table_values: Update the table in the database</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ModifyTable.__init__">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialization of the ModifyTable class</span>
+<span class="sd">        Initialize the ModifyTable dialog.</span>
 
-<span class="sd">        :param project: Instance of project</span>
-<span class="sd">        :param value: List of values of the cell</span>
-<span class="sd">        :param types: Value types</span>
-<span class="sd">        :param scans: Scans of the rows</span>
-<span class="sd">        :param tags: Tags of the columns</span>
+<span class="sd">        :param project: Instance of the current project</span>
+<span class="sd">        :param value: List of values in the cell to be modified</span>
+<span class="sd">        :param types: Allowed value types for validation</span>
+<span class="sd">        :param scans: Scan identifiers corresponding to rows</span>
+<span class="sd">        :param tags: Tag identifiers corresponding to columns</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="c1"># Variables init</span>
+        <span class="c1"># Initialize instance variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">types</span> <span class="o">=</span> <span class="n">types</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scans</span> <span class="o">=</span> <span class="n">scans</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-        <span class="c1"># The table that will be filled</span>
+        <span class="c1"># Create and configure the table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">()</span>
-
-        <span class="c1"># Filling the table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fill_table</span><span class="p">()</span>
-
-        <span class="c1"># Ok button</span>
+        <span class="c1"># Create control buttons</span>
         <span class="n">ok_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ok&quot;</span><span class="p">)</span>
         <span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">)</span>
-
-        <span class="c1"># Cancel button</span>
         <span class="n">cancel_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
         <span class="n">cancel_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="c1"># plus_button = QPushButton(&quot;+&quot;)</span>
+        <span class="n">add_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+        <span class="n">add_button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Add one more element to the list&quot;</span><span class="p">)</span>
+        <span class="n">add_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_item</span><span class="p">)</span>
+        <span class="c1"># minus_button = QPushButton(&quot;-&quot;)</span>
+        <span class="n">remove_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="n">remove_button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Remove the last element of the list&quot;</span><span class="p">)</span>
+        <span class="n">remove_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rem_last_item</span><span class="p">)</span>
+        <span class="c1"># Set up layout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">ok_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">add_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">remove_button</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_layout</span><span class="p">)</span></div>
 
-        <span class="c1"># + button (add one more element to a list)</span>
-        <span class="n">plus_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
-        <span class="n">plus_button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Add one more element to the list&quot;</span><span class="p">)</span>
-        <span class="n">plus_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_item</span><span class="p">)</span>
 
-        <span class="c1"># - button (remove last element from a list)</span>
-        <span class="n">minus_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
-        <span class="n">minus_button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="s2">&quot;Remove the last element of the list&quot;</span><span class="p">)</span>
-        <span class="n">minus_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rem_last_item</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_convert_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">field_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convert a text value to the appropriate type based on field_type.</span>
 
-        <span class="c1"># Layouts</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+<span class="sd">        :param text: String value to convert</span>
+<span class="sd">        :param field_type: Database field type constant</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">ok_button</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel_button</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">plus_button</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">minus_button</span><span class="p">)</span>
+<span class="sd">        :return: The converted value in the appropriate type</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">h_box_final</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="p">)</span></div>
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">eval</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">field_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;%H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_show_error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">type_problem</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display an error message for invalid values.</span>
+
+<span class="sd">        :param value: The invalid value</span>
+<span class="sd">        :param type_problem: The specific type that failed validation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Invalid value&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;The value </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> is invalid with the type </span><span class="si">{</span><span class="n">type_problem</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
 <div class="viewcode-block" id="ModifyTable.add_item">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.add_item">[docs]</a>
     <span class="k">def</span> <span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add one more element to self.value&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a new element to the list with default value 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># Filling the table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fill_table</span><span class="p">()</span></div>
@@ -163,140 +213,124 @@
 <div class="viewcode-block" id="ModifyTable.fill_table">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.fill_table">[docs]</a>
     <span class="k">def</span> <span class="nf">fill_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fill the table.&quot;&quot;&quot;</span>
-        <span class="c1"># Sizes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Populate the table with the current list elements.</span>
+
+<span class="sd">        Configures the table dimensions, populates cells with values,</span>
+<span class="sd">        and adjusts table size to fit content within reasonable bounds.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set table dimensions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setColumnCount</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="c1"># Values filled</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
-            <span class="n">column_elem</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">()</span>
-            <span class="n">item</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">column_elem</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="c1"># Populate cells with values</span>
+        <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
-        <span class="c1"># Resize</span>
+        <span class="c1"># Resize columns to fit content</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">resizeColumnsToContents</span><span class="p">()</span>
-        <span class="n">total_width</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">total_height</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-
-        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">():</span>
-            <span class="n">total_width</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnWidth</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">total_height</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">rowHeight</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">if</span> <span class="n">total_width</span> <span class="o">+</span> <span class="mi">20</span> <span class="o">&lt;</span> <span class="mi">900</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="n">total_width</span> <span class="o">+</span> <span class="mi">20</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="n">total_height</span> <span class="o">+</span> <span class="mi">25</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">900</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="n">total_height</span> <span class="o">+</span> <span class="mi">40</span><span class="p">)</span></div>
+        <span class="c1"># Calculate total dimensions</span>
+        <span class="n">total_width</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnWidth</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="n">total_height</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">rowHeight</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">rowCount</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="c1"># Set table dimensions with constraints</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_width</span> <span class="o">+</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">900</span><span class="p">)</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">total_height</span> <span class="o">+</span> <span class="p">(</span><span class="mi">25</span> <span class="k">if</span> <span class="n">total_width</span> <span class="o">+</span> <span class="mi">20</span> <span class="o">&lt;</span> <span class="mi">900</span> <span class="k">else</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="n">width</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="n">height</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ModifyTable.rem_last_item">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.rem_last_item">[docs]</a>
     <span class="k">def</span> <span class="nf">rem_last_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove last element of self.value&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Remove the last element of the list if there&#39;s more than one element.</span>
+
+<span class="sd">        Lists must maintain at least one element.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
             <span class="c1"># Filling the table</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">fill_table</span><span class="p">()</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The list must contain at least one element. &quot;</span>
-                <span class="s2">&quot;Deletion of the last element is aborted!</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;The list must contain at least one element. &quot;</span>
+                <span class="s2">&quot;Deletion of the last element is aborted!&quot;</span>
             <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="ModifyTable.update_table_values">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.update_table_values">[docs]</a>
     <span class="k">def</span> <span class="nf">update_table_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the table in the database when the &#39;OK&#39; button is clicked.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate user input and update the database with new values.</span>
+
+<span class="sd">        Validates each value against specified types and updates the database</span>
+<span class="sd">        only if all values are valid.</span>
+
+<span class="sd">        :param test (bool): Flag for testing mode, defaults to False</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># import check_value_type only here to prevent circular import issue</span>
         <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">check_value_type</span>
 
         <span class="n">valid</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c1"># For each value, type checked</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
-            <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="c1"># Validate each cell value against allowed types</span>
+        <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+            <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+            <span class="n">type_problem</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="n">valid_type</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># Check if value is valid for each of the allowed types</span>
             <span class="k">for</span> <span class="n">tag_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">types</span><span class="p">:</span>
+
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">check_value_type</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">tag_type</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-                    <span class="n">valid_type</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">valid</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="n">type_problem</span> <span class="o">=</span> <span class="n">tag_type</span>
                     <span class="k">break</span>
 
-            <span class="c1"># Type checked</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">valid_type</span><span class="p">:</span>
-                <span class="c1"># Error dialog if invalid cell</span>
-                <span class="n">valid</span> <span class="o">=</span> <span class="kc">False</span>
-                <span class="k">if</span> <span class="n">test</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
-                    <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Invalid value&quot;</span><span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
-                        <span class="s2">&quot;The value &quot;</span>
-                        <span class="o">+</span> <span class="n">text</span>
-                        <span class="o">+</span> <span class="s2">&quot; is invalid with the type &quot;</span>
-                        <span class="o">+</span> <span class="n">type_problem</span>
-                    <span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Warning&quot;</span><span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-                    <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
-                <span class="k">break</span>
+            <span class="c1"># If not valid, show error and stop validation</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">valid</span><span class="p">:</span>
 
-        <span class="k">if</span> <span class="n">valid</span><span class="p">:</span>
-            <span class="c1"># Database updated only if valid type for every cell</span>
-            <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">)):</span>
-                <span class="n">scan</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span>
-                <span class="n">tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">[</span><span class="n">cell</span><span class="p">]</span>
-                <span class="n">tag_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">get_field</span><span class="p">(</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">test</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_show_error_message</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">type_problem</span><span class="p">)</span>
+
+                <span class="k">return</span>
+
+        <span class="c1"># Only update database if all values are valid</span>
+        <span class="c1"># Update database for each cell with validated values</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">):</span>
+                <span class="c1"># Get field attributes</span>
+                <span class="n">tag_attrib</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_field_attributes</span><span class="p">(</span>
                     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span>
                 <span class="p">)</span>
-                <span class="n">tag_type</span> <span class="o">=</span> <span class="n">tag_object</span><span class="o">.</span><span class="n">field_type</span>
-
+                <span class="n">tag_type</span> <span class="o">=</span> <span class="n">tag_attrib</span><span class="p">[</span><span class="s2">&quot;field_type&quot;</span><span class="p">]</span>
+                <span class="c1"># Convert values according to field type</span>
                 <span class="n">database_value</span> <span class="o">=</span> <span class="p">[]</span>
 
-                <span class="c1"># For each value</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
                     <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
                     <span class="n">text</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                    <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_convert_value</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">tag_type</span><span class="p">))</span>
 
-                    <span class="k">if</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_INTEGER</span><span class="p">:</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_FLOAT</span><span class="p">:</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">:</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">:</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">:</span>
-                        <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span>
-                        <span class="n">subvalue</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">()</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subvalue</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_DATETIME</span><span class="p">:</span>
-                        <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span>
-                        <span class="n">subvalue</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subvalue</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">tag_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">:</span>
-                        <span class="nb">format</span> <span class="o">=</span> <span class="s2">&quot;%H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span>
-                        <span class="n">subvalue</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">format</span><span class="p">)</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-                        <span class="n">database_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subvalue</span><span class="p">)</span>
-
-                <span class="c1"># Database updated for every cell</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">database_value</span>
+                <span class="c1"># Update database</span>
+                <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+                    <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                    <span class="n">primary_key</span><span class="o">=</span><span class="n">scan</span><span class="p">,</span>
+                    <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">database_value</span><span class="p">},</span>
                 <span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </div>
 
 </pre></div>

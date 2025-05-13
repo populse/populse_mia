@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,8 +30,7 @@
         
         
   <h1>Source code for populse_mia.user_interface.pipeline_manager.type_editors</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Define the Mia logger.</span>
 
 <span class="sd">The soma control classes are overloaded for the needs of Mia.</span>
@@ -57,7 +56,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.controls.Directory</span> <span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
 <span class="kn">from</span> <span class="nn">soma.qt_gui.controls.File</span> <span class="kn">import</span> <span class="n">FileControlWidget</span>
@@ -73,14 +71,18 @@
 <div class="viewcode-block" id="PopulseFileControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">[docs]</a>
 <span class="k">class</span> <span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control to enter a file.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget control for selecting a file.</span>
+
+<span class="sd">    Provides methods to create a file selection widget, display a filter</span>
+<span class="sd">    dialog, and update plug values based on filter results.</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Method:</span>
-<span class="sd">            - create_widget: method to create the file widget</span>
-<span class="sd">            - filter_clicked: display a filter widget</span>
-<span class="sd">            - update_plug_value_from_filter: update the plug value from</span>
-<span class="sd">              a filter result</span>
+<span class="sd">            - create_widget: Method to create the file widget.</span>
+<span class="sd">            - filter_clicked: Display a filter widget.</span>
+<span class="sd">            - update_plug_value_from_filter: Update the plug value from</span>
+<span class="sd">                                             a filter result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseFileControlWidget.create_widget">
@@ -94,29 +96,21 @@
         <span class="n">label_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">user_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to create the file widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates a file selection widget.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        parent: QWidget (mandatory)</span>
-<span class="sd">            the parent widget</span>
-<span class="sd">        control_name: str (mandatory)</span>
-<span class="sd">            the name of the control we want to create</span>
-<span class="sd">        control_value: str (mandatory)</span>
-<span class="sd">            the default control value</span>
-<span class="sd">        trait: Tait (mandatory)</span>
-<span class="sd">            the trait associated to the control</span>
-<span class="sd">        label_class: Qt widget class (optional, default: None)</span>
-<span class="sd">            the label widget will be an instance of this class. Its constructor</span>
-<span class="sd">            will be called using 2 arguments: the label string and the parent</span>
-<span class="sd">            widget.</span>
+<span class="sd">        :param parent (QWidget): The parent widget.</span>
+<span class="sd">        :param control_name (str): The name of the control to create.</span>
+<span class="sd">        :param control_value (str): The default control value.</span>
+<span class="sd">        :param trait (Trait): The trait associated with the control.</span>
+<span class="sd">        :param label_class (Optional[Type[QWidget]]): Custom label widget</span>
+<span class="sd">                                                      class.</span>
+<span class="sd">        :param user_data (Optional[dict]): Additional user data.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        out: 2-uplet</span>
-<span class="sd">            a two element tuple of the form (control widget: QWidget with two</span>
-<span class="sd">            elements, a QLineEdit in the &#39;path&#39; parameter and a browse button</span>
-<span class="sd">            in the &#39;browse&#39; parameter, associated label: QLabel)</span>
+<span class="sd">        :return (Tuple[QWidget, QLabel]):</span>
+<span class="sd">            A tuple containing the created widget and its associated label.</span>
+<span class="sd">            The widget includes a QLineEdit (&#39;path&#39;) and a browse</span>
+<span class="sd">            button (&#39;browse&#39;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create the widget that will be used to select a file</span>
         <span class="n">widget</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">FileControlWidget</span><span class="o">.</span><span class="n">create_widget</span><span class="p">(</span>
@@ -127,32 +121,25 @@
             <span class="n">label_class</span><span class="o">=</span><span class="n">label_class</span><span class="p">,</span>
             <span class="n">user_data</span><span class="o">=</span><span class="n">user_data</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="k">if</span> <span class="n">user_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">user_data</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span> <span class="o">=</span> <span class="n">user_data</span>  <span class="c1"># regular File does not store data</span>
-
+        <span class="n">user_data</span> <span class="o">=</span> <span class="n">user_data</span> <span class="ow">or</span> <span class="p">{}</span>
+        <span class="c1"># regular File does not store data</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span> <span class="o">=</span> <span class="n">user_data</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
-
         <span class="n">project</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">connected_inputs</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connected_inputs&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
 
-        <span class="k">def</span> <span class="nf">is_number</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Check if x is a number.</span>
+        <span class="k">def</span> <span class="nf">_is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Checks if a value is a number.</span>
 
-<span class="sd">            Parameters</span>
-<span class="sd">            ----------</span>
-<span class="sd">            x: the name of the control we want to create (str)</span>
+<span class="sd">            :param value (str): The value to check.</span>
 
-<span class="sd">            Returns</span>
-<span class="sd">            -------</span>
-<span class="sd">            out: bool</span>
-<span class="sd">            True if the control name is a number,</span>
-<span class="sd">            False otherwise</span>
+<span class="sd">            :return (bool): True if the value is a number, False otherwise.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">try</span><span class="p">:</span>
-                <span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
                 <span class="k">return</span> <span class="kc">True</span>
 
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
@@ -164,7 +151,7 @@
             <span class="ow">and</span> <span class="n">scan_list</span>
             <span class="ow">and</span> <span class="ow">not</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span>
             <span class="ow">and</span> <span class="n">control_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">connected_inputs</span>
-            <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_number</span><span class="p">(</span><span class="n">control_name</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="n">_is_number</span><span class="p">(</span><span class="n">control_name</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="c1"># Create a browse button</span>
             <span class="n">button</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Filter&quot;</span><span class="p">,</span> <span class="n">widget</span><span class="p">)</span>
@@ -175,12 +162,11 @@
             <span class="p">)</span>
             <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
             <span class="n">widget</span><span class="o">.</span><span class="n">filter_b</span> <span class="o">=</span> <span class="n">button</span>
-
             <span class="c1"># Set a callback on the browse button</span>
             <span class="n">control_class</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">get_control_class</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
-            <span class="n">node_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">node_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">node_name</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">node_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="p">)</span>
             <span class="n">browse_hook</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
                 <span class="n">control_class</span><span class="o">.</span><span class="n">filter_clicked</span><span class="p">,</span>
                 <span class="n">weak_proxy</span><span class="p">(</span><span class="n">widget</span><span class="p">),</span>
@@ -196,19 +182,16 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display a filter widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Display a filter widget.</span>
 
-<span class="sd">        :param node_name: name of the node</span>
-<span class="sd">        :param plug_name: name of the plug</span>
+<span class="sd">        :param widget (QWidget): The parent widget.</span>
+<span class="sd">        :param node_name (str): The name of the node.</span>
+<span class="sd">        :param plug_name (str): The name of the plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
+        <span class="c1"># This import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="c1"># fmt: off</span>
-        <span class="c1"># isort: off</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.</span>\
-            <span class="n">node_controller</span> <span class="kn">import</span> <span class="nn">PlugFilter</span>
-        <span class="c1"># isort: on</span>
-        <span class="c1"># fmt: on</span>
+        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -217,7 +200,7 @@
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span> <span class="o">=</span> <span class="n">PlugFilter</span><span class="p">(</span>
             <span class="n">project</span><span class="p">,</span>
             <span class="n">scan_list</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>  <span class="c1"># (process)</span>
+            <span class="kc">None</span><span class="p">,</span>
             <span class="n">node_name</span><span class="p">,</span>
             <span class="n">plug_name</span><span class="p">,</span>
             <span class="n">node_controller</span><span class="p">,</span>
@@ -225,7 +208,6 @@
         <span class="p">)</span>
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">setWindowModality</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WindowModal</span><span class="p">)</span>
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span><span class="o">.</span><span class="n">plug_value_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="n">partial</span><span class="p">(</span>
                 <span class="n">PopulseFileControlWidget</span><span class="o">.</span><span class="n">update_plug_value_from_filter</span><span class="p">,</span>
@@ -239,10 +221,12 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the plug value from a filter result.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the plug value based on a filter result.</span>
 
-<span class="sd">        :param plug_name: name of the plug</span>
-<span class="sd">        :param filter_res_list: list of the filtered files</span>
+<span class="sd">        :param widget (QWidget): The parent widget.</span>
+<span class="sd">        :param plug_name (str): The name of the plug.</span>
+<span class="sd">        :param filter_res_list (List[str]): List of filtered file paths.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># If the list contains only one element, setting</span>
         <span class="c1"># this element as the plug value</span>
@@ -257,17 +241,15 @@
             <span class="k">if</span> <span class="n">len_list</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
-                    <span class="s2">&quot;The &#39;</span><span class="si">{0}</span><span class="s2">&#39; parameter must by a filename, &quot;</span>
-                    <span class="s2">&quot;but a value of </span><span class="si">{1}</span><span class="s2"> &lt;class &#39;list&#39;&gt; was &quot;</span>
-                    <span class="s2">&quot;specified.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">)</span>
+                    <span class="sa">f</span><span class="s2">&quot;The &#39;</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&#39; parameter must by a filename, &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;but received </span><span class="si">{</span><span class="n">filter_res_list</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;TraitError&quot;</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span>
 
         <span class="c1"># Set the selected file path to the path sub control</span>
-        <span class="n">widget</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">res</span><span class="p">))</span></div>
+        <span class="n">widget</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">))</span></div>
 </div>
 
 
@@ -275,15 +257,15 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">[docs]</a>
 <span class="k">class</span> <span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control to enter a Directory.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget for selecting a directory.</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Method:</span>
-<span class="sd">            - create_widget: method to create the file widget</span>
-<span class="sd">            - filter_clicked: display a filter widget</span>
-<span class="sd">            - update_plug_value_from_filter: update the plug value from</span>
-<span class="sd">              a filter result</span>
-
+<span class="sd">            - create_widget: Creates the directory selection widget.</span>
+<span class="sd">            - filter_clicked: Displays a filtering widget.</span>
+<span class="sd">            - update_plug_value_from_filter: Updates the plug value based on</span>
+<span class="sd">                                             the filter result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.create_widget">
@@ -297,7 +279,19 @@
         <span class="n">label_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">user_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to create the directory widget.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and returns a directory selection widget.</span>
+
+<span class="sd">        :param parent (QWidget): The parent widget.</span>
+<span class="sd">        :param control_name (str): The name of the control.</span>
+<span class="sd">        :param control_value (Any): The initial value of the control.</span>
+<span class="sd">        :param trait (Any): The trait associated with the control.</span>
+<span class="sd">        :param label_class (Optional[Any]): The label class (optional).</span>
+<span class="sd">        :param user_data (Optional[dict]): User data associated with</span>
+<span class="sd">                                           the widget.</span>
+
+<span class="sd">        :return (QWidget): The directory selection widget.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">PopulseFileControlWidget</span><span class="o">.</span><span class="n">create_widget</span><span class="p">(</span>
             <span class="n">parent</span><span class="p">,</span>
@@ -313,19 +307,16 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display a filter widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays a filter widget for selecting a directory.</span>
 
-<span class="sd">        :param node_name: name of the node</span>
-<span class="sd">        :param plug_name: name of the plug</span>
+<span class="sd">        :param widget (QWidget): The calling widget.</span>
+<span class="sd">        :param node_name (str): The name of the node.</span>
+<span class="sd">        :param plug_name (str): The name of the associated plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="c1"># fmt: off</span>
-        <span class="c1"># isort: off</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.</span>\
-            <span class="n">node_controller</span> <span class="kn">import</span> <span class="nn">PlugFilter</span>
-        <span class="c1"># fmt: on</span>
-        <span class="c1"># isort: on</span>
+        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -334,7 +325,7 @@
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span> <span class="o">=</span> <span class="n">PlugFilter</span><span class="p">(</span>
             <span class="n">project</span><span class="p">,</span>
             <span class="n">scan_list</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>  <span class="c1"># (process)</span>
+            <span class="kc">None</span><span class="p">,</span>
             <span class="n">node_name</span><span class="p">,</span>
             <span class="n">plug_name</span><span class="p">,</span>
             <span class="n">node_controller</span><span class="p">,</span>
@@ -354,23 +345,27 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the plug value from a filter result.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the plug value based on the filter result.</span>
 
-<span class="sd">        :param plug_name: name of the plug</span>
-<span class="sd">        :param filter_res_list: list of the filtered files</span>
+<span class="sd">        If multiple elements are returned, the first one is selected.</span>
+<span class="sd">        If the selected element is not a directory, its parent directory</span>
+<span class="sd">        is used.</span>
+
+<span class="sd">        :param widget (QWidget): The widget being updated.</span>
+<span class="sd">        :param plug_name (str): The name of the associated plug.</span>
+<span class="sd">        :param filter_res_list (list[str]): The list of filtered files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># If the list contains only one element, setting</span>
-        <span class="c1"># this element as the plug value</span>
-        <span class="n">len_list</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filter_res_list</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">len_list</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">res</span> <span class="o">=</span> <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">filter_res_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">res</span><span class="p">):</span>
-                <span class="n">res</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filter_res_list</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">filter_res_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="k">else</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span>
 
         <span class="c1"># Set the selected file path to the path sub control</span>
-        <span class="n">widget</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">(</span><span class="n">res</span><span class="p">))</span></div>
+        <span class="n">widget</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">))</span></div>
 </div>
 
 
@@ -378,15 +373,15 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">[docs]</a>
 <span class="k">class</span> <span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control to enter a list of files.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A control widget for entering a list of files.</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Method:</span>
-<span class="sd">            - create_widget: method to create the list of files widget</span>
-<span class="sd">            - filter_clicked: display a filter widget</span>
-<span class="sd">            - update_plug_value_from_filter: update the plug value from</span>
-<span class="sd">              a filter result</span>
-
+<span class="sd">            - create_widget: Creates the list of files widget.</span>
+<span class="sd">            - filter_clicked: Displays a filter widget.</span>
+<span class="sd">            - update_plug_value_from_filter: Updates the plug value based on</span>
+<span class="sd">                                             the filter result.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.create_widget">
@@ -400,28 +395,20 @@
         <span class="n">label_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">user_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to create the list of files widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Creates and returns a file list control widget with an optional</span>
+<span class="sd">        filter button.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        parent: QWidget (mandatory)</span>
-<span class="sd">            the parent widget</span>
-<span class="sd">        control_name: str (mandatory)</span>
-<span class="sd">            the name of the control we want to create</span>
-<span class="sd">        control_value: list of items (mandatory)</span>
-<span class="sd">            the default control value</span>
-<span class="sd">        trait: Tait (mandatory)</span>
-<span class="sd">            the trait associated to the control</span>
-<span class="sd">        label_class: Qt widget class (optional, default: None)</span>
-<span class="sd">            the label widget will be an instance of this class. Its constructor</span>
-<span class="sd">            will be called using 2 arguments: the label string and the parent</span>
-<span class="sd">            widget.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        out: 2-uplet</span>
-<span class="sd">            a two element tuple of the form (control widget: ,</span>
-<span class="sd">            associated labels: (a label QLabel, the tools QWidget))</span>
+<span class="sd">        :param parent (QWidget): The parent widget.</span>
+<span class="sd">        :param control_name (str): The name of the control.</span>
+<span class="sd">        :param control_value (list): The default control value.</span>
+<span class="sd">        :param trait (Trait): The trait associated with the control.</span>
+<span class="sd">        :param label_class (type): A Qt widget class for the label.</span>
+<span class="sd">        :param user_data (dict): Additional data, including project,</span>
+<span class="sd">                                 scan list, and connected inputs.</span>
+
+<span class="sd">        :return (tuple): A tuple (control widget, (QLabel, QWidget)).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">widget</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">OffscreenListFileControlWidget</span><span class="o">.</span><span class="n">create_widget</span><span class="p">(</span>
             <span class="n">parent</span><span class="p">,</span>
@@ -431,12 +418,11 @@
             <span class="n">label_class</span><span class="o">=</span><span class="n">label_class</span><span class="p">,</span>
             <span class="n">user_data</span><span class="o">=</span><span class="n">user_data</span><span class="p">,</span>
         <span class="p">)</span>
-
         <span class="n">layout</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
-
         <span class="n">project</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">connected_inputs</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connected_inputs&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
+
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">project</span>
             <span class="ow">and</span> <span class="n">scan_list</span>
@@ -455,9 +441,10 @@
 
             <span class="c1"># Set a callback on the browse button</span>
             <span class="n">control_class</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">get_control_class</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
-            <span class="n">node_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">node_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">node_name</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="n">node_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">parent</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="p">)</span>
+
             <span class="n">browse_hook</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
                 <span class="n">control_class</span><span class="o">.</span><span class="n">filter_clicked</span><span class="p">,</span>
                 <span class="n">weak_proxy</span><span class="p">(</span><span class="n">widget</span><span class="p">),</span>
@@ -474,19 +461,16 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display a filter widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays a filter widget for selecting files.</span>
 
-<span class="sd">        :param node_name: name of the node</span>
-<span class="sd">        :param plug_name: name of the plug</span>
+<span class="sd">        :param widget (QWidget): The file control widget.</span>
+<span class="sd">        :param node_name (str): The name of the node.</span>
+<span class="sd">        :param plug_name (str): The name of the plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="c1"># fmt: off</span>
-        <span class="c1"># isort: off</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.</span>\
-            <span class="n">node_controller</span> <span class="kn">import</span> <span class="nn">PlugFilter</span>
-        <span class="c1"># isort: on</span>
-        <span class="c1"># fmt: on</span>
+        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -495,7 +479,7 @@
         <span class="n">widget</span><span class="o">.</span><span class="n">pop_up</span> <span class="o">=</span> <span class="n">PlugFilter</span><span class="p">(</span>
             <span class="n">project</span><span class="p">,</span>
             <span class="n">scan_list</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>  <span class="c1"># (process)</span>
+            <span class="kc">None</span><span class="p">,</span>
             <span class="n">node_name</span><span class="p">,</span>
             <span class="n">plug_name</span><span class="p">,</span>
             <span class="n">node_controller</span><span class="p">,</span>
@@ -520,10 +504,13 @@
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the plug value from a filter result.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the plug value based on the filter results.</span>
 
-<span class="sd">        :param plug_name: name of the plug</span>
-<span class="sd">        :param filter_res_list: list of the filtered files</span>
+<span class="sd">        :param widget (QWidget): The file control widget.</span>
+<span class="sd">        :param plug_name (str): The name of the plug.</span>
+<span class="sd">        :param filter_res_list (list): The filtered file list.</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">controller</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">controller</span>
 
@@ -531,69 +518,78 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 </div>
 
 
 
-<span class="c1"># controller_widget.ControllerWidget._defined_controls[&#39;File&#39;] \</span>
-<span class="c1"># = PopulseFileControlWidget</span>
-<span class="c1"># controller_widget.ControllerWidget._defined_controls[&#39;Directory&#39;] \</span>
-<span class="c1"># = PopulseDirectoryControlWidget</span>
-
-
 <div class="viewcode-block" id="PopulseUndefinedControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseUndefinedControlWidget</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control for Undefined value.&quot;&quot;&quot;</span>
+<span class="k">class</span> <span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Widget control for handling Undefined trait values in a Qt interface.</span>
 
-<div class="viewcode-block" id="PopulseUndefinedControlWidget.is_valid">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to check if the new control value is correct.</span>
+<span class="sd">    This class provides methods to create, validate, and update Qt widgets</span>
+<span class="sd">    that represent undefined values in a controller-based UI framework.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        control_instance: QWidget (mandatory)</span>
-<span class="sd">            the control widget we want to validate</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        out: bool</span>
-<span class="sd">            True if the control value is Undefined,</span>
-<span class="sd">            False otherwise</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">    :Contains:</span>
+<span class="sd">        :Method:</span>
 
-        <span class="c1"># Get the control current value</span>
-        <span class="n">control_text</span> <span class="o">=</span> <span class="n">control_instance</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+<span class="sd">            - check: Check if a controller widget control is filled correctly.</span>
+<span class="sd">            - connect: Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
+<span class="sd">                       &#39;StrControlWidget&#39; controller widget control.</span>
+<span class="sd">            - create_widget: Method to create the Undefined widget.</span>
+<span class="sd">            - disconnect: Disconnect a &#39;Str&#39; or &#39;String&#39; controller trait and</span>
+<span class="sd">                          a &#39;StrControlWidget&#39; controller widget control.</span>
+<span class="sd">            - is_valid: Method to check if the new control value is correct.</span>
+<span class="sd">            - update_controller: Update one element of the controller.</span>
+<span class="sd">            - update_controller_widget: Update one element of the controller</span>
+<span class="sd">                                        widget.</span>
 
-        <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="n">control_text</span> <span class="ow">in</span> <span class="p">[</span>
-            <span class="s2">&quot;&lt;undefined&gt;&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;&lt;style&gt;background-color: gray; &quot;</span>
-            <span class="s2">&quot;text-color: red;&lt;/style&gt;&lt;undefined&gt;&quot;</span><span class="p">,</span>
-        <span class="p">]:</span>
-            <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="n">is_valid</span></div>
-
+    <span class="c1"># Class constants</span>
+    <span class="n">UNDEFINED_TEXT</span> <span class="o">=</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span>
+    <span class="n">STYLED_UNDEFINED_TEXT</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;&lt;style&gt;background-color: gray; text-color: red;&lt;/style&gt;&quot;</span> <span class="s2">&quot;&lt;undefined&gt;&quot;</span>
+    <span class="p">)</span>
+    <span class="n">VALID_REPRESENTATIONS</span> <span class="o">=</span> <span class="p">[</span><span class="n">UNDEFINED_TEXT</span><span class="p">,</span> <span class="n">STYLED_UNDEFINED_TEXT</span><span class="p">]</span>
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.check">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.check">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a controller widget control is filled correctly.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if a controller widget control is filled correctly.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        cls: StrControlWidget (mandatory)</span>
-<span class="sd">            a StrControlWidget control</span>
-<span class="sd">        control_instance: QLineEdit (mandatory)</span>
-<span class="sd">            the control widget we want to validate</span>
+<span class="sd">        This method is a placeholder in this implementation.</span>
+
+<span class="sd">        :param cls (StrControlWidget): A StrControlWidget control.</span>
+<span class="sd">        :param control_instance (QLineEdit): The control widget to check.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Implementation can be added here if needed</span>
+        <span class="k">pass</span></div>
 
+
+<div class="viewcode-block" id="PopulseUndefinedControlWidget.connect">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a &#39;StrControlWidget&#39;</span>
+<span class="sd">        controller widget control.</span>
+
+<span class="sd">        This method is a placeholder in this implementation.</span>
+
+<span class="sd">        :param cls (StrControlWidget): A StrControlWidget control.</span>
+<span class="sd">        :param controller_widget (ControllerWidget): The controller widget</span>
+<span class="sd">                                                     containing the controller.</span>
+<span class="sd">        :param control_name (str): The name of the control to connect.</span>
+<span class="sd">        :param control_instance (QWidget): The widget instance to connect</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Signal connections can be added here if needed</span>
         <span class="k">pass</span></div>
 
 
@@ -603,52 +599,77 @@
     <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
-        <span class="n">control_value</span><span class="p">,</span>
-        <span class="n">trait</span><span class="p">,</span>
         <span class="n">label_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">user_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to create the Undefined widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a widget for displaying Undefined values.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        parent: QWidget (mandatory)</span>
-<span class="sd">            the parent widget</span>
-<span class="sd">        control_name: str (mandatory)</span>
-<span class="sd">            the name of the control we want to create</span>
-<span class="sd">        control_value: str (mandatory)</span>
-<span class="sd">            the default control value</span>
-<span class="sd">        trait: Tait (mandatory)</span>
-<span class="sd">            the trait associated to the control</span>
-<span class="sd">        label_class: Qt widget class (optional, default: None)</span>
-<span class="sd">            the label widget will be an instance of this class. Its constructor</span>
-<span class="sd">            will be called using 2 arguments: the label string and the parent</span>
-<span class="sd">            widget.</span>
+<span class="sd">        :param parent (QWidget): The parent widget.</span>
+<span class="sd">        :param control_name (str): The name of the control to create.</span>
+<span class="sd">        :param label_class: The class to use for the label widget. Default is</span>
+<span class="sd">                            QLabel if None.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        out: 2-uplet</span>
-<span class="sd">            a two element tuple of the form (control widget: QLineEdit,</span>
-<span class="sd">            associated label: QLabel)</span>
+<span class="sd">        :return (tuple): (control_widget, label_widget) where control_widget</span>
+<span class="sd">                          is a QLabel displaying the Undefined value and</span>
+<span class="sd">                          label_widget is the associated label.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Create the widget</span>
+        <span class="c1"># Create widget with styled representation of Undefined</span>
         <span class="n">widget</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
-            <span class="s2">&quot;&lt;style&gt;background-color: gray; text-color: red;&lt;/style&gt;&quot;</span>
-            <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span><span class="p">),</span>
-            <span class="n">parent</span><span class="p">,</span>
+            <span class="n">PopulseUndefinedControlWidget</span><span class="o">.</span><span class="n">STYLED_UNDEFINED_TEXT</span><span class="p">,</span> <span class="n">parent</span>
         <span class="p">)</span>
-
-        <span class="c1"># Create the label associated with the string widget</span>
-        <span class="n">control_label</span> <span class="o">=</span> <span class="n">control_name</span>
+        <span class="c1"># Create and return the label</span>
         <span class="k">if</span> <span class="n">label_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">label_class</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QLabel</span>
-        <span class="k">if</span> <span class="n">control_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">label</span> <span class="o">=</span> <span class="n">label_class</span><span class="p">(</span><span class="n">control_label</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">control_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">label</span> <span class="o">=</span> <span class="n">label_class</span><span class="p">(</span><span class="n">control_name</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">return</span> <span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">label</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PopulseUndefinedControlWidget.disconnect">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Disconnect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
+<span class="sd">        &#39;StrControlWidget&#39; controller widget control.</span>
+
+<span class="sd">        This method is a placeholder in this implementation.</span>
+
+<span class="sd">        :param controller_widget (ControllerWidget): The controller widget</span>
+<span class="sd">                                                     containing the controller.</span>
+<span class="sd">        :param control_name (str): The name of the control to disconnect</span>
+<span class="sd">        :param control_instance (QWidget): The widget instance to disconnect</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Signal disconnections can be added here if needed</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PopulseUndefinedControlWidget.is_valid">
+<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Validate if the control contains an Undefined value representation.</span>
+
+<span class="sd">        *args, **kwargs : Additional arguments. Not used, kept for</span>
+<span class="sd">                          interface compatibility.</span>
+
+<span class="sd">        :param control_instance (QWidget): The control widget to validate.</span>
+
+<span class="sd">        :return (bool): True if the control value is Undefined, False</span>
+<span class="sd">                         otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Get the control current value</span>
+        <span class="n">control_text</span> <span class="o">=</span> <span class="n">control_instance</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">control_text</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="n">PopulseUndefinedControlWidget</span><span class="o">.</span><span class="n">VALID_REPRESENTATIONS</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller">
@@ -662,39 +683,43 @@
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update one element of the controller.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the controller with the widget&#39;s value if valid.</span>
 
 <span class="sd">        At the end the controller trait value with the name &#39;control_name&#39;</span>
 <span class="sd">        will match the controller widget user parameters defined in</span>
 <span class="sd">        &#39;control_instance&#39;.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        controller_widget: ControllerWidget (mandatory)</span>
-<span class="sd">            a controller widget that contains the controller we want to update</span>
-<span class="sd">        control_name: str(mandatory)</span>
-<span class="sd">            the name of the controller widget control we want to synchronize</span>
-<span class="sd">            with the controller</span>
-<span class="sd">        control_instance: QLineEdit (mandatory)</span>
-<span class="sd">            the instance of the controller widget control we want to</span>
-<span class="sd">            synchronize with the controller</span>
+<span class="sd">        *args, **kwargs : Additional arguments. Not used, kept for</span>
+<span class="sd">                          interface compatibility.</span>
+
+<span class="sd">        :param controller_widget (ControllerWidget): The controller widget</span>
+<span class="sd">                                                     containing the controller</span>
+<span class="sd">                                                     to update</span>
+<span class="sd">        :param control_name (str): The name of the control to synchronize</span>
+<span class="sd">                                    with the controller</span>
+<span class="sd">        :param  control_instance (QWidget): The widget instance to synchronize</span>
+<span class="sd">                                            with the controller</span>
+<span class="sd">        :param reset_invalid_value (bool): If True and the value is invalid,</span>
+<span class="sd">                                           reset the widget to the</span>
+<span class="sd">                                           controller&#39;s value</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Update the controller only if the control is valid</span>
         <span class="k">if</span> <span class="n">PopulseUndefinedControlWidget</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">):</span>
-            <span class="c1"># Define the control value</span>
+            <span class="c1"># Set controller&#39;s trait to Undefined</span>
             <span class="n">new_trait_value</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span>
             <span class="nb">setattr</span><span class="p">(</span>
                 <span class="n">controller_widget</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">new_trait_value</span>
             <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-                <span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; associated controller trait &quot;</span>
-                <span class="s2">&quot;&#39;</span><span class="si">{0}</span><span class="s2">&#39; has been updated with value &#39;</span><span class="si">{1}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">control_name</span><span class="p">,</span> <span class="n">new_trait_value</span>
-                <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; associated controller &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;trait &#39;</span><span class="si">{</span><span class="n">control_name</span><span class="si">}</span><span class="s2">&#39; has been updated with &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;value &#39;</span><span class="si">{</span><span class="n">new_trait_value</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
             <span class="p">)</span>
+
         <span class="k">elif</span> <span class="n">reset_invalid_value</span><span class="p">:</span>
-            <span class="c1"># invalid, reset GUI to older value</span>
+            <span class="c1"># Invalid value, reset GUI to the previous value</span>
             <span class="n">old_trait_value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
                 <span class="n">controller_widget</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="n">control_name</span>
             <span class="p">)</span>
@@ -707,84 +732,29 @@
     <span class="k">def</span> <span class="nf">update_controller_widget</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update one element of the controller widget.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update the widget to reflect the controller&#39;s value.</span>
 
 <span class="sd">        At the end the controller widget user editable parameter with the</span>
-<span class="sd">        name &#39;control_name&#39; will match the controller trait value with the same</span>
-<span class="sd">        name.</span>
+<span class="sd">        name &#39;control_name&#39; will match the controller trait value with the</span>
+<span class="sd">        same name.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        controller_widget: ControllerWidget (mandatory)</span>
-<span class="sd">            a controller widget that contains the controller we want to update</span>
-<span class="sd">        control_name: str(mandatory)</span>
-<span class="sd">            the name of the controller widget control we want to synchronize</span>
-<span class="sd">            with the controller</span>
-<span class="sd">        control_instance: QLineEdit (mandatory)</span>
-<span class="sd">            the instance of the controller widget control we want to</span>
-<span class="sd">            synchronize with the controller</span>
+<span class="sd">        :param controller_widget (ControllerWidget): The controller widget</span>
+<span class="sd">                                                     containing the controller.</span>
+<span class="sd">        :param control_name (str): The name of the control to synchronize.</span>
+<span class="sd">        :param control_instance (QWidget): The widget instance to update.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Define the trait value</span>
+        <span class="c1"># Set the widget text to represent Undefined</span>
         <span class="n">new_controller_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span><span class="p">)</span>
-
-        <span class="c1"># Set the trait</span>
         <span class="n">control_instance</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">new_controller_value</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-            <span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; has been updated &quot;</span>
-            <span class="s2">&quot;with value &#39;</span><span class="si">{0}</span><span class="s2">&#39;.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">new_controller_value</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; has been updated &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;with value &#39;</span><span class="si">{</span><span class="n">new_controller_value</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
         <span class="p">)</span>
-        <span class="c1"># Set the controller trait value</span>
+        <span class="c1"># Update the controller to ensure consistency</span>
         <span class="n">PopulseUndefinedControlWidget</span><span class="o">.</span><span class="n">update_controller</span><span class="p">(</span>
             <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">,</span> <span class="kc">True</span>
         <span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="PopulseUndefinedControlWidget.connect">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
-<span class="sd">        &#39;StrControlWidget&#39; controller widget control.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        cls: StrControlWidget (mandatory)</span>
-<span class="sd">            a StrControlWidget control</span>
-<span class="sd">        controller_widget: ControllerWidget (mandatory)</span>
-<span class="sd">            a controller widget that contains the controller we want to update</span>
-<span class="sd">        control_name: str (mandatory)</span>
-<span class="sd">            the name of the controller widget control we want to synchronize</span>
-<span class="sd">            with the controller</span>
-<span class="sd">        control_instance: QLineEdit (mandatory)</span>
-<span class="sd">            the instance of the controller widget control we want to</span>
-<span class="sd">            synchronize with the controller</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">pass</span></div>
-
-
-<div class="viewcode-block" id="PopulseUndefinedControlWidget.disconnect">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disconnect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
-<span class="sd">        &#39;StrControlWidget&#39; controller widget control.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        controller_widget: ControllerWidget (mandatory)</span>
-<span class="sd">            a controller widget that contains the controller we want to update</span>
-<span class="sd">        control_name: str(mandatory)</span>
-<span class="sd">            the name of the controller widget control we want to synchronize</span>
-<span class="sd">            with the controller</span>
-<span class="sd">        control_instance: QLineEdit (mandatory)</span>
-<span class="sd">            the instance of the controller widget control we want to</span>
-<span class="sd">            synchronize with the controller</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">pass</span></div>
 </div>
 
 </pre></div>

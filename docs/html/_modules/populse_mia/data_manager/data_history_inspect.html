@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_history_inspect</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,15 +30,58 @@
         
         
   <h1>Source code for populse_mia.data_manager.data_history_inspect</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;This module is dedicated to pipeline history.&quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module is dedicated to pipeline history.</span>
 
+<span class="sd">:Contains:</span>
+<span class="sd">    :Class:</span>
+<span class="sd">        - ProtoProcess: A lightweight convenience class that stores a brick</span>
+<span class="sd">                        database entry along with additional usage information.</span>
+
+<span class="sd">    :Functions:</span>
+<span class="sd">        - brick_to_process:  Convert a brick database entry into a</span>
+<span class="sd">                             &#39;fake process&#39;.</span>
+<span class="sd">        - data_history_pipeline: Retrieves the complete processing history of</span>
+<span class="sd">                                 a file in the database.</span>
+<span class="sd">        - data_in_value: Determine if the specified filename is present within</span>
+<span class="sd">                         the given value.</span>
+<span class="sd">        - find_procs_with_output: Identify processes that have the specified</span>
+<span class="sd">                                  filename as part of their outputs.</span>
+<span class="sd">        - get_data_history: Retrieves the processing history for a given data</span>
+<span class="sd">                            file</span>
+<span class="sd">        - get_data_history_bricks: Retrieves the complete &quot;useful&quot; history of</span>
+<span class="sd">                                   a file in the database.</span>
+
+<span class="sd">        - get_data_history_processes: Retrieves the complete &quot;useful&quot;</span>
+<span class="sd">                                      processing history of a file in the</span>
+<span class="sd">                                      database.</span>
+<span class="sd">        - get_direct_proc_ancestors: Retrieve processing bricks referenced in</span>
+<span class="sd">                                     the direct filename history.</span>
+<span class="sd">        - get_filenames_in_value: Extract filenames from a nested structure of</span>
+<span class="sd">                                  lists, tuples, and dictionaries.</span>
+<span class="sd">        - get_history_brick_process: Retrieve a brick from the database and</span>
+<span class="sd">                                     return it as `ProtoProcess` instance.</span>
+<span class="sd">        - get_proc_ancestors_via_tmp: Retrieve upstream processes connected</span>
+<span class="sd">                                      via a temporary value (&quot;&lt;temp&gt;&quot;).</span>
+<span class="sd">        - is_data_entry: Determine if the given filename is a valid database</span>
+<span class="sd">                         entry.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">##########################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">##########################################################################</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">osp</span>
 
 <span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
 <span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span>  <span class="c1"># , capsul_engine</span>
 
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
     <span class="n">BRICK_ID</span><span class="p">,</span>
@@ -50,13 +93,18 @@
     <span class="n">TAG_BRICKS</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="ProtoProcess">
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.ProtoProcess">[docs]</a>
-<span class="k">class</span> <span class="nc">ProtoProcess</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ProtoProcess</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Lightweight convenience class, stores a brick database entry, plus</span>
-<span class="sd">    additional info (used)</span>
+<span class="sd">    A lightweight convenience class that stores a brick database entry along</span>
+<span class="sd">    with additional usage information.</span>
+
+<span class="sd">    :param brick: The brick database entry to store. Defaults</span>
+<span class="sd">                             to None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ProtoProcess.__init__">
@@ -68,118 +116,277 @@
 
 
 
+<div class="viewcode-block" id="brick_to_process">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.brick_to_process">[docs]</a>
+<span class="k">def</span> <span class="nf">brick_to_process</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a brick database entry into a &#39;fake process&#39;.</span>
+
+<span class="sd">    This function transforms a brick database entry into a `Process` instance</span>
+<span class="sd">    that represents its parameters and values. The process gets a `name`,</span>
+<span class="sd">    `uuid`, and `exec_time` from the brick. This &quot;fake process&quot; cannot perform</span>
+<span class="sd">    actual processing but serves as a representation of the brick&#39;s traits and</span>
+<span class="sd">    values.</span>
+
+<span class="sd">    :param brick (dict or str): The brick database entry to convert. If a</span>
+<span class="sd">                                string is provided, it is treated as the</span>
+<span class="sd">                                brick&#39;s unique ID, and the corresponding brick</span>
+<span class="sd">                                document is retrieved from the project&#39;s</span>
+<span class="sd">                                database.</span>
+<span class="sd">    :param project (object): The project object providing access to the</span>
+<span class="sd">                             database and its documents.</span>
+
+<span class="sd">    :return (Process or None): A `Process` instance representing the brick&#39;s</span>
+<span class="sd">                               parameters and values. Returns `None` if the</span>
+<span class="sd">                               brick is not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="c1"># If brick is an ID, retrieve the corresponding document</span>
+        <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="n">brick</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="n">brick</span>
+            <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">brick</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">brick_data</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span>
+    <span class="n">outputs</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span>
+    <span class="n">proc</span> <span class="o">=</span> <span class="n">Process</span><span class="p">()</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span>
+    <span class="n">proc</span><span class="o">.</span><span class="n">exec_time</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Any</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">proc</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Any</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">proc</span></div>
+
+
+
 <div class="viewcode-block" id="data_history_pipeline">
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.data_history_pipeline">[docs]</a>
 <span class="k">def</span> <span class="nf">data_history_pipeline</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the complete &quot;useful&quot; history of a file in the database, as a &quot;fake</span>
-<span class="sd">    pipeline&quot;.</span>
+<span class="sd">    Retrieves the complete processing history of a file in the database,</span>
+<span class="sd">    formatted as a &quot;fake pipeline&quot;.</span>
 
-<span class="sd">    The pipeline contains fake processes (unspecialized, direct Process</span>
-<span class="sd">    instances), with all parameters (all being of type Any). The pipeline has</span>
-<span class="sd">    connections, and gets all upstream ancestors of the file, so it contains</span>
-<span class="sd">    all processing used to produce the latest version of the file (it may have</span>
-<span class="sd">    been modified several time during the processing), and gets as inputs all</span>
-<span class="sd">    input files which were used to produce the final data.</span>
+<span class="sd">    The generated pipeline consists of unspecialized (fake) processes,</span>
+<span class="sd">    each representing a processing step with all parameters of type `Any`.</span>
+<span class="sd">    The pipeline includes connections and traces all upstream ancestors</span>
+<span class="sd">    of the file, capturing the entire processing path leading to the</span>
+<span class="sd">    latest version of the file.</span>
 
-<span class="sd">    Processing bricks which are not used, probably part of earlier runs which</span>
-<span class="sd">    have been orphaned because the data file has been overwritten, are not</span>
-<span class="sd">    listed in this history.</span>
+<span class="sd">    If the file was modified multiple times, the pipeline reflects only</span>
+<span class="sd">    the relevant processing steps that contributed to the final output.</span>
+<span class="sd">    Orphaned processing steps from overwritten versions are omitted.</span>
+
+<span class="sd">    :param filename (str): The name of the file whose processing history is</span>
+<span class="sd">                           being retrieved.</span>
+<span class="sd">    :param project (Project): The project object containing the database</span>
+<span class="sd">                              and relevant details.</span>
+
+<span class="sd">    :return (Pipeline | None): A `Pipeline` object representing the</span>
+<span class="sd">                               processing history, or `None` if no relevant</span>
+<span class="sd">                               history is found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">procs</span><span class="p">,</span> <span class="n">links</span> <span class="o">=</span> <span class="n">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">procs</span><span class="p">:</span>
-        <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">:</span>
-                <span class="n">pproc</span> <span class="o">=</span> <span class="n">brick_to_process</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
-                <span class="n">proc</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">pproc</span>
-                <span class="n">name</span> <span class="o">=</span> <span class="n">pproc</span><span class="o">.</span><span class="n">name</span>
-                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
-                    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pproc</span><span class="o">.</span><span class="n">uuid</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">))</span>
-                <span class="n">pproc</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">name</span>
-                <span class="n">pipeline</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pproc</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">procs</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">src</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
-                    <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
-                        <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">src</span>
-                    <span class="p">)</span>
-                    <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">elif</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                    <span class="c1"># already taken as an output: export under another name</span>
-                    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-                        <span class="n">src2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">src2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
-                            <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
-                                <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">src2</span>
-                            <span class="p">)</span>
-                            <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span>
-                            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">elif</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">src2</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                            <span class="n">src</span> <span class="o">=</span> <span class="n">src2</span>
-                            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">src</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">dst</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
-                    <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
-                        <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dst</span>
-                    <span class="p">)</span>
-                    <span class="n">dst</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="k">elif</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                    <span class="c1"># already taken as an input: export under another name</span>
-                    <span class="n">done</span> <span class="o">=</span> <span class="kc">False</span>
-                    <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
-                    <span class="k">while</span> <span class="ow">not</span> <span class="n">done</span><span class="p">:</span>
-                        <span class="n">dst2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
-                        <span class="k">if</span> <span class="n">dst2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
-                            <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
-                                <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dst2</span>
-                            <span class="p">)</span>
-                            <span class="n">dst</span> <span class="o">=</span> <span class="kc">None</span>
-                            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">elif</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">dst2</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
-                            <span class="n">dst</span> <span class="o">=</span> <span class="n">dst2</span>
-                            <span class="n">done</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">dst</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
-            <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-&gt;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
-                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">pipeline</span>
+    <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
 
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span></div>
+        <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">:</span>
+            <span class="n">pproc</span> <span class="o">=</span> <span class="n">brick_to_process</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
+            <span class="n">proc</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">pproc</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">pproc</span><span class="o">.</span><span class="n">name</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">pproc</span><span class="o">.</span><span class="n">uuid</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            <span class="n">pproc</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">pipeline</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">pproc</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">link</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">src</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
+                    <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">src</span>
+                <span class="p">)</span>
+                <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">elif</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                <span class="c1"># Rename output if already taken</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">src2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                    <span class="k">if</span> <span class="n">src2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
+                        <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
+                            <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">src2</span>
+                        <span class="p">)</span>
+                        <span class="n">src</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">break</span>
+
+                    <span class="k">elif</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">src2</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                        <span class="n">src</span> <span class="o">=</span> <span class="n">src2</span>
+                        <span class="k">break</span>
+
+                    <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">dst</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
+                    <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dst</span>
+                <span class="p">)</span>
+                <span class="n">dst</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">elif</span> <span class="ow">not</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">dst</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                <span class="c1"># Rename input if already taken</span>
+                <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">dst2</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span>
+
+                    <span class="k">if</span> <span class="n">dst2</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">traits</span><span class="p">():</span>
+                        <span class="n">pipeline</span><span class="o">.</span><span class="n">export_parameter</span><span class="p">(</span>
+                            <span class="n">link</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="p">,</span> <span class="n">link</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dst2</span>
+                        <span class="p">)</span>
+                        <span class="n">dst</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">break</span>
+
+                    <span class="k">elif</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">dst2</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+                        <span class="n">dst</span> <span class="o">=</span> <span class="n">dst2</span>
+                        <span class="k">break</span>
+
+                    <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dst</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">link</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">dst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pipeline</span><span class="o">.</span><span class="n">add_link</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src</span><span class="si">}</span><span class="s2">-&gt;</span><span class="si">{</span><span class="n">dst</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pipeline</span></div>
 
 
 
-<div class="viewcode-block" id="get_data_history_bricks">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_data_history_bricks">[docs]</a>
-<span class="k">def</span> <span class="nf">get_data_history_bricks</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<div class="viewcode-block" id="data_in_value">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.data_in_value">[docs]</a>
+<span class="k">def</span> <span class="nf">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the complete &quot;useful&quot; history of a file in the database, as a set of</span>
-<span class="sd">    bricks.</span>
+<span class="sd">    Determine if the specified filename is present within the given value.</span>
 
-<span class="sd">    This is just a fileterd version of :func:`get_data_history_processes` (like</span>
-<span class="sd">    :func:`data_history_pipeline` in another shape), which only returns the set</span>
-<span class="sd">    of brick elements actually used in the &quot;useful&quot; history of the data.</span>
+<span class="sd">    This function recursively searches through the `value`, which can be a</span>
+<span class="sd">    string, list, tuple, or dictionary, to check if it contains the specified</span>
+<span class="sd">    filename. The filename can be a special placeholder &quot;&lt;temp&gt;&quot; or a &quot;short&quot;</span>
+<span class="sd">    filename, which is a relative path within the project&#39;s database data</span>
+<span class="sd">    directory.</span>
+
+<span class="sd">    :param value (str, list, tuple, or dict): The data structure to search.</span>
+<span class="sd">                                              It can be:</span>
+<span class="sd">        - A string representing a file path.</span>
+<span class="sd">        - A list or tuple containing multiple file paths.</span>
+<span class="sd">        - A dictionary where file paths are stored as values.</span>
+<span class="sd">    :param filename (str): The filename to search for. It can be:</span>
+<span class="sd">        - The special placeholder &quot;&lt;temp&gt;&quot; indicating a temporary value.</span>
+<span class="sd">        - A relative file path to the project database data directory.</span>
+<span class="sd">    :param project (object): The project object containing the project&#39;s</span>
+<span class="sd">                             folder path as an attribute (`project.folder`).</span>
+
+<span class="sd">    :return (bool): True if the filename is found in the value,</span>
+<span class="sd">                    False otherwise.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">procs</span><span class="p">,</span> <span class="n">links</span> <span class="o">=</span> <span class="n">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
-    <span class="n">bricks</span> <span class="o">=</span> <span class="p">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span> <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">bricks</span></div>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">filename</span> <span class="o">!=</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span><span class="p">:</span>
+            <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">osp</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">))</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">value</span> <span class="o">==</span> <span class="n">filename</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="find_procs_with_output">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.find_procs_with_output">[docs]</a>
+<span class="k">def</span> <span class="nf">find_procs_with_output</span><span class="p">(</span><span class="n">procs</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Identify processes in the given list that have the specified filename as</span>
+<span class="sd">     part of their outputs.</span>
+
+<span class="sd">    This function searches through a list of processes to determine which ones</span>
+<span class="sd">    have the specified filename in their output values. The results are</span>
+<span class="sd">    organized by execution time.</span>
+
+<span class="sd">    :param procs (iterable of ProtoProcess): A collection of `ProtoProcess`</span>
+<span class="sd">                                             instances to search through.</span>
+<span class="sd">    :param filename (str): The filename to search for within the processes&#39;</span>
+<span class="sd">                           outputs.</span>
+<span class="sd">    :param project (Project): An instance of the project, used to access the</span>
+<span class="sd">                              database folder.</span>
+
+<span class="sd">    :return (dict): A dictionary where keys are execution times and values</span>
+<span class="sd">                    are lists of tuples. Each tuple contains a process and</span>
+<span class="sd">                    the parameter name associated with the filename.</span>
+<span class="sd">                    Format: `{exec_time: [(process, param_name), ...]}`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">sprocs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+                <span class="n">sprocs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sprocs</span></div>
 
 
 
@@ -187,38 +394,69 @@
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_data_history">[docs]</a>
 <span class="k">def</span> <span class="nf">get_data_history</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the processing history for the given data file. Based on</span>
+<span class="sd">    Retrieves the processing history for a given data file, based on</span>
 <span class="sd">    :func:`get_data_history_processes`.</span>
 
-<span class="sd">    The history dict contains several elements:</span>
+<span class="sd">    The returned dictionary contains:</span>
 
-<span class="sd">    - `parent_files`: set of other data used (directly or indirectly) to</span>
-<span class="sd">      produce the data.</span>
-<span class="sd">    - `processes`: processing bricks set from each ancestor data which</span>
-<span class="sd">      lead to the given one. Elements are process (brick) UUIDs.</span>
+<span class="sd">    - `&quot;parent_files&quot;`: A set of filenames representing data (direct or</span>
+<span class="sd">                        indirect) used to produce the given file.</span>
+<span class="sd">    - `&quot;processes&quot;`: A set of UUIDs of processing bricks that contributed</span>
+<span class="sd">                     to the file&#39;s creation.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    history: dict</span>
+<span class="sd">    :param filename (str): The name of the file whose processing history is</span>
+<span class="sd">                           being retrieved.</span>
+<span class="sd">    :param project (Project): The project object containing the database and</span>
+<span class="sd">                              relevant details.</span>
+
+<span class="sd">    :return (dict): A dictionary with the following keys:</span>
+<span class="sd">                    - `&quot;processes&quot;` (set): A set of UUIDs representing the</span>
+<span class="sd">                                           processing bricks involved.</span>
+<span class="sd">                    - `&quot;parent_files&quot;` (set): A set of filenames that were</span>
+<span class="sd">                                              used to produce the data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">procs</span><span class="p">,</span> <span class="n">links</span> <span class="o">=</span> <span class="n">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
-
-    <span class="c1"># parse input files</span>
-
+    <span class="n">procs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
+    <span class="c1"># Collect parent files (input dependencies)</span>
     <span class="n">parent_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
     <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">filenames</span> <span class="o">=</span> <span class="n">get_filenames_in_value</span><span class="p">(</span>
-                <span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">False</span>
-            <span class="p">)</span>
-            <span class="n">parent_files</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">parent_files</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                    <span class="n">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="p">)</span>
+
+    <span class="c1"># Collect process (brick) UUIDs</span>
     <span class="n">bricks</span> <span class="o">=</span> <span class="p">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span> <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">}</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;processes&quot;</span><span class="p">:</span> <span class="n">bricks</span><span class="p">,</span> <span class="s2">&quot;parent_files&quot;</span><span class="p">:</span> <span class="n">parent_files</span><span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;processes&quot;</span><span class="p">:</span> <span class="n">bricks</span><span class="p">,</span> <span class="s2">&quot;parent_files&quot;</span><span class="p">:</span> <span class="n">parent_files</span><span class="p">}</span></div>
 
-    <span class="k">return</span> <span class="n">history</span></div>
+
+
+<div class="viewcode-block" id="get_data_history_bricks">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_data_history_bricks">[docs]</a>
+<span class="k">def</span> <span class="nf">get_data_history_bricks</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves the complete &quot;useful&quot; history of a file in the database as a set</span>
+<span class="sd">    of processing bricks.</span>
+
+<span class="sd">    This function is a filtered version of :func:`get_data_history_processes`,</span>
+<span class="sd">    similar to :func:`data_history_pipeline`, but instead of constructing a</span>
+<span class="sd">    pipeline, it returns only the set of brick elements that were actually</span>
+<span class="sd">    used in the relevant processing history of the file.</span>
+
+<span class="sd">    :param filename (str): The name of the file whose processing history is</span>
+<span class="sd">                           being retrieved.</span>
+<span class="sd">    :param project (Project): The project object containing the database and</span>
+<span class="sd">                              relevant details.</span>
+
+<span class="sd">    :return (set): A set of brick elements representing the &quot;useful&quot;</span>
+<span class="sd">                   processing steps that contributed to the final version of</span>
+<span class="sd">                   the given data file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">procs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span> <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">used</span><span class="p">}</span></div>
 
 
 
@@ -226,95 +464,102 @@
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_data_history_processes">[docs]</a>
 <span class="k">def</span> <span class="nf">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get the complete &quot;useful&quot; history of a file in the database.</span>
+<span class="sd">    Retrieves the complete &quot;useful&quot; processing history of a file in the</span>
+<span class="sd">    database.</span>
 
-<span class="sd">    The function outputs a dict of processes (:class:`ProtoProcess` instances)</span>
-<span class="sd">    and a set of links between them. :func:`data_history_pipeline` is a</span>
-<span class="sd">    higher-level function which is using this one, then converts its outputs</span>
-<span class="sd">    into a :class:`~capsul.pipeline.pipeline.Pipeline` instance to represent</span>
-<span class="sd">    the data history.</span>
+<span class="sd">    This function returns:</span>
+<span class="sd">    - A dictionary of processes (:class:`ProtoProcess` instances), where</span>
+<span class="sd">      keys are process UUIDs.</span>
+<span class="sd">    - A set of links between these processes, forming the processing graph.</span>
 
-<span class="sd">    The processes output by this function may include extra processes that are</span>
-<span class="sd">    looked during history search, but finally not used. They are not filtered</span>
-<span class="sd">    out, but they are distinguished with their ``used`` attribute: those</span>
-<span class="sd">    actually used have it set to True.</span>
+<span class="sd">    Unlike :func:`data_history_pipeline`, which converts the history into a</span>
+<span class="sd">    :class:`~capsul.pipeline.pipeline.Pipeline`, this function provides a</span>
+<span class="sd">    lower-level representation. Some processes retrieved during history</span>
+<span class="sd">    traversal may not be used; they are distinguished by their ``used``</span>
+<span class="sd">    attribute (set to `True` for relevant processes).</span>
 
-<span class="sd">    Processing bricks which are not used, probably part of earlier runs which</span>
-<span class="sd">    have been orphaned because the data file has been overwritten, are either</span>
-<span class="sd">    not listed in this history, or have their ``used`` property set to False.</span>
+<span class="sd">    Processing bricks that are not used (possibly from earlier runs where</span>
+<span class="sd">    the data file was overwritten) may either be absent from the history</span>
+<span class="sd">    or have ``used = False``.</span>
 
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    procs: dict</span>
-<span class="sd">        {uuid: ProtoProcess instance}</span>
-<span class="sd">    links: set</span>
-<span class="sd">        {(src_protoprocess, src_plug_name, dst_protoprocess, dst_plug_name)}.</span>
-<span class="sd">        Links from/to the &#39;exterior&quot; are also given: in this</span>
-<span class="sd">        case src_protoprocess or dst_protoprocess is None.</span>
+<span class="sd">    :param filename (str): The name of the file whose processing history is</span>
+<span class="sd">                           being retrieved.</span>
+<span class="sd">    :param project (Project): The project object containing the database and</span>
+<span class="sd">                              relevant details.</span>
+
+<span class="sd">    :return (tuple):</span>
+<span class="sd">        - `procs` (dict): `{uuid: ProtoProcess instance}` mapping.</span>
+<span class="sd">        - `links` (set): `{</span>
+<span class="sd">                            (</span>
+<span class="sd">                              src_protoprocess,</span>
+<span class="sd">                              src_plug_name,</span>
+<span class="sd">                              dst_protoprocess,</span>
+<span class="sd">                              dst_plug_name</span>
+<span class="sd">                            )</span>
+<span class="sd">                          }`.</span>
+<span class="sd">          External connections are represented with `None` as</span>
+<span class="sd">          `src_protoprocess` or `dst_protoprocess`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># session = project.session</span>
-
     <span class="n">procs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="n">new_procs</span> <span class="o">=</span> <span class="n">get_direct_proc_ancestors</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">procs</span><span class="p">)</span>
     <span class="n">done_procs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-    <span class="c1"># keep only the latest to begin with</span>
+    <span class="c1"># Identify the most recent processes</span>
     <span class="n">later_date</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">keep_procs</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">new_procs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">later_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">later_date</span> <span class="o">=</span> <span class="n">date</span>
-            <span class="n">keep_procs</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
-        <span class="k">elif</span> <span class="n">date</span> <span class="o">&gt;</span> <span class="n">later_date</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">later_date</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">date</span> <span class="o">&gt;</span> <span class="n">later_date</span><span class="p">:</span>
             <span class="n">later_date</span> <span class="o">=</span> <span class="n">date</span>
             <span class="n">keep_procs</span> <span class="o">=</span> <span class="p">{</span><span class="n">uuid</span><span class="p">:</span> <span class="n">proc</span><span class="p">}</span>
+
         <span class="k">elif</span> <span class="n">date</span> <span class="o">==</span> <span class="n">later_date</span><span class="p">:</span>
-            <span class="c1"># ambiguity: keep all equivalent</span>
+            <span class="c1"># Keep all processes with the same latest execution time</span>
             <span class="n">keep_procs</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;drop earlier run:&quot;</span><span class="p">,</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">],</span> <span class="n">uuid</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drop earlier run: </span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">uuid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">todo</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">keep_procs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
 
     <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
         <span class="n">proc</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">done_procs</span><span class="p">:</span>
             <span class="k">continue</span>
+
         <span class="n">done_procs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
         <span class="n">proc</span><span class="o">.</span><span class="n">used</span> <span class="o">=</span> <span class="kc">True</span>
-
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="s2">&quot;-- ancestors for:&quot;</span><span class="p">,</span>
-            <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">],</span>
-            <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">],</span>
-            <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;-- ancestors for: </span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="p">)</span>
         <span class="n">values_w_files</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">filenames</span> <span class="o">=</span> <span class="n">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
-            <span class="c1"># record inputs referencing files in the DB</span>
+
+            <span class="c1"># Record inputs referencing database files</span>
             <span class="k">if</span> <span class="n">filenames</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;will be parsed.&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filenames</span><span class="si">}</span><span class="s2"> will be parsed.&quot;</span><span class="p">)</span>
                 <span class="n">values_w_files</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filenames</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filenames</span><span class="p">)</span> <span class="ow">in</span> <span class="n">values_w_files</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
             <span class="k">for</span> <span class="n">nfilename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+
                 <span class="k">if</span> <span class="n">nfilename</span> <span class="o">==</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;temp file used -- history is broken&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Temporary file used -- history is broken&quot;</span><span class="p">)</span>
                     <span class="n">prev_procs</span><span class="p">,</span> <span class="n">prev_links</span> <span class="o">=</span> <span class="n">get_proc_ancestors_via_tmp</span><span class="p">(</span>
                         <span class="n">proc</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">procs</span>
                     <span class="p">)</span>
                     <span class="n">links</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">prev_links</span><span class="p">)</span>
-
-                    <span class="n">n_procs</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">pproc</span>
-                        <span class="k">for</span> <span class="n">pproc</span> <span class="ow">in</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">pproc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_procs</span>
+                    <span class="n">todo</span> <span class="o">+=</span> <span class="p">[</span>
+                        <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_procs</span>
                     <span class="p">]</span>
-                    <span class="n">todo</span> <span class="o">+=</span> <span class="n">n_procs</span>
+
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">prev_procs</span> <span class="o">=</span> <span class="n">get_direct_proc_ancestors</span><span class="p">(</span>
                         <span class="n">nfilename</span><span class="p">,</span>
@@ -323,45 +568,44 @@
                         <span class="n">before_exec_time</span><span class="o">=</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span>
                         <span class="n">org_proc</span><span class="o">=</span><span class="n">proc</span><span class="p">,</span>
                     <span class="p">)</span>
-
-                    <span class="n">n_procs</span> <span class="o">=</span> <span class="p">[</span>
-                        <span class="n">pproc</span>
-                        <span class="k">for</span> <span class="n">pproc</span> <span class="ow">in</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="n">pproc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_procs</span>
+                    <span class="n">todo</span> <span class="o">+=</span> <span class="p">[</span>
+                        <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">done_procs</span>
                     <span class="p">]</span>
-                    <span class="n">todo</span> <span class="o">+=</span> <span class="n">n_procs</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Looking for value </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s2">&quot;in </span><span class="si">{</span><span class="n">prev_procs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="p">)</span>
 
-                    <span class="c1"># connect outputs of prev_procs which are identical to</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;look for value&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
                     <span class="k">for</span> <span class="n">pproc</span> <span class="ow">in</span> <span class="n">prev_procs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;- in&quot;</span><span class="p">,</span> <span class="n">pproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">])</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- in </span><span class="si">{</span><span class="n">pproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
                         <span class="k">for</span> <span class="n">pname</span><span class="p">,</span> <span class="n">pval</span> <span class="ow">in</span> <span class="n">pproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
                             <span class="k">if</span> <span class="n">pval</span> <span class="o">==</span> <span class="n">value</span> <span class="ow">or</span> <span class="n">data_in_value</span><span class="p">(</span>
                                 <span class="n">pval</span><span class="p">,</span> <span class="n">nfilename</span><span class="p">,</span> <span class="n">project</span>
                             <span class="p">):</span>
                                 <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">pproc</span><span class="p">,</span> <span class="n">pname</span><span class="p">,</span> <span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prev_procs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">prev_procs</span> <span class="o">==</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">prev_procs</span> <span class="ow">or</span> <span class="n">prev_procs</span> <span class="o">==</span> <span class="p">{</span>
                     <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]:</span> <span class="n">proc</span>
                 <span class="p">}:</span>
-                    <span class="c1"># the param has no previous processing or just the current</span>
-                    <span class="c1"># self-modifing process: connect it to main inputs</span>
+                    <span class="c1"># The parameter has no previous processing or is</span>
+                    <span class="c1"># self-modifying</span>
                     <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
+    <span class="c1"># Connect outputs to external scope if they match the target filename</span>
     <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">keep_procs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
             <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
                 <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="s2">&quot;history of:&quot;</span><span class="p">,</span>
-        <span class="n">filename</span><span class="p">,</span>
-        <span class="s2">&quot;:&quot;</span><span class="p">,</span>
-        <span class="nb">len</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">used</span><span class="p">]),</span>
-        <span class="s2">&quot;processes, &quot;</span><span class="p">,</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">),</span>
-        <span class="s2">&quot;links&quot;</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;History of </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">: &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">([</span><span class="n">p</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">procs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">p</span><span class="o">.</span><span class="n">used</span><span class="p">])</span><span class="si">}</span><span class="s2"> processes, &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">links</span><span class="p">)</span><span class="si">}</span><span class="s2"> links&quot;</span>
     <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">procs</span><span class="p">,</span> <span class="n">links</span></div>
 
 
@@ -377,95 +621,98 @@
     <span class="n">org_proc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Retrieve processing bricks which are referenced in the direct filename</span>
-<span class="sd">    history. It can get the latest before a given execution time. As exec time</span>
-<span class="sd">    is ambiguous (several processes may have finished at exactly the same</span>
-<span class="sd">    time), several processes may be kept for a given exec time.</span>
+<span class="sd">    Retrieve processing bricks referenced in the direct filename history.</span>
 
-<span class="sd">    The &quot;origin&quot; process, if given, is excluded from this exec time filtering</span>
-<span class="sd">    (as we are looking for the one preceding it), but still included in the</span>
-<span class="sd">    ancestors list.</span>
+<span class="sd">    This function identifies the most recent processing steps that generated</span>
+<span class="sd">    the given filename. If multiple processes share the same execution time,</span>
+<span class="sd">    they are all retained to account for ambiguity. The function also allows</span>
+<span class="sd">    filtering by execution time and excluding a specified originating process.</span>
 
-<span class="sd">    This function manipulates processing bricks as :class:`ProtoProcess`</span>
-<span class="sd">    instances, a light wrapper for a brick database entry.</span>
+<span class="sd">    :param filename (str): The data filename to inspect.</span>
+<span class="sd">    :param project (Project): The project instance used to access the database.</span>
+<span class="sd">    :param procs (dict): Dictionary mapping process UUIDs to `ProtoProcess`</span>
+<span class="sd">                         instances. This dictionary is updated with newly</span>
+<span class="sd">                         retrieved processes.</span>
+<span class="sd">    :param before_exec_time (datetime): If specified, only processing bricks</span>
+<span class="sd">                                        executed before this time are</span>
+<span class="sd">                                        considered.</span>
+<span class="sd">    :param only_latest (bool): If True (default), keeps only the latest</span>
+<span class="sd">                               processes found in the history. If</span>
+<span class="sd">                               `before_exec_time` is specified, retains only</span>
+<span class="sd">                               the latest before that time.</span>
+<span class="sd">    :param org_proc (ProtoProcess): The originating process, which is excluded</span>
+<span class="sd">                                    from execution time filtering but included</span>
+<span class="sd">                                    in the ancestor list.</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    filename: str</span>
-<span class="sd">        data filename to inspect</span>
-<span class="sd">    project: Project instance</span>
-<span class="sd">        used to access database</span>
-<span class="sd">    procs: dict</span>
-<span class="sd">        process dict, {uuid: ProtoProcess instance}, the dict is populated when</span>
-<span class="sd">        bricks are retrieved from the database.</span>
-<span class="sd">    before_exec_time: datetime instance (optional)</span>
-<span class="sd">        if it is specified, only processing bricks not newer than this time are</span>
-<span class="sd">        used.</span>
-<span class="sd">    only_latest: bool (optional, default: True)</span>
-<span class="sd">        if True, only the latest processes retrieved from the history are kept.</span>
-<span class="sd">        If ``before_exec_time`` is also used, then it is the latest before this</span>
-<span class="sd">        time.</span>
-<span class="sd">    org_proc: ProtoProcess instance (optional)</span>
-<span class="sd">        if filename is the output of a process, we can specify it here in order</span>
-<span class="sd">        to exclude it from the time filtering (otherwise only this process will</span>
-<span class="sd">        likely remain).</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    procs: dict</span>
-<span class="sd">        {brick uuid: ProtoProcess instance}</span>
+<span class="sd">    :return (dict): A dictionary mapping brick UUIDs to `ProtoProcess`</span>
+<span class="sd">                    instances.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">session</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span>
-    <span class="n">bricks</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bricks for:&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">bricks</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+        <span class="n">bricks</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+            <span class="n">primary_key</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span>
+            <span class="n">field</span><span class="o">=</span><span class="n">TAG_BRICKS</span><span class="p">,</span>
+        <span class="p">)</span>
 
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Bricks for: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">bricks</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">new_procs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="c1"># new_links = set()</span>
 
-    <span class="k">if</span> <span class="n">bricks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">bricks</span><span class="p">:</span>
+
         <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks</span><span class="p">:</span>
+
             <span class="k">if</span> <span class="n">brick</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">procs</span><span class="p">:</span>
                 <span class="n">proc</span> <span class="o">=</span> <span class="n">get_history_brick_process</span><span class="p">(</span>
                     <span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="o">=</span><span class="n">before_exec_time</span>
                 <span class="p">)</span>
-                <span class="k">if</span> <span class="n">proc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">continue</span>
 
-                <span class="n">procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
-                <span class="n">new_procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+                <span class="k">if</span> <span class="n">proc</span><span class="p">:</span>
+                    <span class="n">procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+                    <span class="n">new_procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">proc</span> <span class="o">=</span> <span class="n">procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span>
-                <span class="k">if</span> <span class="p">(</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span>
                     <span class="n">before_exec_time</span>
                     <span class="ow">and</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">before_exec_time</span>
                 <span class="p">):</span>
-                    <span class="k">continue</span>
-                <span class="n">new_procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span>
+                    <span class="n">new_procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span> <span class="o">=</span> <span class="n">procs</span><span class="p">[</span><span class="n">brick</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">only_latest</span><span class="p">:</span>
         <span class="c1"># keep last run(s)</span>
         <span class="n">later_date</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">keep_procs</span> <span class="o">=</span> <span class="p">{}</span>
+
         <span class="k">for</span> <span class="n">uuid</span><span class="p">,</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">new_procs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
             <span class="k">if</span> <span class="n">org_proc</span> <span class="ow">and</span> <span class="n">proc</span> <span class="ow">is</span> <span class="n">org_proc</span><span class="p">:</span>
                 <span class="c1"># ignore origin proc for date sorting</span>
                 <span class="k">continue</span>
+
             <span class="n">date</span> <span class="o">=</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
+
             <span class="k">if</span> <span class="n">later_date</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">later_date</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">keep_procs</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+
             <span class="k">elif</span> <span class="n">date</span> <span class="o">&gt;</span> <span class="n">later_date</span><span class="p">:</span>
                 <span class="n">later_date</span> <span class="o">=</span> <span class="n">date</span>
                 <span class="n">keep_procs</span> <span class="o">=</span> <span class="p">{</span><span class="n">uuid</span><span class="p">:</span> <span class="n">proc</span><span class="p">}</span>
+
             <span class="k">elif</span> <span class="n">date</span> <span class="o">==</span> <span class="n">later_date</span><span class="p">:</span>
                 <span class="c1"># ambiguity: keep all equivalent</span>
                 <span class="n">keep_procs</span><span class="p">[</span><span class="n">uuid</span><span class="p">]</span> <span class="o">=</span> <span class="n">proc</span>
+
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;drop earlier run:&quot;</span><span class="p">,</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Drop earlier run: </span><span class="si">{</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">org_proc</span> <span class="ow">and</span> <span class="n">org_proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span> <span class="ow">in</span> <span class="n">new_procs</span><span class="p">:</span>
             <span class="c1"># set back origin process, if it&#39;s in the list</span>
             <span class="n">keep_procs</span><span class="p">[</span><span class="n">org_proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]]</span> <span class="o">=</span> <span class="n">org_proc</span>
+
     <span class="k">else</span><span class="p">:</span>
         <span class="n">keep_procs</span> <span class="o">=</span> <span class="n">new_procs</span>
 
@@ -473,55 +720,180 @@
 
 
 
+<div class="viewcode-block" id="get_filenames_in_value">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_filenames_in_value">[docs]</a>
+<span class="k">def</span> <span class="nf">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract filenames from a nested structure of lists, tuples, and</span>
+<span class="sd">    dictionaries.</span>
+
+<span class="sd">    This function parses the given `value`, which can be a nested combination</span>
+<span class="sd">    of lists, tuples, and dictionaries, to retrieve all filenames referenced</span>
+<span class="sd">    within it. Only filenames that are valid database entries or the special</span>
+<span class="sd">    &quot;&lt;temp&gt;&quot; value (if `allow_temp` is `True`) are retained. Other filenames</span>
+<span class="sd">    are considered read-only static data and are not included in the results.</span>
+
+<span class="sd">    :param value (object): The value to parse. It can be a single string, a</span>
+<span class="sd">                           list, tuple, dictionary, or a nested combination</span>
+<span class="sd">                           of these types.</span>
+<span class="sd">    :param project (object): The project object providing access to the</span>
+<span class="sd">                             database.</span>
+<span class="sd">    :param allow_temp (bool, optional): If `True`, includes the temporary</span>
+<span class="sd">                                        filename &quot;&lt;temp&gt;&quot; in the results.</span>
+<span class="sd">                                        Defaults to `True`.</span>
+
+<span class="sd">    :return (set): A set of filenames that are valid database entries or the</span>
+<span class="sd">                   temporary filename &quot;&lt;temp&gt;&quot; (if allowed).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+    <span class="n">filenames</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="n">values</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">nvalue</span> <span class="o">=</span> <span class="n">is_data_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="n">allow_temp</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">nvalue</span><span class="p">:</span>
+                <span class="n">filenames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nvalue</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
+            <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">filenames</span></div>
+
+
+
+<div class="viewcode-block" id="get_history_brick_process">
+<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_history_brick_process">[docs]</a>
+<span class="k">def</span> <span class="nf">get_history_brick_process</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieve a brick from the database using its UUID and return it as a</span>
+<span class="sd">    `ProtoProcess` instance.</span>
+
+<span class="sd">    This function fetches a brick from the database using its unique</span>
+<span class="sd">    identifier (UUID). It returns the brick as a `ProtoProcess` instance if</span>
+<span class="sd">    the brick has been executed (its execution status is &quot;Done&quot;) and, if</span>
+<span class="sd">    specified, its execution time is not later than `before_exec_time`. If</span>
+<span class="sd">    the brick does not meet these criteria or is not found in the database,</span>
+<span class="sd">    the function returns `None`.</span>
+
+<span class="sd">    :param brick_id (str): The unique identifier (UUID) of the brick to</span>
+<span class="sd">                           retrieve.</span>
+<span class="sd">    :param project (object): The project object providing access to the</span>
+<span class="sd">                             database.</span>
+<span class="sd">    :param before_exec_time (str): An execution time filter. If provided,</span>
+<span class="sd">                                   bricks executed after this timestamp are</span>
+<span class="sd">                                   discarded.</span>
+
+<span class="sd">    :return (ProtoProcess or None): A `ProtoProcess` instance representing</span>
+<span class="sd">                                    the brick if it meets the criteria;</span>
+<span class="sd">                                    otherwise, `None`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+        <span class="n">binfo</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="n">brick_id</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">binfo</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">brick_data</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">exec_status</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_EXEC</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">exec_status</span> <span class="o">!=</span> <span class="s2">&quot;Done&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">exec_time</span> <span class="o">=</span> <span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">brick_id</span><span class="si">}</span><span class="s2"> exec_time: </span><span class="si">{</span><span class="n">exec_time</span><span class="si">}</span><span class="s2"> before: </span><span class="si">{</span><span class="n">before_exec_time</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">before_exec_time</span> <span class="ow">and</span> <span class="n">exec_time</span> <span class="o">&gt;</span> <span class="n">before_exec_time</span><span class="p">:</span>
+        <span class="c1"># Ignore bricks executed after the specified time</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">brick_id</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="n">brick_data</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ProtoProcess</span><span class="p">(</span><span class="n">brick_data</span><span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="get_proc_ancestors_via_tmp">
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_proc_ancestors_via_tmp">[docs]</a>
 <span class="k">def</span> <span class="nf">get_proc_ancestors_via_tmp</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">procs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Normally an internal function used in :func:`get_data_history_processes`</span>
-<span class="sd">    and :func:`data_history_pipeline`: it is not meant to be part of a public</span>
-<span class="sd">    API.</span>
+<span class="sd">    Retrieve upstream processes connected via a temporary value (&quot;&lt;temp&gt;&quot;).</span>
 
-<span class="sd">    Try to get upstream process(es) for proc, connected via a temp value</span>
-<span class="sd">    (&quot;&lt;temp&gt;&quot;).</span>
+<span class="sd">    This function is intended for internal use within</span>
+<span class="sd">    `get_data_history_processes` and `data_history_pipeline`. It attempts to</span>
+<span class="sd">    identify upstream processes connected to the given process (`proc`)</span>
+<span class="sd">    through a temporary filename.</span>
 
-<span class="sd">    For this, try to match processes in the output files history bricks.</span>
+<span class="sd">    The function first searches the direct history of the process&#39;s output</span>
+<span class="sd">    files. If no matching process is found, it searches the entire database</span>
+<span class="sd">    of bricks, which may be slower for large databases. Matching is based on</span>
+<span class="sd">    the temporary filename and processing time, which can be error-prone.</span>
 
-<span class="sd">    Bricks are looked for, first in the process input files direct histories.</span>
-<span class="sd">    If no matching process is found, then the full database bricks history is</span>
-<span class="sd">    searched, which may be much slower for large databases.</span>
+<span class="sd">    :param proc (ProtoProcess): The process whose ancestors need to be</span>
+<span class="sd">                                determined.</span>
+<span class="sd">    :param project (object): The project object providing access to the</span>
+<span class="sd">                             session and other necessary functionalities for</span>
+<span class="sd">                             processing.</span>
+<span class="sd">    :param procs (dict): A dictionary of processes, where keys are process IDs</span>
+<span class="sd">                         and values are `ProtoProcess` instances.</span>
 
-<span class="sd">    The matching is made by the &quot;&lt;temp&gt;&quot; filename and processing time, thus</span>
-<span class="sd">    is error-prone, especially if searching the whole bricks database.</span>
+<span class="sd">    :return:</span>
+<span class="sd">        - new_procs (dict): A dictionary mapping process UUIDs to</span>
+<span class="sd">                            `ProtoProcess` instances.</span>
+<span class="sd">        - links (set):</span>
+<span class="sd">          A set of tuples representing pipeline links in the format</span>
+<span class="sd">          `(src_protoprocess, src_plug_name, dst_protoprocess, dst_plug_name)`.</span>
+<span class="sd">          Links from/to the pipeline main plugs are also included, where</span>
+<span class="sd">          `src_protoprocess` or `dst_protoprocess` may be `None`.</span>
 
-<span class="sd">    ``proc`` should be a :class:`ProtoProcess` instance</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    new_procs: dict</span>
-<span class="sd">        {uuid: ProtoProcess instance}</span>
-<span class="sd">    links: set</span>
-<span class="sd">        {(src_protoprocess, src_plug_name, dst_protoprocess, dst_plug_name)}.</span>
-<span class="sd">        Pipeline link from/to the pipeline main plugs are also given: in this</span>
-<span class="sd">        case src_protoprocess or dst_protoprocess is None.</span>
+<span class="sd">    :Contains:</span>
+<span class="sd">            :Private function:</span>
+<span class="sd">                - _get_tmp_param: Identifies a process parameter associated</span>
+<span class="sd">                                  with a temporary value.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">new_procs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="n">dlink</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">tmp_filename</span> <span class="o">=</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span>
 
     <span class="k">def</span> <span class="nf">_get_tmp_param</span><span class="p">(</span><span class="n">proc</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Blabla&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Identifies a process parameter associated with a temporary value.</span>
+
+<span class="sd">        This helper function searches through the input parameters of</span>
+<span class="sd">        a process (`proc`) to find one that references a temporary</span>
+<span class="sd">        filename (`&lt;temp&gt;`) in its value.</span>
+
+<span class="sd">        :param proc (ProtoProcess): The process object whose input parameters</span>
+<span class="sd">                                    are being inspected.</span>
+
+<span class="sd">        :return (tuple): `(proc, param)` where `proc` is the process object</span>
+<span class="sd">                         and `param` is the name of the parameter referencing</span>
+<span class="sd">                         `&lt;temp&gt;`. Returns `(None, None)` if no match is found.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
             <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">tmp_filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
                 <span class="k">return</span> <span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># failed...</span>
 
     <span class="c1"># look first from proc outputs history (which is more direct, less error-</span>
     <span class="c1"># prone, and a more limited search)</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">filenames</span> <span class="o">=</span> <span class="n">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
             <span class="n">hprocs</span> <span class="o">=</span> <span class="n">get_direct_proc_ancestors</span><span class="p">(</span>
                 <span class="n">filename</span><span class="p">,</span>
@@ -530,128 +902,74 @@
                 <span class="n">before_exec_time</span><span class="o">=</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span>
                 <span class="n">only_latest</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="p">)</span>
-            <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hprocs</span><span class="p">:</span>
-                <span class="c1"># exclude the current proc</span>
-                <span class="k">del</span> <span class="n">hprocs</span><span class="p">[</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]]</span>
+            <span class="c1"># Exclude the current process</span>
+            <span class="n">hprocs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
             <span class="n">sprocs</span> <span class="o">=</span> <span class="n">find_procs_with_output</span><span class="p">(</span>
                 <span class="n">hprocs</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">tmp_filename</span><span class="p">,</span> <span class="n">project</span>
             <span class="p">)</span>
+
             <span class="k">for</span> <span class="n">exec_time</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sprocs</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
                 <span class="k">for</span> <span class="n">hproc</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sprocs</span><span class="p">[</span><span class="n">exec_time</span><span class="p">]:</span>
                     <span class="n">new_procs</span><span class="p">[</span><span class="n">hproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]]</span> <span class="o">=</span> <span class="n">hproc</span>
+
                     <span class="k">if</span> <span class="n">dlink</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="n">dlink</span> <span class="o">=</span> <span class="n">_get_tmp_param</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
+
                     <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">hproc</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">dlink</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dlink</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
                     <span class="c1"># we have found a link (starting with the older): stop</span>
                     <span class="k">break</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_procs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">new_procs</span><span class="p">:</span>
                     <span class="k">break</span>
             <span class="c1"># if found, should we still process other filenames ?</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_procs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="c1"># not found in data history: search the entire bricks histories</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;temp history not found from output filenames...&quot;</span><span class="p">)</span>
-
-        <span class="c1"># print(&#39;test bricks older than:&#39;, proc.exec_time)</span>
-        <span class="c1"># filtering for date &lt;= doesn&#39;t seem to work as I expect...</span>
-        <span class="c1"># bricks = session.filter_documents(</span>
-        <span class="c1"># COLLECTION_BRICK, &#39;{%s} &lt;= &quot;%s&quot;&#39; % (BRICK_EXEC_TIME, proc.exec_time))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">new_procs</span><span class="p">:</span>
+        <span class="c1"># Search the entire database of bricks if not found in direct history</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Temporary history not found from output filenames...&quot;</span><span class="p">)</span>
         <span class="n">candidates</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">bricks</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_documents</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="n">bricks</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
+                <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span>
+            <span class="p">)</span>
+
         <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks</span><span class="p">:</span>
-            <span class="c1"># if brick</span>
-            <span class="k">if</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Done&quot;</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Done&quot;</span>
+                <span class="ow">or</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
+            <span class="p">):</span>
                 <span class="k">continue</span>
-            <span class="k">if</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]:</span>
-                <span class="k">continue</span>
-            <span class="c1"># print(&#39;try brick:&#39;, brick[BRICK_NAME])</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
                 <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">tmp_filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
                     <span class="n">candidates</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                         <span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
                     <span class="p">)</span>
-                    <span class="c1"># print(&#39;CANDIDATE.&#39;)</span>
                     <span class="k">break</span>
+
         <span class="k">for</span> <span class="n">exec_time</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">candidates</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+
             <span class="k">for</span> <span class="n">brick</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">[</span><span class="n">exec_time</span><span class="p">]:</span>
                 <span class="n">brick_id</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span>
-                <span class="n">hproc</span> <span class="o">=</span> <span class="n">procs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">brick_id</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">hproc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">hproc</span> <span class="o">=</span> <span class="n">get_history_brick_process</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span>
-                    <span class="n">procs</span><span class="p">[</span><span class="n">brick_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">hproc</span>
+                <span class="n">hproc</span> <span class="o">=</span> <span class="n">procs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">brick_id</span><span class="p">)</span> <span class="ow">or</span> <span class="n">get_history_brick_process</span><span class="p">(</span>
+                    <span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span>
+                <span class="p">)</span>
+                <span class="n">procs</span><span class="p">[</span><span class="n">brick_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">hproc</span>
                 <span class="n">new_procs</span><span class="p">[</span><span class="n">brick_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">hproc</span>
+
                 <span class="k">if</span> <span class="n">dlink</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">dlink</span> <span class="o">=</span> <span class="n">_get_tmp_param</span><span class="p">(</span><span class="n">proc</span><span class="p">)</span>
-                <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">hproc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">dlink</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dlink</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found:&quot;</span><span class="p">,</span> <span class="n">hproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">],</span> <span class="n">name</span><span class="p">)</span>
+
+                <span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">hproc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">dlink</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;found: </span><span class="si">{</span><span class="n">hproc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">break</span>
+
             <span class="k">break</span>
 
     <span class="k">return</span> <span class="n">new_procs</span><span class="p">,</span> <span class="n">links</span></div>
-
-
-
-<div class="viewcode-block" id="find_procs_with_output">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.find_procs_with_output">[docs]</a>
-<span class="k">def</span> <span class="nf">find_procs_with_output</span><span class="p">(</span><span class="n">procs</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Find in the given process list if the given filename is part of</span>
-<span class="sd">    its outputs.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    procs: iterable</span>
-<span class="sd">        process in the list is a :class:`ProtoProcess` instance</span>
-<span class="sd">    filename: str</span>
-<span class="sd">        a file name</span>
-<span class="sd">    project: :class:`~populse_mia.data_manager.project.Project` instance</span>
-<span class="sd">        used only to get the database folder (base directory for data)</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    sprocs: dict</span>
-<span class="sd">        exec_time: [(process, param_name), ...]</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">sprocs</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">proc</span> <span class="ow">in</span> <span class="n">procs</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-                <span class="n">sprocs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">proc</span><span class="o">.</span><span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">],</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-                <span class="p">)</span>
-    <span class="k">return</span> <span class="n">sprocs</span></div>
-
-
-
-<div class="viewcode-block" id="data_in_value">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.data_in_value">[docs]</a>
-<span class="k">def</span> <span class="nf">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Looks if the given filename is part of the given value. The value may ba a</span>
-<span class="sd">    list, a tuple, or a dict, and may include several layers, which are parsed.</span>
-
-<span class="sd">    The input filename may be the temp value &quot;&lt;temp&gt;&quot;, or a filename in its</span>
-<span class="sd">    &quot;short&quot; version (relative path to the project database data directory).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">filename</span> <span class="o">!=</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span><span class="p">:</span>
-            <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">osp</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">osp</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-            <span class="n">filename</span> <span class="o">=</span> <span class="n">osp</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span> <span class="o">==</span> <span class="n">filename</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">data_in_value</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-                <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">return</span> <span class="kc">False</span></div>
 
 
 
@@ -659,10 +977,28 @@
 <a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.is_data_entry">[docs]</a>
 <span class="k">def</span> <span class="nf">is_data_entry</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks if the input filename is a database entry. The return value is</span>
-<span class="sd">    either the relative path to the database data directory, or &quot;&lt;temp&gt;&quot; if</span>
-<span class="sd">    filename is this value and allow_temp is True (which is the default), or</span>
-<span class="sd">    None if it is not in the database.</span>
+<span class="sd">    Determine if the given filename is a valid database entry within the</span>
+<span class="sd">    specified project.</span>
+
+<span class="sd">    This function checks whether the input filename is either a recognized</span>
+<span class="sd">    temporary value (&quot;&lt;temp&gt;&quot;) or a file located within the project&#39;s database</span>
+<span class="sd">    data directory. If the filename is valid, it returns either the relative</span>
+<span class="sd">    path to the database data directory or &quot;&lt;temp&gt;&quot; (if allowed). If the file</span>
+<span class="sd">    is not found in the database, the function returns `None`.</span>
+
+<span class="sd">    :param filename (str): The full path or special value &quot;&lt;temp&gt;&quot; to be</span>
+<span class="sd">                           checked.</span>
+<span class="sd">    :param project (object): The project object providing access to the</span>
+<span class="sd">                             database and folder structure.</span>
+<span class="sd">    :param allow_temp (bool, optional): If `True`, allows the special value</span>
+<span class="sd">                                        &quot;&lt;temp&gt;&quot; to be considered a valid</span>
+<span class="sd">                                        entry. Defaults to `True`.</span>
+
+<span class="sd">    :return (str or None):</span>
+<span class="sd">        - The relative path to the project&#39;s database data directory if the</span>
+<span class="sd">          filename is a valid database entry.</span>
+<span class="sd">        - &quot;&lt;temp&gt;&quot; if the input is &quot;&lt;temp&gt;&quot; and `allow_temp` is `True`.</span>
+<span class="sd">        - `None` if the filename is not a valid database entry.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">allow_temp</span> <span class="ow">and</span> <span class="n">filename</span> <span class="o">==</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span><span class="p">:</span>
@@ -677,111 +1013,14 @@
     <span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):]</span>
     <span class="c1"># fmt: on</span>
 
-    <span class="k">if</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">has_document</span><span class="p">(</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">filename</span>
+    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">database_data</span><span class="o">.</span><span class="n">has_document</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="n">filename</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="n">filename</span>
 
     <span class="k">return</span> <span class="kc">None</span></div>
-
-
-
-<div class="viewcode-block" id="get_filenames_in_value">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_filenames_in_value">[docs]</a>
-<span class="k">def</span> <span class="nf">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parses ``value``, which may be an imbrication of lists, tuples and dicts,</span>
-<span class="sd">    and gets all filenames referenced in it. Only filenames which are database</span>
-<span class="sd">    entries are kept, and the &quot;&lt;temp&gt;&quot; value if ``allow_temp`` is True (which</span>
-<span class="sd">    is the default). Other non-indexed filenames are considered to be read-only</span>
-<span class="sd">    static data (such as templates, atlases or other software-related data),</span>
-<span class="sd">    and are not retained.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
-    <span class="n">filenames</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="k">while</span> <span class="n">values</span><span class="p">:</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="n">nvalue</span> <span class="o">=</span> <span class="n">is_data_entry</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="n">allow_temp</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">nvalue</span><span class="p">:</span>
-                <span class="n">filenames</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nvalue</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-            <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;values&quot;</span><span class="p">):</span>
-            <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-
-    <span class="k">return</span> <span class="n">filenames</span></div>
-
-
-
-<div class="viewcode-block" id="get_history_brick_process">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.get_history_brick_process">[docs]</a>
-<span class="k">def</span> <span class="nf">get_history_brick_process</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Get a brick from its uuid in the database, and return it as a</span>
-<span class="sd">    :class:`ProtoProcess` instance.</span>
-
-<span class="sd">    A brick that has not been executed (its exec status is not ``&quot;Done&quot;``), or</span>
-<span class="sd">    if it is newer than ``before_exec_time`` if this parameter is given, is</span>
-<span class="sd">    discarded.</span>
-
-<span class="sd">    If discarded (or nor found in the database), the return value is None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">session</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span>
-    <span class="n">binfo</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">brick_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">binfo</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">exec_status</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="n">BRICK_EXEC</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">exec_status</span> <span class="o">!=</span> <span class="s2">&quot;Done&quot;</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="n">exec_time</span> <span class="o">=</span> <span class="n">binfo</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="s2">&quot;exec_time:&quot;</span><span class="p">,</span> <span class="n">exec_time</span><span class="p">,</span> <span class="s2">&quot;, before:&quot;</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">before_exec_time</span> <span class="ow">and</span> <span class="n">exec_time</span> <span class="o">&gt;</span> <span class="n">before_exec_time</span><span class="p">:</span>
-        <span class="c1"># ignore later runs</span>
-        <span class="k">return</span> <span class="kc">None</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">binfo</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">])</span>
-
-    <span class="n">proc</span> <span class="o">=</span> <span class="n">ProtoProcess</span><span class="p">(</span><span class="n">binfo</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">proc</span></div>
-
-
-
-<div class="viewcode-block" id="brick_to_process">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_history_inspect.brick_to_process">[docs]</a>
-<span class="k">def</span> <span class="nf">brick_to_process</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converts a brick database entry (document) into a &quot;fake process&quot;: a</span>
-<span class="sd">    :class:`̀~capsul.process.process.Process` direct instance (not subclassed)</span>
-<span class="sd">    which cannot do any actual processing, but which represents its parameters</span>
-<span class="sd">    with values (traits and values). The process gets a ``name`` and an</span>
-<span class="sd">    ``uuid`` from the brick, and also an ``exec_time``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="c1"># brick is an id</span>
-        <span class="n">session</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">session</span>
-        <span class="n">brick</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">brick</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">brick</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
-
-    <span class="n">inputs</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_INPUTS</span><span class="p">]</span>
-    <span class="n">outputs</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span>
-
-    <span class="n">proc</span> <span class="o">=</span> <span class="n">Process</span><span class="p">()</span>
-    <span class="n">proc</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_NAME</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">proc</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_ID</span><span class="p">]</span>
-    <span class="n">proc</span><span class="o">.</span><span class="n">exec_time</span> <span class="o">=</span> <span class="n">brick</span><span class="p">[</span><span class="n">BRICK_EXEC_TIME</span><span class="p">]</span>
-
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">proc</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Any</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">proc</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Any</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">optional</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="nb">setattr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">proc</span></div>
 
 </pre></div>
 

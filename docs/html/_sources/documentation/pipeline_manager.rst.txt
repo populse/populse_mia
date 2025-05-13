@@ -277,7 +277,7 @@ Via a regular iterative pipeline (without use of the iteration table)
 
 Starting with a new, empty pipeline tab in the Pipeline Manager:
 
-* Add the pipeline mia_processes > pipelines > preprocess > Spatial_preprocessing_1 to the pipeline editor
+* Add the pipeline mia_processes > pipelines > preprocess > Bold_spatial_preprocessing1 to the pipeline editor
 
 * The ``func_files`` parameter is a list. We will use only one item per iteration. In order to disambiguate the "list of list" situation in the iteration, we will use here a node which transforms a single file (input for this iteration) into a list of just one element.
 
@@ -287,20 +287,20 @@ Starting with a new, empty pipeline tab in the Pipeline Manager:
 
     * Validate the default node parameters (just click on OK button). The ReduceNode appears in the pipeline editor.
 
-    * Connect the ``outputs`` plug of the ReduceNode to the ``func_files`` plug of the Spatial_preprocessing_1 node.
+    * Connect the ``outputs`` plug of the ReduceNode to the ``func_files`` plug of the Bold_spatial_preprocessing1 node.
 
     * Export the ``input_0`` plug of the ReduceNode (right click on the ``input_0`` plug then select export plug), renamed as ``func_files`` (for clarity).
 
   * In case of the Files_To_List brick:
 
-    * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the Spatial_preprocessing_1 node.
+    * Connect the ``file_list`` plug of the Files_To_List node to the ``func_files`` plug of the Bold_spatial_preprocessing1 node.
 
     * Export the ``file1`` plug of the Files_To_List node (right click on the ``file1`` plug then select export plug), renamed as ``func_files`` (for clarity).
 
 
-* Export all unconnected plugs of the Spatial_preprocessing_1 node (right click on the node then select "export all unconnected plugs")
+* Export all unconnected plugs of the Bold_spatial_preprocessing1 node (right click on the node then select "export all unconnected plugs")
 
-  .. image:: ../images/pipeline_iter_1.jpg
+  .. image:: ../images/pipeline_iter_1.png
     :align: center
     :name: Pipeline iteration 1
 
@@ -360,7 +360,7 @@ Without use of the iteration table
 
 Starting with a new, empty pipeline tab in the Pipeline Manager:
 
-* Add the pipeline mia_processes > pipelines > preprocess > Spatial_preprocessing_1 to the pipeline editor.
+* Add the pipeline mia_processes > pipelines > preprocess > Bold_spatial_preprocessing1 to the pipeline editor.
 
 * Check on the **iterate pipeline** button.
 
