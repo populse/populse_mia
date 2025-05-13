@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia package &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia package &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=dfa0e015" />
-    <script src="_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="_static/documentation_options.js?v=a73ba755"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,46 +30,44 @@
         
   <section id="module-populse_mia">
 <span id="populse-mia-package"></span><h1>populse_mia package<a class="headerlink" href="#module-populse_mia" title="Link to this heading">¶</a></h1>
-<p>MIA is shorthand for “Multiparametric Image Analysis”. It is intended to be
-a complete image processing environment mainly targeted at the analysis and
-visualization of large amounts of MRI data.</p>
-<p>MRI data analysis often requires a complex succession of data processing
-pipelines applied to a set of data acquired in an MRI exam or over several
-MRI exams. This analysis may need to be repeated a large number of times in
-studies involving a large number of acquisition sessions. Such that manual
-execution of the processing modules or simple ad-hoc scripting of the
-process may become error-prone, cumbersome and difficult to reproduce. Data
-processing pipelines exist in separate heterogeneous toolboxes, developed
-in-house or by other researchers in the field. This heterogeneity adds to
-the complexity of the modules are to be invoked manually.</p>
-<p>MIA (populse_mia) aims to provide easy tools to perform complex data processing
-based on a definition of the inputs and outputs of the individual pipelines
-on a conceptual level, and implies identifying data with respect to their
-role in an analysis project: “the scan type”, “the subject being scanned”,
-“the group of this subject is part of”, etc.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Packages<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>data_manager: handles the projects and their database</p></li>
-<li><p>sources_images: a collection of images used in Mia</p></li>
-<li><p>user_interface: mainly intended for the graphic interface of Mia</p></li>
-<li><p>utils: various utilities for the Mia operation</p></li>
+<p>MIA (Multiparametric Image Analysis) is a comprehensive image processing
+environment primarily designed for the analysis and visualization of large
+MRI datasets.</p>
+<p>MRI data analysis often requires executing complex processing pipelines on
+datasets acquired during single or multiple MRI exams. In large-scale studies,
+where data processing must be repeated across numerous acquisition sessions,
+manually running processing modules or relying on simple ad-hoc scripts can
+become error-prone, cumbersome, and difficult to reproduce. Additionally, data
+processing pipelines are often distributed across various heterogeneous
+toolboxes, developed either in-house or by other researchers, further
+increasing the complexity of manually invoking these modules.</p>
+<p>MIA (populse_mia) aims to simplify complex data processing by providing
+intuitive tools that define inputs and outputs at a conceptual level. It
+organizes data based on their roles in an analysis project, such
+as “scan type,” “subject,” or “subject group,” making it easier to structure
+and automate workflows.</p>
+<p>Contents:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Packages</p>
+<ul>
+<li><p>data_manager: Manages projects and their associated databases.</p></li>
+<li><p>sources_images: Contains a collection of images used in MIA.</p></li>
+<li><p>user_interface: Handles the graphical user interface of MIA.</p></li>
+<li><p>utils: Provides various utility functions for MIA operations.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Modules<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p>info.py: define software version, description and requirements</p></li>
-<li><p>main.py: the first module used at the runtime of mia</p></li>
-<li><p>__main__.py: make populse_mia accessible as a module</p></li>
-<li><p>software_properties.py: handles the configuration of the software</p></li>
-<li><p>test.py: unitary tests</p></li>
+</li>
+<li><p>Modules</p>
+<ul>
+<li><p>info.py: Defines software version, description, and requirements.</p></li>
+<li><p>main.py: The primary module executed at runtime.</p></li>
+<li><p>__main__.py: Allows populse_mia to be executed as a module.</p></li>
+<li><p>software_properties.py: Manages the software’s configuration.</p></li>
+<li><p>test.py: Contains unit tests.</p></li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</li>
+</ul>
+</div></blockquote>
 <section id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -105,6 +103,7 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.__init__"><code class="docutils literal notranslate"><span class="pre">ImportWorker.__init__()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.notifyProgress"><code class="docutils literal notranslate"><span class="pre">ImportWorker.notifyProgress</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.run"><code class="docutils literal notranslate"><span class="pre">ImportWorker.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.scans_added"><code class="docutils literal notranslate"><span class="pre">ImportWorker.scans_added</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.data_loader.read_log"><code class="docutils literal notranslate"><span class="pre">read_log()</span></code></a></li>
@@ -114,19 +113,41 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 </li>
 <li class="toctree-l2"><a class="reference internal" href="populse_mia.data_manager.html#module-populse_mia.data_manager.database_mia">populse_mia.data_manager.database_mia module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.database_session_class"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA.database_session_class</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.__init__"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.close"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA.close()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.data"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA.data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMIA.schema"><code class="docutils literal notranslate"><span class="pre">DatabaseMIA.schema()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_collection"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.add_collection()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.add_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_field_attributes_collection"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.add_field_attributes_collection()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.add_fields"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.add_fields()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_field"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.get_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_fields"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.get_fields()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.get_shown_tags"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.get_shown_tags()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.remove_field"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.remove_field()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseSessionMIA.set_shown_tags"><code class="docutils literal notranslate"><span class="pre">DatabaseSessionMIA.set_shown_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.__init__"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.add_document"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.add_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.filter_documents"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.filter_documents()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_collection_names"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_collection_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document_names"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_document_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_attributes"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_field_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_names"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_field_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_primary_key_name"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_primary_key_name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_shown_tags"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_shown_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_value"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.get_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.has_collection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_document"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.has_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_document"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.remove_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_value"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.remove_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_shown_tags"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.set_shown_tags()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_value"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaData.set_value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_collection"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.add_collection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.add_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.add_field_attributes_collection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.data"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.remove_field()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.remove_field_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.update_field_attributes"><code class="docutils literal notranslate"><span class="pre">DatabaseMiaSchema.update_field_attributes()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -161,7 +182,7 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows"><code class="docutils literal notranslate"><span class="pre">Project.get_finished_bricks_in_workflows()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_bricks"><code class="docutils literal notranslate"><span class="pre">Project.get_orphan_bricks()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_history"><code class="docutils literal notranslate"><span class="pre">Project.get_orphan_history()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_nonexsiting_files"><code class="docutils literal notranslate"><span class="pre">Project.get_orphan_nonexsiting_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files"><code class="docutils literal notranslate"><span class="pre">Project.get_orphan_nonexisting_files()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.hasUnsavedModifications"><code class="docutils literal notranslate"><span class="pre">Project.hasUnsavedModifications()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.init_filters"><code class="docutils literal notranslate"><span class="pre">Project.init_filters()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.loadProperties"><code class="docutils literal notranslate"><span class="pre">Project.loadProperties()</span></code></a></li>
@@ -178,7 +199,6 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.undo"><code class="docutils literal notranslate"><span class="pre">Project.undo()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.unsaveModifications"><code class="docutils literal notranslate"><span class="pre">Project.unsaveModifications()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.unsavedModifications"><code class="docutils literal notranslate"><span class="pre">Project.unsavedModifications</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.update_data_history"><code class="docutils literal notranslate"><span class="pre">Project.update_data_history()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.data_manager.html#populse_mia.data_manager.project.Project.update_db_for_paths"><code class="docutils literal notranslate"><span class="pre">Project.update_db_for_paths()</span></code></a></li>
 </ul>
 </li>
@@ -264,6 +284,8 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.save_project_as"><code class="docutils literal notranslate"><span class="pre">MainWindow.save_project_as()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.see_all_projects"><code class="docutils literal notranslate"><span class="pre">MainWindow.see_all_projects()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.set_controller_version"><code class="docutils literal notranslate"><span class="pre">MainWindow.set_controller_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.setup_menu_actions"><code class="docutils literal notranslate"><span class="pre">MainWindow.setup_menu_actions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.setup_window_size"><code class="docutils literal notranslate"><span class="pre">MainWindow.setup_window_size()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up"><code class="docutils literal notranslate"><span class="pre">MainWindow.software_preferences_pop_up()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.switch_project"><code class="docutils literal notranslate"><span class="pre">MainWindow.switch_project()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.tab_changed"><code class="docutils literal notranslate"><span class="pre">MainWindow.tab_changed()</span></code></a></li>
@@ -402,12 +424,35 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.browse_spm_standalone"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.browse_spm_standalone()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.change_admin_psswd"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.change_admin_psswd()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.control_checkbox_toggled"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.control_checkbox_toggled()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_afni_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_afni_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_ants_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_ants_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_appearance_tab"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_appearance_tab()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_capsul_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_capsul_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_freesurfer_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_freesurfer_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_fsl_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_fsl_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_global_preferences"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_global_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_horizontal_box"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_horizontal_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_matlab_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_matlab_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_mrtrix_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_mrtrix_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_pipeline_tab"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_pipeline_tab()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_populse_preferences"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_populse_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_projects_preferences"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_projects_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_resources_preferences"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_resources_preferences()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_spm_group"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_spm_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.create_tools_tab"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.create_tools_tab()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_capsul_config"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.edit_capsul_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.edit_config_file"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.edit_config_file()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.findChar"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.findChar()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.load_config"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.load_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.not_use_clinical_mode_signal"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.not_use_clinical_mode_signal</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.ok_clicked"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.ok_clicked()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.save_full_config"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.save_full_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.save_minimal_config"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.save_minimal_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.setup_ui"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.setup_ui()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.show_error_message"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.show_error_message()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.show_warning_message"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.show_warning_message()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.signal_preferences_change"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.signal_preferences_change</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.update_gui_from_capsul_config"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.update_gui_from_capsul_config()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_afni_changed"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.use_afni_changed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_ants_changed"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.use_ants_changed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_clinical_mode_signal"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.use_clinical_mode_signal</span></code></a></li>
@@ -420,6 +465,12 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_spm_changed"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.use_spm_changed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.use_spm_standalone_changed"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.use_spm_standalone_changed()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_and_save"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_and_save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_matlab_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_matlab_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_matlab_standalone_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_matlab_standalone_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_paths"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_paths()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_spm_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_spm_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_spm_standalone_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_spm_standalone_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.validate_tool_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.validate_tool_path()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpPreferences.wrong_path"><code class="docutils literal notranslate"><span class="pre">PopUpPreferences.wrong_path()</span></code></a></li>
 </ul>
 </li>
@@ -491,12 +542,23 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 </li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.__init__"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.adjust_size"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.adjust_size()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.file_clicked"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.file_clicked()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.find_associated_bricks"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.find_associated_bricks()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.find_process_from_plug"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.find_process_from_plug()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.handle_pipeline_nodes"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.handle_pipeline_nodes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.highlight_selected_node"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.highlight_selected_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.initialize_pipeline"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.initialize_pipeline()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.io_value_is_scan"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.io_value_is_scan()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.load_data"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.load_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.load_pipeline_data"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.load_pipeline_data()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.node_selected"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.node_selected()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.select_node"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.select_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.setup_ui"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.setup_ui()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.update_table"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.update_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.update_table_for_single_brick"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.update_table_for_single_brick()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.update_table_for_subpipeline"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.update_table_for_subpipeline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpShowHistory.update_table_with_brick_data"><code class="docutils literal notranslate"><span class="pre">PopUpShowHistory.update_table_with_brick_data()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.user_interface.html#populse_mia.user_interface.pop_ups.PopUpTagSelection"><code class="docutils literal notranslate"><span class="pre">PopUpTagSelection</span></code></a><ul>
@@ -535,12 +597,21 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 </li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.check_python_version"><code class="docutils literal notranslate"><span class="pre">check_python_version()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.check_value_type"><code class="docutils literal notranslate"><span class="pre">check_value_type()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.dict4runtime_update"><code class="docutils literal notranslate"><span class="pre">dict4runtime_update()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.get_db_field_value"><code class="docutils literal notranslate"><span class="pre">get_db_field_value()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.get_document_names"><code class="docutils literal notranslate"><span class="pre">get_document_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.get_field_names"><code class="docutils literal notranslate"><span class="pre">get_field_names()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.get_shown_tags"><code class="docutils literal notranslate"><span class="pre">get_shown_tags()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.get_value"><code class="docutils literal notranslate"><span class="pre">get_value()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.launch_mia"><code class="docutils literal notranslate"><span class="pre">launch_mia()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.message_already_exists"><code class="docutils literal notranslate"><span class="pre">message_already_exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.remove_document"><code class="docutils literal notranslate"><span class="pre">remove_document()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_db_field_value"><code class="docutils literal notranslate"><span class="pre">set_db_field_value()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_filters_directory_as_default"><code class="docutils literal notranslate"><span class="pre">set_filters_directory_as_default()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_item_data"><code class="docutils literal notranslate"><span class="pre">set_item_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.set_projects_directory_as_default"><code class="docutils literal notranslate"><span class="pre">set_projects_directory_as_default()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.table_to_database"><code class="docutils literal notranslate"><span class="pre">table_to_database()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.type_name"><code class="docutils literal notranslate"><span class="pre">type_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.verCmp"><code class="docutils literal notranslate"><span class="pre">verCmp()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.verify_processes"><code class="docutils literal notranslate"><span class="pre">verify_processes()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="populse_mia.utils.html#populse_mia.utils.utils.verify_setup"><code class="docutils literal notranslate"><span class="pre">verify_setup()</span></code></a></li>
@@ -571,10 +642,10 @@ role in an analysis project: “the scan type”, “the subject being scanned�
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.info.get_populse_mia_gitversion">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.info.</span></span><span class="sig-name descname"><span class="pre">get_populse_mia_gitversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/info.html#get_populse_mia_gitversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.info.get_populse_mia_gitversion" title="Link to this definition">¶</a></dt>
-<dd><p>Mia version as reported by the last commit in git</p>
+<dd><p>Mia version as reported by the last commit in git.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>the version or None if nothing was found</p>
+<dd class="field-odd"><p>The short commit hash as the version or None if not found.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,15 +662,55 @@ mia’s GUI.</p>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Function<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p>add_to_sys_path</p></li>
+<li><p>check_package</p></li>
 <li><p>main</p></li>
+<li><p>qt_message_handler</p></li>
 </ul>
 </dd>
 </dl>
 </dd>
 </dl>
 <dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.main.add_to_sys_path">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">add_to_sys_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#add_to_sys_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.add_to_sys_path" title="Link to this definition">¶</a></dt>
+<dd><p>Adds the specified path to the system path if it’s a valid directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>pathlib.Path</strong><strong>)</strong> (<em>path</em>) – The directory path to be added to the
+system path.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>name</em>) – The name of the package being added.</p></li>
+<li><p><strong>optional</strong><strong>)</strong> (<em>index</em><em> (</em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>,</em>) – The index at which to insert the path
+into sys.path. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the path is a valid directory and was added
+to sys.path, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.main.check_package">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">check_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#check_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.check_package" title="Link to this definition">¶</a></dt>
+<dd><p>Attempts to import a package by its name, logs the location of the
+package if successful, and logs an error if the package is missing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>name</em>) – The name of the package to be imported.</p>
+</dd>
+<dt class="field-even">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the package is imported successfully;
+False if the package is missing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.main.main">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.main" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.main" title="Link to this definition">¶</a></dt>
 <dd><p>Make basic configuration check, then actual launch of Mia.</p>
 <p>Checks if Mia is called from the site/dist packages (<cite>user mode</cite>) or from a
 cloned git repository (<cite>developer mode</cite>).</p>
@@ -629,8 +740,15 @@ or is corrupted, try to create one with a valid properties path.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.main.qt_message_handler">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">qt_message_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#qt_message_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.qt_message_handler" title="Link to this definition">¶</a></dt>
-<dd><p>Custom Qt message handler to filter out specific messages</p>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">qt_message_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#qt_message_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.qt_message_handler" title="Link to this definition">¶</a></dt>
+<dd><p>Custom Qt message handler to filter out specific unwanted messages and
+output the remaining ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>message</em>) – The message to be handled, potentially filtered and
+then output.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -653,7 +771,7 @@ pop-up in the config.yml file.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.software_properties.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object that handles the configuration of the software</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
@@ -665,75 +783,153 @@ pop-up in the config.yml file.</p>
 <li><p>get_ants_path: returns the path of ANTS</p></li>
 <li><p>getBackgroundColor: get background color</p></li>
 <li><p>get_capsul_config: get CAPSUL config dictionary</p></li>
-<li><p>get_capsul_engine: get a global CapsulEngine object used for all
-operations in MIA application</p></li>
-<li><p>getChainCursors: returns if the “chain cursors” checkbox of the
-mini viewer is activated</p></li>
+<li><dl class="simple">
+<dt>get_capsul_engine: get a global CapsulEngine object used for all</dt><dd><p>operations in MIA application</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getChainCursors: returns if the “chain cursors” checkbox of the</dt><dd><p>mini-viewer is activated</p>
+</dd>
+</dl>
+</li>
 <li><p>get_freesurfer_setup: get freesurfer path</p></li>
 <li><p>get_fsl_config: returns the path of the FSL config file</p></li>
 <li><p>get_mainwindow_maximized: get the maximized (full-screen) flag</p></li>
 <li><p>get_mainwindow_size: get the main window size</p></li>
 <li><p>get_matlab_command: returns Matlab command</p></li>
 <li><p>get_matlab_path: returns the path of Matlab’s executable</p></li>
-<li><p>get_matlab_standalone_path: returns the path of Matlab Compiler
-Runtime</p></li>
-<li><p>get_max_projects: returns the maximum number of projects
-displayed in the “Saved projects” menu</p></li>
-<li><p>get_max_thumbnails:  get max thumbnails number at the data
-browser bottom</p></li>
+<li><dl class="simple">
+<dt>get_matlab_standalone_path: returns the path of Matlab Compiler</dt><dd><p>Runtime</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_max_projects: returns the maximum number of projects</dt><dd><p>displayed in the “Saved projects” menu</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_max_thumbnails:  get max thumbnails number at the data</dt><dd><p>browser bottom</p>
+</dd>
+</dl>
+</li>
 <li><p>get_properties_path: returns the software’s properties path</p></li>
 <li><p>get_mri_conv_path: returns the MRIManager.jar path</p></li>
 <li><p>get_mrtrix_path: returns mrtrix path</p></li>
-<li><p>getNbAllSlicesMax: returns the maximum number of slices to
-display in the mini viewer</p></li>
+<li><dl class="simple">
+<dt>getNbAllSlicesMax: returns the maximum number of slices to</dt><dd><p>display in the mini viewer</p>
+</dd>
+</dl>
+</li>
 <li><p>get_opened_projects: returns the opened projects</p></li>
-<li><p>getPathToProjectsFolder: returns the project’s path</p></li>
-<li><p>get_projects_save_path: returns the folder where the projects
-are saved</p></li>
-<li><p>get_referential: returns boolean to indicate DataViewer
-referential</p></li>
+<li><dl class="simple">
+<dt>get_projects_save_path: returns the folder where the projects</dt><dd><p>are saved</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_referential: returns boolean to indicate DataViewer</dt><dd><p>referential</p>
+</dd>
+</dl>
+</li>
 <li><p>get_resources_path: get the resources path</p></li>
-<li><p>getShowAllSlices: returns if the “show all slices” checkbox of
-the mini viewer is activated</p></li>
+<li><dl class="simple">
+<dt>getShowAllSlices: returns if the “show all slices” checkbox of</dt><dd><p>the mini viewer is activated</p>
+</dd>
+</dl>
+</li>
 <li><p>getSourceImageDir: get the source directory for project images</p></li>
 <li><p>get_spm_path: returns the path of SPM12 (license version)</p></li>
-<li><p>get_spm_standalone_path: returns the path of SPM12 (standalone
-version)</p></li>
+<li><dl class="simple">
+<dt>get_spm_standalone_path: returns the path of SPM12 (standalone</dt><dd><p>version)</p>
+</dd>
+</dl>
+</li>
 <li><p>getTextColor: return the text color</p></li>
-<li><p>getThumbnailTag: returns the tag that is displayed in the mini
-viewer</p></li>
-<li><p>get_use_afni: returns the value of “use afni” checkbox in the
-preferences</p></li>
-<li><p>get_use_ants: returns the value of “use ants” checkbox in the
-preferences</p></li>
-<li><p>get_use_clinical: returns the value of “clinical mode” checkbox
-in the preferences</p></li>
-<li><p>get_use_freesurfer: returns the value of “use freesurfer”
-checkbox in the preferences</p></li>
-<li><p>get_use_fsl: returns the value of “use fsl” checkbox in the
-preferences</p></li>
-<li><p>get_use_matlab: returns the value of “use matlab” checkbox in the
-preferences</p></li>
-<li><p>get_use_matlab_standalone: returns the value of “use matlab
-standalone” checkbox in the preferences</p></li>
-<li><p>get_use_mrtrix: returns the value of “use mrtrix” checkbox in the
-prefrence</p></li>
+<li><dl class="simple">
+<dt>getThumbnailTag: returns the tag that is displayed in the mini</dt><dd><p>viewer</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_afni: returns the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_ants: returns the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_clinical: returns the value of “clinical mode” checkbox</dt><dd><p>in the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_freesurfer: returns the value of “use freesurfer”</dt><dd><p>checkbox in the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_fsl: returns the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_matlab: returns the value of “use matlab” checkbox in</dt><dd><p>the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_matlab_standalone: returns the value of “use matlab</dt><dd><p>standalone” checkbox in the
+preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_mrtrix: returns the value of “use mrtrix” checkbox in</dt><dd><p>the preferences</p>
+</dd>
+</dl>
+</li>
 <li><p>get_user_level: get the user level in the Capsul config</p></li>
-<li><p>get_user_mode: returns the value of “user mode” checkbox
-in the preferences</p></li>
-<li><p>get_use_spm: returns the value of “use spm” checkbox in the
-preferences</p></li>
-<li><p>get_use_spm_standalone: returns the value of “use spm standalone”
-checkbox in the preferences</p></li>
-<li><p>getViewerConfig: returns the DataViewer configuration (neuro or
-radio), by default neuro</p></li>
-<li><p>getViewerFramerate: returns the DataViewer framerate for
-automatic time running images</p></li>
+<li><dl class="simple">
+<dt>get_user_mode: returns the value of “user mode” checkbox</dt><dd><p>in the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_spm: returns the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_spm_standalone: returns the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getViewerConfig: returns the DataViewer configuration (neuro or</dt><dd><p>radio), by default neuro</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>getViewerFramerate: returns the DataViewer framerate for</dt><dd><p>automatic time running images</p>
+</dd>
+</dl>
+</li>
 <li><p>isAutoSave: checks if auto-save mode is activated</p></li>
-<li><p>isControlV1: checks if the selected display of the controller is
-of V1 type</p></li>
-<li><p>isRadioView: checks if miniviewer in radiological orientation (if
-not, then it is in neurological orientation)</p></li>
+<li><dl class="simple">
+<dt>isControlV1: checks if the selected display of the controller is</dt><dd><p>of V1 type</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>isRadioView: checks if miniviewer in radiological orientation (if</dt><dd><p>not, then it is in neurological orientation)</p>
+</dd>
+</dl>
+</li>
 <li><p>loadConfig: reads the config in the config.yml file</p></li>
 <li><p>saveConfig: saves the config to the config.yml file</p></li>
 <li><p>set_admin_hash: set the password hash</p></li>
@@ -743,68 +939,132 @@ not, then it is in neurological orientation)</p></li>
 <li><p>setAutoSave: sets the auto-save mode</p></li>
 <li><p>setBackgroundColor: sets the background color</p></li>
 <li><p>set_capsul_config: set CAPSUL configuration dict into MIA config</p></li>
-<li><p>setChainCursors: set the “chain cursors” checkbox of the mini
-viewer</p></li>
-<li><p>set_clinical_mode: set the value of “clinical mode” in
-the preferences</p></li>
+<li><dl class="simple">
+<dt>setChainCursors: set the “chain cursors” checkbox of the mini</dt><dd><p>viewer</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_clinical_mode: set the value of “clinical mode” in</dt><dd><p>the preferences</p>
+</dd>
+</dl>
+</li>
 <li><p>setControlV1: Set controller display mode (True if V1)</p></li>
 <li><p>set_freesurfer_setup: set freesurfer path</p></li>
 <li><p>set_fsl_config: set the path of the FSL config file</p></li>
 <li><p>set_mainwindow_maximized: set the maximized (fullscreen) flag</p></li>
 <li><p>set_mainwindow_size: set main window size</p></li>
 <li><p>set_matlab_path: set the path of Matlab’s executable</p></li>
-<li><p>set_matlab_standalone_path: set the path of Matlab Compiler
-Runtime</p></li>
-<li><p>set_max_projects: set the maximum number of projects displayed in
-the “Saved projects” menu</p></li>
-<li><p>set_max_thumbnails: set max thumbnails number at the data browser
-bottom</p></li>
+<li><dl class="simple">
+<dt>set_matlab_standalone_path: set the path of Matlab Compiler</dt><dd><p>Runtime</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_max_projects: set the maximum number of projects displayed in</dt><dd><p>the “Saved projects” menu</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_max_thumbnails: set max thumbnails number at the data browser</dt><dd><p>bottom</p>
+</dd>
+</dl>
+</li>
 <li><p>set_mri_conv_path: set the MRIManager.jar path</p></li>
-<li><p>setNbAllSlicesMax: set the maximum number of slices to display in
-the mini viewer</p></li>
+<li><dl class="simple">
+<dt>setNbAllSlicesMax: set the maximum number of slices to display in</dt><dd><p>the mini viewer</p>
+</dd>
+</dl>
+</li>
 <li><p>set_opened_projects: set the opened projects</p></li>
-<li><p>set_projects_save_path: set the folder where the projects are
-saved</p></li>
-<li><p>set_radioView: set the orientation in miniviewer (True for
-radiological, False for neurological orientation)</p></li>
+<li><dl class="simple">
+<dt>set_projects_save_path: set the folder where the projects are</dt><dd><p>saved</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_radioView: set the orientation in miniviewer (True for</dt><dd><p>radiological, False for neurological orientation)</p>
+</dd>
+</dl>
+</li>
 <li><p>set_referential: set the DataViewer referential</p></li>
 <li><p>set_resources_path: Set the resources path</p></li>
-<li><p>setShowAllSlices: set the “show all slices” checkbox of the mini
-viewer</p></li>
+<li><dl class="simple">
+<dt>setShowAllSlices: set the “show all slices” checkbox of the mini</dt><dd><p>viewer</p>
+</dd>
+</dl>
+</li>
 <li><p>setSourceImageDir: set the source directory for project images</p></li>
 <li><p>set_spm_path: set the path of SPM12 (license version)</p></li>
-<li><p>set_spm_standalone_path: set the path of SPM12 (standalone
-version)</p></li>
+<li><dl class="simple">
+<dt>set_spm_standalone_path: set the path of SPM12 (standalone</dt><dd><p>version)</p>
+</dd>
+</dl>
+</li>
 <li><p>setTextColor: set the text color</p></li>
 <li><p>setThumbnailTag: set the tag that is displayed in the mini viewer</p></li>
-<li><p>set_use_afni: set the value of “use afni” checkbox in the
-preferences</p></li>
-<li><p>set_use_ants: set the value of “use ants” checkbox in the
-preferences</p></li>
+<li><dl class="simple">
+<dt>set_use_afni: set the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_ants: set the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
 <li><dl class="simple">
 <dt>set_use_freesurfer: set the value of “use freesurfer” checkbox</dt><dd><p>in the preferences</p>
 </dd>
 </dl>
 </li>
-<li><p>set_use_fsl: set the value of “use fsl” checkbox in the
-preferences</p></li>
-<li><p>set_use_matlab: set the value of “use matlab” checkbox in the
-preferences</p></li>
-<li><p>set_use_matlab_standalone: set the value of “use matlab
-standalone” checkbox in the preferences</p></li>
-<li><p>set_use_mrtrix: set the value of “use mrtrix” checkbox in the
-preferences</p></li>
-<li><p>set_user_mode: set the value of “user mode” checkbox in
-the preferences</p></li>
-<li><p>set_use_spm: set the value of “use spm” checkbox in the
-preferences</p></li>
-<li><p>set_use_spm_standalone: set the value of “use spm standalone”
-checkbox in the preferences</p></li>
+<li><dl class="simple">
+<dt>set_use_fsl: set the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_matlab: set the value of “use matlab” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_matlab_standalone: set the value of “use matlab</dt><dd><p>standalone” checkbox in the
+preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_mrtrix: set the value of “use mrtrix” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_user_mode: set the value of “user mode” checkbox in</dt><dd><p>the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_spm: set the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_spm_standalone: set the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
+</dd>
+</dl>
+</li>
 <li><p>setViewerConfig: set the Viewer configuration neuro or radio</p></li>
-<li><p>setViewerFramerate: set the Viewer frame rate for automatic
-running time images</p></li>
-<li><p>update_capsul_config: update a global CapsulEngine object used
-for all operations in MIA application</p></li>
+<li><dl class="simple">
+<dt>setViewerFramerate: set the Viewer frame rate for automatic</dt><dd><p>running time images</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>update_capsul_config: update a global CapsulEngine object used</dt><dd><p>for all operations in MIA application</p>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
@@ -816,18 +1076,13 @@ for all operations in MIA application</p></li>
 <dd><p>Initialization of the Config class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><dl class="field-list simple">
-<dt class="field-odd">config_path<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str (optional). If provided, the configuration file
-will be loaded/saved from the given directory. Otherwise, the
-regular heuristics will be used to determine the config path.
-This option allows to use an alternative config directory (for
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>properties_path</em>) – If provided, the configuration file
+will be loaded/saved from the given
+directory. Otherwise, the regular
+heuristics will be used to determine the
+config path. This option allows to use
+an alternative config directory (for
 tests for instance).</p>
-</dd>
-</dl>
-</li>
-</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -842,8 +1097,8 @@ tests for instance).</p>
 <span class="sig-name descname"><span class="pre">getBackgroundColor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getBackgroundColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getBackgroundColor" title="Link to this definition">¶</a></dt>
 <dd><p>Get background color.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of the background color</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Background color, or “” if unknown.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -853,8 +1108,8 @@ tests for instance).</p>
 <span class="sig-name descname"><span class="pre">getChainCursors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getChainCursors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getChainCursors" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of the checkbox ‘chain cursor’ in miniviewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Value of the checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -862,22 +1117,10 @@ tests for instance).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.getNbAllSlicesMax">
 <span class="sig-name descname"><span class="pre">getNbAllSlicesMax</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getNbAllSlicesMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getNbAllSlicesMax" title="Link to this definition">¶</a></dt>
-<dd><p>Get number the maximum number of slices to display in the
-miniviewer.</p>
+<dd><p>Get number the maximum number of slices to display in the miniviewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Integer</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.software_properties.Config.getPathToProjectsFolder">
-<span class="sig-name descname"><span class="pre">getPathToProjectsFolder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getPathToProjectsFolder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getPathToProjectsFolder" title="Link to this definition">¶</a></dt>
-<dd><p>Get the project’s path.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of the path</p>
+<dt class="field-odd">Return (int)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximum number of slices to display in miniviewer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -885,11 +1128,11 @@ miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.getShowAllSlices">
 <span class="sig-name descname"><span class="pre">getShowAllSlices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getShowAllSlices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getShowAllSlices" title="Link to this definition">¶</a></dt>
-<dd><p>Get whether the show_all_slices parameters was enabled
-or not in the miniviewer.</p>
+<dd><p>Get whether the show_all_slices parameters was enabled or not in
+the miniviewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the show_all_slices parameters was enabled.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -899,8 +1142,8 @@ or not in the miniviewer.</p>
 <span class="sig-name descname"><span class="pre">getSourceImageDir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getSourceImageDir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getSourceImageDir" title="Link to this definition">¶</a></dt>
 <dd><p>Get the source directory for project images.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of the path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -910,8 +1153,8 @@ or not in the miniviewer.</p>
 <span class="sig-name descname"><span class="pre">getTextColor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getTextColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getTextColor" title="Link to this definition">¶</a></dt>
 <dd><p>Get the text color.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The text color.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -921,8 +1164,8 @@ or not in the miniviewer.</p>
 <span class="sig-name descname"><span class="pre">getThumbnailTag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getThumbnailTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getThumbnailTag" title="Link to this definition">¶</a></dt>
 <dd><p>Get the tag of the thumbnail displayed in the miniviewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The tag of the thumbnail displayed in miniviewer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -930,10 +1173,10 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.getViewerConfig">
 <span class="sig-name descname"><span class="pre">getViewerConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getViewerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerConfig" title="Link to this definition">¶</a></dt>
-<dd><p>Get the viewer config neuro or radio, neuro by default</p>
+<dd><p>Get the viewer config “neuro” or “radio”, “neuro” by default.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>String</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The viewer config (“neuro” or “radio”).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -941,10 +1184,10 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.getViewerFramerate">
 <span class="sig-name descname"><span class="pre">getViewerFramerate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.getViewerFramerate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerFramerate" title="Link to this definition">¶</a></dt>
-<dd><p>Get the Viewer framerate</p>
+<dd><p>Get the Viewer framerate.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>integer</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Viewer framerat (ex. “5”).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -952,10 +1195,11 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_admin_hash">
 <span class="sig-name descname"><span class="pre">get_admin_hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_admin_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_admin_hash" title="Link to this definition">¶</a></dt>
-<dd><p>Get the value of the hash of the admin password.</p>
+<dd><p>Retrieves the hashed admin password from the configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string</p>
+<dd class="field-odd"><p>The hashed admin password if found in config, False if not
+present in config.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -963,10 +1207,10 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_afni_path">
 <span class="sig-name descname"><span class="pre">get_afni_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_afni_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_afni_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the AFNI path</p>
+<dd><p>Get the AFNI path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to AFNI</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to AFNI, or “” if unknown.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -974,10 +1218,10 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_ants_path">
 <span class="sig-name descname"><span class="pre">get_ants_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_ants_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_ants_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the ANTS path</p>
+<dd><p>Get the ANTS path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to ANTS</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to ANTS, or “” if unknown.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -985,15 +1229,40 @@ or not in the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_capsul_config">
 <span class="sig-name descname"><span class="pre">get_capsul_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sync_from_engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_capsul_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_capsul_config" title="Link to this definition">¶</a></dt>
-<dd><p>Get CAPSUL config dictionary.</p>
-<dl class="field-list simple">
+<dd><p>Retrieve and construct the Capsul configuration dictionary.</p>
+<p>This function builds a configuration dictionary for Capsul,
+incorporating settings for various neuroimaging tools and processing
+engines. It manages configurations for tools like SPM, FSL,
+FreeSurfer, MATLAB, AFNI, ANTs, and MRTrix.</p>
+<p>The function first retrieves local settings for each tool from the Mia
+preferences, then constructs the appropriate configuration structure.
+If requested, it can synchronize the configuration with the current
+Capsul engine state.</p>
+<dl class="field-list">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sync_from_engine</strong> – if True, perform a synchronisation
-with CAPSUL engine (Bool)</p>
+<dd class="field-odd"><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>sync_from_engine</em>) – If True, synchronizes the
+configuration with the current Capsul
+engine settings after building the
+base configuration.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>capsul_config: the CAPSUL configuration saved into
-Mia config (Dict)</p>
+<dt class="field-even">Return (dict)<span class="colon">:</span></dt>
+<dd class="field-even"><p>A nested dictionary containing the complete Capsul
+configuration, structured with the following main
+sections:
+- engine_modules: List of available processing modules
+- engine: Contains global and environment-specific</p>
+<blockquote>
+<div><p>settings</p>
+</div></blockquote>
+<ul class="simple">
+<li><p>tool-specific configurations (SPM, FSL, etc.)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Private functions<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>_configure_spm: Configure SPM settings.</p></li>
+<li><p>_configure_tool:</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -1001,11 +1270,13 @@ Mia config (Dict)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_capsul_engine">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_capsul_engine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_capsul_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_capsul_engine" title="Link to this definition">¶</a></dt>
-<dd><p>Get a global CapsulEngine object used for all operations in MIA
-application. The engine is created once when needed.</p>
+<dd><p>Get or create a global CapsulEngine singleton for Mia application
+operations.</p>
+<p>The engine is created only once when first needed (lazy
+initialization). Subsequent calls return the same instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Config.capsul_engine: capsul.engine.CapsulEngine object</p>
+<dd class="field-odd"><p>CapsulEngine: The global CapsulEngine instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1013,10 +1284,10 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_freesurfer_setup">
 <span class="sig-name descname"><span class="pre">get_freesurfer_setup</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_freesurfer_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_freesurfer_setup" title="Link to this definition">¶</a></dt>
-<dd><p>Get the freesurfer path</p>
+<dd><p>Get the freesurfer path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to freesurfer</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to freesurfer, or “” if unknown.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1024,10 +1295,10 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_fsl_config">
 <span class="sig-name descname"><span class="pre">get_fsl_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_fsl_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_fsl_config" title="Link to this definition">¶</a></dt>
-<dd><p>Get the FSL config file  path</p>
+<dd><p>Get the FSL config file  path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to the fsl/etc/fslconf/fsl.sh file</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path to the fsl/etc/fslconf/fsl.sh file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1035,10 +1306,10 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_mainwindow_maximized">
 <span class="sig-name descname"><span class="pre">get_mainwindow_maximized</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_maximized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_maximized" title="Link to this definition">¶</a></dt>
-<dd><p>Get the maximized (fullscreen) flag</p>
+<dd><p>Get the maximized (fullscreen) flag.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Maximized (fullscreen) flag.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1046,10 +1317,10 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_mainwindow_size">
 <span class="sig-name descname"><span class="pre">get_mainwindow_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mainwindow_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mainwindow_size" title="Link to this definition">¶</a></dt>
-<dd><p>Get the main window size</p>
+<dd><p>Get the main window size.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list or None</p>
+<dt class="field-odd">Return (list)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Main window size.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1057,11 +1328,11 @@ application. The engine is created once when needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_matlab_command">
 <span class="sig-name descname"><span class="pre">get_matlab_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_matlab_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_matlab_command" title="Link to this definition">¶</a></dt>
-<dd><p>Get Matlab command.</p>
+<dd><p>Retrieves the appropriate Matlab command based on the configuration.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>matlab executable path or nothing if matlab path not
-specified</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Matlab executable path or None if no path is
+specified.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1071,8 +1342,8 @@ specified</p>
 <span class="sig-name descname"><span class="pre">get_matlab_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_matlab_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_matlab_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the path to the matlab executable.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>String of path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1082,8 +1353,8 @@ specified</p>
 <span class="sig-name descname"><span class="pre">get_matlab_standalone_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_matlab_standalone_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_matlab_standalone_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the path to matlab compiler runtime.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1091,11 +1362,12 @@ specified</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_max_projects">
 <span class="sig-name descname"><span class="pre">get_max_projects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_max_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_max_projects" title="Link to this definition">¶</a></dt>
-<dd><p>Get the maximum number of projects displayed in the “Saved
-projects” menu.</p>
+<dd><p>Retrieves the maximum number of projects displayed in the
+“Saved projects” menu.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Integer</p>
+<dt class="field-odd">Return (int)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum number of projects. Defaults to 5 if not
+specified.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1103,10 +1375,12 @@ projects” menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_max_thumbnails">
 <span class="sig-name descname"><span class="pre">get_max_thumbnails</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_max_thumbnails"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_max_thumbnails" title="Link to this definition">¶</a></dt>
-<dd><p>Get the max thumbnails number at the data browser bottom.</p>
+<dd><p>Retrieves the maximum number of thumbnails displayed in the
+mini-viewer at the bottom of the data browser.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Integer</p>
+<dt class="field-odd">Return (int)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum number of thumbnails. Defaults to 5 if
+not specified.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1116,8 +1390,8 @@ projects” menu.</p>
 <span class="sig-name descname"><span class="pre">get_mri_conv_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mri_conv_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mri_conv_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the MRIManager.jar path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of the path to the MRIManager.jar</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1127,8 +1401,8 @@ projects” menu.</p>
 <span class="sig-name descname"><span class="pre">get_mrtrix_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_mrtrix_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_mrtrix_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the  mrtrix path</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to mrtrix</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1138,8 +1412,8 @@ projects” menu.</p>
 <span class="sig-name descname"><span class="pre">get_opened_projects</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_opened_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_opened_projects" title="Link to this definition">¶</a></dt>
 <dd><p>Get opened projects.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>list of opened projects</p>
+<dt class="field-odd">Return (list)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Opened projects.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1149,8 +1423,8 @@ projects” menu.</p>
 <span class="sig-name descname"><span class="pre">get_projects_save_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_projects_save_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_projects_save_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the path where projects are saved.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1158,19 +1432,21 @@ projects” menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_properties_path">
 <span class="sig-name descname"><span class="pre">get_properties_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_properties_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_properties_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the path to the folder containing the processes and properties
-folders of mia (properties_path).</p>
-<p>The properties_path is defined and stored in the
-configuration_path.yml file, located in the ~/.populse_mia folder.</p>
-<p>If Mia is launched in user mode, properties path must compulsorily be
-returned from the “properties_user_path” parameter of the
-configuration_path.yml file.</p>
-<p>If mia is launched in developer mode, mia path must compulsorily be
-returned from the “properties_dev_path” parameter of the
-configuration_path.yml file.</p>
+<dd><p>Retrieves the path to the folder containing the “processes” and
+“properties” directories of Mia.</p>
+<p>The properties path is defined in the <cite>configuration_path.yml</cite> file,
+located in <cite>~/.populse_mia</cite>.</p>
+<ul class="simple">
+<li><p>In <strong>user mode</strong>, the path is retrieved from the
+<cite>properties_user_path</cite> parameter.</p></li>
+<li><p>In <strong>developer mode</strong>, the path is retrieved from the
+<cite>properties_dev_path</cite> parameter.</p></li>
+</ul>
+<p>If outdated parameters (<cite>mia_path</cite>, <cite>mia_user_path</cite>) are found,
+they are automatically updated in the configuration file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path to properties folder</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The absolute path to the properties folder.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1178,10 +1454,10 @@ configuration_path.yml file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_referential">
 <span class="sig-name descname"><span class="pre">get_referential</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_referential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_referential" title="Link to this definition">¶</a></dt>
-<dd><p>Checks in anatomist_2 data viewer which referential has been chosen</p>
+<dd><p>Retrieves the chosen referential from the anatomist_2 data viewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>0 for World Coordinates, 1 for Image ref</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“0” for World Coordinates, “1” for Image ref.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1191,8 +1467,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_resources_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_resources_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_resources_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the resources path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of the path to the resources folder</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1202,8 +1478,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_spm_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_spm_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_spm_path" title="Link to this definition">¶</a></dt>
 <dd><p>Get the path of SPM12.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>string of path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1211,10 +1487,10 @@ configuration_path.yml file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_spm_standalone_path">
 <span class="sig-name descname"><span class="pre">get_spm_standalone_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_spm_standalone_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_spm_standalone_path" title="Link to this definition">¶</a></dt>
-<dd><p>Get the path to the SPM12 (standalone version).</p>
+<dd><p>Get the path to the SPM12 standalone version.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>String of path</p>
+<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1224,8 +1500,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_afni</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_afni"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_afni" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use afni” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use afni” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1235,8 +1511,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_ants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_ants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_ants" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use ants” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use ants” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1246,8 +1522,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_clinical</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_clinical"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_clinical" title="Link to this definition">¶</a></dt>
 <dd><p>Get the clinical mode in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The clinical mode.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1257,8 +1533,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_freesurfer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_freesurfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_freesurfer" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use freesurfer” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use freesurfer” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1268,8 +1544,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_fsl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_fsl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_fsl" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use fsl” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use fsl” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1279,8 +1555,8 @@ configuration_path.yml file.</p>
 <span class="sig-name descname"><span class="pre">get_use_matlab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_matlab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_matlab" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use matlab” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use matlab” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1288,11 +1564,10 @@ configuration_path.yml file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_use_matlab_standalone">
 <span class="sig-name descname"><span class="pre">get_use_matlab_standalone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_matlab_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_matlab_standalone" title="Link to this definition">¶</a></dt>
-<dd><p>Get the value of “use matlab standalone” checkbox in the
-preferences.</p>
+<dd><p>Get the value of “use matlab standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use matlab standalone” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1302,8 +1577,8 @@ preferences.</p>
 <span class="sig-name descname"><span class="pre">get_use_mrtrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_mrtrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_mrtrix" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use mrtrix” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use mrtrix” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1313,8 +1588,8 @@ preferences.</p>
 <span class="sig-name descname"><span class="pre">get_use_spm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_spm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_spm" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use spm” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use spm” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1324,8 +1599,8 @@ preferences.</p>
 <span class="sig-name descname"><span class="pre">get_use_spm_standalone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_use_spm_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_use_spm_standalone" title="Link to this definition">¶</a></dt>
 <dd><p>Get the value of “use spm standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The value of “use spm standalone” checkbox.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1333,10 +1608,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_user_level">
 <span class="sig-name descname"><span class="pre">get_user_level</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_user_level"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_user_level" title="Link to this definition">¶</a></dt>
-<dd><p>Get the user level in the Capsul config</p>
+<dd><p>Get the user level in the Capsul config.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>integer</p>
+<dt class="field-odd">Return (int)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The user level in the Capsul config.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1346,8 +1621,8 @@ preferences.</p>
 <span class="sig-name descname"><span class="pre">get_user_mode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.get_user_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_user_mode" title="Link to this definition">¶</a></dt>
 <dd><p>Get if user mode is disabled or enabled in the preferences.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, the user mode is enabled.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1357,8 +1632,8 @@ preferences.</p>
 <span class="sig-name descname"><span class="pre">isAutoSave</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isAutoSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isAutoSave" title="Link to this definition">¶</a></dt>
 <dd><p>Get if the auto-save mode is enabled or not.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, auto-save mode is enabled.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1366,10 +1641,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.isControlV1">
 <span class="sig-name descname"><span class="pre">isControlV1</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isControlV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isControlV1" title="Link to this definition">¶</a></dt>
-<dd><p>Get if the display of the controller is of V1 type.</p>
+<dd><p>Gets whether the controller display is of type V1.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, V1 controller display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1378,13 +1653,10 @@ preferences.</p>
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.isRadioView">
 <span class="sig-name descname"><span class="pre">isRadioView</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.isRadioView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.isRadioView" title="Link to this definition">¶</a></dt>
 <dd><p>Get if the display in miniviewer is in radiological orientation.</p>
-<ul class="simple">
-<li><p>True for radiological</p></li>
-<li><p>False for neurological</p></li>
-</ul>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>boolean</p>
+<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If True, radiological orientation,
+otherwise neurological orientation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1392,10 +1664,16 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.loadConfig">
 <span class="sig-name descname"><span class="pre">loadConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.loadConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.loadConfig" title="Link to this definition">¶</a></dt>
-<dd><p>Read the config in the config.yml file.</p>
+<dd><p>Read the config from config.yml file.</p>
+<blockquote>
+<div><p>Attempts to read an encrypted YAML configuration file from the
+properties directory, decrypt it using Fernet encryption, and
+parse it as YAML.</p>
+</div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Returns a dictionary of the contents of config.yml</p>
+<dt class="field-odd">Return (dict)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parsed configuration from the YAML file.
+Returns empty dict if parsing fails.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1404,6 +1682,10 @@ preferences.</p>
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.saveConfig">
 <span class="sig-name descname"><span class="pre">saveConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.saveConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.saveConfig" title="Link to this definition">¶</a></dt>
 <dd><p>Save the current parameters in the config.yml file.</p>
+<p>Encrypts and writes the current configuration (self.config) to
+config.yml using Fernet encryption. Creates the necessary
+directory structure if it doesn’t exist. After saving, updates
+the capsul configuration.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1412,7 +1694,7 @@ preferences.</p>
 <dd><p>Set auto-save mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save</strong> – boolean</p>
+<dd class="field-odd"><p><strong>save</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1435,7 +1717,7 @@ preferences.</p>
 <dd><p>Set the value of the checkbox ‘chain cursor’ in the mini viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>chain_cursors</strong> – Boolean</p>
+<dd class="field-odd"><p><strong>chain_cursors</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1446,7 +1728,7 @@ preferences.</p>
 <dd><p>Set controller display mode (True if V1).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>controlV1</strong> – boolean</p>
+<dd class="field-odd"><p><strong>controlV1</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1454,10 +1736,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setNbAllSlicesMax">
 <span class="sig-name descname"><span class="pre">setNbAllSlicesMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_slices_max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setNbAllSlicesMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setNbAllSlicesMax" title="Link to this definition">¶</a></dt>
-<dd><p>Set the number of slices to display in the mini viewer.</p>
+<dd><p>Set the number of slices to display in the mini-viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_slices_max</strong> – maximum number of slices to display (Int)</p>
+<dd class="field-odd"><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>nb_slices_max</em>) – maximum number of slices to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1468,7 +1750,7 @@ preferences.</p>
 <dd><p>Set the show_all_slides setting in miniviewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>show_all_slices</strong> – Boolean</p>
+<dd class="field-odd"><p><strong>show_all_slices</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1479,7 +1761,7 @@ preferences.</p>
 <dd><p>Set the source directory for project images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source_image_dir</strong> – String of path</p>
+<dd class="field-odd"><p><strong>source_image_dir</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1499,10 +1781,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setThumbnailTag">
 <span class="sig-name descname"><span class="pre">setThumbnailTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thumbnail_tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setThumbnailTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setThumbnailTag" title="Link to this definition">¶</a></dt>
-<dd><p>Set the tag that is displayed in the mini viewer.</p>
+<dd><p>Set the tag that is displayed in the mini-viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>thumbnail_tag</strong> – string</p>
+<dd class="field-odd"><p><strong>thumbnail_tag</strong> – A string.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1510,14 +1792,14 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setViewerConfig">
 <span class="sig-name descname"><span class="pre">setViewerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_NeuRad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setViewerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerConfig" title="Link to this definition">¶</a></dt>
-<dd><p>sets user’s configuration neuro or radio for data_viewer</p>
+<dd><p>sets user’s configuration neuro or radio for data_viewer.</p>
 <ul class="simple">
 <li><p>neuro: neurological</p></li>
 <li><p>radio: radiological</p></li>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config_NeuRad</strong> – string</p>
+<dd class="field-odd"><p><strong>config_NeuRad</strong> – A string.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1525,10 +1807,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setViewerFramerate">
 <span class="sig-name descname"><span class="pre">setViewerFramerate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">im_sec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.setViewerFramerate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerFramerate" title="Link to this definition">¶</a></dt>
-<dd><p>sets user’s framerate for data_viewer</p>
+<dd><p>sets user’s framerate for data_viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>im_sec</strong> – int</p>
+<dd class="field-odd"><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>im_sec</em>) – Number of images per second.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1539,7 +1821,7 @@ preferences.</p>
 <dd><p>Set the password hash.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>admin_hash</strong> – string of hash</p>
+<dd class="field-odd"><p><strong>admin_hash</strong> – A string.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1547,10 +1829,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_afni_path">
 <span class="sig-name descname"><span class="pre">set_afni_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_afni_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_afni_path" title="Link to this definition">¶</a></dt>
-<dd><p>Set the AFNI path</p>
+<dd><p>Set the AFNI path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of AFNI path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1561,7 +1843,7 @@ preferences.</p>
 <dd><p>Set the ANTS path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of ANTS path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1569,14 +1851,55 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_capsul_config">
 <span class="sig-name descname"><span class="pre">set_capsul_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">capsul_config_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_capsul_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_capsul_config" title="Link to this definition">¶</a></dt>
-<dd><p>Set CAPSUL configuration dict into MIA config.</p>
-<p>This method is used just (and only) after editing capsul config
-(in File &gt; Mia preferences, Pipeline tab, Edit CAPSUL config button),
-in order to synchronise the new Capsul config with the Mia preferences.</p>
+<dd><p>Update Mia configuration with Capsul settings and synchronize tools
+configuration.</p>
+<p>Called after editing Capsul config (via File &gt; Mia preferences &gt;
+Pipeline tab &gt; Edit CAPSUL config) to synchronize Capsul settings
+with Mia preferences. Configures various neuroimaging tools
+AFNI, ANTs, FSL, etc.) based on the Capsul engine configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>capsul_config_dict</strong> – a dict; {‘engine’: {…},
-‘engine_modules’: […]}</p>
+<dd class="field-odd"><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>capsul_config_dict</em>) – <dl class="simple">
+<dt>Dictionary containing Capsul</dt><dd><p>configuration with structure:</p>
+</dd>
+</dl>
+<dl>
+<dt>{</dt><dd><dl class="simple">
+<dt>‘engine’: {</dt><dd><p>‘environment_name’: {…configuration…}</p>
+</dd>
+</dl>
+<p>},
+‘engine_modules’: […]</p>
+</dd>
+</dl>
+<p>}</p>
+</p>
+</dd>
+<dt class="field-even">Contains<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="field-list simple">
+<dt class="field-odd">Private function<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><dl class="simple">
+<dt>_configure_standalone_spm: Configures standalone SPM and</dt><dd><p>MCR.</p>
+</dd>
+</dl>
+</li>
+<li><p>_configure_matlab_spm: Configures SPM and MATLAB.</p></li>
+<li><p>_configure_matlab_only: Configures MATLAB without SPM.</p></li>
+<li><p>_configure_mcr_only: Configures MCR without SPM.</p></li>
+<li><dl class="simple">
+<dt>_disable_matlab_spm: Disables all MATLAB and SPM</dt><dd><p>configurations.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>_get_module_config: Extracts module configuration from the</dt><dd><p>global Capsul configuration.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1584,10 +1907,10 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_clinical_mode">
 <span class="sig-name descname"><span class="pre">set_clinical_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clinical_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_clinical_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_clinical_mode" title="Link to this definition">¶</a></dt>
-<dd><p>Enable of disable clinical mode.</p>
+<dd><p>Enable or disable clinical mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>clinical_mode</strong> – boolean</p>
+<dd class="field-odd"><p><strong>clinical_mode</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1595,10 +1918,10 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_freesurfer_setup">
 <span class="sig-name descname"><span class="pre">set_freesurfer_setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_freesurfer_setup"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_freesurfer_setup" title="Link to this definition">¶</a></dt>
-<dd><p>Set  the freesurfer config file</p>
+<dd><p>Set the freesurfer config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path to freesurfer/FreeSurferEnv.sh</p>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>path</em>) – Path to freesurfer/FreeSurferEnv.sh.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1606,10 +1929,10 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_fsl_config">
 <span class="sig-name descname"><span class="pre">set_fsl_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_fsl_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_fsl_config" title="Link to this definition">¶</a></dt>
-<dd><p>Set  the FSL config file</p>
+<dd><p>Set the FSL config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path to fsl/etc/fslconf/fsl.sh</p>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>path</em>) – Path to fsl/etc/fslconf/fsl.sh.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1617,10 +1940,10 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_mainwindow_maximized">
 <span class="sig-name descname"><span class="pre">set_mainwindow_maximized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Link to this definition">¶</a></dt>
-<dd><p>Set the maximized (full-screen) flag</p>
+<dd><p>Set the maximized (full-screen) flag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>enabled</strong> – boolean</p>
+<dd class="field-odd"><p><strong>enabled</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1628,10 +1951,10 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_mainwindow_size">
 <span class="sig-name descname"><span class="pre">set_mainwindow_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mainwindow_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_size" title="Link to this definition">¶</a></dt>
-<dd><p>Set main window size</p>
+<dd><p>Set main window size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>size</strong> – list</p>
+<dd class="field-odd"><p><strong>size</strong> – A list of two integers.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1642,7 +1965,7 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dd><p>Set the path of Matlab’s executable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1653,7 +1976,7 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dd><p>Set the path of Matlab Compiler Runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1661,11 +1984,11 @@ in order to synchronise the new Capsul config with the Mia preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_max_projects">
 <span class="sig-name descname"><span class="pre">set_max_projects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_max_projects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_max_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_max_projects" title="Link to this definition">¶</a></dt>
-<dd><p>Set the maximum number of projects displayed in
-the “Saved projects” menu.</p>
+<dd><p>Set the maximum number of projects displayed in the “Saved projects”
+menu.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_max_projects</strong> – Integer</p>
+<dd class="field-odd"><p><strong>nb_max_projects</strong> – An integer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1676,7 +1999,7 @@ the “Saved projects” menu.</p>
 <dd><p>Set max thumbnails number at the data browser bottom.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_max_thumbnails</strong> – Integer</p>
+<dd class="field-odd"><p><strong>nb_max_thumbnails</strong> – An integer.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1687,7 +2010,7 @@ the “Saved projects” menu.</p>
 <dd><p>Set the MRIManager.jar path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of the path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1695,10 +2018,10 @@ the “Saved projects” menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_mrtrix_path">
 <span class="sig-name descname"><span class="pre">set_mrtrix_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_mrtrix_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mrtrix_path" title="Link to this definition">¶</a></dt>
-<dd><p>Set the mrtrix path</p>
+<dd><p>Set the mrtrix path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of mrtrix path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1709,7 +2032,7 @@ the “Saved projects” menu.</p>
 <dd><p>Set the list of opened projects and saves the modification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_projects</strong> – list of path</p>
+<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>new_projects</em>) – A list of paths.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1720,7 +2043,7 @@ the “Saved projects” menu.</p>
 <dd><p>Set the folder where the projects are saved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1735,7 +2058,7 @@ the “Saved projects” menu.</p>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>radio_view</strong> – boolean</p>
+<dd class="field-odd"><p><strong>radio_view</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1743,11 +2066,11 @@ the “Saved projects” menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_referential">
 <span class="sig-name descname"><span class="pre">set_referential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_referential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_referential" title="Link to this definition">¶</a></dt>
-<dd><p>Set the referential to image ref or world coordinates in anatomist_2
-data viewer.</p>
+<dd><p>Set the referential to “image Ref” or “World Coordinates” in
+anatomist_2 data viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ref</strong> – str; 0 for World Coordinates, 1 for Image ref</p>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>ref</em>) – “0” for World Coordinates, “1” for Image Ref.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1758,7 +2081,7 @@ data viewer.</p>
 <dd><p>Set the resources path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of the path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1769,7 +2092,7 @@ data viewer.</p>
 <dd><p>Set the path of SPM (license version).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1780,7 +2103,7 @@ data viewer.</p>
 <dd><p>Set the path of SPM (standalone version).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – string of path</p>
+<dd class="field-odd"><p><strong>path</strong> – A path (str).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1791,7 +2114,7 @@ data viewer.</p>
 <dd><p>Set the value of “use_afni” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_afni</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_afni</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1802,7 +2125,7 @@ data viewer.</p>
 <dd><p>Set the value of “use_ants” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_ants</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_ants</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1813,7 +2136,7 @@ data viewer.</p>
 <dd><p>Set the value of “use_freesurfer” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_freesurfer</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_freesurfer</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1824,7 +2147,7 @@ data viewer.</p>
 <dd><p>Set the value of “use_fsl” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_fsl</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_fsl</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1835,7 +2158,7 @@ data viewer.</p>
 <dd><p>Set the value of “use matlab” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_matlab</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_matlab</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1843,11 +2166,10 @@ data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_matlab_standalone">
 <span class="sig-name descname"><span class="pre">set_use_matlab_standalone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_matlab_standalone</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_use_matlab_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_matlab_standalone" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_matlab_standalone” checkbox in the
-preferences.</p>
+<dd><p>Set the value of “use_matlab_standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_matlab</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_matlab</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1858,7 +2180,7 @@ preferences.</p>
 <dd><p>Set the value of “use_mrtrix” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_mrtrix</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_mrtrix</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1869,7 +2191,7 @@ preferences.</p>
 <dd><p>Set the value of “use spm” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_spm</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_spm</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1880,7 +2202,7 @@ preferences.</p>
 <dd><p>Set the value of “use spm standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_spm_standalone</strong> – boolean</p>
+<dd class="field-odd"><p><strong>use_spm_standalone</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1888,10 +2210,10 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_user_mode">
 <span class="sig-name descname"><span class="pre">set_user_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.set_user_mode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_user_mode" title="Link to this definition">¶</a></dt>
-<dd><p>Enable of disable user mode.</p>
+<dd><p>Enable or disable user mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_mode</strong> – boolean</p>
+<dd class="field-odd"><p><strong>user_mode</strong> – A boolean.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1899,12 +2221,17 @@ preferences.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.update_capsul_config">
 <span class="sig-name descname"><span class="pre">update_capsul_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config.update_capsul_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.update_capsul_config" title="Link to this definition">¶</a></dt>
-<dd><p>Update a global CapsulEngine object used for all operations in MIA
-application. The engine is created once when needed, and updated
-each time the config is saved.</p>
+<dd><p>Updates the global CapsulEngine object used for all operations in
+the Mia application.</p>
+<p>The CapsulEngine is created once when needed and updated each time
+the configuration is saved. This method ensures that all necessary
+engine modules are loaded and configurations are properly imported
+from the saved settings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>capsul.engine.CapsulEngine object</p>
+<dt class="field-odd">Return (capsul.engine.CapsulEngine)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The updated CapsulEngine
+object, or None if the engine
+is not initialized.</p>
 </dd>
 </dl>
 </dd></dl>

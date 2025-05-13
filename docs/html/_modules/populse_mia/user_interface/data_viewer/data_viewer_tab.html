@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,9 +30,8 @@
         
         
   <h1>Source code for populse_mia.user_interface.data_viewer.data_viewer_tab</h1><div class="highlight"><pre>
-<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Populse-MIA data viewer GUI interface, in the &quot;Data Viewer&quot; tab.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Populse_mia data viewer GUI interface (in the &quot;Data Viewer&quot; tab).</span>
 
 <span class="sd">Contains:</span>
 <span class="sd">    Class:</span>
@@ -40,73 +39,95 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="c1">##########################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">##########################################################################</span>
+
 <span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
 
 <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DataViewerTab">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab">[docs]</a>
 <span class="k">class</span> <span class="nc">DataViewerTab</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    DataViewerTab is the widget in the data viewer tab of Populse-MIA GUI.</span>
+<span class="sd">    A flexible and extensible widget for managing data viewers in a GUI</span>
+<span class="sd">    application.</span>
 
-<span class="sd">    A combobox containing the available viewers will always appear.</span>
-<span class="sd">    If import of viewers fails, it won&#39;t impact the work of Mia itself.</span>
-<span class="sd">    Viewers are put in Qt.QStackedLayout in order to share a same project.</span>
-<span class="sd">    A new viewer can be added simply by placing it in the</span>
-<span class="sd">    data_viewer directory.</span>
+<span class="sd">    This widget provides a dynamic interface for loading and switching between</span>
+<span class="sd">    different data viewers. Key features include:</span>
+<span class="sd">    - Automatic discovery of viewers in the data_viewer directory</span>
+<span class="sd">    - Graceful handling of viewer import failures</span>
+<span class="sd">    - Ability to dynamically add new viewers</span>
+<span class="sd">    - Centralized document and project management across viewers</span>
+
+<span class="sd">    .. Methods:</span>
+<span class="sd">        - activate_viewer: Activates viewer which was selected</span>
+<span class="sd">                           in the combobox.</span>
+<span class="sd">        - change_viewer: Switches to viewer selected in the combobox.</span>
+<span class="sd">        - clear: Clears all loaded viewers before closing Mia.</span>
+<span class="sd">        - closeEvent: Clears and closes all events before closing Mia.</span>
+<span class="sd">        - current_viewer: Return current viewer (selected viewer in combobox).</span>
+<span class="sd">        - load_viewer: Load a viewer.</span>
+<span class="sd">        - set_documents: Shares project with documents to all viewers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DataViewerTab.__init__">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;The constructor ...</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the DataViewerTab with a reference to the main window.</span>
 
-<span class="sd">        :param main_window: an instance of the MainWindow class</span>
+<span class="sd">        :param main_window (Qt.QMainWindow): The main application window</span>
+<span class="sd">                                             providing context and potential</span>
+<span class="sd">                                             shared resources.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DataViewerTab</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Initialize state tracking attributes</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lay</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="c1"># Display of combobox containing the viewers</span>
+        <span class="c1"># Set up main layout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lay</span><span class="p">)</span>
-
+        <span class="c1"># Create viewer selection interface</span>
         <span class="n">hlay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lay</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hlay</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;use viewer:&quot;</span><span class="p">))</span>
-
         <span class="c1"># Combobox will contain the viewers if they are available</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span>
-
         <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="p">)</span>
         <span class="n">hlay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
+        <span class="c1"># Connect viewer selection to change handler</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndexChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">change_viewer</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataViewerTab.activate_viewer">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">[docs]</a>
     <span class="k">def</span> <span class="nf">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Activates viewer viewer_name which was selected</span>
-<span class="sd">        in the combobox.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Activate a specific viewer by name.</span>
 
-<span class="sd">        :param viewer_name: a viewer name (a string)</span>
+<span class="sd">        :param viewer_name (str): Name of the viewer to activate.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span> <span class="ow">and</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">viewer_name</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">- activate viewer:&quot;</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">)</span>
-        <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">viewer_name</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Activate viewer: </span><span class="si">{</span><span class="n">viewer_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">viewer</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span><span class="o">.</span><span class="n">setCurrentWidget</span><span class="p">(</span><span class="n">viewer</span><span class="p">)</span>
@@ -117,11 +138,13 @@
 <div class="viewcode-block" id="DataViewerTab.change_viewer">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">[docs]</a>
     <span class="k">def</span> <span class="nf">change_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Switches to viewer selected in the combobox</span>
-<span class="sd">        pass the project from on viewer to the other.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle viewer change event triggered by the combobox.</span>
+
+<span class="sd">        Retrieves the selected viewer, activates it, and ensures</span>
+<span class="sd">        that the current project and documents are set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
-        <span class="n">viewer_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">itemText</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">viewer_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">activate_viewer</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">docs</span><span class="p">)</span></div>
 
@@ -129,7 +152,13 @@
 <div class="viewcode-block" id="DataViewerTab.clear">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear">[docs]</a>
     <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clears all loaded viewers before closing Mia.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clean up and close all loaded viewers.</span>
+
+<span class="sd">        Called before closing the application to ensure</span>
+<span class="sd">        proper resource management.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">for</span> <span class="n">viewer</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">viewer</span><span class="p">]</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">viewer</span><span class="p">]</span></div>
@@ -138,93 +167,105 @@
 <div class="viewcode-block" id="DataViewerTab.closeEvent">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.closeEvent">[docs]</a>
     <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;clears and closes all events before closing Mia.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override close event to ensure proper cleanup.</span>
+
+<span class="sd">        :param event (QCloseEvent): Close event triggered by the window system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">closeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataViewerTab.current_viewer">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">[docs]</a>
     <span class="k">def</span> <span class="nf">current_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return current viewer (selected viewer in combobox)</span>
-<span class="sd">        used when user changes from BrowserTab or PipelineManagerTab</span>
-<span class="sd">        to DataViewerTab.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the name of the currently active viewer.</span>
 
+<span class="sd">        :return (str): Name of the current viewer, either from the current</span>
+<span class="sd">                       viewer tracking or the combobox selection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span>
+            <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataViewerTab.load_viewer">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Available viewers in data_viewer folder are loaded as soon</span>
-<span class="sd">        as Data Viewer tab is clicked.</span>
+    <span class="k">def</span> <span class="nf">load_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dynamically load viewers from the data_viewer directory.</span>
 
-<span class="sd">        :param viewer_name: string</span>
+<span class="sd">        Attempts to import and initialize viewers, handling</span>
+<span class="sd">        import failures gracefully.</span>
+
+<span class="sd">        :param viewer_name (str): Specific viewer to load. If None, discovers</span>
+<span class="sd">                                  all viewers.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">viewer_name</span><span class="p">:</span>
-            <span class="n">detected_viewer</span> <span class="o">=</span> <span class="p">[</span><span class="n">viewer_name</span><span class="p">]</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">detected_viewer</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># Determine viewers to load</span>
+        <span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="n">detected_viewers</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="p">[</span><span class="n">viewer_name</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">viewer_name</span>
+            <span class="k">else</span> <span class="p">[</span>
                 <span class="n">p</span>
-                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="n">p</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">script_dir</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="n">p</span><span class="p">)))</span>
+                    <span class="ow">and</span> <span class="n">p</span> <span class="o">!=</span> <span class="s2">&quot;__pycache__&quot;</span>
                 <span class="p">)</span>
-                <span class="ow">and</span> <span class="n">p</span> <span class="o">!=</span> <span class="s2">&quot;__pycache__&quot;</span>
             <span class="p">]</span>
+        <span class="p">)</span>
 
+        <span class="c1"># Create stacked layout only if no viewers have been loaded yet</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QStackedLayout</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">lay</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stacks</span><span class="p">)</span>
 
         <span class="n">init_global_handlers</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="c1"># Try import detected viewers</span>
-        <span class="k">for</span> <span class="n">viewer_name</span> <span class="ow">in</span> <span class="n">detected_viewer</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">viewer_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">:</span>
+        <span class="c1"># Load detected viewers</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">detected_viewers</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">:</span>
+
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">viewer_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span>
-                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">viewer_name</span><span class="p">)</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="vm">__name__</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
                     <span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">viewer_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">viewer_module</span><span class="o">.</span><span class="n">MiaViewer</span><span class="p">(</span>
-                        <span class="n">init_global_handlers</span>
-                    <span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">viewer_name</span><span class="p">])</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span>
-                    <span class="c1"># Check if initialization of controls has been done:</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span>
-                        <span class="n">viewer_name</span>
-                    <span class="p">]</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">_global_handlers_initialized</span><span class="p">:</span>
+                    <span class="n">viewer</span> <span class="o">=</span> <span class="n">viewer_module</span><span class="o">.</span><span class="n">MiaViewer</span><span class="p">(</span><span class="n">init_global_handlers</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">viewer</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stacks</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">viewer</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">viewers_combo</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+
+                    <span class="c1"># Update global handlers flag</span>
+                    <span class="k">if</span> <span class="n">viewer</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">_global_handlers_initialized</span><span class="p">:</span>
                         <span class="n">init_global_handlers</span> <span class="o">=</span> <span class="kc">False</span>
 
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span>
-                        <span class="s2">&quot;</span><span class="se">\n</span><span class="si">{0}</span><span class="s2"> viewer is not available or not working &quot;</span>
-                        <span class="s2">&quot;...!</span><span class="se">\n</span><span class="s2">Traceback:&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span>
-                    <span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span>
-                        <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)),</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
-                    <span class="p">)</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">: </span><span class="si">{1}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span></div>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> viewer is not available or not working...!&quot;</span><span class="p">,</span>
+                        <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="DataViewerTab.set_documents">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.set_documents">[docs]</a>
     <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shares project with documents to all viewers.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Distribute project and document information to the current viewer.</span>
 
-<span class="sd">        :param project: whole project</span>
-<span class="sd">        :param documents: objects (images) contained in the project</span>
+<span class="sd">        :param project: The entire project context.</span>
+<span class="sd">        :param documents (list): List of document/image objects in the project.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span>
+            <span class="n">current_viewer_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">[</span><span class="n">current_viewer_name</span><span class="p">]</span><span class="o">.</span><span class="n">set_documents</span><span class="p">(</span>
                 <span class="n">project</span><span class="p">,</span> <span class="n">documents</span>
             <span class="p">)</span>
+            <span class="c1"># Update local project and document tracking</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">documents</span></div>
 </div>

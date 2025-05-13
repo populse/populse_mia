@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist package &#8212; populse_mia 2.5.3-dev+4c74f0c5 documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist package &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=dfa0e015" />
-    <script src="_static/documentation_options.js?v=fdbc8fe9"></script>
+    <script src="_static/documentation_options.js?v=a73ba755"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 2.5.3-dev+4c74f0c5 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist package</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -30,59 +30,104 @@
         
   <section id="module-populse_mia.user_interface.data_viewer.anatomist">
 <span id="populse-mia-user-interface-data-viewer-anatomist-package"></span><h1>populse_mia.user_interface.data_viewer.anatomist package<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist" title="Link to this heading">¶</a></h1>
-<p>Blabla</p>
+<p>This is the original viewer based on Anatomist
+(anatomist.simpleviewer.anasimpleviewer).</p>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-populse_mia.user_interface.data_viewer.anatomist.mia_anatomist">
 <span id="populse-mia-user-interface-data-viewer-anatomist-mia-anatomist-module"></span><h2>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist module<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist.mia_anatomist" title="Link to this heading">¶</a></h2>
-<p>MIA data viewer implementation based on <a class="reference external" href="http://brainvisa.info/anatomist/user_doc/index.html">Anatomist</a></p>
+<p>Mia data viewer implementation based on <a class="reference external" href="http://brainvisa.info/anatomist/user_doc/index.html">Anatomist</a></p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>MiaViewer</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">MiaViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code>, <a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a></p>
-<p><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">MIA</span> <span class="pre">data</span> <span class="pre">viewer</span></code></a> # noqa: E501
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a></p>
+<p>A data viewer for Mia (Multiparametric Image Analysis) using PyAnatomist.</p>
+<p>This class provides a specialized viewer for displaying and managing
+medical imaging files with additional filtering and visualization
+capabilities.</p>
+<p><a class="reference internal" href="populse_mia.user_interface.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mia</span> <span class="pre">data</span> <span class="pre">viewer</span></code></a> # noqa: E501
 implementation based on <a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a>  # noqa: E501</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Initialize the MiaViewer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>init_global_handlers</strong> – Initial global handlers for Anatomist
+viewer.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.close" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Close the viewer and manage Anatomist viewer resources.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files">
 <span class="sig-name descname"><span class="pre">display_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.display_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.display_files" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Display the given files in the Anatomist viewer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>files</em>) – List of file paths to display.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.displayed_files">
 <span class="sig-name descname"><span class="pre">displayed_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.displayed_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.displayed_files" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Get the list of currently displayed files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return (List)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of displayed file paths.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.filter_documents">
 <span class="sig-name descname"><span class="pre">filter_documents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.filter_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.filter_documents" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Open a dialog to filter and select documents for visualization.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.remove_files">
 <span class="sig-name descname"><span class="pre">remove_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.remove_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.remove_files" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><p>Remove specified files from the viewer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>files</em>) – List of file paths to remove.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents">
 <span class="sig-name descname"><span class="pre">set_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.set_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents" title="Link to this definition">¶</a></dt>
-<dd><p>blabla</p>
+<dd><blockquote>
+<div><p>Set the current project and documents for the viewer.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>project</strong> – The project to set.</p></li>
+<li><p><strong>(</strong><strong>List</strong><strong>)</strong> (<em>documents</em>) – List of documents in the project.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
