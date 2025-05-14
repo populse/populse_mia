@@ -149,14 +149,19 @@ TAG_FILENAME = "FileName"
 TAG_BRICKS = "History"
 TAG_HISTORY = "Full history"
 CLINICAL_TAGS = {
-    "Site": "the site where the NMR spectrometer is installed",
-    "Spectro": "the NMR spectrometer used",
-    "MR": "the field strength of the NMR spectrometer",
-    "PatientRef": "the patient's anonymous reference",
-    "Pathology": "the patient's pathology",
-    "Age": "the patient's age",
-    "Sex": "the patient's gender",
-    "Message": "a brief message about the patient",
+    "Age": "patient's age",
+    "Institution": "site where the NMR spectrometer is installed",
+    "Manufacturer": "manufacturer of the MRI spectrometer",
+    # fmt: off
+    "Manufacturer's Model":
+        "manufacturer's model name of the MRI spectrometer",
+    # fmt: on
+    "Message": "brief message about the patient",
+    "MagneticFieldStrength": "nominal field strength of MR magnet in Tesla",
+    "PatientRef": "patient's anonymous reference",
+    "Pathology": "patient's pathology",
+    "Sex": "patient's gender",
+    "SoftwareVersions": "tversion of the software used to acquire the data",
 }
 
 # Bricks
