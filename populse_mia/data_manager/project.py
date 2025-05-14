@@ -528,12 +528,11 @@ class Project:
         with self.database.schema() as database_schema:
 
             with database_schema.data() as database_data:
+                field_names = database_data.get_field_names(COLLECTION_CURRENT)
 
                 for clinical_tag in CLINICAL_TAGS:
 
-                    if clinical_tag not in database_data.get_field_names(
-                        COLLECTION_CURRENT
-                    ):
+                    if clinical_tag not in field_names:
 
                         if clinical_tag == "Age":
                             field_type = FIELD_TYPE_INTEGER
@@ -566,6 +565,9 @@ class Project:
                             }
                         )
 
+                        # This step is redundant and could be removed, because
+                        # after creating a field (just above), it seems to me
+                        # that the default value is already None!
                         for scan in database_data.get_document(
                             collection_name=COLLECTION_CURRENT
                         ):
