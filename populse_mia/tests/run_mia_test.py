@@ -10547,13 +10547,26 @@ class Test_Z_MIAOthers(TestMIACase):
 
     :Contains:
         :Method:
-            - test_iteration_table: plays with the iteration table
-            - test_process_library: install the brick_test and then remove it
             - test_check_setup: check that Mia's configuration control is
                                 working correctly
+            - test_iteration_table: plays with the iteration table
+            - test_process_library: install the brick_test and then remove it
+
             - test_verify_processes: check that Mia's processes control is
-                                     working correctly
+                                     working correctly (currently commented)
     """
+
+    def test_check_setup(self):
+        """Check that Mia's configuration control is working correctly.
+
+        - Tests: utils.verify_setup()
+        """
+        dot_mia_config = os.path.join(
+            os.path.dirname(self.properties_path), "configuration_path.yml"
+        )
+
+        QTimer.singleShot(1000, self.execute_QDialogAccept)
+        verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
 
     def test_iteration_table(self):
         """Opens a new project, initializes the pipeline iteration and changes
@@ -10730,18 +10743,6 @@ class Test_Z_MIAOthers(TestMIACase):
         QMenu.exec_ = lambda *args: proc_lib.action_delete
 
         proc_lib.mousePressEvent(mouse_event)
-
-    def test_check_setup(self):
-        """Check that Mia's configuration control is working correctly.
-
-        - Tests: utils.verify_setup()
-        """
-        dot_mia_config = os.path.join(
-            os.path.dirname(self.properties_path), "configuration_path.yml"
-        )
-
-        QTimer.singleShot(1000, self.execute_QDialogAccept)
-        verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
 
 
 #    def test_verify_processes(self):
