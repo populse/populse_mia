@@ -161,7 +161,7 @@ CLINICAL_TAGS = {
     "PatientRef": "patient's anonymous reference",
     "Pathology": "patient's pathology",
     "Sex": "patient's gender",
-    "SoftwareVersions": "tversion of the software used to acquire the data",
+    "SoftwareVersions": "version of the software used to acquire the data",
 }
 
 # Bricks
