@@ -1553,7 +1553,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
 def verify_setup(
     dev_mode,
-    pypath=[],
+    pypath=None,
     dot_mia_config=os.path.join(
         os.path.expanduser("~"), ".populse_mia", "configuration_path.yml"
     ),
@@ -1563,7 +1563,7 @@ def verify_setup(
     :param dev_mode (bool): the current developer mode.
                             (True: dev, False: user)
     :param pypath (list): List of paths for the capsul config.
-    :dot_mia_config: Path to the configuration_path.yml file.
+    :param dot_mia_config (str): Path to the configuration_path.yml file.
 
     :Contains:
         :Private function:
@@ -1577,6 +1577,9 @@ def verify_setup(
 
     # import Config only here to prevent circular import issue
     from populse_mia.software_properties import Config
+
+    if pypath is None:
+        pypath = []
 
     def _browse_properties_path(dialog):
         """
@@ -1703,7 +1706,7 @@ def verify_setup(
 
         if not os.path.exists(user_processes_dir):
             os.makedirs(user_processes_dir, exist_ok=True)
-            logger.info("The {user_processes_dir} directory is created...")
+            logger.info(f"The {user_processes_dir} directory is created...")
 
         init_file = os.path.join(user_processes_dir, "__init__.py")
 
@@ -1905,8 +1908,8 @@ def verify_setup(
                     save_flag = True
                     config.config[key] = True
 
-                if save_flag is True:
-                    config.saveConfig()
+            if save_flag is True:
+                config.saveConfig()
 
     # The directory in which the configuration is located must be
     # declared in ~/.populse_mia/configuration_path.yml
@@ -1921,10 +1924,10 @@ def verify_setup(
             f"The {os.path.dirname(dot_mia_config)} directory is "
             f"created..."
         )
-        Path(os.path.join(dot_mia_config)).touch()
+        Path(dot_mia_config).touch()
 
     if not os.path.exists(dot_mia_config):
-        Path(os.path.join(dot_mia_config)).touch()
+        Path(dot_mia_config).touch()
 
     try:
 
