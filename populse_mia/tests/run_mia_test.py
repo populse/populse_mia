@@ -10566,96 +10566,98 @@ class Test_Z_MIAOthers(TestMIACase):
         verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
         mock_exec.assert_called_once()
 
-    # def test_iteration_table(self):
-    #     """Opens a new project, initializes the pipeline iteration and changes
-    #     its parameters.
+    @patch(
+        "populse_mia.user_interface.pipeline_manager.iteration_table."
+        "PopUpSelectTagCountTable.exec_",
+        return_value=True,
+    )
+    @patch("PyQt5.QtWidgets.QDialog.exec_", return_value=QDialog.Accepted)
+    def test_iteration_table(self, mock_exec, mock_pop_up):
+        """Opens a new project, initializes the pipeline iteration and changes
+        its parameters.
 
-    #     - Tests: IterationTable
+        - Tests: IterationTable behavior without asynchronous dialogs.
 
-    #     - Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
-    #     """
+        - Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
+        """
 
-    #     project_8_path = self.get_new_test_project()
-    #     self.main_window.switch_project(project_8_path, "project_8")
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
 
-    #     # Sets shortcuts for objects that are often used
-    #     iter_table = self.main_window.pipeline_manager.iterationTable
-    #     ppl_manager = self.main_window.pipeline_manager
-    #     ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
+        # Sets shortcuts for objects that are often used
+        iter_table = self.main_window.pipeline_manager.iterationTable
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
 
-    #     # Mocks the execution of a dialog box to avoid asynchronous shot
-    #     QDialog.exec_ = Mock(return_value=QDialog.Accepted)
+        # Allows for the iteration of the pipeline
+        iter_table.check_box_iterate.setChecked(True)
 
-    #     # Allows for the iteration of the pipeline
-    #     iter_table.check_box_iterate.setChecked(True)
+        # Adds a tag and asserts that a tag button was added
+        iter_table.add_tag()
+        self.assertEqual(len(iter_table.push_buttons), 3)
+        self.assertEqual(iter_table.push_buttons[-1].text(), "Tag n°3")
 
-    #     # Adds a tag and asserts that a tag button was added
-    #     iter_table.add_tag()
-    #     self.assertEqual(len(iter_table.push_buttons), 3)
-    #     self.assertEqual(iter_table.push_buttons[-1].text(), "Tag n°3")
+        # Fill the 'values_list' with the tag values in the documents
+        iter_table.push_buttons[2].setText("BandWidth")
+        iter_table.fill_values(2)
+        self.assertTrue(len(iter_table.values_list[-1]) == 3)
+        self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
+        self.assertEqual(iter_table.values_list[-1][0], [65789.48])
 
-    #     # Fill the 'values_list' with the tag values in the documents
-    #     iter_table.push_buttons[2].setText("BandWidth")
-    #     iter_table.fill_values(2)
-    #     self.assertTrue(len(iter_table.values_list[-1]) == 3)
-    #     self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
-    #     self.assertEqual(iter_table.values_list[-1][0], [65789.48])
+        # Removes a tag and asserts that a tag button was removed
+        iter_table.remove_tag()
+        self.assertEqual(len(iter_table.push_buttons), 2)
 
-    #     # Removes a tag and asserts that a tag button was removed
-    #     iter_table.remove_tag()
-    #     self.assertEqual(len(iter_table.push_buttons), 2)
+        # Selects a tag to iterate over, tests 'select_iteration_tag' while
+        # mocking a 'PopUpSelectTagCountTable'.
+        # Due to the PopUpSelectTagCountTable.exec_ mock,
+        # 'iterated_tag' is set as None
+        ppl_editor.iterated_tag = "BandWidth"
+        iter_table.select_iteration_tag()
+        self.assertIsNone(ppl_editor.iterated_tag)
 
-    #     # Mocks the execution of 'PopUpSelectTagCountTable' to avoid
-    #     # asynchronous shot
-    #     PopUpSelectTagCountTable.exec_ = Mock(return_value=True)
+        # Filters the scans matching the selected  'iterated_tag'
+        # Since the execution is mocked, 'tag_values_list' becomes empty
+        iter_table.filter_values()
+        self.assertEqual(ppl_editor.tag_values_list, [])
 
-    #     # Selects a tag to iterate over, tests 'select_iteration_tag' while
-    #     # mocking a 'PopUpSelectTagCountTable'.
-    #     # Due to the above mock, 'iterated_tag' is set as None
-    #     ppl_editor.iterated_tag = "BandWidth"
-    #     iter_table.select_iteration_tag()
-    #     # iter_table.combo_box.clear()
-    #     # iter_table.combo_box.addItems(['[50000.0]'])
-    #     self.assertIsNone(ppl_editor.iterated_tag)
+        # Updates the button with the selected tag
+        iter_table.update_selected_tag("Bandwidth")
 
-    #     # Filters the scans matching the selected  'iterated_tag'
-    #     # Since the execution is mocked, 'tag_values_list' becomes empty
-    #     iter_table.filter_values()
-    #     self.assertTrue(isinstance(ppl_editor.tag_values_list, list))
-    #     self.assertTrue(len(ppl_editor.tag_values_list) == 0)
+        # Selects the visualized tag
+        iter_table.select_visualized_tag(0)
 
-    #     # Updates the button with the selected tag
-    #     iter_table.update_selected_tag("Bandwidth")
+        # Sends the data browser scans to the pipeline manager and updates the
+        # iterated tags
+        with iter_table.project.database.data() as database_data:
+            SCANS_LIST = database_data.get_document_names(COLLECTION_CURRENT)
 
-    #     # Selects the visualized tag
-    #     iter_table.select_visualized_tag(0)
+        ppl_manager.scan_list = SCANS_LIST
+        iter_table.update_iterated_tag()
 
-    #     # Sends the data browser scans to the pipeline manager and updates the
-    #     # iterated tags
-    #     with iter_table.project.database.data() as database_data:
-    #         SCANS_LIST = database_data.get_document_names(COLLECTION_CURRENT)
+        # Updates the iteration table, tests 'update_table' while
+        # mocking the execution of 'filter_documents'
+        DOC_1_NAME = SCANS_LIST[0]
 
-    #     ppl_manager.scan_list = SCANS_LIST
-    #     iter_table.update_iterated_tag()
+        with iter_table.project.database.data() as database_data:
+            DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
 
-    #     # Updates the iteration table, tests 'update_table' while
-    #     # mocking the execution of 'filter_documents'
-    #     DOC_1_NAME = SCANS_LIST[0]
+        # Patch the method directly on the real class
+        # (no mocking of `data()` or context managers)
+        with patch.object(
+            database_data.__class__, "filter_documents", return_value=DOC_1
+        ):
+            ppl_editor.iterated_tag = "BandWidth"
+            iter_table.update_table()
 
-    #     with iter_table.project.database.data() as database_data:
-    #         DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
+        # Asserts that the iteration table has one item
+        self.assertIsNotNone(iter_table.iteration_table.item(0, 0))
+        self.assertIsNone(iter_table.iteration_table.item(1, 0))
 
-    #     # Patch the method directly on the real class
-    #     # (no mocking of `data()` or context managers)
-    #     with patch.object(
-    #         database_data.__class__, "filter_documents", return_value=DOC_1
-    #     ):
-    #         ppl_editor.iterated_tag = "BandWidth"
-    #         iter_table.update_table()
-
-    #     # Asserts that the iteration table has one item
-    #     self.assertIsNotNone(iter_table.iteration_table.item(0, 0))
-    #     self.assertIsNone(iter_table.iteration_table.item(1, 0))
+        # Asserts that QDialog.exec_ and PopUpSelectTagCountTable.exec_
+        # has been called twice
+        self.assertEqual(mock_exec.call_count, 2)
+        self.assertEqual(mock_pop_up.call_count, 2)
 
     # def test_process_library(self):
     #     """Inserts a row, mimes and changes the data and deletes it.
