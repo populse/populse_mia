@@ -59,7 +59,7 @@ from nipype.interfaces.spm import Smooth, Threshold
 from packaging import version
 
 # PyQt5 import
-from PyQt5 import QtGui
+from PyQt5 import QtGui, sip
 from PyQt5.QtCore import (
     QT_VERSION_STR,
     QCoreApplication,
@@ -810,7 +810,6 @@ class TestMIACase(unittest.TestCase):
         for widget in QApplication.topLevelWidgets():
 
             try:
-                import sip
 
                 if not sip.isdeleted(widget):
                     widget.close()
