@@ -8266,2278 +8266,2278 @@ class TestMIAPipelineEditor(TestMIACase):
         )
 
 
-class TestMIAPipelineManagerTab(TestMIACase):
-    """Tests the pipeline manager tab class, part of the homonym tab.
-
-    :Contains:
-        :Method:
-            - test_add_plug_value_to_database_list_type: adds a list type plug
-              value to the database
-            - test_add_plug_value_to_database_non_list_type: adds a non list
-              type plug value to the database
-            - test_add_plug_value_to_database_several_inputs: exports a non
-              list type input plug and with several possible inputs
-            - test_ask_iterated_pipeline_plugs: test the iteration
-              dialog for each plug of a Rename process
-            - test_build_iterated_pipeline: mocks methods and builds an
-              iterated pipeline
-            - test_check_requirements: checks the requirements for a given node
-            - test_cleanup_older_init: tests the cleaning of old
-              initialisations
-            - test_complete_pipeline_parameters: test the pipeline
-              parameters completion
-            - test_delete_processes: deletes a process and makes the undo/redo
-            - test_end_progress: creates a progress object and tries to end it
-            - test_garbage_collect: collects the garbage of a pipeline
-            - test_get_capsul_engine: gets the capsul engine of the pipeline
-            - test_get_missing_mandatory_parameters: tries to initialize
-              the pipeline with missing mandatory parameters
-            - test_get_pipeline_or_process: gets a pipeline and a process from
-              the pipeline_manager
-            - test_initialize: mocks objects and initializes the workflow
-            - test_register_completion_attributes: mocks methods of the
-              pipeline manager and registers completion attributes
-            - test_register_node_io_in_database: sets input and output
-              parameters and registers them in database
-            - test_remove_progress: removes the progress of the pipeline
-            - test_run: creates a pipeline manager progress object and
-              tries to run it
-            - test_save_pipeline: saves a simple pipeline
-            - test_savePipelineAs: saves a pipeline under another name
-            - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
-            - test_show_status: shows the status of pipeline execution
-            - test_stop_execution: shows the status window of the pipeline
-              manager
-            - test_undo_redo: tests the undo/redo feature
-            - test_update_auto_inheritance: updates the job's auto inheritance
-              dict
-            - test_update_inheritance: updates the job's inheritance dict
-            - test_update_node_list: initializes a workflow and adds a
-              process to the "pipline_manager.node_list"
-            - test_z_init_pipeline: initializes the pipeline
-            - test_z_runPipeline: adds a processruns a pipeline
-            - test_zz_del_pack: deletion of the brick created during UTs
-    """
-
-    def test_add_plug_value_to_database_list_type(self):
-        """Opens a project, adds a 'Select' process, exports a list type
-        input plug and adds it to the database.
-
-        - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database().
-        """
-
-        # Opens project 8 and switches to it
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_9")
-
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
-                1
-            ]
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-
-        # Adds the process Select, creates the "select_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "select_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        pipeline_manager = self.main_window.pipeline_manager
-
-        # Initializes the workflow manually
-        pipeline_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-
-        # Gets the 'job' and mocks adding a brick to the collection
-        job = pipeline_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
-        pipeline_manager.brick_list.append(brick_id)
-
-        with pipeline_manager.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
-
-        # Sets the mandatory plug values corresponding to "inputs" node
-        trait_list_inlist = TraitListObject(
-            InputMultiObject(), pipeline, "inlist", [DOCUMENT_1, DOCUMENT_2]
-        )
-
-        # Mocks the creation of a completion engine
-        process = job.process()
-        plug_name = "inlist"
-        trait = process.trait(plug_name)
-        inputs = process.get_inputs()
-
-        # Mocks the attributes dict
-        attributes = {
-            "not_list": "not_list_value",
-            "small_list": ["list_item1"],
-            "large_list": ["list_item1", "list_item2", "list_item3"],
-        }
-
-        # Adds plug value of type 'TraitListObject'
-        pipeline_manager.add_plug_value_to_database(
-            trait_list_inlist,
-            brick_id,
-            "",
-            "select_1",
-            plug_name,
-            "select_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in
-        # the database
-        with pipeline_manager.project.database.data() as database_data:
-            self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
-            )
-            self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_2)
-            )
-
-    def test_add_plug_value_to_database_non_list_type(self):
-        """Opens a project, adds a 'Rename' process, exports a non list type
-        input plug and adds it to the database.
-
-        - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
-        """
-
-        # Opens project 8 and switches to it
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
-
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
-
-        # Adds the process Rename, creates the "rename_1" node
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(Rename)
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "rename_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_all_unconnected_outputs()
-
-        old_scan_name = DOCUMENT_1.split("/")[-1]
-        new_scan_name = "new_name.nii"
-
-        # Changes the "_out_file" in the "outputs" node
-        pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
-        )
-
-        pipeline_manager = self.main_window.pipeline_manager
-        pipeline_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-
-        job = pipeline_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
-        pipeline_manager.brick_list.append(brick_id)
-
-        with pipeline_manager.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
-
-        # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
-
-        process = job.process()
-        plug_name = "in_file"
-        trait = process.trait(plug_name)
-
-        inputs = process.get_inputs()
-
-        attributes = {}
-        completion = ProcessCompletionEngine.get_completion_engine(process)
-
-        if completion:
-            attributes = completion.get_attribute_values().export_to_dict()
-
-        # Plug value is file location outside project directory
-        pipeline_manager.add_plug_value_to_database(
-            DOCUMENT_1,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        with pipeline_manager.project.database.data() as database_data:
-            self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
-            )
-
-        # Plug values outside the directory are not registered into the
-        # database, therefore only plug values inside the project will be used
-        # from now on.
-
-        # Plug value is file location inside project directory
-        inside_project = os.path.join(
-            pipeline_manager.project.folder, DOCUMENT_1.split("/")[-1]
-        )
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Plug value that is already in the database
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Plug value is tag
-        tag_value = os.path.join(pipeline_manager.project.folder, "tag.gz")
-        pipeline_manager.add_plug_value_to_database(
-            tag_value,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Plug value is .mat
-        mat_value = os.path.join(pipeline_manager.project.folder, "file.mat")
-        pipeline_manager.add_plug_value_to_database(
-            mat_value,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Plug value is .txt
-        txt_value = os.path.join(pipeline_manager.project.folder, "file.txt")
-        pipeline_manager.add_plug_value_to_database(
-            txt_value,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # 'parent_files' are extracted from the 'inheritance_dict' and
-        # 'auto_inheritance_dict' attributes of 'job'. They test cases are
-        # listed below:
-        # 'parent_files' inside 'auto_inheritance_dict'
-        job.auto_inheritance_dict = {inside_project: "parent_files_value"}
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # 'parent_files' inside 'inheritance_dict'
-        job.auto_inheritance_dict = None
-        job.inheritance_dict = {inside_project: "parent_files_value"}
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # 'parent_files' inside 'inheritance_dict', dict type
-        job.inheritance_dict = {
-            inside_project: {
-                "own_tags": [
-                    {
-                        "name": "tag_name",
-                        "field_type": FIELD_TYPE_STRING,
-                        "description": "description_content",
-                        "visibility": "visibility_content",
-                        "origin": "origin_content",
-                        "unit": "unit_content",
-                        "value": "value_content",
-                        "default_value": "default_value_content",
-                    }
-                ],
-                "parent": "parent_content",
-            }
-        }
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # 'parent_files' inside 'inheritance_dict', output is one of the inputs
-        job.inheritance_dict = {
-            inside_project: {
-                "own_tags": [
-                    {
-                        "name": "tag_name",
-                        "field_type": FIELD_TYPE_STRING,
-                        "description": "description_content",
-                        "visibility": "visibility_content",
-                        "origin": "origin_content",
-                        "unit": "unit_content",
-                        "value": "value_content",
-                        "default_value": "default_value_content",
-                    }
-                ],
-                "parent": "parent_content",
-                "output": inside_project,
-            }
-        }
-
-        pipeline_manager.add_plug_value_to_database(
-            inside_project,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-    def test_add_plug_value_to_database_several_inputs(self):
-        """Creates a new project folder, adds a 'Rename' process, exports a
-        non list type input plug and with several possible inputs.
-
-        Independently opens an inheritance dict pop-up.
-
-        The test cases are divided into:
-        - 1) 'parent_files' is a dict with 2 keys and identical values
-        - 2) 'parent_files' is a dict with 2 keys and distinct values
-        - 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
-        - 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name +
-             plug value
-
-        - Tests:
-            - PipelineManagerTab.add_plug_value_to_database
-            - PopUpInheritanceDict.
-
-        - Mocks:
-            - PopUpInheritanceDict.exec
-        """
-
-        def mock_get_document(collection, relfile):
-            """Blabla"""
-
-            SCAN_1_ = SCAN_1
-
-            if relfile == "mock_val_1":
-                SCAN_1_._values[3] = "Exp Type 1"
-                return SCAN_1_
-            elif relfile == "mock_val_2":
-                SCAN_1_._values[3] = "Exp Type 2"
-                return SCAN_1_
-
-            return None
-
-        # Those methods are called prior to adding a plug to the database
-        def reset_inheritance_dicts():
-            """Blabla"""
-
-            job.inheritance_dict = {DOCUMENT_1: None}
-            job.auto_inheritance_dict = {DOCUMENT_1: parent_files}
-
-        def reset_collections():
-            """Blabla"""
-
-            with ppl_manager.project.database.data(
-                write=True
-            ) as database_data:
-
-                if database_data.has_document(COLLECTION_CURRENT, P_VALUE):
-                    database_data.remove_document(COLLECTION_CURRENT, P_VALUE)
-
-                if database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1):
-                    database_data.remove_document(
-                        COLLECTION_CURRENT, DOCUMENT_1
-                    )
-
-                if database_data.has_document(COLLECTION_INITIAL, P_VALUE):
-                    database_data.remove_document(COLLECTION_INITIAL, P_VALUE)
-
-                if database_data.has_document(COLLECTION_INITIAL, DOCUMENT_1):
-                    database_data.remove_document(
-                        COLLECTION_INITIAL, DOCUMENT_1
-                    )
-
-        # Sets shortcuts for often used objects
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
-
-        # Creates a new project folder and adds one document to the
-        # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path, "data", "raw_data")
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        P_VALUE = DOCUMENT_1.replace(os.path.abspath(project_8_path), "")[1:]
-
-        with ppl_manager.project.database.data(write=True) as database_data:
-            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
-
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tab.click_pos = QPoint(450, 500)
-        ppl_edt_tab.add_named_process(Rename)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "rename_1"
-        ppl_edt_tab.current_node_name = "rename_1"
-        ppl_edt_tab.export_unconnected_mandatory_inputs()
-        ppl_edt_tab.export_all_unconnected_outputs()
-
-        old_scan_name = DOCUMENT_1.split("/")[-1]
-        new_scan_name = "new_name.nii"
-
-        # Changes the "_out_file" in the "outputs" node
-        pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
-        )
-
-        ppl_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-
-        job = ppl_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
-        ppl_manager.brick_list.append(brick_id)
-
-        with ppl_manager.project.database.data(write=True) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
-
-        # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
-
-        process = job.process()
-        plug_name = "in_file"
-        trait = process.trait(plug_name)
-
-        inputs = process.get_inputs()
-
-        attributes = {}
-        completion = ProcessCompletionEngine.get_completion_engine(process)
-
-        if completion:
-            attributes = completion.get_attribute_values().export_to_dict()
-
-        # Mocks the document getter to always return a scan
-        with ppl_manager.project.database.data() as database_data:
-            SCAN_1 = database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-            database_data.get_document = mock_get_document
-
-            # Mocks the value setter on the database
-            database_data.set_values = Mock()
-
-            # 1) 'parent_files' is a dict with 2 keys and identical values
-            parent_files = {
-                "mock_key_1": os.path.join(
-                    ppl_manager.project.folder, "mock_val_1"
-                ),
-                "mock_key_2": os.path.join(
-                    ppl_manager.project.folder, "mock_val_1"
-                ),
-            }
-
-        reset_inheritance_dicts()
-        reset_collections()
-
-        args = [
-            DOCUMENT_1,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        ]
-
-        ppl_manager.add_plug_value_to_database(*args)
-
-        # Mocks the execution of 'PopUpInheritanceDict' to avoid
-        # asynchronous shot
-        PopUpInheritanceDict.exec = Mock()
-
-        # 2) 'parent_files' is a dict with 2 keys and distinct values
-        # Triggers the execution of 'PopUpInheritanceDict'
-        parent_files["mock_key_2"] = os.path.join(
-            ppl_manager.project.folder, "mock_val_2"
-        )
-
-        reset_inheritance_dicts()
-        reset_collections()
-
-        ppl_manager.add_plug_value_to_database(*args)
-
-        # 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
-        ppl_manager.key = {"rename_1": "mock_key_2"}
-
-        reset_inheritance_dicts()
-        reset_collections()
-
-        ppl_manager.add_plug_value_to_database(*args)
-
-        # 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
-        # + plug value
-        ppl_manager.key = {"rename_1in_file": "mock_key_2"}
-
-        reset_inheritance_dicts()
-        reset_collections()
-
-        ppl_manager.add_plug_value_to_database(*args)
-
-        # Independently tests 'PopUpInheritanceDict'
-        pop_up = PopUpInheritanceDict(
-            {"mock_key": "mock_value"},
-            "mock_full_name",
-            "mock_plug_name",
-            True,
-        )
-
-        pop_up.ok_clicked()
-        pop_up.okall_clicked()
-        pop_up.ignore_clicked()
-        pop_up.ignoreall_clicked()
-        pop_up.ignore_node_clicked()
-
-    def test_ask_iterated_pipeline_plugs(self):
-        """Adds the process 'Rename', export mandatory input and output plug
-        and opens an iteration dialog for each plug.
-
-        - Tests: PipelineManagerTab.ask_iterated_pipeline_plugs
-        """
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-        pipeline_manager = self.main_window.pipeline_manager
-
-        # Exports the mandatory input and output plugs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Mocks executing a dialog box and clicking close
-        QDialog.exec_ = lambda self_, *args: self_.accept()
-
-        pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
-
-    def test_build_iterated_pipeline(self):
-        """Adds a 'Select' process, exports its mandatory inputs, mocks
-        some methods of the pipeline manager and builds an iterated pipeline.
-
-        - Tests:'PipelineManagerTab.build_iterated_pipeline'
-        """
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Adds the processes Select, creates the "select_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "select_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Mocks 'parent_pipeline' and returns a 'Process' instead of a
-        # 'Pipeline'
-        pipeline = pipeline.nodes["select_1"].process
-        pipeline.parent_pipeline = True
-
-        ppl_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
-
-        # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple
-        # '(iterated_plugs, database_plugs)'
-        ppl_manager.ask_iterated_pipeline_plugs = MagicMock(
-            return_value=(["index", "inlist", "_out"], ["inlist"])
-        )
-
-        # Mocks 'update_nodes_and_plugs_activation' with no returned values
-        pipeline.update_nodes_and_plugs_activation = MagicMock()
-
-        # Builds iterated pipeline
-        print("\n\n** An exception message is expected below\n")
-        ppl_manager.build_iterated_pipeline()
-
-        # Asserts the mock methods were called as expected
-        ppl_manager.get_pipeline_or_process.assert_called_once_with()
-        ppl_manager.ask_iterated_pipeline_plugs.assert_called_once_with(
-            pipeline
-        )
-        pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
-
-    def test_check_requirements(self):
-        """Adds a 'Select' process, appends it to the nodes list and checks
-        the requirements for the given node.
-
-        - Tests: PipelineManagerTab.check_requirements
-        """
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        pipeline_manager = self.main_window.pipeline_manager
-
-        # Adds the processes Select, creates the "select_1" node
-        process_class = Select
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Appends a 'Process' to 'pipeline_manager.node_list' and checks
-        # requirements
-        pipeline_manager.node_list.append(pipeline.nodes["select_1"].process)
-        config = pipeline_manager.check_requirements()
-
-        # Asserts the output
-        self.assertTrue(isinstance(config, dict))
-        self.assertTrue(
-            list(config[next(iter(config))].keys())
-            == ["capsul_engine", "capsul.engine.module.nipype"]
-        )
-
-    def test_cleanup_older_init(self):
-        """Mocks a brick list, mocks some methods from the pipeline manager
-        and cleans up old initialization results.
-
-        - Tests: PipelineManagerTab.cleanup_older_init
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Mocks a 'pipeline_manager.brick_list'
-        brick_id = str(uuid.uuid4())
-        ppl_manager.brick_list.append(brick_id)
-
-        # Mocks methods used in the test
-        (ppl_manager.main_window.data_browser.table_data.delete_from_brick) = (
-            MagicMock()
-        )
-        ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
-
-        # Cleans up older init
-        ppl_manager.cleanup_older_init()
-
-        # Asserts that the mock methods were called as expected
-        # fmt: off
-        (
-            ppl_manager.main_window.data_browser.table_data.delete_from_brick.
-            assert_called_once_with(brick_id)
-        )
-        (
-            ppl_manager.project.cleanup_orphan_nonexisting_files.
-            assert_called_once_with()
-        )
-        # fmt: on
-
-        # Asserts that both 'brick_list' and 'node_list' were cleaned
-        self.assertTrue(len(ppl_manager.brick_list) == 0)
-        self.assertTrue(len(ppl_manager.node_list) == 0)
-
-    def test_complete_pipeline_parameters(self):
-        """Mocks a method of pipeline manager and completes the pipeline
-        parameters.
-
-        - Tests: PipelineManagerTab.complete_pipeline_parameters
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Mocks method used in the test
-        ppl_manager.get_capsul_engine = MagicMock(
-            return_value=ppl_manager.get_pipeline_or_process()
-        )
-
-        # Complete pipeline parameters
-        ppl_manager.complete_pipeline_parameters()
-
-        # Asserts that the mock method was called as expected
-        ppl_manager.get_capsul_engine.assert_called_once_with()
-
-    def test_delete_processes(self):
-        """Deletes a process and makes the undo/redo action."""
-
-        pipeline_manager = self.main_window.pipeline_manager
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
-
-        # Adding processes
-        process_class = Smooth
-
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        # Creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        # Creates a node called "smooth_2"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        # Creates a node called "smooth_3"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_1", "_smoothed_files"),
-            ("smooth_2", "in_files"),
-            active=True,
-            weak=False,
-        )
-
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_2", "_smoothed_files"),
-            ("smooth_3", "in_files"),
-            active=True,
-            weak=False,
-        )
-
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
-        )
-
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "smooth_2"
-        )
-        pipeline_editor_tabs.get_current_editor().del_node()
-
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-
-        pipeline_manager.undo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
-        )
-
-        pipeline_manager.redo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-
-    def test_end_progress(self):
-        """Creates a pipeline manager progress object and tries to end it.
-
-        - Tests RunProgress.end_progress
-        """
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Creates a 'RunProgress' object
-        ppl_manager.progress = RunProgress(ppl_manager)
-
-        # 'ppl_manager.worker' does not have a 'exec_id'
-        ppl_manager.progress.end_progress()
-
-        # Mocks an 'exec_id' and an 'get_pipeline_or_process'
-        ppl_manager.progress.worker.exec_id = str(uuid.uuid4())
-        engine = ppl.get_study_config().engine
-        engine.raise_for_status = Mock()
-
-        # Ends the progress with success
-        ppl_manager.progress.end_progress()
-
-        engine.raise_for_status.assert_called_once_with(
-            ppl_manager.progress.worker.status,
-            ppl_manager.progress.worker.exec_id,
-        )
-
-        # Mocks a 'WorkflowExecutionError' exception
-        engine.raise_for_status = Mock(
-            side_effect=WorkflowExecutionError({}, {}, verbose=False)
-        )
-
-        # Raises a 'WorkflowExecutionError' while ending progress
-        # ppl_manager.progress.end_progress()
-        # FIXME: the above call to the function leads to a Segmentation
-        #        fault when the test routine is launched in AppVeyor.
-
-    def test_garbage_collect(self):
-        """Mocks several objects of the pipeline manager and collects the
-        garbage of the pipeline.
-
-        - Tests: PipelineManagerTab.test_garbage_collect
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-
-        # INTEGRATED TEST
-
-        # Mocks the 'initialized' object
-        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
-
-        # Collects the garbage
-        ppl_manager.garbage_collect()
-
-        # Asserts that the 'initialized' object changed state
-        self.assertFalse(
-            ppl_manager.pipelineEditorTabs.get_current_editor().initialized
-        )
-
-        # ISOLATED TEST
-
-        # Mocks again the 'initialized' object
-        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
-
-        # Mocks the methods used in the test
-        ppl_manager.postprocess_pipeline_execution = MagicMock()
-        ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
-        ppl_manager.project.cleanup_orphan_history = MagicMock()
-        (ppl_manager.main_window.data_browser.table_data.update_table) = (
-            MagicMock()
-        )
-        ppl_manager.update_user_buttons_states = MagicMock()
-
-        # Collects the garbage
-        ppl_manager.garbage_collect()
-
-        # Asserts that the 'initialized' object changed state
-        self.assertFalse(
-            ppl_manager.pipelineEditorTabs.get_current_editor().initialized
-        )
-
-        # Asserts that the mocked methods were called as expected
-        ppl_manager.postprocess_pipeline_execution.assert_called_once_with()
-        # fmt: off
-        (
-            ppl_manager.project.cleanup_orphan_nonexisting_files.
-            assert_called_once_with()
-        )
-        # fmt: on
-        ppl_manager.project.cleanup_orphan_history.assert_called_once_with()
-        # fmt:off
-        (
-            ppl_manager.main_window.data_browser.table_data.update_table.
-            assert_called_once_with()
-        )
-        # fmt:on
-        ppl_manager.update_user_buttons_states.assert_called_once_with()
-
-    def test_get_capsul_engine(self):
-        """Mocks an object in the pipeline manager and gets the capsul engine
-        of the pipeline.
-
-        - Tests: PipelineManagerTab.get_capsul_engine
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-
-        # INTEGRATED
-
-        # Gets the capsul engine
-        capsul_engine = ppl_manager.get_capsul_engine()
-
-        # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
-        self.assertIsInstance(capsul_engine, CapsulEngine)
-
-        # ISOLATED
-        ppl_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
-
-        # Gets the capsul engine
-        _ = ppl_manager.get_capsul_engine()
-
-        # Asserts that the mocked method was called as expected
-        # fmt: off
-        (
-            ppl_manager.pipelineEditorTabs.get_capsul_engine.
-            assert_called_once_with()
-        )
-        # fmt: on
-
-    def test_get_missing_mandatory_parameters(self):
-        """
-        Adds a process, exports input and output plugs and tries to initialize
-        the pipeline with missing mandatory parameters.
-
-        -Tests: PipelineManagerTab.get_missing_mandatory_parameters
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory inputs and outputs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        (
-            ppl_edt_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor()._export_plug(
-            temp_plug_name=("rename_1", "_out_file"),
-            pipeline_parameter="_out_file",
-            optional=False,
-            weak_link=False,
-        )
-
-        # Initializes the pipeline
-        ppl_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-        ppl_manager.update_node_list()
-
-        # Asserts that 2 mandatory parameters are missing
-        ppl_manager.update_node_list()
-        missing_inputs = ppl_manager.get_missing_mandatory_parameters()
-        self.assertEqual(len(missing_inputs), 2)
-        self.assertEqual(missing_inputs[0], "rename_1.format_string")
-        self.assertEqual(missing_inputs[1], "rename_1.in_file")
-
-        # Empties the jobs list
-        ppl_manager.workflow.jobs = []
-
-        # Asserts that 2 mandatory parameters are still missing
-        missing_inputs = ppl_manager.get_missing_mandatory_parameters()
-        self.assertEqual(len(missing_inputs), 2)
-        self.assertEqual(missing_inputs[0], "rename_1.format_string")
-        self.assertEqual(missing_inputs[1], "rename_1.in_file")
-
-    def test_get_pipeline_or_process(self):
-        """Adds a process and gets a pipeline and a process from the pipeline
-        manager.
-
-        - Tests: PipelineManagerTab.get_pipeline_or_process
-        """
-
-        # Sets shortcuts for often used objects
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        # Gets the pipeline
-        pipeline = ppl_manager.get_pipeline_or_process()
-
-        # Asserts that the object 'pipeline' is a 'Pipeline'
-        self.assertIsInstance(pipeline, Pipeline)
-
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Gets a process
-        process = ppl_manager.get_pipeline_or_process()
-
-        # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
-        self.assertIsInstance(process, NipypeProcess)
-
-    def test_initialize(self):
-        """Adds Select process, exports its plugs, mocks objects from the
-        pipeline manager and initializes the workflow.
-
-        - Tests: the PipelineManagerTab.initialize
-        """
-
-        # Gets the paths of 2 documents
-        folder = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "mia_ut_data",
-            "resources",
-            "mia",
-            "project_8",
-            "data",
-            "raw_data",
-        )
-
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        # Adds the process 'Rename' as the node 'rename_1'
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory inputs and outputs for 'select_1'
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Sets mandatory parameters 'select_1'
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", "new_name.nii")
-
-        # Checks that there is no workflow index
-        self.assertIsNone(ppl_manager.workflow)
-
-        # Mocks objects
-        ppl_manager.init_clicked = True
-        ppl_manager.ignore_node = True
-        ppl_manager.key = {"item": "item_value"}
-        ppl_manager.ignore = {"item": "item_value"}
-
-        # Mocks methods
-        ppl_manager.init_pipeline = Mock()
-        # FIXME: if the method 'init_pipeline' is not mocked the whole
-        #        test routine fails with a 'Segmentation Fault'
-
-        # Initializes the pipeline
-        ppl_manager.initialize()
-
-        # Asserts that a workflow has been created
-        # self.assertIsNotNone(ppl_manager.workflow)
-        # from soma_workflow.client_types import Workflow
-        # self.assertIsInstance(ppl_manager.workflow, Workflow)
-        # FiXME: the above code else leads to 'Segmentation Fault'
-
-        self.assertFalse(ppl_manager.ignore_node)
-        self.assertEqual(len(ppl_manager.key), 0)
-        self.assertEqual(len(ppl_manager.ignore), 0)
-        ppl_manager.init_pipeline.assert_called_once_with()
-
-        # Mocks an object to induce an exception
-        ppl_manager.init_pipeline = None
-
-        # Induces an exception in the pipeline initialization
-        print("\n\n** an exception message is expected below")
-        ppl_manager.initialize()
-
-        self.assertFalse(ppl_manager.ignore_node)
-
-    def test_register_completion_attributes(self):
-        """Mocks methods of the pipeline manager and registers completion
-        attributes.
-
-        Since a method of the ProcessCompletionEngine class is mocked,
-        this test may render the upcoming test routine unstable.
-
-        - Tests: PipelineManagerTab.register_completion_attributes
-        """
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        folder = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "mia_ut_data",
-            "resources",
-            "mia",
-            "project_8",
-            "data",
-            "raw_data",
-        )
-
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
-        )
-        NII_FILE_2 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
-
-        # Adds a Select processes, creates the 'select_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
-
-        # Export plugs and sets their values
-        print("\n\n** an exception message is expected below\n")
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        ppl.nodes[""].set_plug_value("inlist", [DOCUMENT_1, DOCUMENT_2])
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(ppl_manager.project.folder)), ""
-        )
-        output_dir = os.path.join(proj_dir, "output_file.nii")
-        ppl.nodes[""].set_plug_value("_out", output_dir)
-
-        # Register completion without 'attributes'
-        ppl_manager.register_completion_attributes(ppl)
-
-        # Mocks 'get_capsul_engine' for the method not to throw an error
-        # with the insertion of the upcoming mock
-        capsul_engine = ppl_edt_tabs.get_capsul_engine()
-        ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
-
-        # Mocks attributes values that are in the tags list
-        attributes = {TAG_CHECKSUM: "Checksum_value"}
-        (
-            ProcessCompletionEngine.get_completion_engine(
-                ppl
-            ).get_attribute_values
-        )().export_to_dict = Mock(return_value=attributes)
-
-        # Register completion with mocked 'attributes'
-        ppl_manager.register_completion_attributes(ppl)
-
-    def test_register_node_io_in_database(self):
-        """Adds a process, sets input and output parameters and registers them
-        in database.
-
-        - Tests: PipelineManagerTab._register_node_io_in_database
-        """
-
-        # Opens project 8 and switches to it
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_9")
-
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
-
-        # Adds the processes Rename, creates the "rename_1" node
-        process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "rename_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_all_unconnected_outputs()
-
-        old_scan_name = DOCUMENT_1.split("/")[-1]
-        new_scan_name = "new_name.nii"
-
-        # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
-
-        # Changes the "_out_file" in the "outputs" node
-        pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
-        )
-
-        pipeline_manager = self.main_window.pipeline_manager
-        pipeline_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-
-        job = pipeline_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
-        pipeline_manager.brick_list.append(brick_id)
-
-        with pipeline_manager.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
-
-        pipeline_manager._register_node_io_in_database(job, job.process())
-
-        # Simulates a 'ProcessNode()' as 'process'
-        process_node = ProcessNode(pipeline, "", job.process())
-        pipeline_manager._register_node_io_in_database(job, process_node)
-
-        # Simulates a 'PipelineNode()' as 'process'
-        pipeline_node = PipelineNode(pipeline, "", job.process())
-        pipeline_manager._register_node_io_in_database(job, pipeline_node)
-
-        # Simulates a 'Switch()' as 'process'
-        switch = Switch(pipeline, "", [""], [""])
-        switch.completion_engine = None
-        pipeline_manager._register_node_io_in_database(job, switch)
-
-        # Simulates a list of outputs in 'process'
-        job.process().list_outputs = []
-        job.process().outputs = []
-        pipeline_manager._register_node_io_in_database(job, job.process())
-
-    def test_remove_progress(self):
-        """Mocks an object of the pipeline manager and removes its progress.
-
-        - Tests: PipelineManagerTab.remove_progress
-        """
-
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Mocks the 'progress' object
-        ppl_manager.progress = RunProgress(ppl_manager)
-
-        # Removes progress
-        ppl_manager.remove_progress()
-
-        # Asserts that the object 'progress' was deleted
-        self.assertFalse(hasattr(ppl_manager, "progress"))
-
-    def test_run(self):
-        """Adds a process, creates a pipeline manager progress object and
-        tries to run it while mocking methods of the pipeline manager.
-
-        - Tests: RunWorker.run
-        """
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-        folder = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "mia_ut_data",
-            "resources",
-            "mia",
-            "project_8",
-            "data",
-            "raw_data",
-        )
-        # project_8_path = self.get_new_test_project()
-        # ppl_manager.project.folder = project_8_path
-        # folder = os.path.join(project_8_path, "data", "raw_data")
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
-        )
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Sets the mandatory parameters
-        ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
-
-        # Creates a 'RunProgress' object
-        ppl_manager.progress = RunProgress(ppl_manager)
-
-        # Mocks a node that does not have a process and a node that has
-        # a pipeline as a process
-        ppl.nodes["switch"] = Switch(ppl, "", [""], [""])
-        ppl.nodes["pipeline"] = ProcessNode(ppl, "pipeline", Pipeline())
-
-        ppl_manager.progress.worker.run()
-
-        # Mocks 'get_pipeline_or_process' to return a 'NipypeProcess' instead
-        # of a 'Pipeline' and 'postprocess_pipeline_execution' to throw an
-        # exception
-        ppl_manager.progress = RunProgress(ppl_manager)
-        # fmt: off
-        (
-            ppl_manager.progress.worker.pipeline_manager.
-            get_pipeline_or_process
-        ) = Mock(return_value=ppl.nodes["rename_1"].process)
-        (
-            ppl_manager.progress.worker.pipeline_manager.
-            postprocess_pipeline_execution
-        ) = Mock(side_effect=ValueError())
-        # fmt: on
-        # print("\n\n** an exception message is expected below\n")
-        ppl_manager.progress.worker.run()
-
-        # Mocks an interruption request
-        ppl_manager.progress.worker.interrupt_request = True
-
-        ppl_manager.progress.worker.run()
-
-    def test_savePipeline(self):
-        """Mocks methods of the pipeline manager and tries to save the pipeline
-        over several conditions.
-
-        -Tests: PipelineManagerTab.savePipeline
-        """
-
-        def click_yes(self_):
-            """Blabla"""
-
-            close_button = self_.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        config = Config(properties_path=self.properties_path)
-        ppl_path = os.path.join(
-            config.get_properties_path(),
-            "processes",
-            "User_processes",
-            "test_pipeline_1.py",
-        )
-
-        ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
-
-        # Save pipeline as with empty filename, unchecked
-        ppl_manager.savePipeline(uncheck=True)
-
-        # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
-
-        # Saves pipeline as with empty filename, checked
-        ppl_manager.savePipeline(uncheck=True)
-
-        # Sets the path to save the pipeline
-        ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
-
-        # Saves pipeline as with filled filename, uncheck
-        ppl_manager.savePipeline(uncheck=True)
-
-        # Mocks executing a dialog box and clicking close
-        QMessageBox.exec = lambda self_, *args: self_.close()
-
-        # Aborts pipeline saving with filled filename
-        ppl_manager.savePipeline()
-
-        # Mocks executing a dialog box and clicking yes
-        QMessageBox.exec = click_yes
-
-        # Accept pipeline saving with filled filename
-        ppl_manager.savePipeline()
-
-    def test_savePipelineAs(self):
-        """Mocks a method from pipeline manager and saves a pipeline under
-        another name.
-
-        - Tests: PipelineManagerTab.savePipelineAs
-        """
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        # Saves pipeline with empty filename
-        ppl_manager.savePipelineAs()
-
-        # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
-
-        # Saves pipeline with not empty filename
-        ppl_manager.savePipelineAs()
-
-    def test_set_anim_frame(self):
-        """Runs the 'rotatingBrainVISA.gif' animation."""
-
-        pipeline_manager = self.main_window.pipeline_manager
-
-        config = Config()
-        sources_images_dir = config.getSourceImageDir()
-        self.assertTrue(sources_images_dir)  # if the string is not empty
-
-        pipeline_manager._mmovie = QtGui.QMovie(
-            os.path.join(sources_images_dir, "rotatingBrainVISA.gif")
-        )
-        pipeline_manager._set_anim_frame()
-
-    def test_show_status(self):
-        """Shows the status of the pipeline execution.
-
-        Indirectly tests StatusWidget.__init__ and
-        StatusWidget.toggle_soma_workflow.
-
-        -Tests: PipelineManagerTab.test_show_status
-        """
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Shows the status of the pipeline's execution
-        ppl_manager.show_status()
-
-        self.assertIsNone(ppl_manager.status_widget.swf_widget)
-
-        # Creates 'ppl_manager.status_widget.swf_widget', not visible by
-        # default (the argument is irrelevant)
-        ppl_manager.status_widget.toggle_soma_workflow(False)
-
-        # Asserts that 'swf_widget' has been created and is visible
-        self.assertIsNotNone(ppl_manager.status_widget.swf_widget)
-        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
-
-        # Toggles visibility on
-        ppl_manager.status_widget.toggle_soma_workflow(False)
-        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
-
-        # Toggles visibility off
-        ppl_manager.status_widget.toggle_soma_workflow(True)
-        self.assertTrue(ppl_manager.status_widget.swf_widget.isVisible())
-
-    def test_stop_execution(self):
-        """Shows the status window of the pipeline manager.
-
-        - Tests: PipelineManagerTab.test_show_status
-        """
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Creates a 'RunProgress' object
-        ppl_manager.progress = RunProgress(ppl_manager)
-
-        ppl_manager.stop_execution()
-
-        self.assertTrue(ppl_manager.progress.worker.interrupt_request)
-
-    def test_undo_redo(self):
-        """Tests the undo/redo action."""
-
-        config = Config(properties_path=self.properties_path)
-        controlV1_ver = config.isControlV1()
-
-        # Switch to V1 node controller GUI, if necessary
-        if not controlV1_ver:
-            config.setControlV1(True)
-            self.restart_MIA()
-
-        # Set shortcuts for objects that are often used
-        pipeline_manager = self.main_window.pipeline_manager
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
-
-        # Creates a new project folder and adds one document to the
-        # project
-        # test_proj_path = self.get_new_test_project()
-        # folder = os.path.join(test_proj_path, 'data', 'raw_data')
-        # NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-
-        #                      '04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-        # DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Creates a project with another project already opened
-        # self.main_window.data_browser.table_data.add_path()
-
-        # pop_up_add_path = (self.main_window.data_browser.
-        #                                         table_data.pop_up_add_path)
-
-        # pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
-        # pop_up_add_path.save_path()
-
-        # self.main_window.undo()
-
-        # self.main_window.redo()
-
-        # Mocks not saving the pipeline
-        # QMessageBox.exec = lambda self_, *arg: self_.buttons(
-        #                                                  )[-1].clicked.emit()
-
-        # Switches to pipeline manager
-        self.main_window.tabs.setCurrentIndex(2)
-
-        # Add a Smooth process => creates a node called "smooth_1",
-        # test if Smooth_1 is a node in the current pipeline / editor
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-
-        # Undo (remove the node), test if the node was removed
-        pipeline_manager.undo()
-        self.assertFalse("smooth_1" in pipeline.nodes.keys())
-
-        # Redo (add again the node), test if the node was added
-        pipeline_manager.redo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-
-        # Delete the node, test if the node was removed
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "smooth_1"
-        )
-        pipeline_editor_tabs.get_current_editor().del_node()
-        self.assertFalse("smooth_1" in pipeline.nodes.keys())
-
-        # Undo (add again the node), test if the node was added
-        pipeline_manager.undo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-
-        # Redo (delete again the node), test if the node was removed
-        pipeline_manager.redo()
-        self.assertFalse("smooth1" in pipeline.nodes.keys())
-
-        # Adding a new Smooth process => creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-
-        # Export the "out_prefix" plug as "prefix_smooth" in Input node, test
-        # if the Input node have a prefix_smooth plug
-        pipeline_editor_tabs.get_current_editor()._export_plug(
-            temp_plug_name=("smooth_1", "out_prefix"),
-            pipeline_parameter="prefix_smooth",
-            optional=False,
-            weak_link=False,
-        )
-        self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # Undo (remove prefix_smooth from Input node),
-        # test if the prefix_smooth plug was deleted from Input node
-        pipeline_manager.undo()
-        self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # redo (export again the "out_prefix" plug),
-        # test if the Input node have a prefix_smooth plug
-        pipeline_manager.redo()
-        self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # Delete the "prefix_smooth" plug from the Input node,
-        # test if the Input node have not a prefix_smooth plug
-        pipeline_editor_tabs.get_current_editor()._remove_plug(
-            _temp_plug_name=("inputs", "prefix_smooth")
-        )
-        self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # Undo (export again the "out_prefix" plug),
-        # test if the Input node have a prefix_smooth plug
-        pipeline_manager.undo()
-        self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # redo (deleting the "prefix_smooth" plug from the Input node),
-        # test if the Input node have not a prefix_smooth plug
-        pipeline_manager.redo()
-        self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-
-        # FIXME: export_plugs (currently there is a bug if a plug is
-        #        of type list)
-
-        # Adding a new Smooth process => creates a node called "smooth_2"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 550)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-
-        # Adding a link
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_1", "_smoothed_files"),
-            ("smooth_2", "in_files"),
-            active=True,
-            weak=False,
-        )
-
-        # test if the 2 nodes have the good links
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Undo (remove the link), test if the 2 nodes have not the links
-        pipeline_manager.undo()
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Redo (add again the link), test if the 2 nodes have the good links
-        pipeline_manager.redo()
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Removing the link, test if the 2 nodes have not the links
-        link = "smooth_1._smoothed_files->smooth_2.in_files"
-        pipeline_editor_tabs.get_current_editor()._del_link(link)
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Undo (add again the link), test if the 2 nodes have the good links
-        pipeline_manager.undo()
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Redo (remove the link), test if the 2 nodes have not the links
-        pipeline_manager.redo()
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Re-adding a link
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_1", "_smoothed_files"),
-            ("smooth_2", "in_files"),
-            active=True,
-            weak=False,
-        )
-
-        # Updating the node name
-        process = pipeline.nodes["smooth_2"].process
-        pipeline_manager.displayNodeParameters("smooth_2", process)
-        node_controller = self.main_window.pipeline_manager.nodeController
-        node_controller.display_parameters("smooth_2", process, pipeline)
-        node_controller.line_edit_node_name.setText("my_smooth")
-        keyEvent = QtGui.QKeyEvent(
-            QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
-        )
-        QCoreApplication.postEvent(
-            node_controller.line_edit_node_name, keyEvent
-        )
-        QTest.qWait(100)
-
-        # test if the smooth_2 node has been replaced by the
-        # my_smooth node and test the links
-        self.assertTrue("my_smooth" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertEqual(
-            1, len(pipeline.nodes["my_smooth"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Undo (Updating the node name from my_smooth to smooth_2),
-        # test if it's ok
-        pipeline_manager.undo()
-        QTest.qWait(100)
-        self.assertFalse("my_smooth" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Redo (Updating the node name from smooth_2 to my_smooth),
-        # test if it's ok
-        pipeline_manager.redo()
-        QTest.qWait(100)
-        self.assertTrue("my_smooth" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertEqual(
-            1, len(pipeline.nodes["my_smooth"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-
-        # Updating a plug value
-        if hasattr(node_controller, "get_index_from_plug_name"):
-            index = node_controller.get_index_from_plug_name(
-                "out_prefix", "in"
-            )
-            node_controller.line_edit_input[index].setText("PREFIX")
-            node_controller.update_plug_value(
-                "in", "out_prefix", pipeline, str
-            )
-
-            self.assertEqual(
-                "PREFIX",
-                pipeline.nodes["my_smooth"].get_plug_value("out_prefix"),
-            )
-
-            self.main_window.undo()
-            self.assertEqual(
-                "s", pipeline.nodes["my_smooth"].get_plug_value("out_prefix")
-            )
-
-            self.main_window.redo()
-            self.assertEqual(
-                "PREFIX",
-                pipeline.nodes["my_smooth"].get_plug_value("out_prefix"),
-            )
-
-        # Switches back to node controller V2, if necessary (return to initial
-        # state)
-        config = Config(properties_path=self.properties_path)
-
-        if not controlV1_ver:
-            config.setControlV1(False)
-
-    def test_update_auto_inheritance(self):
-        """Adds a process and updates the job's auto inheritance dict.
-
-        - Tests: PipelineManagerTab.update_auto_inheritance
-        """
-
-        project_8_path = self.get_new_test_project()
-        folder = os.path.join(
-            project_8_path,
-            "data",
-            "raw_data",
-        )
-
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
-        )
-        NII_FILE_2 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
-
-        DOCUMENT_1 = os.path.realpath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.realpath(os.path.join(folder, NII_FILE_2))
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        ppl.nodes["rename_1"].set_plug_value("in_file", DOCUMENT_1)
-        node = ppl.nodes["rename_1"]
-
-        # Initializes the workflow manually
-        ppl_manager.workflow = workflow_from_pipeline(
-            ppl, complete_parameters=True
-        )
-
-        job = ppl_manager.workflow.jobs[0]
-
-        # Mocks the node's parameters
-        node.auto_inheritance_dict = {}
-        process = node.process
-
-        real_project = Mock()
-        fake_db_data = Mock()
-        fake_db_data.has_document.return_value = True
-
-        @contextmanager
-        def fake_data_cm():
-            """
-            Context manager that yields mock database data for testing
-            purposes.
-
-            :yields: The fake database data object used in tests.
-            """
-            yield fake_db_data
-
-        real_project.database = Mock()
-        real_project.database.data = fake_data_cm
-
-        process.study_config.project = real_project
-        process.study_config.project.folder = os.path.dirname(project_8_path)
-        process.outputs = []
-        process.list_outputs = []
-        process.auto_inheritance_dict = {}
-
-        # Mocks 'job.param_dict' to share items with both the inputs and
-        # outputs list of the process
-        # Note: only 'in_file' and '_out_file' are file trait types
-        job.param_dict["_out_file"] = "_out_file_value"
-
-        ppl_manager.update_auto_inheritance(node, job)
-
-        # 'job.param_dict' as list of objects
-        job.param_dict["inlist"] = [DOCUMENT_1, DOCUMENT_2]
-        process.get_outputs = Mock(return_value={"_out": ["_out_value"]})
-        process.add_trait(
-            "_out", OutputMultiPath(File(exists=True), desc="out files")
-        )
-        job.param_dict["_out"] = ["_out_value"]
-        ppl_manager.update_auto_inheritance(node, job)
-
-        # 'node' does not have a 'project'
-        del node.process.study_config.project
-        ppl_manager.update_auto_inheritance(node, job)
-
-        # 'node' is not a 'Process'
-        node = {}
-        ppl_manager.update_auto_inheritance(node, job)
-
-    def test_update_inheritance(self):
-        """Adds a process and updates the job's inheritance dict.
-
-        - Tests: PipelineManagerTab.update_inheritance
-        """
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        node = ppl.nodes["rename_1"]
-
-        # Initializes the workflow manually
-        ppl_manager.workflow = workflow_from_pipeline(
-            ppl, complete_parameters=True
-        )
-
-        # Gets the 'job' and mocks adding a brick to the collection
-        job = ppl_manager.workflow.jobs[0]
-
-        # Node's name does not contains 'Pipeline'
-        node.context_name = ""
-        node.process.inheritance_dict = {"item": "value"}
-        ppl_manager.project.node_inheritance_history = {}
-        ppl_manager.update_inheritance(job, node)
-
-        self.assertEqual(job.inheritance_dict, {"item": "value"})
-
-        # Node's name contains 'Pipeline'
-        node.context_name = "Pipeline.rename_1"
-        ppl_manager.update_inheritance(job, node)
-
-        self.assertEqual(job.inheritance_dict, {"item": "value"})
-
-        # Node's name in 'node_inheritance_history'
-        (ppl_manager.project.node_inheritance_history["rename_1"]) = [
-            {0: "new_value"}
-        ]
-        ppl_manager.update_inheritance(job, node)
-
-        self.assertEqual(job.inheritance_dict, {0: "new_value"})
-
-    def test_update_node_list(self):
-        """Adds a process, exports input and output plugs, initializes a
-        workflow and adds the process to the "pipline_manager.node_list".
-
-        - Tests: PipelineManagerTab.update_node_list
-        """
-
-        # Set shortcuts for often used objects
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-
-        process_class = Rename
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory inputs and outputs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Initializes the workflow
-        ppl_manager.workflow = workflow_from_pipeline(
-            pipeline, complete_parameters=True
-        )
-
-        # Asserts that the "node_list" is empty by default
-        node_list = self.main_window.pipeline_manager.node_list
-        self.assertEqual(len(node_list), 0)
-
-        # Asserts that the process "Rename" was added to "node_list"
-        ppl_manager.update_node_list()
-        self.assertEqual(len(node_list), 1)
-        self.assertEqual(node_list[0]._nipype_class, "Rename")
-
-    def test_z_init_pipeline(self):
-        """Adds a process, mocks several parameters from the pipeline
-        manager and initializes the pipeline.
-
-        - Tests: PipelineManagerTab.init_pipeline
-        """
-
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Gets the path of one document
-        folder = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
-            "mia_ut_data",
-            "resources",
-            "mia",
-            "project_8",
-            "data",
-            "raw_data",
-        )
-
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
-        )
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Verifies that all the processes were added
-        self.assertEqual(["", "rename_1"], ppl.nodes.keys())
-
-        # Initialize the pipeline with missing mandatory parameters
-        ppl_manager.workflow = workflow_from_pipeline(
-            ppl, complete_parameters=True
-        )
-
-        # Mocks executing a dialog box, instead shows it
-        QMessageBox.exec = lambda self_, *args: self_.show()
-
-        ppl_manager.update_node_list()
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-        # Sets the mandatory parameters
-        ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
-
-        # Mocks an iteration pipeline
-        ppl.name = "Iteration_pipeline"
-        process_it = ProcessIteration(ppl.nodes["rename_1"].process, "")
-        ppl.list_process_in_pipeline.append(process_it)
-
-        # Initialize the pipeline with mandatory parameters set
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        # init_result = ppl_manager.init_pipeline(pipeline=ppl)
-        # ppl_manager.msg.accept()
-
-        # Mocks requirements to {} and initializes the pipeline
-        ppl_manager.check_requirements = Mock(return_value={})
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-        # ppl_manager.check_requirements.assert_called_once_with(
-        #    "global", message_list=[]
-        # )
-        ppl_manager.check_requirements.assert_called_once()
-        # Mocks external packages as requirements and initializes the pipeline
-        pkgs = ["fsl", "afni", "ants", "matlab", "mrtrix", "spm"]
-        req = {"capsul_engine": {"uses": Mock()}}
-
-        for pkg in pkgs:
-            req[f"capsul.engine.module.{pkg}"] = {"directory": False}
-
-        req["capsul_engine"]["uses"].get = Mock(return_value=1)
-        proc = Mock()
-        proc.context_name = "moke_process"
-        req = {proc: req}
-        ppl_manager.check_requirements = Mock(return_value=req)
-
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-        # Extra steps for SPM
-        req[proc]["capsul.engine.module.spm"]["directory"] = True
-        req[proc]["capsul.engine.module.spm"]["standalone"] = True
-        Config().set_matlab_standalone_path(None)
-
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-        req[proc]["capsul.engine.module.spm"]["standalone"] = False
-
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-        # Deletes an attribute of each package requirement
-        for pkg in pkgs:
-            del req[proc][f"capsul.engine.module.{pkg}"]
-
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-        # Mocks a 'ValueError' in 'workflow_from_pipeline'
-        ppl.find_empty_parameters = Mock(side_effect=ValueError)
-
-        # QTimer.singleShot(1000, self.execute_QDialogAccept)
-        init_result = ppl_manager.init_pipeline()
-        ppl_manager.msg.accept()
-        self.assertFalse(init_result)
-
-    def test_z_runPipeline(self):
-        """Adds a process, export plugs and runs a pipeline.
-
-        - Tests:
-            - PipelineManagerTab.runPipeline
-            - PipelineManagerTab.finish_execution
-            - RunProgress
-            - RunWorker
-        """
-
-        # Set shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
-
-        # Creates a new project folder and adds one document to the
-        # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path, "data", "raw_data")
-        NII_FILE_1 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Switches to pipeline manager tab
-        self.main_window.tabs.setCurrentIndex(2)
-
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
-        # Sets the mandatory parameters
-        ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
-
-        # Test successful pipeline run with patched thread start
-        with (
-            patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
-            patch(
-                "populse_mia.user_interface.pipeline_manager."
-                "pipeline_manager_tab.RunWorker.start"
-            ) as mock_start,
-        ):
-            ppl_manager.runPipeline()
-
-            self.assertEqual(ppl_manager.last_run_pipeline, ppl)
-            mock_start.assert_called_once()
-
-        QTest.qWait(2000)
-
-        # Test pipeline run with manual interruption
-        # (simulate failure before execution)
-        with (
-            patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
-            patch(
-                "populse_mia.user_interface.pipeline_manager."
-                "pipeline_manager_tab.RunWorker.start"
-            ) as mock_start,
-        ):
-            ppl_manager.runPipeline()
-            ppl_manager.stop_execution()
-
-            # Simulate the worker finishing
-            worker = ppl_manager.progress.worker
-            worker.finished.emit()
-
-        QTest.qWait(2000)
-
-    def test_zz_del_pack(self):
-        """We remove the brick created during the unit tests, and we take
-        advantage of this to cover the part of the code used to remove the
-        packages"""
-
-        pkg = PackageLibraryDialog(self.main_window)
-
-        # The Test_pipeline brick was added in the package library
-        self.assertTrue(
-            "Test_pipeline_1"
-            in pkg.package_library.package_tree["User_processes"]
-        )
-
-        pkg.delete_package(
-            to_delete="User_processes.Test_pipeline_1", loop=True
-        )
-
-        # The Test_pipeline brick has been removed from the package library
-        self.assertFalse(
-            "Test_pipeline_1"
-            in pkg.package_library.package_tree["User_processes"]
-        )
+# class TestMIAPipelineManagerTab(TestMIACase):
+#     """Tests the pipeline manager tab class, part of the homonym tab.
+
+#     :Contains:
+#         :Method:
+#             - test_add_plug_value_to_database_list_type: adds a list type plug
+#               value to the database
+#             - test_add_plug_value_to_database_non_list_type: adds a non list
+#               type plug value to the database
+#             - test_add_plug_value_to_database_several_inputs: exports a non
+#               list type input plug and with several possible inputs
+#             - test_ask_iterated_pipeline_plugs: test the iteration
+#               dialog for each plug of a Rename process
+#             - test_build_iterated_pipeline: mocks methods and builds an
+#               iterated pipeline
+#             - test_check_requirements: checks the requirements for a given node
+#             - test_cleanup_older_init: tests the cleaning of old
+#               initialisations
+#             - test_complete_pipeline_parameters: test the pipeline
+#               parameters completion
+#             - test_delete_processes: deletes a process and makes the undo/redo
+#             - test_end_progress: creates a progress object and tries to end it
+#             - test_garbage_collect: collects the garbage of a pipeline
+#             - test_get_capsul_engine: gets the capsul engine of the pipeline
+#             - test_get_missing_mandatory_parameters: tries to initialize
+#               the pipeline with missing mandatory parameters
+#             - test_get_pipeline_or_process: gets a pipeline and a process from
+#               the pipeline_manager
+#             - test_initialize: mocks objects and initializes the workflow
+#             - test_register_completion_attributes: mocks methods of the
+#               pipeline manager and registers completion attributes
+#             - test_register_node_io_in_database: sets input and output
+#               parameters and registers them in database
+#             - test_remove_progress: removes the progress of the pipeline
+#             - test_run: creates a pipeline manager progress object and
+#               tries to run it
+#             - test_save_pipeline: saves a simple pipeline
+#             - test_savePipelineAs: saves a pipeline under another name
+#             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
+#             - test_show_status: shows the status of pipeline execution
+#             - test_stop_execution: shows the status window of the pipeline
+#               manager
+#             - test_undo_redo: tests the undo/redo feature
+#             - test_update_auto_inheritance: updates the job's auto inheritance
+#               dict
+#             - test_update_inheritance: updates the job's inheritance dict
+#             - test_update_node_list: initializes a workflow and adds a
+#               process to the "pipline_manager.node_list"
+#             - test_z_init_pipeline: initializes the pipeline
+#             - test_z_runPipeline: adds a processruns a pipeline
+#             - test_zz_del_pack: deletion of the brick created during UTs
+#     """
+
+#     def test_add_plug_value_to_database_list_type(self):
+#         """Opens a project, adds a 'Select' process, exports a list type
+#         input plug and adds it to the database.
+
+#         - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database().
+#         """
+
+#         # Opens project 8 and switches to it
+#         project_8_path = self.get_new_test_project()
+#         self.main_window.switch_project(project_8_path, "project_9")
+
+#         with self.main_window.project.database.data() as database_data:
+#             DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+#                 0
+#             ]
+#             DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
+#                 1
+#             ]
+
+#         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+
+#         # Adds the process Select, creates the "select_1" node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Select)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory input and output plugs for "select_1"
+#         ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         pipeline_manager = self.main_window.pipeline_manager
+
+#         # Initializes the workflow manually
+#         pipeline_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+
+#         # Gets the 'job' and mocks adding a brick to the collection
+#         job = pipeline_manager.workflow.jobs[0]
+
+#         brick_id = str(uuid.uuid4())
+#         job.uuid = brick_id
+#         pipeline_manager.brick_list.append(brick_id)
+
+#         with pipeline_manager.project.database.data(
+#             write=True
+#         ) as database_data:
+#             database_data.add_document(COLLECTION_BRICK, brick_id)
+
+#         # Sets the mandatory plug values corresponding to "inputs" node
+#         trait_list_inlist = TraitListObject(
+#             InputMultiObject(), pipeline, "inlist", [DOCUMENT_1, DOCUMENT_2]
+#         )
+
+#         # Mocks the creation of a completion engine
+#         process = job.process()
+#         plug_name = "inlist"
+#         trait = process.trait(plug_name)
+#         inputs = process.get_inputs()
+
+#         # Mocks the attributes dict
+#         attributes = {
+#             "not_list": "not_list_value",
+#             "small_list": ["list_item1"],
+#             "large_list": ["list_item1", "list_item2", "list_item3"],
+#         }
+
+#         # Adds plug value of type 'TraitListObject'
+#         pipeline_manager.add_plug_value_to_database(
+#             trait_list_inlist,
+#             brick_id,
+#             "",
+#             "select_1",
+#             plug_name,
+#             "select_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in
+#         # the database
+#         with pipeline_manager.project.database.data() as database_data:
+#             self.assertTrue(
+#                 database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
+#             )
+#             self.assertTrue(
+#                 database_data.has_document(COLLECTION_CURRENT, DOCUMENT_2)
+#             )
+
+#     def test_add_plug_value_to_database_non_list_type(self):
+#         """Opens a project, adds a 'Rename' process, exports a non list type
+#         input plug and adds it to the database.
+
+#         - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
+#         """
+
+#         # Opens project 8 and switches to it
+#         project_8_path = self.get_new_test_project()
+#         self.main_window.switch_project(project_8_path, "project_8")
+
+#         with self.main_window.project.database.data() as database_data:
+#             DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+#                 0
+#             ]
+
+#         pipeline_editor_tabs = (
+#             self.main_window.pipeline_manager.pipelineEditorTabs
+#         )
+
+#         # Adds the process Rename, creates the "rename_1" node
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         pipeline_editor_tabs.get_current_editor().add_named_process(Rename)
+#         pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+#         # Exports the mandatory input and output plugs for "rename_1"
+#         pipeline_editor_tabs.get_current_editor().current_node_name = (
+#             "rename_1"
+#         )
+#         (
+#             pipeline_editor_tabs.get_current_editor
+#         )().export_unconnected_mandatory_inputs()
+#         (
+#             pipeline_editor_tabs.get_current_editor
+#         )().export_all_unconnected_outputs()
+
+#         old_scan_name = DOCUMENT_1.split("/")[-1]
+#         new_scan_name = "new_name.nii"
+
+#         # Changes the "_out_file" in the "outputs" node
+#         pipeline.nodes[""].set_plug_value(
+#             "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+#         )
+
+#         pipeline_manager = self.main_window.pipeline_manager
+#         pipeline_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+
+#         job = pipeline_manager.workflow.jobs[0]
+
+#         brick_id = str(uuid.uuid4())
+#         job.uuid = brick_id
+#         pipeline_manager.brick_list.append(brick_id)
+
+#         with pipeline_manager.project.database.data(
+#             write=True
+#         ) as database_data:
+#             database_data.add_document(COLLECTION_BRICK, brick_id)
+
+#         # Sets the mandatory plug values in the "inputs" node
+#         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
+
+#         process = job.process()
+#         plug_name = "in_file"
+#         trait = process.trait(plug_name)
+
+#         inputs = process.get_inputs()
+
+#         attributes = {}
+#         completion = ProcessCompletionEngine.get_completion_engine(process)
+
+#         if completion:
+#             attributes = completion.get_attribute_values().export_to_dict()
+
+#         # Plug value is file location outside project directory
+#         pipeline_manager.add_plug_value_to_database(
+#             DOCUMENT_1,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         with pipeline_manager.project.database.data() as database_data:
+#             self.assertTrue(
+#                 database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
+#             )
+
+#         # Plug values outside the directory are not registered into the
+#         # database, therefore only plug values inside the project will be used
+#         # from now on.
+
+#         # Plug value is file location inside project directory
+#         inside_project = os.path.join(
+#             pipeline_manager.project.folder, DOCUMENT_1.split("/")[-1]
+#         )
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # Plug value that is already in the database
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # Plug value is tag
+#         tag_value = os.path.join(pipeline_manager.project.folder, "tag.gz")
+#         pipeline_manager.add_plug_value_to_database(
+#             tag_value,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # Plug value is .mat
+#         mat_value = os.path.join(pipeline_manager.project.folder, "file.mat")
+#         pipeline_manager.add_plug_value_to_database(
+#             mat_value,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # Plug value is .txt
+#         txt_value = os.path.join(pipeline_manager.project.folder, "file.txt")
+#         pipeline_manager.add_plug_value_to_database(
+#             txt_value,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # 'parent_files' are extracted from the 'inheritance_dict' and
+#         # 'auto_inheritance_dict' attributes of 'job'. They test cases are
+#         # listed below:
+#         # 'parent_files' inside 'auto_inheritance_dict'
+#         job.auto_inheritance_dict = {inside_project: "parent_files_value"}
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # 'parent_files' inside 'inheritance_dict'
+#         job.auto_inheritance_dict = None
+#         job.inheritance_dict = {inside_project: "parent_files_value"}
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # 'parent_files' inside 'inheritance_dict', dict type
+#         job.inheritance_dict = {
+#             inside_project: {
+#                 "own_tags": [
+#                     {
+#                         "name": "tag_name",
+#                         "field_type": FIELD_TYPE_STRING,
+#                         "description": "description_content",
+#                         "visibility": "visibility_content",
+#                         "origin": "origin_content",
+#                         "unit": "unit_content",
+#                         "value": "value_content",
+#                         "default_value": "default_value_content",
+#                     }
+#                 ],
+#                 "parent": "parent_content",
+#             }
+#         }
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#         # 'parent_files' inside 'inheritance_dict', output is one of the inputs
+#         job.inheritance_dict = {
+#             inside_project: {
+#                 "own_tags": [
+#                     {
+#                         "name": "tag_name",
+#                         "field_type": FIELD_TYPE_STRING,
+#                         "description": "description_content",
+#                         "visibility": "visibility_content",
+#                         "origin": "origin_content",
+#                         "unit": "unit_content",
+#                         "value": "value_content",
+#                         "default_value": "default_value_content",
+#                     }
+#                 ],
+#                 "parent": "parent_content",
+#                 "output": inside_project,
+#             }
+#         }
+
+#         pipeline_manager.add_plug_value_to_database(
+#             inside_project,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         )
+
+#     def test_add_plug_value_to_database_several_inputs(self):
+#         """Creates a new project folder, adds a 'Rename' process, exports a
+#         non list type input plug and with several possible inputs.
+
+#         Independently opens an inheritance dict pop-up.
+
+#         The test cases are divided into:
+#         - 1) 'parent_files' is a dict with 2 keys and identical values
+#         - 2) 'parent_files' is a dict with 2 keys and distinct values
+#         - 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
+#         - 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name +
+#              plug value
+
+#         - Tests:
+#             - PipelineManagerTab.add_plug_value_to_database
+#             - PopUpInheritanceDict.
+
+#         - Mocks:
+#             - PopUpInheritanceDict.exec
+#         """
+
+#         def mock_get_document(collection, relfile):
+#             """Blabla"""
+
+#             SCAN_1_ = SCAN_1
+
+#             if relfile == "mock_val_1":
+#                 SCAN_1_._values[3] = "Exp Type 1"
+#                 return SCAN_1_
+#             elif relfile == "mock_val_2":
+#                 SCAN_1_._values[3] = "Exp Type 2"
+#                 return SCAN_1_
+
+#             return None
+
+#         # Those methods are called prior to adding a plug to the database
+#         def reset_inheritance_dicts():
+#             """Blabla"""
+
+#             job.inheritance_dict = {DOCUMENT_1: None}
+#             job.auto_inheritance_dict = {DOCUMENT_1: parent_files}
+
+#         def reset_collections():
+#             """Blabla"""
+
+#             with ppl_manager.project.database.data(
+#                 write=True
+#             ) as database_data:
+
+#                 if database_data.has_document(COLLECTION_CURRENT, P_VALUE):
+#                     database_data.remove_document(COLLECTION_CURRENT, P_VALUE)
+
+#                 if database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1):
+#                     database_data.remove_document(
+#                         COLLECTION_CURRENT, DOCUMENT_1
+#                     )
+
+#                 if database_data.has_document(COLLECTION_INITIAL, P_VALUE):
+#                     database_data.remove_document(COLLECTION_INITIAL, P_VALUE)
+
+#                 if database_data.has_document(COLLECTION_INITIAL, DOCUMENT_1):
+#                     database_data.remove_document(
+#                         COLLECTION_INITIAL, DOCUMENT_1
+#                     )
+
+#         # Sets shortcuts for often used objects
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
+
+#         # Creates a new project folder and adds one document to the
+#         # project, sets the plug value that is added to the database
+#         project_8_path = self.get_new_test_project()
+#         ppl_manager.project.folder = project_8_path
+#         folder = os.path.join(project_8_path, "data", "raw_data")
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
+#             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+#         )
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+#         P_VALUE = DOCUMENT_1.replace(os.path.abspath(project_8_path), "")[1:]
+
+#         with ppl_manager.project.database.data(write=True) as database_data:
+#             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+
+#         # Adds the processes Rename, creates the "rename_1" node
+#         ppl_edt_tab.click_pos = QPoint(450, 500)
+#         ppl_edt_tab.add_named_process(Rename)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory input and output plugs for "rename_1"
+#         ppl_edt_tab.current_node_name = "rename_1"
+#         ppl_edt_tab.export_unconnected_mandatory_inputs()
+#         ppl_edt_tab.export_all_unconnected_outputs()
+
+#         old_scan_name = DOCUMENT_1.split("/")[-1]
+#         new_scan_name = "new_name.nii"
+
+#         # Changes the "_out_file" in the "outputs" node
+#         pipeline.nodes[""].set_plug_value(
+#             "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+#         )
+
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+
+#         job = ppl_manager.workflow.jobs[0]
+
+#         brick_id = str(uuid.uuid4())
+#         job.uuid = brick_id
+#         ppl_manager.brick_list.append(brick_id)
+
+#         with ppl_manager.project.database.data(write=True) as database_data:
+#             database_data.add_document(COLLECTION_BRICK, brick_id)
+
+#         # Sets the mandatory plug values in the "inputs" node
+#         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
+
+#         process = job.process()
+#         plug_name = "in_file"
+#         trait = process.trait(plug_name)
+
+#         inputs = process.get_inputs()
+
+#         attributes = {}
+#         completion = ProcessCompletionEngine.get_completion_engine(process)
+
+#         if completion:
+#             attributes = completion.get_attribute_values().export_to_dict()
+
+#         # Mocks the document getter to always return a scan
+#         with ppl_manager.project.database.data() as database_data:
+#             SCAN_1 = database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
+#             database_data.get_document = mock_get_document
+
+#             # Mocks the value setter on the database
+#             database_data.set_values = Mock()
+
+#             # 1) 'parent_files' is a dict with 2 keys and identical values
+#             parent_files = {
+#                 "mock_key_1": os.path.join(
+#                     ppl_manager.project.folder, "mock_val_1"
+#                 ),
+#                 "mock_key_2": os.path.join(
+#                     ppl_manager.project.folder, "mock_val_1"
+#                 ),
+#             }
+
+#         reset_inheritance_dicts()
+#         reset_collections()
+
+#         args = [
+#             DOCUMENT_1,
+#             brick_id,
+#             "",
+#             "rename_1",
+#             plug_name,
+#             "rename_1",
+#             job,
+#             trait,
+#             inputs,
+#             attributes,
+#         ]
+
+#         ppl_manager.add_plug_value_to_database(*args)
+
+#         # Mocks the execution of 'PopUpInheritanceDict' to avoid
+#         # asynchronous shot
+#         PopUpInheritanceDict.exec = Mock()
+
+#         # 2) 'parent_files' is a dict with 2 keys and distinct values
+#         # Triggers the execution of 'PopUpInheritanceDict'
+#         parent_files["mock_key_2"] = os.path.join(
+#             ppl_manager.project.folder, "mock_val_2"
+#         )
+
+#         reset_inheritance_dicts()
+#         reset_collections()
+
+#         ppl_manager.add_plug_value_to_database(*args)
+
+#         # 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
+#         ppl_manager.key = {"rename_1": "mock_key_2"}
+
+#         reset_inheritance_dicts()
+#         reset_collections()
+
+#         ppl_manager.add_plug_value_to_database(*args)
+
+#         # 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
+#         # + plug value
+#         ppl_manager.key = {"rename_1in_file": "mock_key_2"}
+
+#         reset_inheritance_dicts()
+#         reset_collections()
+
+#         ppl_manager.add_plug_value_to_database(*args)
+
+#         # Independently tests 'PopUpInheritanceDict'
+#         pop_up = PopUpInheritanceDict(
+#             {"mock_key": "mock_value"},
+#             "mock_full_name",
+#             "mock_plug_name",
+#             True,
+#         )
+
+#         pop_up.ok_clicked()
+#         pop_up.okall_clicked()
+#         pop_up.ignore_clicked()
+#         pop_up.ignoreall_clicked()
+#         pop_up.ignore_node_clicked()
+
+#     def test_ask_iterated_pipeline_plugs(self):
+#         """Adds the process 'Rename', export mandatory input and output plug
+#         and opens an iteration dialog for each plug.
+
+#         - Tests: PipelineManagerTab.ask_iterated_pipeline_plugs
+#         """
+
+#         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+
+#         # Adds the processes Rename, creates the "rename_1" node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+#         pipeline_manager = self.main_window.pipeline_manager
+
+#         # Exports the mandatory input and output plugs for "rename_1"
+#         ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Mocks executing a dialog box and clicking close
+#         QDialog.exec_ = lambda self_, *args: self_.accept()
+
+#         pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
+
+#     def test_build_iterated_pipeline(self):
+#         """Adds a 'Select' process, exports its mandatory inputs, mocks
+#         some methods of the pipeline manager and builds an iterated pipeline.
+
+#         - Tests:'PipelineManagerTab.build_iterated_pipeline'
+#         """
+
+#         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Adds the processes Select, creates the "select_1" node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Select)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory input and output plugs for "select_1"
+#         ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Mocks 'parent_pipeline' and returns a 'Process' instead of a
+#         # 'Pipeline'
+#         pipeline = pipeline.nodes["select_1"].process
+#         pipeline.parent_pipeline = True
+
+#         ppl_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
+
+#         # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple
+#         # '(iterated_plugs, database_plugs)'
+#         ppl_manager.ask_iterated_pipeline_plugs = MagicMock(
+#             return_value=(["index", "inlist", "_out"], ["inlist"])
+#         )
+
+#         # Mocks 'update_nodes_and_plugs_activation' with no returned values
+#         pipeline.update_nodes_and_plugs_activation = MagicMock()
+
+#         # Builds iterated pipeline
+#         print("\n\n** An exception message is expected below\n")
+#         ppl_manager.build_iterated_pipeline()
+
+#         # Asserts the mock methods were called as expected
+#         ppl_manager.get_pipeline_or_process.assert_called_once_with()
+#         ppl_manager.ask_iterated_pipeline_plugs.assert_called_once_with(
+#             pipeline
+#         )
+#         pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
+
+#     def test_check_requirements(self):
+#         """Adds a 'Select' process, appends it to the nodes list and checks
+#         the requirements for the given node.
+
+#         - Tests: PipelineManagerTab.check_requirements
+#         """
+
+#         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+#         pipeline_manager = self.main_window.pipeline_manager
+
+#         # Adds the processes Select, creates the "select_1" node
+#         process_class = Select
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Appends a 'Process' to 'pipeline_manager.node_list' and checks
+#         # requirements
+#         pipeline_manager.node_list.append(pipeline.nodes["select_1"].process)
+#         config = pipeline_manager.check_requirements()
+
+#         # Asserts the output
+#         self.assertTrue(isinstance(config, dict))
+#         self.assertTrue(
+#             list(config[next(iter(config))].keys())
+#             == ["capsul_engine", "capsul.engine.module.nipype"]
+#         )
+
+#     def test_cleanup_older_init(self):
+#         """Mocks a brick list, mocks some methods from the pipeline manager
+#         and cleans up old initialization results.
+
+#         - Tests: PipelineManagerTab.cleanup_older_init
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Mocks a 'pipeline_manager.brick_list'
+#         brick_id = str(uuid.uuid4())
+#         ppl_manager.brick_list.append(brick_id)
+
+#         # Mocks methods used in the test
+#         (ppl_manager.main_window.data_browser.table_data.delete_from_brick) = (
+#             MagicMock()
+#         )
+#         ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+
+#         # Cleans up older init
+#         ppl_manager.cleanup_older_init()
+
+#         # Asserts that the mock methods were called as expected
+#         # fmt: off
+#         (
+#             ppl_manager.main_window.data_browser.table_data.delete_from_brick.
+#             assert_called_once_with(brick_id)
+#         )
+#         (
+#             ppl_manager.project.cleanup_orphan_nonexisting_files.
+#             assert_called_once_with()
+#         )
+#         # fmt: on
+
+#         # Asserts that both 'brick_list' and 'node_list' were cleaned
+#         self.assertTrue(len(ppl_manager.brick_list) == 0)
+#         self.assertTrue(len(ppl_manager.node_list) == 0)
+
+#     def test_complete_pipeline_parameters(self):
+#         """Mocks a method of pipeline manager and completes the pipeline
+#         parameters.
+
+#         - Tests: PipelineManagerTab.complete_pipeline_parameters
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Mocks method used in the test
+#         ppl_manager.get_capsul_engine = MagicMock(
+#             return_value=ppl_manager.get_pipeline_or_process()
+#         )
+
+#         # Complete pipeline parameters
+#         ppl_manager.complete_pipeline_parameters()
+
+#         # Asserts that the mock method was called as expected
+#         ppl_manager.get_capsul_engine.assert_called_once_with()
+
+#     def test_delete_processes(self):
+#         """Deletes a process and makes the undo/redo action."""
+
+#         pipeline_manager = self.main_window.pipeline_manager
+#         pipeline_editor_tabs = (
+#             self.main_window.pipeline_manager.pipelineEditorTabs
+#         )
+
+#         # Adding processes
+#         process_class = Smooth
+
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         # Creates a node called "smooth_1"
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+#         # Creates a node called "smooth_2"
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+#         # Creates a node called "smooth_3"
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+
+#         pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_2" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_3" in pipeline.nodes.keys())
+
+#         pipeline_editor_tabs.get_current_editor().add_link(
+#             ("smooth_1", "_smoothed_files"),
+#             ("smooth_2", "in_files"),
+#             active=True,
+#             weak=False,
+#         )
+
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         pipeline_editor_tabs.get_current_editor().add_link(
+#             ("smooth_2", "_smoothed_files"),
+#             ("smooth_3", "in_files"),
+#             active=True,
+#             weak=False,
+#         )
+
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         pipeline_editor_tabs.get_current_editor().current_node_name = (
+#             "smooth_2"
+#         )
+#         pipeline_editor_tabs.get_current_editor().del_node()
+
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+#         self.assertFalse("smooth_2" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_3" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             0,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+#         self.assertEqual(
+#             0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
+#         )
+
+#         pipeline_manager.undo()
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_2" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_3" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         pipeline_manager.redo()
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+#         self.assertFalse("smooth_2" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_3" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             0,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+#         self.assertEqual(
+#             0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
+#         )
+
+#     def test_end_progress(self):
+#         """Creates a pipeline manager progress object and tries to end it.
+
+#         - Tests RunProgress.end_progress
+#         """
+
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Creates a 'RunProgress' object
+#         ppl_manager.progress = RunProgress(ppl_manager)
+
+#         # 'ppl_manager.worker' does not have a 'exec_id'
+#         ppl_manager.progress.end_progress()
+
+#         # Mocks an 'exec_id' and an 'get_pipeline_or_process'
+#         ppl_manager.progress.worker.exec_id = str(uuid.uuid4())
+#         engine = ppl.get_study_config().engine
+#         engine.raise_for_status = Mock()
+
+#         # Ends the progress with success
+#         ppl_manager.progress.end_progress()
+
+#         engine.raise_for_status.assert_called_once_with(
+#             ppl_manager.progress.worker.status,
+#             ppl_manager.progress.worker.exec_id,
+#         )
+
+#         # Mocks a 'WorkflowExecutionError' exception
+#         engine.raise_for_status = Mock(
+#             side_effect=WorkflowExecutionError({}, {}, verbose=False)
+#         )
+
+#         # Raises a 'WorkflowExecutionError' while ending progress
+#         # ppl_manager.progress.end_progress()
+#         # FIXME: the above call to the function leads to a Segmentation
+#         #        fault when the test routine is launched in AppVeyor.
+
+#     def test_garbage_collect(self):
+#         """Mocks several objects of the pipeline manager and collects the
+#         garbage of the pipeline.
+
+#         - Tests: PipelineManagerTab.test_garbage_collect
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # INTEGRATED TEST
+
+#         # Mocks the 'initialized' object
+#         ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
+
+#         # Collects the garbage
+#         ppl_manager.garbage_collect()
+
+#         # Asserts that the 'initialized' object changed state
+#         self.assertFalse(
+#             ppl_manager.pipelineEditorTabs.get_current_editor().initialized
+#         )
+
+#         # ISOLATED TEST
+
+#         # Mocks again the 'initialized' object
+#         ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
+
+#         # Mocks the methods used in the test
+#         ppl_manager.postprocess_pipeline_execution = MagicMock()
+#         ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+#         ppl_manager.project.cleanup_orphan_history = MagicMock()
+#         (ppl_manager.main_window.data_browser.table_data.update_table) = (
+#             MagicMock()
+#         )
+#         ppl_manager.update_user_buttons_states = MagicMock()
+
+#         # Collects the garbage
+#         ppl_manager.garbage_collect()
+
+#         # Asserts that the 'initialized' object changed state
+#         self.assertFalse(
+#             ppl_manager.pipelineEditorTabs.get_current_editor().initialized
+#         )
+
+#         # Asserts that the mocked methods were called as expected
+#         ppl_manager.postprocess_pipeline_execution.assert_called_once_with()
+#         # fmt: off
+#         (
+#             ppl_manager.project.cleanup_orphan_nonexisting_files.
+#             assert_called_once_with()
+#         )
+#         # fmt: on
+#         ppl_manager.project.cleanup_orphan_history.assert_called_once_with()
+#         # fmt:off
+#         (
+#             ppl_manager.main_window.data_browser.table_data.update_table.
+#             assert_called_once_with()
+#         )
+#         # fmt:on
+#         ppl_manager.update_user_buttons_states.assert_called_once_with()
+
+#     def test_get_capsul_engine(self):
+#         """Mocks an object in the pipeline manager and gets the capsul engine
+#         of the pipeline.
+
+#         - Tests: PipelineManagerTab.get_capsul_engine
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # INTEGRATED
+
+#         # Gets the capsul engine
+#         capsul_engine = ppl_manager.get_capsul_engine()
+
+#         # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
+#         self.assertIsInstance(capsul_engine, CapsulEngine)
+
+#         # ISOLATED
+#         ppl_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
+
+#         # Gets the capsul engine
+#         _ = ppl_manager.get_capsul_engine()
+
+#         # Asserts that the mocked method was called as expected
+#         # fmt: off
+#         (
+#             ppl_manager.pipelineEditorTabs.get_capsul_engine.
+#             assert_called_once_with()
+#         )
+#         # fmt: on
+
+#     def test_get_missing_mandatory_parameters(self):
+#         """
+#         Adds a process, exports input and output plugs and tries to initialize
+#         the pipeline with missing mandatory parameters.
+
+#         -Tests: PipelineManagerTab.get_missing_mandatory_parameters
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory inputs and outputs for "rename_1"
+#         ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
+#         (
+#             ppl_edt_tabs.get_current_editor
+#         )().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor()._export_plug(
+#             temp_plug_name=("rename_1", "_out_file"),
+#             pipeline_parameter="_out_file",
+#             optional=False,
+#             weak_link=False,
+#         )
+
+#         # Initializes the pipeline
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+#         ppl_manager.update_node_list()
+
+#         # Asserts that 2 mandatory parameters are missing
+#         ppl_manager.update_node_list()
+#         missing_inputs = ppl_manager.get_missing_mandatory_parameters()
+#         self.assertEqual(len(missing_inputs), 2)
+#         self.assertEqual(missing_inputs[0], "rename_1.format_string")
+#         self.assertEqual(missing_inputs[1], "rename_1.in_file")
+
+#         # Empties the jobs list
+#         ppl_manager.workflow.jobs = []
+
+#         # Asserts that 2 mandatory parameters are still missing
+#         missing_inputs = ppl_manager.get_missing_mandatory_parameters()
+#         self.assertEqual(len(missing_inputs), 2)
+#         self.assertEqual(missing_inputs[0], "rename_1.format_string")
+#         self.assertEqual(missing_inputs[1], "rename_1.in_file")
+
+#     def test_get_pipeline_or_process(self):
+#         """Adds a process and gets a pipeline and a process from the pipeline
+#         manager.
+
+#         - Tests: PipelineManagerTab.get_pipeline_or_process
+#         """
+
+#         # Sets shortcuts for often used objects
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         # Gets the pipeline
+#         pipeline = ppl_manager.get_pipeline_or_process()
+
+#         # Asserts that the object 'pipeline' is a 'Pipeline'
+#         self.assertIsInstance(pipeline, Pipeline)
+
+#         # Adds the processes Rename, creates the "rename_1" node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         # Gets a process
+#         process = ppl_manager.get_pipeline_or_process()
+
+#         # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
+#         self.assertIsInstance(process, NipypeProcess)
+
+#     def test_initialize(self):
+#         """Adds Select process, exports its plugs, mocks objects from the
+#         pipeline manager and initializes the workflow.
+
+#         - Tests: the PipelineManagerTab.initialize
+#         """
+
+#         # Gets the paths of 2 documents
+#         folder = os.path.join(
+#             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+#             "mia_ut_data",
+#             "resources",
+#             "mia",
+#             "project_8",
+#             "data",
+#             "raw_data",
+#         )
+
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
+#             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+#         )
+
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         # Adds the process 'Rename' as the node 'rename_1'
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory inputs and outputs for 'select_1'
+#         ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Sets mandatory parameters 'select_1'
+#         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         pipeline.nodes[""].set_plug_value("format_string", "new_name.nii")
+
+#         # Checks that there is no workflow index
+#         self.assertIsNone(ppl_manager.workflow)
+
+#         # Mocks objects
+#         ppl_manager.init_clicked = True
+#         ppl_manager.ignore_node = True
+#         ppl_manager.key = {"item": "item_value"}
+#         ppl_manager.ignore = {"item": "item_value"}
+
+#         # Mocks methods
+#         ppl_manager.init_pipeline = Mock()
+#         # FIXME: if the method 'init_pipeline' is not mocked the whole
+#         #        test routine fails with a 'Segmentation Fault'
+
+#         # Initializes the pipeline
+#         ppl_manager.initialize()
+
+#         # Asserts that a workflow has been created
+#         # self.assertIsNotNone(ppl_manager.workflow)
+#         # from soma_workflow.client_types import Workflow
+#         # self.assertIsInstance(ppl_manager.workflow, Workflow)
+#         # FiXME: the above code else leads to 'Segmentation Fault'
+
+#         self.assertFalse(ppl_manager.ignore_node)
+#         self.assertEqual(len(ppl_manager.key), 0)
+#         self.assertEqual(len(ppl_manager.ignore), 0)
+#         ppl_manager.init_pipeline.assert_called_once_with()
+
+#         # Mocks an object to induce an exception
+#         ppl_manager.init_pipeline = None
+
+#         # Induces an exception in the pipeline initialization
+#         print("\n\n** an exception message is expected below")
+#         ppl_manager.initialize()
+
+#         self.assertFalse(ppl_manager.ignore_node)
+
+#     def test_register_completion_attributes(self):
+#         """Mocks methods of the pipeline manager and registers completion
+#         attributes.
+
+#         Since a method of the ProcessCompletionEngine class is mocked,
+#         this test may render the upcoming test routine unstable.
+
+#         - Tests: PipelineManagerTab.register_completion_attributes
+#         """
+
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Gets the path of one document
+#         folder = os.path.join(
+#             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+#             "mia_ut_data",
+#             "resources",
+#             "mia",
+#             "project_8",
+#             "data",
+#             "raw_data",
+#         )
+
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
+#             "Guerbet_Anat-RAREpvm-000220_000.nii"
+#         )
+#         NII_FILE_2 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
+#             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+#         )
+
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+#         DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
+
+#         # Adds a Select processes, creates the 'select_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Select)
+
+#         # Export plugs and sets their values
+#         print("\n\n** an exception message is expected below\n")
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+#         ppl.nodes[""].set_plug_value("inlist", [DOCUMENT_1, DOCUMENT_2])
+#         proj_dir = os.path.join(
+#             os.path.abspath(os.path.normpath(ppl_manager.project.folder)), ""
+#         )
+#         output_dir = os.path.join(proj_dir, "output_file.nii")
+#         ppl.nodes[""].set_plug_value("_out", output_dir)
+
+#         # Register completion without 'attributes'
+#         ppl_manager.register_completion_attributes(ppl)
+
+#         # Mocks 'get_capsul_engine' for the method not to throw an error
+#         # with the insertion of the upcoming mock
+#         capsul_engine = ppl_edt_tabs.get_capsul_engine()
+#         ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
+
+#         # Mocks attributes values that are in the tags list
+#         attributes = {TAG_CHECKSUM: "Checksum_value"}
+#         (
+#             ProcessCompletionEngine.get_completion_engine(
+#                 ppl
+#             ).get_attribute_values
+#         )().export_to_dict = Mock(return_value=attributes)
+
+#         # Register completion with mocked 'attributes'
+#         ppl_manager.register_completion_attributes(ppl)
+
+#     def test_register_node_io_in_database(self):
+#         """Adds a process, sets input and output parameters and registers them
+#         in database.
+
+#         - Tests: PipelineManagerTab._register_node_io_in_database
+#         """
+
+#         # Opens project 8 and switches to it
+#         project_8_path = self.get_new_test_project()
+#         self.main_window.switch_project(project_8_path, "project_9")
+
+#         with self.main_window.project.database.data() as database_data:
+#             DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
+#                 0
+#             ]
+
+#         pipeline_editor_tabs = (
+#             self.main_window.pipeline_manager.pipelineEditorTabs
+#         )
+
+#         # Adds the processes Rename, creates the "rename_1" node
+#         process_class = Rename
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+#         pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+#         # Exports the mandatory input and output plugs for "rename_1"
+#         pipeline_editor_tabs.get_current_editor().current_node_name = (
+#             "rename_1"
+#         )
+#         (
+#             pipeline_editor_tabs.get_current_editor
+#         )().export_unconnected_mandatory_inputs()
+#         (
+#             pipeline_editor_tabs.get_current_editor
+#         )().export_all_unconnected_outputs()
+
+#         old_scan_name = DOCUMENT_1.split("/")[-1]
+#         new_scan_name = "new_name.nii"
+
+#         # Sets the mandatory plug values in the "inputs" node
+#         pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
+
+#         # Changes the "_out_file" in the "outputs" node
+#         pipeline.nodes[""].set_plug_value(
+#             "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+#         )
+
+#         pipeline_manager = self.main_window.pipeline_manager
+#         pipeline_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+
+#         job = pipeline_manager.workflow.jobs[0]
+
+#         brick_id = str(uuid.uuid4())
+#         job.uuid = brick_id
+#         pipeline_manager.brick_list.append(brick_id)
+
+#         with pipeline_manager.project.database.data(
+#             write=True
+#         ) as database_data:
+#             database_data.add_document(COLLECTION_BRICK, brick_id)
+
+#         pipeline_manager._register_node_io_in_database(job, job.process())
+
+#         # Simulates a 'ProcessNode()' as 'process'
+#         process_node = ProcessNode(pipeline, "", job.process())
+#         pipeline_manager._register_node_io_in_database(job, process_node)
+
+#         # Simulates a 'PipelineNode()' as 'process'
+#         pipeline_node = PipelineNode(pipeline, "", job.process())
+#         pipeline_manager._register_node_io_in_database(job, pipeline_node)
+
+#         # Simulates a 'Switch()' as 'process'
+#         switch = Switch(pipeline, "", [""], [""])
+#         switch.completion_engine = None
+#         pipeline_manager._register_node_io_in_database(job, switch)
+
+#         # Simulates a list of outputs in 'process'
+#         job.process().list_outputs = []
+#         job.process().outputs = []
+#         pipeline_manager._register_node_io_in_database(job, job.process())
+
+#     def test_remove_progress(self):
+#         """Mocks an object of the pipeline manager and removes its progress.
+
+#         - Tests: PipelineManagerTab.remove_progress
+#         """
+
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Mocks the 'progress' object
+#         ppl_manager.progress = RunProgress(ppl_manager)
+
+#         # Removes progress
+#         ppl_manager.remove_progress()
+
+#         # Asserts that the object 'progress' was deleted
+#         self.assertFalse(hasattr(ppl_manager, "progress"))
+
+#     def test_run(self):
+#         """Adds a process, creates a pipeline manager progress object and
+#         tries to run it while mocking methods of the pipeline manager.
+
+#         - Tests: RunWorker.run
+#         """
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+#         folder = os.path.join(
+#             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+#             "mia_ut_data",
+#             "resources",
+#             "mia",
+#             "project_8",
+#             "data",
+#             "raw_data",
+#         )
+#         # project_8_path = self.get_new_test_project()
+#         # ppl_manager.project.folder = project_8_path
+#         # folder = os.path.join(project_8_path, "data", "raw_data")
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
+#             "Guerbet_Anat-RAREpvm-000220_000.nii"
+#         )
+
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+#         # Adds a Rename processes, creates the 'rename_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Sets the mandatory parameters
+#         ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
+
+#         # Creates a 'RunProgress' object
+#         ppl_manager.progress = RunProgress(ppl_manager)
+
+#         # Mocks a node that does not have a process and a node that has
+#         # a pipeline as a process
+#         ppl.nodes["switch"] = Switch(ppl, "", [""], [""])
+#         ppl.nodes["pipeline"] = ProcessNode(ppl, "pipeline", Pipeline())
+
+#         ppl_manager.progress.worker.run()
+
+#         # Mocks 'get_pipeline_or_process' to return a 'NipypeProcess' instead
+#         # of a 'Pipeline' and 'postprocess_pipeline_execution' to throw an
+#         # exception
+#         ppl_manager.progress = RunProgress(ppl_manager)
+#         # fmt: off
+#         (
+#             ppl_manager.progress.worker.pipeline_manager.
+#             get_pipeline_or_process
+#         ) = Mock(return_value=ppl.nodes["rename_1"].process)
+#         (
+#             ppl_manager.progress.worker.pipeline_manager.
+#             postprocess_pipeline_execution
+#         ) = Mock(side_effect=ValueError())
+#         # fmt: on
+#         # print("\n\n** an exception message is expected below\n")
+#         ppl_manager.progress.worker.run()
+
+#         # Mocks an interruption request
+#         ppl_manager.progress.worker.interrupt_request = True
+
+#         ppl_manager.progress.worker.run()
+
+#     def test_savePipeline(self):
+#         """Mocks methods of the pipeline manager and tries to save the pipeline
+#         over several conditions.
+
+#         -Tests: PipelineManagerTab.savePipeline
+#         """
+
+#         def click_yes(self_):
+#             """Blabla"""
+
+#             close_button = self_.button(QMessageBox.Yes)
+#             QTest.mouseClick(close_button, Qt.LeftButton)
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         config = Config(properties_path=self.properties_path)
+#         ppl_path = os.path.join(
+#             config.get_properties_path(),
+#             "processes",
+#             "User_processes",
+#             "test_pipeline_1.py",
+#         )
+
+#         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
+
+#         # Save pipeline as with empty filename, unchecked
+#         ppl_manager.savePipeline(uncheck=True)
+
+#         # Mocks 'savePipeline' from 'ppl_edt_tabs'
+#         ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
+
+#         # Saves pipeline as with empty filename, checked
+#         ppl_manager.savePipeline(uncheck=True)
+
+#         # Sets the path to save the pipeline
+#         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
+
+#         # Saves pipeline as with filled filename, uncheck
+#         ppl_manager.savePipeline(uncheck=True)
+
+#         # Mocks executing a dialog box and clicking close
+#         QMessageBox.exec = lambda self_, *args: self_.close()
+
+#         # Aborts pipeline saving with filled filename
+#         ppl_manager.savePipeline()
+
+#         # Mocks executing a dialog box and clicking yes
+#         QMessageBox.exec = click_yes
+
+#         # Accept pipeline saving with filled filename
+#         ppl_manager.savePipeline()
+
+#     def test_savePipelineAs(self):
+#         """Mocks a method from pipeline manager and saves a pipeline under
+#         another name.
+
+#         - Tests: PipelineManagerTab.savePipelineAs
+#         """
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         # Saves pipeline with empty filename
+#         ppl_manager.savePipelineAs()
+
+#         # Mocks 'savePipeline' from 'ppl_edt_tabs'
+#         ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
+
+#         # Saves pipeline with not empty filename
+#         ppl_manager.savePipelineAs()
+
+#     def test_set_anim_frame(self):
+#         """Runs the 'rotatingBrainVISA.gif' animation."""
+
+#         pipeline_manager = self.main_window.pipeline_manager
+
+#         config = Config()
+#         sources_images_dir = config.getSourceImageDir()
+#         self.assertTrue(sources_images_dir)  # if the string is not empty
+
+#         pipeline_manager._mmovie = QtGui.QMovie(
+#             os.path.join(sources_images_dir, "rotatingBrainVISA.gif")
+#         )
+#         pipeline_manager._set_anim_frame()
+
+#     def test_show_status(self):
+#         """Shows the status of the pipeline execution.
+
+#         Indirectly tests StatusWidget.__init__ and
+#         StatusWidget.toggle_soma_workflow.
+
+#         -Tests: PipelineManagerTab.test_show_status
+#         """
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Shows the status of the pipeline's execution
+#         ppl_manager.show_status()
+
+#         self.assertIsNone(ppl_manager.status_widget.swf_widget)
+
+#         # Creates 'ppl_manager.status_widget.swf_widget', not visible by
+#         # default (the argument is irrelevant)
+#         ppl_manager.status_widget.toggle_soma_workflow(False)
+
+#         # Asserts that 'swf_widget' has been created and is visible
+#         self.assertIsNotNone(ppl_manager.status_widget.swf_widget)
+#         self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+
+#         # Toggles visibility on
+#         ppl_manager.status_widget.toggle_soma_workflow(False)
+#         self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+
+#         # Toggles visibility off
+#         ppl_manager.status_widget.toggle_soma_workflow(True)
+#         self.assertTrue(ppl_manager.status_widget.swf_widget.isVisible())
+
+#     def test_stop_execution(self):
+#         """Shows the status window of the pipeline manager.
+
+#         - Tests: PipelineManagerTab.test_show_status
+#         """
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+
+#         # Creates a 'RunProgress' object
+#         ppl_manager.progress = RunProgress(ppl_manager)
+
+#         ppl_manager.stop_execution()
+
+#         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
+
+#     def test_undo_redo(self):
+#         """Tests the undo/redo action."""
+
+#         config = Config(properties_path=self.properties_path)
+#         controlV1_ver = config.isControlV1()
+
+#         # Switch to V1 node controller GUI, if necessary
+#         if not controlV1_ver:
+#             config.setControlV1(True)
+#             self.restart_MIA()
+
+#         # Set shortcuts for objects that are often used
+#         pipeline_manager = self.main_window.pipeline_manager
+#         pipeline_editor_tabs = (
+#             self.main_window.pipeline_manager.pipelineEditorTabs
+#         )
+
+#         # Creates a new project folder and adds one document to the
+#         # project
+#         # test_proj_path = self.get_new_test_project()
+#         # folder = os.path.join(test_proj_path, 'data', 'raw_data')
+#         # NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-
+#         #                      '04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
+#         # DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+#         # Creates a project with another project already opened
+#         # self.main_window.data_browser.table_data.add_path()
+
+#         # pop_up_add_path = (self.main_window.data_browser.
+#         #                                         table_data.pop_up_add_path)
+
+#         # pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
+#         # pop_up_add_path.save_path()
+
+#         # self.main_window.undo()
+
+#         # self.main_window.redo()
+
+#         # Mocks not saving the pipeline
+#         # QMessageBox.exec = lambda self_, *arg: self_.buttons(
+#         #                                                  )[-1].clicked.emit()
+
+#         # Switches to pipeline manager
+#         self.main_window.tabs.setCurrentIndex(2)
+
+#         # Add a Smooth process => creates a node called "smooth_1",
+#         # test if Smooth_1 is a node in the current pipeline / editor
+#         process_class = Smooth
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+
+#         pipeline = pipeline_editor_tabs.get_current_pipeline()
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+
+#         # Undo (remove the node), test if the node was removed
+#         pipeline_manager.undo()
+#         self.assertFalse("smooth_1" in pipeline.nodes.keys())
+
+#         # Redo (add again the node), test if the node was added
+#         pipeline_manager.redo()
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+
+#         # Delete the node, test if the node was removed
+#         pipeline_editor_tabs.get_current_editor().current_node_name = (
+#             "smooth_1"
+#         )
+#         pipeline_editor_tabs.get_current_editor().del_node()
+#         self.assertFalse("smooth_1" in pipeline.nodes.keys())
+
+#         # Undo (add again the node), test if the node was added
+#         pipeline_manager.undo()
+#         self.assertTrue("smooth_1" in pipeline.nodes.keys())
+
+#         # Redo (delete again the node), test if the node was removed
+#         pipeline_manager.redo()
+#         self.assertFalse("smooth1" in pipeline.nodes.keys())
+
+#         # Adding a new Smooth process => creates a node called "smooth_1"
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+
+#         # Export the "out_prefix" plug as "prefix_smooth" in Input node, test
+#         # if the Input node have a prefix_smooth plug
+#         pipeline_editor_tabs.get_current_editor()._export_plug(
+#             temp_plug_name=("smooth_1", "out_prefix"),
+#             pipeline_parameter="prefix_smooth",
+#             optional=False,
+#             weak_link=False,
+#         )
+#         self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # Undo (remove prefix_smooth from Input node),
+#         # test if the prefix_smooth plug was deleted from Input node
+#         pipeline_manager.undo()
+#         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # redo (export again the "out_prefix" plug),
+#         # test if the Input node have a prefix_smooth plug
+#         pipeline_manager.redo()
+#         self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # Delete the "prefix_smooth" plug from the Input node,
+#         # test if the Input node have not a prefix_smooth plug
+#         pipeline_editor_tabs.get_current_editor()._remove_plug(
+#             _temp_plug_name=("inputs", "prefix_smooth")
+#         )
+#         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # Undo (export again the "out_prefix" plug),
+#         # test if the Input node have a prefix_smooth plug
+#         pipeline_manager.undo()
+#         self.assertTrue("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # redo (deleting the "prefix_smooth" plug from the Input node),
+#         # test if the Input node have not a prefix_smooth plug
+#         pipeline_manager.redo()
+#         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
+
+#         # FIXME: export_plugs (currently there is a bug if a plug is
+#         #        of type list)
+
+#         # Adding a new Smooth process => creates a node called "smooth_2"
+#         pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 550)
+#         pipeline_editor_tabs.get_current_editor().add_named_process(
+#             process_class
+#         )
+
+#         # Adding a link
+#         pipeline_editor_tabs.get_current_editor().add_link(
+#             ("smooth_1", "_smoothed_files"),
+#             ("smooth_2", "in_files"),
+#             active=True,
+#             weak=False,
+#         )
+
+#         # test if the 2 nodes have the good links
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Undo (remove the link), test if the 2 nodes have not the links
+#         pipeline_manager.undo()
+#         self.assertEqual(
+#             0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             0,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Redo (add again the link), test if the 2 nodes have the good links
+#         pipeline_manager.redo()
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Removing the link, test if the 2 nodes have not the links
+#         link = "smooth_1._smoothed_files->smooth_2.in_files"
+#         pipeline_editor_tabs.get_current_editor()._del_link(link)
+#         self.assertEqual(
+#             0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             0,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Undo (add again the link), test if the 2 nodes have the good links
+#         pipeline_manager.undo()
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Redo (remove the link), test if the 2 nodes have not the links
+#         pipeline_manager.redo()
+#         self.assertEqual(
+#             0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             0,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Re-adding a link
+#         pipeline_editor_tabs.get_current_editor().add_link(
+#             ("smooth_1", "_smoothed_files"),
+#             ("smooth_2", "in_files"),
+#             active=True,
+#             weak=False,
+#         )
+
+#         # Updating the node name
+#         process = pipeline.nodes["smooth_2"].process
+#         pipeline_manager.displayNodeParameters("smooth_2", process)
+#         node_controller = self.main_window.pipeline_manager.nodeController
+#         node_controller.display_parameters("smooth_2", process, pipeline)
+#         node_controller.line_edit_node_name.setText("my_smooth")
+#         keyEvent = QtGui.QKeyEvent(
+#             QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
+#         )
+#         QCoreApplication.postEvent(
+#             node_controller.line_edit_node_name, keyEvent
+#         )
+#         QTest.qWait(100)
+
+#         # test if the smooth_2 node has been replaced by the
+#         # my_smooth node and test the links
+#         self.assertTrue("my_smooth" in pipeline.nodes.keys())
+#         self.assertFalse("smooth_2" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             1, len(pipeline.nodes["my_smooth"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Undo (Updating the node name from my_smooth to smooth_2),
+#         # test if it's ok
+#         pipeline_manager.undo()
+#         QTest.qWait(100)
+#         self.assertFalse("my_smooth" in pipeline.nodes.keys())
+#         self.assertTrue("smooth_2" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Redo (Updating the node name from smooth_2 to my_smooth),
+#         # test if it's ok
+#         pipeline_manager.redo()
+#         QTest.qWait(100)
+#         self.assertTrue("my_smooth" in pipeline.nodes.keys())
+#         self.assertFalse("smooth_2" in pipeline.nodes.keys())
+#         self.assertEqual(
+#             1, len(pipeline.nodes["my_smooth"].plugs["in_files"].links_from)
+#         )
+#         self.assertEqual(
+#             1,
+#             len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+#         )
+
+#         # Updating a plug value
+#         if hasattr(node_controller, "get_index_from_plug_name"):
+#             index = node_controller.get_index_from_plug_name(
+#                 "out_prefix", "in"
+#             )
+#             node_controller.line_edit_input[index].setText("PREFIX")
+#             node_controller.update_plug_value(
+#                 "in", "out_prefix", pipeline, str
+#             )
+
+#             self.assertEqual(
+#                 "PREFIX",
+#                 pipeline.nodes["my_smooth"].get_plug_value("out_prefix"),
+#             )
+
+#             self.main_window.undo()
+#             self.assertEqual(
+#                 "s", pipeline.nodes["my_smooth"].get_plug_value("out_prefix")
+#             )
+
+#             self.main_window.redo()
+#             self.assertEqual(
+#                 "PREFIX",
+#                 pipeline.nodes["my_smooth"].get_plug_value("out_prefix"),
+#             )
+
+#         # Switches back to node controller V2, if necessary (return to initial
+#         # state)
+#         config = Config(properties_path=self.properties_path)
+
+#         if not controlV1_ver:
+#             config.setControlV1(False)
+
+#     def test_update_auto_inheritance(self):
+#         """Adds a process and updates the job's auto inheritance dict.
+
+#         - Tests: PipelineManagerTab.update_auto_inheritance
+#         """
+
+#         project_8_path = self.get_new_test_project()
+#         folder = os.path.join(
+#             project_8_path,
+#             "data",
+#             "raw_data",
+#         )
+
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
+#             "Guerbet_Anat-RAREpvm-000220_000.nii"
+#         )
+#         NII_FILE_2 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
+#             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+#         )
+
+#         DOCUMENT_1 = os.path.realpath(os.path.join(folder, NII_FILE_1))
+#         DOCUMENT_2 = os.path.realpath(os.path.join(folder, NII_FILE_2))
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Adds a Rename processes, creates the 'rename_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         ppl.nodes["rename_1"].set_plug_value("in_file", DOCUMENT_1)
+#         node = ppl.nodes["rename_1"]
+
+#         # Initializes the workflow manually
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             ppl, complete_parameters=True
+#         )
+
+#         job = ppl_manager.workflow.jobs[0]
+
+#         # Mocks the node's parameters
+#         node.auto_inheritance_dict = {}
+#         process = node.process
+
+#         real_project = Mock()
+#         fake_db_data = Mock()
+#         fake_db_data.has_document.return_value = True
+
+#         @contextmanager
+#         def fake_data_cm():
+#             """
+#             Context manager that yields mock database data for testing
+#             purposes.
+
+#             :yields: The fake database data object used in tests.
+#             """
+#             yield fake_db_data
+
+#         real_project.database = Mock()
+#         real_project.database.data = fake_data_cm
+
+#         process.study_config.project = real_project
+#         process.study_config.project.folder = os.path.dirname(project_8_path)
+#         process.outputs = []
+#         process.list_outputs = []
+#         process.auto_inheritance_dict = {}
+
+#         # Mocks 'job.param_dict' to share items with both the inputs and
+#         # outputs list of the process
+#         # Note: only 'in_file' and '_out_file' are file trait types
+#         job.param_dict["_out_file"] = "_out_file_value"
+
+#         ppl_manager.update_auto_inheritance(node, job)
+
+#         # 'job.param_dict' as list of objects
+#         job.param_dict["inlist"] = [DOCUMENT_1, DOCUMENT_2]
+#         process.get_outputs = Mock(return_value={"_out": ["_out_value"]})
+#         process.add_trait(
+#             "_out", OutputMultiPath(File(exists=True), desc="out files")
+#         )
+#         job.param_dict["_out"] = ["_out_value"]
+#         ppl_manager.update_auto_inheritance(node, job)
+
+#         # 'node' does not have a 'project'
+#         del node.process.study_config.project
+#         ppl_manager.update_auto_inheritance(node, job)
+
+#         # 'node' is not a 'Process'
+#         node = {}
+#         ppl_manager.update_auto_inheritance(node, job)
+
+#     def test_update_inheritance(self):
+#         """Adds a process and updates the job's inheritance dict.
+
+#         - Tests: PipelineManagerTab.update_inheritance
+#         """
+
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Adds a Rename processes, creates the 'rename_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         node = ppl.nodes["rename_1"]
+
+#         # Initializes the workflow manually
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             ppl, complete_parameters=True
+#         )
+
+#         # Gets the 'job' and mocks adding a brick to the collection
+#         job = ppl_manager.workflow.jobs[0]
+
+#         # Node's name does not contains 'Pipeline'
+#         node.context_name = ""
+#         node.process.inheritance_dict = {"item": "value"}
+#         ppl_manager.project.node_inheritance_history = {}
+#         ppl_manager.update_inheritance(job, node)
+
+#         self.assertEqual(job.inheritance_dict, {"item": "value"})
+
+#         # Node's name contains 'Pipeline'
+#         node.context_name = "Pipeline.rename_1"
+#         ppl_manager.update_inheritance(job, node)
+
+#         self.assertEqual(job.inheritance_dict, {"item": "value"})
+
+#         # Node's name in 'node_inheritance_history'
+#         (ppl_manager.project.node_inheritance_history["rename_1"]) = [
+#             {0: "new_value"}
+#         ]
+#         ppl_manager.update_inheritance(job, node)
+
+#         self.assertEqual(job.inheritance_dict, {0: "new_value"})
+
+#     def test_update_node_list(self):
+#         """Adds a process, exports input and output plugs, initializes a
+#         workflow and adds the process to the "pipline_manager.node_list".
+
+#         - Tests: PipelineManagerTab.update_node_list
+#         """
+
+#         # Set shortcuts for often used objects
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+
+#         process_class = Rename
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+#         pipeline = ppl_edt_tabs.get_current_pipeline()
+
+#         # Exports the mandatory inputs and outputs for "rename_1"
+#         ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Initializes the workflow
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             pipeline, complete_parameters=True
+#         )
+
+#         # Asserts that the "node_list" is empty by default
+#         node_list = self.main_window.pipeline_manager.node_list
+#         self.assertEqual(len(node_list), 0)
+
+#         # Asserts that the process "Rename" was added to "node_list"
+#         ppl_manager.update_node_list()
+#         self.assertEqual(len(node_list), 1)
+#         self.assertEqual(node_list[0]._nipype_class, "Rename")
+
+#     def test_z_init_pipeline(self):
+#         """Adds a process, mocks several parameters from the pipeline
+#         manager and initializes the pipeline.
+
+#         - Tests: PipelineManagerTab.init_pipeline
+#         """
+
+#         # Sets shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Gets the path of one document
+#         folder = os.path.join(
+#             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
+#             "mia_ut_data",
+#             "resources",
+#             "mia",
+#             "project_8",
+#             "data",
+#             "raw_data",
+#         )
+
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
+#             "Guerbet_Anat-RAREpvm-000220_000.nii"
+#         )
+
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+#         # Adds a Rename processes, creates the 'rename_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Verifies that all the processes were added
+#         self.assertEqual(["", "rename_1"], ppl.nodes.keys())
+
+#         # Initialize the pipeline with missing mandatory parameters
+#         ppl_manager.workflow = workflow_from_pipeline(
+#             ppl, complete_parameters=True
+#         )
+
+#         # Mocks executing a dialog box, instead shows it
+#         QMessageBox.exec = lambda self_, *args: self_.show()
+
+#         ppl_manager.update_node_list()
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#         # Sets the mandatory parameters
+#         ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
+
+#         # Mocks an iteration pipeline
+#         ppl.name = "Iteration_pipeline"
+#         process_it = ProcessIteration(ppl.nodes["rename_1"].process, "")
+#         ppl.list_process_in_pipeline.append(process_it)
+
+#         # Initialize the pipeline with mandatory parameters set
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         # init_result = ppl_manager.init_pipeline(pipeline=ppl)
+#         # ppl_manager.msg.accept()
+
+#         # Mocks requirements to {} and initializes the pipeline
+#         ppl_manager.check_requirements = Mock(return_value={})
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+#         # ppl_manager.check_requirements.assert_called_once_with(
+#         #    "global", message_list=[]
+#         # )
+#         ppl_manager.check_requirements.assert_called_once()
+#         # Mocks external packages as requirements and initializes the pipeline
+#         pkgs = ["fsl", "afni", "ants", "matlab", "mrtrix", "spm"]
+#         req = {"capsul_engine": {"uses": Mock()}}
+
+#         for pkg in pkgs:
+#             req[f"capsul.engine.module.{pkg}"] = {"directory": False}
+
+#         req["capsul_engine"]["uses"].get = Mock(return_value=1)
+#         proc = Mock()
+#         proc.context_name = "moke_process"
+#         req = {proc: req}
+#         ppl_manager.check_requirements = Mock(return_value=req)
+
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#         # Extra steps for SPM
+#         req[proc]["capsul.engine.module.spm"]["directory"] = True
+#         req[proc]["capsul.engine.module.spm"]["standalone"] = True
+#         Config().set_matlab_standalone_path(None)
+
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#         req[proc]["capsul.engine.module.spm"]["standalone"] = False
+
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#         # Deletes an attribute of each package requirement
+#         for pkg in pkgs:
+#             del req[proc][f"capsul.engine.module.{pkg}"]
+
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#         # Mocks a 'ValueError' in 'workflow_from_pipeline'
+#         ppl.find_empty_parameters = Mock(side_effect=ValueError)
+
+#         # QTimer.singleShot(1000, self.execute_QDialogAccept)
+#         init_result = ppl_manager.init_pipeline()
+#         ppl_manager.msg.accept()
+#         self.assertFalse(init_result)
+
+#     def test_z_runPipeline(self):
+#         """Adds a process, export plugs and runs a pipeline.
+
+#         - Tests:
+#             - PipelineManagerTab.runPipeline
+#             - PipelineManagerTab.finish_execution
+#             - RunProgress
+#             - RunWorker
+#         """
+
+#         # Set shortcuts for objects that are often used
+#         ppl_manager = self.main_window.pipeline_manager
+#         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+#         ppl = ppl_edt_tabs.get_current_pipeline()
+
+#         # Creates a new project folder and adds one document to the
+#         # project, sets the plug value that is added to the database
+#         project_8_path = self.get_new_test_project()
+#         ppl_manager.project.folder = project_8_path
+#         folder = os.path.join(project_8_path, "data", "raw_data")
+#         NII_FILE_1 = (
+#             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
+#             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+#         )
+#         DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+
+#         # Switches to pipeline manager tab
+#         self.main_window.tabs.setCurrentIndex(2)
+
+#         # Adds a Rename processes, creates the 'rename_1' node
+#         ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+#         ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+
+#         ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
+#         ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+
+#         # Sets the mandatory parameters
+#         ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+#         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
+
+#         # Test successful pipeline run with patched thread start
+#         with (
+#             patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
+#             patch(
+#                 "populse_mia.user_interface.pipeline_manager."
+#                 "pipeline_manager_tab.RunWorker.start"
+#             ) as mock_start,
+#         ):
+#             ppl_manager.runPipeline()
+
+#             self.assertEqual(ppl_manager.last_run_pipeline, ppl)
+#             mock_start.assert_called_once()
+
+#         QTest.qWait(2000)
+
+#         # Test pipeline run with manual interruption
+#         # (simulate failure before execution)
+#         with (
+#             patch.object(QDialog, "exec_", return_value=QDialog.Accepted),
+#             patch(
+#                 "populse_mia.user_interface.pipeline_manager."
+#                 "pipeline_manager_tab.RunWorker.start"
+#             ) as mock_start,
+#         ):
+#             ppl_manager.runPipeline()
+#             ppl_manager.stop_execution()
+
+#             # Simulate the worker finishing
+#             worker = ppl_manager.progress.worker
+#             worker.finished.emit()
+
+#         QTest.qWait(2000)
+
+#     def test_zz_del_pack(self):
+#         """We remove the brick created during the unit tests, and we take
+#         advantage of this to cover the part of the code used to remove the
+#         packages"""
+
+#         pkg = PackageLibraryDialog(self.main_window)
+
+#         # The Test_pipeline brick was added in the package library
+#         self.assertTrue(
+#             "Test_pipeline_1"
+#             in pkg.package_library.package_tree["User_processes"]
+#         )
+
+#         pkg.delete_package(
+#             to_delete="User_processes.Test_pipeline_1", loop=True
+#         )
+
+#         # The Test_pipeline brick has been removed from the package library
+#         self.assertFalse(
+#             "Test_pipeline_1"
+#             in pkg.package_library.package_tree["User_processes"]
+#         )
 
 
 class Test_Z_MIAOthers(TestMIACase):
