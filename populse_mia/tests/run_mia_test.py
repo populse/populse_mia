@@ -72,6 +72,7 @@ from PyQt5.QtCore import (
 )
 from PyQt5.QtTest import QTest
 from PyQt5.QtWidgets import (
+    QAction,
     QApplication,
     QDialog,
     QFileDialog,
@@ -10545,6 +10546,8 @@ class Test_Z_MIAOthers(TestMIACase):
 
     :Contains:
         :Method:
+            - _mock_mouse_event: mock QMouseEvent for a right-click at
+                                 position (0, 0)
             - test_check_setup: check that Mia's configuration control is
                                 working correctly
             - test_iteration_table: plays with the iteration table
@@ -10553,6 +10556,15 @@ class Test_Z_MIAOthers(TestMIACase):
             - test_verify_processes: check that Mia's processes control is
                                      working correctly (currently commented)
     """
+
+    def _mock_mouse_event(self):
+        """
+        Returns a mock QMouseEvent for a right-click at position (0, 0).
+        """
+        event = Mock()
+        event.pos.return_value = QPoint(0, 0)
+        event.button.return_value = Qt.RightButton
+        return event
 
     @patch("PyQt5.QtWidgets.QDialog.exec", return_value=QDialog.Accepted)
     def test_check_setup(self, mock_exec):
@@ -10659,90 +10671,97 @@ class Test_Z_MIAOthers(TestMIACase):
         self.assertEqual(mock_exec.call_count, 2)
         self.assertEqual(mock_pop_up.call_count, 2)
 
-    # def test_process_library(self):
-    #     """Inserts a row, mimes and changes the data and deletes it.
+    @patch("PyQt5.QtWidgets.QMenu.exec_")
+    @patch(
+        "PyQt5.QtWidgets.QMessageBox.question", return_value=QMessageBox.Yes
+    )
+    @patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None)
+    def test_process_library(
+        self, mock_msgbox_exec, mock_msgbox_question, mock_menu_exec
+    ):
+        """
+        Tests row insert, rename, delete in ProcessLibrary with
+        mocking dialogs.
 
-    #     - Tests: ProcessLibrary
+        The process library is located at the left corner of the pipeline
+        manager tab, where the list of available bricks is shown.
+        """
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_manager.processLibrary.process_config = {}
+        ppl_manager.processLibrary.packages = {
+            "User_processes": {"Tests": "process_enabled"}
+        }
+        ppl_manager.processLibrary.paths = []
+        ppl_manager.processLibrary.pkg_library.save()
+        proc_lib = ppl_manager.processLibrary.process_library
 
-    #     -Mocks:
-    #         - QMessageBox.exec
-    #         - QMessageBox.question
+        # Switches to pipeline manager
+        self.main_window.tabs.setCurrentIndex(2)
 
-    #     The process library is located at the left corner of the pipeline
-    #     manager tab, where the list of available bricks is shown.
-    #     """
+        # Gets the child count
+        child_count = proc_lib._model.getNode(QModelIndex()).childCount()
+        row_data = "untitled" + str(child_count)
 
-    #     # Sets shortcuts for objects that are often used
-    #     ppl_manager = self.main_window.pipeline_manager
-    #     ppl_manager.processLibrary.process_config = {}
-    #     ppl_manager.processLibrary.packages = {
-    #         "User_processes": {"Tests": "process_enabled"}
-    #     }
-    #     ppl_manager.processLibrary.paths = []
-    #     ppl_manager.processLibrary.pkg_library.save()
-    #     proc_lib = ppl_manager.processLibrary.process_library
+        # Insert new row to the process library
+        success = proc_lib._model.insertRow(0)
+        self.assertTrue(success)
 
-    #     # Switches to pipeline manager
-    #     self.main_window.tabs.setCurrentIndex(2)
+        # Gets its index and selects it
+        row_index = self.find_item_by_data(proc_lib, row_data)
+        self.assertIsNotNone(row_index)
+        proc_lib.selectionModel().select(
+            row_index, QItemSelectionModel.SelectCurrent
+        )
 
-    #     # Gets the child count
-    #     child_count = proc_lib._model.getNode(QModelIndex()).childCount()
-    #     row_data = "untitled" + str(child_count)
+        # Test mime data of the row widget
+        mime_data = proc_lib._model.mimeData([row_index])
+        self.assertEqual(
+            mime_data.data("component/name").data(),
+            bytes(row_data, encoding="utf-8"),
+        )
 
-    #     # Adds a row to the process library
-    #     proc_lib._model.insertRow(0)
+        # Rename the row
+        set_result = proc_lib._model.setData(row_index, "untitled101")
+        self.assertTrue(set_result)
+        self.assertEqual(row_index.data(), "untitled101")
 
-    #     # Gets its index and selects it
-    #     row_index = self.find_item_by_data(proc_lib, row_data)
-    #     self.assertIsNotNone(row_index)
-    #     proc_lib.selectionModel().select(
-    #         row_index, QItemSelectionModel.SelectCurrent
-    #     )
+        # Simulate delete key press
+        event = Mock()
+        event.key = lambda *args: Qt.Key_Delete
+        proc_lib.keyPressEvent(event)
 
-    #     # Mimes the data of the row widget
-    #     mime_data = proc_lib._model.mimeData([row_index])
-    #     self.assertEqual(
-    #         mime_data.data("component/name").data(),
-    #         bytes(row_data, encoding="utf-8"),
-    #     )
+        # Create dummy QAction objects
+        dummy_action_remove = QAction("Remove package")
+        dummy_action_delete = QAction("Delete package")
 
-    #     # Changes the data of the row
-    #     proc_lib._model.setData(row_index, "untitled101")
-    #     self.assertEqual(row_index.data(), "untitled101")
+        # Monkey-patch QTreeView.mousePressEvent to avoid calling base
+        # implementation
+        with patch.object(QTreeView, "mousePressEvent", return_value=True):
+            # Simulate right-click and select "Remove package"
+            proc_lib._model.insertRow(0)
+            row_index_remove = self.find_item_by_data(
+                proc_lib, "untitled" + str(child_count + 1)
+            )
+            self.assertIsNotNone(row_index_remove)
+            mock_menu_exec.return_value = dummy_action_remove
+            res = proc_lib.mousePressEvent(self._mock_mouse_event())
+            self.assertTrue(res)
+            self.assertEqual(mock_menu_exec.call_count, 1)
 
-    #     # Mocks the execution of a dialog box
-    #     QMessageBox.exec = lambda *args: None
-    #     QMessageBox.question = lambda *args: QMessageBox.Yes
-
-    #     # Deletes the row by pressing the del key
-    #     event = Mock()
-    #     event.key = lambda *args: Qt.Key_Delete
-    #     proc_lib.keyPressEvent(event)
-
-    #     # Mocks a mouse press event of the first item of the process lib
-    #     mouse_event = QtGui.QMouseEvent
-    #     mouse_event.pos = lambda *args: QPoint(0, 0)
-    #     mouse_event.button = lambda *args: Qt.RightButton
-
-    #     # Mocks the return value of 'mousePressEvent'
-    #     QTreeView.mousePressEvent = lambda *args: True
-
-    #     # Adds a row to the process library
-    #     proc_lib._model.insertRow(0)
-
-    #     # Mocks selecting 'Delete package'
-    #     QMenu.exec_ = lambda *args: proc_lib.remove
-
-    #     res = proc_lib.mousePressEvent(mouse_event)
-    #     self.assertTrue(res)
-
-    #     # Adds a row to the process library
-    #     proc_lib._model.insertRow(0)
-
-    #     # Mocks selecting 'Delete package'
-    #     QMenu.exec_ = lambda *args: proc_lib.action_delete
-
-    #     proc_lib.mousePressEvent(mouse_event)
+            # Simulate right-click and select "Delete package"
+            proc_lib._model.insertRow(0)
+            row_index_delete = self.find_item_by_data(
+                proc_lib, "untitled" + str(child_count + 2)
+            )
+            self.assertIsNotNone(row_index_delete)
+            mock_menu_exec.return_value = dummy_action_delete
+            proc_lib.mousePressEvent(self._mock_mouse_event())
+            self.assertEqual(mock_menu_exec.call_count, 2)
+            proc_lib.mousePressEvent(self._mock_mouse_event())
+            # MessageBox.question should have been called (for
+            # delete confirmation)
+            self.assertGreaterEqual(mock_msgbox_question.call_count, 1)
 
     # def test_verify_processes(self):
     #     """Check that Mia's processes control is working correctly
