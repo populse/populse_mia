@@ -836,6 +836,239 @@ class TestMIACase(unittest.TestCase):
         del cls._app
 
 
+# class Test_Z_MIAOthers(TestMIACase):
+class Test1AMIAOthers(TestMIACase):
+    """Tests for other parts of the MIA software that do not relate much
+    with the other classes.
+
+    :Contains:
+        :Method:
+            - _mock_mouse_event: mock QMouseEvent for a right-click at
+                                 position (0, 0)
+            - test_check_setup: check that Mia's configuration control is
+                                working correctly
+            - test_iteration_table: plays with the iteration table
+            - test_process_library: install the brick_test and then remove it
+
+            - test_verify_processes: check that Mia's processes control is
+                                     working correctly (currently commented)
+    """
+
+    def _mock_mouse_event(self):
+        """
+        Returns a mock QMouseEvent for a right-click at position (0, 0).
+        """
+        event = Mock()
+        event.pos.return_value = QPoint(0, 0)
+        event.button.return_value = Qt.RightButton
+        return event
+
+    @patch("PyQt5.QtWidgets.QDialog.exec", return_value=QDialog.Accepted)
+    def test_check_setup(self, mock_exec):
+        """Check that Mia's configuration control is working correctly.
+
+        - Tests: utils.verify_setup()
+        """
+        dot_mia_config = os.path.join(
+            os.path.dirname(self.properties_path), "configuration_path.yml"
+        )
+        verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
+        mock_exec.assert_called_once()
+
+    @patch(
+        "populse_mia.user_interface.pipeline_manager.iteration_table."
+        "PopUpSelectTagCountTable.exec_",
+        return_value=True,
+    )
+    @patch("PyQt5.QtWidgets.QDialog.exec_", return_value=QDialog.Accepted)
+    def test_iteration_table(self, mock_exec, mock_pop_up):
+        """Opens a new project, initializes the pipeline iteration and changes
+        its parameters.
+
+        - Tests: IterationTable behavior without asynchronous dialogs.
+
+        - Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
+        """
+
+        project_8_path = self.get_new_test_project()
+        self.main_window.switch_project(project_8_path, "project_8")
+
+        # Sets shortcuts for objects that are often used
+        iter_table = self.main_window.pipeline_manager.iterationTable
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
+
+        # Allows for the iteration of the pipeline
+        iter_table.check_box_iterate.setChecked(True)
+
+        # Adds a tag and asserts that a tag button was added
+        iter_table.add_tag()
+        self.assertEqual(len(iter_table.push_buttons), 3)
+        self.assertEqual(iter_table.push_buttons[-1].text(), "Tag n°3")
+
+        # Fill the 'values_list' with the tag values in the documents
+        iter_table.push_buttons[2].setText("BandWidth")
+        iter_table.fill_values(2)
+        self.assertTrue(len(iter_table.values_list[-1]) == 3)
+        self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
+        self.assertEqual(iter_table.values_list[-1][0], [65789.48])
+
+        # Removes a tag and asserts that a tag button was removed
+        iter_table.remove_tag()
+        self.assertEqual(len(iter_table.push_buttons), 2)
+
+        # Selects a tag to iterate over, tests 'select_iteration_tag' while
+        # mocking a 'PopUpSelectTagCountTable'.
+        # Due to the PopUpSelectTagCountTable.exec_ mock,
+        # 'iterated_tag' is set as None
+        ppl_editor.iterated_tag = "BandWidth"
+        iter_table.select_iteration_tag()
+        self.assertIsNone(ppl_editor.iterated_tag)
+
+        # Filters the scans matching the selected  'iterated_tag'
+        # Since the execution is mocked, 'tag_values_list' becomes empty
+        iter_table.filter_values()
+        self.assertEqual(ppl_editor.tag_values_list, [])
+
+        # Updates the button with the selected tag
+        iter_table.update_selected_tag("Bandwidth")
+
+        # Selects the visualized tag
+        iter_table.select_visualized_tag(0)
+
+        # Sends the data browser scans to the pipeline manager and updates the
+        # iterated tags
+        with iter_table.project.database.data() as database_data:
+            SCANS_LIST = database_data.get_document_names(COLLECTION_CURRENT)
+
+        ppl_manager.scan_list = SCANS_LIST
+        iter_table.update_iterated_tag()
+
+        # Updates the iteration table, tests 'update_table' while
+        # mocking the execution of 'filter_documents'
+        DOC_1_NAME = SCANS_LIST[0]
+
+        with iter_table.project.database.data() as database_data:
+            DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
+
+        # Patch the method directly on the real class
+        # (no mocking of `data()` or context managers)
+        with patch.object(
+            database_data.__class__, "filter_documents", return_value=DOC_1
+        ):
+            ppl_editor.iterated_tag = "BandWidth"
+            iter_table.update_table()
+
+        # Asserts that the iteration table has one item
+        self.assertIsNotNone(iter_table.iteration_table.item(0, 0))
+        self.assertIsNone(iter_table.iteration_table.item(1, 0))
+
+        # Asserts that QDialog.exec_ and PopUpSelectTagCountTable.exec_
+        # has been called twice
+        self.assertEqual(mock_exec.call_count, 2)
+        self.assertEqual(mock_pop_up.call_count, 2)
+
+    @patch("PyQt5.QtWidgets.QMenu.exec_")
+    @patch(
+        "PyQt5.QtWidgets.QMessageBox.question", return_value=QMessageBox.Yes
+    )
+    @patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None)
+    def test_process_library(
+        self, mock_msgbox_exec, mock_msgbox_question, mock_menu_exec
+    ):
+        """
+        Tests row insert, rename, delete in ProcessLibrary with
+        mocking dialogs.
+
+        The process library is located at the left corner of the pipeline
+        manager tab, where the list of available bricks is shown.
+        """
+        # Sets shortcuts for objects that are often used
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_manager.processLibrary.process_config = {}
+        ppl_manager.processLibrary.packages = {
+            "User_processes": {"Tests": "process_enabled"}
+        }
+        ppl_manager.processLibrary.paths = []
+        ppl_manager.processLibrary.pkg_library.save()
+        proc_lib = ppl_manager.processLibrary.process_library
+
+        # Switches to pipeline manager
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Gets the child count
+        child_count = proc_lib._model.getNode(QModelIndex()).childCount()
+        row_data = "untitled" + str(child_count)
+
+        # Insert new row to the process library
+        success = proc_lib._model.insertRow(0)
+        self.assertTrue(success)
+
+        # Gets its index and selects it
+        row_index = self.find_item_by_data(proc_lib, row_data)
+        self.assertIsNotNone(row_index)
+        proc_lib.selectionModel().select(
+            row_index, QItemSelectionModel.SelectCurrent
+        )
+
+        # Test mime data of the row widget
+        mime_data = proc_lib._model.mimeData([row_index])
+        self.assertEqual(
+            mime_data.data("component/name").data(),
+            bytes(row_data, encoding="utf-8"),
+        )
+
+        # Rename the row
+        set_result = proc_lib._model.setData(row_index, "untitled101")
+        self.assertTrue(set_result)
+        self.assertEqual(row_index.data(), "untitled101")
+
+        # Simulate delete key press
+        event = Mock()
+        event.key = lambda *args: Qt.Key_Delete
+        proc_lib.keyPressEvent(event)
+
+        # Create dummy QAction objects
+        dummy_action_remove = QAction("Remove package")
+        dummy_action_delete = QAction("Delete package")
+
+        # Monkey-patch QTreeView.mousePressEvent to avoid calling base
+        # implementation
+        with patch.object(QTreeView, "mousePressEvent", return_value=True):
+            # Simulate right-click and select "Remove package"
+            proc_lib._model.insertRow(0)
+            row_index_remove = self.find_item_by_data(
+                proc_lib, "untitled" + str(child_count + 1)
+            )
+            self.assertIsNotNone(row_index_remove)
+            mock_menu_exec.return_value = dummy_action_remove
+            res = proc_lib.mousePressEvent(self._mock_mouse_event())
+            self.assertTrue(res)
+            self.assertEqual(mock_menu_exec.call_count, 1)
+
+            # Simulate right-click and select "Delete package"
+            proc_lib._model.insertRow(0)
+            row_index_delete = self.find_item_by_data(
+                proc_lib, "untitled" + str(child_count + 2)
+            )
+            self.assertIsNotNone(row_index_delete)
+            mock_menu_exec.return_value = dummy_action_delete
+            proc_lib.mousePressEvent(self._mock_mouse_event())
+            self.assertEqual(mock_menu_exec.call_count, 2)
+            proc_lib.mousePressEvent(self._mock_mouse_event())
+            # MessageBox.question should have been called (for
+            # delete confirmation)
+            self.assertGreaterEqual(mock_msgbox_question.call_count, 1)
+
+    # def test_verify_processes(self):
+    #     """Check that Mia's processes control is working correctly
+
+    #     - Tests: utils.verify_processes()
+    #     """
+
+    #     verify_processes("toto", "titi", "tata")
+
+
 class TestMIADataBrowser(TestMIACase):
     """Tests for the data browser tab (DataBrowser).
 
@@ -10562,238 +10795,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "Test_pipeline_1"
             in pkg.package_library.package_tree["User_processes"]
         )
-
-
-# class Test_Z_MIAOthers(TestMIACase):
-#     """Tests for other parts of the MIA software that do not relate much
-#     with the other classes.
-
-#     :Contains:
-#         :Method:
-#             - _mock_mouse_event: mock QMouseEvent for a right-click at
-#                                  position (0, 0)
-#             - test_check_setup: check that Mia's configuration control is
-#                                 working correctly
-#             - test_iteration_table: plays with the iteration table
-#             - test_process_library: install the brick_test and then remove it
-
-#             - test_verify_processes: check that Mia's processes control is
-#                                      working correctly (currently commented)
-#     """
-
-#     def _mock_mouse_event(self):
-#         """
-#         Returns a mock QMouseEvent for a right-click at position (0, 0).
-#         """
-#         event = Mock()
-#         event.pos.return_value = QPoint(0, 0)
-#         event.button.return_value = Qt.RightButton
-#         return event
-
-#     @patch("PyQt5.QtWidgets.QDialog.exec", return_value=QDialog.Accepted)
-#     def test_check_setup(self, mock_exec):
-#         """Check that Mia's configuration control is working correctly.
-
-#         - Tests: utils.verify_setup()
-#         """
-#         dot_mia_config = os.path.join(
-#             os.path.dirname(self.properties_path), "configuration_path.yml"
-#         )
-#         verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
-#         mock_exec.assert_called_once()
-
-#     @patch(
-#         "populse_mia.user_interface.pipeline_manager.iteration_table."
-#         "PopUpSelectTagCountTable.exec_",
-#         return_value=True,
-#     )
-#     @patch("PyQt5.QtWidgets.QDialog.exec_", return_value=QDialog.Accepted)
-#     def test_iteration_table(self, mock_exec, mock_pop_up):
-#         """Opens a new project, initializes the pipeline iteration and changes
-#         its parameters.
-
-#         - Tests: IterationTable behavior without asynchronous dialogs.
-
-#         - Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
-#         """
-
-#         project_8_path = self.get_new_test_project()
-#         self.main_window.switch_project(project_8_path, "project_8")
-
-#         # Sets shortcuts for objects that are often used
-#         iter_table = self.main_window.pipeline_manager.iterationTable
-#         ppl_manager = self.main_window.pipeline_manager
-#         ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
-
-#         # Allows for the iteration of the pipeline
-#         iter_table.check_box_iterate.setChecked(True)
-
-#         # Adds a tag and asserts that a tag button was added
-#         iter_table.add_tag()
-#         self.assertEqual(len(iter_table.push_buttons), 3)
-#         self.assertEqual(iter_table.push_buttons[-1].text(), "Tag n°3")
-
-#         # Fill the 'values_list' with the tag values in the documents
-#         iter_table.push_buttons[2].setText("BandWidth")
-#         iter_table.fill_values(2)
-#         self.assertTrue(len(iter_table.values_list[-1]) == 3)
-#         self.assertTrue(isinstance(iter_table.values_list[-1][0], list))
-#         self.assertEqual(iter_table.values_list[-1][0], [65789.48])
-
-#         # Removes a tag and asserts that a tag button was removed
-#         iter_table.remove_tag()
-#         self.assertEqual(len(iter_table.push_buttons), 2)
-
-#         # Selects a tag to iterate over, tests 'select_iteration_tag' while
-#         # mocking a 'PopUpSelectTagCountTable'.
-#         # Due to the PopUpSelectTagCountTable.exec_ mock,
-#         # 'iterated_tag' is set as None
-#         ppl_editor.iterated_tag = "BandWidth"
-#         iter_table.select_iteration_tag()
-#         self.assertIsNone(ppl_editor.iterated_tag)
-
-#         # Filters the scans matching the selected  'iterated_tag'
-#         # Since the execution is mocked, 'tag_values_list' becomes empty
-#         iter_table.filter_values()
-#         self.assertEqual(ppl_editor.tag_values_list, [])
-
-#         # Updates the button with the selected tag
-#         iter_table.update_selected_tag("Bandwidth")
-
-#         # Selects the visualized tag
-#         iter_table.select_visualized_tag(0)
-
-#         # Sends the data browser scans to the pipeline manager and updates the
-#         # iterated tags
-#         with iter_table.project.database.data() as database_data:
-#             SCANS_LIST = database_data.get_document_names(COLLECTION_CURRENT)
-
-#         ppl_manager.scan_list = SCANS_LIST
-#         iter_table.update_iterated_tag()
-
-#         # Updates the iteration table, tests 'update_table' while
-#         # mocking the execution of 'filter_documents'
-#         DOC_1_NAME = SCANS_LIST[0]
-
-#         with iter_table.project.database.data() as database_data:
-#             DOC_1 = database_data.get_document(COLLECTION_CURRENT, DOC_1_NAME)
-
-#         # Patch the method directly on the real class
-#         # (no mocking of `data()` or context managers)
-#         with patch.object(
-#             database_data.__class__, "filter_documents", return_value=DOC_1
-#         ):
-#             ppl_editor.iterated_tag = "BandWidth"
-#             iter_table.update_table()
-
-#         # Asserts that the iteration table has one item
-#         self.assertIsNotNone(iter_table.iteration_table.item(0, 0))
-#         self.assertIsNone(iter_table.iteration_table.item(1, 0))
-
-#         # Asserts that QDialog.exec_ and PopUpSelectTagCountTable.exec_
-#         # has been called twice
-#         self.assertEqual(mock_exec.call_count, 2)
-#         self.assertEqual(mock_pop_up.call_count, 2)
-
-#     @patch("PyQt5.QtWidgets.QMenu.exec_")
-#     @patch(
-#         "PyQt5.QtWidgets.QMessageBox.question", return_value=QMessageBox.Yes
-#     )
-#     @patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None)
-#     def test_process_library(
-#         self, mock_msgbox_exec, mock_msgbox_question, mock_menu_exec
-#     ):
-#         """
-#         Tests row insert, rename, delete in ProcessLibrary with
-#         mocking dialogs.
-
-#         The process library is located at the left corner of the pipeline
-#         manager tab, where the list of available bricks is shown.
-#         """
-#         # Sets shortcuts for objects that are often used
-#         ppl_manager = self.main_window.pipeline_manager
-#         ppl_manager.processLibrary.process_config = {}
-#         ppl_manager.processLibrary.packages = {
-#             "User_processes": {"Tests": "process_enabled"}
-#         }
-#         ppl_manager.processLibrary.paths = []
-#         ppl_manager.processLibrary.pkg_library.save()
-#         proc_lib = ppl_manager.processLibrary.process_library
-
-#         # Switches to pipeline manager
-#         self.main_window.tabs.setCurrentIndex(2)
-
-#         # Gets the child count
-#         child_count = proc_lib._model.getNode(QModelIndex()).childCount()
-#         row_data = "untitled" + str(child_count)
-
-#         # Insert new row to the process library
-#         success = proc_lib._model.insertRow(0)
-#         self.assertTrue(success)
-
-#         # Gets its index and selects it
-#         row_index = self.find_item_by_data(proc_lib, row_data)
-#         self.assertIsNotNone(row_index)
-#         proc_lib.selectionModel().select(
-#             row_index, QItemSelectionModel.SelectCurrent
-#         )
-
-#         # Test mime data of the row widget
-#         mime_data = proc_lib._model.mimeData([row_index])
-#         self.assertEqual(
-#             mime_data.data("component/name").data(),
-#             bytes(row_data, encoding="utf-8"),
-#         )
-
-#         # Rename the row
-#         set_result = proc_lib._model.setData(row_index, "untitled101")
-#         self.assertTrue(set_result)
-#         self.assertEqual(row_index.data(), "untitled101")
-
-#         # Simulate delete key press
-#         event = Mock()
-#         event.key = lambda *args: Qt.Key_Delete
-#         proc_lib.keyPressEvent(event)
-
-#         # Create dummy QAction objects
-#         dummy_action_remove = QAction("Remove package")
-#         dummy_action_delete = QAction("Delete package")
-
-#         # Monkey-patch QTreeView.mousePressEvent to avoid calling base
-#         # implementation
-#         with patch.object(QTreeView, "mousePressEvent", return_value=True):
-#             # Simulate right-click and select "Remove package"
-#             proc_lib._model.insertRow(0)
-#             row_index_remove = self.find_item_by_data(
-#                 proc_lib, "untitled" + str(child_count + 1)
-#             )
-#             self.assertIsNotNone(row_index_remove)
-#             mock_menu_exec.return_value = dummy_action_remove
-#             res = proc_lib.mousePressEvent(self._mock_mouse_event())
-#             self.assertTrue(res)
-#             self.assertEqual(mock_menu_exec.call_count, 1)
-
-#             # Simulate right-click and select "Delete package"
-#             proc_lib._model.insertRow(0)
-#             row_index_delete = self.find_item_by_data(
-#                 proc_lib, "untitled" + str(child_count + 2)
-#             )
-#             self.assertIsNotNone(row_index_delete)
-#             mock_menu_exec.return_value = dummy_action_delete
-#             proc_lib.mousePressEvent(self._mock_mouse_event())
-#             self.assertEqual(mock_menu_exec.call_count, 2)
-#             proc_lib.mousePressEvent(self._mock_mouse_event())
-#             # MessageBox.question should have been called (for
-#             # delete confirmation)
-#             self.assertGreaterEqual(mock_msgbox_question.call_count, 1)
-
-#     def test_verify_processes(self):
-#         """Check that Mia's processes control is working correctly
-
-#         - Tests: utils.verify_processes()
-#         """
-
-#         verify_processes("toto", "titi", "tata")
 
 
 if __name__ == "__main__":
