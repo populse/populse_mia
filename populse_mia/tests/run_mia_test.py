@@ -1156,228 +1156,203 @@ class TestMIADataBrowser(TestMIACase):
     """
 
     def test_add_path(self):
-        """Tries import a document to the project.
-
-        - Tests: DataBrowser.add_path and PopUpAddPath
-
-        - Mocks: the execution of QFileDialog and QMessageBox
         """
+        Tests importing a document into the project via the DataBrowser UI.
 
+        - Verifies behavior of `DataBrowser.add_path()` and `PopUpAddPath`.
+        - Mocks `QFileDialog.getOpenFileNames` and `QMessageBox.show`.
+        - Checks:
+            - Handling of empty or invalid fields.
+            - Successful addition of a valid document.
+            - Duplicate document addition behavior.
+        """
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
         table_data = self.main_window.data_browser.table_data
-
         # Creates a new project folder and adds one document to the
         # project, sets the plug value that is added to the database
         project_8_path = self.get_new_test_project()
         ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path, "data", "raw_data")
+        raw_data_folder = os.path.join(project_8_path, "data", "raw_data")
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
         )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_1 = os.path.abspath(os.path.join(raw_data_folder, NII_FILE_1))
 
-        # Mocks the execution of a message box
-        QMessageBox.show = Mock()
+        with patch("PyQt5.QtWidgets.QMessageBox.show"):
+            # Opens the 'add_path' pop-up
+            self.main_window.data_browser.table_data.add_path()
+            add_path = self.main_window.data_browser.table_data.pop_up_add_path
+            # Case 1: Try adding without filling any fields
+            QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
+            self.assertEqual(add_path.msg.text(), "Invalid arguments")
+            # Case 2: Invalid document path
+            add_path.file_line_edit.setText(str([DOCUMENT_1 + "_"]))
+            add_path.type_line_edit.setText(str([TYPE_NII]))
+            QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
+            self.assertEqual(add_path.msg.text(), "Invalid arguments")
+            # Case 3: Valid document addition
+            add_path.file_line_edit.setText(str([DOCUMENT_1]))
+            add_path.type_line_edit.setText(str([TYPE_NII]))
+            QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
 
-        # Opens the 'add_path' pop-up
-        self.main_window.data_browser.table_data.add_path()
-        add_path = self.main_window.data_browser.table_data.pop_up_add_path
+            # Asserts that the document was added into the data browser
+            # A regular '.split('/')' will not work in Windows OS
+            with ppl_manager.project.database.data() as database_data:
+                filename = os.path.split(
+                    database_data.get_document_names(COLLECTION_CURRENT)[0]
+                )[-1]
+                self.assertTrue(filename in DOCUMENT_1)
+                self.assertEqual(table_data.rowCount(), 1)
 
-        # Tries to add a document without filling the pop-up fields
-        QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
-        self.assertEqual(add_path.msg.text(), "Invalid arguments")
+            # Case 4: QFileDialog file selection by mocked extensions
+            for ext in ["nii", "mat", "txt"]:
 
-        # Tries to add invalid document path
-        add_path.file_line_edit.setText(str([DOCUMENT_1 + "_"]))
-        add_path.type_line_edit.setText(str([TYPE_NII]))
-        QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
-        self.assertEqual(add_path.msg.text(), "Invalid arguments")
+                with patch(
+                    "PyQt5.QtWidgets.QFileDialog.getOpenFileNames",
+                    return_value=([f"file.{ext}"], "All Files (*)"),
+                ):
+                    add_path.file_to_choose()
 
-        # Adds a valid document path
-        add_path.file_line_edit.setText(str([DOCUMENT_1]))
-        add_path.type_line_edit.setText(str([TYPE_NII]))
-        QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
+            # Case 5: Try saving the same document again
+            with self.project.database.data(write=True) as database_data:
+                database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
 
-        # Asserts that the document was added into the data browser
-        # A regular '.split('/')' will not work in Windows OS
-        with ppl_manager.project.database.data() as database_data:
-            filename = os.path.split(
-                database_data.get_document_names(COLLECTION_CURRENT)[0]
-            )[-1]
-
-        self.assertTrue(filename in DOCUMENT_1)
-
-        self.assertEqual(table_data.rowCount(), 1)
-
-        # Mocks the execution of file dialog box and finds the file type
-        for ext in ["nii", "mat", "txt"]:
-            QFileDialog.getOpenFileNames = Mock(
-                return_value=(["file." + ext], "All Files (*)")
-            )
-            add_path.file_to_choose()
-
-        # Adds a document into the database and tries to save the same
-        # one once again
-        with self.project.database.data(write=True) as database_data:
-            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
-
-        add_path.file_line_edit.setText(str([DOCUMENT_1]))
-        add_path.save_path()
+            add_path.file_line_edit.setText(str([DOCUMENT_1]))
+            add_path.save_path()
 
     def test_add_tag(self):
-        """Tests the pop-up adding a tag."""
+        """
+        Test the add tag functionality in the data browser.
 
+        This test verifies that:
+        - Empty tag names are properly rejected
+        - Duplicate tag names are properly rejected
+        - Invalid default values for the selected type are rejected
+        - Valid string tags are successfully added to the database and UI
+        - List-type tags (Integer List) are properly created and displayed
+
+        """
+        # Sets shortcuts for often used objects
+        data_browser = self.main_window.data_browser
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Mocks the execution of a dialog box and clicking close
-        QMessageBox.exec = lambda self_, *args: self_.close()
-
-        # Testing without tag name
-        self.main_window.data_browser.add_tag_action.trigger()
-        add_tag = self.main_window.data_browser.pop_up_add_tag
-        # QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
-        QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        self.assertEqual(add_tag.msg.text(), "The tag name cannot be empty")
-
-        QApplication.processEvents()
-
-        # Testing with tag name already existing
-        add_tag.text_edit_tag_name.setText(TAG_TYPE)
-        # QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
-        QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        self.assertEqual(add_tag.msg.text(), "This tag name already exists")
-
-        QApplication.processEvents()
-
-        # Testing with wrong type
-        add_tag.text_edit_tag_name.setText("Test")
-        add_tag.combo_box_type.setCurrentText("Integer")
-        add_tag.type = FIELD_TYPE_INTEGER
-        add_tag.text_edit_default_value.setText("Should be integer")
-        # QTimer.singleShot(1000, self.execute_QMessageBox_clickClose)
-        QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-        self.assertEqual(add_tag.msg.text(), "Invalid default value")
-
-        QApplication.processEvents()
-
-        # Testing when everything is ok
-        add_tag.text_edit_tag_name.setText("Test")
-        add_tag.text_edit_default_value.setText("def_value")
-        add_tag.type = FIELD_TYPE_STRING
-
-        QTest.qWait(500)
-
-        QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
+        # Use patch context manager instead of direct modification
+        with patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None):
+            # === Test: Empty tag name ===
+            data_browser.add_tag_action.trigger()
+            add_tag = data_browser.pop_up_add_tag
+            QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
+            self.assertEqual(
+                add_tag.msg.text(), "The tag name cannot be empty"
             )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
+            # === Test: Duplicate tag name ===
+            add_tag.text_edit_tag_name.setText(TAG_TYPE)
+            QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
+            self.assertEqual(
+                add_tag.msg.text(), "This tag name already exists"
             )
+            # === Test: Invalid default value for Integer ===
+            add_tag.text_edit_tag_name.setText("Test")
+            add_tag.combo_box_type.setCurrentText("Integer")
+            add_tag.type = FIELD_TYPE_INTEGER
+            add_tag.text_edit_default_value.setText("Should be integer")
+            QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
+            self.assertEqual(add_tag.msg.text(), "Invalid default value")
+            # === Test: Valid String tag creation ===
+            add_tag.text_edit_tag_name.setText("Test")
+            add_tag.combo_box_type.setCurrentText("String")
+            add_tag.type = FIELD_TYPE_STRING
+            add_tag.text_edit_default_value.setText("def_value")
+            QTest.qWait(200)
+            QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
-            for document in database_data.get_document_names(
-                COLLECTION_CURRENT
-            ):
-                self.assertEqual(
-                    database_data.get_value(
-                        COLLECTION_CURRENT, document, "Test"
-                    ),
-                    "def_value",
-                )
+            # Verify tag was added to database
+            with self.main_window.project.database.data() as database_data:
 
-            for document in database_data.get_document_names(
-                COLLECTION_INITIAL
-            ):
-                self.assertEqual(
-                    database_data.get_value(
-                        COLLECTION_INITIAL, document, "Test"
-                    ),
-                    "def_value",
-                )
+                # Check if tag exists in both collections
+                for collection in [COLLECTION_CURRENT, COLLECTION_INITIAL]:
+                    self.assertIn(
+                        "Test", database_data.get_field_names(collection)
+                    )
 
-        test_column = self.main_window.data_browser.table_data.get_tag_column(
-            "Test"
-        )
+                    # Check default value for each document
+                    for doc in database_data.get_document_names(collection):
+                        self.assertEqual(
+                            database_data.get_value(collection, doc, "Test"),
+                            "def_value",
+                        )
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item = self.main_window.data_browser.table_data.item(
-                row, test_column
+            # Verify tag appears in UI with correct value
+            test_column = data_browser.table_data.get_tag_column("Test")
+
+            for row in range(data_browser.table_data.rowCount()):
+                item = data_browser.table_data.item(row, test_column)
+                self.assertEqual(item.text(), "def_value")
+
+        # === Test: Valid Integer List tag creation ===
+        with patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None):
+            data_browser.add_tag_action.trigger()
+            add_tag = data_browser.pop_up_add_tag
+            add_tag.text_edit_tag_name.setText("Test_list")
+            # Test all combo box types properly load
+            combo_box_types = [
+                "String",
+                "Integer",
+                "Float",
+                "Boolean",
+                "Date",
+                "Datetime",
+                "Time",
+                "String List",
+                "Integer List",
+                "Float List",
+                "Boolean List",
+                "Date List",
+                "Datetime List",
+                "Time List",
+            ]
+
+            for data_type in combo_box_types:
+                add_tag.combo_box_type.setCurrentText(data_type)
+
+            # Set to Integer List for our test
+            add_tag.combo_box_type.setCurrentText("Integer List")
+            # Simulate list value creation
+            QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
+            QTest.mouseClick(
+                (
+                    add_tag.text_edit_default_value.list_creation.add_element_label
+                ),
+                Qt.LeftButton,
             )
-            self.assertEqual(item.text(), "def_value")
+            # Add items to table
+            table = add_tag.text_edit_default_value.list_creation.table
 
-        QApplication.processEvents()
+            for col, value in enumerate([1, 2, 3]):
+                item = QTableWidgetItem(str(value))
+                table.setItem(0, col, item)
 
-        # Testing with list type
-        self.main_window.data_browser.add_tag_action.trigger()
-        add_tag = self.main_window.data_browser.pop_up_add_tag
-        add_tag.text_edit_tag_name.setText("Test_list")
-
-        combo_box_types = [
-            "String",
-            "Integer",
-            "Float",
-            "Boolean",
-            "Date",
-            "Datetime",
-            "Time",
-            "String List",
-            "Integer List",
-            "Float List",
-            "Boolean List",
-            "Date List",
-            "Datetime List",
-            "Time List",
-        ]
-
-        for data_type in combo_box_types:
-            add_tag.combo_box_type.setCurrentText(data_type)
-
-        add_tag.combo_box_type.setCurrentText("Integer List")
-        QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
-        QTest.mouseClick(
-            add_tag.text_edit_default_value.list_creation.add_element_label,
-            Qt.LeftButton,
-        )
-        table = add_tag.text_edit_default_value.list_creation.table
-        item = QTableWidgetItem()
-        item.setText(str(1))
-        table.setItem(0, 0, item)
-        item = QTableWidgetItem()
-        item.setText(str(2))
-        table.setItem(0, 1, item)
-        item = QTableWidgetItem()
-        item.setText(str(3))
-        table.setItem(0, 2, item)
-
-        QTest.qWait(500)
-
-        QTest.mouseClick(
-            add_tag.text_edit_default_value.list_creation.ok_button,
-            Qt.LeftButton,
-        )
-        self.assertEqual(add_tag.text_edit_default_value.text(), "[1, 2, 3]")
-        QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
-
-        test_list_column = (
-            self.main_window.data_browser.table_data.get_tag_column(
+            # Close the list dialog
+            QTest.mouseClick(
+                add_tag.text_edit_default_value.list_creation.ok_button,
+                Qt.LeftButton,
+            )
+            self.assertEqual(
+                add_tag.text_edit_default_value.text(), "[1, 2, 3]"
+            )
+            # Confirm tag creation
+            QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
+            # Verify the list tag appears in the UI
+            test_list_column = data_browser.table_data.get_tag_column(
                 "Test_list"
             )
-        )
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item = self.main_window.data_browser.table_data.item(
-                row, test_list_column
-            )
-            self.assertEqual(item.text(), "[1, 2, 3]")
+            for row in range(data_browser.table_data.rowCount()):
+                item = data_browser.table_data.item(row, test_list_column)
+                self.assertEqual(item.text(), "[1, 2, 3]")
 
         QApplication.processEvents()
 
