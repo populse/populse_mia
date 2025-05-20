@@ -82,7 +82,6 @@ from PyQt5.QtWidgets import (
 )
 from traits.api import TraitListObject, Undefined
 
-print("__file__ in run_mia_test.py: ", __file__)
 uts_dir = os.path.isdir(
     os.path.join(
         os.path.dirname(
@@ -91,7 +90,7 @@ uts_dir = os.path.isdir(
         "mia_ut_data",
     )
 )
-print("uts_dir in run_mia_test.py: ", uts_dir)
+
 if not uts_dir:
     print(
         "\nTo work properly, unit tests need data in the populse_mia(or "
@@ -105,8 +104,6 @@ if not uts_dir:
 populse_mia_dir = os.path.dirname(
     os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 )
-print("populse_mia_dir in run_mia_test.py: ", populse_mia_dir)
-print("sys.path in run_mia_test.py 1: ", sys.path)
 # UTs are always in developer mode
 os.environ["MIA_DEV_MODE"] = "1"
 root_dev_dir = os.path.dirname(
@@ -114,8 +111,9 @@ root_dev_dir = os.path.dirname(
         os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
     )
 )
-print("root_dev_dir in run_mia_test.py: ", root_dev_dir)
+
 if populse_mia_dir not in sys.path:
+
     # Adding populse_mia
     if os.path.isdir(os.path.join(root_dev_dir, "populse-mia")):
         mia_dev_dir = os.path.join(root_dev_dir, "populse-mia")
@@ -128,7 +126,9 @@ if populse_mia_dir not in sys.path:
     del mia_dev_dir
 
 mia_processes_dir = os.path.join(root_dev_dir, "mia_processes")
+
 if mia_processes_dir not in sys.path:
+
     if os.path.isdir(mia_processes_dir):
         # Adding mia_processes
         print(
@@ -139,7 +139,9 @@ if mia_processes_dir not in sys.path:
         del mia_processes_dir
 
 populse_db_dir = os.path.join(root_dev_dir, "populse_db", "python")
+
 if populse_db_dir not in sys.path:
+
     if os.path.isdir(populse_db_dir):
         # Adding populse_db
         print(
@@ -149,7 +151,9 @@ if populse_db_dir not in sys.path:
         del populse_db_dir
 
 capsul_dir = os.path.join(root_dev_dir, "capsul")
+
 if capsul_dir not in sys.path:
+
     if os.path.isdir(capsul_dir):
         # Adding capsul
         print(f"- Using capsul package from {capsul_dir} ...")
@@ -157,7 +161,9 @@ if capsul_dir not in sys.path:
         del capsul_dir
 
 soma_base_dir = os.path.join(root_dev_dir, "soma-base", "python")
+
 if soma_base_dir not in sys.path:
+
     if os.path.isdir(soma_base_dir):
         # Adding soma-base
         print("- Using soma-base package from {} " "...".format(soma_base_dir))
@@ -165,7 +171,9 @@ if soma_base_dir not in sys.path:
         del soma_base_dir
 
 soma_workflow_dir = os.path.join(root_dev_dir, "soma-workflow", "python")
+
 if soma_workflow_dir not in sys.path:
+
     if os.path.isdir(soma_workflow_dir):
         # Adding soma-workflow:
         print(
@@ -175,10 +183,7 @@ if soma_workflow_dir not in sys.path:
         sys.path.insert(1, soma_workflow_dir)
         del soma_workflow_dir
 
-print("sys.path in run_mia_test.py 2: ", sys.path)
-
-# Imports after defining the location of populse packages in the case of a
-# developer configuration:
+# Imports after defining the location of populse packages:
 
 # Capsul import
 from capsul.api import (  # noqa: E402
@@ -1065,8 +1070,31 @@ class Test1AMIAOthers(TestMIACase):
 
     #     - Tests: utils.verify_processes()
     #     """
+    #     config = Config()
+    #     proc_config = os.path.join(
+    #         config.get_properties_path(), "properties", "process_config.yml"
+    #     )
 
-    #     verify_processes("toto", "titi", "tata")
+    #     with open(proc_config) as stream:
+    #             proc_content = yaml.load(stream, Loader=yaml.FullLoader)
+
+    #     self.assertEqual(proc_content, {'Packages': {}, 'Paths': []})
+    #     verify_processes("nipype_ver", "mia_proc_ver", "capsul_ver")
+
+    #     with open(proc_config) as stream:
+    #             proc_content = yaml.load(stream, Loader=yaml.FullLoader)
+
+    #     self.assertTrue('capsul' in proc_content['Packages'])
+    #     self.assertTrue('mia_processes' in proc_content['Packages'])
+    #     self.assertTrue('nipype' in proc_content['Packages'])
+    #     self.assertEqual(
+    #         proc_content['Paths'],
+    #         []
+    #     )
+    #     self.assertEqual(
+    #         proc_content['Versions'],
+    #         {'capsul': 'capsul_ver', 'mia_processes': 'mia_proc_ver', 'nipype': 'nipype_ver'}
+    #     )
 
 
 class TestMIADataBrowser(TestMIACase):
