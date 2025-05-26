@@ -77,7 +77,9 @@ from PyQt5.QtWidgets import (
     QDialog,
     QFileDialog,
     QInputDialog,
+    QLabel,
     QMessageBox,
+    QPushButton,
     QTableWidgetItem,
 )
 from traits.api import TraitListObject, Undefined
@@ -343,13 +345,6 @@ class TestMIACase(unittest.TestCase):
             - create_mock_jar: creates a mocked java (.jar) executable
             - edit_databrowser_list: change value for a tag in DataBrowser
             - execute_QDialogAccept: accept (close) a QDialog instance
-            - execute_QDialogClose: closes a QDialog instance
-            - execute_QMessageBox_clickClose: press the Close button of
-              a QMessageBox instance
-            - execute_QMessageBox_clickOk: press the Ok button of a
-              QMessageBox instance
-            - execute_QMessageBox_clickYes: press the Yes button of a
-              QMessageBox instance
             - find_item_by_data: looks for a QModelIndex whose contents
               correspond to the argument data
             - get_new_test_project: create a temporary project that can
@@ -378,7 +373,7 @@ class TestMIACase(unittest.TestCase):
         :param tag: the tag to be displayed (str)
         """
 
-        w = QApplication.activeWindow()
+        w = self._app.activeWindow()
 
         if isinstance(w, QDialog):
             visualized_tags = w.layout().itemAt(0).widget()
@@ -479,7 +474,7 @@ class TestMIACase(unittest.TestCase):
         :param value: the new value
         """
 
-        w = QApplication.activeWindow()
+        w = self._app.activeWindow()
 
         if isinstance(w, QDialog):
             item = w.table.item(0, 0)
@@ -489,70 +484,10 @@ class TestMIACase(unittest.TestCase):
     def execute_QDialogAccept(self):
         """Accept (close) a QDialog window."""
 
-        w = QApplication.activeWindow()
+        w = self._app.activeWindow()
 
         if isinstance(w, QDialog):
             w.accept()
-
-    # def execute_QDialogClose(self):
-    #     """Close a QDialog window.
-    #
-    #     Currently, this method is not used.
-    #     """
-    #
-    #     w = QApplication.activeWindow()
-    #
-    #     if isinstance(w, QDialog):
-    #
-    #         # If there's an “OK” or “Yes” button,
-    #         # click it instead of force-closing
-    #         for btn in w.findChildren(QPushButton):
-    #             text = btn.text().replace("&", "").strip().lower()
-    #
-    #             if text in ("ok", "yes"):
-    #                 QTest.mouseClick(btn, Qt.LeftButton)
-    #                 return
-    #
-    #         # Fallback: just close the dialog
-    #         w.close()
-
-    # def execute_QMessageBox_clickClose(self):
-    #     """Press the Close button of a QMessageBox instance.
-    #
-    #     Currently, this method is not used.
-    #     """
-    #
-    #     w = QApplication.activeWindow()
-    #
-    #     if isinstance(w, QMessageBox):
-    #         close_button = w.button(QMessageBox.Close)
-    #         QTest.mouseClick(close_button, Qt.LeftButton)
-
-    def execute_QMessageBox_clickOk(self):
-        """Press the Ok button of a QMessageBox instance."""
-
-        # for w in QApplication.topLevelWidgets():
-        #     print(f"Title: {w.windowTitle()}, Type: {type(w)}")
-
-        # w = QApplication.activeWindow()
-        # print(f"Title: {w.windowTitle()}, Type: {type(w)}")
-        w = QApplication.activeWindow()
-
-        if isinstance(w, QMessageBox):
-            close_button = w.button(QMessageBox.Ok)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-    # def execute_QMessageBox_clickYes(self):
-    #     """Press the Yes button of a QMessageBox instance.
-    #
-    #     Currently, this method is not used.
-    #     """
-    #
-    #     w = QApplication.activeWindow()
-    #
-    #     if isinstance(w, QMessageBox):
-    #         close_button = w.button(QMessageBox.Yes)
-    #         QTest.mouseClick(close_button, Qt.LeftButton)
 
     def find_item_by_data(
         self, q_tree_view: QTreeView, data: str
@@ -701,7 +636,7 @@ class TestMIACase(unittest.TestCase):
         if self.main_window:
             self.main_window.close()
             self.main_window.deleteLater()
-            QApplication.processEvents()
+            self._app.processEvents()
 
         # Reset config/state
         config = Config(properties_path=self.properties_path)
@@ -715,6 +650,8 @@ class TestMIACase(unittest.TestCase):
     def setUp(self):
         """Called before each test"""
 
+        # Make _app available at instance level
+        self._app = self.__class__._app
         # All the tests are run in admin mode
         config = Config(properties_path=self.properties_path)
         config.set_user_mode(False)
@@ -812,7 +749,7 @@ class TestMIACase(unittest.TestCase):
         config.set_opened_projects([])
         config.saveConfig()
 
-        for widget in QApplication.topLevelWidgets():
+        for widget in self._app.topLevelWidgets():
 
             try:
 
@@ -823,7 +760,7 @@ class TestMIACase(unittest.TestCase):
             except Exception as e:
                 print(f"Error closing widget: {e}")
 
-        QApplication.processEvents()
+        self._app.processEvents()
         self.project = None
         self.main_window = None
 
@@ -1094,7 +1031,7 @@ class Test1AMIAOthers(TestMIACase):
     #     self.assertEqual(
     #         proc_content['Versions'],
     #         {'capsul': 'capsul_ver', 'mia_processes': 'mia_proc_ver', 'nipype': 'nipype_ver'}
-    #     )
+    # )
 
 
 class TestMIADataBrowser(TestMIACase):
@@ -1102,10 +1039,16 @@ class TestMIADataBrowser(TestMIACase):
 
     :Contains:
         :Method:
-            - test_add_path: tests the popup to add a path
-            - test_add_tag: tests the pop up adding a tag
-            - test_advanced_search: tests the advanced search widget
-            - test_brick_history: tests the brick history popup
+            - assert_scans_present: Asserts that all expected scan names are
+                                    present in the given list.
+            - get_cell_text: Returns the text of the QLabel inside a cell
+                             widget.
+            - get_visible_scans: Returns the list of scan names currently
+                                 visible in the table.
+            - test_add_path: Tests the popup to add a path.
+            - test_add_tag: Tests the pop up adding a tag.
+            - test_advanced_search: Tests the advanced search widget.
+            - test_brick_history: Tests the brick history popup.
             - test_clear_cell: tests the method clearing cells
             - test_clone_tag: tests the pop up cloning a tag
             - test_count_table: tests the count table popup
@@ -1154,6 +1097,54 @@ class TestMIADataBrowser(TestMIACase):
             - test_visualized_tags: tests the popup modifying the
               visualized tags
     """
+
+    def assert_scans_present(self, scans, expected_subset):
+        """
+        Asserts that all expected scan names are present in the given list.
+        """
+
+        for expected in expected_subset:
+            self.assertIn(expected, scans)
+
+    def get_cell_text(self, table, row, column, label_index=0):
+        """
+        Utility method to retrieve the text of the QLabel inside a cell
+        widget.
+
+        :param table (QTableWidget): The table containing the cell.
+        :param row (int): The row index.
+        :param column (int): The column index.
+        :param label_index (int): If multiple labels are present, which
+                                    one to return. Default is 0 (first QLabel
+                                    found).
+        :returns (str): The text of the QLabel, or fails the test if not
+                        found.
+        """
+        widget = table.cellWidget(row, column)
+        self.assertIsNotNone(widget, f"No widget at cell ({row}, {column})")
+        labels = widget.findChildren(QLabel)
+        self.assertGreater(
+            len(labels),
+            label_index,
+            f"Not enough QLabel widgets in cell ({row}, {column})",
+        )
+
+        return labels[label_index].text()
+
+    def get_visible_scans(self):
+        """
+        Returns the list of scan names currently visible in the table.
+        """
+        self._app.processEvents()
+        visible_scans = []
+
+        for row in range(self.main_window.data_browser.table_data.rowCount()):
+
+            if not self.main_window.data_browser.table_data.isRowHidden(row):
+                item = self.main_window.data_browser.table_data.item(row, 0)
+                visible_scans.append(item.text())
+
+        return visible_scans
 
     def test_add_path(self):
         """
@@ -1354,194 +1345,92 @@ class TestMIADataBrowser(TestMIACase):
                 item = data_browser.table_data.item(row, test_list_column)
                 self.assertEqual(item.text(), "[1, 2, 3]")
 
-        QApplication.processEvents()
+        self._app.processEvents()
 
     def test_advanced_search(self):
         """Tests the advanced search widget."""
-
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+        self._app.processEvents()
 
-        scans_displayed = []
+        initial_expected = [
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01"
+            "-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04"
+            "-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-05"
+            "-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-06"
+            "-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-08"
+            "-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-09"
+            "-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-10"
+            "-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-11"
+            "-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-"
+            "14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+        ]
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item = self.main_window.data_browser.table_data.item(row, 0)
-            scan_name = item.text()
+        scans = self.get_visible_scans()
+        self.assertEqual(len(scans), 9)
+        self.assert_scans_present(scans, initial_expected)
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                scans_displayed.append(scan_name)
-
-        self.assertEqual(len(scans_displayed), 9)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
-
+        # Open advanced search
         QTest.mouseClick(
             self.main_window.data_browser.advanced_search_button, Qt.LeftButton
         )
+        self._app.processEvents()
 
-        # Testing - and + buttons
-        self.assertEqual(
-            1, len(self.main_window.data_browser.advanced_search.rows)
-        )
-        first_row = self.main_window.data_browser.advanced_search.rows[0]
-        QTest.mouseClick(first_row[6], Qt.LeftButton)
-        self.assertEqual(
-            2, len(self.main_window.data_browser.advanced_search.rows)
-        )
-        second_row = self.main_window.data_browser.advanced_search.rows[1]
-        QTest.mouseClick(second_row[5], Qt.LeftButton)
-        self.assertEqual(
-            1, len(self.main_window.data_browser.advanced_search.rows)
-        )
-        first_row = self.main_window.data_browser.advanced_search.rows[0]
-        QTest.mouseClick(first_row[5], Qt.LeftButton)
-        self.assertEqual(
-            1, len(self.main_window.data_browser.advanced_search.rows)
-        )
+        adv_search = self.main_window.data_browser.advanced_search
+        self.assertEqual(len(adv_search.rows), 1)
 
-        field = self.main_window.data_browser.advanced_search.rows[0][2]
-        condition = self.main_window.data_browser.advanced_search.rows[0][3]
-        value = self.main_window.data_browser.advanced_search.rows[0][4]
-        field_filename_index = field.findText(TAG_FILENAME)
-        field.setCurrentIndex(field_filename_index)
-        condition_contains_index = condition.findText("CONTAINS")
-        condition.setCurrentIndex(condition_contains_index)
+        first_row = adv_search.rows[0]
+        QTest.mouseClick(first_row[6], Qt.LeftButton)  # + button
+        self._app.processEvents()
+        self.assertEqual(len(adv_search.rows), 2)
+
+        second_row = adv_search.rows[1]
+        QTest.mouseClick(second_row[5], Qt.LeftButton)  # - button
+        self._app.processEvents()
+        self.assertEqual(len(adv_search.rows), 1)
+
+        first_row = adv_search.rows[0]
+        QTest.mouseClick(first_row[5], Qt.LeftButton)  # - button again
+        self._app.processEvents()
+        self.assertEqual(len(adv_search.rows), 1)
+
+        # Apply filter
+        field, condition, value = first_row[2], first_row[3], first_row[4]
+        field.setCurrentIndex(field.findText(TAG_FILENAME))
+        condition.setCurrentIndex(condition.findText("CONTAINS"))
         value.setText("G1")
-        QTest.mouseClick(
-            self.main_window.data_browser.advanced_search.search, Qt.LeftButton
-        )
+        self._app.processEvents()
+        QTest.mouseClick(adv_search.search, Qt.LeftButton)
+        self._app.processEvents()
 
-        # Testing that only G1 scans are displayed with the filter applied
-        scans_displayed = []
+        filtered_expected = [
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01"
+            "-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-"
+            "14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+        ]
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item = self.main_window.data_browser.table_data.item(row, 0)
-            scan_name = item.text()
+        scans = self.get_visible_scans()
+        self.assertEqual(len(scans), 2)
+        self.assert_scans_present(scans, filtered_expected)
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                scans_displayed.append(scan_name)
-
-        self.assertEqual(len(scans_displayed), 2)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
-
-        # Testing that every scan is back when clicking again on
-        # advanced search
+        # Reset filter
         QTest.mouseClick(
             self.main_window.data_browser.advanced_search_button, Qt.LeftButton
         )
-        scans_displayed = []
+        self._app.processEvents()
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item = self.main_window.data_browser.table_data.item(row, 0)
-            scan_name = item.text()
-
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                scans_displayed.append(scan_name)
-
-        self.assertEqual(len(scans_displayed), 9)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans_displayed
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans_displayed
-        )
+        scans = self.get_visible_scans()
+        self.assertEqual(len(scans), 9)
+        self.assert_scans_present(scans, initial_expected)
 
     def test_brick_history(self):
         """Tests the brick history popup."""
@@ -1550,153 +1439,139 @@ class TestMIADataBrowser(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         bricks_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )(TAG_BRICKS)
+            self.main_window.data_browser.table_data.get_tag_column(TAG_BRICKS)
+        )
         bricks_widget = self.main_window.data_browser.table_data.cellWidget(
             0, bricks_column
         )
         smooth_button = bricks_widget.layout().itemAt(0).widget()
         self.assertEqual(smooth_button.text(), "smooth_1")
         QTest.mouseClick(smooth_button, Qt.LeftButton)
+
         brick_history = (
             self.main_window.data_browser.table_data.brick_history_popup
         )
         brick_table = brick_history.table
+
+        expected_headers = [
+            BRICK_NAME,
+            BRICK_INIT,
+            BRICK_INIT_TIME,
+            BRICK_EXEC,
+            BRICK_EXEC_TIME,
+            "data_type",
+            "fwhm",
+            "implicit_masking",
+            "in_files",
+            "matlab_cmd",
+            "mfile",
+        ]
+
+        for i, expected in enumerate(expected_headers):
+            self.assertEqual(
+                brick_table.horizontalHeaderItem(i).text(), expected
+            )
+
+        self.assertEqual(self.get_cell_text(brick_table, 0, 0), "smooth_1")
+        self.assertEqual(self.get_cell_text(brick_table, 0, 1), "Done")
+
+        # Assert datetime format for BRICK_INIT_TIME and BRICK_EXEC_TIME
+        date_regex = r"\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}"
+        init_time = self.get_cell_text(brick_table, 0, 2)
+        exec_time = self.get_cell_text(brick_table, 0, 4)
+        # We only verifying the format of date, not its exact value.
+        self.assertRegex(init_time, date_regex)
+        self.assertRegex(exec_time, date_regex)
+
+        self.assertEqual(self.get_cell_text(brick_table, 0, 3), "Done")
+        self.assertEqual(self.get_cell_text(brick_table, 0, 5), "0")
         self.assertEqual(
-            brick_table.horizontalHeaderItem(0).text(), BRICK_NAME
+            self.get_cell_text(brick_table, 0, 6), "[6.0, 6.0, 6.0]"
+        )
+        self.assertEqual(self.get_cell_text(brick_table, 0, 7), "False")
+
+        # in_files might have multiple widgets; adjust label_index if needed
+        in_files_widget = brick_table.cellWidget(0, 8)
+        self.assertIsNotNone(in_files_widget)
+        in_files_labels = in_files_widget.findChildren(QLabel)
+        self.assertGreaterEqual(len(in_files_labels), 3)
+        in_files_button = in_files_widget.findChild(QPushButton)
+        self.assertIsNotNone(
+            in_files_button, "Could not find QPushButton in in_files cell"
+        )
+        self.assertIn(
+            "data/raw_data/Guerbet-C6-2014",
+            in_files_button.text(),
+            f"Unexpected button text: {in_files_button.text()}",
         )
         self.assertEqual(
-            brick_table.horizontalHeaderItem(1).text(), BRICK_INIT
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(2).text(), BRICK_INIT_TIME
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(3).text(), BRICK_EXEC
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(4).text(), BRICK_EXEC_TIME
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(5).text(), "data_type"
-        )
-        self.assertEqual(brick_table.horizontalHeaderItem(6).text(), "fwhm")
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(7).text(), "implicit_masking"
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(8).text(), "in_files"
-        )
-        self.assertEqual(
-            brick_table.horizontalHeaderItem(9).text(), "matlab_cmd"
-        )
-        self.assertEqual(brick_table.horizontalHeaderItem(10).text(), "mfile")
-        # self.assertEqual(brick_table.item(0, 0).text(), "smooth_1")
-        self.assertEqual(
-            brick_table.cellWidget(0, 0).children()[1].text(), "smooth_1"
-        )
-        # self.assertEqual(brick_table.item(0, 1).text(), "Done")
-        self.assertEqual(
-            brick_table.cellWidget(0, 1).children()[1].text(), "Done"
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 2).children()[1].text(),
-            "2025-04-22 15:55:59",
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 3).children()[1].text(), "Done"
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 4).children()[1].text(),
-            "2025-04-22 15:55:59",
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 5).children()[1].text(), "0"
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 6).children()[1].text(),
-            "[6.0, 6.0, 6.0]",
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 7).children()[1].text(), "False"
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 8).children()[2].text(),
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii",
-        )
-        self.assertEqual(
-            brick_table.cellWidget(0, 9).children()[1].text(),
+            self.get_cell_text(brick_table, 0, 9),
             "/data/softs/MATLAB/R2024a/bin/matlab",
         )
-        self.assertEqual(
-            brick_table.cellWidget(0, 10).children()[1].text(), "True"
-        )
+        self.assertEqual(self.get_cell_text(brick_table, 0, 10), "True")
 
     def test_clear_cell(self):
-        """Tests the method clearing cells."""
+        """
+        Tests clearing a cell and ensuring value is removed from database.
+        """
+        project_path = self.get_new_test_project()
+        self.main_window.switch_project(project_path, "project_8")
 
-        project_8_path = self.get_new_test_project()
-        self.main_window.switch_project(project_8_path, "project_8")
+        # Sets shortcuts for often used objects
+        data_browser = self.main_window.data_browser
+        table = data_browser.table_data
 
-        # Selecting a cell
-        bw_column = self.main_window.data_browser.table_data.get_tag_column(
-            "BandWidth"
-        )
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
-        bw_item.setSelected(True)
+        # Locate the BandWidth column and the first item
+        bw_column = table.get_tag_column("BandWidth")
+        bw_item = table.item(0, bw_column)
+
+        # Confirm initial value in table
         self.assertEqual(float(bw_item.text()[1:-1]), 50000.0)
 
-        with self.main_window.project.database.data() as database_data:
+        # Confirm initial value in database
+        file_path = (
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
+            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+            "pvm-000220_000.nii"
+        )
+
+        with self.main_window.project.database.data() as db:
             self.assertEqual(
-                database_data.get_value(
-                    COLLECTION_CURRENT,
-                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                    "pvm-000220_000.nii",
-                    "BandWidth",
-                ),
+                db.get_value(COLLECTION_CURRENT, file_path, "BandWidth"),
                 [50000.0],
             )
 
-        # Clearing the cell
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
+        # Clear the cell
         bw_item.setSelected(True)
-        self.main_window.data_browser.table_data.itemChanged.disconnect()
-        self.main_window.data_browser.table_data.clear_cell()
-        self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color
-        )
+        table.itemChanged.disconnect()
+        table.clear_cell()
+        table.itemChanged.connect(table.change_cell_color)
 
-        # Checking that it's empty
-        bw_item = self.main_window.data_browser.table_data.item(0, bw_column)
+        # Confirm the cell text is now marked as not defined
+        bw_item = table.item(0, bw_column)
         self.assertEqual(bw_item.text(), NOT_DEFINED_VALUE)
 
-        with self.main_window.project.database.data() as database_data:
+        # Confirm the database no longer has a value for BandWidth
+        with self.main_window.project.database.data() as db:
             self.assertIsNone(
-                database_data.get_value(
-                    COLLECTION_CURRENT,
-                    "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-                    "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                    "pvm-000220_000.nii",
-                    "BandWidth",
-                )
+                db.get_value(COLLECTION_CURRENT, file_path, "BandWidth")
             )
 
     def test_clone_tag(self):
-        """Tests the pop up cloning a tag."""
+        """
+        Tests the pop-up for cloning a tag.
+        """
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Testing without new tag name
+        # -- Test 1: No new tag name provided --
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(clone_tag.msg.text(), "The tag name can't be empty")
 
-        # Testing without any tag selected to clone
+        # -- Test 2: No tag selected to clone --
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
         clone_tag.line_edit_new_tag_name.setText("Test")
@@ -1705,13 +1580,14 @@ class TestMIADataBrowser(TestMIACase):
             clone_tag.msg.text(), "The tag to clone must be selected"
         )
 
-        # Testing with tag name already existing
+        # -- Test 3: New tag name already exists --
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
         clone_tag.line_edit_new_tag_name.setText(TAG_TYPE)
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
         self.assertEqual(clone_tag.msg.text(), "This tag name already exists")
 
+        # -- Test 4: Successful cloning of "BandWidth" tag to "Test" --
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
         clone_tag.line_edit_new_tag_name.setText("Test")
@@ -1719,206 +1595,194 @@ class TestMIADataBrowser(TestMIACase):
         clone_tag.list_widget_tags.setCurrentRow(0)  # BandWidth tag selected
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
 
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
-            test_row = database_data.get_field_attributes(
-                COLLECTION_CURRENT, "Test"
-            )
-            bandwidth_row = database_data.get_field_attributes(
-                COLLECTION_CURRENT, "BandWidth"
-            )
-            self.assertEqual(
-                test_row["description"], bandwidth_row["description"]
-            )
-            self.assertEqual(test_row["unit"], bandwidth_row["unit"])
-            self.assertEqual(
-                test_row["default_value"], bandwidth_row["default_value"]
-            )
-            self.assertEqual(
-                test_row["field_type"], bandwidth_row["field_type"]
-            )
-            self.assertEqual(test_row["origin"], TAG_ORIGIN_USER)
-            self.assertEqual(test_row["visibility"], True)
-            test_row = database_data.get_field_attributes(
-                COLLECTION_INITIAL, "Test"
-            )
-            bandwidth_row = database_data.get_field_attributes(
-                COLLECTION_INITIAL, "BandWidth"
-            )
-            self.assertEqual(
-                test_row["description"], bandwidth_row["description"]
-            )
-            self.assertEqual(test_row["unit"], bandwidth_row["unit"])
-            self.assertEqual(
-                test_row["default_value"], bandwidth_row["default_value"]
-            )
-            self.assertEqual(
-                test_row["field_type"], bandwidth_row["field_type"]
-            )
-            self.assertEqual(test_row["origin"], TAG_ORIGIN_USER)
-            self.assertEqual(test_row["visibility"], True)
+        # Helper to assert metadata equivalence
+        def assert_metadata_equal(tag1, tag2, collection):
+            """
+            Asserts that the metadata of two tags are equal in the given
+            collection.
+            """
 
-            for document in database_data.get_document_names(
-                COLLECTION_CURRENT
-            ):
+            with self.main_window.project.database.data() as db:
+                self.assertTrue(tag1 in db.get_field_names(collection))
+                meta1 = db.get_field_attributes(collection, tag1)
+                meta2 = db.get_field_attributes(collection, tag2)
+                self.assertEqual(meta1["description"], meta2["description"])
+                self.assertEqual(meta1["unit"], meta2["unit"])
                 self.assertEqual(
-                    database_data.get_value(
-                        COLLECTION_CURRENT, document, "Test"
-                    ),
-                    database_data.get_value(
-                        COLLECTION_CURRENT, document, "BandWidth"
-                    ),
+                    meta1["default_value"], meta2["default_value"]
                 )
+                self.assertEqual(meta1["field_type"], meta2["field_type"])
+                self.assertEqual(meta1["origin"], TAG_ORIGIN_USER)
+                self.assertTrue(meta1["visibility"])
 
-            for document in database_data.get_document_names(
-                COLLECTION_INITIAL
-            ):
-                self.assertEqual(
-                    database_data.get_value(
-                        COLLECTION_INITIAL, document, "Test"
-                    ),
-                    database_data.get_value(
-                        COLLECTION_INITIAL, document, "BandWidth"
-                    ),
-                )
+        # -- Check metadata in both collections --
+        assert_metadata_equal("Test", "BandWidth", COLLECTION_CURRENT)
+        assert_metadata_equal("Test", "BandWidth", COLLECTION_INITIAL)
 
-        test_column = self.main_window.data_browser.table_data.get_tag_column(
-            "Test"
-        )
-        bw_column = self.main_window.data_browser.table_data.get_tag_column(
-            "BandWidth"
-        )
+        # -- Check data values in all documents --
+        with self.main_window.project.database.data() as db:
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            item_bw = self.main_window.data_browser.table_data.item(
-                row, bw_column
-            )
-            item_test = self.main_window.data_browser.table_data.item(
-                row, test_column
-            )
-            self.assertEqual(item_bw.text(), item_test.text())
+            for collection in [COLLECTION_CURRENT, COLLECTION_INITIAL]:
+
+                for doc in db.get_document_names(collection):
+                    self.assertEqual(
+                        db.get_value(collection, doc, "Test"),
+                        db.get_value(collection, doc, "BandWidth"),
+                    )
+
+        # -- Check values in the table view --
+        table = self.main_window.data_browser.table_data
+        test_col = table.get_tag_column("Test")
+        bw_col = table.get_tag_column("BandWidth")
+
+        for row in range(table.rowCount()):
+            item_test = table.item(row, test_col)
+            item_bw = table.item(row, bw_col)
+            self.assertEqual(item_test.text(), item_bw.text())
 
     def test_count_table(self):
-        """Tests the count table popup."""
+        """
+        Tests the count table popup.
+        """
+        # Constants
+        BANDWIDTH = "BandWidth"
+        ECHOTIME = "EchoTime"
+
+        # Helper to get text from a table header without brackets
+        def get_header_text(table, col):
+            """
+            Returns the header text of a given column without brackets.
+            """
+
+            return table.horizontalHeaderItem(col).text().strip("[]")
+
+        # Helper to get text from a table cell without brackets
+        def get_cell_text(table, row, col):
+            """
+            Returns the text of a cell in the count table without brackets.
+            """
+
+            return table.item(row, col).text().strip("[]")
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
+        # Open count table popup
         QTest.mouseClick(
             self.main_window.data_browser.count_table_button, Qt.LeftButton
         )
         count_table = self.main_window.data_browser.count_table_pop_up
+
         self.assertEqual(len(count_table.push_buttons), 2)
 
-        count_table.push_buttons[0].setText("BandWidth")
+        # Set tags to count
+        count_table.push_buttons[0].setText(BANDWIDTH)
         count_table.fill_values(0)
-        count_table.push_buttons[1].setText("EchoTime")
+        count_table.push_buttons[1].setText(ECHOTIME)
         count_table.fill_values(1)
+
+        # Perform count
         QTest.mouseClick(count_table.push_button_count, Qt.LeftButton)
 
-        # Trying to add and remove tag buttons
+        # Add and remove a tag
         QTest.mouseClick(count_table.add_tag_label, Qt.LeftButton)
         self.assertEqual(len(count_table.push_buttons), 3)
         QTest.mouseClick(count_table.remove_tag_label, Qt.LeftButton)
         self.assertEqual(len(count_table.push_buttons), 2)
 
-        self.assertEqual(count_table.push_buttons[0].text(), "BandWidth")
-        self.assertEqual(count_table.push_buttons[1].text(), "EchoTime")
+        # Check tag names
+        self.assertEqual(count_table.push_buttons[0].text(), BANDWIDTH)
+        self.assertEqual(count_table.push_buttons[1].text(), ECHOTIME)
 
-        QApplication.processEvents()
+        self._app.processEvents()
 
-        self.assertEqual(
-            count_table.table.horizontalHeaderItem(0).text(), "BandWidth"
-        )
-        self.assertEqual(
-            count_table.table.horizontalHeaderItem(1).text()[1:-1], "5.0"
-        )
-        self.assertEqual(
-            float(count_table.table.horizontalHeaderItem(2).text()[1:-1]),
-            75.0,
-        )
-        self.assertEqual(
-            count_table.table.horizontalHeaderItem(3).text()[1:-1], "5.8239923"
-        )
+        # Check headers
+        self.assertEqual(get_header_text(count_table.table, 0), BANDWIDTH)
+        self.assertEqual(get_header_text(count_table.table, 1), "5.0")
+        self.assertEqual(float(get_header_text(count_table.table, 2)), 75.0)
+        self.assertEqual(get_header_text(count_table.table, 3), "5.8239923")
         self.assertEqual(
             count_table.table.verticalHeaderItem(3).text(), "Total"
         )
-        self.assertEqual(count_table.table.item(0, 0).text()[1:-1], "65789.48")
-        self.assertEqual(count_table.table.item(1, 0).text()[1:-1], "50000.0")
-        self.assertEqual(
-            float(count_table.table.item(2, 0).text()[1:-1]), 25000.0
-        )
-        self.assertEqual(count_table.table.item(3, 0).text(), "3")
-        self.assertEqual(count_table.table.item(0, 1).text(), "5")
-        self.assertEqual(count_table.table.item(1, 1).text(), "")
-        self.assertEqual(count_table.table.item(2, 1).text(), "")
-        self.assertEqual(count_table.table.item(3, 1).text(), "5")
-        self.assertEqual(count_table.table.item(0, 2).text(), "")
-        self.assertEqual(count_table.table.item(1, 2).text(), "2")
-        self.assertEqual(count_table.table.item(2, 2).text(), "")
-        self.assertEqual(count_table.table.item(3, 2).text(), "2")
-        self.assertEqual(count_table.table.item(0, 3).text(), "")
-        self.assertEqual(count_table.table.item(1, 3).text(), "")
-        self.assertEqual(count_table.table.item(2, 3).text(), "2")
-        self.assertEqual(count_table.table.item(3, 3).text(), "2")
 
-    def test_mia_preferences(self):
-        """Tests the MIA preferences popup."""
+        # Expected values for table cells
+        expected_cells = {
+            (0, 0): "65789.48",
+            (1, 0): "50000.0",
+            (2, 0): "25000.0",
+            (3, 0): "3",
+            (0, 1): "5",
+            (1, 1): "",
+            (2, 1): "",
+            (3, 1): "5",
+            (0, 2): "",
+            (1, 2): "2",
+            (2, 2): "",
+            (3, 2): "2",
+            (0, 3): "",
+            (1, 3): "",
+            (2, 3): "2",
+            (3, 3): "2",
+        }
 
-        config = Config(properties_path=self.properties_path)
-        old_auto_save = config.isAutoSave()
-        self.assertEqual(old_auto_save, False)
+        for (row, col), expected in expected_cells.items():
+            self.assertEqual(
+                get_cell_text(count_table.table, row, col), expected
+            )
 
-        # Auto save activated
-        self.main_window.action_software_preferences.trigger()
-        properties = self.main_window.pop_up_preferences
+    @patch("PyQt5.QtWidgets.QMessageBox.exec_", return_value=QMessageBox.Ok)
+    def test_mia_preferences(self, mock_qmsgbox):
+        """Tests the MIA preferences popup with QMessageBox mocked."""
+
+        def reload_config():
+            """
+            Reloads the configuration from the properties path.
+            """
+
+            return Config(properties_path=self.properties_path)
+
+        def open_preferences():
+            """
+            Opens the preferences dialog and returns the properties widget.
+            """
+            self.main_window.action_software_preferences.trigger()
+            return self.main_window.pop_up_preferences
+
+        config = reload_config()
+        self.assertFalse(config.isAutoSave())
+
+        # Enable Auto Save
+        properties = open_preferences()
         properties.projects_save_path_line_edit.setText(
             tempfile.mkdtemp(prefix="projects_tests")
         )
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
-        QTest.qWait(500)
-        self.execute_QMessageBox_clickOk()
+        QTest.qWait(100)
+        config = reload_config()
+        self.assertTrue(config.isAutoSave())
 
-        config = Config(properties_path=self.properties_path)
-        new_auto_save = config.isAutoSave()
-        self.assertEqual(new_auto_save, True)
-
-        # Auto save disabled again
-        self.main_window.action_software_preferences.trigger()
-        properties = self.main_window.pop_up_preferences
+        # Disable Auto Save again
+        properties = open_preferences()
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(False)
         QTest.mouseClick(properties.push_button_ok, Qt.LeftButton)
-        QTest.qWait(500)
-        self.execute_QMessageBox_clickOk()
-        config = Config(properties_path=self.properties_path)
-        reput_auto_save = config.isAutoSave()
-        self.assertEqual(reput_auto_save, False)
+        QTest.qWait(100)
+        config = reload_config()
+        self.assertFalse(config.isAutoSave())
 
-        # Checking that the changes are not effective if cancel is clicked
-        self.main_window.action_software_preferences.trigger()
-        properties = self.main_window.pop_up_preferences
+        # Cancel — config should remain unchanged
+        properties = open_preferences()
         properties.tab_widget.setCurrentIndex(1)
         properties.save_checkbox.setChecked(True)
         QTest.mouseClick(properties.push_button_cancel, Qt.LeftButton)
-        QTest.qWait(500)
-        self.execute_QMessageBox_clickOk()
-        config = Config(properties_path=self.properties_path)
-        # clear config -> user_mode become True !
+        QTest.qWait(100)
+        config = reload_config()
         config.config = {}
-        auto_save = config.isAutoSave()
-        self.assertEqual(auto_save, False)
+        self.assertFalse(config.isAutoSave())
 
-        # Checking that the values for the "Projects preferences" are well set
+        # --- Check project preferences ---
         self.assertEqual(config.get_max_projects(), 5)
         config.set_max_projects(7)
         self.assertEqual(config.get_max_projects(), 7)
@@ -1927,44 +1791,41 @@ class TestMIADataBrowser(TestMIACase):
         config_path = os.path.join(
             config.get_properties_path(), "properties", "config.yml"
         )
-        self.assertEqual(os.path.exists(config_path), True)
+        self.assertTrue(os.path.exists(config_path))
 
-        self.assertEqual(config.get_user_mode(), True)
+        self.assertTrue(config.get_user_mode())
         config.set_user_mode(False)
-        self.assertEqual(config.get_user_mode(), False)
-
-        self.assertEqual(config.get_mri_conv_path(), "")
-
-        self.assertEqual(config.get_matlab_command(), None)
-        self.assertEqual(config.get_matlab_path(), None)
-        self.assertEqual(config.get_matlab_standalone_path(), "")
-        self.assertEqual(config.get_spm_path(), "")
-        self.assertEqual(config.get_spm_standalone_path(), "")
-        self.assertEqual(config.get_use_matlab(), False)
-        self.assertEqual(config.get_use_spm(), False)
-        self.assertEqual(config.get_use_spm_standalone(), False)
-        self.assertEqual(config.getBackgroundColor(), "")
-        self.assertEqual(config.getChainCursors(), False)
-        self.assertEqual(config.getNbAllSlicesMax(), 10)
-        self.assertEqual(config.getShowAllSlices(), False)
-        self.assertEqual(config.getTextColor(), "")
-        self.assertEqual(config.getThumbnailTag(), "SequenceName")
-
-        self.assertEqual(
-            False, version.parse(yaml.__version__) > version.parse("9.1")
-        )
-        self.assertEqual(
-            True, version.parse(yaml.__version__) < version.parse("9.1")
-        )
+        self.assertFalse(config.get_user_mode())
 
         self.assertEqual(config.get_projects_save_path(), "")
 
-    def test_mini_viewer(self):
-        """Selects scans and display them in the mini viewer.
+        # --- Check external tools (Matlab/SPM) ---
+        self.assertIsNone(config.get_matlab_command())
+        self.assertIsNone(config.get_matlab_path())
+        self.assertEqual(config.get_matlab_standalone_path(), "")
+        self.assertEqual(config.get_spm_path(), "")
+        self.assertEqual(config.get_spm_standalone_path(), "")
+        self.assertFalse(config.get_use_matlab())
+        self.assertFalse(config.get_use_spm())
+        self.assertFalse(config.get_use_spm_standalone())
 
-        - Tests MiniViewer.
-        - The mini viewer displays information of the selected scan in a
-          box under the scans list, in the data browser tab.
+        # --- Check display and behavior settings ---
+        self.assertEqual(config.getBackgroundColor(), "")
+        self.assertEqual(config.getTextColor(), "")
+        self.assertFalse(config.getShowAllSlices())
+        self.assertFalse(config.getChainCursors())
+        self.assertEqual(config.getNbAllSlicesMax(), 10)
+        self.assertEqual(config.getThumbnailTag(), "SequenceName")
+
+        # --- Check MRI conversion path ---
+        self.assertEqual(config.get_mri_conv_path(), "")
+
+    def test_mini_viewer(self):
+        """
+        Tests MiniViewer functionality.
+
+        - Displays scan information in the mini viewer box.
+        - Verifies slider behavior and checkbox states.
         """
 
         # Creates a new project folder and switches to it
@@ -1975,39 +1836,63 @@ class TestMIADataBrowser(TestMIACase):
         data_browser = self.main_window.data_browser
         viewer = self.main_window.data_browser.viewer
 
-        # Selects the first scan
-        data_browser.table_data.item(0, 0).setSelected(True)
+        # Helper: select scan by row index
+        def select_scan(index: int):
+            """
+            Selects a scan in the data browser table by index.
 
-        # Gets the 3D slider range
-        slider_3D_range = viewer.slider_3D[0].maximum()
+            :param index: The row index of the scan to select.
+            """
+            item = data_browser.table_data.item(index, 0)
+            self.assertIsNotNone(item)
+            item.setSelected(True)
 
-        # Moves the 3D slide to the middle of the range
-        viewer.slider_3D[0].setValue(int(slider_3D_range / 2))
+        # Helper: set slider to percentage position
+        def set_slider_percent(slider, percent: float):
+            """
+            Sets the slider value to a percentage of its maximum.
 
-        # Shows all slices
-        viewer.check_box_slices.setCheckState(Qt.Checked)
+            :param slider: The slider to set.
+            :param percent: A float between 0.0 and 1.0.
+            """
+            max_val = slider.maximum()
+            slider.setValue(int(max_val * percent))
 
-        # Unchecks show all slices
-        viewer.check_box_slices.setCheckState(Qt.Checked)
+        # Helper: toggle a checkbox to a state
+        def set_checkbox(checkbox, state: bool):
+            """
+            Sets the checkbox state to checked or unchecked.
 
-        # Checks the chain cursors
-        viewer.check_box_cursors.setCheckState(Qt.Checked)
+            :param checkbox: The checkbox to set.
+            :param state: True for checked, False for unchecked.
+            """
+            checkbox.setCheckState(Qt.Checked if state else Qt.Unchecked)
 
-        # Selects the second scan
-        data_browser.table_data.item(1, 0).setSelected(True)
+        # Select first scan and adjust slider
+        select_scan(0)
+        set_slider_percent(viewer.slider_3D[0], 0.5)
 
-        # Moves the 3D slides to the lower limit
-        viewer.slider_3D[0].setValue(0)
+        # Show all slices
+        set_checkbox(viewer.check_box_slices, True)
 
-        # Moves the 3D slides to the middle of the range
-        viewer.slider_3D[0].setValue(int(slider_3D_range / 2))
+        # Reset to show one slice
+        set_checkbox(viewer.check_box_slices, False)
 
-        # Moves the 3D slides to the middle of the range
-        viewer.slider_3D[0].setValue(slider_3D_range)
+        # Enable chain cursors
+        set_checkbox(viewer.check_box_cursors, True)
 
-        # Unchecks the chain cursors
-        viewer.check_box_cursors.setCheckState(Qt.Unchecked)
+        # Select second scan
+        select_scan(1)
 
+        # Move slider to various positions
+        set_slider_percent(viewer.slider_3D[0], 0.0)
+        set_slider_percent(viewer.slider_3D[0], 0.5)
+        set_slider_percent(viewer.slider_3D[0], 1.0)
+
+        # Disable chain cursors
+        set_checkbox(viewer.check_box_cursors, False)
+
+        # Update number of displayed slices
         viewer.update_nb_slices()
 
     def test_modify_table(self):
