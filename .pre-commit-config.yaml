@@ -45,7 +45,7 @@ repos:
         language_version: python3
 
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.19.1
+  rev: v3.20.0
   hooks:
     - id: pyupgrade
       args: ["--py39-plus"]  # Ensures compatibility with Python 3.9+
