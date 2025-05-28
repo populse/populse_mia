@@ -1030,7 +1030,11 @@ class Test1AMIAOthers(TestMIACase):
     #     )
     #     self.assertEqual(
     #         proc_content['Versions'],
-    #         {'capsul': 'capsul_ver', 'mia_processes': 'mia_proc_ver', 'nipype': 'nipype_ver'}
+    #         {
+    #             'capsul': 'capsul_ver',
+    #             'mia_processes': 'mia_proc_ver',
+    #             'nipype': 'nipype_ver'
+    #         }
     # )
 
 
@@ -2033,7 +2037,8 @@ class TestMIADataBrowser(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Step 2: Temporarily disconnect signal to prevent unwanted side effects
+        # Step 2: Temporarily disconnect signal to prevent unwanted side
+        #         effects
         table.itemChanged.disconnect()
 
         # Step 3: Open multiple sort popup and configure sorting
@@ -2687,7 +2692,8 @@ class TestMIADataBrowser(TestMIACase):
             "Tags in initial collection changed unexpectedly.",
         )
 
-        # --- Act: Trigger remove tag popup again, select and confirm removal ---
+        # --- Act: Trigger remove tag popup again,
+        #          select and confirm removal ---
         data_browser.remove_tag_action.trigger()
         remove_tag_popup = data_browser.pop_up_remove_tag
         remove_tag_popup.list_widget_tags.setCurrentRow(0)  # Select "Test"
