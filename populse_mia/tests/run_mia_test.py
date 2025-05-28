@@ -1043,8 +1043,12 @@ class TestMIADataBrowser(TestMIACase):
                                     present in the given list.
             - get_cell_text: Returns the text of the QLabel inside a cell
                              widget.
+            - get_db_and_databrowser_value: Returns current, initial DB values
+                                            and UI value for a given tag.
             - get_visible_scans: Returns the list of scan names currently
                                  visible in the table.
+            - suppress_item_changed_signal: Temporarily disconnects and
+                                            reconnects the itemChanged signal.
             - test_add_path: Tests the popup to add a path.
             - test_add_tag: Tests the pop up adding a tag.
             - test_advanced_search: Tests the advanced search widget.
@@ -1131,6 +1135,39 @@ class TestMIADataBrowser(TestMIACase):
 
         return labels[label_index].text()
 
+    def get_db_and_databrowser_value(self, main_window, scan_name, tag):
+        """
+        Retrieves the current and initial values for a given tag from the
+        database, along with the corresponding value displayed in the
+        data browser UI.
+
+        :param main_window (QMainWindow): The main application window
+                                          containing the project and data
+                                          browser.
+        :param scan_name (str): The name of the scan (i.e., row identifier)
+                                for which values are retrieved.
+        :param tag (str): The tag (i.e., column identifier) whose values are
+                          to be fetched.
+
+        :returns (tuple): A tuple containing:
+            - value (Any): The current value from the database.
+            - value_initial (Any): The initial value from the database.
+            - value_ui (str): The string representation of the value in the
+                              data browser UI.
+            - item (QTableWidgetItem): The UI item associated with the tag in
+                                       the first row.
+        """
+
+        with main_window.project.database.data() as db:
+            value = db.get_value(COLLECTION_CURRENT, scan_name, tag)
+            value_initial = db.get_value(COLLECTION_INITIAL, scan_name, tag)
+
+        col = main_window.data_browser.table_data.get_tag_column(tag)
+        item = main_window.data_browser.table_data.item(0, col)
+        value_ui = item.text() if item is not None else None
+
+        return value, value_initial, value_ui, item
+
     def get_visible_scans(self):
         """
         Returns the list of scan names currently visible in the table.
@@ -1145,6 +1182,28 @@ class TestMIADataBrowser(TestMIACase):
                 visible_scans.append(item.text())
 
         return visible_scans
+
+    @contextmanager
+    def suppress_item_changed_signal(self, table_data):
+        """
+        Temporarily disables the itemChanged signal to prevent unwanted slot
+        execution during programmatic updates to the table data.
+
+        :param table_data (QTableWidget): The data browser's table widget
+                                          whose itemChanged signal is to be
+                                          suppressed.
+
+        :yields: None. The context block is executed with the signal
+                       disconnected, and it is reconnected automatically
+                       afterward.
+        """
+        table_data.itemChanged.disconnect()
+
+        try:
+            yield
+
+        finally:
+            table_data.itemChanged.connect(table_data.change_cell_color)
 
     def test_add_path(self):
         """
@@ -2655,168 +2714,165 @@ class TestMIADataBrowser(TestMIACase):
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+        table = self.main_window.data_browser.table_data
+        scan_name = table.item(0, 0).text()
 
-        # scan name
-        item = self.main_window.data_browser.table_data.item(0, 0)
-        scan_name = item.text()
+        # Helper to get fresh item
+        def get_item(tag):
+            """
+            Retrieve the table widget item for the specified tag in the first
+            row.
 
-        # Test for a list:
-        # Values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name, "BandWidth"
-                )[0]
-            )
+            :param tag (str): The tag (column identifier) whose cell item is
+                              to be fetched.
 
-        # Value in the DataBrowser
-        bandwidth_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )("BandWidth")
-        item = self.main_window.data_browser.table_data.item(
-            0, bandwidth_column
+            :returns (QTableWidgetItem): The item at row 0 of the column
+                                         corresponding to `tag`.
+            """
+            col = table.get_tag_column(tag)
+
+            return table.item(0, col)
+
+        # Sanity-check initial BandWidth
+        val, val_init, val_ui, item = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, "BandWidth"
         )
-        databrowser = float(item.text()[1:-1])
+        self.assertEqual(
+            float(val[0]), 50000.0, f"Expected DB value 50000.0, got {val}"
+        )
+        self.assertEqual(
+            float(val[0]),
+            float(val_ui.strip("[]")),
+            "Mismatch in UI and DB value",
+        )
+        self.assertEqual(
+            float(val[0]),
+            float(val_init[0]),
+            "Mismatch between current and initial DB values",
+        )
 
-        # Check equality between DataBrowser and db
-        self.assertEqual(value, float(50000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        # 1) Define exec_ that “does the OK click”:
+        def exec_as_update(self, *args, **kwargs):
+            """
+            Patched exec_ method that injects a test value into the dialog
+            table and runs the real update logic without showing the dialog.
 
-        # Change the value
+            :param self (ModifyTable): The dialog instance being tested.
+            :param args: Positional arguments forwarded to exec_, unused here.
+            :param kwargs: Keyword arguments forwarded to exec_, unused here.
+
+            :returns (bool): Always returns True to simulate the user
+                             clicking "Ok".
+            """
+            # inject the new text into the dialog’s table
+            self.table.setItem(0, 0, QTableWidgetItem("25000"))
+            # call the real update logic (with test=True so no QMessageBox)
+            ModifyTable.update_table_values(self, test=True)
+
+            return True
+
+        # 2) Patch only exec_ on the ModifyTable class that DataBrowser uses:
+        patch_target = (
+            "populse_mia.user_interface.data_browser.data_browser."
+            "ModifyTable.exec_"
+        )
+
+        with patch(patch_target, new=exec_as_update):
+            # select, run the edit routine, and deselect
+            item.setSelected(True)
+            table.edit_table_data_values()
+            item = get_item("BandWidth")
+            item.setSelected(False)
+
+        # Re-check values
+        val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, "BandWidth"
+        )
+        self.assertEqual(
+            float(val[0]),
+            25000.0,
+            f"Expected updated value 25000.0, got {val}",
+        )
+        self.assertEqual(
+            float(val[0]),
+            float(val_ui.strip("[]")),
+            "UI and DB mismatch after edit",
+        )
+        self.assertEqual(
+            float(val_init[0]),
+            50000.0,
+            "Initial value should remain unchanged",
+        )
+
+        # Reset cell
         item.setSelected(True)
-        # threading.Timer(
-        #     2, partial(self.edit_databrowser_list, "25000")
-        # ).start()
-        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "25000"))
-        self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # Check again the equality between DataBrowser and db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name, "BandWidth"
-                )[0]
-            )
+        with self.suppress_item_changed_signal(table):
+            table.reset_cell()
 
-        item = self.main_window.data_browser.table_data.item(
-            0, bandwidth_column
-        )
-        databrowser = float(item.text()[1:-1])
-        self.assertEqual(value, float(25000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, float(50000))
-
-        # Reset the current value to the initial value
-        item = self.main_window.data_browser.table_data.item(
-            0, bandwidth_column
-        )
-        item.setSelected(True)
-        self.main_window.data_browser.table_data.itemChanged.disconnect()
-        self.main_window.data_browser.table_data.reset_cell()
-        self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color
-        )
         item.setSelected(False)
 
-        # Check whether the data has been reset
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name, "BandWidth"
-                )[0]
-            )
-
-        item = self.main_window.data_browser.table_data.item(
-            0, bandwidth_column
+        # Validate reset
+        val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, "BandWidth"
         )
-        databrowser = float(item.text()[1:-1])
-        self.assertEqual(value, float(50000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        self.assertEqual(
+            float(val[0]), 50000.0, "Reset value does not match initial"
+        )
+        self.assertEqual(
+            float(val[0]),
+            float(val_ui.strip("[]")),
+            "UI and DB mismatch after reset",
+        )
+        self.assertEqual(
+            float(val[0]),
+            float(val_init[0]),
+            "Reset failed to restore initial DB value",
+        )
 
-        # Test for a string:
-        # Values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, TAG_TYPE
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, TAG_TYPE
-            )
-
-        # Value in the DataBrowser
-        type_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )(TAG_TYPE)
-        item = self.main_window.data_browser.table_data.item(0, type_column)
-        databrowser = item.text()
-
-        # Check equality between DataBrowser and db
-        self.assertEqual(value, TYPE_NII)
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        # Test for a string: TAG_TYPE
+        val, val_init, val_ui, item = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, TAG_TYPE
+        )
+        self.assertEqual(val, TYPE_NII, "Initial DB value mismatch")
+        self.assertEqual(val, val_ui, "Initial UI value mismatch")
+        self.assertEqual(
+            val, val_init, "Current and initial DB value mismatch"
+        )
 
         # Change the value
         item.setSelected(True)
         item.setText("Test")
         item.setSelected(False)
 
-        # Check again the equality between DataBrowser and db
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, TAG_TYPE
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, TAG_TYPE
-            )
-
-        item = self.main_window.data_browser.table_data.item(0, type_column)
-
-        databrowser = item.text()
-
-        self.assertEqual(value, "Test")
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, TYPE_NII)
-
-        # Reset the current value to the initial value
-        item = self.main_window.data_browser.table_data.item(0, type_column)
-        item.setSelected(True)
-        self.main_window.data_browser.table_data.itemChanged.disconnect()
-        self.main_window.data_browser.table_data.reset_cell()
-        self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color
+        val, val_init, val_ui, item = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, TAG_TYPE
         )
+        self.assertEqual(val, "Test", "Expected updated string value 'Test'")
+        self.assertEqual(val, val_ui, "UI and DB mismatch after text change")
+        self.assertEqual(
+            val_init, TYPE_NII, "Initial string value should remain unchanged"
+        )
+
+        # Reset cell
+        item.setSelected(True)
+
+        with self.suppress_item_changed_signal(table):
+            table.reset_cell()
+
         item.setSelected(False)
 
-        # Check whether the data has been reset
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, TAG_TYPE
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, TAG_TYPE
-            )
-        item = self.main_window.data_browser.table_data.item(0, type_column)
-        databrowser = item.text()
-        self.assertEqual(value, TYPE_NII)
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        # Validate reset
+        val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, scan_name, TAG_TYPE
+        )
+        self.assertEqual(
+            val, TYPE_NII, "Reset string value does not match initial"
+        )
+        self.assertEqual(val, val_ui, "UI and DB string mismatch after reset")
+        self.assertEqual(
+            val, val_init, "Reset failed to restore initial string value"
+        )
 
     def test_reset_column(self):
         """Tests the method resetting the columns selected."""
