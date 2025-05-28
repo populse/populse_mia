@@ -7030,6 +7030,7 @@ class TestMIANodeController(TestMIACase):
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
+        self.main_window.tabs.setCurrentIndex(2)
 
         # Adds the process "input_filter_1"
         process_class = Input_Filter
