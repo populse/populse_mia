@@ -389,6 +389,7 @@ class TestMIACase(unittest.TestCase):
 
             tags_list.setCurrentItem(found_item[0])
             visualized_tags.click_select_tag()
+            w.accept()
 
     def clean_uts_packages(self, proc_lib_view):
         """Deleting the packages added during the UTs."""
@@ -1139,36 +1140,37 @@ class TestMIADataBrowser(TestMIACase):
 
         return labels[label_index].text()
 
-    def get_db_and_databrowser_value(self, main_window, scan_name, tag):
+    def get_db_and_databrowser_value(self, main_window, row_nb, tag):
         """
-        Retrieves the current and initial values for a given tag from the
-        database, along with the corresponding value displayed in the
-        data browser UI.
+        Fetches the current and initial values of a given tag from the
+        database, along with the corresponding value and item from the data
+        browser UI.
 
         :param main_window (QMainWindow): The main application window
                                           containing the project and data
                                           browser.
-        :param scan_name (str): The name of the scan (i.e., row identifier)
-                                for which values are retrieved.
-        :param tag (str): The tag (i.e., column identifier) whose values are
-                          to be fetched.
+        :param row_nb (int): The row index in the data browser table.
+        :param tag (str): The name of the tag (column) to retrieve.
 
-        :returns (tuple): A tuple containing:
-            - value (Any): The current value from the database.
-            - value_initial (Any): The initial value from the database.
-            - value_ui (str): The string representation of the value in the
-                              data browser UI.
-            - item (QTableWidgetItem): The UI item associated with the tag in
-                                       the first row.
+        :returns (tuple): A 4-tuple containing:
+            - value (Any): The current value from the database
+                           (COLLECTION_CURRENT).
+            - value_initial (Any): The initial value from the database
+                                   (COLLECTION_INITIAL).
+            - value_ui (str | None): The value displayed in the data browser
+                                     UI, or None if not available.
+            - item (QTableWidgetItem | None): The table item corresponding to
+                                              the tag, or None if not found.
         """
+        table = main_window.data_browser.table_data
+        col = table.get_tag_column(tag)
+        scan_name = table.item(row_nb, 0).text()
+        item = table.item(row_nb, col)
+        value_ui = item.text() if item is not None else None
 
         with main_window.project.database.data() as db:
             value = db.get_value(COLLECTION_CURRENT, scan_name, tag)
             value_initial = db.get_value(COLLECTION_INITIAL, scan_name, tag)
-
-        col = main_window.data_browser.table_data.get_tag_column(tag)
-        item = main_window.data_browser.table_data.item(0, col)
-        value_ui = item.text() if item is not None else None
 
         return value, value_initial, value_ui, item
 
@@ -2721,7 +2723,6 @@ class TestMIADataBrowser(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
         table = self.main_window.data_browser.table_data
-        scan_name = table.item(0, 0).text()
 
         # Helper to get fresh item
         def get_item(tag):
@@ -2741,7 +2742,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Sanity-check initial BandWidth
         val, val_init, val_ui, item = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, "BandWidth"
+            self.main_window, 0, "BandWidth"
         )
         self.assertEqual(
             float(val[0]), 50000.0, f"Expected DB value 50000.0, got {val}"
@@ -2792,7 +2793,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Re-check values
         val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, "BandWidth"
+            self.main_window, 0, "BandWidth"
         )
         self.assertEqual(
             float(val[0]),
@@ -2820,7 +2821,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Validate reset
         val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, "BandWidth"
+            self.main_window, 0, "BandWidth"
         )
         self.assertEqual(
             float(val[0]), 50000.0, "Reset value does not match initial"
@@ -2838,7 +2839,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Test for a string: TAG_TYPE
         val, val_init, val_ui, item = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, TAG_TYPE
+            self.main_window, 0, TAG_TYPE
         )
         self.assertEqual(val, TYPE_NII, "Initial DB value mismatch")
         self.assertEqual(val, val_ui, "Initial UI value mismatch")
@@ -2852,7 +2853,7 @@ class TestMIADataBrowser(TestMIACase):
         item.setSelected(False)
 
         val, val_init, val_ui, item = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, TAG_TYPE
+            self.main_window, 0, TAG_TYPE
         )
         self.assertEqual(val, "Test", "Expected updated string value 'Test'")
         self.assertEqual(val, val_ui, "UI and DB mismatch after text change")
@@ -2870,7 +2871,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Validate reset
         val, val_init, val_ui, _ = self.get_db_and_databrowser_value(
-            self.main_window, scan_name, TAG_TYPE
+            self.main_window, 0, TAG_TYPE
         )
         self.assertEqual(
             val, TYPE_NII, "Reset string value does not match initial"
@@ -2881,430 +2882,363 @@ class TestMIADataBrowser(TestMIACase):
         )
 
     def test_reset_column(self):
-        """Tests the method resetting the columns selected."""
-
+        """
+        Test that edit_table_data_values() properly updates column values,
+        and reset_column() reverts them to their initial state.
+        """
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Second document; scan name
-        item = self.main_window.data_browser.table_data.item(1, 0)
-        scan_name2 = item.text()
+        table = self.main_window.data_browser.table_data
+        bandwidth_col = table.get_tag_column("BandWidth")
 
-        # Second document; values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name2, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name2, "BandWidth"
-                )[0]
-            )
-
-        # Second document; value in the DataBrowser
-        bandwidth_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )("BandWidth")
-        item2 = self.main_window.data_browser.table_data.item(
-            1, bandwidth_column
+        # Initial checks before modification
+        curr2, init2, gui2, _ = self.get_db_and_databrowser_value(
+            self.main_window, 1, "BandWidth"
         )
-        databrowser = float(item2.text()[1:-1])
-
-        # Check equality between DataBrowser and db for second document
-        self.assertEqual(value, float(50000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
-        item2.setSelected(True)
-
-        # Third document; scan name
-        item = self.main_window.data_browser.table_data.item(2, 0)
-        scan_name3 = item.text()
-
-        # Third document; values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name3, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name3, "BandWidth"
-                )[0]
-            )
-
-        # Third document; value in the DataBrowser
-        item3 = self.main_window.data_browser.table_data.item(
-            2, bandwidth_column
+        self.assertEqual(
+            (float(curr2[0]), float(gui2.strip("[]")), float(init2[0])),
+            (50000, 50000, 50000),
         )
 
-        # Check equality between DataBrowser and db for third document
-        databrowser = float(item3.text()[1:-1])
-        self.assertEqual(value, float(25000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
-        item3.setSelected(True)
-
-        # Change the value to [70000] for the third and second documents
-        # threading.Timer(
-        #     2, partial(self.edit_databrowser_list, "70000")
-        # ).start()
-        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "70000"))
-        self.main_window.data_browser.table_data.edit_table_data_values()
-
-        # Second document; values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name2, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name2, "BandWidth"
-                )[0]
-            )
-
-        # Second document; value in the DataBrowser
-        item2 = self.main_window.data_browser.table_data.item(
-            1, bandwidth_column
+        curr3, init3, gui3, _ = self.get_db_and_databrowser_value(
+            self.main_window, 2, "BandWidth"
         )
-        databrowser = float(item2.text()[1:-1])
-
-        # Check equality between DataBrowser and db for second document
-        self.assertEqual(value, float(70000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(float(50000), value_initial)
-        item2.setSelected(True)
-
-        # Third document; values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name3, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name3, "BandWidth"
-                )[0]
-            )
-
-        # Third document; value in the DataBrowser
-        item3 = self.main_window.data_browser.table_data.item(
-            2, bandwidth_column
-        )
-        databrowser = float(item3.text()[1:-1])
-
-        # Check value in database for the third document
-        self.assertEqual(value, float(70000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, float(25000))
-        item3.setSelected(True)
-
-        # Reset the current value to the initial value
-        self.main_window.data_browser.table_data.itemChanged.disconnect()
-        self.main_window.data_browser.table_data.reset_column()
-        self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color
+        self.assertEqual(
+            (float(curr3[0]), float(gui3.strip("[]")), float(init3[0])),
+            (25000, 25000, 25000),
         )
 
-        # Check the value in the db and DataBrowser for the second document
-        # has been reset
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name2, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name2, "BandWidth"
-                )[0]
-            )
+        # 1) Define patched exec_ to simulate user editing both selected rows
+        def exec_as_update(self, *args, **kwargs):
+            """
+            Simulated exec_() for ModifyTable: injects value and calls update
+            logic.
+            """
+            self.table.setItem(0, 0, QTableWidgetItem("70000"))
+            self.update_table_values(test=True)
 
-        item2 = self.main_window.data_browser.table_data.item(
-            1, bandwidth_column
+            return True  # Simulate "OK" button
+
+        # 2) Patch exec_ only on ModifyTable
+        patch_target = (
+            "populse_mia.user_interface.data_browser.data_browser."
+            "ModifyTable.exec_"
         )
-        databrowser = float(item2.text()[1:-1])
-        self.assertEqual(value, float(50000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
 
-        # Check the value in the db and DataBrowser for the third document
-        # has been reset
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name3, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name3, "BandWidth"
-                )[0]
-            )
+        with patch(patch_target, new=exec_as_update):
+            # Select both rows
+            table.item(1, bandwidth_col).setSelected(True)
+            table.item(2, bandwidth_col).setSelected(True)
+            table.edit_table_data_values()
 
-        item3 = self.main_window.data_browser.table_data.item(
-            2, bandwidth_column
+        # Check new values
+        curr2, init2, gui2, _ = self.get_db_and_databrowser_value(
+            self.main_window, 1, "BandWidth"
         )
-        databrowser = float(item3.text()[1:-1])
-        self.assertEqual(value, float(25000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        self.assertEqual(
+            (float(curr2[0]), float(gui2.strip("[]")), float(init2[0])),
+            (70000, 70000, 50000),
+        )
+
+        curr3, init3, gui3, _ = self.get_db_and_databrowser_value(
+            self.main_window, 2, "BandWidth"
+        )
+        self.assertEqual(
+            (float(curr3[0]), float(gui3.strip("[]")), float(init3[0])),
+            (70000, 70000, 25000),
+        )
+
+        # 3) Reset the column
+        with self.suppress_item_changed_signal(table):
+            table.reset_column()
+
+        table.item(1, bandwidth_col).setSelected(False)
+        table.item(2, bandwidth_col).setSelected(False)
+
+        # Verify values are restored
+        curr2, init2, gui2, _ = self.get_db_and_databrowser_value(
+            self.main_window, 1, "BandWidth"
+        )
+        self.assertEqual(
+            (float(curr2[0]), float(gui2.strip("[]")), float(init2[0])),
+            (50000, 50000, 50000),
+        )
+
+        curr3, init3, gui3, _ = self.get_db_and_databrowser_value(
+            self.main_window, 2, "BandWidth"
+        )
+        self.assertEqual(
+            (float(curr3[0]), float(gui3.strip("[]")), float(init3[0])),
+            (25000, 25000, 25000),
+        )
 
     def test_reset_row(self):
         """Tests row reset."""
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+        table = self.main_window.data_browser.table_data
 
-        # Value in DataBrowser for the second document
-        type_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )(TAG_TYPE)
-        type_item = self.main_window.data_browser.table_data.item(
-            1, type_column
+        # Value in DataBrowser and DataBase for the second document
+        curr, init, gui, type_item = self.get_db_and_databrowser_value(
+            self.main_window, 1, TAG_TYPE
         )
-        old_type = type_item.text()
-
-        # Check value in DataBrowser for the second document
-        self.assertEqual(old_type, TYPE_NII)
+        # Check value for the second document
+        self.assertEqual((curr, init, gui), (TYPE_NII, TYPE_NII, TYPE_NII))
 
         # Change the value
         type_item.setSelected(True)
         type_item.setText("Test")
 
-        # Check if value in DataBrowser as been changed
-        set_item = self.main_window.data_browser.table_data.item(
-            1, type_column
+        # Check if value in DataBrowser and DataBase as been changed
+        curr, init, gui, _ = self.get_db_and_databrowser_value(
+            self.main_window, 1, TAG_TYPE
         )
-        set_type = set_item.text()
-        self.assertEqual(set_type, "Test")
+        self.assertEqual((curr, init, gui), ("Test", TYPE_NII, "Test"))
 
         # Reset row for second document
-        self.main_window.data_browser.table_data.clearSelection()
-        item = self.main_window.data_browser.table_data.item(1, 0)
-        item.setSelected(True)
-        self.main_window.data_browser.table_data.itemChanged.disconnect()
-        self.main_window.data_browser.table_data.reset_row()
-        self.main_window.data_browser.table_data.itemChanged.connect(
-            self.main_window.data_browser.table_data.change_cell_color
-        )
+        table.clearSelection()
+        scan_item = table.item(1, 0)
+        scan_item.setSelected(True)
+
+        with self.suppress_item_changed_signal(table):
+            table.reset_row()
 
         # Check if value in DataBrowser as been reset
-        type_item = self.main_window.data_browser.table_data.item(
-            1, type_column
+        curr, init, gui, type_item = self.get_db_and_databrowser_value(
+            self.main_window, 1, TAG_TYPE
         )
-        new_type = type_item.text()
-        self.assertEqual(new_type, TYPE_NII)
+        self.assertEqual((curr, init, gui), (TYPE_NII, TYPE_NII, TYPE_NII))
 
     def test_save_project(self):
-        """Test opening & saving of a project."""
-
+        """
+        Test creating, saving, switching, and reopening a project,
+        while mocking dialogs and preventing UI blocking.
+        """
         config = Config(properties_path=self.properties_path)
         projects_dir = os.path.realpath(
             tempfile.mkdtemp(prefix="projects_tests")
         )
-
-        # Instead of executing the pop-up, only shows it
-        # This prevents thread deadlocking
-        QMessageBox.exec = lambda self_: self_.show()
-
-        # Tries to open the project pop-up without the projects save dir
-        config.set_projects_save_path(None)
-        self.main_window.create_project_pop_up()
-        self.main_window.msg.accept()
-
-        # Tries to save the project 'something' without setting the
-        # projects save directory
-        self.main_window.saveChoice()
-        self.main_window.msg.accept()
-
-        # Sets the project save directory
-        config.set_projects_save_path(projects_dir)
         something_path = os.path.join(projects_dir, "something")
-        project_8_path = self.get_new_test_project(name="project_8")
 
-        # Saves the project 'something'
-        self.main_window.saveChoice()
-        self.assertEqual(self.main_window.project.getName(), "something")
-        self.assertEqual(os.path.exists(something_path), True)
+        # -- Patch QMessageBox.exec to prevent modal dialog
+        with patch.object(QMessageBox, "exec", lambda self_: self_.show()):
+            # -- No save path configured initially
+            config.set_projects_save_path(None)
+            self.main_window.create_project_pop_up()
+            self.main_window.msg.accept()
 
-        # Switches to project 'project_8'
-        self.main_window.switch_project(project_8_path, "project_8")
-        self.assertEqual(self.main_window.project.getName(), "project_8")
-        self.main_window.saveChoice()  # Updates the project 'project_8'
+            # -- Attempt save without path
+            self.main_window.saveChoice()
+            self.main_window.msg.accept()
 
-        # Removes the project 'something' file tree
-        shutil.rmtree(something_path)
+            # -- Configure a proper project save path
+            config.set_projects_save_path(projects_dir)
+            project_8_path = self.get_new_test_project(name="project_8")
 
-        PopUpNewProject.exec = lambda x: True
-        PopUpNewProject.selectedFiles = lambda x: True
-        PopUpNewProject.get_filename = lambda x, y: True
-        PopUpNewProject.relative_path = something_path
+            # -- Save new project 'something'
+            self.main_window.saveChoice()
+            self.assertEqual(self.main_window.project.getName(), "something")
+            self.assertTrue(os.path.exists(something_path))
 
-        PopUpOpenProject.exec = lambda x: True
-        PopUpOpenProject.selectedFiles = lambda x: True
-        PopUpOpenProject.get_filename = lambda x, y: True
-        PopUpOpenProject.relative_path = something_path
-        PopUpOpenProject.path, PopUpOpenProject.name = os.path.split(
-            something_path
-        )
-        # Creates and saves the project 'something'
-        self.main_window.create_project_pop_up()
-        self.assertEqual(self.main_window.project.getName(), "something")
-        self.assertEqual(os.path.exists(something_path), True)
+            # -- Switch to project_8 and save it
+            self.main_window.switch_project(project_8_path, "project_8")
+            self.assertEqual(self.main_window.project.getName(), "project_8")
+            self.main_window.saveChoice()
 
-        # Switches to another project and verifies that project
-        # 'something' is shown in the projects pop-up
-        self.main_window.switch_project(project_8_path, "project_8")
-        self.main_window.open_project_pop_up()
-        self.assertEqual(self.main_window.project.getName(), "something")
+            # -- Remove 'something' to simulate a fresh open
+            shutil.rmtree(something_path)
 
-        # Removes the project 'something' tree
-        self.main_window.switch_project(project_8_path, "project_8")
-        shutil.rmtree(something_path)
+            # --- Mock project pop-ups ---
+
+            # Common mock configuration
+            def mock_popup(relative_path):
+                """
+                Create a MagicMock instance simulating a PopUpNewProject
+                dialog.
+
+                :param relative_path (str): The relative path to set as the
+                                            selected file and filename in the
+                                            popup.
+
+                :returns (MagicMock): A mocked PopUpNewProject instance with
+                                      predefined behaviors:
+                    - `relative_path` attribute set to the given path.
+                    - `selectedFiles()` returns a list containing the relative
+                      path.
+                    - `get_filename()` returns the relative path.
+                    - `exec_()` returns True, simulating a successful dialog
+                      execution.
+                """
+                popup = MagicMock(spec=PopUpNewProject)
+                popup.relative_path = relative_path
+                popup.selectedFiles.return_value = [relative_path]
+                popup.get_filename.return_value = relative_path
+                popup.exec_.return_value = True
+                return popup
+
+            new_project_popup = mock_popup(something_path)
+            open_project_popup = mock_popup(something_path)
+            open_project_popup.path, open_project_popup.name = os.path.split(
+                something_path
+            )
+
+            with (
+                patch(
+                    "populse_mia.user_interface.main_window.PopUpNewProject",
+                    return_value=new_project_popup,
+                ),
+                patch(
+                    "populse_mia.user_interface.main_window.PopUpOpenProject",
+                    return_value=open_project_popup,
+                ),
+            ):
+                # -- Recreate 'something' project
+                self.main_window.create_project_pop_up()
+                self.assertEqual(
+                    self.main_window.project.getName(), "something"
+                )
+                self.assertTrue(os.path.exists(something_path))
+
+                # -- Switch to another project and open the 'something'
+                #    project
+                self.main_window.switch_project(project_8_path, "project_8")
+                self.main_window.open_project_pop_up()
+                self.assertEqual(
+                    self.main_window.project.getName(), "something"
+                )
+
+                # -- Switch back and clean up
+                self.main_window.switch_project(project_8_path, "project_8")
+                shutil.rmtree(something_path)
 
     def test_send_doc_to_pipeline_manager(self):
-        """Tests the popup sending the documents to the pipeline manager."""
+        """
+        Test that documents (scans) can be sent from the data browser to the
+        pipeline manager.
+
+        This includes:
+            - Sending all scans (cancel and confirm cases)
+            - Sending a manual selection of scans
+            - Sending filtered scans using the search bar
+
+        All popup interactions are mocked to avoid GUI side effects.
+        """
+
+        def simulate_send_popup(confirm: bool = True):
+            """
+            Simulate user interaction with the send_documents_to_pipeline
+            popup dialog.
+
+            This function waits briefly for the popup to be fully initialized,
+            then either confirms the selection by triggering the OK action or
+            cancels by closing the popup, depending on the `confirm` parameter.
+
+            :param confirm (bool): If True, simulate clicking the OK button to
+                                   confirm the selection. If False, simulate
+                                   closing/cancelling the popup. Defaults to
+                                   True.
+            """
+            popup = self.main_window.data_browser.show_selection
+            QTest.qWait(100)
+
+            if confirm:
+                popup.ok_clicked()
+
+            else:
+                popup.close()
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Checking that the pipeline manager has an empty list at the beginning
+        # Start with empty pipeline manager
         self.assertEqual(self.main_window.pipeline_manager.scan_list, [])
 
-        # Sending the selection (all scans), but closing the popup
+        # --- Case 1: Cancel popup, expect no scans sent ---
         QTest.mouseClick(
             self.main_window.data_browser.send_documents_to_pipeline_button,
             Qt.LeftButton,
         )
-        send_popup = self.main_window.data_browser.show_selection
 
-        QTest.qWait(500)
-
-        send_popup.close()
-
-        # Checking that the list is still empty
+        simulate_send_popup(confirm=False)
         self.assertEqual(self.main_window.pipeline_manager.scan_list, [])
 
-        # Sending the selection (all scans), but hit the "OK" button
+        # --- Case 2: Confirm popup with full selection ---
         QTest.mouseClick(
             self.main_window.data_browser.send_documents_to_pipeline_button,
             Qt.LeftButton,
         )
-        send_popup = self.main_window.data_browser.show_selection
+        simulate_send_popup()
 
-        QTest.qWait(500)
-
-        send_popup.ok_clicked()
-
-        # Checking that all scans have been sent to the pipeline manager
         scans = self.main_window.pipeline_manager.scan_list
         self.assertEqual(len(scans), 9)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-05-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-06-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-08-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-09-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-11-G4_Guerbet_T1SE_800-RARE"
-            "pvm-000142_400.nii" in scans
-        )
-        self.assertTrue(
-            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-            "pvm-000220_000.nii" in scans
-        )
 
-        # Selecting the first 2 scans
-        item1 = self.main_window.data_browser.table_data.item(0, 0)
+        expected_scans = [
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "01-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "05-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "06-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "08-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "09-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "10-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "11-G4_Guerbet_T1SE_800-RAREpvm-000142_400.nii",
+            "data/derived_data/sGuerbet-C6-2014-Rat-K52-Tube27-2014-02-"
+            "14102317-01-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+        ]
+
+        for expected in expected_scans:
+            self.assertIn(expected, scans)
+
+        # --- Case 3: Select first two scans manually ---
+        table = self.main_window.data_browser.table_data
+        item1 = table.item(0, 0)
+        item2 = table.item(1, 0)
         item1.setSelected(True)
-        scan1 = item1.text()
-        item2 = self.main_window.data_browser.table_data.item(1, 0)
         item2.setSelected(True)
+        scan1 = item1.text()
         scan2 = item2.text()
 
-        # Sending the selection (first 2 scans)
         QTest.mouseClick(
             self.main_window.data_browser.send_documents_to_pipeline_button,
             Qt.LeftButton,
         )
-        send_popup = self.main_window.data_browser.show_selection
+        simulate_send_popup()
 
-        QTest.qWait(500)
-
-        send_popup.ok_clicked()
-
-        # Checking that the first 2 scans have been sent to the
-        # pipeline manager
         scans = self.main_window.pipeline_manager.scan_list
         self.assertEqual(len(scans), 2)
-        self.assertTrue(scan1 in scans)
-        self.assertTrue(scan2 in scans)
+        self.assertIn(scan1, scans)
+        self.assertIn(scan2, scans)
 
-        # Checking with the rapid search
+        # --- Case 4: Use search bar to filter 'G3' scans ---
         self.main_window.data_browser.table_data.clearSelection()
         self.main_window.data_browser.search_bar.setText("G3")
 
-        # Sending the selection (G3 scans)
         QTest.mouseClick(
             self.main_window.data_browser.send_documents_to_pipeline_button,
             Qt.LeftButton,
         )
-        send_popup = self.main_window.data_browser.show_selection
+        simulate_send_popup()
 
-        QTest.qWait(500)
-
-        send_popup.ok_clicked()
-
-        # Checking that G3 scans have been sent to the pipeline manager
         scans = self.main_window.pipeline_manager.scan_list
         self.assertEqual(len(scans), 2)
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-04-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans
-        )
-        self.assertTrue(
-            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-            "-2014-02-14102317-10-G3_Guerbet_MDEFT-MDEFT"
-            "pvm-000940_800.nii" in scans
-        )
+
+        expected_g3_scans = [
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "10-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
+        ]
+        for expected in expected_g3_scans:
+            self.assertIn(expected, scans)
 
     def test_set_value(self):
         """Tests the values modifications.
@@ -7103,6 +7037,8 @@ class TestMIANodeController(TestMIACase):
         # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
 
         # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag
+        # QTimer.singleShot(1000, lambda:self.add_visualized_tag(
+        #       'AcquisitionDate'))
         input_filter.update_tags()
         self.add_visualized_tag("AcquisitionDate")
         # FIXME: The following statement is always True (not the correct test)
@@ -7112,6 +7048,7 @@ class TestMIANodeController(TestMIACase):
         )
 
         # Updates the tag to filter with
+        # with patch.object(PopUpSelectTagCountTable, 'exec_', return_value=True):
         input_filter.update_tag_to_filter()
 
         input_filter.push_button_tag_filter.setText(TAG_FILENAME)
