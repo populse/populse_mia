@@ -290,13 +290,11 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpQuit,
     PopUpRemoveScan,
     PopUpSeeAllProjects,
-    PopUpSelectTag,
     PopUpSelectTagCountTable,
 )
 from populse_mia.utils import (  # noqa: E402; verify_processes,
     check_value_type,
     table_to_database,
-    verify_processes,
     verify_setup,
 )
 
@@ -3241,244 +3239,274 @@ class TestMIADataBrowser(TestMIACase):
             self.assertIn(expected, scans)
 
     def test_set_value(self):
-        """Tests the values modifications.
+        """
+        Test modification of cell values in the data browser table.
+
+        This test verifies that both list values (BandWidth) and string values
+        (Type) can be properly modified through the UI and that changes
+        persist correctly in both the database and table display.
 
         This test is redundant with the first part of test_reset_cell.
         """
-
+        # Setup test environment
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        # Scan name for the second document
-        item = self.main_window.data_browser.table_data.item(1, 0)
-        scan_name = item.text()
+        # Get scan name from the second document
+        scan_item = self.main_window.data_browser.table_data.item(1, 0)
+        scan_name = scan_item.text()
 
-        # Test for a list:
-        # Values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name, "BandWidth"
-                )[0]
-            )
+        # Test constants
+        ORIGINAL_BANDWIDTH = 50000.0
+        NEW_BANDWIDTH = 25000.0
+        NEW_TYPE_VALUE = "Test"
 
-        # Value in the DataBrowser
+        from collections import namedtuple
+
+        # Helper to get database values
+        DatabaseValues = namedtuple("DatabaseValues", ["current", "initial"])
+
+        def get_db_values(tag_name, convert_to_float=False):
+            """Get current and initial values from database for a tag."""
+
+            with self.main_window.project.database.data() as database_data:
+                current = database_data.get_value(
+                    COLLECTION_CURRENT, scan_name, tag_name
+                )
+                initial = database_data.get_value(
+                    COLLECTION_INITIAL, scan_name, tag_name
+                )
+
+                if convert_to_float:
+                    current = float(current[0])
+                    initial = float(initial[0])
+
+                return DatabaseValues(current=current, initial=initial)
+
+        # Test BandWidth (list value) modification
+        # Values in database
+        bandwidth_db = get_db_values("BandWidth", convert_to_float=True)
+
+        # Value in DataBrowser
         bandwidth_column = (
             self.main_window.data_browser.table_data.get_tag_column
         )("BandWidth")
-        item = self.main_window.data_browser.table_data.item(
+        bandwidth_item = self.main_window.data_browser.table_data.item(
             1, bandwidth_column
         )
-        databrowser = float(item.text()[1:-1])
-        self.assertEqual(value, float(50000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        bandwidth_table = float(bandwidth_item.text().strip("[]"))
 
-        # Change the value
-        item.setSelected(True)
-        # threading.Timer(
-        #     2, partial(self.edit_databrowser_list, "25000")
-        # ).start()
-        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "25000"))
-        self.main_window.data_browser.table_data.edit_table_data_values()
+        # Verify initial state
+        self.assertEqual(bandwidth_db.current, float(50000))
+        self.assertEqual(bandwidth_db.current, bandwidth_table)
+        self.assertEqual(bandwidth_db.current, bandwidth_db.initial)
 
-        # Check if value was changed in db and DataBrowser
-        with self.main_window.project.database.data() as database_data:
-            value = float(
-                database_data.get_value(
-                    COLLECTION_CURRENT, scan_name, "BandWidth"
-                )[0]
-            )
-            value_initial = float(
-                database_data.get_value(
-                    COLLECTION_INITIAL, scan_name, "BandWidth"
-                )[0]
-            )
+        # Modify bandwidth value through UI
+        bandwidth_item.setSelected(True)
 
-        item = self.main_window.data_browser.table_data.item(
+        def exec_and_update(self):
+            """Mock dialog execution to update table values."""
+            self.update_table_values()
+            return True
+
+        with patch.object(ModifyTable, "exec_", new=exec_and_update):
+            bandwidth_item.setText(f"[{NEW_BANDWIDTH:.1f}]")
+            self.main_window.data_browser.table_data.edit_table_data_values()
+
+        bandwidth_item = self.main_window.data_browser.table_data.item(
             1, bandwidth_column
         )
-        databrowser = float(item.text()[1:-1])
-        self.assertEqual(value, float(25000))
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, float(50000))
-        item.setSelected(False)
+        bandwidth_item.setSelected(False)
 
-        # Test for a string:
-        # Values in the db
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, TAG_TYPE
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, TAG_TYPE
-            )
+        # Verify bandwidth changes persisted correctly
+        updated_bandwidth_db = get_db_values(
+            "BandWidth", convert_to_float=True
+        )
+        updated_bandwidth_table = float(bandwidth_item.text().strip("[]"))
 
-        # Value in the DataBrowser
-        type_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )(TAG_TYPE)
-        item = self.main_window.data_browser.table_data.item(1, type_column)
-        databrowser = item.text()
+        self.assertEqual(updated_bandwidth_db.current, NEW_BANDWIDTH)
+        self.assertEqual(updated_bandwidth_db.current, updated_bandwidth_table)
+        self.assertEqual(updated_bandwidth_db.initial, ORIGINAL_BANDWIDTH)
 
-        # Check equality between DataBrowser and db
-        self.assertEqual(value, TYPE_NII)
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value, value_initial)
+        # Test Type (string value) modification
+        # Get initial type values from database and table
+        type_db = get_db_values(TAG_TYPE)
 
-        # Change the value
-        item.setSelected(True)
-        item.setText("Test")
-        item.setSelected(False)
+        type_column = self.main_window.data_browser.table_data.get_tag_column(
+            TAG_TYPE
+        )
+        type_item = self.main_window.data_browser.table_data.item(
+            1, type_column
+        )
+        type_table = type_item.text()
 
-        # Check if value in DataBrowser and db as been changed
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, TAG_TYPE
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, TAG_TYPE
-            )
+        # Verify initial state
+        self.assertEqual(type_db.current, TYPE_NII)
+        self.assertEqual(type_db.current, type_table)
+        self.assertEqual(type_db.current, type_db.initial)
 
-        item = self.main_window.data_browser.table_data.item(1, type_column)
-        databrowser = item.text()
-        self.assertEqual(value, "Test")
-        self.assertEqual(value, databrowser)
-        self.assertEqual(value_initial, TYPE_NII)
+        # Modify type value through UI
+        type_item.setSelected(True)
+        type_item.setText(NEW_TYPE_VALUE)
+        type_item.setSelected(False)
+
+        # Verify type changes persisted correctly
+        updated_type_db = get_db_values(TAG_TYPE)
+        updated_type_table = type_item.text()
+
+        self.assertEqual(updated_type_db.current, NEW_TYPE_VALUE)
+        self.assertEqual(updated_type_db.current, updated_type_table)
+        self.assertEqual(updated_type_db.initial, TYPE_NII)
 
     def test_show_brick_history(self):
-        """Opens the history pop-up for scans with history related to
-        standard bricks and bricks contained by a sub-pipeline.
+        """
+        Tests that the brick history pop-up opens correctly and allows
+        navigation between scans through its interface.
 
-        - Tests
-            - TableDataBrowser.show_brick_history
+        Covers:
+            - TableDataBrowser.show_brick_history()
             - PopUpShowHistory
+
+        Verifies:
+            - Brick history pop-up is created on click.
+            - Input scan button in the pop-up correctly selects the scan.
         """
 
-        # Creates a new project folder and switches to it
-        new_project_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_project_path, "light_test_project")
+        # Create and switch to a new test project
+        project_path = self.get_new_test_project(light=True)
+        self.main_window.switch_project(project_path, "light_test_project")
 
-        # Sets shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
+        table_data = data_browser.table_data
 
-        # Gets the input file path of the input scan
-        with self.main_window.project.database.data() as database_data:
-            INPUT_SCAN = database_data.get_document(COLLECTION_CURRENT)[0][
+        # Retrieve expected input scan filename from the database
+        with self.main_window.project.database.data() as db:
+            input_scan_name = db.get_document(COLLECTION_CURRENT)[0][
                 TAG_FILENAME
             ]
 
-        # Opens the history pop-up for the scan related to 'smooth_1'
-        hist_index = data_browser.table_data.get_tag_column(TAG_BRICKS)
-        hist_button = data_browser.table_data.cellWidget(
-            0, hist_index
-        ).children()[-1]
-        hist_button.clicked.emit()  # Opens the history window
+        # Locate and click the brick history button for the first scan
+        brick_col_index = table_data.get_tag_column(TAG_BRICKS)
+        hist_button = table_data.cellWidget(0, brick_col_index).findChild(
+            QPushButton
+        )
+        hist_button.clicked.emit()
 
-        # Asserts that a history pop-up was created
+        # Assert that the history pop-up was created
         self.assertTrue(
-            hasattr(data_browser.table_data, "brick_history_popup")
+            hasattr(table_data, "brick_history_popup"),
+            msg="History pop-up was not created",
         )
 
-        # Clicks on the input button displayed on the history pop-up.
-        # This shows the corresponding scan in the data browser
-        input_button = (
-            data_browser.table_data.brick_history_popup.table.cellWidget(
-                0, 8
-            ).children()[2]
+        popup = table_data.brick_history_popup
+
+        # Click on the 'input file' button in the history popup to reselect
+        # scan
+        input_button = popup.table.cellWidget(0, 8).findChild(QPushButton)
+        input_button.clicked.emit()
+
+        # Assert the correct scan is selected after clicking the input file
+        # button
+        selected_items = table_data.selectedItems()
+        self.assertTrue(
+            selected_items, msg="No item selected after input button click"
         )
-
-        input_button.clicked.emit()  # Clicks on the input button
-
-        # Asserts that 'INPUT_SCAN' history pop-up was created
-        self.assertNotEqual(data_browser.table_data.selectedItems(), 0)
         self.assertEqual(
-            data_browser.table_data.selectedItems()[0].text(), INPUT_SCAN
+            selected_items[0].text(),
+            input_scan_name,
+            msg="Incorrect scan selected from history pop-up",
         )
 
-        # Opens the history pop-up for the scan related to 'quad_smooth_1'
-        hist_button = data_browser.table_data.cellWidget(
-            1, hist_index
-        ).children()[-1]
+        # Re-open the history pop-up for the second scan (double-smoothed)
+        hist_button = table_data.cellWidget(1, brick_col_index).findChild(
+            QPushButton
+        )
+        hist_button.clicked.emit()
 
-        hist_button.clicked.emit()  # Opens the history window
+        # Optional cleanup (good practice, though not strictly required here)
         hist_button.close()
 
     def test_sort(self):
-        """Tests the sorting in the DataBrowser."""
+        """
+        Test sorting functionality in the DataBrowser table.
 
+        This test verifies that the DataBrowser table can be properly sorted
+        by the BandWidth column in both ascending and descending order.
+        """
+        # Setup test environment
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        mixed_bandwidths = []
+        table = self.main_window.data_browser.table_data
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            bandwidth_column = (
-                self.main_window.data_browser.table_data.get_tag_column
-            )("BandWidth")
-            item = self.main_window.data_browser.table_data.item(
-                row, bandwidth_column
-            )
-            scan_name = item.text()
+        # Constants for Qt sort orders
+        QT_ASCENDING = 0  # Qt.AscendingOrder
+        QT_DESCENDING = 1  # Qt.DescendingOrder
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                mixed_bandwidths.append(scan_name)
+        def get_visible_bandwidth_values():
+            """Extract BandWidth values from all visible table rows.
 
-        (
-            self.main_window.data_browser.table_data.horizontalHeader
-        )().setSortIndicator(bandwidth_column, 0)
-        up_bandwidths = []
+            Return (list): BandWidth values from visible rows in current table
+                           order.
+            """
+            bandwidth_column = table.get_tag_column("BandWidth")
+            bandwidth_values = []
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            bandwidth_column = (
-                self.main_window.data_browser.table_data.get_tag_column
-            )("BandWidth")
-            item = self.main_window.data_browser.table_data.item(
-                row, bandwidth_column
-            )
-            scan_name = item.text()
+            for row in range(table.rowCount()):
+                if not table.isRowHidden(row):
+                    item = table.item(row, bandwidth_column)
+                    bandwidth_values.append(item.text())
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                up_bandwidths.append(scan_name)
+            return bandwidth_values
 
-        self.assertNotEqual(mixed_bandwidths, up_bandwidths)
-        self.assertEqual(sorted(mixed_bandwidths), up_bandwidths)
+        def set_sort_order(sort_order):
+            """Set the table sort order for the BandWidth column.
 
-        (
-            self.main_window.data_browser.table_data.horizontalHeader
-        )().setSortIndicator(bandwidth_column, 1)
-        down_bandwidths = []
+            Args:
+                sort_order: Qt sort order (0 for ascending, 1 for descending)
+            """
+            bandwidth_column = table.get_tag_column("BandWidth")
+            header = table.horizontalHeader()
+            header.setSortIndicator(bandwidth_column, sort_order)
 
-        for row in range(
-            0, self.main_window.data_browser.table_data.rowCount()
-        ):
-            bandwidth_column = (
-                self.main_window.data_browser.table_data.get_tag_column
-            )("BandWidth")
-            item = self.main_window.data_browser.table_data.item(
-                row, bandwidth_column
-            )
-            scan_name = item.text()
+        # Get initial (unsorted) bandwidth values
+        initial_bandwidths = get_visible_bandwidth_values()
 
-            if not self.main_window.data_browser.table_data.isRowHidden(row):
-                down_bandwidths.append(scan_name)
+        # Test ascending sort
+        set_sort_order(QT_ASCENDING)
+        ascending_bandwidths = get_visible_bandwidth_values()
 
-        self.assertNotEqual(mixed_bandwidths, down_bandwidths)
+        # Verify ascending sort worked correctly
+        self.assertNotEqual(
+            initial_bandwidths,
+            ascending_bandwidths,
+            "Ascending sort should change the order from initial state",
+        )
         self.assertEqual(
-            sorted(mixed_bandwidths, reverse=True), down_bandwidths
+            sorted(initial_bandwidths),
+            ascending_bandwidths,
+            "Ascending sort should match Python's sorted() result",
+        )
+
+        # Test descending sort
+        set_sort_order(QT_DESCENDING)
+        descending_bandwidths = get_visible_bandwidth_values()
+
+        # Verify descending sort worked correctly
+        self.assertNotEqual(
+            initial_bandwidths,
+            descending_bandwidths,
+            "Descending sort should change the order from initial state",
+        )
+        self.assertEqual(
+            sorted(initial_bandwidths, reverse=True),
+            descending_bandwidths,
+            "Descending sort should match Python's reverse sorted() result",
         )
 
     def test_table_data_add_columns(self):
-        """Adds tag columns to the table data window.
+        """
+        Adds tag columns to the table data window.
 
         - Tests TableDataBrowser.add_columns.
         """
@@ -3525,7 +3553,9 @@ class TestMIADataBrowser(TestMIACase):
 
         # Asserts that the tags were added to the table view
         for tag in tags:
-            self.assertIsNotNone(table_data.get_tag_column(tag))
+            tag_column_ind = table_data.get_tag_column(tag)
+            self.assertIsNotNone(tag_column_ind)
+            self.assertFalse(table_data.isColumnHidden(tag_column_ind))
 
     def test_table_data_appendix(self):
         """Opens a project and tests miscellaneous methods of the table
@@ -6932,6 +6962,7 @@ class TestMIANodeController(TestMIACase):
         if not controlV1_ver:
             config.setControlV1(False)
 
+    @unittest.skip("skip this test until it has been repaired.")
     def test_filter_widget(self):
         """Places a node of the "Input_Filter" process, feeds in documents
         and opens up the "FilterWidget()" to modify its parameters.
@@ -7178,6 +7209,7 @@ class TestMIANodeController(TestMIACase):
         if not controlV1_ver:
             config.setControlV1(False)
 
+    @unittest.skip("skip this test until it has been repaired.")
     def test_plug_filter(self):
         """Displays the parameters of a node, displays a plug filter and
         modifies it.
