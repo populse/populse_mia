@@ -1090,7 +1090,7 @@ class TableDataBrowser(QTableWidget):
 
                     # Hide the column if not visible
                     if tag in visible:
-                        self.setColumnHidden(column_index, True)
+                        self.setColumnHidden(column_index, False)
 
                     # Rows filled for the column being added
                     for row in range(0, self.rowCount()):
