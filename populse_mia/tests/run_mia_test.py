@@ -3558,13 +3558,20 @@ class TestMIADataBrowser(TestMIACase):
             self.assertFalse(table_data.isColumnHidden(tag_column_ind))
 
     def test_table_data_appendix(self):
-        """Opens a project and tests miscellaneous methods of the table
-        data view, in the data browser.
+        """
+        Test various behaviors of the table data view in the data browser.
 
-        -Tests
+        This includes verifying correct interaction with:
             - TableDataBrowser.change_cell_color
             - TableDataBrowser.section_moved
             - TableDataBrowser.selectColumn
+
+        The test:
+            - Opens a test project
+            - Adds a scan via the add_path dialog
+            - Mocks user interactions (dialogs)
+            - Checks that editing cells updates or preserves values correctly
+            - Tests column selection and header section movement
         """
 
         # Creates a new project folder and switches to it
@@ -3574,78 +3581,161 @@ class TestMIADataBrowser(TestMIACase):
         # Set often used shortcuts
         table_data = self.main_window.data_browser.table_data
 
-        # TESTS CHANGE_CELL_COLOR
         # Adds a new document to the collection
-        NEW_DOC = "mock_file_name"
+        NEW_DOC = "mock_file_name.nii"
+        src = os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "mia_ut_data",
+            "resources",
+            "mia",
+            "light_test_project",
+            "data",
+            "downloaded_data",
+            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "01-G1_Guerbet_Anat-RAREpvm-000220_000.nii",
+        )
+        src = os.path.realpath(os.path.normpath(src))
+        dst = os.path.join(os.path.dirname(new_proj_path), NEW_DOC)
+        shutil.copy2(src, dst)
 
-        with self.main_window.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_CURRENT, NEW_DOC)
-            database_data.add_document(COLLECTION_INITIAL, NEW_DOC)
+        with patch("PyQt5.QtWidgets.QMessageBox.show"):
+            # Opens the 'add_path' pop-up
+            table_data.add_path()
+            add_path = self.main_window.data_browser.table_data.pop_up_add_path
+            add_path.file_line_edit.setText(str([dst]))
+            add_path.type_line_edit.setText(str([TYPE_NII]))
+            QTest.mouseClick(add_path.ok_button, Qt.LeftButton)
 
-        # Selects the 'Filename' of the first scan and changes its value
-        # to this document filename
-        table_data.item(0, 0).setSelected(True)
-        table_data.item(0, 0).setText(NEW_DOC)
-        table_data.item(0, 0).setSelected(False)
+        # Test initial state
+        scan_cur, scan_init, scan_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, 3, TAG_FILENAME
+        )
+        expected_path = os.path.join("data", "downloaded_data", NEW_DOC)
+        self.assertEqual(scan_cur, expected_path, "Current DB value mismatch")
+        self.assertEqual(scan_cur, scan_ui, "UI value mismatch")
+        self.assertEqual(
+            scan_cur, scan_init, "Current and initial DB value mismatch"
+        )
+        fov_cur, fov_init, fov_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, 3, "FOV"
+        )
+        self.assertIsNone(fov_cur, "Current DB value mismatch")
+        self.assertEqual(fov_ui, "*Not Defined*", "UI value mismatch")
+        self.assertIsNone(fov_init, "Current and initial DB value mismatch")
 
-        # Selects 'FOV' and changes its value
-        table_data.item(0, 3).setSelected(True)
-        table_data.item(0, 3).setText("[4.0, 4.0]")
-        table_data.item(0, 3).setSelected(False)
+        # Selects 'FOV' and changes its value to a new one with good type
+        table_data.item(3, 3).setSelected(True)
 
+        def exec_and_update(self):
+            """Mock dialog execution to update table values."""
+            self.update_table_values()
+            return True
+
+        with patch.object(ModifyTable, "exec_", new=exec_and_update):
+            table_data.item(3, 3).setText("[4.0, 4.0]")
+            self.main_window.data_browser.table_data.edit_table_data_values()
+            table_data.item(3, 3).setSelected(False)
+
+        # Asserts that the 'FOV' value was changed
+        fov_cur, fov_init, fov_ui, _ = self.get_db_and_databrowser_value(
+            self.main_window, 3, "FOV"
+        )
+        self.assertEqual(fov_cur, [4.0, 4.0], "Current DB value mismatch")
+        self.assertEqual(fov_ui, "[4.0, 4.0]", "UI value mismatch")
+        self.assertIsNone(fov_init, "Current and initial DB value mismatch")
         # Creates a tag of type float and selects it
         self.main_window.data_browser.add_tag_infos(
             "mock_tag", 0.0, FIELD_TYPE_FLOAT, "", ""
         )
-        table_data.item(0, 7).setSelected(True)
+        table_data.item(3, 7).setSelected(True)
 
         # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda *args: None
+        with patch.object(QMessageBox, "exec", return_value=None):
+            # Tries setting an invalid string value to the tag
+            table_data.item(3, 7).setText("invalid_string")
+            table_data.item(3, 7).setSelected(False)
 
-        # Tries setting an invalid string value to the tag
-        table_data.item(0, 7).setText("invalid_string")
-        table_data.item(0, 7).setSelected(False)
+            # Asserts that the tag value was not changed
+            tag_cur, tag_init, tag_ui, _ = self.get_db_and_databrowser_value(
+                self.main_window, 3, "mock_tag"
+            )
+            self.assertEqual(tag_cur, 0.0, "Initial DB value mismatch")
+            self.assertEqual(tag_ui, "0", "UI value mismatch")
+            self.assertEqual(
+                tag_init, tag_cur, "Current and initial DB value mismatch"
+            )
 
-        # Creates another tag of type float and selects it
-        self.main_window.data_browser.add_tag_infos(
-            "mock_tag_1", 0.0, FIELD_TYPE_FLOAT, "", ""
-        )
-        table_data.item(0, 8).setSelected(True)
+            # Creates another tag of type float and selects it
+            self.main_window.data_browser.add_tag_infos(
+                "mock_tag_1", 0.0, FIELD_TYPE_FLOAT, "", ""
+            )
+            table_data.item(3, 8).setSelected(True)
 
-        # Sets a valid float value to the tag
-        table_data.item(0, 8).setText("1.0")
+            # Sets a valid float value to the tag
+            table_data.item(3, 8).setText("1.0")
 
-        # Changing the same tag does not trigger the 'valueChanged' and
-        # thus not the 'change_cell_color' method
-        table_data.item(0, 8).setSelected(False)
+            # Changing the same tag does not trigger the 'valueChanged' and
+            # thus not the 'change_cell_color' method
+            table_data.item(3, 8).setSelected(False)
 
-        # Selects the 'Exp Type' and 'FOV' of the first scan, which have
-        # distinct data types
-        table_data.item(0, 2).setSelected(True)
-        table_data.item(0, 3).setSelected(True)
+            # Asserts that the tag value was changed
+            tag_cur, tag_init, tag_ui, _ = self.get_db_and_databrowser_value(
+                self.main_window, 3, "mock_tag_1"
+            )
+            self.assertEqual(tag_cur, 1.0, "Current DB value mismatch")
+            self.assertEqual(tag_ui, "1", "UI value mismatch")
+            self.assertEqual(
+                tag_init, 0.0, "Current and initial DB value mismatch"
+            )
 
-        # Tries changing the value of 'Exp Type'
-        table_data.item(0, 2).setText("RARE_B")
+            # Selects the 'Exp Type' and 'FOV' of the mock scan, which have
+            # distinct data types
+            table_data.item(3, 2).setSelected(True)
+            table_data.item(3, 3).setSelected(True)
 
-        # Asserts that only 'Exp Type' changed
-        self.assertEqual(table_data.item(0, 2).text(), "RARE_B")
-        self.assertNotEqual(table_data.item(0, 3).text(), "RARE_B")
+            # Tries changing the value of 'Exp Type'
+            table_data.item(3, 2).setText("mock_val")
+
+            # Asserts that nothing was changed
+            exp_cur, exp_init, exp_ui, _ = self.get_db_and_databrowser_value(
+                self.main_window, 3, "Exp Type"
+            )
+            self.assertIsNone(exp_cur, "Current DB value mismatch")
+            self.assertEqual(exp_ui, "*Not Defined*", "UI value mismatch")
+            self.assertIsNone(exp_init, "Initial DB value mismatch")
+
+            # Selects only the 'Exp Type'
+            table_data.item(3, 3).setSelected(False)
+
+            # Tries changing the value of 'Exp Type'
+            table_data.item(3, 2).setText("mock_val")
+
+            # Asserts the value was changed
+            exp_cur, exp_init, exp_ui, _ = self.get_db_and_databrowser_value(
+                self.main_window, 3, "Exp Type"
+            )
+            self.assertEqual(exp_cur, "mock_val", "Current DB value mismatch")
+            self.assertEqual(exp_ui, "mock_val", "UI value mismatch")
+            self.assertIsNone(exp_init, "Initial DB value mismatch")
+
+            table_data.item(3, 2).setSelected(False)
 
         # TESTS SELECTION_MOVED
-
-        # Switch columns of the 2 first tags
+        # Switch columns of the 2 first tags (including the TAG_FILENAME)
         table_data.horizontalHeader().sectionMoved.emit(0, 0, 1)
 
-        # SELECT_COLUMN
         # Selects the whole filename column
         table_data.selectColumn(0)
 
-        # Asserts that it was selected
+        # Asserts that TAG_FILENAMEwas not moved
         selected_items = table_data.selectedItems()
         self.assertEqual(len(selected_items), len(table_data.scans))
         self.assertEqual(selected_items[0].text(), table_data.scans[0][0])
+        self.assertEqual(
+            table_data.horizontalHeaderItem(0).text(), TAG_FILENAME
+        )
 
     def test_table_data_context_menu(self):
         """Right-click on a scan to display the context menu table, and choose
