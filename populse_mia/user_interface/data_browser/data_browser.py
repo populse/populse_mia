@@ -1357,6 +1357,31 @@ class TableDataBrowser(QTableWidget):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.buttonClicked.connect(msg.close)
                 msg.exec()
+
+                for item in self.selectedItems():
+                    row = item.row()
+                    col = item.column()
+                    scan_path = self.item(row, 0).text()
+                    tag_name = self.horizontalHeaderItem(col).text()
+                    old_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan_path,
+                        field=tag_name,
+                    )
+                    field_type = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
+                    )["field_type"]
+
+                    set_item_data(
+                        item,
+                        (
+                            old_value
+                            if old_value is not None
+                            else "*Not Defined*"
+                        ),
+                        field_type,
+                    )
+
                 self.itemChanged.connect(self.change_cell_color)
                 return
 
@@ -1396,6 +1421,30 @@ class TableDataBrowser(QTableWidget):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.buttonClicked.connect(msg.close)
                 msg.exec()
+
+                for item in self.selectedItems():
+                    row = item.row()
+                    col = item.column()
+                    scan_path = self.item(row, 0).text()
+                    tag_name = self.horizontalHeaderItem(col).text()
+                    old_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan_path,
+                        field=tag_name,
+                    )
+                    field_type = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
+                    )["field_type"]
+
+                    set_item_data(
+                        item,
+                        (
+                            old_value
+                            if old_value is not None
+                            else "*Not Defined*"
+                        ),
+                        field_type,
+                    )
 
             # Otherwise we update the values
             else:
@@ -2767,32 +2816,30 @@ class TableDataBrowser(QTableWidget):
         self.resizeColumnsToContents()
 
     def section_moved(self, logical_index, old_index, new_index):
-        """Update the visual index and forbid to move the first column when
-        the user try to move columns.
+        """
+        Ensure the FileName column (logical index 0) stays at visual index 0,
+        when the user try to move columns.
 
         :param logical_index: int of the column logical index
         :param old_index: int of the column old visual index
         :param new_index: int of the column new visual index
         """
-        # The logical index is not used in this method but it is returned by
-        # the event we're connected to.
-        self.itemSelectionChanged.disconnect()
-        # We need to disconnect the sectionMoved signal, otherwise infinite
-        # call to this function
-        self.horizontalHeader().sectionMoved.disconnect()
 
-        # We have to ensure FileName column stays at index 0
-        if old_index == 0 or new_index == 0:
-            # FileName column is moved, to revert because it has to stay the
-            # first column
-            self.horizontalHeader().moveSection(new_index, old_index)
+        # # The logical index is not used in this method but it is returned by
+        # # the event we're connected to.
+        if getattr(self, "_ignore_section_move", False):
+            return
 
-        # We reconnect the signal
-        self.horizontalHeader().sectionMoved.connect(self.section_moved)
-        # Selection updated
+        self._ignore_section_move = True
+        header = self.horizontalHeader()
+        file_name_visual_index = header.visualIndex(0)
+
+        if file_name_visual_index != 0:
+            header.moveSection(file_name_visual_index, 0)
+
         self.update_selection()
-        self.itemSelectionChanged.connect(self.selection_changed)
         self.update()
+        self._ignore_section_move = False
 
     def select_all_column(self, col):
         """Select all column when the header is double clicked
