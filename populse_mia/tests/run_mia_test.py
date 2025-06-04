@@ -67,7 +67,6 @@ from PyQt5.QtCore import (
     QModelIndex,
     QPoint,
     Qt,
-    QTimer,
     qInstallMessageHandler,
 )
 from PyQt5.QtTest import QSignalSpy, QTest
@@ -341,7 +340,6 @@ class TestMIACase(unittest.TestCase):
             - clean_uts_packages: deleting the package added during the UTs or
               old one still existing
             - create_mock_jar: creates a mocked java (.jar) executable
-            - edit_databrowser_list: change value for a tag in DataBrowser
             - execute_QDialogAccept: accept (close) a QDialog instance
             - find_item_by_data: looks for a QModelIndex whose contents
               correspond to the argument data
@@ -466,19 +464,6 @@ class TestMIACase(unittest.TestCase):
             return 1
 
         return 0
-
-    def edit_databrowser_list(self, value):
-        """Change value for a tag in DataBrowser.
-
-        :param value: the new value
-        """
-
-        w = self._app.activeWindow()
-
-        if isinstance(w, QDialog):
-            item = w.table.item(0, 0)
-            item.setText(value)
-            w.update_table_values(True)
 
     def execute_QDialogAccept(self):
         """Accept (close) a QDialog window."""
@@ -1001,40 +986,38 @@ class Test1AMIAOthers(TestMIACase):
             # delete confirmation)
             self.assertGreaterEqual(mock_msgbox_question.call_count, 1)
 
-    # def test_verify_processes(self):
-    #     """Check that Mia's processes control is working correctly
+    @unittest.skip("skip this test until it has been repaired.")
+    def test_verify_processes(self):
+        """Check that Mia's processes control is working correctly
 
-    #     - Tests: utils.verify_processes()
-    #     """
-    #     config = Config()
-    #     proc_config = os.path.join(
-    #         config.get_properties_path(), "properties", "process_config.yml"
-    #     )
+        - Tests: utils.verify_processes()
+        """
+        config = Config()
+        proc_config = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
 
-    #     with open(proc_config) as stream:
-    #             proc_content = yaml.load(stream, Loader=yaml.FullLoader)
+        with open(proc_config) as stream:
+            proc_content = yaml.load(stream, Loader=yaml.FullLoader)
 
-    #     self.assertEqual(proc_content, {'Packages': {}, 'Paths': []})
-    #     verify_processes("nipype_ver", "mia_proc_ver", "capsul_ver")
+        self.assertEqual(proc_content, {"Packages": {}, "Paths": []})
+        verify_processes("nipype_ver", "mia_proc_ver", "capsul_ver")
 
-    #     with open(proc_config) as stream:
-    #             proc_content = yaml.load(stream, Loader=yaml.FullLoader)
+        with open(proc_config) as stream:
+            proc_content = yaml.load(stream, Loader=yaml.FullLoader)
 
-    #     self.assertTrue('capsul' in proc_content['Packages'])
-    #     self.assertTrue('mia_processes' in proc_content['Packages'])
-    #     self.assertTrue('nipype' in proc_content['Packages'])
-    #     self.assertEqual(
-    #         proc_content['Paths'],
-    #         []
-    #     )
-    #     self.assertEqual(
-    #         proc_content['Versions'],
-    #         {
-    #             'capsul': 'capsul_ver',
-    #             'mia_processes': 'mia_proc_ver',
-    #             'nipype': 'nipype_ver'
-    #         }
-    # )
+        self.assertTrue("capsul" in proc_content["Packages"])
+        self.assertTrue("mia_processes" in proc_content["Packages"])
+        self.assertTrue("nipype" in proc_content["Packages"])
+        self.assertEqual(proc_content["Paths"], [])
+        self.assertEqual(
+            proc_content["Versions"],
+            {
+                "capsul": "capsul_ver",
+                "mia_processes": "mia_proc_ver",
+                "nipype": "nipype_ver",
+            },
+        )
 
 
 class TestMIADataBrowser(TestMIACase):
@@ -3738,189 +3721,202 @@ class TestMIADataBrowser(TestMIACase):
         )
 
     def test_table_data_context_menu(self):
-        """Right-click on a scan to display the context menu table, and choose
-        an option.
-
-        - Tests: TableDataBrowser.context_menu_table
-
-        - Mocks:
-            - QMenu.exec_
-            - QMessageBox.exec
         """
+        Simulates a right-click on a scan to display the context menu in the
+        data table and triggers each available action to ensure correct
+        behavior.
 
-        # Creates a new project folder and switches to it
+        This test verifies that the `TableDataBrowser.context_menu_table`
+        method handles various context menu actions without error.
+
+        Mocks:
+            - QMenu.exec_: Simulates user selection of context menu actions.
+            - QMessageBox.exec: Suppresses message box dialogs during the
+                                test.
+        """
+        # Create a new lightweight test project and switch to it
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
 
-        # Sets shortcuts for often used objects
+        # Get a reference to the data table
         table_data = self.main_window.data_browser.table_data
 
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda *args: None
-
-        # Opens the context menu one time before cycling through the
-        # actions
-        QMenu.exec_ = lambda *args: None
-        table_data.context_menu_table(QPoint(10, 10))
-
-        # Cycles through the actions by opening the context menu and
-        # clicking in each one of them
-        act_names = [
-            "action_reset_cell",
-            "action_reset_column",
-            "action_reset_row",
-            "action_clear_cell",
-            "action_add_scan",
-            "action_remove_scan",
-            "action_visualized_tags",
-            "action_select_column",
-            "action_multiple_sort",
-            "action_send_documents_to_pipeline",
-            "action_display_file",
-        ]
-        # Including 'action_sort_column' will crash the build
-
-        for act_name in act_names:
-            QMenu.exec_ = lambda *args: getattr(table_data, act_name)
+        with (
+            patch.object(QMessageBox, "exec", return_value=None),
+            patch.object(QMenu, "exec_", return_value=None),
+        ):
+            # Trigger the context menu once before simulating individual
+            # actions
             table_data.context_menu_table(QPoint(10, 10))
 
+            # List of action names to simulate from the context menu
+            action_names = [
+                "action_reset_cell",
+                "action_reset_column",
+                "action_reset_row",
+                "action_clear_cell",
+                "action_add_scan",
+                "action_remove_scan",
+                "action_sort_column",
+                "action_sort_column_descending",
+                "action_visualized_tags",
+                "action_select_column",
+                "action_multiple_sort",
+                "action_send_documents_to_pipeline",
+                "action_display_file",
+                # Note: 'action_sort_column' may cause instability
+            ]
+
+            # Simulate selecting each action via the context menu
+            for action_name in action_names:
+
+                with patch.object(
+                    QMenu,
+                    "exec_",
+                    return_value=getattr(table_data, action_name),
+                ):
+                    table_data.context_menu_table(QPoint(10, 10))
+
     def test_undo_redo_databrowser(self):
-        """Tests the DataBrowser undo/redo."""
+        """
+        Test undo and redo functionality in the DataBrowser across
+        several operations.
+
+        This test verifies that user actions such as modifying a tag value,
+        removing scans, adding/removing/cloning tags are correctly recorded
+        in the project's undo/redo stacks, and that the database and GUI
+        reflect the expected changes after each undo/redo operation.
+
+        Tested operations include:
+            1. Modifying a tag value ("BandWidth") of a scan and
+               undoing/redoing the change.
+            2. Attempting to undo the deletion of a scan (should have
+               no effect).
+            3. Adding a new tag ("Test") and verifying undo/redo toggles
+               it properly.
+            4. Removing an existing tag and checking undo/redo consistency.
+            5. Cloning an existing tag ("FOV") to create a new one ("Test"),
+            verifying values in both the database and DataBrowser.
+
+        Ensures:
+            - Undo/redo stacks (`project.undos` and `project.redos`) are
+              updated appropriately.
+            - DataBrowser UI and internal database states remain synchronized.
+            - Non-reversible operations (e.g., scan deletion) behave as
+              expected.
+        """
 
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
+        # Get a reference to the data table
+        table = self.main_window.data_browser.table_data
+
         # 1. Tag value (list)
-        # Check undos and redos are empty
-        self.assertEqual(self.main_window.project.undos, [])
-        self.assertEqual(self.main_window.project.redos, [])
+        # Initial undo/redo stacks must be empty
+        self.assertListEqual(self.main_window.project.undos, [])
+        self.assertListEqual(self.main_window.project.redos, [])
 
-        # DataBrowser value for second document
-        bw_column = (self.main_window.data_browser.table_data.get_tag_column)(
-            "BandWidth"
-        )
-        bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
-        bw_old = bw_item.text()
+        # DataBrowser value for the second document
+        bw_col = table.get_tag_column("BandWidth")
+        bw_item = table.item(1, bw_col)
+        old_value = float(bw_item.text().strip("[]"))
 
-        # Check the value is really 50000
-        self.assertEqual(float(bw_old[1:-1]), 50000)
+        # Check the value is the good one (50000)
+        self.assertEqual(old_value, 50000.0)
 
-        # Change the value
+        # Change the value from 50000 to 0.0
         bw_item.setSelected(True)
-        # threading.Timer(2,
-        #                 partial(self.edit_databrowser_list, "0.0")).start()
-        QTimer.singleShot(2000, partial(self.edit_databrowser_list, "0.0"))
-        self.main_window.data_browser.table_data.edit_table_data_values()
 
-        # Check undos and redos have the right values.
-        self.assertEqual(
-            self.main_window.project.undos,
+        def exec_and_update(self):
+            """Mock dialog execution to update table values."""
+            self.update_table_values()
+            return True
+
+        with patch.object(ModifyTable, "exec_", new=exec_and_update):
+            bw_item.setText("[0.0]")
+            table.edit_table_data_values()
+            bw_item = table.item(1, bw_col)
+            bw_item.setSelected(False)
+
+        # Check project.undos and project.redos have the right values.
+        expected_mod = [
             [
+                "modified_values",
                 [
-                    "modified_values",
                     [
-                        [
-                            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                            "pvm-000220_000.nii",
-                            "BandWidth",
-                            [50000.0],
-                            [0.0],
-                        ]
-                    ],
-                ]
-            ],
-        )
+                        "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
+                        "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
+                        "pvm-000220_000.nii",
+                        "BandWidth",
+                        [50000.0],
+                        [0.0],
+                    ]
+                ],
+            ]
+        ]
+        self.assertListEqual(self.main_window.project.undos, expected_mod)
         self.assertEqual(self.main_window.project.redos, [])
 
         # Check the value has really been changed to 0.0.
-        bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
-        bw_set = bw_item.text()
-        self.assertEqual(float(bw_set[1:-1]), 0)
+        self.assertEqual(float(bw_item.text().strip("[]")), 0.0)
+
+        scan_name = table.item(1, 0).text()
+
+        with self.main_window.project.database.data() as db:
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, scan_name, "BandWidth"), [0]
+            )
+            self.assertEqual(
+                db.get_value(COLLECTION_INITIAL, scan_name, "BandWidth"),
+                [50000],
+            )
 
         # Undo
         self.main_window.action_undo.trigger()
 
         # Check the value has really been reset to 50000
-        bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
-        bw_undo = bw_item.text()
-        self.assertEqual(float(bw_undo[1:-1]), 50000)
+        self.assertEqual(float(bw_item.text().strip("[]")), 50000.0)
 
         # Check undos / redos have the right values
-        self.assertEqual(
-            self.main_window.project.redos,
-            [
-                [
-                    "modified_values",
-                    [
-                        [
-                            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                            "pvm-000220_000.nii",
-                            "BandWidth",
-                            [50000.0],
-                            [0.0],
-                        ]
-                    ],
-                ]
-            ],
-        )
-        self.assertEqual(self.main_window.project.undos, [])
+        self.assertListEqual(self.main_window.project.redos, expected_mod)
+        self.assertListEqual(self.main_window.project.undos, [])
 
         # Redo
         self.main_window.action_redo.trigger()
 
         # Check the value has really been reset to 0.0
-        bw_item = self.main_window.data_browser.table_data.item(1, bw_column)
-        bw_redo = bw_item.text()
-        self.assertEqual(float(bw_redo[1:-1]), 0)
+        self.assertEqual(float(bw_item.text().strip("[]")), 0.0)
 
         # we test undos / redos have the right values
-        self.assertEqual(
-            self.main_window.project.undos,
-            [
-                [
-                    "modified_values",
-                    [
-                        [
-                            "data/raw_data/Guerbet-C6-2014-Rat-K52-Tube27"
-                            "-2014-02-14102317-01-G1_Guerbet_Anat-RARE"
-                            "pvm-000220_000.nii",
-                            "BandWidth",
-                            [50000.0],
-                            [0.0],
-                        ]
-                    ],
-                ]
-            ],
-        )
+        self.assertListEqual(self.main_window.project.undos, expected_mod)
         self.assertEqual(self.main_window.project.redos, [])
 
         # 2. Remove a scan (document)
         # Check there are 9 documents in db (current and initial)
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data() as db:
             self.assertEqual(
                 9,
-                len(database_data.get_document_names(COLLECTION_CURRENT)),
+                len(db.get_document_names(COLLECTION_CURRENT)),
             )
             self.assertEqual(
                 9,
-                len(database_data.get_document_names(COLLECTION_INITIAL)),
+                len(db.get_document_names(COLLECTION_INITIAL)),
             )
 
         # Remove the eighth document
-        self.main_window.data_browser.table_data.selectRow(8)
-        self.main_window.data_browser.table_data.remove_scan()
+        table.selectRow(8)
+        table.remove_scan()
 
         # Check if there are now 8 documents in db (current and initial)
-        with self.main_window.project.database.data() as database_data:
+        with self.main_window.project.database.data() as db:
             self.assertEqual(
                 8,
-                len(database_data.get_document_names(COLLECTION_CURRENT)),
+                len(db.get_document_names(COLLECTION_CURRENT)),
             )
             self.assertEqual(
                 8,
-                len(database_data.get_document_names(COLLECTION_INITIAL)),
+                len(db.get_document_names(COLLECTION_INITIAL)),
             )
 
         # Undo
@@ -3928,26 +3924,40 @@ class TestMIADataBrowser(TestMIACase):
 
         # Check there are still only 8 documents in the database
         # (current and initial). In fact the document has been permanently
-        # deleted and we cannot recover it in this case
-        with self.main_window.project.database.data() as database_data:
+        # deleted and we cannot recover it in this case. It is not possible to
+        # undo the deletion of a document. Here, the undo will apply to the
+        # last modification of the BandWidth value.
+        with self.main_window.project.database.data() as db:
             self.assertEqual(
                 8,
-                len(database_data.get_document_names(COLLECTION_CURRENT)),
+                len(db.get_document_names(COLLECTION_CURRENT)),
             )
             self.assertEqual(
                 8,
-                len(database_data.get_document_names(COLLECTION_INITIAL)),
+                len(db.get_document_names(COLLECTION_INITIAL)),
+            )
+
+            # Check the value has really been reset to 50000
+            self.assertEqual(float(bw_item.text().strip("[]")), 50000.0)
+
+            # Check undos / redos have the right values
+            self.assertListEqual(self.main_window.project.redos, expected_mod)
+            self.assertEqual(self.main_window.project.undos, [])
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, scan_name, "BandWidth"),
+                [50000],
+            )
+            self.assertEqual(
+                db.get_value(COLLECTION_INITIAL, scan_name, "BandWidth"),
+                [50000],
             )
 
         # 3. Add a tag
-        # Check we don't have 'Test' tag in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check we don't have 'Test' tag in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsNone(table.get_tag_column("Test"))
 
         # Add the Test tag
         self.main_window.data_browser.add_tag_action.trigger()
@@ -3955,38 +3965,29 @@ class TestMIADataBrowser(TestMIACase):
         add_tag.text_edit_tag_name.setText("Test")
         QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
 
-        # Check the 'Test' tag is in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check the 'Test' tag is in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsInstance(table.get_tag_column("Test"), int)
 
         # Undo
         self.main_window.action_undo.trigger()
 
-        # Check 'Test' tag is not in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check 'Test' tag is not in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsNone(table.get_tag_column("Test"))
 
         # Redo
         self.main_window.action_redo.trigger()
 
-        # Check the 'Test' tag is in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check the 'Test' tag is in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsInstance(table.get_tag_column("Test"), int)
 
         # 4. Remove tag
         # Remove the 'Test' tag
@@ -3995,100 +3996,77 @@ class TestMIADataBrowser(TestMIACase):
         remove_tag.list_widget_tags.setCurrentRow(1)  # 'Test' tag selected
         QTest.mouseClick(remove_tag.push_button_ok, Qt.LeftButton)
 
-        # Check 'Test' tag is not in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check 'Test' tag is not in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsNone(table.get_tag_column("Test"))
 
         # Undo
         self.main_window.action_undo.trigger()
 
-        # Check 'Test' tag is in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check 'Test' tag is in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsInstance(table.get_tag_column("Test"), int)
 
         # Redo
         self.main_window.action_redo.trigger()
 
-        # Check 'Test' tag is not in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check 'Test' tag is not in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertNotIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsNone(table.get_tag_column("Test"))
 
-        # 4. clone tag
+        # 4. Clone tag 'FOV' to 'Test'
         self.main_window.data_browser.clone_tag_action.trigger()
         clone_tag = self.main_window.data_browser.pop_up_clone_tag
 
-        for fov_column in range(clone_tag.list_widget_tags.count()):
-            if clone_tag.list_widget_tags.item(fov_column).text() == "FOV":
+        for i in range(clone_tag.list_widget_tags.count()):
+
+            if clone_tag.list_widget_tags.item(i).text() == "FOV":
+                clone_tag.list_widget_tags.setCurrentRow(i)
                 break
 
         # 'FOV' tag selected
-        clone_tag.list_widget_tags.setCurrentRow(fov_column)
         clone_tag.line_edit_new_tag_name.setText("Test")
         QTest.mouseClick(clone_tag.push_button_ok, Qt.LeftButton)
 
-        # Check 'Test' tag is in the db
-        with self.main_window.project.database.data() as database_data:
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertTrue(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        # Check 'Test' tag is in the db and in the DataBrowser
+        with self.main_window.project.database.data() as db:
+            self.assertIn("Test", db.get_field_names(COLLECTION_CURRENT))
+            self.assertIn("Test", db.get_field_names(COLLECTION_INITIAL))
+            self.assertIsInstance(table.get_tag_column("Test"), int)
 
         # Value in the db
-        item = self.main_window.data_browser.table_data.item(1, 0)
+        item = table.item(1, 0)
         scan_name = item.text()
 
-        with self.main_window.project.database.data() as database_data:
-            value = database_data.get_value(
-                COLLECTION_CURRENT, scan_name, "Test"
-            )
-            value_initial = database_data.get_value(
-                COLLECTION_INITIAL, scan_name, "Test"
-            )
+        with self.main_window.project.database.data() as db:
+            value_cur = db.get_value(COLLECTION_CURRENT, scan_name, "Test")
+            value_init = db.get_value(COLLECTION_INITIAL, scan_name, "Test")
 
         # Value in the DataBrowser
-        test_column = (
-            self.main_window.data_browser.table_data.get_tag_column
-        )("Test")
-        item = self.main_window.data_browser.table_data.item(1, test_column)
-        databrowser = item.text()
+        test_column = table.get_tag_column("Test")
+        item = table.item(1, test_column)
+        databrowser_val = item.text()
 
         # Check equality between DataBrowser and db
-        self.assertEqual(value, [3.0, 3.0])
-        self.assertEqual(value, ast.literal_eval(databrowser))
-        self.assertEqual(value, value_initial)
+        self.assertEqual(value_cur, [3.0, 3.0])
+        self.assertEqual(value_cur, ast.literal_eval(databrowser_val))
+        self.assertEqual(value_cur, value_init)
 
         # Undo
         self.main_window.action_undo.trigger()
 
         # Check 'Test' tag is not in the db and not in the DataBrowser
-        with self.main_window.project.database.data() as database_data:
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_CURRENT)
-            )
-            self.assertFalse(
-                "Test" in database_data.get_field_names(COLLECTION_INITIAL)
-            )
+        with self.main_window.project.database.data() as db:
+            self.assertFalse("Test" in db.get_field_names(COLLECTION_CURRENT))
+            self.assertFalse("Test" in db.get_field_names(COLLECTION_INITIAL))
 
-        self.assertIsNone(
-            (self.main_window.data_browser.table_data.get_tag_column)("Test")
-        )
+        self.assertIsNone(table.get_tag_column("Test"))
 
     def test_unnamed_proj_soft_open(self):
         """Tests unnamed project creation at software opening."""
