@@ -4385,7 +4385,6 @@ class TestMIAMainWindow(TestMIACase):
         :Method:
             - test_check_database: checks if the database has changed
               since the scans were first imported
-            - test_closeEvent: opens a project and closes the main window
             - test_create_project_pop_up: tries to create a new project
               with a project already open.
             - test_files_in_project: tests whether or not a given file
@@ -4425,68 +4424,37 @@ class TestMIAMainWindow(TestMIACase):
     """
 
     def test_check_database(self):
-        """Checks if the database has changed since the scans were first
-        imported.
-
-        - Tests: MainWindow.test_check_database
-
-        - Mocks QMessageBox.exec
         """
+        Test detection of changes in the project's database after file removal.
 
-        # Creates a new project and switches to it
+        This test verifies that the application correctly identifies changes
+        to the database, such as a missing file after import.
+        """
+        # Create and switch to a new test project
         test_proj_path = self.get_new_test_project()
         self.main_window.switch_project(test_proj_path, "test_project")
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
 
-        # Mocks the execution of a dialog box by accepting it
-        QMessageBox.exec = lambda self_, *arg: self_.accept()
-
-        # Gets the file path
+        # Construct path to a file and remove it
         ppl_manager.project.folder = test_proj_path
-        folder = os.path.join(test_proj_path, "data", "raw_data")
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
         )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-
-        # Removes one document from the database
-        os.remove(DOCUMENT_1)
+        file_path = os.path.abspath(
+            os.path.join(test_proj_path, "data", "raw_data", NII_FILE_1)
+        )
+        os.remove(file_path)
 
         # Check if the files of the database have been modified
-        # Since QMessageBox.exec is mocked, the QMessageBox's text is not
-        # observed
-        self.main_window.action_check_database.triggered.emit()
-
-    def test_closeEvent(self):
-        """Opens a project and closes the main window.
-
-        - Tests: MainWindow.closeEvent
-        """
-        # FIXME: Does this test really bring anything new compared to other
-        #        tests already performed?
-        # Creates a new project folder and switches to it
-        new_proj_path = self.get_new_test_project(light=True)
-        self.main_window.switch_project(new_proj_path, "test_light_project")
-        # Sets shortcuts for objects that are often used
-        ppl_manager = self.main_window.pipeline_manager
-        # Gets the UID of the first brick in the brick collection, which is
-        # composed of the bricks appearing in the scan history.
-
-        with ppl_manager.project.database.data() as database_data:
-            bricks_coll = database_data.get_document(COLLECTION_BRICK)
-        brick = bricks_coll[0]
-        # Appends it to the 'brick_list'
-        ppl_manager.brick_list.append(brick[BRICK_ID])
-        # Mocks having initialized the pipeline
-        ppl_manager.init_clicked = True
-        # 'self.main_window.close()' is already called by 'tearDown'
-        # after each test
-        # No assertion is possible since the 'self.main_window.project'
-        # was deleted
-        print()
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.exec",
+            side_effect=lambda self_: self_.accept(),
+        ) as mock_exec:
+            self.main_window.action_check_database.triggered.emit()
+            mock_exec.assert_called_once()
 
     def test_create_project_pop_up(self):
         """Tries to create a new project with an already open project, with and
