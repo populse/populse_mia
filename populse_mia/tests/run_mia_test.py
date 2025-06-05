@@ -226,6 +226,7 @@ from populse_mia.data_manager import (  # noqa: E402
     COLLECTION_CURRENT,
     COLLECTION_HISTORY,
     COLLECTION_INITIAL,
+    FIELD_ATTRIBUTES_COLLECTION,
     FIELD_TYPE_BOOLEAN,
     FIELD_TYPE_DATE,
     FIELD_TYPE_DATETIME,
@@ -4069,34 +4070,46 @@ class TestMIADataBrowser(TestMIACase):
         self.assertIsNone(table.get_tag_column("Test"))
 
     def test_unnamed_proj_soft_open(self):
-        """Tests unnamed project creation at software opening."""
+        """
+        Test that an unnamed project is correctly initialized at software
+        startup.
+
+        Verifies that:
+            - The project instance is created and named "Unnamed project".
+            - The default tags in the 'current' collection are correctly set.
+            - No documents exist in 'current' and 'initial' collections.
+            - All expected collections are present.
+            - The main window title reflects the unnamed project.
+        """
 
         self.assertIsInstance(self.project, Project)
         self.assertEqual(self.main_window.project.getName(), "Unnamed project")
 
-        with self.main_window.project.database.data() as database_data:
-            tags = database_data.get_field_names(COLLECTION_CURRENT)
-            self.assertEqual(len(tags), 6)
-            self.assertTrue(TAG_CHECKSUM in tags)
-            self.assertTrue(TAG_FILENAME in tags)
-            self.assertTrue(TAG_TYPE in tags)
-            self.assertTrue(TAG_EXP_TYPE in tags)
-            self.assertTrue(TAG_BRICKS in tags)
-            self.assertTrue(TAG_HISTORY in tags)
-            self.assertEqual(
-                database_data.get_document_names(COLLECTION_CURRENT),
-                [],
-            )
-            self.assertEqual(
-                database_data.get_document_names(COLLECTION_INITIAL),
-                [],
-            )
-            collections = database_data.get_collection_names()
-            self.assertEqual(len(collections), 5)
-            self.assertTrue(COLLECTION_INITIAL in collections)
-            self.assertTrue(COLLECTION_CURRENT in collections)
-            self.assertTrue(COLLECTION_BRICK in collections)
-            self.assertTrue(COLLECTION_HISTORY in collections)
+        with self.main_window.project.database.data() as db:
+            tags = db.get_field_names(COLLECTION_CURRENT)
+            expected_tags = {
+                TAG_CHECKSUM,
+                TAG_FILENAME,
+                TAG_TYPE,
+                TAG_EXP_TYPE,
+                TAG_BRICKS,
+                TAG_HISTORY,
+            }
+            self.assertEqual(set(tags), expected_tags)
+            self.assertListEqual(db.get_document_names(COLLECTION_CURRENT), [])
+            self.assertListEqual(db.get_document_names(COLLECTION_INITIAL), [])
+
+            collections = db.get_collection_names()
+
+            expected_collections = {
+                FIELD_ATTRIBUTES_COLLECTION,
+                COLLECTION_INITIAL,
+                COLLECTION_CURRENT,
+                COLLECTION_BRICK,
+                COLLECTION_HISTORY,
+            }
+            self.assertEqual(set(collections), expected_collections)
+
             self.assertEqual(
                 self.main_window.windowTitle(),
                 "MIA - Multiparametric Image Analysis "
@@ -4104,254 +4117,241 @@ class TestMIADataBrowser(TestMIACase):
             )
 
     def test_update_default_value(self):
-        """Updates the values when a list of default values is created.
-
-        Tests: DefaultValueListCreation.update_default_value
         """
+        Test the update of default tag values for various input types via the
+        DefaultValueListCreation mechanism.
 
+        This test verifies:
+            - Table behavior for different input formats (empty string,
+              non-empty string, valid list).
+            - Addition, removal, and resizing of list elements.
+            - Update behavior across multiple field types.
+            - Error handling for invalid input types.
+        """
         # Set shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
 
         # The objects are successively created in the following order:
         # PopUpAddTag > DefaultValueQLineEdit > DefaultValueListCreation
         pop_up = PopUpAddTag(data_browser, data_browser.project)
-        text_edt = pop_up.text_edit_default_value
+        text_edit = pop_up.text_edit_default_value
 
         # Assures the instantiation of 'DefaultValueListCreation'
         # text_edt.parent.type = "list_"
-        text_edt.parent.type = FIELD_TYPE_LIST_STRING
+        text_edit.parent.type = FIELD_TYPE_LIST_STRING
 
         # Mocks the execution of a dialog window
-        DefaultValueListCreation.show = Mock()
+        with patch.object(DefaultValueListCreation, "show"):
+            # 'DefaultValueListCreation' can be instantiated with an empty
+            # string, non-empty string or list
+            # Only a list leads to the table values being filled
+            # - Case: empty string
+            text_edit.setText("")
+            text_edit.mousePressEvent(None)
+            self.assertEqual(
+                text_edit.list_creation.table.item(0, 0).text(), ""
+            )
 
-        # 'DefaultValueListCreation' can be instantiated with an empty
-        # string, non-empty string or list
-        # Only a list leads to the table values being filled
-        # Empty string
-        text_edt.setText("")
-        text_edt.mousePressEvent(None)
+            # - Case: non-empty string
+            text_edit.setText("non_empty")
+            text_edit.mousePressEvent(None)
+            self.assertEqual(
+                text_edit.list_creation.table.item(0, 0).text(), ""
+            )
 
-        # Non-empty string
-        text_edt.setText("non_empty")
-        text_edt.mousePressEvent(None)
-        self.assertEqual(text_edt.list_creation.table.itemAt(0, 0).text(), "")
+            # - Case: valid list (length == 2)
+            text_edit.setText("[1, 2]")
+            text_edit.mousePressEvent(None)
+            table = text_edit.list_creation.table
+            self.assertEqual(table.item(0, 0).text(), "1")
+            self.assertEqual(table.item(0, 1).text(), "2")
+            self.assertEqual(table.columnCount(), 2)
 
-        # List of length = 2
-        text_edt.setText("[1, 2]")
-        text_edt.mousePressEvent(None)
+            # Test add and remove element
+            text_edit.list_creation.add_element()
+            self.assertEqual(table.columnCount(), 3)
 
-        self.assertEqual(text_edt.list_creation.table.item(0, 0).text(), "1")
-        self.assertEqual(text_edt.list_creation.table.item(0, 1).text(), "2")
-        self.assertEqual(text_edt.list_creation.table.columnCount(), 2)
-        # ''[1]'' will become '[1]' after being passed through s
-        # 'ast.literal_eval()'
+            text_edit.list_creation.remove_element()
+            self.assertEqual(table.columnCount(), 2)
 
-        # Adds one element to the table
-        text_edt.list_creation.add_element()
-        self.assertEqual(text_edt.list_creation.table.columnCount(), 3)
+            # Resize table
+            text_edit.list_creation.resize_table()
+            table.setColumnWidth(0, 900)
+            text_edit.list_creation.resize_table()
 
-        # Removes one element to the table
-        text_edt.list_creation.remove_element()
-        self.assertEqual(text_edt.list_creation.table.columnCount(), 2)
+            # Test various data types
+            test_cases = [
+                (FIELD_TYPE_LIST_INTEGER, "[1]"),
+                (FIELD_TYPE_LIST_FLOAT, "[1.1]"),
+                (FIELD_TYPE_LIST_BOOLEAN, "[True]"),
+                (FIELD_TYPE_LIST_BOOLEAN, "[False]"),
+                (FIELD_TYPE_LIST_STRING, '["str"]'),
+                (FIELD_TYPE_LIST_DATE, '["11/11/1111"]'),
+                (FIELD_TYPE_LIST_DATETIME, '["11/11/1111 11:11:11.11"]'),
+                (FIELD_TYPE_LIST_TIME, '["11:11:11.11"]'),
+            ]
 
-        # Resize the table
-        text_edt.list_creation.resize_table()
+            for field_type, value in test_cases:
+                text_edit.setText(value)
+                text_edit.mousePressEvent(None)
+                text_edit.list_creation.type = field_type
+                text_edit.list_creation.update_default_value()
 
-        # Resize the table while mocking a column width of 900 elements
-        text_edt.list_creation.table.setColumnWidth(0, 900)
-        text_edt.list_creation.resize_table()
-
-        # The default value can be updated with several types of data
-        types = [
-            FIELD_TYPE_LIST_INTEGER,
-            FIELD_TYPE_LIST_FLOAT,
-            FIELD_TYPE_LIST_BOOLEAN,
-            FIELD_TYPE_LIST_BOOLEAN,
-            FIELD_TYPE_LIST_STRING,
-            FIELD_TYPE_LIST_DATE,
-            FIELD_TYPE_LIST_DATETIME,
-            FIELD_TYPE_LIST_TIME,
-        ]
-        values = [
-            "[1]",
-            "[1.1]",
-            "[True]",
-            "[False]",
-            '["str"]',
-            '["11/11/1111"]',
-            '["11/11/1111 11:11:11.11"]',
-            '["11:11:11.11"]',
-        ]
-
-        for type_, value in zip(types, values):
-            text_edt.setText(value)
-            text_edt.mousePressEvent(None)
-            text_edt.list_creation.type = type_
-            text_edt.list_creation.update_default_value()
-
-        # Induces a 'ValueError', mocks the execution of a dialog box
-        QMessageBox.exec = Mock()
-        text_edt.setText('["not_boolean"]')
-        text_edt.mousePressEvent(None)
-        text_edt.list_creation.type = FIELD_TYPE_LIST_BOOLEAN
-        text_edt.list_creation.update_default_value()
+            # Test ValueError handling with invalid boolean string, mocks the
+            # execution of a dialog box
+            with patch.object(QMessageBox, "exec"):
+                text_edit.setText('["not_boolean"]')
+                text_edit.mousePressEvent(None)
+                text_edit.list_creation.type = FIELD_TYPE_LIST_BOOLEAN
+                text_edit.list_creation.update_default_value()
 
     def test_utils(self):
-        """Test the utils functions."""
+        """
+        Test utility functions for type checking and conversion from UI table
+        strings to correctly typed Python values for various field types.
 
-        self.assertEqual(table_to_database(True, FIELD_TYPE_BOOLEAN), True)
-        self.assertEqual(table_to_database("False", FIELD_TYPE_BOOLEAN), False)
+        Functions tested:
+            - check_value_type: validates if a string value matches a given
+                                field type.
+            - table_to_database: converts a string value from the UI into a
+                                 typed value suitable for storage in the
+                                 database.
+        """
+        # Boolean tests
+        boolean_cases = [
+            (True, True),
+            ("False", False),
+        ]
 
-        format_ = "%d/%m/%Y"
-        value = datetime.strptime("01/01/2019", format_).date()
-        self.assertEqual(check_value_type("01/01/2019", FIELD_TYPE_DATE), True)
+        for input_value, expected in boolean_cases:
+            with self.subTest(field_type="boolean", input=input_value):
+                self.assertEqual(
+                    table_to_database(input_value, FIELD_TYPE_BOOLEAN),
+                    expected,
+                )
+
+        # Date test
+        date_str = "01/01/2019"
+        date_format = "%d/%m/%Y"
+        expected_date = datetime.strptime(date_str, date_format).date()
+        self.assertTrue(check_value_type(date_str, FIELD_TYPE_DATE))
         self.assertEqual(
-            table_to_database("01/01/2019", FIELD_TYPE_DATE), value
+            table_to_database(date_str, FIELD_TYPE_DATE), expected_date
         )
 
-        format_ = "%d/%m/%Y %H:%M:%S.%f"
-        value = datetime.strptime("15/7/2019 16:16:55.789643", format_)
+        # Datetime test
+        datetime_str = "15/7/2019 16:16:55.789643"
+        datetime_format = "%d/%m/%Y %H:%M:%S.%f"
+        expected_datetime = datetime.strptime(datetime_str, datetime_format)
+        self.assertTrue(check_value_type(datetime_str, FIELD_TYPE_DATETIME))
         self.assertEqual(
-            check_value_type("15/7/2019 16:16:55.789643", FIELD_TYPE_DATETIME),
-            True,
-        )
-        self.assertEqual(
-            table_to_database(
-                "15/7/2019 16:16:55.789643", FIELD_TYPE_DATETIME
-            ),
-            value,
+            table_to_database(datetime_str, FIELD_TYPE_DATETIME),
+            expected_datetime,
         )
 
-        format_ = "%H:%M:%S.%f"
-        value = datetime.strptime("16:16:55.789643", format_).time()
+        # Time test
+        time_str = "16:16:55.789643"
+        time_format = "%H:%M:%S.%f"
+        expected_time = datetime.strptime(time_str, time_format).time()
+        self.assertTrue(check_value_type(time_str, FIELD_TYPE_TIME))
         self.assertEqual(
-            check_value_type("16:16:55.789643", FIELD_TYPE_TIME), True
-        )
-        self.assertEqual(
-            table_to_database("16:16:55.789643", FIELD_TYPE_TIME), value
+            table_to_database(time_str, FIELD_TYPE_TIME), expected_time
         )
 
     def test_visualized_tags(self):
-        """Tests the popup modifying the visualized tags."""
+        """
+        Validate the tag visibility management system and its impact on the
+        DataBrowser UI.
 
-        # Testing default tags visibility
+        This test simulates user interaction with the tag visibility popup
+        and verifies:
+            - Default visible tags are correctly initialized.
+            - UI column headers match backend tag visibility.
+            - System tags (e.g., checksum, history) remain hidden.
+            - Filename tag is always visible and in the first column.
+            - Tags can be hidden and re-shown via the interface.
+        """
+        data_browser = self.main_window.data_browser
+        table = data_browser.table_data
+
+        # Verify initial default tag visibility state
         with self.main_window.project.database.data() as database_data:
-            visible = database_data.get_shown_tags()
+            visible_tags = database_data.get_shown_tags()
 
-        self.assertEqual(len(visible), 4)
-        self.assertTrue(TAG_FILENAME in visible)
-        self.assertTrue(TAG_BRICKS in visible)
-        self.assertTrue(TAG_TYPE in visible)
-        self.assertTrue(TAG_EXP_TYPE in visible)
+        expected_tags = {TAG_FILENAME, TAG_BRICKS, TAG_TYPE, TAG_EXP_TYPE}
+        self.assertSetEqual(set(visible_tags), expected_tags)
 
-        # Testing columns displayed in the DataBrowser
-        self.assertEqual(
-            4, self.main_window.data_browser.table_data.columnCount()
-        )
-        columns_displayed = []
+        # Verify UI column display matches backend state
+        self.assertEqual(table.columnCount(), 4)
 
-        for column in range(
-            0, self.main_window.data_browser.table_data.columnCount()
-        ):
-            tag_displayed = (
-                self.main_window.data_browser.table_data.horizontalHeaderItem
-            )(column).text()
+        displayed_columns = [
+            table.horizontalHeaderItem(i).text()
+            for i in range(table.columnCount())
+            if not table.isColumnHidden(i)
+        ]
 
-            if not self.main_window.data_browser.table_data.isColumnHidden(
-                column
-            ):
-                columns_displayed.append(tag_displayed)
+        self.assertSetEqual(set(displayed_columns), set(visible_tags))
 
-        self.assertEqual(sorted(visible), sorted(columns_displayed))
+        # Ensure filename tag is always the first column
+        first_column_tag = table.horizontalHeaderItem(0).text()
+        self.assertEqual(first_column_tag, TAG_FILENAME)
 
-        # Testing that FileName tag is the first column
-        self.assertEqual(
-            TAG_FILENAME,
-            self.main_window.data_browser.table_data.horizontalHeaderItem(
-                0
-            ).text(),
-        )
+        # Open tag management popup
+        QTest.mouseClick(data_browser.visualized_tags_button, Qt.LeftButton)
+        settings = table.pop_up
 
-        # Trying to set the visible tags
-        QTest.mouseClick(
-            self.main_window.data_browser.visualized_tags_button, Qt.LeftButton
-        )
-        settings = self.main_window.data_browser.table_data.pop_up
+        # Ensure system tags are not visible in tag manager
+        for system_tag in [TAG_CHECKSUM, TAG_HISTORY]:
+            settings.tab_tags.search_bar.setText(system_tag)
+            tag_count = settings.tab_tags.list_widget_tags.count()
+            self.assertEqual(tag_count, 0)
 
-        # Testing that checksum tag isn't displayed
-        settings.tab_tags.search_bar.setText(TAG_CHECKSUM)
-        self.assertEqual(settings.tab_tags.list_widget_tags.count(), 0)
-
-        # Testing that history uuid tag isn't displayed
-        settings.tab_tags.search_bar.setText(TAG_HISTORY)
-        self.assertEqual(settings.tab_tags.list_widget_tags.count(), 0)
-
-        # Testing that FileName is not displayed in the list of visible tags
+        # Check manageable (non-system) tags
         settings.tab_tags.search_bar.setText("")
-        visible_tags = []
+        selected_tags_widget = settings.tab_tags.list_widget_selected_tags
 
-        for row in range(
-            0, settings.tab_tags.list_widget_selected_tags.count()
-        ):
-            item = settings.tab_tags.list_widget_selected_tags.item(row).text()
-            visible_tags.append(item)
+        manageable_tags = [
+            selected_tags_widget.item(i).text()
+            for i in range(selected_tags_widget.count())
+        ]
+        expected_manageable = {TAG_BRICKS, TAG_EXP_TYPE, TAG_TYPE}
+        self.assertSetEqual(set(manageable_tags), expected_manageable)
+        self.assertNotIn(TAG_FILENAME, manageable_tags)
 
-        self.assertEqual(len(visible_tags), 3)
-        self.assertTrue(TAG_BRICKS in visible_tags)
-        self.assertTrue(TAG_EXP_TYPE in visible_tags)
-        self.assertTrue(TAG_TYPE in visible_tags)
-
-        # Testing when hiding a tag
-        # Bricks tag selected
-        settings.tab_tags.list_widget_selected_tags.item(2).setSelected(True)
+        # Simulate hiding the BRICKS tag
+        selected_tags_widget.item(2).setSelected(True)
         QTest.mouseClick(
             settings.tab_tags.push_button_unselect_tag, Qt.LeftButton
         )
-        visible_tags = []
 
-        for row in range(
-            0, settings.tab_tags.list_widget_selected_tags.count()
-        ):
-            item = settings.tab_tags.list_widget_selected_tags.item(row).text()
-            visible_tags.append(item)
+        visible_tags = [
+            selected_tags_widget.item(i).text()
+            for i in range(selected_tags_widget.count())
+        ]
 
-        self.assertEqual(len(visible_tags), 2)
-        self.assertTrue(TAG_TYPE in visible_tags)
-        self.assertTrue(TAG_EXP_TYPE in visible_tags)
+        self.assertSetEqual(set(visible_tags), {TAG_TYPE, TAG_EXP_TYPE})
         QTest.mouseClick(settings.push_button_ok, Qt.LeftButton)
 
         with self.main_window.project.database.data() as database_data:
-            new_visibles = database_data.get_shown_tags()
+            new_visible_tags = database_data.get_shown_tags()
 
-        self.assertEqual(len(new_visibles), 3)
-        self.assertTrue(TAG_FILENAME in new_visibles)
-        self.assertTrue(TAG_EXP_TYPE in new_visibles)
-        self.assertTrue(TAG_TYPE in new_visibles)
-
-        columns_displayed = []
-
-        for column in range(
-            0, self.main_window.data_browser.table_data.columnCount()
-        ):
-            item = (
-                self.main_window.data_browser.table_data.horizontalHeaderItem
-            )(column)
-
-            if not self.main_window.data_browser.table_data.isColumnHidden(
-                column
-            ):
-                columns_displayed.append(item.text())
-
-        self.assertEqual(len(columns_displayed), 3)
-        self.assertTrue(TAG_FILENAME in columns_displayed)
-        self.assertTrue(TAG_EXP_TYPE in columns_displayed)
-        self.assertTrue(TAG_TYPE in columns_displayed)
-
-        # Testing when showing a new tag
-        QTest.mouseClick(
-            self.main_window.data_browser.visualized_tags_button, Qt.LeftButton
+        self.assertSetEqual(
+            set(new_visible_tags), {TAG_FILENAME, TAG_TYPE, TAG_EXP_TYPE}
         )
-        settings = self.main_window.data_browser.table_data.pop_up
+
+        displayed_columns = [
+            table.horizontalHeaderItem(i).text()
+            for i in range(table.columnCount())
+            if not table.isColumnHidden(i)
+        ]
+
+        self.assertSetEqual(
+            set(displayed_columns), {TAG_FILENAME, TAG_TYPE, TAG_EXP_TYPE}
+        )
+
+        # Simulate showing the BRICKS tag again
+        QTest.mouseClick(data_browser.visualized_tags_button, Qt.LeftButton)
+        settings = table.pop_up
         settings.tab_tags.search_bar.setText(TAG_BRICKS)
         settings.tab_tags.list_widget_tags.item(0).setSelected(True)
         QTest.mouseClick(
@@ -4360,33 +4360,22 @@ class TestMIADataBrowser(TestMIACase):
         QTest.mouseClick(settings.push_button_ok, Qt.LeftButton)
 
         with self.main_window.project.database.data() as database_data:
-            new_visibles = database_data.get_shown_tags()
+            new_visible_tags = database_data.get_shown_tags()
 
-        self.assertEqual(len(new_visibles), 4)
-        self.assertTrue(TAG_FILENAME in new_visibles)
-        self.assertTrue(TAG_EXP_TYPE in new_visibles)
-        self.assertTrue(TAG_TYPE in new_visibles)
-        self.assertTrue(TAG_BRICKS in new_visibles)
+        self.assertSetEqual(
+            set(new_visible_tags),
+            {TAG_FILENAME, TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS},
+        )
 
-        columns_displayed = []
-
-        for column in range(
-            0, self.main_window.data_browser.table_data.columnCount()
-        ):
-            item = (
-                self.main_window.data_browser.table_data.horizontalHeaderItem
-            )(column)
-
-            if not self.main_window.data_browser.table_data.isColumnHidden(
-                column
-            ):
-                columns_displayed.append(item.text())
-
-        self.assertEqual(len(columns_displayed), 4)
-        self.assertTrue(TAG_FILENAME in columns_displayed)
-        self.assertTrue(TAG_EXP_TYPE in columns_displayed)
-        self.assertTrue(TAG_TYPE in columns_displayed)
-        self.assertTrue(TAG_BRICKS in columns_displayed)
+        displayed_columns = [
+            table.horizontalHeaderItem(i).text()
+            for i in range(table.columnCount())
+            if not table.isColumnHidden(i)
+        ]
+        self.assertSetEqual(
+            set(displayed_columns),
+            {TAG_FILENAME, TAG_TYPE, TAG_EXP_TYPE, TAG_BRICKS},
+        )
 
 
 class TestMIAMainWindow(TestMIACase):
