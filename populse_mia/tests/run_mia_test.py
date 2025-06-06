@@ -4449,12 +4449,11 @@ class TestMIAMainWindow(TestMIACase):
         os.remove(file_path)
 
         # Check if the files of the database have been modified
-        with patch(
-            "PyQt5.QtWidgets.QMessageBox.exec",
-            side_effect=lambda self_: self_.accept(),
+        with patch.object(
+            QMessageBox, "exec", return_value=QMessageBox.Accepted
         ) as mock_exec:
             self.main_window.action_check_database.triggered.emit()
-            mock_exec.assert_called_once()
+            self.assertTrue(mock_exec.called)
 
     def test_create_project_pop_up(self):
         """Tries to create a new project with an already open project, with and
