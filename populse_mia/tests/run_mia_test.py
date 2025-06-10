@@ -4468,14 +4468,14 @@ class TestMIAMainWindow(TestMIACase):
             - QMessageBox.exec
             - PopUpNewProject.exec
         """
-        # Creates a new project folder and switches to it
+        # Creates a new project folder
         new_proj_path = self.get_new_test_project(light=True)
-        folder = os.path.join(new_proj_path, "data", "downloaded_data")
+
         NII_FILE_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
         )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        DOCUMENT_1 = os.path.join("data", "downloaded_data", NII_FILE_1)
 
         # Adds a document to the collection
         with self.main_window.project.database.data(
@@ -4484,29 +4484,28 @@ class TestMIAMainWindow(TestMIACase):
             database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of the pop-up quit
-        PopUpQuit.exec = lambda self_, *args: self_.show()
-
-        # Tries to create a project with unsaved modifications
-        self.main_window.create_project_pop_up()
+        with patch.object(PopUpQuit, "exec", new=lambda self: self.show()):
+            # Tries to create a project with unsaved modifications
+            self.main_window.create_project_pop_up()
 
         # Closes the error dialog
         self.assertTrue(hasattr(self.main_window, "pop_up_close"))
         self.main_window.pop_up_close.accept()
 
+        # Remove the document from the DB
         with self.main_window.project.database.data(
             write=True
         ) as database_data:
             database_data.remove_document(COLLECTION_CURRENT, DOCUMENT_1)
 
         # Mocks the execution of a pop-up
-        QMessageBox.exec = lambda self_, *args: self_.show()
+        with patch.object(QMessageBox, "exec", lambda self_: self_.show()):
+            # Resets the projects folder
+            config = Config(properties_path=self.properties_path)
+            config.set_projects_save_path(None)
 
-        # Resets the projects folder
-        config = Config(properties_path=self.properties_path)
-        config.set_projects_save_path(None)
-
-        # Tries to create a new project without setting the projects folder
-        self.main_window.create_project_pop_up()
+            # Tries to create a new project without setting the projects folder
+            self.main_window.create_project_pop_up()
 
         self.assertTrue(hasattr(self.main_window, "msg"))
         self.main_window.msg.accept()
@@ -4517,23 +4516,17 @@ class TestMIAMainWindow(TestMIACase):
         config.set_projects_save_path(proj_folder)
 
         # Mocks the execution of 'PopUpNewProject
-        PopUpNewProject.exec = lambda self_, *args: None
-
-        # Opens the "create project" pop-up
-        self.main_window.create_project_pop_up()
-
-        # Mocks the execution of a pop-up
-        QMessageBox.exec = lambda *args: None
+        with patch.object(PopUpNewProject, "exec", lambda self_, *args: None):
+            # Opens the "create project" pop-up
+            self.main_window.create_project_pop_up()
 
         # Tries to create a new project in the same directory of an
         # existing one
-        self.main_window.exPopup.get_filename(
-            (os.path.join(folder, NII_FILE_1),)
-        )
+        self.main_window.exPopup.get_filename([DOCUMENT_1])
 
         # Creates a new project
         self.main_window.exPopup.get_filename(
-            (os.path.join(folder, "new_project"),)
+            [os.path.join("data", "downloaded_data", "new_project")]
         )
 
     def test_files_in_project(self):
