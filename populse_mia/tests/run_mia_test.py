@@ -254,10 +254,7 @@ from populse_mia.data_manager import (  # noqa: E402
 )
 
 # Populse_mia import
-from populse_mia.data_manager.data_loader import (  # noqa: E402
-    ImportProgress,
-    ImportWorker,
-)
+from populse_mia.data_manager.data_loader import read_log  # noqa: E402
 from populse_mia.data_manager.project import Project  # noqa: E402
 from populse_mia.data_manager.project_properties import (  # noqa: E402
     SavedProjects,
@@ -420,16 +417,16 @@ class TestMIACase(unittest.TestCase):
             proc_lib_view.keyPressEvent(event)
 
     def create_mock_jar(self, path):
-        """Creates a mocked java (.jar) executable.
+        """
+        Create a mock Java executable (.jar) for testing.
 
-        :param path: the full path of the executable, ending by '.jar'
-
-        :return: 0 if success or 1 if failure
+        :param path (str): Full path to the output .jar file.
+        :returns (int): 0 if creation succeeded, 1 otherwise.
         """
 
         (folder, name) = os.path.split(path)
 
-        CONTENT = (
+        java_source = (
             "public class MockApp {\n"
             + "    public static void main(String[] args){\n"
             + '        System.out.println("Executed mock java app.");\n'
@@ -437,28 +434,40 @@ class TestMIACase(unittest.TestCase):
             + "}"
         )
 
-        # Creates the .java source code
-        with open(os.path.join(folder, "MockApp.java"), "w") as file:
-            file.write(CONTENT)
+        # Write Java source file
+        with open(os.path.join(folder, "MockApp.java"), "w") as f:
+            f.write(java_source)
 
-        # Creates the MANIFEST file
-        with open(os.path.join(folder, "MANIFEST.MF"), "w") as file:
-            file.write("Main-Class:  MockApp\n")
-        # The build only works with the '\n' at the end of the manifest
+        # Write MANIFEST file (note the trailing newline is required)
+        with open(os.path.join(folder, "MANIFEST.MF"), "w") as f:
+            f.write("Main-Class:  MockApp\n")
 
-        # Check if the OpenJDK Runtime (java) is installed
+        # Check for Java runtime availability
         try:
-            subprocess.run(["java", "-version"])
+            subprocess.run(
+                ["java", "-version"],
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
 
-        except FileNotFoundError:
-            print("OpenJDK Runtime is not installed")
+        except (FileNotFoundError, subprocess.CalledProcessError):
+            print("OpenJDK Runtime is not installed or not found.")
             return 1
 
-        # Compile and pack
-        subprocess.run(["javac", "-d", ".", "MockApp.java"], cwd=folder)
-        subprocess.run(
-            ["jar", "cvmf", "MANIFEST.MF", name, "MockApp.class"], cwd=folder
-        )
+        # Compile Java source and package jar
+        try:
+            subprocess.run(
+                ["javac", "-d", ".", "MockApp.java"], cwd=folder, check=True
+            )
+            subprocess.run(
+                ["jar", "cvmf", "MANIFEST.MF", name, "MockApp.class"],
+                cwd=folder,
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            print("Failed to compile or package the Java mock executable.")
+            return 1
 
         if not os.path.exists(path):
             print("The java executable was not created")
@@ -4456,17 +4465,18 @@ class TestMIAMainWindow(TestMIACase):
             self.assertTrue(mock_exec.called)
 
     def test_create_project_pop_up(self):
-        """Tries to create a new project with an already open project, with and
-        without setting the projects folder path.
+        """Test project creation popup behavior under various conditions.
 
-        - Tests:
-            - MainWindow.create_project_pop_up
-            - PopUpNewProject
+        Verifies the MainWindow.create_project_pop_up method handles:
+            - Project creation with unsaved modifications (triggers quit popup)
+            - Project creation without configured projects folder (shows error)
+            - Normal project creation flow with proper configuration
 
-        - Mocks:
-            - PopUpQuit.exec
-            - QMessageBox.exec
-            - PopUpNewProject.exec
+        Components tested:
+            MainWindow.create_project_pop_up, PopUpNewProject
+
+        Mocked components:
+            PopUpQuit.exec, QMessageBox.exec, PopUpNewProject.exec
         """
         # Creates a new project folder
         new_proj_path = self.get_new_test_project(light=True)
@@ -4530,78 +4540,82 @@ class TestMIAMainWindow(TestMIACase):
         )
 
     def test_files_in_project(self):
-        """Tests whether a given file is part of the project.
+        """
+        Test MainWindow.project.files_in_project method.
 
-        - Tests: MainWindow.files_in_project
+        Verifies that the method correctly identifies which files belong to
+        the project, handling invalid inputs and files both inside and outside
+        the project directory.
         """
 
         # Creates a now test project
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.project.folder = test_proj_path
 
-        # Checks for a bool type as a file
+        # Invalid input (non-string) returns empty set
         res = self.main_window.project.files_in_project([{"mock_key": False}])
-        self.assertFalse(res)
+        self.assertEqual(res, set())
 
-        # Checks for a str type path located out of the project
+        # File outside project returns empty set
         res = self.main_window.project.files_in_project("/out_of_project")
-        self.assertFalse(res)
+        self.assertEqual(res, set())
 
-        # Checks for a str type path within the project
+        # File within project returns filename
         res = self.main_window.project.files_in_project(
             os.path.join(test_proj_path, "mock_file")
         )
-        self.assertTrue(res)  # Asserts it is not empty
+        self.assertEqual(res, {"mock_file"})
 
     def test_import_data(self):
-        """Opens a project and simulates importing a file from the mri_conv
-        java executable.
+        """
+        Test importing data via the mocked MRI conversion process.
 
-        - Tests:
-            - read_log (data_loader.py)
-            - ImportProgress
+        This test simulates opening a project, setting up a mock Java
+        executable for MRI conversion, and importing a scan file into the
+        project.
 
-        - Mocks:
-            - ImportWorker.start
-            - ImportProgress.exec
+        It verifies:
+            - The integration with `read_log` (from `data_loader.py`)
+            - Proper behavior of `ImportProgress`
+
+        Mocks within this test:
+            - `ImportWorker.start` to prevent actual threading
+            - `ImportProgress.exec` to run the worker directly
         """
 
-        # Opens a test project and switches to it
+        # Prepare test project and switch context
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, "test_project")
 
-        # Creates a mocked java executable
+        # Create a mock conversion Java executable
         mock_mriconv_path = os.path.join(
             test_proj_path, "mock_mriconv", "mockapp.jar"
         )
-        os.mkdir(os.path.split(mock_mriconv_path)[0])
-        res = self.create_mock_jar(mock_mriconv_path)
-        self.assertEqual(res, 0)
+        os.makedirs(os.path.dirname(mock_mriconv_path), exist_ok=True)
+        self.assertEqual(self.create_mock_jar(mock_mriconv_path), 0)
 
-        # Sets the 'MRIManager.jar' path to a mocked java executable
+        # Configure path to the mocked executable
         config = Config()
         config.set_mri_conv_path(os.path.normpath(mock_mriconv_path))
 
-        # Gets information regarding the fist scan, located in the
-        # 'derived_data' of the project
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
+        # Retrieve first document from current collection
+        with self.main_window.project.database.data() as db_data:
+            document_1 = db_data.get_document_names(COLLECTION_CURRENT)[0]
 
-        DOCUMENT_1_NAME = os.path.split(DOCUMENT_1)[-1].split(".")[0]
+        document_1_name = os.path.splitext(os.path.basename(document_1))[0]
 
         # Gets the 'raw_data' folder path, where the scan will be import
-        RAW_DATA_FLDR = os.path.join(test_proj_path, "data", "raw_data")
+        raw_data_folder = os.path.join(test_proj_path, "data", "raw_data")
 
         # Copies a scan to the raw data folder
         shutil.copy(
-            os.path.join(test_proj_path, DOCUMENT_1),
-            os.path.join(RAW_DATA_FLDR, os.path.split(DOCUMENT_1)[-1]),
+            os.path.join(test_proj_path, document_1),
+            os.path.join(raw_data_folder, os.path.basename(document_1)),
         )
 
-        # Creates the .json with the tag values, in the raw data folder
-        JSON_TAG_DUMP = {
+        # Create JSON tag file with metadata for the scan,
+        # in the raw data folder.
+        json_tag_data = {
             "AcquisitionTime": {
                 "format": "HH:mm:ss.SSS",
                 "description": "The time the acquisition of data.",
@@ -4617,50 +4631,55 @@ class TestMIAMainWindow(TestMIACase):
                 "value": [[50000.0]],
             },
         }
-        JSON_TAG = os.path.join(RAW_DATA_FLDR, DOCUMENT_1_NAME + ".json")
+        json_tag_path = os.path.join(
+            raw_data_folder, f"{document_1_name}.json"
+        )
 
-        with open(JSON_TAG, "w") as file:
-            json.dump(JSON_TAG_DUMP, file)
+        with open(json_tag_path, "w") as file:
+            json.dump(json_tag_data, file)
 
-        # Creates the 'logExport*.json' file, in the raw data folder
-        JSON_EXPORT_DUMP = [
+        # Create a mock logExport JSON file, in the raw data folder
+        json_export_data = [
             {
                 "StatusExport": "Export ok",
-                "NameFile": DOCUMENT_1_NAME,
+                "NameFile": document_1_name,
                 "Bvec_bval": "no",
             }
         ]
-        JSON_EXPORT = os.path.join(
-            test_proj_path, "data", "raw_data", "logExportMock.json"
+        json_export_path = os.path.join(raw_data_folder, "logExportMock.json")
+
+        with open(json_export_path, "w") as f:
+            json.dump(json_export_data, f)
+
+        # Mock ImportWorker.start and ImportProgress.exec only during
+        # import_data call
+        with (
+            patch(
+                "populse_mia.data_manager.data_loader.ImportWorker.start",
+                lambda self_, *args: None,
+            ),
+            patch(
+                "populse_mia.data_manager.data_loader.ImportProgress.exec",
+                lambda self_, *args: self_.worker.run(),
+            ),
+        ):
+            scan_added = read_log(self.main_window.project, self.main_window)
+
+            # Mocks importing a scan, runs a mocked java executable instead
+            # of the 'MRIManager.jar'
+            self.main_window.import_data()
+
+        # Verify the scan was imported into the 'raw_data' folder
+        expected_scan_path = os.path.normpath(
+            document_1.replace("downloaded_data", "raw_data")
         )
-
-        with open(JSON_EXPORT, "w") as file:
-            json.dump(JSON_EXPORT_DUMP, file)
-
-        # Mocks the thread start to avoid thread deadlocking
-        ImportWorker.start = lambda self_, *args: None
-        ImportProgress.exec = lambda self_, *args: self_.worker.run()
-
-        # Reads the scans added to the project
-        # FIXME: Try uncommenting the following line
-        # scans_added = read_log(self.main_window.project, self.main_window)
-
-        # Mocks importing a scan, runs a mocked java executable instead
-        # of the 'MRIManager.jar'
-        self.main_window.import_data()
-
-        new_scan = os.path.normpath(
-            DOCUMENT_1.replace("derived_data", "raw_data")
-        )
-        table_data_scans = (
-            self.main_window.data_browser.table_data.scans_to_visualize
-        )
-        table_data_scans = [
-            os.path.normpath(path) for path in table_data_scans
+        scans = [
+            os.path.normpath(p)
+            for p in self.main_window.data_browser.table_data.scans_to_visualize
         ]
-
         # Asserts that the first scan was added to the 'raw_data' folder
-        self.assertIn(new_scan, table_data_scans)
+        self.assertIn(expected_scan_path, scans)
+        self.assertIn(expected_scan_path, scan_added)
 
     def test_open_project_pop_up(self):
         """Creates a test project and opens a project, including unsaved
