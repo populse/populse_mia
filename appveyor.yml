@@ -128,6 +128,7 @@ install:
   - cmd: pip install pypiwin32
   - python -m pip install pyparsing --upgrade
   - python -m pip install tomli
+  - python -m pip install qtconsole jupyter_core
 
   # We want to use the last github versions instead of the pypi version:
   - cmd: git clone --depth=50 --branch=%POPULSE_DB_BRANCH% https://github.com/populse/populse_db.git C:\\projects\\populse_db
