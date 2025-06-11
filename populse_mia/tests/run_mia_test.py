@@ -4905,6 +4905,9 @@ class TestMIAMainWindow(TestMIACase):
             )
             target_widget.clicked.emit()
             # Open a browser to select a package
+            # Currently the
+            # "user_interface.pipeline_manager.process_library
+            # .PackageLibraryDialog.browse_package()" is commented
             # proc_lib_view.pkg_library.browse_package()
 
             # Fill in the line edit to pkg_name then click on
@@ -4967,43 +4970,41 @@ class TestMIAMainWindow(TestMIACase):
 
             # Make a 'unit_test_1.py' in the mock_proc_dir with a
             # real process
-            (mock_proc_dir / "unit_test_1.py").write_text(
-                "\n".join(
-                    [
-                        "from capsul.api import Pipeline",
-                        "import traits.api as traits",
-                        "class Unit_test_1(Pipeline):",
-                        "    def pipeline_definition(self):",
-                        "        self.add_process('smooth_1', 'mia_processes.bricks."
-                        "preprocess.spm.spatial_preprocessing.Smooth')",
-                        "        self.export_parameter('smooth_1', 'in_files', "
-                        "is_optional=False)",
-                        "        self.export_parameter('smooth_1', 'fwhm', "
-                        "is_optional=True)",
-                        "        self.export_parameter('smooth_1', 'data_type', "
-                        "is_optional=True)",
-                        "        self.export_parameter('smooth_1', 'implicit_masking', "
-                        "is_optional=True)",
-                        "        self.export_parameter('smooth_1', 'out_prefix', "
-                        "is_optional=True)",
-                        "        self.export_parameter('smooth_1', 'smoothed_files', "
-                        "is_optional=False)",
-                        "        self.reorder_traits(('in_files', 'fwhm', 'data_type', "
-                        "'implicit_masking', 'out_prefix', 'smoothed_files'))",
-                        "        self.node_position = {",
-                        "            'smooth_1': (-119.0, -73.0),",
-                        "            'inputs': (-373.265, -73.0),",
-                        "            'outputs': (227.034, -73.0),",
-                        "        }",
-                        "        self.node_dimension = {",
-                        "            'smooth_1': (221.0, 215.0),",
-                        "            'inputs': (137.3, 161.0),",
-                        "            'outputs': (111.25, 61.0),",
-                        "        }",
-                        "        self.do_autoexport_nodes_parameters = False",
-                    ]
-                )
-            )
+            txt = [
+                "from capsul.api import Pipeline",
+                "import traits.api as traits",
+                "class Unit_test_1(Pipeline):",
+                "    def pipeline_definition(self):",
+                "        self.add_process('smooth_1', 'mia_processes.bricks."
+                "preprocess.spm.spatial_preprocessing.Smooth')",
+                "        self.export_parameter('smooth_1', 'in_files', "
+                "is_optional=False)",
+                "        self.export_parameter('smooth_1', 'fwhm', "
+                "is_optional=True)",
+                "        self.export_parameter('smooth_1', 'data_type', "
+                "is_optional=True)",
+                "        self.export_parameter('smooth_1', "
+                "'implicit_masking', is_optional=True)",
+                "        self.export_parameter('smooth_1', 'out_prefix', "
+                "is_optional=True)",
+                "        self.export_parameter('smooth_1', 'smoothed_files', "
+                "is_optional=False)",
+                "        self.reorder_traits(('in_files', 'fwhm', "
+                "'data_type', 'implicit_masking', 'out_prefix', "
+                "'smoothed_files'))",
+                "        self.node_position = {",
+                "            'smooth_1': (-119.0, -73.0),",
+                "            'inputs': (-373.265, -73.0),",
+                "            'outputs': (227.034, -73.0),",
+                "        }",
+                "        self.node_dimension = {",
+                "            'smooth_1': (221.0, 215.0),",
+                "            'inputs': (137.3, 161.0),",
+                "            'outputs': (111.25, 61.0),",
+                "        }",
+                "        self.do_autoexport_nodes_parameters = False",
+            ]
+            (mock_proc_dir / "unit_test_1.py").write_text("\n".join(txt))
 
             # Makes a file "mock_file_path" in the temporary projects path
             mock_file_path = Path(new_proj_path) / "mock_file"
