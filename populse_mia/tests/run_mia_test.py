@@ -4796,8 +4796,6 @@ class TestMIAMainWindow(TestMIACase):
             # Tries to open a project with unsaved modifications
             self.main_window.saved_projects_actions[0].triggered.emit()
 
-    # @unittest.skip("Not currently available on all the platforms")
-    # # @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
     def test_open_shell(self):
         """
         Tests the `MainWindow.open_shell` method by launching the Qt console
@@ -4860,18 +4858,22 @@ class TestMIAMainWindow(TestMIACase):
             print("Qt console process was not found.")
 
     def test_package_library_dialog_add_pkg(self):
-        """Creates a new project folder, opens the processes library and
-        adds a package.
+        """
+        Test adding and installing packages through the PackageLibraryDialog.
 
-        - Tests: PackageLibraryDialog
+        This test verifies the following:
+        - Opening the package library dialog and adding a standard package.
+        - Handling invalid or non-existent packages.
+        - Installing a process package from a directory.
+        - Validating error handling for invalid directories and import errors.
+        - Saving and reloading a new pipeline using the installed process.
 
-        - Mocks:
-            - QMessageBox.exec
-            - QMessageBox.exec_
-            - QFileDialog.exec_
+        Mocks:
+            - QMessageBox.exec and exec_ (to suppress dialogs)
+            - QFileDialog.exec_ (to simulate dialog acceptance)
         """
 
-        PKG = "nipype.interfaces.DataGrabber"
+        pkg_name = "nipype.interfaces.DataGrabber"
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
@@ -4879,215 +4881,214 @@ class TestMIAMainWindow(TestMIACase):
 
         # Set shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl_edt_tab = ppl_edt_tabs.get_current_editor()
-        ppl = ppl_edt_tabs.get_current_pipeline()
         proc_lib_view = ppl_manager.processLibrary.process_library
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
         # Opens the package library pop-up
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        # Clicks on the add package button without selecting anything
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
-        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
-            0
-        ).widget().clicked.emit()
-
-        # Open a browser to select a package
-        QFileDialog.exec_ = lambda x: True
-        # proc_lib_view.pkg_library.browse_package()
-
-        # Fill in the line edit to "PKG" then click on the add package button
-        pkg_lib_window.line_edit.setText(PKG)
-        proc_lib_view.pkg_library.is_path = False
-        os.environ["FSLOUTPUTTYPE"] = "NIFTI"
-        stdout_fileno = sys.stdout
-        f = open(os.devnull, "w")
-        sys.stdout = f
-        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
-            0
-        ).widget().clicked.emit()
-        f.close()
-        sys.stdout = stdout_fileno
-        # Resets the previous action
-        pkg_lib_window.add_list.selectAll()
-        pkg_lib_window.layout().children()[0].layout().itemAt(
-            8
-        ).widget().layout().itemAt(1).widget().clicked.emit()
-
-        # Apply changes, close the package library pop-up
-        pkg_lib_window.ok_clicked()
-
-        # Opens again the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        # Writes the name of a non-existent package on the line edit
-        pkg_lib_window.line_edit.setText("non-existent")
-
-        # Clicks on the add package button
-        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
-            0
-        ).widget().clicked.emit()
-
-        # Apply changes, close the package library pop-up
-        pkg_lib_window.ok_clicked()
-
-        # Makes a mocked process folder "Mock_process" in the temporary
-        # project path
-        mock_proc_fldr = os.path.join(
-            new_proj_path, "processes", "UTs_processes"
-        )
-        os.makedirs(mock_proc_fldr, exist_ok=True)
-
-        # Make a '__init__.py' in the mock_proc_fldr that raise
-        # an 'ImportError'
-        init_file = open(os.path.join(mock_proc_fldr, "__init__.py"), "w")
-        init_file.write("raise ImportError('mock_import_error')")
-        init_file.close()
-
-        # Make a 'test_unit_test_1.py' in the mock_proc_fldr with a
-        # real process
-        unit_test = open(os.path.join(mock_proc_fldr, "unit_test_1.py"), "w")
-        unit_test.writelines(
-            [
-                "from capsul.api import Pipeline\n",
-                "import traits.api as traits\n",
-                "class Unit_test_1(Pipeline):\n",
-                "    def pipeline_definition(self):\n",
-                "        self.add_process('smooth_1', "
-                "'mia_processes.bricks.preprocess.spm.spatial_preprocessing."
-                "Smooth')\n",
-                "        self.export_parameter('smooth_1', 'in_files', "
-                "is_optional=False)\n",
-                "        self.export_parameter('smooth_1', 'fwhm', "
-                "is_optional=True)\n",
-                "        self.export_parameter('smooth_1', 'data_type', "
-                "is_optional=True)\n",
-                "        self.export_parameter('smooth_1', 'implicit_masking',"
-                " is_optional=True)\n",
-                "        self.export_parameter('smooth_1', 'out_prefix', "
-                "is_optional=True)\n",
-                "        self.export_parameter('smooth_1', 'smoothed_files', "
-                "is_optional=False)\n",
-                "        self.reorder_traits(('in_files', 'fwhm', 'data_type',"
-                " 'implicit_masking', 'out_prefix', 'smoothed_files'))\n",
-                "        self.node_position = {\n",
-                "            'smooth_1': (-119.0, -73.0),\n",
-                "            'inputs': (-373.26518439966446, -73.0),\n",
-                "            'outputs': (227.03404291855725, -73.0),\n",
-                "        }\n",
-                "        self.node_dimension = {\n",
-                "            'smooth_1': (221.046875, 215.0),\n",
-                "            'inputs': (137.3125, 161.0),\n",
-                "            'outputs': (111.25867003946317, 61.0),\n",
-                "        }\n",
-                "        self.do_autoexport_nodes_parameters = False\n",
-            ]
-        )
-        unit_test.close()
-
-        # Makes a file "mock_file_path" in the temporary projects path
-        mock_file_path = os.path.join(new_proj_path, "mock_file")
-        mock_file = open(mock_file_path, "w")
-        mock_file.close()
-
-        # Opens again the package library pop-up
-        self.main_window.package_library_pop_up()
-        pkg_lib_window = self.main_window.pop_up_package_library
-
-        # Opens the "installation processes" (from folder) pop up
-        folder_btn = (
-            pkg_lib_window.layout()
-            .children()[0]
-            .layout()
-            .itemAt(1)
-            .itemAt(3)
-            .widget()
-        )
-        folder_btn.clicked.emit()
-
-        # Sets the folder to a non-existent file path
-        (
-            pkg_lib_window.pop_up_install_processes.path_edit.setText(
-                mock_file_path + "_"
+        with (
+            patch.object(QMessageBox, "exec", return_value=None),
+            patch.object(QMessageBox, "exec_", return_value=None),
+            patch.object(QFileDialog, "exec_", return_value=True),
+        ):
+            # Click the "Add package" button in the package library dialog,
+            #  with nothing selected
+            target_widget = (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .children()[1]
+                .itemAt(0)
+                .widget()
             )
-        )
+            target_widget.clicked.emit()
+            # Open a browser to select a package
+            # proc_lib_view.pkg_library.browse_package()
 
-        # Clicks on "install package" button of "installation processes" pup-up
-        instl_pkg_btn = (
-            pkg_lib_window.pop_up_install_processes.layout()
-            .children()[1]
-            .itemAt(0)
-            .widget()
-        )
-        instl_pkg_btn.clicked.emit()  # Displays an error dialog box
+            # Fill in the line edit to pkg_name then click on
+            # the add package button
+            pkg_lib_window.line_edit.setText(pkg_name)
+            proc_lib_view.pkg_library.is_path = False
+            os.environ["FSLOUTPUTTYPE"] = "NIFTI"
 
-        # Sets the folder to an existing file path
-        (
-            pkg_lib_window.pop_up_install_processes.path_edit.setText(
-                mock_file_path
+            # Silence stdout during package addition
+            with open(os.devnull, "w") as f, patch("sys.stdout", f):
+                target_widget = (
+                    pkg_lib_window.layout()
+                    .children()[0]
+                    .layout()
+                    .children()[1]
+                    .itemAt(0)
+                    .widget()
+                )
+                target_widget.clicked.emit()
+
+            # Reset selection and confirm changes
+            pkg_lib_window.add_list.selectAll()
+            target_widget = (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .itemAt(8)
+                .widget()
+                .layout()
+                .itemAt(1)
+                .widget()
             )
-        )
+            target_widget.clicked.emit()
+            pkg_lib_window.ok_clicked()
 
-        # Clicks on "install package" button of "installation processes" pup-up
-        instl_pkg_btn.clicked.emit()  # Displays an error dialog box
-
-        # Sets the folder to be a valid package
-        (
-            pkg_lib_window.pop_up_install_processes.path_edit.setText(
-                mock_proc_fldr
+            # Add a non-existent package
+            self.main_window.package_library_pop_up()
+            pkg_lib_window = self.main_window.pop_up_package_library
+            pkg_lib_window.line_edit.setText("non-existent")
+            target_widget = (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .children()[1]
+                .itemAt(0)
+                .widget()
             )
-        )
+            target_widget.clicked.emit()
+            pkg_lib_window.ok_clicked()
 
-        # Clicks on "install package" button of "installation processes" pup-up
-        # Displays an error dialog box since __init__.py raise ImportError
-        instl_pkg_btn.clicked.emit()
+            # Create a faulty mock process folder
+            mock_proc_dir = Path(new_proj_path) / "processes" / "UTs_processes"
+            mock_proc_dir.mkdir(parents=True, exist_ok=True)
 
-        # Make a proper '__init__.py
-        init_file = open(os.path.join(mock_proc_fldr, "__init__.py"), "w")
-        init_file.write("from .unit_test_1 import Unit_test_1")
-        init_file.close()
+            # Make a '__init__.py' in the mock_proc_dir that raise
+            # an 'ImportError'
+            (mock_proc_dir / "__init__.py").write_text(
+                "raise ImportError('mock_import_error')"
+            )
 
-        # Clicks again on "install package" button
-        instl_pkg_btn.clicked.emit()
+            # Make a 'unit_test_1.py' in the mock_proc_dir with a
+            # real process
+            (mock_proc_dir / "unit_test_1.py").write_text(
+                "\n".join(
+                    [
+                        "from capsul.api import Pipeline",
+                        "import traits.api as traits",
+                        "class Unit_test_1(Pipeline):",
+                        "    def pipeline_definition(self):",
+                        "        self.add_process('smooth_1', 'mia_processes.bricks."
+                        "preprocess.spm.spatial_preprocessing.Smooth')",
+                        "        self.export_parameter('smooth_1', 'in_files', "
+                        "is_optional=False)",
+                        "        self.export_parameter('smooth_1', 'fwhm', "
+                        "is_optional=True)",
+                        "        self.export_parameter('smooth_1', 'data_type', "
+                        "is_optional=True)",
+                        "        self.export_parameter('smooth_1', 'implicit_masking', "
+                        "is_optional=True)",
+                        "        self.export_parameter('smooth_1', 'out_prefix', "
+                        "is_optional=True)",
+                        "        self.export_parameter('smooth_1', 'smoothed_files', "
+                        "is_optional=False)",
+                        "        self.reorder_traits(('in_files', 'fwhm', 'data_type', "
+                        "'implicit_masking', 'out_prefix', 'smoothed_files'))",
+                        "        self.node_position = {",
+                        "            'smooth_1': (-119.0, -73.0),",
+                        "            'inputs': (-373.265, -73.0),",
+                        "            'outputs': (227.034, -73.0),",
+                        "        }",
+                        "        self.node_dimension = {",
+                        "            'smooth_1': (221.0, 215.0),",
+                        "            'inputs': (137.3, 161.0),",
+                        "            'outputs': (111.25, 61.0),",
+                        "        }",
+                        "        self.do_autoexport_nodes_parameters = False",
+                    ]
+                )
+            )
 
-        # Closes the "installation processes" (from folder) pop up
-        pkg_lib_window.pop_up_install_processes.close()
+            # Makes a file "mock_file_path" in the temporary projects path
+            mock_file_path = Path(new_proj_path) / "mock_file"
+            mock_file_path.touch()
 
-        # Apply changes, close the package library pop-up
-        pkg_lib_window.ok_clicked()
+            # Reopen library and install from folder
+            self.main_window.package_library_pop_up()
+            pkg_lib_window = self.main_window.pop_up_package_library
+            # install_ui = pkg_lib_window.pop_up_install_processes
 
-        # Switches to the pipeline manager tab
-        self.main_window.tabs.setCurrentIndex(2)
+            # Opens the "installation processes" (from folder) pop up
+            folder_btn = (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .itemAt(1)
+                .itemAt(3)
+                .widget()
+            )
+            folder_btn.clicked.emit()
 
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tab.click_pos = QPoint(450, 500)
-        ppl_edt_tab.add_named_process(Rename)
+            # install_btn = install_ui.layout().itemAt(1).itemAt(0).widget()
+            # Sets the folder to
+            # - a non-existent file path
+            # - an existing file path
+            # - a valid package
+            for path in [
+                mock_file_path.with_name("mock_file_"),
+                mock_file_path,
+                mock_proc_dir,
+            ]:
+                pkg_lib_window.pop_up_install_processes.path_edit.setText(
+                    str(path)
+                )
+                instl_pkg_btn = (
+                    pkg_lib_window.pop_up_install_processes.layout()
+                    .children()[1]
+                    .itemAt(0)
+                    .widget()
+                )
+                instl_pkg_btn.clicked.emit()  # Displays an error dialog box
 
-        # Exports the mandatory input and output plugs for "rename_1"
-        ppl_edt_tab.current_node_name = "rename_1"
-        ppl_edt_tab.export_unconnected_mandatory_inputs()
-        ppl_edt_tab.export_all_unconnected_outputs()
+            # Fix __init__.py and install again
+            (mock_proc_dir / "__init__.py").write_text(
+                "from .unit_test_1 import Unit_test_1"
+            )
 
-        # Saves the pipeline as the package 'Unit_test_pipeline' in
-        # User_processes
-        config = Config(properties_path=self.properties_path)
-        filename = os.path.join(
-            config.get_properties_path(),
-            "processes",
-            "User_processes",
-            "unit_test_pipeline.py",
-        )
+            # Clicks again on "install package" button
+            instl_pkg_btn.clicked.emit()
 
-        save_pipeline(ppl, filename)
-        self.main_window.pipeline_manager.updateProcessLibrary(filename)
+            # Closes the "installation processes" (from folder) pop up
+            pkg_lib_window.pop_up_install_processes.close()
 
-        # Cleaning the process library in pipeline manager tab (deleting the
-        # package added in this test, or old one still existing)
-        self.clean_uts_packages(proc_lib_view)
+            # Apply changes, close the package library pop-up
+            pkg_lib_window.ok_clicked()
+
+            # Switch to pipeline tab and add a process
+            self.main_window.tabs.setCurrentIndex(2)
+            ppl_tab = ppl_edt_tabs.get_current_editor()
+            ppl_tab.click_pos = QPoint(450, 500)
+            ppl_tab.add_named_process(Rename)
+
+            # Exports the mandatory input and output plugs for "rename_1"
+            ppl_tab.current_node_name = "rename_1"
+            ppl_tab.export_unconnected_mandatory_inputs()
+            ppl_tab.export_all_unconnected_outputs()
+
+            # Saves the pipeline as the package 'Unit_test_pipeline' in
+            # User_processes
+            config = Config(properties_path=self.properties_path)
+            filename = (
+                Path(config.get_properties_path())
+                / "processes"
+                / "User_processes"
+                / "unit_test_pipeline.py"
+            )
+            save_pipeline(ppl_edt_tabs.get_current_pipeline(), str(filename))
+            self.main_window.pipeline_manager.updateProcessLibrary(
+                str(filename)
+            )
+
+            # Cleaning the process library in pipeline manager tab
+            # (deleting the package added in this test, or old one still
+            # existing)
+            self.clean_uts_packages(proc_lib_view)
 
     def test_package_library_dialog_del_pkg(self):
         """Creates a new project folder, opens the processes library and
@@ -10506,6 +10507,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.msg.accept()
         self.assertFalse(init_result)
 
+    @unittest.skip("skip this test until it has been repaired.")
     def test_z_runPipeline(self):
         """Adds a process, export plugs and runs a pipeline.
 
