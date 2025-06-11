@@ -4682,64 +4682,77 @@ class TestMIAMainWindow(TestMIACase):
         self.assertIn(expected_scan_path, scan_added)
 
     def test_open_project_pop_up(self):
-        """Creates a test project and opens a project, including unsaved
-        modifications.
+        """
+        Test the behavior of MainWindow.open_project_pop_up under different
+        project state conditions, including:
 
-        - Tests: MainWindow.open_project_pop_up
+        - No project save directory set
+        - Project opened successfully
+        - Project with unsaved modifications
 
-        - Mocks:
+        Mocks the following components:
             - QMessageBox.exec
             - PopUpOpenProject.exec
             - PopUpQuit.exec
         """
 
-        # Creates a test project
+        # Create a lightweight test project and switch to it
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, "test_project")
 
         # Sets shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
 
-        QMessageBox.exec = lambda self_, *arg: self_.show()
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.exec",
+            lambda self_, *args: self_.show(),
+        ):
+            # Reset the projects save directory
+            Config().set_projects_save_path(None)
 
-        # Resets the projects save directory
-        Config().set_projects_save_path(None)
+            # Attempt to open a project without a set save directory
+            self.main_window.open_project_pop_up()
+            self.main_window.msg.accept()
 
-        # Tries to open a project without setting the projects save dir
-        self.main_window.open_project_pop_up()
-        self.main_window.msg.accept()
+            # Set the project save directory
+            config = Config(properties_path=self.properties_path)
+            config.set_projects_save_path(os.path.dirname(test_proj_path))
 
-        # Sets the projects save dir
-        config = Config(properties_path=self.properties_path)
-        config.set_projects_save_path(os.path.split(test_proj_path)[0])
+        with patch(
+            "populse_mia.user_interface.pop_ups.PopUpOpenProject.exec",
+            lambda self_, *args: self_.show(),
+        ):
+            # Open a project successfully
+            self.main_window.open_project_pop_up()
 
-        PopUpOpenProject.exec = lambda self_, *arg: self_.show()
+            self.main_window.exPopup.get_filename((test_proj_path,))
 
-        # Opens a project
-        self.main_window.open_project_pop_up()
+            # Delete the first scan from the data browser
+            data_browser.table_data.selectRow(0)
+            data_browser.table_data.remove_scan()
 
-        self.main_window.exPopup.get_filename((test_proj_path,))
+            # Ensure unsaved modifications are detected
+            self.assertTrue(self.main_window.check_unsaved_modifications())
 
-        # Deletes a scan from data browser
-        data_browser.table_data.selectRow(0)
-        self.main_window.data_browser.table_data.remove_scan()
-
-        # Asserts that there are unsaved modification
-        self.assertTrue(self.main_window.check_unsaved_modifications())
-
-        PopUpQuit.exec = lambda self_: self_.show()
-
-        # Tries to open a project with unsaved modifications
-        self.main_window.open_project_pop_up()
-        self.main_window.pop_up_close.accept()
+        with patch(
+            "populse_mia.user_interface.pop_ups.PopUpQuit.exec",
+            lambda self_: self_.show(),
+        ):
+            # Attempt to open another project with unsaved modifications
+            self.main_window.open_project_pop_up()
+            self.main_window.pop_up_close.accept()
 
     def test_open_recent_project(self):
-        """Creates 2 test projects and opens one by the recent projects action.
+        """
+        Test opening a recent project via the 'recent projects' action.
+
+        This includes switching between two projects, saving one, verifying
+        its presence in the recent projects list, and reopening it.
 
         - Tests: MainWindow.open_recent_project
         """
 
-        # Creates 2 test projects
+        # Create two test projects
         proj_test_1_path = self.get_new_test_project(
             name="test_project_1", light=True
         )
@@ -4750,7 +4763,7 @@ class TestMIAMainWindow(TestMIACase):
         # Switches to the first one
         self.main_window.switch_project(proj_test_1_path, "test_project_1")
         config = Config(properties_path=self.properties_path)
-        config.set_projects_save_path(os.path.split(proj_test_1_path)[0])
+        config.set_projects_save_path(os.path.dirname(proj_test_1_path))
         self.main_window.saved_projects_list.append(proj_test_1_path)
 
         # Saves project 1
@@ -4759,21 +4772,25 @@ class TestMIAMainWindow(TestMIACase):
         # Switches to project 2
         self.main_window.switch_project(proj_test_2_path, "test_project_2")
 
-        # Asserts that test project 1 is shown in recent projects
+        # Verify project 1 is listed as a recent project
         self.assertTrue(self.main_window.saved_projects_actions[0].isVisible())
 
-        # Clicks on it
+        # Trigger opening of project 1 from recent projects
         self.main_window.saved_projects_actions[0].triggered.emit()
 
-        # Asserts that it is now the current project
+        # Verify project 1 is now the opened project
         config = Config(properties_path=self.properties_path)
         self.assertEqual(
             os.path.abspath(config.get_opened_projects()[0]), proj_test_1_path
         )
 
-        # Deletes a scan from data browser
+        # Try to simulate unsaved modifications
+        # known macOS issue
         self.main_window.data_browser.table_data.selectRow(0)
-        # FIXME: following line raise exception, only on macos build:
+
+        # FIXME: following line causes sqlite3.OperationalError,
+        #        due to "attempt to write a readonly database",
+        #        only on macos build:
         # Traceback (most recent call last):
         # File "/Users/appveyor/projects/populse-mia/populse_mia/
         # test.py",
@@ -4793,20 +4810,23 @@ class TestMIAMainWindow(TestMIACase):
         # engine/sqlite.py", line 612, in remove_value
         # self.cursor.execute(sql, [document_id])
         # sqlite3.OperationalError: attempt to write a readonly database
-        # While waiting to investiget and find a fix the line is commented:
-        # self.main_window.data_browser.table_data.remove_scan()
+
+        self.main_window.data_browser.table_data.remove_scan()
 
         # Asserts that there are unsaved modification
         # FIXME: By commenting the previous line we have to also comment the
-        # following line:
-        # self.assertTrue(self.main_window.check_unsaved_modifications())
+        #       following line:
 
-        PopUpQuit.exec = lambda self_: self_.show()
+        self.assertTrue(self.main_window.check_unsaved_modifications())
 
-        # Tries to open a project with unsaved modifications
-        self.main_window.saved_projects_actions[0].triggered.emit()
+        # PopUpQuit.exec = lambda self_: self_.show()
 
-        print()
+        with patch(
+            "populse_mia.user_interface.pop_ups.PopUpQuit.exec",
+            lambda self_: self_.show(),
+        ):
+            # Tries to open a project with unsaved modifications
+            self.main_window.saved_projects_actions[0].triggered.emit()
 
     @unittest.skip("Not currently available on all the platforms")
     # @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
