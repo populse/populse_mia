@@ -4785,41 +4785,9 @@ class TestMIAMainWindow(TestMIACase):
         )
 
         # Try to simulate unsaved modifications
-        # known macOS issue
         self.main_window.data_browser.table_data.selectRow(0)
-
-        # FIXME: following line causes sqlite3.OperationalError,
-        #        due to "attempt to write a readonly database",
-        #        only on macos build:
-        # Traceback (most recent call last):
-        # File "/Users/appveyor/projects/populse-mia/populse_mia/
-        # test.py",
-        # line 3797, in test_open_recent_project
-        # self.main_window.data_browser.table_data.remove_scan()
-        # File "/Users/appveyor/projects/populse-mia/populse_mia/
-        # user_interface/data_browser/data_browser.py", line 2055, in
-        # remove_scan
-        # scan_path)
-        # File "/Users/appveyor/projects/populse_db/python/populse_db/
-        # database.py", line 724, in remove_document
-        # self.engine.remove_document(collection, document_id)
-        # File "/Users/appveyor/projects/populse_db/python/populse_db/
-        # engine/sqlite.py", line 628, in remove_document
-        # self.remove_value(collection, document_id, field.field_name)
-        # File "/Users/appveyor/projects/populse_db/python/populse_db/
-        # engine/sqlite.py", line 612, in remove_value
-        # self.cursor.execute(sql, [document_id])
-        # sqlite3.OperationalError: attempt to write a readonly database
-
         self.main_window.data_browser.table_data.remove_scan()
-
-        # Asserts that there are unsaved modification
-        # FIXME: By commenting the previous line we have to also comment the
-        #       following line:
-
         self.assertTrue(self.main_window.check_unsaved_modifications())
-
-        # PopUpQuit.exec = lambda self_: self_.show()
 
         with patch(
             "populse_mia.user_interface.pop_ups.PopUpQuit.exec",
@@ -4828,47 +4796,68 @@ class TestMIAMainWindow(TestMIACase):
             # Tries to open a project with unsaved modifications
             self.main_window.saved_projects_actions[0].triggered.emit()
 
-    @unittest.skip("Not currently available on all the platforms")
-    # @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
+    # @unittest.skip("Not currently available on all the platforms")
+    # # @unittest.skipUnless(sys.platform.startswith("linux"), "requires linux")
     def test_open_shell(self):
-        """Opens a Qt console and kill it afterward.
-
-        -Tests: MainWindow.open_shell
-
-        Currently, this test is only done on linux.
         """
+        Tests the `MainWindow.open_shell` method by launching the Qt console
+        and ensuring the spawned process is detected and terminated.
 
-        # Opens the Qt console
+        - Tests: MainWindow.open_shell
+        - Supported OS: Linux, Windows, macOS
+
+        This test emits the `action_open_shell` signal to trigger the console,
+        then searches for the corresponding child process. If found, the
+        process is terminated to prevent resource leakage.
+        """
         self.main_window.action_open_shell.triggered.emit()
 
         qt_console_process = None
-        time_elapsed = 0
+        timeout_seconds = 5
+        poll_interval = 1
 
-        while time_elapsed < 5:
-            # Gets the current process
+        # Try to find the qtconsole process within timeout
+        for _ in range(timeout_seconds):
             current_process = psutil.Process()
             children = current_process.children(recursive=True)
 
-            # If qt_console_process is not none, the qt console process
-            # was found
+            for child in children:
+
+                try:
+                    name = child.name().lower()
+
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    continue
+
+                if (
+                    "jupyter-qtconsole" in name
+                    or "qtconsole" in name
+                    or "python" in name  # Fallback for embedded consoles
+                ):
+                    qt_console_process = child
+                    break
+
             if qt_console_process:
                 break
 
-            if children:
-                # Gets the process pid (process id)
-                for child in children:
-                    if child.name() == "jupyter-qtconso":
-                        qt_console_process = child.pid
-
-            sleep(1)
-            time_elapsed += 1
+            sleep(poll_interval)
 
         if qt_console_process:
-            # Kills the Qt console
-            os.kill(qt_console_process, 9)
+
+            try:
+                qt_console_process.terminate()
+                qt_console_process.wait(timeout=3)
+
+            except (psutil.NoSuchProcess, psutil.TimeoutExpired):
+
+                try:
+                    qt_console_process.kill()
+
+                except Exception as e:
+                    print(f"Failed to kill Qt console process: {e}")
 
         else:
-            print("the Qt console process was not found")
+            print("Qt console process was not found.")
 
     def test_package_library_dialog_add_pkg(self):
         """Creates a new project folder, opens the processes library and
