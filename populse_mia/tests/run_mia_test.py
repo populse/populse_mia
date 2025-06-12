@@ -386,35 +386,48 @@ class TestMIACase(unittest.TestCase):
             w.accept()
 
     def clean_uts_packages(self, proc_lib_view):
-        """Deleting the packages added during the UTs."""
+        """
+        Remove all packages added specifically for unit tests from the given
+        process library view.
 
-        pck2remove = [
-            k
-            for (k, v) in proc_lib_view.to_dict().items()
-            if "UTs_processes" in k
-        ]
-        user_proc = proc_lib_view.to_dict().get("User_processes", None)
+        This includes:
+            - Any package whose name contains 'UTs_processes'
+            - The 'Unit_test_pipeline' entry within 'User_processes',
+              if present
 
-        if user_proc is not None and "Unit_test_pipeline" in user_proc:
-            pck2remove.append("Unit_test_pipeline")
+        The method simulates user confirmation for deletion and triggers a
+        `Delete` key press event to invoke the removal mechanism.
 
-        # Mocks the MessageBox().question() for populse_mia.user_interface.
-        # pipeline_manager.process_library.PackageLibraryDialog.delete_package()
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
+        :param proc_lib_view: The process library view containing the package
+                              items. Expected to implement `to_dict()`,
+                              `selectionModel()`, and `keyPressEvent()`.
+        """
+        # Identify packages related to unit tests
+        packages = proc_lib_view.to_dict()
+        packages_to_remove = [k for k in packages if "UTs_processes" in k]
 
-        # Mocks the event.key
+        user_processes = packages.get("User_processes")
+
+        if (
+            isinstance(user_processes, dict)
+            and "Unit_test_pipeline" in user_processes
+        ):
+            packages_to_remove.append("Unit_test_pipeline")
+
+        # Simulate key press event for deletion
         event = Mock()
         event.key = lambda: Qt.Key_Delete
 
-        # Remove
-        for k in pck2remove:
-            pkg_index = self.find_item_by_data(proc_lib_view, k)
-            (
+        with patch.object(
+            QMessageBox, "question", return_value=QMessageBox.Yes
+        ):
+
+            for package_name in packages_to_remove:
+                index = self.find_item_by_data(proc_lib_view, package_name)
                 proc_lib_view.selectionModel().select(
-                    pkg_index, QItemSelectionModel.SelectCurrent
+                    index, QItemSelectionModel.SelectCurrent
                 )
-            )
-            proc_lib_view.keyPressEvent(event)
+                proc_lib_view.keyPressEvent(event)
 
     def create_mock_jar(self, path):
         """
@@ -4907,7 +4920,8 @@ class TestMIAMainWindow(TestMIACase):
             # Open a browser to select a package
             # Currently the
             # "user_interface.pipeline_manager.process_library
-            # .PackageLibraryDialog.browse_package()" is commented
+            # .PackageLibraryDialog.browse_package()" is commented out,
+            # so the following line is also commented out.
             # proc_lib_view.pkg_library.browse_package()
 
             # Fill in the line edit to pkg_name then click on
