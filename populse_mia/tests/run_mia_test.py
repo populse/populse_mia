@@ -25,7 +25,9 @@
 
 # Other import
 import ast
+import contextlib
 import copy
+import io
 import json
 import os
 import platform
@@ -83,18 +85,34 @@ from PyQt5.QtWidgets import (
 )
 from traits.api import TraitListObject, Undefined
 
-uts_dir = os.path.isdir(
-    os.path.join(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-        ),
-        "mia_ut_data",
-    )
-)
 
-if not uts_dir:
+def add_to_syspath(path: Path, position: int = 1, name: str = ""):
+    """
+    Add a directory to sys.path if it exists and isn't already there.
+
+    :param path (Path): The directory path to be added to sys.path.
+    :param position (int): The index at which to insert the path.
+                           Defaults to 1.
+    :param name (str): The name of the package (used for
+                       informative printing).
+    """
+
+    if path.is_dir() and str(path) not in sys.path:
+        print(f"- Using {name} package from {path} ...")
+        sys.path.insert(position, str(path))
+
+
+# Base directories
+current_file = Path(__file__).resolve()
+populse_mia_dir = current_file.parents[2]
+root_dev_dir = populse_mia_dir.parent
+
+# Check if mia_ut_data exists
+uts_dir = populse_mia_dir / "mia_ut_data"
+
+if not uts_dir.is_dir():
     print(
-        "\nTo work properly, unit tests need data in the populse_mia(or "
+        "\nTo work properly, unit tests need data in the populse_mia (or "
         "populse-mia)/mia_ut_data directory. Please use:\n"
         "git clone https://gricad-gitlab.univ-grenoble-alpes.fr/mia/"
         "mia_ut_data.git\n"
@@ -102,90 +120,25 @@ if not uts_dir:
     )
     sys.exit()
 
-populse_mia_dir = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-)
-# UTs are always in developer mode
+# Set dev mode
 os.environ["MIA_DEV_MODE"] = "1"
-root_dev_dir = os.path.dirname(
-    os.path.dirname(
-        os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    )
-)
 
-if populse_mia_dir not in sys.path:
+# Add populse_mia (check both naming conventions)
+for name in ("populse-mia", "populse_mia"):
+    mia_dev_dir = root_dev_dir / name
 
-    # Adding populse_mia
-    if os.path.isdir(os.path.join(root_dev_dir, "populse-mia")):
-        mia_dev_dir = os.path.join(root_dev_dir, "populse-mia")
+    if mia_dev_dir.is_dir():
+        add_to_syspath(mia_dev_dir, position=0, name="populse_mia")
+        break
 
-    else:
-        mia_dev_dir = os.path.join(root_dev_dir, "populse_mia")
-
-    print("- Using populse_mia package from {} " "...".format(mia_dev_dir))
-    sys.path.insert(0, mia_dev_dir)
-    del mia_dev_dir
-
-mia_processes_dir = os.path.join(root_dev_dir, "mia_processes")
-
-if mia_processes_dir not in sys.path:
-
-    if os.path.isdir(mia_processes_dir):
-        # Adding mia_processes
-        print(
-            "- Using mia_processes package from {} "
-            "...".format(mia_processes_dir)
-        )
-        sys.path.insert(1, mia_processes_dir)
-        del mia_processes_dir
-
-populse_db_dir = os.path.join(root_dev_dir, "populse_db", "python")
-
-if populse_db_dir not in sys.path:
-
-    if os.path.isdir(populse_db_dir):
-        # Adding populse_db
-        print(
-            "- Using populse_db package from {} " "...".format(populse_db_dir)
-        )
-        sys.path.insert(1, populse_db_dir)
-        del populse_db_dir
-
-capsul_dir = os.path.join(root_dev_dir, "capsul")
-
-if capsul_dir not in sys.path:
-
-    if os.path.isdir(capsul_dir):
-        # Adding capsul
-        print(f"- Using capsul package from {capsul_dir} ...")
-        sys.path.insert(1, capsul_dir)
-        del capsul_dir
-
-soma_base_dir = os.path.join(root_dev_dir, "soma-base", "python")
-
-if soma_base_dir not in sys.path:
-
-    if os.path.isdir(soma_base_dir):
-        # Adding soma-base
-        print("- Using soma-base package from {} " "...".format(soma_base_dir))
-        sys.path.insert(1, soma_base_dir)
-        del soma_base_dir
-
-soma_workflow_dir = os.path.join(root_dev_dir, "soma-workflow", "python")
-
-if soma_workflow_dir not in sys.path:
-
-    if os.path.isdir(soma_workflow_dir):
-        # Adding soma-workflow:
-        print(
-            "- Using soma-workflow package from {} "
-            "...".format(soma_workflow_dir)
-        )
-        sys.path.insert(1, soma_workflow_dir)
-        del soma_workflow_dir
+# Add other populse packages
+add_to_syspath(root_dev_dir / "mia_processes", name="mia_processes")
+add_to_syspath(root_dev_dir / "populse_db" / "python", name="populse_db")
+add_to_syspath(root_dev_dir / "capsul", name="capsul")
+add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma-base")
+add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma-workflow")
 
 # Imports after defining the location of populse packages:
-
 # Capsul import
 from capsul.api import (  # noqa: E402
     PipelineNode,
@@ -312,20 +265,32 @@ unwanted_messages = [
 
 
 def qt_message_handler(mode, context, message):
-    """Custom Qt message handler to filter out specific messages"""
+    """
+    Custom Qt message handler that filters out or cleans specific
+    unwanted messages.
 
-    for unwanted_message in unwanted_messages:
+    This function is used to suppress known, irrelevant Qt warnings during
+    tests or execution. If a message exactly matches an unwanted message,
+    it is ignored. If it contains an unwanted substring, that part is removed
+    and the cleaned message is printed to stderr (if anything remains).
 
-        if message.strip() == unwanted_message:
-            return
+    :param mode: The Qt message type (ignored here).
+    :param context: The context of the message (ignored here).
+    :param message (str): The Qt debug/warning message to filter and display
+    """
 
-        elif unwanted_message in message:
-            # Remove the unwanted message but keep the rest of the line
-            message = message.replace(unwanted_message, "").strip()
+    cleaned_message = message.strip()
 
-    # Output the remaining message (if any)
-    if message:
-        sys.stderr.write(message + "\n")
+    for unwanted in unwanted_messages:
+
+        if cleaned_message == unwanted:
+            return  # Exact match, discard completely
+
+        elif unwanted in cleaned_message:
+            cleaned_message = cleaned_message.replace(unwanted, "").strip()
+
+    if cleaned_message:
+        sys.stderr.write(f"{cleaned_message}\n")
 
 
 class TestMIACase(unittest.TestCase):
@@ -350,6 +315,8 @@ class TestMIACase(unittest.TestCase):
             - restart_MIA: restarts MIA within a unit test
             - setUp: called automatically before each test method
             - setUpClass: called before tests in the individual class
+            - suppress_all_output: Context manager to suppress all output
+                                   during tests
             - tearDown: cleans up after each test method
             - tearDownClass: called after tests in the individual class
     """
@@ -539,96 +506,85 @@ class TestMIACase(unittest.TestCase):
         return new_test_proj
 
     def proclibview_nipype_state(self, proc_lib_view):
-        """Give the state of nipype proc_lib_view.
-
-        :param proc_lib_view: the process library view object
-
-        :return: the state of nipype proc_lib_view:
-                 - None: proc_lib_view is empty or nipype is not loaded.
-                 - 'nipype': 'nipype' is loaded but 'interfaces' not.
-                 - 'nipype.interface': 'nipype.interface' is loaded but
-                                       'DataGrabber' not.
-                 - 'process_enabled': 'nipype.interface.DataGrabber' is
-                                      loaded.
         """
+        Determine the state of the Nipype process library view.
 
-        if proc_lib_view.to_dict():
-            if proc_lib_view.to_dict().get("nipype"):
-                if proc_lib_view.to_dict().get("nipype").get("interfaces"):
-                    if (
-                        proc_lib_view.to_dict()
-                        .get("nipype")
-                        .get("interfaces")
-                        .get("DataGrabber")
-                    ):
-                        state = (
-                            proc_lib_view.to_dict()
-                            .get("nipype")
-                            .get("interfaces")
-                            .get("DataGrabber")
-                        )
+        This method inspects the provided process library view and returns
+        a string describing the loading state of the Nipype modules.
 
-                    else:
-                        state = "nipype.interfaces"
+        :param proc_lib_view: The process library view object.
 
-                else:
-                    state = "nipype"
+        :returns (str or None): A string representing the current state:
+            - None: No processes loaded, or Nipype is not present.
+            - 'nipype': Nipype is present, but 'interfaces' is not.
+            - 'nipype.interfaces': 'interfaces' is present, but 'DataGrabber'
+                                   is not.
+            - 'process_enabled': 'nipype.interfaces.DataGrabber' is present.
+        """
+        view_dict = proc_lib_view.to_dict()
+        nipype = view_dict.get("nipype")
 
-            else:
-                state = None
+        if not nipype:
+            return None
 
-        else:
-            state = None
+        interfaces = nipype.get("interfaces")
 
-        return state
+        if not interfaces:
+            return "nipype"
+
+        datagrabber = interfaces.get("DataGrabber")
+
+        if not datagrabber:
+            return "nipype.interfaces"
+
+        return datagrabber
 
     def proclibview_nipype_reset_state(
         self, main_window, ppl_manager, init_state
     ):
-        """Reset the process library view to its initial state.
+        """
+        Resets the Nipype process library view in the package library popup
+        to a specified initial state.
 
-        :param main_window: the main window object
-        :param ppl_manager: the pipeline manager object
-        :param init_state: the initial state of nipype proc_lib_view:
-                           - None: proc_lib_view is empty or nipype is not
-                                   loaded.
-                           - 'nipype': 'nipype' is loaded but 'interfaces' not.
-                           - 'nipype.interface': 'nipype.interface' is loaded
-                                                 but 'DataGrabber' not.
-                           - 'process_enabled': 'nipype.interface.DataGrabber'
-                                                is loaded.
+        :param main_window (QMainWindow): The main window containing the
+                                          package library popup.
+        :param ppl_manager (PipelineManager): The pipeline manager handling
+                                              the process library.
+        :param init_state (str or None): The desired reset state of the Nipype
+                                         process view.
+            - None: The library is either empty or 'nipype' is not loaded.
+            - 'nipype': Only 'nipype' is loaded.
+            - 'nipype.interfaces': 'nipype.interfaces' is loaded but
+                                   not 'DataGrabber'.
+            - 'process_enabled': 'nipype.interfaces.DataGrabber' is
+                                 already loaded.
         """
         main_window.package_library_pop_up()
         pkg_lib_window = main_window.pop_up_package_library
         ppl_manager.processLibrary.process_library.pkg_library.is_path = False
+        package_map = {
+            None: "nipype",
+            "nipype": "nipype.interfaces",
+            "nipype.interfaces": "nipype.interfaces.DataGrabber",
+            "process_enabled": "nipype.interfaces.DataGrabber",
+        }
 
-        if init_state is None:
-            pkg_lib_window.line_edit.setText("nipype")
-            # Clicks on remove package
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(1).widget().clicked.emit()
+        pkg_name = package_map.get(init_state)
+        pkg_lib_window.line_edit.setText(pkg_name)
 
-        elif init_state == "nipype":
-            pkg_lib_window.line_edit.setText("nipype.interfaces")
-            # Clicks on remove package
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(1).widget().clicked.emit()
+        # Access the button layout where "Add" is at index 0,
+        # "Remove" at index 1
+        button_layout = (
+            pkg_lib_window.layout().children()[0].layout().children()[1]
+        )
 
-        elif init_state == "nipype.interfaces":
-            pkg_lib_window.line_edit.setText("nipype.interfaces.DataGrabber")
-            # Clicks on remove package
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(1).widget().clicked.emit()
+        if init_state == "process_enabled":
+            add_button = button_layout.itemAt(0).widget()
+            add_button.clicked.emit()
 
         else:
-            pkg_lib_window.line_edit.setText("nipype.interfaces.DataGrabber")
-            # Clicks on add package
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(0).widget().clicked.emit()
+            remove_button = button_layout.itemAt(1).widget()
+            remove_button.clicked.emit()
 
         pkg_lib_window.ok_clicked()
 
@@ -742,6 +698,43 @@ class TestMIACase(unittest.TestCase):
                 ).touch()
 
         cls._app = QApplication.instance() or QApplication(sys.argv)
+
+    @contextlib.contextmanager
+    def suppress_all_output(self):
+        """
+        Cross-platform suppression of all standard output and error,
+        including C-level and OS-level messages.
+        """
+        # Flush Python buffers
+        sys.stdout.flush()
+        sys.stderr.flush()
+        # Save original file descriptors
+        original_stdout_fd = os.dup(1)
+        original_stderr_fd = os.dup(2)
+
+        # Create a null device
+        with open(os.devnull, "w") as devnull:
+            # Replace sys.stdout/stderr with dummy objects
+            sys.stdout = io.StringIO()
+            sys.stderr = io.StringIO()
+            # Redirect low-level FDs
+            os.dup2(devnull.fileno(), 1)
+            os.dup2(devnull.fileno(), 2)
+
+            try:
+                yield
+
+            finally:
+                # Flush and restore original file descriptors
+                sys.stdout.flush()
+                sys.stderr.flush()
+                os.dup2(original_stdout_fd, 1)
+                os.dup2(original_stderr_fd, 2)
+                os.close(original_stdout_fd)
+                os.close(original_stderr_fd)
+                # Restore sys.stdout/stderr
+                sys.stdout = sys.__stdout__
+                sys.stderr = sys.__stderr__
 
     def tearDown(self):
         """Called after each test"""
@@ -4931,7 +4924,7 @@ class TestMIAMainWindow(TestMIACase):
             os.environ["FSLOUTPUTTYPE"] = "NIFTI"
 
             # Silence stdout during package addition
-            with open(os.devnull, "w") as f, patch("sys.stdout", f):
+            with self.suppress_all_output():
                 target_widget = (
                     pkg_lib_window.layout()
                     .children()[0]
@@ -5106,14 +5099,19 @@ class TestMIAMainWindow(TestMIACase):
             self.clean_uts_packages(proc_lib_view)
 
     def test_package_library_dialog_del_pkg(self):
-        """Creates a new project folder, opens the processes library and
-        deletes a package.
+        """
+        Test the behavior of the PackageLibraryDialog when deleting packages.
 
-        - Tests: PackageLibraryDialog
+        This test covers:
+        - Adding and removing a known package
+          (`nipype.interfaces.DataGrabber`)
+        - Ensuring deletion confirmations are handled correctly
+        - Ensuring packages that can't be deleted show proper warnings
+        - Adding and deleting a user-defined process package (`Unit_test_2`)
 
-        - Mocks:
-            - QMessageBox.exec
-            - QMessageBox.question
+        Mocks:
+        - QMessageBox.exec
+        - QMessageBox.question
         """
         PKG = "nipype.interfaces.DataGrabber"
 
@@ -5130,76 +5128,70 @@ class TestMIAMainWindow(TestMIACase):
 
         # Takes the initial state of nipype proc_lib_view and makes sure that
         # PKG is already installed
-
         init_state = self.proclibview_nipype_state(proc_lib_view)
 
         if init_state != "process_enabled":
             self.main_window.package_library_pop_up()
             pkg_lib_window = self.main_window.pop_up_package_library
             pkg_lib_window.line_edit.setText(PKG)
-            (
-                ppl_manager.processLibrary.process_library.pkg_library.is_path
-            ) = False
-            # Clicks on add package
-            os.environ["FSLOUTPUTTYPE"] = "NIFTI"
-            stdout_fileno = sys.stdout
-            f = open(os.devnull, "w")
-            sys.stdout = f
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(0).widget().clicked.emit()
-            f.close()
-            sys.stdout = stdout_fileno
+            proc_lib_view.pkg_library.is_path = False
+
+            # Silence stdout during package addition
+            with self.suppress_all_output():
+                # Clicks on add package
+                os.environ["FSLOUTPUTTYPE"] = "NIFTI"
+                pkg_lib_window.layout().children()[0].layout().children()[
+                    1
+                ].itemAt(0).widget().clicked.emit()
+
             pkg_lib_window.ok_clicked()
 
         # Opens the package library pop-up
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        # Tries to delete PKG
+        # Try deleting the package
         pkg_lib_window.line_edit.setText(PKG)
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
-        # Resets the previous action
+        # Reset deletion
         pkg_lib_window.del_list.selectAll()
-        stdout_fileno = sys.stdout
-        f = open(os.devnull, "w")
-        sys.stdout = f
-        (
-            pkg_lib_window.layout()
-            .children()[0]
-            .layout()
-            .itemAt(12)
-            .widget()
-            .layout()
-            .itemAt(1)
-            .widget()
-            .clicked.emit()
-        )  # clicks on Reset
-        f.close()
-        sys.stdout = stdout_fileno
 
-        # Tries to delete again PKG
+        with self.suppress_all_output():
+            (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .itemAt(12)
+                .widget()
+                .layout()
+                .itemAt(1)
+                .widget()
+                .clicked.emit()
+            )  # clicks on Reset
+
+        # Try deletion again, cancel confirmation
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
         ).widget().clicked.emit()  # Clicks on delete package
 
         # Close the package library pop-up
-        QMessageBox.question = Mock(return_value=QMessageBox.No)
-        stdout_fileno = sys.stdout
-        f = open(os.devnull, "w")
-        sys.stdout = f
-        pkg_lib_window.ok_clicked()  # Do not apply the modification
-        f.close()
-        sys.stdout = stdout_fileno
+        with (
+            patch(
+                "PyQt5.QtWidgets.QMessageBox.question",
+                return_value=QMessageBox.No,
+            ),
+            self.suppress_all_output(),
+        ):
+            pkg_lib_window.ok_clicked()  # Do not apply the modification
 
         # Opens again the package library pop-up
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        # Tries to delete PKG
+        # Try again, accept deletion
         pkg_lib_window.line_edit.setText(PKG)
         pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
             2
@@ -5207,22 +5199,25 @@ class TestMIAMainWindow(TestMIACase):
 
         # Close the package library pop-up, apply changes for a package which
         # is part of nipype, the package is only removed.
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
-        pkg_lib_window.ok_clicked()
-        pkg_lib_window.msg.close()  # Closes the warning message
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.question",
+            return_value=QMessageBox.Yes,
+        ):
+            pkg_lib_window.ok_clicked()
+            pkg_lib_window.msg.close()
 
-        # Add again PKG
+        # Re-add the package
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
         pkg_lib_window.line_edit.setText(PKG)
-        stdout_fileno = sys.stdout
-        f = open(os.devnull, "w")
-        sys.stdout = f
-        pkg_lib_window.layout().children()[0].layout().children()[1].itemAt(
-            0
-        ).widget().clicked.emit()  # Clicks on add package
-        f.close()
-        sys.stdout = stdout_fileno
+
+        with self.suppress_all_output():
+            pkg_lib_window.layout().children()[0].layout().children()[
+                1
+            ].itemAt(
+                0
+            ).widget().clicked.emit()  # Clicks on add package
+
         pkg_lib_window.ok_clicked()
 
         # Switches to the pipeline manager tab
@@ -5230,14 +5225,12 @@ class TestMIAMainWindow(TestMIACase):
 
         # Selects the 'DataGrabber' package in Pipeline Manager tab
         pkg_index = self.find_item_by_data(proc_lib_view, "DataGrabber")
-        (
-            proc_lib_view.selectionModel().select(
-                pkg_index, QItemSelectionModel.SelectCurrent
-            )
+        proc_lib_view.selectionModel().select(
+            pkg_index, QItemSelectionModel.SelectCurrent
         )
 
-        # Tries to delete a package that cannot be deleted (is part of nipype),
-        # selecting it and pressing the del key
+        # Tries to delete a package that cannot be deleted (is part of
+        #  nipype), selecting it and pressing the del key
         event = Mock()
         event.key = lambda: Qt.Key_Delete
         proc_lib_view.keyPressEvent(event)
@@ -5281,52 +5274,35 @@ class TestMIAMainWindow(TestMIACase):
         )
         os.makedirs(mock_proc_fldr, exist_ok=True)
 
-        if os.path.exists(
-            os.path.join(
-                config.get_properties_path(),
-                "processes",
-                "User_processes",
-                "unit_test_pipeline.py",
-            )
-        ):
-            shutil.copy(
-                os.path.join(
-                    config.get_properties_path(),
-                    "processes",
-                    "User_processes",
-                    "unit_test_pipeline.py",
-                ),
-                os.path.join(mock_proc_fldr, "unit_test_2.py"),
-            )
+        dst_file = os.path.join(mock_proc_fldr, "unit_test_2.py")
+        shutil.copy(filename, dst_file)
 
-            with open(os.path.join(mock_proc_fldr, "unit_test_2.py")) as file:
-                filedata = file.read()
-                filedata = filedata.replace(
-                    "Unit_test_pipeline", "Unit_test_2"
-                )
+        with open(dst_file, "r+") as f:
+            filedata = f.read().replace("Unit_test_pipeline", "Unit_test_2")
+            f.seek(0)
+            f.write(filedata)
+            f.truncate()
 
-            with open(
-                os.path.join(mock_proc_fldr, "unit_test_2.py"), "w"
-            ) as file:
-                file.write(filedata)
-
-            init_file = open(os.path.join(mock_proc_fldr, "__init__.py"), "w")
-            init_file.write("from .unit_test_2 import Unit_test_2")
-            init_file.close()
+        with open(os.path.join(mock_proc_fldr, "__init__.py"), "w") as f:
+            f.write("from .unit_test_2 import Unit_test_2")
 
         # Imports the UTs_processes processes folder as a package
         pkg_lib_window.install_processes_pop_up()
         pkg_lib_window.pop_up_install_processes.path_edit.setText(
             mock_proc_fldr
         )
-        QMessageBox.exec = lambda x: QMessageBox.Ok
-        (
-            pkg_lib_window.pop_up_install_processes.layout()
-            .children()[-1]
-            .itemAt(0)
-            .widget()
-            .clicked.emit()
-        )
+
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Ok
+        ):
+            (
+                pkg_lib_window.pop_up_install_processes.layout()
+                .children()[-1]
+                .itemAt(0)
+                .widget()
+                .clicked.emit()
+            )
+
         pkg_lib_window.pop_up_install_processes.close()
         pkg_lib_window.ok_clicked()
 
@@ -5340,13 +5316,18 @@ class TestMIAMainWindow(TestMIACase):
 
         # Tries to delete the package 'Unit_test_2', rejects the
         # dialog box
-        QMessageBox.question = Mock(return_value=QMessageBox.No)
-        proc_lib_view.keyPressEvent(event)
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.question", return_value=QMessageBox.No
+        ):
+            proc_lib_view.keyPressEvent(event)
 
         # Effectively deletes the package 'Unit_test_2', accepting the
         # dialog box
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
-        proc_lib_view.keyPressEvent(event)
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.question",
+            return_value=QMessageBox.Yes,
+        ):
+            proc_lib_view.keyPressEvent(event)
 
         # Resets the process library to its original state for nipype
         cur_state = self.proclibview_nipype_state(proc_lib_view)
