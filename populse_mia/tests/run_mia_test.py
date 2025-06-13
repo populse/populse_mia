@@ -5342,104 +5342,117 @@ class TestMIAMainWindow(TestMIACase):
         self.clean_uts_packages(proc_lib_view)
 
     def test_package_library_dialog_rmv_pkg(self):
-        """Creates a new project folder, opens the processes library and
-        removes a package. Also saves the current configuration.
+        """
+        Test removing a package from the package library dialog.
 
-        - Tests: PackageLibraryDialog
+        This test:
+            - Creates a new project.
+            - Opens the process library and ensures a test package is
+              installed.
+            - Attempts to remove nonexistent and unspecified packages.
+            - Removes a real package through the UI simulation.
+            - Resets the library state and saves the configuration.
 
-        - Mocks:
+        :mocks:
             - QMessageBox.exec
             - QMessageBox.exec_
         """
 
-        PKG = "nipype.interfaces.DataGrabber"
+        package_name = "nipype.interfaces.DataGrabber"
 
-        # Creates a new project folder and switches to it
+        # Setup: create and switch to a new lightweight project
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
 
-        # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         proc_lib_view = ppl_manager.processLibrary.process_library
 
-        # Takes the initial state of nipype proc_lib_view and makes sure that
-        # PKG is already installed
+        # Ensure package is present
         init_state = self.proclibview_nipype_state(proc_lib_view)
 
         if init_state != "process_enabled":
             self.main_window.package_library_pop_up()
             pkg_lib_window = self.main_window.pop_up_package_library
-            pkg_lib_window.line_edit.setText(PKG)
-            (
-                ppl_manager.processLibrary.process_library.pkg_library.is_path
-            ) = False
+            pkg_lib_window.line_edit.setText(package_name)
+            proc_lib_view.pkg_library.is_path = False
+
             # Clicks on add package
-            pkg_lib_window.layout().children()[0].layout().children()[
-                1
-            ].itemAt(0).widget().clicked.emit()
-            pkg_lib_window.ok_clicked()
+            with self.suppress_all_output():
+                add_button = (
+                    pkg_lib_window.layout()
+                    .children()[0]
+                    .layout()
+                    .children()[1]
+                    .itemAt(0)
+                    .widget()
+                )
+                add_button.clicked.emit()
+                pkg_lib_window.ok_clicked()
 
         # Opens the package library pop-up
         self.main_window.package_library_pop_up()
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda x: None
-        QMessageBox.exec_ = lambda x: None
+        # Scoped mocking for QMessageBox
+        with (
+            patch("PyQt5.QtWidgets.QMessageBox.exec", return_value=None),
+            patch("PyQt5.QtWidgets.QMessageBox.exec_", return_value=None),
+        ):
 
-        # Mocks deleting a package that is not specified
-        res = pkg_lib_window.remove_package("")
-        self.assertFalse(res)
+            # Attempt to remove a package with empty name
+            self.assertFalse(pkg_lib_window.remove_package(""))
 
-        # Tries removing a non-existent package
-        res = pkg_lib_window.remove_package("non_existent_package")
-        self.assertFalse(res)
+            # Attempt to remove a non-existent package
+            self.assertFalse(
+                pkg_lib_window.remove_package("non_existent_package")
+            )
 
-        # Clicks on the remove package button without selecting package
-        rmv_pkg_button = (
-            pkg_lib_window.layout()
-            .children()[0]
-            .layout()
-            .children()[1]
-            .itemAt(1)
-            .widget()
-        )
-        rmv_pkg_button.clicked.emit()
+            # Clicks on the remove package button without selecting package
+            rmv_button = (
+                pkg_lib_window.layout()
+                .children()[0]
+                .layout()
+                .children()[1]
+                .itemAt(1)
+                .widget()
+            )
+            rmv_button.clicked.emit()
 
-        # Writes the name of an existing package on the line edit and clicks on
-        # the remove package button
-        pkg_lib_window.line_edit.setText(PKG)
-        rmv_pkg_button.clicked.emit()
+            # Set line edit to a real package and try to remove it
+            pkg_lib_window.line_edit.setText(package_name)
+            rmv_button.clicked.emit()
 
-        # Resets the previous action
-        pkg_lib_window.remove_list.selectAll()
-        (
-            pkg_lib_window.layout()
-            .children()[0]
-            .layout()
-            .itemAt(10)
-            .widget()
-            .layout()
-            .itemAt(1)
-            .widget()
-            .clicked.emit()
-        )
+            # Resets the previous action
+            with self.suppress_all_output():
+                pkg_lib_window.remove_list.selectAll()
+                (
+                    pkg_lib_window.layout()
+                    .children()[0]
+                    .layout()
+                    .itemAt(10)
+                    .widget()
+                    .layout()
+                    .itemAt(1)
+                    .widget()
+                    .clicked.emit()
+                )
 
-        # Click again on the remove package button
-        rmv_pkg_button.clicked.emit()
+            # Click again on the remove package button
+            rmv_button.clicked.emit()
 
-        # Apply changes
-        pkg_lib_window.ok_clicked()
+            # Apply the changes
+            pkg_lib_window.ok_clicked()
 
-        # Mocks removing a package with text and from the tree
-        pkg_lib_window.remove_dic[PKG] = 1
-        pkg_lib_window.add_dic[PKG] = 1
-        pkg_lib_window.delete_dic[PKG] = 1
-        pkg_lib_window.remove_package_with_text(
-            package_name=PKG, tree_remove=False
-        )
+            # Mocks removing a package with text and from the tree
+            # (internal state manipulation)
+            pkg_lib_window.remove_dic[package_name] = 1
+            pkg_lib_window.add_dic[package_name] = 1
+            pkg_lib_window.delete_dic[package_name] = 1
+            pkg_lib_window.remove_package_with_text(
+                package_name=package_name, tree_remove=False
+            )
 
-        # Resets the process library to its original state for nipype
+        # Restore initial state if changed
         cur_state = self.proclibview_nipype_state(proc_lib_view)
 
         if cur_state != init_state:
