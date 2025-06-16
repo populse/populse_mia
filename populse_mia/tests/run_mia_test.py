@@ -236,7 +236,6 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpDeleteProject,
     PopUpInheritanceDict,
     PopUpNewProject,
-    PopUpOpenProject,
     PopUpQuit,
     PopUpRemoveScan,
     PopUpSeeAllProjects,
@@ -5589,7 +5588,6 @@ class TestMIAMainWindow(TestMIACase):
         saved_projects.addSavedProject(fake_project_path)
 
         # Asserts that 'saved_projects.yml' contains the filepath
-        # NOTE: This check may fail on some CI environments (e.g., AppVeyor)
         self.assertIn(
             fake_project_path, saved_projects.loadSavedProjects()["paths"]
         )
@@ -5614,29 +5612,27 @@ class TestMIAMainWindow(TestMIACase):
                 self.msg = PopUpDeletedProject(deleted_projects)
 
         # Final check: ensure the deleted project was removed
-        # NOTE: This check may fail on some CI environments (e.g., AppVeyor)
         self.assertNotIn(
             fake_project_path, saved_projects.loadSavedProjects()["paths"]
         )
 
     def test_see_all_projects(self):
         """
-        Creates 2 projects and tries to open them through the
-        all projects pop-up.
+        Test the 'See All Projects' feature with two saved projects.
 
-        - Tests:
-            - MainWindow.see_all_projects
-            - PopUpSeeAllProjects
+        Validates:
+            - Displaying projects in PopUpSeeAllProjects
+            - Proper handling of missing project folders
+            - Opening a selected existing project
 
-        - Mocks:
+        Mocks:
             - PopUpSeeAllProjects.exec
             - QMessageBox.exec
         """
-
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
 
-        # Creates 2 new project folders
+        # Create two test projects
         project_8_path = self.get_new_test_project(name="project_8")
         project_9_path = self.get_new_test_project(name="project_9")
 
@@ -5644,61 +5640,63 @@ class TestMIAMainWindow(TestMIACase):
         config = Config(properties_path=self.properties_path)
         config.set_projects_save_path(self.properties_path)
 
-        # Adds the projects to the 'pathsList'
-        main_wnd.saved_projects.pathsList.append(project_8_path)
-        main_wnd.saved_projects.pathsList.append(project_9_path)
+        # Register both projects (to the 'pathsList')
+        main_wnd.saved_projects.pathsList.extend(
+            [project_8_path, project_9_path]
+        )
 
         # Mocks the execution of 'PopUpSeeAllProjects' and 'QMessageBox'
-        PopUpSeeAllProjects.exec = lambda x: None
-        QMessageBox.exec = lambda x: None
+        with (
+            patch.object(PopUpSeeAllProjects, "exec", return_value=None),
+            patch.object(QMessageBox, "exec", return_value=None),
+        ):
+            # Remove one project directory to simulate a missing project
+            shutil.rmtree(project_9_path)
 
-        # Deletes the folder containing the project 9
-        shutil.rmtree(project_9_path)
+            # Launch project selection popup
+            main_wnd.see_all_projects()
 
-        # Show the projects pop-up
-        main_wnd.see_all_projects()
+            tree = main_wnd.exPopup.treeWidget
+            item_0 = tree.itemAt(0, 0)
+            item_1 = tree.itemBelow(item_0)
 
-        item_0 = self.main_window.exPopup.treeWidget.itemAt(0, 0)
-        self.assertEqual(item_0.text(0), "project_8")
-        self.assertEqual(
-            main_wnd.exPopup.treeWidget.itemBelow(item_0).text(0), "project_9"
-        )
+            self.assertEqual(item_0.text(0), "project_8")
+            self.assertEqual(item_1.text(0), "project_9")
 
-        # Asserts that project 8 is not opened:
-        config = Config(properties_path=self.properties_path)
-        self.assertNotEqual(
-            os.path.abspath(config.get_opened_projects()[0]), project_8_path
-        )
+            # Ensure no project was automatically opened
+            config = Config(properties_path=self.properties_path)
+            opened_project = os.path.abspath(config.get_opened_projects()[0])
+            self.assertNotEqual(opened_project, project_8_path)
 
-        # Tries to open a project with no projects selected
-        main_wnd.exPopup.open_project()
+            # Attempt to open a project with none selected
+            main_wnd.exPopup.open_project()
 
-        # Selects project 8, which was not deleted
-        item_0.setSelected(True)
+            # Select and open the valid project
+            item_0.setSelected(True)
+            main_wnd.exPopup.open_project()
 
-        # Opens project 8
-        main_wnd.exPopup.open_project()
-
-        # Asserts that project 8 is now opened
-        config = Config(properties_path=self.properties_path)
-        self.assertEqual(
-            os.path.abspath(config.get_opened_projects()[0]), project_8_path
-        )
+            # Confirm the project is now opened
+            config = Config(properties_path=self.properties_path)
+            opened_project = os.path.abspath(config.get_opened_projects()[0])
+            self.assertEqual(opened_project, project_8_path)
 
     def test_software_preferences_pop_up(self):
-        """Opens the preferences pop up and changes parameters.
+        """
+        Test the software preferences pop-up window behavior.
 
-        - Tests:
-            - MainWindow.software_preferences_pop_up
-            - PopUpPreferences
+        This test covers:
+            - The opening and interaction with the preferences dialog.
+            - The reflection of config changes (e.g., enabling tools,
+              setting paths).
+            - Admin mode switching and password validation.
+            - UI updates based on configuration flags.
 
-        - Mocks
+        Mocked methods:
             - QFileDialog.getOpenFileName
             - QFileDialog.getExistingDirectory
-            - QLineEdit.text
+            - QInputDialog.getText
             - QDialog.exec
             - QMessageBox.exec
-            - QPlainTextEdit.toPlainText
         """
 
         # Sets shortcuts for objects that are often used
@@ -5709,7 +5707,9 @@ class TestMIAMainWindow(TestMIACase):
         project_8_path = self.get_new_test_project()
         ppl_manager.project.folder = project_8_path
 
-        # Modification of some configuration parameters
+        mock_path = os.path.dirname(project_8_path)
+
+        # Initial configuration
         config = Config(properties_path=self.properties_path)
         config.setControlV1(True)
         config.setAutoSave(True)
@@ -5776,6 +5776,7 @@ class TestMIAMainWindow(TestMIACase):
         # Check that SPM standalone and matlab MCR are selected,
         # SPM and matlab not
         main_wnd.software_preferences_pop_up()
+
         if "Windows" not in platform.architecture()[1]:
             # fmt: off
             self.assertTrue(
@@ -5793,169 +5794,190 @@ class TestMIAMainWindow(TestMIACase):
             self.assertFalse(
                 main_wnd.pop_up_preferences.use_spm_checkbox.isChecked()
             )
+
+        else:
+            prefs = main_wnd.pop_up_preferences
+            print(
+                "prefs.use_matlab_standalone_checkbox.isChecked():",
+                prefs.use_matlab_standalone_checkbox.isChecked(),
+            )
+            print(
+                "prefs.use_spm_standalone_checkbox.isChecked():",
+                prefs.use_spm_standalone_checkbox.isChecked(),
+            )
+            print(
+                "prefs.use_matlab_checkbox.isChecked():",
+                prefs.use_matlab_checkbox.isChecked(),
+            )
+            print(
+                "prefs.use_spm_checkbox.isChecked():",
+                prefs.use_spm_checkbox.isChecked(),
+            )
+
         main_wnd.pop_up_preferences.close()
 
         # Mocks 'QFileDialog.getOpenFileName' (returns an existing file)
         # This method returns a tuple (filename, file_types), where file_types
-        # is the allowed file type (eg. 'All Files (*)')
-        mock_path = os.path.split(project_8_path)[0]
-        QFileDialog.getOpenFileName = lambda x, y, z: (mock_path,)
+        # is the allowed file type (eg. 'All Files (*)') and mocks
+        # 'QFileDialog.getExistingDirectory'.
+        with (
+            patch(
+                "PyQt5.QtWidgets.QFileDialog.getOpenFileName",
+                return_value=(mock_path,),
+            ),
+            patch(
+                "PyQt5.QtWidgets.QFileDialog.getExistingDirectory",
+                return_value=mock_path,
+            ),
+        ):
+            # Open the software preferences window
+            main_wnd.software_preferences_pop_up()
+            prefs = main_wnd.pop_up_preferences
 
-        # Mocks 'QFileDialog.getExistingDirectory'
-        QFileDialog.getExistingDirectory = lambda x, y, z: mock_path
+            # Browses the FSL path
+            prefs.browse_fsl()
+            self.assertEqual(prefs.fsl_choice.text(), mock_path)
 
-        # Open the software preferences window
-        main_wnd.software_preferences_pop_up()
+            # Browses the AFNI path
+            prefs.browse_afni()
+            self.assertEqual(prefs.afni_choice.text(), mock_path)
 
-        # Browses the FSL path
-        main_wnd.pop_up_preferences.browse_fsl()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.fsl_choice.text(), mock_path
-        )
+            # Browses the ANTS path
+            prefs.browse_ants()
+            self.assertEqual(prefs.ants_choice.text(), mock_path)
 
-        # Browses the AFNI path
-        main_wnd.pop_up_preferences.browse_afni()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.afni_choice.text(), mock_path
-        )
+            # Browses the mrtrix path
+            prefs.browse_mrtrix()
+            self.assertEqual(prefs.mrtrix_choice.text(), mock_path)
 
-        # Browses the ANTS path
-        main_wnd.pop_up_preferences.browse_ants()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.ants_choice.text(), mock_path
-        )
+            # Browses the MATLAB path
+            prefs.browse_matlab()
+            self.assertEqual(prefs.matlab_choice.text(), mock_path)
 
-        # Browses the mrtrix path
-        main_wnd.pop_up_preferences.browse_mrtrix()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.mrtrix_choice.text(), mock_path
-        )
+            # Browses the MATLAB MCR path
+            prefs.browse_matlab_standalone()
+            self.assertEqual(prefs.matlab_standalone_choice.text(), mock_path)
 
-        # Browses the MATLAB path
-        main_wnd.pop_up_preferences.browse_matlab()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.matlab_choice.text(), mock_path
-        )
+            # Browses the SPM path
+            prefs.browse_spm()
+            self.assertEqual(prefs.spm_choice.text(), mock_path)
 
-        # Browses the MATLAB MCR path
-        main_wnd.pop_up_preferences.browse_matlab_standalone()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.matlab_standalone_choice.text(),
-            mock_path,
-        )
+            # Browses the SPM Standalone path
+            prefs.browse_spm_standalone()
+            self.assertEqual(prefs.spm_standalone_choice.text(), mock_path)
 
-        # Browses the SPM path
-        main_wnd.pop_up_preferences.browse_spm()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.spm_choice.text(), mock_path
-        )
+            # Browses the MriConv path
+            prefs.browse_mri_conv_path()
+            self.assertEqual(prefs.mri_conv_path_line_edit.text(), mock_path)
 
-        # Browses the SPM Standalone path
-        main_wnd.pop_up_preferences.browse_spm_standalone()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.spm_standalone_choice.text(), mock_path
-        )
-
-        # Browses the MriConv path
-        main_wnd.pop_up_preferences.browse_mri_conv_path()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.mri_conv_path_line_edit.text(),
-            mock_path,
-        )
-
-        # Browser the projects save path
-        main_wnd.pop_up_preferences.browse_projects_save_path()
-        self.assertEqual(
-            main_wnd.pop_up_preferences.projects_save_path_line_edit.text(),
-            mock_path,
-        )
+            # Browser the projects save path
+            prefs.browse_projects_save_path()
+            self.assertEqual(
+                prefs.projects_save_path_line_edit.text(), mock_path
+            )
 
         # Sets the admin password to be 'mock_admin_password'
         admin_password = "mock_admin_password"
-        old_psswd = main_wnd.pop_up_preferences.salt + admin_password
-        hash_psswd = sha256(old_psswd.encode()).hexdigest()
+        hash_psswd = sha256((prefs.salt + admin_password).encode()).hexdigest()
         config.set_admin_hash(hash_psswd)
 
         # Calls 'admin_mode_switch' without checking the box
-        main_wnd.pop_up_preferences.admin_mode_switch()
+        prefs.admin_mode_switch()
 
         # Calls 'admin_mode_switch', mocking the execution of 'QInputDialog'
-        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
-        QInputDialog.getText = lambda w, x, y, z: (None, False)
-        main_wnd.pop_up_preferences.admin_mode_switch()
+        with patch(
+            "PyQt5.QtWidgets.QInputDialog.getText", return_value=(None, False)
+        ):
+            prefs.admin_mode_checkbox.setChecked(True)
+            prefs.admin_mode_switch()
 
-        # Tries to activate admin mode with the wrong password
-        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
-        QInputDialog.getText = lambda w, x, y, z: (
-            "mock_wrong_password",
-            True,
-        )
-        main_wnd.pop_up_preferences.admin_mode_switch()
-        self.assertFalse(main_wnd.pop_up_preferences.change_psswd.isVisible())
+        with patch(
+            "PyQt5.QtWidgets.QInputDialog.getText",
+            return_value=("mock_wrong_password", True),
+        ):
+            # Tries to activate admin mode with the wrong password
+            prefs.admin_mode_checkbox.setChecked(True)
+            prefs.admin_mode_switch()
+            self.assertFalse(prefs.change_psswd.isVisible())
 
-        # Activates admin mode with the correct password
-        QInputDialog.getText = lambda w, x, y, z: (admin_password, True)
-        main_wnd.pop_up_preferences.admin_mode_checkbox.setChecked(True)
-        main_wnd.pop_up_preferences.admin_mode_switch()
-        self.assertTrue(main_wnd.pop_up_preferences.change_psswd.isVisible())
+        with patch(
+            "PyQt5.QtWidgets.QInputDialog.getText",
+            return_value=(admin_password, True),
+        ):
+            # Activates admin mode with the correct password
+            prefs.admin_mode_checkbox.setChecked(True)
+            prefs.admin_mode_switch()
+            self.assertTrue(prefs.change_psswd.isVisible())
 
-        # Mocks the old passwd text field to be 'mock_admin_password'
-        # (and the other textfields too!)
-        # QLineEdit.text = lambda x: admin_password
+        with patch("PyQt5.QtWidgets.QDialog.exec", return_value=False):
+            # Changes the admin password
+            prefs.change_admin_psswd("")
 
-        # Changes the admin password
-        QDialog.exec = lambda x: False
-        main_wnd.pop_up_preferences.change_admin_psswd("")
-        # QDialog.exec = lambda x: True
-        # main_wnd.pop_up_preferences.change_admin_psswd('')
-
-        # Shows a wrong path pop-up message
-        main_wnd.pop_up_preferences.wrong_path(
-            "/mock_path", "mock_tool", extra_mess="mock_msg"
-        )
-        self.assertTrue(hasattr(main_wnd.pop_up_preferences, "msg"))
-        self.assertEqual(
-            main_wnd.pop_up_preferences.msg.icon(), QMessageBox.Critical
-        )
-        main_wnd.pop_up_preferences.msg.close()
+        # Wrong path popup
+        prefs.wrong_path("/mock_path", "mock_tool", extra_mess="mock_msg")
+        self.assertTrue(hasattr(prefs, "msg"))
+        self.assertEqual(prefs.msg.icon(), QMessageBox.Critical)
+        prefs.msg.close()
 
         # Sets the main window size
-        main_wnd.pop_up_preferences.use_current_mainwindow_size()
+        prefs.use_current_mainwindow_size()
 
         # Mocks the click of the OK button on 'QMessageBox.exec'
-        QMessageBox.exec = lambda x: QMessageBox.Yes
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Yes
+        ):
+            prefs.control_checkbox_toggled()
+            prefs.control_checkbox_changed = True
+            self.assertTrue(main_wnd.get_controller_version())
 
-        # Programs the controller version to change to V1
-        main_wnd.pop_up_preferences.control_checkbox_toggled()
-        main_wnd.pop_up_preferences.control_checkbox_changed = True
-        self.assertTrue(main_wnd.get_controller_version())
+            # Cancels the above change
+            prefs.control_checkbox_toggled()
+            self.assertFalse(main_wnd.get_controller_version())
 
-        # Cancels the above change
-        main_wnd.pop_up_preferences.control_checkbox_toggled()
-        self.assertFalse(main_wnd.get_controller_version())
+            prefs.close()
 
-        # Edits the Capsul config file
-        # QDialog.exec = lambda x: False
-        # capsul_engine.load = lambda x: True
-        # main_wnd.pop_up_preferences.edit_capsul_config()
+            # Programs the controller version to change to V1
+            main_wnd.pop_up_preferences.control_checkbox_toggled()
+            main_wnd.pop_up_preferences.control_checkbox_changed = True
+            self.assertTrue(main_wnd.get_controller_version())
 
-        # Mocks an exception in the QDialog execution
-        # exc_1 = lambda x: (_ for _ in ()).throw(Exception('mock exception'))
-        # QDialog.exec = exc_1
-        # main_wnd.pop_up_preferences.edit_capsul_config()
+            # Cancels the above change
+            main_wnd.pop_up_preferences.control_checkbox_toggled()
+            self.assertFalse(main_wnd.get_controller_version())
 
-        # Mocks an exception in the 'set_capsul_config' call
-        # QDialog.exec = lambda x: True
-        # exc_2 = lambda x, y: (_ for _ in ()).throw(Exception(
-        #                                            'mock exception'))
-        # Config.set_capsul_config = exc_2
-        # main_wnd.pop_up_preferences.edit_capsul_config()
-        # FIXME: failing in MacOS build
+        # Test normal config edit
+        with (
+            patch("PyQt5.QtWidgets.QDialog.exec", lambda x: False),
+            patch("capsul.api.capsul_engine") as mock_capsul_engine,
+        ):
+            mock_engine = MagicMock()
+            mock_engine.load_module.return_value = True
+            main_wnd.pop_up_preferences.edit_capsul_config()
+
+        # Test exception during QDialog.exec
+        with patch(
+            "PyQt5.QtWidgets.QDialog.exec",
+            lambda x: (_ for _ in ()).throw(Exception("mock exception")),
+        ):
+            main_wnd.pop_up_preferences.edit_capsul_config()
+
+        # Test exception in Config.set_capsul_config
+        with (
+            patch("PyQt5.QtWidgets.QDialog.exec", lambda x: True),
+            patch.object(
+                Config,
+                "set_capsul_config",
+                lambda x, y: (_ for _ in ()).throw(
+                    Exception("mock exception")
+                ),
+            ),
+        ):
+            main_wnd.pop_up_preferences.edit_capsul_config()
 
         # Close the software preferences window
         main_wnd.pop_up_preferences.close()
 
-        # Return certain parameters to their default configuration values
+        # Restore default config
         config.set_use_spm_standalone(True)
         config.set_use_spm(False)
         config.set_use_matlab(False)
