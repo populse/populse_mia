@@ -5502,6 +5502,68 @@ class TestMIAMainWindow(TestMIACase):
         # Close the dialog
         pkg_lib_window.close()
 
+    def test_popUpDeleteProject(self):
+        """
+        Test the project deletion flow, including dialog behavior and config
+        updates.
+
+        This test:
+            - Creates a new test project and switches to it.
+            - Attempts to delete the project without a configured save path
+              (to test error handling).
+            - Sets a valid save path and ensures the project is properly
+              deleted.
+            - Simulates user interaction with confirmation dialogs
+              (e.g., "Yes to All").
+
+        Notes:
+            - Not to be confused with `test_popUpDeletedProject`.
+
+        Targets:
+            - MainWindow.delete_project
+            - PopUpDeleteProject
+        """
+        # Create and switch to a new test project
+        test_proj_path = self.get_new_test_project()
+        self.main_window.switch_project(test_proj_path, "test_project")
+
+        # Instead of executing the pop-up, only shows it. This avoids thread
+        # deadlocking
+        with patch.object(QMessageBox, "exec", lambda self_: self_.show()):
+            # Unset the projects save path to trigger error handling
+            Config(
+                properties_path=self.properties_path
+            ).set_projects_save_path("")
+
+            # Attempt to delete the project (expected to fail due to
+            # missing path)
+            self.main_window.delete_project()
+            self.main_window.msg.accept()
+
+        # Set a valid projects save path
+        config = Config(properties_path=self.properties_path)
+        project_root = os.path.dirname(test_proj_path)
+        config.set_projects_save_path(project_root)
+
+        # Append project to saved/opened lists for increase coverage
+        rel_proj_path = os.path.relpath(test_proj_path)
+        self.main_window.saved_projects.pathsList.append(rel_proj_path)
+        config.set_opened_projects([rel_proj_path])
+
+        with (
+            patch.object(PopUpDeleteProject, "exec", lambda self_: None),
+            patch.object(
+                QMessageBox, "warning", return_value=QMessageBox.YesToAll
+            ),
+        ):
+            # Attempt to delete the project again (should now succeed)
+            self.main_window.delete_project()
+
+            # Simulate user checking the project to delete
+            ex_popup = self.main_window.exPopup
+            ex_popup.check_boxes[0].setChecked(True)
+            ex_popup.ok_clicked()
+
     def test_popUpDeletedProject(self):
         """
         Test that the application handles deleted projects properly.
@@ -5556,58 +5618,6 @@ class TestMIAMainWindow(TestMIACase):
         self.assertNotIn(
             fake_project_path, saved_projects.loadSavedProjects()["paths"]
         )
-
-    def test_popUpDeleteProject(self):
-        """Creates a new project and deletes it.
-
-        Not to be confused with test_PopUpDeletedProject!
-
-        - Tests:
-            - MainWindow.delete_project
-            - PopUpDeleteProject.
-        """
-
-        # Gets a new project
-        test_proj_path = self.get_new_test_project()
-        self.main_window.switch_project(test_proj_path, "test_project")
-
-        # Instead of executing the pop-up, only shows it
-        # This avoids thread deadlocking
-        QMessageBox.exec = lambda self_: self_.show()
-
-        # Resets the projects folder
-        Config(properties_path=self.properties_path).set_projects_save_path("")
-
-        # Tries to delete a project without setting the projects folder
-        self.main_window.delete_project()
-        self.main_window.msg.accept()
-
-        # Sets a projects save directory
-        config = Config(properties_path=self.properties_path)
-        proj_save_path = os.path.split(test_proj_path)[0]
-        config.set_projects_save_path(proj_save_path)
-
-        # Append 'test_proj_path' to 'saved_projects.pathsList' and
-        # 'opened_projects', to increase coverage
-        self.main_window.saved_projects.pathsList.append(
-            os.path.relpath(test_proj_path)
-        )
-        config.set_opened_projects([os.path.relpath(test_proj_path)])
-
-        # PopUpDeleteProject.exec = lambda self_: self_.show()
-        PopUpDeleteProject.exec = lambda self_: None
-
-        # Deletes a project with the projects folder set
-        self.main_window.delete_project()
-
-        exPopup = self.main_window.exPopup
-
-        # Checks the first project to be deleted
-        exPopup.check_boxes[0].setChecked(True)
-
-        # Mocks the dialog box to directly return 'YesToAll'
-        QMessageBox.warning = Mock(return_value=QMessageBox.YesToAll)
-        exPopup.ok_clicked()
 
     def test_see_all_projects(self):
         """
