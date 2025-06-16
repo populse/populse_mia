@@ -5464,84 +5464,98 @@ class TestMIAMainWindow(TestMIACase):
         ppl_manager.processLibrary.pkg_library.save()
 
     def test_package_library_others(self):
-        """Creates a new project folder, opens the processes library and
-        adds a package.
+        """
+        Test the behavior of the Package Library Manager dialog.
 
-        The package library object opens up as a pop-up when
-        File > Package library manager is clicked.
+        This test:
+            - Creates a new light project.
+            - Opens the Package Library Manager dialog via the main window.
+            - Mocks a package tree structure and populates it into the library.
+            - Closes the dialog after setup.
 
-        - Tests: PackageLibraryDialog
+        Targets:
+            - PackageLibraryDialog behavior
         """
 
         # Creates a new project folder and switches to it
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
 
-        # Opens the package library pop-up
+        # Open the Package Library Manager dialog
         self.main_window.package_library_pop_up()
 
-        # Sets shortcuts for objects that are often used
+        # Shortcuts for frequently accessed objects
         ppl_manager = self.main_window.pipeline_manager
         pkg_lib = ppl_manager.processLibrary.pkg_library.package_library
         pkg_lib_window = self.main_window.pop_up_package_library
 
-        # Mocks the package tree
+        # Mock package tree structure
         mock_pkg_tree = [
             {"Double_rename": "process_enabled"},
             [{"Double_rename": "process_enabled"}],
             ({"Double_rename": "process_enabled"}),
         ]
 
-        # Mocks filling an item with the above item
+        # Populate the package library with the mocked tree
         pkg_lib.fill_item(pkg_lib.invisibleRootItem(), mock_pkg_tree)
 
-        # Closes the package library pop-up
+        # Close the dialog
         pkg_lib_window.close()
 
     def test_popUpDeletedProject(self):
-        """Adds a deleted projects to the projects list and launches mia.
-
-        - Tests: PopUpDeletedProject.
         """
+        Test that the application handles deleted projects properly.
 
-        # Sets a projects save directory
-        # config = Config()
+        This test:
+            - Configures a custom project save directory.
+            - Adds a non-existent (deleted) project path to
+              `saved_projects.yml`.
+            - Verifies the path is handled correctly by `PopUpDeletedProject`.
+            - Ensures the project is removed from the saved projects list.
+
+        Target:
+            - PopUpDeletedProject behavior
+        """
+        # Set up a custom projects save directory
         config = Config(properties_path=self.properties_path)
-        projects_save_path = os.path.join(self.properties_path, "projects")
-        config.set_projects_save_path(projects_save_path)
+        projects_dir = os.path.join(self.properties_path, "projects")
+        config.set_projects_save_path(projects_dir)
 
-        # Mocks a project filepath that does not exist in the filesystem
-        # Adds this filepath to 'saved_projects.yml'
-        savedProjects = SavedProjects()
-        del_prjct = os.path.join(projects_save_path, "missing_project")
-        savedProjects.addSavedProject(del_prjct)
+        # # Add a fake (non-existent) project path to the saved projects
+        fake_project_path = os.path.join(projects_dir, "missing_project")
+        saved_projects = SavedProjects()
+        saved_projects.addSavedProject(fake_project_path)
 
         # Asserts that 'saved_projects.yml' contains the filepath
-        # FIXME: The following line does not seem to be supported by the
-        #        appveyor version, while it works fine on my station...
-        #        For now I comment ...
-        # self.assertIn(del_prjct, savedProjects.loadSavedProjects()['paths'])
+        # NOTE: This check may fail on some CI environments (e.g., AppVeyor)
+        self.assertIn(
+            fake_project_path, saved_projects.loadSavedProjects()["paths"]
+        )
 
         # Mocks the execution of a dialog box
-        PopUpDeletedProject.exec = Mock()
+        with patch.object(PopUpDeletedProject, "exec", return_value=None):
+            # Simulate the main application's startup routine handling deleted
+            # projects
+            saved_projects_obj = SavedProjects()
+            saved_paths = copy.deepcopy(saved_projects_obj.pathsList)
 
-        # Adds code from the 'main.py', gets deleted projects
-        saved_projects_object = SavedProjects()
-        saved_projects_list = copy.deepcopy(saved_projects_object.pathsList)
-        deleted_projects = []
-        for saved_project in saved_projects_list:
-            if not os.path.isdir(saved_project):
-                deleted_projects.append(os.path.abspath(saved_project))
-                saved_projects_object.removeSavedProject(saved_project)
+            deleted_projects = [
+                os.path.abspath(path)
+                for path in saved_paths
+                if not os.path.isdir(path)
+            ]
 
-        if deleted_projects is not None and deleted_projects:
-            self.msg = PopUpDeletedProject(deleted_projects)
+            for path in deleted_projects:
+                saved_projects_obj.removeSavedProject(path)
 
-        # Asserts that 'saved_projects.yml' no longer contains it
-        # FIXME: Since the previous FIXME, and comment, the following line is
-        #        also commented
-        # self.assertNotIn(del_prjct,
-        #                  savedProjects.loadSavedProjects()['paths'])
+            if deleted_projects:
+                self.msg = PopUpDeletedProject(deleted_projects)
+
+        # Final check: ensure the deleted project was removed
+        # NOTE: This check may fail on some CI environments (e.g., AppVeyor)
+        self.assertNotIn(
+            fake_project_path, saved_projects.loadSavedProjects()["paths"]
+        )
 
     def test_popUpDeleteProject(self):
         """Creates a new project and deletes it.
