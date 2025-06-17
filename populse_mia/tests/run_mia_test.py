@@ -5797,21 +5797,18 @@ class TestMIAMainWindow(TestMIACase):
 
         else:
             prefs = main_wnd.pop_up_preferences
-            print(
-                "prefs.use_matlab_standalone_checkbox.isChecked():",
-                prefs.use_matlab_standalone_checkbox.isChecked(),
+            self.assertFalse(
+                main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.isChecked()
             )
-            print(
-                "prefs.use_spm_standalone_checkbox.isChecked():",
-                prefs.use_spm_standalone_checkbox.isChecked(),
+            self.assertTrue(
+                main_wnd.pop_up_preferences.use_spm_standalone_checkbox.isChecked()
             )
-            print(
-                "prefs.use_matlab_checkbox.isChecked():",
-                prefs.use_matlab_checkbox.isChecked(),
+            # fmt: on
+            self.assertFalse(
+                main_wnd.pop_up_preferences.use_matlab_checkbox.isChecked()
             )
-            print(
-                "prefs.use_spm_checkbox.isChecked():",
-                prefs.use_spm_checkbox.isChecked(),
+            self.assertFalse(
+                main_wnd.pop_up_preferences.use_spm_checkbox.isChecked()
             )
 
         main_wnd.pop_up_preferences.close()
@@ -5947,23 +5944,27 @@ class TestMIAMainWindow(TestMIACase):
 
         # Test normal config edit
         with (
-            patch("PyQt5.QtWidgets.QDialog.exec", lambda x: False),
+            patch.object(SettingsEditor, "exec", return_value=False),
             patch("capsul.api.capsul_engine") as mock_capsul_engine,
+            patch(
+                "capsul.qt_gui.widgets.settings_editor"
+                ".SettingsEditor.update_gui",
+                lambda self: None,
+            ),
         ):
             mock_engine = MagicMock()
             mock_engine.load_module.return_value = True
             main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Test exception during QDialog.exec
-        with patch(
-            "PyQt5.QtWidgets.QDialog.exec",
-            lambda x: (_ for _ in ()).throw(Exception("mock exception")),
+        # Test exception during SettingsEditor.exec
+        with patch.object(
+            SettingsEditor, "exec", side_effect=Exception("mock exception")
         ):
             main_wnd.pop_up_preferences.edit_capsul_config()
 
         # Test exception in Config.set_capsul_config
         with (
-            patch("PyQt5.QtWidgets.QDialog.exec", lambda x: True),
+            patch.object(SettingsEditor, "exec", return_value=True),
             patch.object(
                 Config,
                 "set_capsul_config",
