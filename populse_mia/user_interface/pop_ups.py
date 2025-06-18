@@ -4008,7 +4008,7 @@ class PopUpPreferences(QDialog):
         else:
             # If self.use_spm_checkbox.isChecked() is True, the test will
             # take place when SPM is validated.
-            pass
+            return True
 
     def validate_matlab_standalone_path(self, path, config):
         """
