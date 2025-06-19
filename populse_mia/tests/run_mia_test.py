@@ -5933,8 +5933,6 @@ class TestMIAMainWindow(TestMIACase):
             prefs.control_checkbox_toggled()
             self.assertFalse(main_wnd.get_controller_version())
 
-            # prefs.close()
-
         # Mocks the execution of a 'capsul' method
         # (This fixes the Mac OS build)
         with patch(
@@ -5972,43 +5970,8 @@ class TestMIAMainWindow(TestMIACase):
                 # Test exception in Config.set_capsul_config
                 prefs.edit_capsul_config()
 
+        # Close the software preferences window
         prefs.close()
-
-        # # Test normal config edit
-        # with (
-        #     patch.object(SettingsEditor, "exec", return_value=False),
-        #     patch("capsul.api.capsul_engine") as mock_capsul_engine,
-        #     patch(
-        #         "capsul.qt_gui.widgets.settings_editor"
-        #         ".SettingsEditor.update_gui",
-        #         lambda self: None,
-        #     ),
-        # ):
-        #     mock_engine = MagicMock()
-        #     mock_engine.load_module.return_value = True
-        #     main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # # Test exception during SettingsEditor.exec
-        # with patch.object(
-        #     SettingsEditor, "exec", side_effect=Exception("mock exception")
-        # ):
-        #     main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # # Test exception in Config.set_capsul_config
-        # with (
-        #     patch.object(SettingsEditor, "exec", return_value=True),
-        #     patch.object(
-        #         Config,
-        #         "set_capsul_config",
-        #         lambda x, y: (_ for _ in ()).throw(
-        #             Exception("mock exception")
-        #         ),
-        #     ),
-        # ):
-        #     main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # # Close the software preferences window
-        # main_wnd.pop_up_preferences.close()
 
         # Restore default config
         config.set_use_spm_standalone(True)
@@ -6375,7 +6338,6 @@ if __name__ == "__main__":
 
                 mock_executable(fsl_bin_path, "flirt")
                 popup.ok_clicked()
-                # popup.close()  # Closes the window
 
                 # Disables FSL
                 config = Config(properties_path=self.properties_path)
@@ -6475,7 +6437,6 @@ if __name__ == "__main__":
                 popup.spm_choice.setText(
                     os.path.join(tmp_path, "not_existing")
                 )
-                # popup.close()  # Closes the window
                 popup.ok_clicked()  # Opens error dialog
                 popup.close()  # Closes the window
 
@@ -6556,7 +6517,6 @@ if __name__ == "__main__":
                 # Creates a working MATLAB executable
                 mock_executable(tmp_path, "matlab")
                 popup.ok_clicked()  # Closes window
-                # main_wnd.pop_up_preferences.close()  # Closes the window
 
                 # Asserts that MATLAB was enabled and MATLAB standalone
                 # remains disabled
