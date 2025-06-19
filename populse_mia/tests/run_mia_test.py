@@ -5933,7 +5933,46 @@ class TestMIAMainWindow(TestMIACase):
             prefs.control_checkbox_toggled()
             self.assertFalse(main_wnd.get_controller_version())
 
-            prefs.close()
+            # prefs.close()
+
+        # Mocks the execution of a 'capsul' method
+        # (This fixes the Mac OS build)
+        with patch(
+            "capsul.qt_gui.widgets.settings_editor"
+            ".SettingsEditor.update_gui",
+            return_value=None,
+        ):
+
+            with (
+                patch("capsul.api.capsul_engine") as mock_capsul_engine,
+                patch("PyQt5.QtWidgets.QDialog.exec", return_value=False),
+            ):
+                mock_capsul_engine = MagicMock()
+                mock_capsul_engine.load_module.return_value = True
+                # Test normal config edit
+                prefs.edit_capsul_config()
+
+            with patch(
+                "PyQt5.QtWidgets.QDialog.exec",
+                side_effect=Exception("mock exception"),
+            ):
+                # Test exception during SettingsEditor.exec
+                prefs.edit_capsul_config()
+
+            with (
+                patch("PyQt5.QtWidgets.QDialog.exec", return_value=True),
+                patch.object(
+                    Config,
+                    "set_capsul_config",
+                    lambda x, y: (_ for _ in ()).throw(
+                        Exception("mock exception")
+                    ),
+                ),
+            ):
+                # Test exception in Config.set_capsul_config
+                prefs.edit_capsul_config()
+
+        prefs.close()
 
         # # Test normal config edit
         # with (
