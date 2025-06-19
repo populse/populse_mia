@@ -6005,6 +6005,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Simulate user canceling config file edit dialog
         with patch("PyQt5.QtWidgets.QDialog.exec", return_value=False):
+            self.assertFalse(hasattr(main_wnd.pop_up_preferences, "editConf"))
             main_wnd.pop_up_preferences.edit_config_file()
             self.assertTrue(hasattr(main_wnd.pop_up_preferences, "editConf"))
 
@@ -6031,9 +6032,13 @@ class TestMIAMainWindow(TestMIACase):
         with patch(
             "PyQt5.QtWidgets.QDialog.exec", side_effect=mock_exec_accept
         ):
+            self.assertFalse(
+                Config(properties_path=self.properties_path).get_user_mode()
+            )
             main_wnd.pop_up_preferences.edit_config_file()
-            config = Config(properties_path=self.properties_path)
-            self.assertTrue(config.get_user_mode())
+            self.assertTrue(
+                Config(properties_path=self.properties_path).get_user_mode()
+            )
 
         # Tries to find an empty string of characters in the config file
         main_wnd.pop_up_preferences.findChar()
@@ -6042,37 +6047,36 @@ class TestMIAMainWindow(TestMIACase):
         main_wnd.pop_up_preferences.findChar_line_edit.setText("user_mode")
         main_wnd.pop_up_preferences.findChar()
 
-        # Simulate Capsul config editing behavior
-        with (
-            patch(
-                "capsul.qt_gui.widgets.settings_editor"
-                ".SettingsEditor.update_gui",
-                return_value=None,
-            ),
-            patch("PyQt5.QtWidgets.QDialog.exec", return_value=True),
-        ):
-            main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # Simulate failure in set_capsul_config
-        with (
-            patch(
-                "populse_mia.software_properties.Config.set_capsul_config",
-                side_effect=Exception("mock_except"),
-            ),
-            patch("PyQt5.QtWidgets.QDialog.exec", return_value=True),
-        ):
-            main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # Simulate exception raised by QDialog.exec
+        # Mocks the execution of a 'capsul' method
+        # (This fixes the Mac OS build)
         with patch(
-            "PyQt5.QtWidgets.QDialog.exec",
-            side_effect=Exception("mock_except"),
+            "capsul.qt_gui.widgets.settings_editor"
+            ".SettingsEditor.update_gui",
+            return_value=None,
         ):
-            main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Simulate user canceling the Capsul config dialog
-        with patch("PyQt5.QtWidgets.QDialog.exec", return_value=False):
-            main_wnd.pop_up_preferences.edit_capsul_config()
+            # Simulate Capsul config editing behavior
+            with patch("PyQt5.QtWidgets.QDialog.exec", return_value=True):
+                main_wnd.pop_up_preferences.edit_capsul_config()
+
+                # Simulate failure in set_capsul_config
+                with patch(
+                    "populse_mia.software_properties.Config"
+                    ".set_capsul_config",
+                    side_effect=Exception("mock_except"),
+                ):
+                    main_wnd.pop_up_preferences.edit_capsul_config()
+
+            # Simulate exception raised by QDialog.exec
+            with patch(
+                "PyQt5.QtWidgets.QDialog.exec",
+                side_effect=Exception("mock_except"),
+            ):
+                main_wnd.pop_up_preferences.edit_capsul_config()
+
+            # Simulate user canceling the Capsul config dialog
+            with patch("PyQt5.QtWidgets.QDialog.exec", return_value=False):
+                main_wnd.pop_up_preferences.edit_capsul_config()
 
         main_wnd.pop_up_preferences.close()
 
