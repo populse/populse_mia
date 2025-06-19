@@ -3256,7 +3256,7 @@ class PopUpPreferences(QDialog):
                 return
 
             # Update Mia preferences GUI which might have changed
-            self.update_gui_from_capsul_config(capsul_config)
+            self.update_gui_from_capsul_config(config)
 
         del dialog
         del engine

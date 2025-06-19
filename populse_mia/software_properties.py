@@ -40,148 +40,155 @@ class Config:
 
     :Contains:
         :Methods:
-            - get_admin_hash: get the value of the hash of the admin password
-            - get_afni_path: returns the path of AFNI
-            - get_ants_path: returns the path of ANTS
-            - getBackgroundColor: get background color
-            - get_capsul_config: get CAPSUL config dictionary
-            - get_capsul_engine: get a global CapsulEngine object used for all
+            - _configure_standalone_spm: Configures standalone SPM and
+                                         MCR.
+            - _configure_matlab_spm: Configures SPM and MATLAB.
+            - _configure_matlab_only: Configures MATLAB without SPM.
+            - _configure_mcr_only: Configures MCR without SPM.
+            - _disable_matlab_spm: Disables all MATLAB and SPM
+                                   configurations.
+            - get_admin_hash: Get the value of the hash of the admin password
+            - get_afni_path: Returns the path of AFNI
+            - get_ants_path: Returns the path of ANTS
+            - getBackgroundColor: Get background color
+            - get_capsul_config: Get CAPSUL config dictionary
+            - get_capsul_engine: Get a global CapsulEngine object used for all
                                  operations in MIA application
-            - getChainCursors: returns if the "chain cursors" checkbox of the
+            - getChainCursors: Returns if the "chain cursors" checkbox of the
                                mini-viewer is activated
-            - get_freesurfer_setup: get freesurfer path
-            - get_fsl_config: returns the path of the FSL config file
-            - get_mainwindow_maximized: get the maximized (full-screen) flag
-            - get_mainwindow_size: get the main window size
-            - get_matlab_command: returns Matlab command
-            - get_matlab_path: returns the path of Matlab's executable
-            - get_matlab_standalone_path: returns the path of Matlab Compiler
+            - get_freesurfer_setup: Get freesurfer path
+            - get_fsl_config: Returns the path of the FSL config file
+            - get_mainwindow_maximized: Get the maximized (full-screen) flag
+            - get_mainwindow_size: Get the main window size
+            - get_matlab_command: Returns Matlab command
+            - get_matlab_path: Returns the path of Matlab's executable
+            - get_matlab_standalone_path: Returns the path of Matlab Compiler
                                           Runtime
-            - get_max_projects: returns the maximum number of projects
+            - get_max_projects: Returns the maximum number of projects
                                 displayed in the "Saved projects" menu
-            - get_max_thumbnails:  get max thumbnails number at the data
-                                   browser bottom
-            - get_properties_path: returns the software's properties path
-            - get_mri_conv_path: returns the MRIManager.jar path
-            - get_mrtrix_path: returns mrtrix path
-            - getNbAllSlicesMax: returns the maximum number of slices to
+            - get_max_thumbnails: Get max thumbnails number at the data
+                                  browser bottom
+            - get_properties_path: Returns the software's properties path
+            - get_mri_conv_path: Returns the MRIManager.jar path
+            - get_mrtrix_path: Returns mrtrix path
+            - getNbAllSlicesMax: Returns the maximum number of slices to
                                  display in the mini viewer
-            - get_opened_projects: returns the opened projects
-            - get_projects_save_path: returns the folder where the projects
+            - get_opened_projects: Returns the opened projects
+            - get_projects_save_path: Returns the folder where the projects
                                       are saved
-            - get_referential: returns boolean to indicate DataViewer
+            - get_referential: Returns boolean to indicate DataViewer
                                referential
-            - get_resources_path: get the resources path
-            - getShowAllSlices: returns if the "show all slices" checkbox of
+            - get_resources_path: Get the resources path
+            - getShowAllSlices: Returns if the "show all slices" checkbox of
                                 the mini viewer is activated
-            - getSourceImageDir: get the source directory for project images
-            - get_spm_path: returns the path of SPM12 (license version)
-            - get_spm_standalone_path: returns the path of SPM12 (standalone
+            - getSourceImageDir: Get the source directory for project images
+            - get_spm_path: Returns the path of SPM12 (license version)
+            - get_spm_standalone_path: Returns the path of SPM12 (standalone
                                        version)
-            - getTextColor: return the text color
-            - getThumbnailTag: returns the tag that is displayed in the mini
+            - getTextColor: Return the text color
+            - getThumbnailTag: Returns the tag that is displayed in the mini
                                viewer
-            - get_use_afni: returns the value of "use afni" checkbox in the
+            - get_use_afni: Returns the value of "use afni" checkbox in the
                             preferences
-            - get_use_ants: returns the value of "use ants" checkbox in the
+            - get_use_ants: Returns the value of "use ants" checkbox in the
                             preferences
-            - get_use_clinical: returns the value of "clinical mode" checkbox
+            - get_use_clinical: Returns the value of "clinical mode" checkbox
                                 in the preferences
-            - get_use_freesurfer: returns the value of "use freesurfer"
+            - get_use_freesurfer: Returns the value of "use freesurfer"
                                   checkbox in the preferences
-            - get_use_fsl: returns the value of "use fsl" checkbox in the
+            - get_use_fsl: Returns the value of "use fsl" checkbox in the
                            preferences
-            - get_use_matlab: returns the value of "use matlab" checkbox in
+            - get_use_matlab: Returns the value of "use matlab" checkbox in
                               the preferences
-            - get_use_matlab_standalone: returns the value of "use matlab
+            - get_use_matlab_standalone: Returns the value of "use matlab
                                          standalone" checkbox in the
                                          preferences
-            - get_use_mrtrix: returns the value of "use mrtrix" checkbox in
+            - get_use_mrtrix: Returns the value of "use mrtrix" checkbox in
                               the preferences
-            - get_user_level: get the user level in the Capsul config
-            - get_user_mode: returns the value of "user mode" checkbox
+            - get_user_level: Get the user level in the Capsul config
+            - get_user_mode: Returns the value of "user mode" checkbox
                              in the preferences
-            - get_use_spm: returns the value of "use spm" checkbox in the
+            - get_use_spm: Returns the value of "use spm" checkbox in the
                            preferences
-            - get_use_spm_standalone: returns the value of "use spm standalone"
+            - get_use_spm_standalone: Returns the value of "use spm standalone"
                                       checkbox in the preferences
-            - getViewerConfig: returns the DataViewer configuration (neuro or
+            - getViewerConfig: Returns the DataViewer configuration (neuro or
                                radio), by default neuro
-            - getViewerFramerate: returns the DataViewer framerate for
+            - getViewerFramerate: Returns the DataViewer framerate for
                                   automatic time running images
-            - isAutoSave: checks if auto-save mode is activated
-            - isControlV1: checks if the selected display of the controller is
+            - isAutoSave: Checks if auto-save mode is activated
+            - isControlV1: Checks if the selected display of the controller is
                            of V1 type
-            - isRadioView: checks if miniviewer in radiological orientation (if
+            - isRadioView: Checks if miniviewer in radiological orientation (if
                            not, then it is in neurological orientation)
-            - loadConfig: reads the config in the config.yml file
-            - saveConfig: saves the config to the config.yml file
-            - set_admin_hash: set the password hash
-            - set_afni_path: set the path of the AFNI
-            - set_ants_path: set the path of the ANTS
-            - set_mrtrix_path: set the path of mrtrix
-            - setAutoSave: sets the auto-save mode
-            - setBackgroundColor: sets the background color
-            - set_capsul_config: set CAPSUL configuration dict into MIA config
-            - setChainCursors: set the "chain cursors" checkbox of the mini
+            - loadConfig: Reads the config in the config.yml file
+            - saveConfig: Saves the config to the config.yml file
+            - set_admin_hash: Set the password hash
+            - set_afni_path: Set the path of the AFNI
+            - set_ants_path: Set the path of the ANTS
+            - set_mrtrix_path: Set the path of mrtrix
+            - setAutoSave: Sets the auto-save mode
+            - setBackgroundColor: Sets the background color
+            - set_capsul_config: Set CAPSUL configuration dict into MIA config
+            - setChainCursors: Set the "chain cursors" checkbox of the mini
                                viewer
-            - set_clinical_mode: set the value of "clinical mode" in
+            - set_clinical_mode: Set the value of "clinical mode" in
                                  the preferences
             - setControlV1: Set controller display mode (True if V1)
-            - set_freesurfer_setup: set freesurfer path
-            - set_fsl_config: set the path of the FSL config file
-            - set_mainwindow_maximized: set the maximized (fullscreen) flag
-            - set_mainwindow_size: set main window size
-            - set_matlab_path: set the path of Matlab's executable
-            - set_matlab_standalone_path: set the path of Matlab Compiler
+            - set_freesurfer_setup: Set freesurfer path
+            - set_fsl_config: Set the path of the FSL config file
+            - set_mainwindow_maximized: Set the maximized (fullscreen) flag
+            - set_mainwindow_size: Set main window size
+            - set_matlab_path: Set the path of Matlab's executable
+            - set_matlab_standalone_path: Set the path of Matlab Compiler
                                           Runtime
-            - set_max_projects: set the maximum number of projects displayed in
+            - set_max_projects: Set the maximum number of projects displayed in
                                 the "Saved projects" menu
-            - set_max_thumbnails: set max thumbnails number at the data browser
+            - set_max_thumbnails: Set max thumbnails number at the data browser
                                   bottom
-            - set_mri_conv_path: set the MRIManager.jar path
-            - setNbAllSlicesMax: set the maximum number of slices to display in
+            - set_mri_conv_path: Set the MRIManager.jar path
+            - setNbAllSlicesMax: Set the maximum number of slices to display in
                                  the mini viewer
-            - set_opened_projects: set the opened projects
-            - set_projects_save_path: set the folder where the projects are
+            - set_opened_projects: Set the opened projects
+            - set_projects_save_path: Set the folder where the projects are
                                       saved
-            - set_radioView: set the orientation in miniviewer (True for
+            - set_radioView: Set the orientation in miniviewer (True for
                              radiological, False for neurological orientation)
-            - set_referential: set the DataViewer referential
+            - set_referential: Set the DataViewer referential
             - set_resources_path: Set the resources path
-            - setShowAllSlices: set the "show all slices" checkbox of the mini
+            - setShowAllSlices: Set the "show all slices" checkbox of the mini
                                 viewer
-            - setSourceImageDir: set the source directory for project images
-            - set_spm_path: set the path of SPM12 (license version)
-            - set_spm_standalone_path: set the path of SPM12 (standalone
+            - setSourceImageDir: Set the source directory for project images
+            - set_spm_path: Set the path of SPM12 (license version)
+            - set_spm_standalone_path: Set the path of SPM12 (standalone
                                        version)
-            - setTextColor: set the text color
-            - setThumbnailTag: set the tag that is displayed in the mini viewer
-            - set_use_afni: set the value of "use afni" checkbox in the
+            - setTextColor: Set the text color
+            - setThumbnailTag: Set the tag that is displayed in the mini viewer
+            - set_use_afni: Set the value of "use afni" checkbox in the
                             preferences
-            - set_use_ants: set the value of "use ants" checkbox in the
+            - set_use_ants: Set the value of "use ants" checkbox in the
                             preferences
-            - set_use_freesurfer: set the value of "use freesurfer" checkbox
+            - set_use_freesurfer: Set the value of "use freesurfer" checkbox
                                   in the preferences
-            - set_use_fsl: set the value of "use fsl" checkbox in the
+            - set_use_fsl: Set the value of "use fsl" checkbox in the
                            preferences
-            - set_use_matlab: set the value of "use matlab" checkbox in the
+            - set_use_matlab: Set the value of "use matlab" checkbox in the
                               preferences
-            - set_use_matlab_standalone: set the value of "use matlab
+            - set_use_matlab_standalone: Set the value of "use matlab
                                          standalone" checkbox in the
                                          preferences
-            - set_use_mrtrix: set the value of "use mrtrix" checkbox in the
+            - set_use_mrtrix: Set the value of "use mrtrix" checkbox in the
                               preferences
-            - set_user_mode: set the value of "user mode" checkbox in
+            - set_user_mode: Set the value of "user mode" checkbox in
                              the preferences
-            - set_use_spm: set the value of "use spm" checkbox in the
+            - set_use_spm: Set the value of "use spm" checkbox in the
                            preferences
-            - set_use_spm_standalone: set the value of "use spm standalone"
+            - set_use_spm_standalone: Set the value of "use spm standalone"
                                       checkbox in the preferences
-            - setViewerConfig: set the Viewer configuration neuro or radio
-            - setViewerFramerate: set the Viewer frame rate for automatic
+            - setViewerConfig: Set the Viewer configuration neuro or radio
+            - setViewerFramerate: Set the Viewer frame rate for automatic
                                   running time images
-            - update_capsul_config: update a global CapsulEngine object used
+            - update_capsul_config: Update a global CapsulEngine object used
                                     for all operations in MIA application
     """
 
@@ -211,6 +218,77 @@ class Config:
             logger.warning("MIA_DEV_MODE not found...")
 
         self.config = self.loadConfig()
+
+    def _configure_standalone_spm(self, spm_dir, mcr_dir):
+        """
+        Configures standalone SPM to use the specified SPM and MATLAB
+        Compiler Runtime (MCR) directories.
+
+        :param spm_dir (str): The directory path of the standalone SPM
+                                installation.
+        :param mcr_dir (str): The directory path of the MATLAB Compiler
+                                Runtime (MCR).
+        """
+        self.set_spm_standalone_path(spm_dir)
+        self.set_use_spm_standalone(True)
+        self.set_use_spm(False)
+        self.set_matlab_standalone_path(mcr_dir)
+        self.set_use_matlab_standalone(True)
+        self.set_use_matlab(False)
+
+    def _configure_matlab_spm(self, spm_dir, matlab_path):
+        """
+        Configures SPM to use the specified SPM directory with a MATLAB
+        installation.
+
+        :param spm_dir (str): The directory path of the SPM installation.
+        :param matlab_path (str): The directory path of the MATLAB
+                                    installation.
+        """
+        self.set_spm_path(spm_dir)
+        self.set_use_spm(True)
+        self.set_use_spm_standalone(False)
+        self.set_matlab_path(matlab_path)
+        self.set_use_matlab(True)
+        self.set_use_matlab_standalone(False)
+
+    def _configure_matlab_only(self, matlab_path: str) -> None:
+        """
+        Configures MATLAB without SPM, ensuring that only MATLAB is used.
+
+        :param matlab_path (str): The directory path of the MATLAB
+                                    installation.
+        """
+        self.set_matlab_path(matlab_path)
+        self.set_use_matlab(True)
+        self.set_use_matlab_standalone(False)
+        self.set_use_spm(False)
+        self.set_use_spm_standalone(False)
+
+    def _configure_mcr_only(self, mcr_dir: str) -> None:
+        """
+        Configures MATLAB Compiler Runtime (MCR) without SPM, ensuring
+        that only MCR is used.
+
+        :param mcr_dir (str): The directory path of the MATLAB Compiler
+                                Runtime (MCR).
+
+        """
+        self.set_matlab_standalone_path(mcr_dir)
+        self.set_use_matlab_standalone(True)
+        self.set_use_matlab(False)
+        self.set_use_spm(False)
+        self.set_use_spm_standalone(False)
+
+    def _disable_matlab_spm(self) -> None:
+        """
+        Disables all MATLAB and SPM configurations, ensuring that neither
+        MATLAB nor SPM is used.
+        """
+        self.set_use_matlab(False)
+        self.set_use_matlab_standalone(False)
+        self.set_use_spm(False)
+        self.set_use_spm_standalone(False)
 
     def get_admin_hash(self):
         """
@@ -1105,87 +1183,9 @@ class Config:
 
         :Contains:
             :Private function:
-                - _configure_standalone_spm: Configures standalone SPM and
-                                             MCR.
-                - _configure_matlab_spm: Configures SPM and MATLAB.
-                - _configure_matlab_only: Configures MATLAB without SPM.
-                - _configure_mcr_only: Configures MCR without SPM.
-                - _disable_matlab_spm: Disables all MATLAB and SPM
-                                       configurations.
                 - _get_module_config: Extracts module configuration from the
                                       global Capsul configuration.
         """
-
-        def _configure_standalone_spm(self, spm_dir, mcr_dir):
-            """
-            Configures standalone SPM to use the specified SPM and MATLAB
-            Compiler Runtime (MCR) directories.
-
-            :param spm_dir (str): The directory path of the standalone SPM
-                                  installation.
-            :param mcr_dir (str): The directory path of the MATLAB Compiler
-                                  Runtime (MCR).
-            """
-            self.set_spm_standalone_path(spm_dir)
-            self.set_use_spm_standalone(True)
-            self.set_use_spm(False)
-            self.set_matlab_standalone_path(mcr_dir)
-            self.set_use_matlab_standalone(True)
-            self.set_use_matlab(False)
-
-        def _configure_matlab_spm(self, spm_dir, matlab_path):
-            """
-            Configures SPM to use the specified SPM directory with a MATLAB
-            installation.
-
-            :param spm_dir (str): The directory path of the SPM installation.
-            :param matlab_path (str): The directory path of the MATLAB
-                                       installation.
-            """
-            self.set_spm_path(spm_dir)
-            self.set_use_spm(True)
-            self.set_use_spm_standalone(False)
-            self.set_matlab_path(matlab_path)
-            self.set_use_matlab(True)
-            self.set_use_matlab_standalone(False)
-
-        def _configure_matlab_only(self, matlab_path: str) -> None:
-            """
-            Configures MATLAB without SPM, ensuring that only MATLAB is used.
-
-            :param matlab_path (str): The directory path of the MATLAB
-                                      installation.
-            """
-            self.set_matlab_path(matlab_path)
-            self.set_use_matlab(True)
-            self.set_use_matlab_standalone(False)
-            self.set_use_spm(False)
-            self.set_use_spm_standalone(False)
-
-        def _configure_mcr_only(self, mcr_dir: str) -> None:
-            """
-            Configures MATLAB Compiler Runtime (MCR) without SPM, ensuring
-            that only MCR is used.
-
-            :param mcr_dir (str): The directory path of the MATLAB Compiler
-                                  Runtime (MCR).
-
-            """
-            self.set_matlab_standalone_path(mcr_dir)
-            self.set_use_matlab_standalone(True)
-            self.set_use_matlab(False)
-            self.set_use_spm(False)
-            self.set_use_spm_standalone(False)
-
-        def _disable_matlab_spm(self) -> None:
-            """
-            Disables all MATLAB and SPM configurations, ensuring that neither
-            MATLAB nor SPM is used.
-            """
-            self.set_use_matlab(False)
-            self.set_use_matlab_standalone(False)
-            self.set_use_spm(False)
-            self.set_use_spm_standalone(False)
 
         def _get_module_config(module_name: str) -> dict:
             """
