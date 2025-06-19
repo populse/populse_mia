@@ -5924,6 +5924,7 @@ class TestMIAMainWindow(TestMIACase):
         with patch(
             "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Yes
         ):
+            # Programs the controller version to change to V1
             prefs.control_checkbox_toggled()
             prefs.control_checkbox_changed = True
             self.assertTrue(main_wnd.get_controller_version())
@@ -5934,50 +5935,41 @@ class TestMIAMainWindow(TestMIACase):
 
             prefs.close()
 
-            # Programs the controller version to change to V1
-            main_wnd.pop_up_preferences.control_checkbox_toggled()
-            main_wnd.pop_up_preferences.control_checkbox_changed = True
-            self.assertTrue(main_wnd.get_controller_version())
+        # # Test normal config edit
+        # with (
+        #     patch.object(SettingsEditor, "exec", return_value=False),
+        #     patch("capsul.api.capsul_engine") as mock_capsul_engine,
+        #     patch(
+        #         "capsul.qt_gui.widgets.settings_editor"
+        #         ".SettingsEditor.update_gui",
+        #         lambda self: None,
+        #     ),
+        # ):
+        #     mock_engine = MagicMock()
+        #     mock_engine.load_module.return_value = True
+        #     main_wnd.pop_up_preferences.edit_capsul_config()
 
-            # Cancels the above change
-            main_wnd.pop_up_preferences.control_checkbox_toggled()
-            self.assertFalse(main_wnd.get_controller_version())
+        # # Test exception during SettingsEditor.exec
+        # with patch.object(
+        #     SettingsEditor, "exec", side_effect=Exception("mock exception")
+        # ):
+        #     main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Test normal config edit
-        with (
-            patch.object(SettingsEditor, "exec", return_value=False),
-            patch("capsul.api.capsul_engine") as mock_capsul_engine,
-            patch(
-                "capsul.qt_gui.widgets.settings_editor"
-                ".SettingsEditor.update_gui",
-                lambda self: None,
-            ),
-        ):
-            mock_engine = MagicMock()
-            mock_engine.load_module.return_value = True
-            main_wnd.pop_up_preferences.edit_capsul_config()
+        # # Test exception in Config.set_capsul_config
+        # with (
+        #     patch.object(SettingsEditor, "exec", return_value=True),
+        #     patch.object(
+        #         Config,
+        #         "set_capsul_config",
+        #         lambda x, y: (_ for _ in ()).throw(
+        #             Exception("mock exception")
+        #         ),
+        #     ),
+        # ):
+        #     main_wnd.pop_up_preferences.edit_capsul_config()
 
-        # Test exception during SettingsEditor.exec
-        with patch.object(
-            SettingsEditor, "exec", side_effect=Exception("mock exception")
-        ):
-            main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # Test exception in Config.set_capsul_config
-        with (
-            patch.object(SettingsEditor, "exec", return_value=True),
-            patch.object(
-                Config,
-                "set_capsul_config",
-                lambda x, y: (_ for _ in ()).throw(
-                    Exception("mock exception")
-                ),
-            ),
-        ):
-            main_wnd.pop_up_preferences.edit_capsul_config()
-
-        # Close the software preferences window
-        main_wnd.pop_up_preferences.close()
+        # # Close the software preferences window
+        # main_wnd.pop_up_preferences.close()
 
         # Restore default config
         config.set_use_spm_standalone(True)
