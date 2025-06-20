@@ -4055,7 +4055,7 @@ class PopUpPreferences(QDialog):
         else:
             # If self.use_spm_standalone_checkbox.isChecked() is True,
             # the test will take place when SPM Stadalone is validated.
-            pass
+            return True
 
     def validate_paths(self, config):
         """

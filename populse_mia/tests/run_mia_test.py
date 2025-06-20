@@ -6098,9 +6098,11 @@ class TestMIAMainWindow(TestMIACase):
             """
             path = os.path.join(directory, name)
 
-            if name == "matlab":
+            if name in ["matlab", "run_spm.sh"]:
                 # Use the specific MATLAB mock script
                 python_path = sys.executable
+                # Check if we should print to stderr for this specific output
+                should_print_stderr = output == "_ _ version (standalone)"
                 mock_matlab_script = f"""#!/usr/bin/env {python_path}
 import sys
 import os
@@ -6112,6 +6114,7 @@ def mock_matlab():
     # Check for specific MATLAB flags
     if "-r" in args:
         idx = args.index("-r")
+
         if idx + 1 < len(args):
             matlab_cmd = args[idx + 1]
 
@@ -6125,12 +6128,20 @@ def mock_matlab():
             if "spm('Ver')" in matlab_cmd:
                 print("SPM version: SPM12 (simulated)")
 
+    if "--version" in args:
+        # Only print to stderr if output is the special version string
+        {(f'print("Version check completed", '
+           f'file=sys.stderr)')
+          if should_print_stderr else ''}
+        return
+
     # Simulate MATLAB exit
     print("MATLAB simulation completed.")
 
 if __name__ == "__main__":
     mock_matlab()
-    {'print("{err_msg}", file=sys.stderr)' if failing else ''}
+    {f'print("{output}")'}
+    {f'print("{err_msg}", file=sys.stderr)' if failing else ''}
     {'sys.exit(1)' if failing else ''}
 """
 
@@ -6363,8 +6374,8 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Opens error dialog
 
                 # Creates a MATLAB executable. This works because we defined
-                # the paths to Matlab and SPM in the configuration, in the first
-                # few lines!
+                # the paths to Matlab and SPM in the configuration, in the
+                # first few lines!
                 mock_executable(tmp_path, "matlab")
                 popup.ok_clicked()  # Closes the window
 
@@ -6434,7 +6445,8 @@ if __name__ == "__main__":
                 ensures errors are triggered.
                 - Simulates a subprocess permission error.
                 - Confirms MATLAB remains disabled in the config.
-                - Finally, sets a valid executable and confirms MATLAB is enabled.
+                - Finally, sets a valid executable and confirms MATLAB is
+                  enabled.
                 """
                 print("Testing MATLAB only configuration...")
                 main_wnd.software_preferences_pop_up()  # Reopens the window
@@ -6500,24 +6512,30 @@ if __name__ == "__main__":
 
             def test_matlab_mcr_spm_standalone():
                 """
-                Tests the configuration of MATLAB MCR and SPM standalone in
-                the software preferences.
+                Tests configuration of MATLAB MCR and SPM standalone mode via
+                the software preferences dialog.
 
-                This test simulates both failure and success scenarios for
-                configuring the SPM standalone mode with MATLAB MCR,
-                validating that configurations are only accepted if both
-                executables are available and functional.
+                This test simulates various invalid and valid setups for the
+                SPM standalone configuration and verifies that the
+                configuration is only accepted when both MATLAB MCR and SPM
+                paths are valid and executable.
 
-                Steps:
-                    - Tries invalid and missing directories for MCR and SPM.
-                    - Tests failure cases with bad/missing/failing
-                        `run_spm.sh`.
-                    - Uses mock executables to simulate errors (missing libs,
-                        permissions).
-                    - Ensures config stays disabled unless valid setup is
-                        found.
-                    - Final part simulates valid configuration and confirms
-                        enabling in config.
+                Scenarios tested:
+                    - Invalid/nonexistent directories for MCR and SPM
+                    - Missing or failing `run_spm.sh` executable (permissions,
+                      missing libs)
+                    - Proper setup with mock `run_spm.sh` emitting expected
+                      output
+
+                - Tests:
+                        - PopUpPreferences.ok_clicked (validation of config)
+                        - Config.get_use_spm_standalone and
+                          get_use_matlab_standalone
+                        - Proper error handling on subprocess failure
+
+                - Mocks:
+                        - `mock_executable` for generating mock `run_spm.sh`
+                        - `subprocess.run` for simulating chmod
                 """
                 print("Testing MATLAB MCR / SPM standalone configuration...")
                 main_wnd.software_preferences_pop_up()  # Opens the window
@@ -6535,6 +6553,9 @@ if __name__ == "__main__":
                     os.path.join(tmp_path, "non_existing")
                 )
                 popup.ok_clicked()  # Opens error message
+                config = Config(properties_path=self.properties_path)
+                self.assertFalse(config.get_use_spm_standalone())
+                self.assertFalse(config.get_use_matlab_standalone())
 
                 # Sets an existing directory for MATLAB MCR, non-existing
                 # directory for SPM standalone
@@ -6543,18 +6564,24 @@ if __name__ == "__main__":
                     os.path.join(tmp_path, "non_existing")
                 )
                 popup.ok_clicked()  # Opens error dialog
+                config = Config(properties_path=self.properties_path)
+                self.assertFalse(config.get_use_spm_standalone())
+                self.assertFalse(config.get_use_matlab_standalone())
 
                 # Sets existing directories for both MATLAB MCR and SPM
-                # standalone
+                # standalone, but no executable
                 popup.spm_standalone_choice.setText(tmp_path)
                 popup.ok_clicked()  # Opens error dialog
-
-                # Does not find a SPM standalone executable
-                popup.ok_clicked()  # Opens error dialog
+                config = Config(properties_path=self.properties_path)
+                self.assertFalse(config.get_use_spm_standalone())
+                self.assertFalse(config.get_use_matlab_standalone())
 
                 # Creates a failing SPM standalone executable
                 mock_executable(tmp_path, "run_spm.sh", failing=True)
                 popup.ok_clicked()  # Opens error dialog
+                config = Config(properties_path=self.properties_path)
+                self.assertFalse(config.get_use_spm_standalone())
+                self.assertFalse(config.get_use_matlab_standalone())
 
                 mock_executable(
                     tmp_path,
@@ -6563,9 +6590,13 @@ if __name__ == "__main__":
                     err_msg="shared libraries",
                 )
                 popup.ok_clicked()  # Opens error dialog
+                config = Config(properties_path=self.properties_path)
+                self.assertFalse(config.get_use_spm_standalone())
+                self.assertFalse(config.get_use_matlab_standalone())
 
                 # Restricts the permission required to run the MATLAB
                 # executable to induce an exception on 'subprocess.Popen'
+                mock_executable(tmp_path, "run_spm.sh")
                 subprocess.run(
                     ["chmod", "-x", os.path.join(tmp_path, "run_spm.sh")]
                 )
@@ -6580,16 +6611,24 @@ if __name__ == "__main__":
                 mock_executable(
                     tmp_path,
                     "run_spm.sh",
-                    failing=True,
+                    failing=False,
                     output="_ _ version (standalone)",
                 )
-                popup.ok_clicked()  # Closes window
+                popup.ok_clicked()  # Closes window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                # FIXME: the following lines makes, only with macos build: <====
-                #        'AssertionError: False is not true'. Commented.
-                # self.assertTrue(config.get_use_spm_standalone())
-                # self.assertTrue(config.get_use_matlab_standalone())
+                # FIXME: the following lines makes, only with macos build: <===
+                #        'AssertionError: False is not true'.
+                print(
+                    "config.get_use_spm_standalone(): ",
+                    config.get_use_spm_standalone(),
+                )
+                print(
+                    "config.get_use_matlab_standalone(): ",
+                    config.get_use_matlab_standalone(),
+                )
+                self.assertTrue(config.get_use_spm_standalone())
+                self.assertTrue(config.get_use_matlab_standalone())
 
                 # Resets the 'config' object
                 config.set_spm_standalone_path("")
@@ -6598,35 +6637,52 @@ if __name__ == "__main__":
 
                 # Enable standalone SMP mode in the pop-up window.
                 main_wnd.software_preferences_pop_up()  # Opens the window
+                popup = main_wnd.pop_up_preferences
                 popup.use_spm_standalone_checkbox.setChecked(True)
                 popup.spm_standalone_choice.setText(tmp_path)
                 mock_executable(tmp_path, "run_spm.sh")
-                popup.ok_clicked()  # Closes the window
+                popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                # FIXME: the following lines makes, only with macos build: <====
-                #        'AssertionError: False is not true'. Commented.
-                # self.assertTrue(config.get_use_spm_standalone())
-
-                # self.assertTrue(config.get_use_matlab_standalone())
+                # FIXME: the following lines makes, only with macos build: <===
+                #        'AssertionError: False is not true'
+                print(
+                    "config.get_use_spm_standalone(): ",
+                    config.get_use_spm_standalone(),
+                )
+                print(
+                    "config.get_use_matlab_standalone(): ",
+                    config.get_use_matlab_standalone(),
+                )
+                self.assertTrue(config.get_use_spm_standalone())
+                self.assertTrue(config.get_use_matlab_standalone())
 
                 # Resets the 'config' object
                 config.set_use_spm_standalone(False)
                 config.set_use_matlab_standalone(False)
 
                 main_wnd.software_preferences_pop_up()  # Opens the window
+                popup = main_wnd.pop_up_preferences
                 popup.use_spm_standalone_checkbox.setChecked(True)
 
                 # The same MATLAB directory is already the same on both the
                 # preferences window and 'config' object, same for SPM
                 # standalone
-                popup.ok_clicked()  # Closes the window
+                popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
                 # FIXME: the following lines makes, only with macos build: <===
-                #        'AssertionError: False is not true'. Commented.
-                # self.assertTrue(config.get_use_spm_standalone())
-                # self.assertTrue(config.get_use_matlab_standalone())
+                #        'AssertionError: False is not true'.
+                print(
+                    "config.get_use_spm_standalone(): ",
+                    config.get_use_spm_standalone(),
+                )
+                print(
+                    "config.get_use_matlab_standalone(): ",
+                    config.get_use_matlab_standalone(),
+                )
+                self.assertTrue(config.get_use_spm_standalone())
+                self.assertTrue(config.get_use_matlab_standalone())
 
             # Actual launch of testing
             Config(
@@ -6662,7 +6718,7 @@ if __name__ == "__main__":
             test_fsl()
             test_spm_matlab()
             test_matlab_only()
-            test_matlab_mcr_spm_standalone
+            test_matlab_mcr_spm_standalone()
 
     def test_software_preferences_pop_up_validate(self):
         """Opens the preferences pop up, sets the configuration.
