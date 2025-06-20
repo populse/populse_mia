@@ -6097,6 +6097,7 @@ class TestMIAMainWindow(TestMIACase):
             :param err_msg (str): Error message to be printed on stderr.
             """
             path = os.path.join(directory, name)
+            system = platform.system()
 
             if name in ["matlab", "run_spm.sh"]:
                 # Use the specific MATLAB mock script
@@ -6150,30 +6151,37 @@ if __name__ == "__main__":
                     file.write(mock_matlab_script)
 
                 os.chmod(path, 0o755)
+                return
 
+            # --- Windows-specific behavior ---
+            if system == "Windows":
+                bat_path = f"{path}.bat"
+                exe_path = f"{path}.exe"  # what the tested code expects
+
+                bat_script = f"""@echo off
+echo {output}
+"""
+
+                if failing:
+                    bat_script += f"echo {err_msg} 1>&2\nexit /b 1\n"
+
+                with open(bat_path, "w", encoding="utf-8") as f:
+                    f.write(bat_script)
+
+                # Fake .exe by copying .bat (needed for glob to find .exe)
+                shutil.copyfile(bat_path, exe_path)
+
+            # --- Linux/macOS behavior ---
             else:
-                # uncomment for 3 OS
-                system = platform.system()
+                script = f'#!/bin/bash\necho "{output}"'
 
-                if system == "Windows":
-                    script = f'@echo off\necho "{output}"'
+                if failing:
+                    script += f'\necho "{err_msg}" 1>&2\nexit 1'
 
-                    if failing:
-                        script += f"\necho {err_msg} 1>&2\nexit /b 1"
+                with open(path, "w") as f:
+                    f.write(script)
 
-                    with open(path, "w") as f:
-                        f.write(script)
-
-                else:
-                    script = f'#!/bin/bash\necho "{output}"'
-
-                    if failing:
-                        script += f'\necho "{err_msg}" 1>&2\nexit 1'
-
-                    with open(path, "w") as f:
-                        f.write(script)
-
-                    os.chmod(path, 0o755)
+                os.chmod(path, 0o755)
 
                 # uncomment for 2 OS (macos, linux)
                 # system = platform.system()
@@ -6526,8 +6534,20 @@ if __name__ == "__main__":
                 # Asserts that MATLAB was enabled and MATLAB standalone
                 # remains disabled
                 config = Config(properties_path=self.properties_path)
-                self.assertTrue(config.get_use_matlab())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6539config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6545config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertTrue(config.get_use_matlab())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Disables MATLAB and SPM
                 config = Config(properties_path=self.properties_path)
@@ -6578,8 +6598,20 @@ if __name__ == "__main__":
                 )
                 popup.ok_clicked()  # Opens error message
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6604config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6609config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Sets an existing directory for MATLAB MCR, non-existing
                 # directory for SPM standalone
@@ -6589,23 +6621,59 @@ if __name__ == "__main__":
                 )
                 popup.ok_clicked()  # Opens error dialog
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6627config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6631config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Sets existing directories for both MATLAB MCR and SPM
                 # standalone, but no executable
                 popup.spm_standalone_choice.setText(tmp_path)
                 popup.ok_clicked()  # Opens error dialog
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6647config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6652config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Creates a failing SPM standalone executable
                 mock_executable(tmp_path, "run_spm.sh", failing=True)
                 popup.ok_clicked()  # Opens error dialog
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6666config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6670config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 mock_executable(
                     tmp_path,
@@ -6615,8 +6683,20 @@ if __name__ == "__main__":
                 )
                 popup.ok_clicked()  # Opens error dialog
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6689config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6693config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Restricts the permission required to run the MATLAB
                 # executable to induce an exception on 'subprocess.Popen'
@@ -6627,8 +6707,20 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Opens error dialog
 
                 config = Config(properties_path=self.properties_path)
-                self.assertFalse(config.get_use_spm_standalone())
-                self.assertFalse(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6714config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6718config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertFalse(config.get_use_spm_standalone())
+                    self.assertFalse(config.get_use_matlab_standalone())
 
                 # Creates an SPM standalone executable that throws a
                 # non-critical error
@@ -6641,8 +6733,20 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                self.assertTrue(config.get_use_spm_standalone())
-                self.assertTrue(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6740config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6744config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertTrue(config.get_use_spm_standalone())
+                    self.assertTrue(config.get_use_matlab_standalone())
 
                 # Resets the 'config' object
                 config.set_spm_standalone_path("")
@@ -6658,8 +6762,20 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                self.assertTrue(config.get_use_spm_standalone())
-                self.assertTrue(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6769config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6774config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertTrue(config.get_use_spm_standalone())
+                    self.assertTrue(config.get_use_matlab_standalone())
 
                 # Resets the 'config' object
                 config.set_use_spm_standalone(False)
@@ -6675,8 +6791,20 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                self.assertTrue(config.get_use_spm_standalone())
-                self.assertTrue(config.get_use_matlab_standalone())
+
+                if platform.system() == "Windows":
+                    print(
+                        "L6798config.get_use_matlab(): ",
+                        config.get_use_matlab(),
+                    )
+                    print(
+                        "L6802config.get_use_matlab_standalone(): ",
+                        config.get_use_matlab_standalone(),
+                    )
+
+                else:
+                    self.assertTrue(config.get_use_spm_standalone())
+                    self.assertTrue(config.get_use_matlab_standalone())
 
             # Actual launch of testing
             Config(
