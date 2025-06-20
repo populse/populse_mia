@@ -6053,7 +6053,7 @@ class TestMIAMainWindow(TestMIACase):
 
     # FIXME: Temporary solution: We need to find a way to run this test
     #        on Windows, as it is currently skipped.
-    @unittest.skipIf(platform.system() == "Windows", "Test skipped on Windows")
+    # @unittest.skipIf(platform.system() == "Windows", "Test skipped on Windows")
     def test_software_preferences_pop_up_modules_config(self):
         """
         Tests the software module configuration via the Preferences pop-up.
@@ -6152,25 +6152,49 @@ if __name__ == "__main__":
                 os.chmod(path, 0o755)
 
             else:
+                # uncomment for 3 OS
                 system = platform.system()
 
-                if system == "Linux":
+                if system == "Windows":
+                    script = f'@echo off\necho "{output}"'
+
+                    if failing:
+                        script += f"\necho {err_msg} 1>&2\nexit /b 1"
+
+                    with open(path, "w") as f:
+                        f.write(script)
+
+                else:
                     script = f'#!/bin/bash\necho "{output}"'
 
-                elif system == "Darwin":
-                    script = '#!/usr/bin/env bash\necho "mock executable"'
+                    if failing:
+                        script += f'\necho "{err_msg}" 1>&2\nexit 1'
 
-                elif system == "Windows":
-                    pass
-                    # TODO: build mocked executable for Windows
+                    with open(path, "w") as f:
+                        f.write(script)
 
-                if failing:
-                    script += f'\necho "{err_msg}" 1>&2\nexit 1'
+                    os.chmod(path, 0o755)
 
-                with open(path, "w") as f:
-                    f.write(script)
+                # uncomment for 2 OS (macos, linux)
+                # system = platform.system()
 
-                subprocess.run(["chmod", "+x", path])
+                # if system == "Linux":
+                #     script = f'#!/bin/bash\necho "{output}"'
+
+                # elif system == "Darwin":
+                #     script = '#!/usr/bin/env bash\necho "mock executable"'
+
+                # elif system == "Windows":
+                #     pass
+                #     # TODO: build mocked executable for Windows
+
+                # if failing:
+                #     script += f'\necho "{err_msg}" 1>&2\nexit 1'
+
+                # with open(path, "w") as f:
+                #     f.write(script)
+
+                # subprocess.run(["chmod", "+x", path])
 
         # Mocks 'QMessageBox.show'
         with patch.object(QMessageBox, "show", lambda *args, **kwargs: None):
@@ -6617,16 +6641,6 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                # FIXME: the following lines makes, only with macos build: <===
-                #        'AssertionError: False is not true'.
-                print(
-                    "config.get_use_spm_standalone(): ",
-                    config.get_use_spm_standalone(),
-                )
-                print(
-                    "config.get_use_matlab_standalone(): ",
-                    config.get_use_matlab_standalone(),
-                )
                 self.assertTrue(config.get_use_spm_standalone())
                 self.assertTrue(config.get_use_matlab_standalone())
 
@@ -6644,16 +6658,6 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                # FIXME: the following lines makes, only with macos build: <===
-                #        'AssertionError: False is not true'
-                print(
-                    "config.get_use_spm_standalone(): ",
-                    config.get_use_spm_standalone(),
-                )
-                print(
-                    "config.get_use_matlab_standalone(): ",
-                    config.get_use_matlab_standalone(),
-                )
                 self.assertTrue(config.get_use_spm_standalone())
                 self.assertTrue(config.get_use_matlab_standalone())
 
@@ -6671,16 +6675,6 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
-                # FIXME: the following lines makes, only with macos build: <===
-                #        'AssertionError: False is not true'.
-                print(
-                    "config.get_use_spm_standalone(): ",
-                    config.get_use_spm_standalone(),
-                )
-                print(
-                    "config.get_use_matlab_standalone(): ",
-                    config.get_use_matlab_standalone(),
-                )
                 self.assertTrue(config.get_use_spm_standalone())
                 self.assertTrue(config.get_use_matlab_standalone())
 
