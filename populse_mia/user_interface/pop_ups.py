@@ -3613,9 +3613,10 @@ class PopUpPreferences(QDialog):
         SPM, etc.) and updates the corresponding GUI fields, including
         checkboxes and text fields.
 
-        :param conf (CapsulConfig): The CAPSUL configuration object containing
-                                    the paths and usage states of different
-                                    tools.
+        :param conf (software_properties.Config): The Mia configuration object
+                                                  containing the paths and
+                                                  usage states of different
+                                                  tools.
         """
         # afni
         use_afni = conf.get_use_afni()

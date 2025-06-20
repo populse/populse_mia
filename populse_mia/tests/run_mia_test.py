@@ -5698,6 +5698,9 @@ class TestMIAMainWindow(TestMIACase):
             - QInputDialog.getText
             - QDialog.exec
             - QMessageBox.exec
+            - SettingsEditor.update_gui
+            - capsul.api.capsul_engine
+            - Config.set_capsul_config
         """
 
         # Sets shortcuts for objects that are often used
@@ -5734,42 +5737,29 @@ class TestMIAMainWindow(TestMIACase):
 
         # Check that matlab MCR is selected
         main_wnd.software_preferences_pop_up()
-        # fmt: off
-        self.assertTrue(
-            main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.
-            isChecked()
-        )
-        # fmt: on
-        main_wnd.pop_up_preferences.close()
+        popup = main_wnd.pop_up_preferences
+        self.assertTrue(popup.use_matlab_standalone_checkbox.isChecked())
+        popup.close()
 
         # Enables Matlab
         config.set_use_matlab(True)
 
         # Check that matlab is selected and matlab MCR not
         main_wnd.software_preferences_pop_up()
-        self.assertTrue(
-            main_wnd.pop_up_preferences.use_matlab_checkbox.isChecked()
-        )
-        # fmt: off
-        self.assertFalse(
-            main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.
-            isChecked()
-        )
-        # fmt: on
-        main_wnd.pop_up_preferences.close()
+        popup = main_wnd.pop_up_preferences
+        self.assertTrue(popup.use_matlab_checkbox.isChecked())
+        self.assertFalse(popup.use_matlab_standalone_checkbox.isChecked())
+        popup.close()
 
         # Enables SPM
         config.set_use_spm(True)
 
         # Check that SPM and matlab are selected
         main_wnd.software_preferences_pop_up()
-        self.assertTrue(
-            main_wnd.pop_up_preferences.use_matlab_checkbox.isChecked()
-        )
-        self.assertTrue(
-            main_wnd.pop_up_preferences.use_spm_checkbox.isChecked()
-        )
-        main_wnd.pop_up_preferences.close()
+        popup = main_wnd.pop_up_preferences
+        self.assertTrue(popup.use_matlab_checkbox.isChecked())
+        self.assertTrue(popup.use_spm_checkbox.isChecked())
+        popup.close()
 
         # Enables SPM standalone
         config.set_use_spm_standalone(True)
@@ -5777,42 +5767,21 @@ class TestMIAMainWindow(TestMIACase):
         # Check that SPM standalone and matlab MCR are selected,
         # SPM and matlab not
         main_wnd.software_preferences_pop_up()
+        popup = main_wnd.pop_up_preferences
 
         if "Windows" not in platform.architecture()[1]:
-            # fmt: off
-            self.assertTrue(
-                main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.
-                isChecked()
-            )
-            self.assertTrue(
-                main_wnd.pop_up_preferences.use_spm_standalone_checkbox.
-                isChecked()
-            )
-            # fmt: on
-            self.assertFalse(
-                main_wnd.pop_up_preferences.use_matlab_checkbox.isChecked()
-            )
-            self.assertFalse(
-                main_wnd.pop_up_preferences.use_spm_checkbox.isChecked()
-            )
+            self.assertTrue(popup.use_matlab_standalone_checkbox.isChecked())
+            self.assertTrue(popup.use_spm_standalone_checkbox.isChecked())
+            self.assertFalse(popup.use_matlab_checkbox.isChecked())
+            self.assertFalse(popup.use_spm_checkbox.isChecked())
 
         else:
-            prefs = main_wnd.pop_up_preferences
-            self.assertFalse(
-                main_wnd.pop_up_preferences.use_matlab_standalone_checkbox.isChecked()
-            )
-            self.assertTrue(
-                main_wnd.pop_up_preferences.use_spm_standalone_checkbox.isChecked()
-            )
-            # fmt: on
-            self.assertFalse(
-                main_wnd.pop_up_preferences.use_matlab_checkbox.isChecked()
-            )
-            self.assertFalse(
-                main_wnd.pop_up_preferences.use_spm_checkbox.isChecked()
-            )
+            self.assertFalse(popup.use_matlab_standalone_checkbox.isChecked())
+            self.assertTrue(popup.use_spm_standalone_checkbox.isChecked())
+            self.assertFalse(popup.use_matlab_checkbox.isChecked())
+            self.assertFalse(popup.use_spm_checkbox.isChecked())
 
-        main_wnd.pop_up_preferences.close()
+        popup.close()
 
         # Mocks 'QFileDialog.getOpenFileName' (returns an existing file)
         # This method returns a tuple (filename, file_types), where file_types
@@ -6581,7 +6550,7 @@ if __name__ == "__main__":
                 popup.ok_clicked()  # Opens error dialog
 
                 # Does not find a SPM standalone executable
-                popup.ok_clicked()  # Opens error dialog <=== ?
+                popup.ok_clicked()  # Opens error dialog
 
                 # Creates a failing SPM standalone executable
                 mock_executable(tmp_path, "run_spm.sh", failing=True)
@@ -6606,8 +6575,8 @@ if __name__ == "__main__":
                 self.assertFalse(config.get_use_spm_standalone())
                 self.assertFalse(config.get_use_matlab_standalone())
 
-                # Creates an SPM standalone executable that throws a non-critical
-                # error
+                # Creates an SPM standalone executable that throws a
+                # non-critical error
                 mock_executable(
                     tmp_path,
                     "run_spm.sh",
