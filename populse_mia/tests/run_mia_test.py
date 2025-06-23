@@ -6051,8 +6051,10 @@ class TestMIAMainWindow(TestMIACase):
 
         main_wnd.pop_up_preferences.close()
 
-    # FIXME: Temporary solution: We need to find a way to run this test
-    #        on Windows, as it is currently skipped.
+    # TODO: Currently, this test does not work properly under Windows (which
+    #       is why we make no "assert" regarding the configuration under
+    #       Windows). This test will need to be reworked directly on a Windows
+    #       system in order to make the necessary corrections.
     # @unittest.skipIf(platform.system() == "Windows", "Test skipped on Windows")
     def test_software_preferences_pop_up_modules_config(self):
         """
@@ -6068,14 +6070,6 @@ class TestMIAMainWindow(TestMIACase):
         :mocks:
             - QMessageBox.show
         """
-        # Sets shortcuts for objects that are often used
-        main_wnd = self.main_window
-        tmp_path = os.path.join(self.properties_path, "test_preference")
-        os.makedirs(tmp_path, exist_ok=True)
-        mri_manager_file = os.path.join(tmp_path, "MRIManager.jar")
-        Path(mri_manager_file).touch()
-        resources_path = os.path.join(tmp_path, "resources_path")
-        os.makedirs(resources_path, exist_ok=True)
 
         # Mocks executables to be used for the modules tested
         def mock_executable(
@@ -6203,6 +6197,15 @@ echo {output}
                 #     f.write(script)
 
                 # subprocess.run(["chmod", "+x", path])
+
+        # Sets shortcuts for objects that are often used
+        main_wnd = self.main_window
+        tmp_path = os.path.join(self.properties_path, "test_preference")
+        os.makedirs(tmp_path, exist_ok=True)
+        mri_manager_file = os.path.join(tmp_path, "MRIManager.jar")
+        Path(mri_manager_file).touch()
+        resources_path = os.path.join(tmp_path, "resources_path")
+        os.makedirs(resources_path, exist_ok=True)
 
         # Mocks 'QMessageBox.show'
         with patch.object(QMessageBox, "show", lambda *args, **kwargs: None):
