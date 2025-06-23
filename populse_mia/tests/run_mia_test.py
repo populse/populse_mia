@@ -41,7 +41,6 @@ import unittest
 import uuid
 from contextlib import contextmanager
 from datetime import datetime
-from functools import partial
 from hashlib import sha256
 from pathlib import Path
 from time import sleep
@@ -156,7 +155,6 @@ from capsul.pipeline.pipeline_workflow import (  # noqa: E402
 )
 from capsul.pipeline.process_iteration import ProcessIteration  # noqa: E402
 from capsul.process.process import NipypeProcess  # noqa: E402
-from capsul.qt_gui.widgets.settings_editor import SettingsEditor  # noqa: E402
 
 # Mia_processes import
 from mia_processes.bricks.tools import Input_Filter  # noqa: E402
@@ -171,7 +169,6 @@ from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 from populse_mia.data_manager import (  # noqa: E402
     BRICK_EXEC,
     BRICK_EXEC_TIME,
-    BRICK_ID,
     BRICK_INIT,
     BRICK_INIT_TIME,
     BRICK_NAME,
@@ -241,9 +238,10 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
     PopUpSeeAllProjects,
     PopUpSelectTagCountTable,
 )
-from populse_mia.utils import (  # noqa: E402; verify_processes,
+from populse_mia.utils import (  # noqa: E402
     check_value_type,
     table_to_database,
+    verify_processes,
     verify_setup,
 )
 
@@ -1375,12 +1373,15 @@ class TestMIADataBrowser(TestMIACase):
             add_tag.combo_box_type.setCurrentText("Integer List")
             # Simulate list value creation
             QTest.mouseClick(add_tag.text_edit_default_value, Qt.LeftButton)
+            # fmt: off
             QTest.mouseClick(
                 (
-                    add_tag.text_edit_default_value.list_creation.add_element_label
+                    add_tag.text_edit_default_value.list_creation
+                    .add_element_label
                 ),
                 Qt.LeftButton,
             )
+            # fmt: on
             # Add items to table
             table = add_tag.text_edit_default_value.list_creation.table
 
@@ -4152,7 +4153,6 @@ class TestMIADataBrowser(TestMIACase):
         text_edit = pop_up.text_edit_default_value
 
         # Assures the instantiation of 'DefaultValueListCreation'
-        # text_edt.parent.type = "list_"
         text_edit.parent.type = FIELD_TYPE_LIST_STRING
 
         # Mocks the execution of a dialog window
@@ -4679,10 +4679,13 @@ class TestMIAMainWindow(TestMIACase):
         expected_scan_path = os.path.normpath(
             document_1.replace("downloaded_data", "raw_data")
         )
+        # fmt: off
         scans = [
             os.path.normpath(p)
-            for p in self.main_window.data_browser.table_data.scans_to_visualize
+            for p in self.main_window.data_browser.table_data
+            .scans_to_visualize
         ]
+        # fmt: on
         # Asserts that the first scan was added to the 'raw_data' folder
         self.assertIn(expected_scan_path, scans)
         self.assertIn(expected_scan_path, scan_added)
@@ -5020,7 +5023,6 @@ class TestMIAMainWindow(TestMIACase):
             # Reopen library and install from folder
             self.main_window.package_library_pop_up()
             pkg_lib_window = self.main_window.pop_up_package_library
-            # install_ui = pkg_lib_window.pop_up_install_processes
 
             # Opens the "installation processes" (from folder) pop up
             folder_btn = (
@@ -5033,7 +5035,6 @@ class TestMIAMainWindow(TestMIACase):
             )
             folder_btn.clicked.emit()
 
-            # install_btn = install_ui.layout().itemAt(1).itemAt(0).widget()
             # Sets the folder to
             # - a non-existent file path
             # - an existing file path
@@ -5583,7 +5584,7 @@ class TestMIAMainWindow(TestMIACase):
         projects_dir = os.path.join(self.properties_path, "projects")
         config.set_projects_save_path(projects_dir)
 
-        # # Add a fake (non-existent) project path to the saved projects
+        # Add a fake (non-existent) project path to the saved projects
         fake_project_path = os.path.join(projects_dir, "missing_project")
         saved_projects = SavedProjects()
         saved_projects.addSavedProject(fake_project_path)
@@ -6055,7 +6056,9 @@ class TestMIAMainWindow(TestMIACase):
     #       is why we make no "assert" regarding the configuration under
     #       Windows). This test will need to be reworked directly on a Windows
     #       system in order to make the necessary corrections.
-    # @unittest.skipIf(platform.system() == "Windows", "Test skipped on Windows")
+    # @unittest.skipIf(
+    # platform.system() == "Windows", "Test skipped on Windows"
+    # )
     def test_software_preferences_pop_up_modules_config(self):
         """
         Tests the software module configuration via the Preferences pop-up.
@@ -6315,7 +6318,7 @@ echo {output}
                     confirms acceptance.
                 8. Closes the dialog and disables FSL in the configuration.
                 """
-                print(f"Testing FSL configuration...")
+                print("Testing FSL configuration...")
                 main_wnd.software_preferences_pop_up()  # Reopens the window
                 popup = main_wnd.pop_up_preferences
 
@@ -6554,11 +6557,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6539config.get_use_matlab(): ",
+                        "L6556config.get_use_matlab(): ",
                         config.get_use_matlab(),
                     )
                     print(
-                        "L6545config.get_use_matlab_standalone(): ",
+                        "L6560config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6625,11 +6628,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6604config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6627config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6609config.get_use_matlab_standalone(): ",
+                        "L6631onfig.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6648,11 +6651,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6627config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6650config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6631config.get_use_matlab_standalone(): ",
+                        "L6654config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6668,11 +6671,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6647config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6670config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6652config.get_use_matlab_standalone(): ",
+                        "L6674config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6687,11 +6690,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6666config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6689config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6670config.get_use_matlab_standalone(): ",
+                        "L6693config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6710,11 +6713,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6689config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6712config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6693config.get_use_matlab_standalone(): ",
+                        "L6716config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6734,11 +6737,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6714config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6737config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6718config.get_use_matlab_standalone(): ",
+                        "L6740config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6760,11 +6763,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6740config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6762config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6744config.get_use_matlab_standalone(): ",
+                        "L6766config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6789,11 +6792,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6769config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6791config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6774config.get_use_matlab_standalone(): ",
+                        "L6795config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6818,11 +6821,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6798config.get_use_matlab(): ",
-                        config.get_use_matlab(),
+                        "L6820config.get_use_spm_standalone(): ",
+                        config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6802config.get_use_matlab_standalone(): ",
+                        "L6824config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6867,57 +6870,80 @@ echo {output}
             test_matlab_mcr_spm_standalone()
 
     def test_software_preferences_pop_up_validate(self):
-        """Opens the preferences pop up, sets the configuration.
+        """
+        Validates configuration changes via the software preferences pop-up.
 
-        For modules AFNI, ANTS, FSL, SPM, mrtrix and MATLAB without pressing
-        the OK button and switches the auto-save, controller version and
-        radio view options.
+        This test simulates user interactions in the software preferences
+        window without and with confirming via the 'OK' button. It verifies
+        correct saving of settings related to:
+            - Standalone modules (AFNI, ANTS, FSL, SPM, MRtrix, MATLAB,
+              freesurfer)
+            - UI and behavioral options (auto-save, radio view,
+              admin/clinical mode)
 
-        - Tests: PopUpPreferences.validate_and_save
+        - Tests:
+            - PopUpPreferences.validate_and_save
+            - PopUpPreferences.ok_clicked
 
         - Mocks:
             - PopUpPreferences.show
+            - PopUpPreferences.wrong_path
             - QMessageBox.show
         """
 
-        # Validates the Pipeline tab without pressing the 'OK' button:
+        # --- Validates the Pipeline tab without pressing the 'OK' button
 
         # Set shortcuts for objects that are often used
         main_wnd = self.main_window
 
-        # Mocks the execution of 'PopUpPreferences' to speed up the test
-        # PopUpPreferences.show = lambda x: None
-
         tmp_path = self.properties_path
         main_wnd.software_preferences_pop_up()
 
-        # Selects standalone modules
+        # Enable MATLAB and SPM standalone modules
         for module in ["matlab_standalone", "spm_standalone"]:
             getattr(
-                main_wnd.pop_up_preferences, "use_" + module + "_checkbox"
+                main_wnd.pop_up_preferences, f"use_{module}_checkbox"
             ).setChecked(True)
 
-        # Validates the Pipeline tab without pressing the 'OK' button
+        # --- Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
-        config = Config(properties_path=self.properties_path)
+        config = Config(properties_path=tmp_path)
+
         for module in ["matlab_standalone", "spm_standalone"]:
-            self.assertTrue(getattr(config, "get_use_" + module)())
+            self.assertTrue(getattr(config, f"get_use_{module}")())
 
-        # Selects non standalone modules
-        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
+        # Enable all non standalone modules
+        for module in [
+            "afni",
+            "ants",
+            "fsl",
+            "matlab",
+            "mrtrix",
+            "spm",
+            "freesurfer",
+        ]:
             getattr(
-                main_wnd.pop_up_preferences, "use_" + module + "_checkbox"
+                main_wnd.pop_up_preferences, f"use_{module}_checkbox"
             ).setChecked(True)
 
-        # Validates the Pipeline tab without pressing the 'OK' button
+        # --- Validates the Pipeline tab without pressing the 'OK' button
         main_wnd.pop_up_preferences.validate_and_save()
 
-        config = Config(properties_path=self.properties_path)
-        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
-            self.assertTrue(getattr(config, "get_use_" + module)())
+        config = Config(properties_path=tmp_path)
 
-        # Validates the Pipeline tab by pressing the 'OK' button:
+        for module in [
+            "afni",
+            "ants",
+            "fsl",
+            "matlab",
+            "mrtrix",
+            "spm",
+            "freesurfer",
+        ]:
+            self.assertTrue(getattr(config, f"get_use_{module}")())
+
+        # --- Validates the Pipeline tab by pressing the 'OK' button:
 
         # Sets the projects folder for the preferences window to close
         # when pressing on 'OK'
@@ -6928,33 +6954,44 @@ echo {output}
         )
 
         # Mocks the execution of 'wrong_path' and 'QMessageBox.show'
-        main_wnd.pop_up_preferences.wrong_path = lambda x, y: None
-        QMessageBox.show = lambda x: None
+        with (
+            patch.object(QMessageBox, "show", lambda *_, **__: None),
+            patch.object(
+                main_wnd.pop_up_preferences,
+                "wrong_path",
+                lambda *_, **__: None,
+            ),
+        ):
+            # Disable all module checkboxes
+            for module in [
+                "afni",
+                "ants",
+                "fsl",
+                "matlab",
+                "mrtrix",
+                "spm",
+                "freesurfer",
+            ]:
+                getattr(
+                    main_wnd.pop_up_preferences, f"use_{module}_checkbox"
+                ).setChecked(False)
 
-        # Deselects non standalone modules
-        for module in ["afni", "ants", "fsl", "matlab", "mrtrix", "spm"]:
-            getattr(
-                main_wnd.pop_up_preferences, "use_" + module + "_checkbox"
-            ).setChecked(False)
-
-        # Deselects the 'radioView', 'adminMode' and 'clinicalMode' option
+        # Disable the 'radioView', 'adminMode' and 'clinicalMode' option
         for opt in ["save", "radioView", "admin_mode", "clinical_mode"]:
             (
                 getattr(
-                    main_wnd.pop_up_preferences, opt + "_checkbox"
+                    main_wnd.pop_up_preferences, f"{opt}_checkbox"
                 ).setChecked(False)
             )
         # The options autoSave, radioView and controlV1 are not selected
 
-        # Sets the projects save path
-        Config(properties_path=self.properties_path).set_projects_save_path(
-            tmp_path
-        )
+        # Set a valid path before confirming
+        Config(properties_path=tmp_path).set_projects_save_path(tmp_path)
 
-        # Validates the all tab after pressing the 'OK' button
+        # --- Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
 
-        config = Config(properties_path=self.properties_path)
+        config = Config(properties_path=tmp_path)
 
         for opt in [
             "isAutoSave",
@@ -6971,9 +7008,10 @@ echo {output}
         config = Config(properties_path=self.properties_path)
 
         for module in ["matlab", "spm"]:
-            getattr(config, "set_use_" + module)(False)
+            getattr(config, f"set_use_{module}")(False)
 
-        main_wnd.software_preferences_pop_up()  # Reopens the window
+        # Reopen preferences and re-check options
+        main_wnd.software_preferences_pop_up()
 
         # Selects the autoSave, radioView and controlV1 options
         for opt in [
@@ -6988,115 +7026,116 @@ echo {output}
         # Alternates to minimized mode
         main_wnd.pop_up_preferences.fullscreen_cbox.setChecked(True)
 
-        # Sets a non-existent projects save path
-        Config(properties_path=self.properties_path).set_projects_save_path(
+        # Set an invalid path and confirm
+        Config(properties_path=tmp_path).set_projects_save_path(
             os.path.join(tmp_path, "non_existent")
         )
 
         # Validates the all tab after pressing the 'OK' button
         main_wnd.pop_up_preferences.ok_clicked()
 
-        # Asserts that the 'config' objects was not updated with the
-        # non-existent projects folder
-        config = Config(properties_path=self.properties_path)
+        # Ensure config path remains unchanged
+        config = Config(properties_path=tmp_path)
         self.assertEqual(config.get_projects_save_path(), tmp_path)
 
     def test_switch_project(self):
-        """Creates a project and switches to it.
+        """
+        Tests switching to various project states using
+        MainWindow.switch_project.
+
+        This test covers:
+            - Switching to a valid Mia project
+            - Handling non-existent project paths
+            - Preventing switching to already-open projects
+            - Ignoring invalid or malformed Mia projects
 
         - Tests: MainWindow.switch_project
-
-        - Mocks: QMessageBox.exec
+        - Mocks: QMessageBox.exec (to bypass dialog confirmations)
         """
 
         # Mocks the execution of a dialog window
-        QMessageBox.exec = lambda self_: None
+        with patch.object(QMessageBox, "exec", return_value=None):
+            # Create a new valid test project
+            test_proj_path = self.get_new_test_project()
 
-        # Creates a new project
-        test_proj_path = self.get_new_test_project()
+            # Switch to the newly created valid project
+            res = self.main_window.switch_project(
+                test_proj_path, "test_project"
+            )
+            self.assertTrue(res)
+            self.assertEqual(self.main_window.project.folder, test_proj_path)
 
-        # Switches to an existing mia project
-        res = self.main_window.switch_project(test_proj_path, "test_project")
-        self.assertTrue(res)
-        self.assertEqual(self.main_window.project.folder, test_proj_path)
+            # Reset the folder to simulate no project loaded
+            self.main_window.project.folder = ""
 
-        self.main_window.project.folder = ""  # Resets the project folder
+            # Attempt to switch to a non-existent project path
+            res = self.main_window.switch_project(
+                test_proj_path + "_", "test_project"
+            )
+            self.assertFalse(res)
+            self.assertEqual(self.main_window.project.folder, "")
 
-        # Tries to switch to a non-existent project
-        res = self.main_window.switch_project(
-            test_proj_path + "_", "test_project"
-        )
-        self.assertFalse(res)
-        self.assertEqual(self.main_window.project.folder, "")
+            # Simulate trying to open a project already opened in another
+            # instance
+            res = self.main_window.switch_project(
+                test_proj_path, "test_project"
+            )
+            self.assertFalse(res)
+            self.assertEqual(self.main_window.project.folder, "")
 
-        # Tries to switch to a project that is already opened in another
-        # instance of the software
-        res = self.main_window.switch_project(test_proj_path, "test_project")
-        self.assertFalse(res)
-        self.assertEqual(self.main_window.project.folder, "")
+            # Clear the list of opened projects to simulate clean state
+            config = Config(properties_path=self.properties_path)
+            config.set_opened_projects([])
 
-        # Resets the opened projects list
-        config = Config(properties_path=self.properties_path)
-        config.set_opened_projects([])
+            # Delete the 'filters' folder to make the project non-MIA compliant
+            filters_path = os.path.join(test_proj_path, "filters")
+            subprocess.run(["rm", "-rf", filters_path], check=False)
 
-        # Deletes the 'COLLECTION_CURRENT' equivalent in 'mia.db'
-        # con = sqlite3.connect(os.path.join(test_proj_path,
-        #                                    'database','mia.db'))
-        # cursor = con.cursor()
-        # query = "DELETE FROM '_collection' WHERE collection_name = 'current'"
-        # cursor.execute(query)
-        # con.commit()
-        # con.close()
-
-        # Tries to switch to a project that cannot be read by mia
-        # res = self.main_window.switch_project(test_proj_path, 'test_project')
-        # self.assertFalse(res)
-
-        # Deletes the 'filters' folder of the project
-        subprocess.run(["rm", "-rf", os.path.join(test_proj_path, "filters")])
-
-        # Tries to switch to non mia project
-        res = self.main_window.switch_project(test_proj_path, "test_project")
-        self.assertFalse(res)
+            # Attempt to switch to a project that's missing required structure
+            res = self.main_window.switch_project(
+                test_proj_path, "test_project"
+            )
+            self.assertFalse(res)
 
     def test_tab_changed(self):
-        """Switches between tabs.
-
-        Data browser, data viewer and pipeline manager.
-
-        Tests: MainWindow.tab_changed.
-
-        Mocks: QMessageBox.exec.
         """
+        Tests tab switching behavior in the main window.
 
+        Verifies that switching between:
+            - Data browser
+            - Data viewer
+            - Pipeline manager
+        behaves as expected, including handling unsaved changes via
+        a confirmation dialog.
+
+        - Tests: MainWindow.tab_changed
+        - Mocks: QMessageBox.exec
+        """
         # Creates a test project
         test_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(test_proj_path, "test_project")
 
         # Set shortcuts for objects that are often used
         data_browser = self.main_window.data_browser
+        tabs = self.main_window.tabs
 
-        # Switches to data viewer
-        self.main_window.tabs.setCurrentIndex(1)  # Calls tab_changed()
-        self.assertEqual(self.main_window.tabs.currentIndex(), 1)
+        # Switch to the data viewer tab
+        tabs.setCurrentIndex(1)  # Should trigger tab_changed()
+        self.assertEqual(tabs.currentIndex(), 1)
 
-        # Deletes a scan from data browser
+        # Remove a scan to simulate unsaved pipeline modifications
         data_browser.table_data.selectRow(0)
         data_browser.table_data.remove_scan()
 
         # Mocks the execution of a dialog box by accepting it
-        QMessageBox.exec = lambda self_, *arg: self_.accept()
+        with patch.object(QMessageBox, "exec", lambda self_: self_.accept()):
+            # Switch to the pipeline manager with unsaved modifications
+            tabs.setCurrentIndex(2)  # Calls tab_changed()
+            self.assertEqual(tabs.currentIndex(), 2)
 
-        # Switch to pipeline manager with unsaved modifications
-        self.main_window.tabs.setCurrentIndex(2)  # Calls tab_changed()
-        self.assertEqual(self.main_window.tabs.currentIndex(), 2)
-
-        # Mocks nots list
-        # self.main_window.project.currentFilter.nots = ['NOT', '', '']
-
-        # Switches to data browser
-        self.main_window.tabs.setCurrentIndex(0)  # Calls tab_changed()
-        self.assertEqual(self.main_window.tabs.currentIndex(), 0)
+        # Switch back to the data browser tab
+        tabs.setCurrentIndex(0)  # Calls tab_changed()
+        self.assertEqual(tabs.currentIndex(), 0)
 
 
 class TestMIANodeController(TestMIACase):
@@ -7430,7 +7469,9 @@ class TestMIANodeController(TestMIACase):
         )
 
         # Updates the tag to filter with
-        # with patch.object(PopUpSelectTagCountTable, 'exec_', return_value=True):
+        # with patch.object(
+        # PopUpSelectTagCountTable, 'exec_', return_value=True
+        # ):
         input_filter.update_tag_to_filter()
 
         input_filter.push_button_tag_filter.setText(TAG_FILENAME)
