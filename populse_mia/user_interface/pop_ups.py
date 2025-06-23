@@ -4364,7 +4364,8 @@ class PopUpPreferences(QDialog):
         if os.path.isdir(path):
 
             if "Windows" in archi[1]:
-                mcr = glob.glob(os.path.join(path, "spm*_win*.exe"))
+                # mcr = glob.glob(os.path.join(path, "spm*_win*.exe"))
+                mcr = glob.glob(os.path.join(path, "run_spm*.bat"))
                 pos = False
                 nb_bit_sys = archi[0]
 

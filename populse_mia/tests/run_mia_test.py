@@ -6099,7 +6099,7 @@ class TestMIAMainWindow(TestMIACase):
             path = os.path.join(directory, name)
             system = platform.system()
 
-            if name in ["matlab", "run_spm.sh"]:
+            if name in ["matlab", "matlab.exe", "run_spm12.sh"]:
                 # Use the specific MATLAB mock script
                 python_path = sys.executable
                 # Check if we should print to stderr for this specific output
@@ -6154,9 +6154,9 @@ if __name__ == "__main__":
                 return
 
             # --- Windows-specific behavior ---
-            if system == "Windows":
+            elif system == "Windows":
                 bat_path = f"{path}.bat"
-                exe_path = f"{path}.exe"  # what the tested code expects
+                # exe_path = f"{path}.exe"  # what the tested code expects
 
                 bat_script = f"""@echo off
 echo {output}
@@ -6169,7 +6169,7 @@ echo {output}
                     f.write(bat_script)
 
                 # Fake .exe by copying .bat (needed for glob to find .exe)
-                shutil.copyfile(bat_path, exe_path)
+                # shutil.copyfile(bat_path, exe_path)
 
             # --- Linux/macOS behavior ---
             else:
@@ -6392,7 +6392,14 @@ echo {output}
                 """
                 print("Testing MATLAB / SPM configuration...")
                 config = Config(properties_path=self.properties_path)
-                config.set_matlab_path(os.path.join(tmp_path, "matlab"))
+
+                if platform.system() == "Windows":
+                    soft_name = "matlab.exe"
+
+                else:
+                    soft_name = "matlab"
+
+                config.set_matlab_path(os.path.join(tmp_path, soft_name))
                 config.set_spm_path(tmp_path)
 
                 main_wnd.software_preferences_pop_up()  # Reopens the window
@@ -6402,13 +6409,13 @@ echo {output}
                 popup.use_spm_checkbox.setChecked(True)
 
                 # Sets a MATLAB executable path that does not exists
-                popup.matlab_choice.setText(os.path.join(tmp_path, "matlab"))
+                popup.matlab_choice.setText(os.path.join(tmp_path, soft_name))
                 popup.ok_clicked()  # Opens error dialog
 
                 # Creates a MATLAB executable. This works because we defined
                 # the paths to Matlab and SPM in the configuration, in the
                 # first few lines!
-                mock_executable(tmp_path, "matlab")
+                mock_executable(tmp_path, soft_name)
                 popup.ok_clicked()  # Closes the window
 
                 # Case where both MATLAB and SPM applications are used
@@ -6425,7 +6432,7 @@ echo {output}
 
                 main_wnd.software_preferences_pop_up()  # Reopens the window
                 popup = main_wnd.pop_up_preferences
-                popup.matlab_choice.setText(os.path.join(tmp_path, "matlab"))
+                popup.matlab_choice.setText(os.path.join(tmp_path, soft_name))
                 popup.spm_choice.setText(tmp_path)
                 popup.ok_clicked()  # Closes the window
 
@@ -6435,7 +6442,7 @@ echo {output}
                 # Restricts the permission on the MATLAB executable to induce
                 # an exception on 'subprocess.Popen'
                 subprocess.run(
-                    ["chmod", "-x", os.path.join(tmp_path, "matlab")]
+                    ["chmod", "-x", os.path.join(tmp_path, soft_name)]
                 )
 
                 # Resets the MATLAB executable path (which was set by the last
@@ -6481,6 +6488,13 @@ echo {output}
                   enabled.
                 """
                 print("Testing MATLAB only configuration...")
+
+                if platform.system() == "Windows":
+                    soft_name = "matlab.exe"
+
+                else:
+                    soft_name = "matlab"
+
                 main_wnd.software_preferences_pop_up()  # Reopens the window
                 popup = main_wnd.pop_up_preferences
 
@@ -6510,16 +6524,16 @@ echo {output}
                 popup.ok_clicked()  # Opens error dialog
 
                 # Creates a failing MATLAB executable
-                mock_executable(tmp_path, "matlab", failing=True)
+                mock_executable(tmp_path, soft_name, failing=True)
 
                 # Sets the MATLAB directory to this executable
-                popup.matlab_choice.setText(os.path.join(tmp_path, "matlab"))
+                popup.matlab_choice.setText(os.path.join(tmp_path, soft_name))
                 popup.ok_clicked()  # Opens error dialog
 
                 # Restricts the permission required to run the MATLAB
                 # executable to induce an exception on 'subprocess.Popen'
                 subprocess.run(
-                    ["chmod", "-x", os.path.join(tmp_path, "matlab")]
+                    ["chmod", "-x", os.path.join(tmp_path, soft_name)]
                 )
                 popup.ok_clicked()  # Opens error dialog
 
@@ -6528,7 +6542,7 @@ echo {output}
                 self.assertFalse(config.get_use_matlab())
 
                 # Creates a working MATLAB executable
-                mock_executable(tmp_path, "matlab")
+                mock_executable(tmp_path, soft_name)
                 popup.ok_clicked()  # Closes window
 
                 # Asserts that MATLAB was enabled and MATLAB standalone
@@ -6582,6 +6596,13 @@ echo {output}
                         - `subprocess.run` for simulating chmod
                 """
                 print("Testing MATLAB MCR / SPM standalone configuration...")
+
+                if platform.system() == "Windows":
+                    soft_name = "run_spm12"
+
+                else:
+                    soft_name = "run_spm12.sh"
+
                 main_wnd.software_preferences_pop_up()  # Opens the window
                 popup = main_wnd.pop_up_preferences
 
@@ -6657,7 +6678,7 @@ echo {output}
                     self.assertFalse(config.get_use_matlab_standalone())
 
                 # Creates a failing SPM standalone executable
-                mock_executable(tmp_path, "run_spm.sh", failing=True)
+                mock_executable(tmp_path, soft_name, failing=True)
                 popup.ok_clicked()  # Opens error dialog
                 config = Config(properties_path=self.properties_path)
 
@@ -6677,7 +6698,7 @@ echo {output}
 
                 mock_executable(
                     tmp_path,
-                    "run_spm.sh",
+                    soft_name,
                     failing=True,
                     err_msg="shared libraries",
                 )
@@ -6700,9 +6721,9 @@ echo {output}
 
                 # Restricts the permission required to run the MATLAB
                 # executable to induce an exception on 'subprocess.Popen'
-                mock_executable(tmp_path, "run_spm.sh")
+                mock_executable(tmp_path, soft_name)
                 subprocess.run(
-                    ["chmod", "-x", os.path.join(tmp_path, "run_spm.sh")]
+                    ["chmod", "-x", os.path.join(tmp_path, soft_name)]
                 )
                 popup.ok_clicked()  # Opens error dialog
 
@@ -6726,7 +6747,7 @@ echo {output}
                 # non-critical error
                 mock_executable(
                     tmp_path,
-                    "run_spm.sh",
+                    soft_name,
                     failing=False,
                     output="_ _ version (standalone)",
                 )
@@ -6758,7 +6779,7 @@ echo {output}
                 popup = main_wnd.pop_up_preferences
                 popup.use_spm_standalone_checkbox.setChecked(True)
                 popup.spm_standalone_choice.setText(tmp_path)
-                mock_executable(tmp_path, "run_spm.sh")
+                mock_executable(tmp_path, soft_name)
                 popup.ok_clicked()  # Closes the window, acceptance
 
                 config = Config(properties_path=self.properties_path)
