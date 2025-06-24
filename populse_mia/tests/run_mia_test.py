@@ -7161,43 +7161,56 @@ class TestMIANodeController(TestMIACase):
     """
 
     def test_attributes_filter(self):
-        """Displays the parameters of a node, displays an attributes filter
-        and modifies it.
+        """
+        Tests the display and modification of the attributes filter in the
+        CapsulNodeController GUI.
 
-        - Tests: AttributesFilter in V2 controller GUI (CapsulNodeController).
+        This test performs the following:
+            - Opens a test project and switches to it.
+            - Adds a 'Smooth' process node to the pipeline editor.
+            - Exports unconnected mandatory plugs for the new node.
+            - Displays parameters of the 'inputs' node.
+            - Opens the attributes filter dialog, selects a row, and confirms.
+            - Reopens the dialog, performs a failed search, and confirms
+              without selection.
+
+        Target:
+            - CapsulNodeController.filter_attributes
+            - AttributesFilter dialog interactions
         """
 
-        # Opens project 8 and switches to it
+        # Open and switch to test project
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_controller = self.main_window.pipeline_manager.nodeController
 
-        # Adds the process Smooth, creates a node called "smooth_1"
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+        # Add 'Smooth' process as 'smooth_1'
+        self.main_window.tabs.setCurrentIndex(2)
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Smooth)
+
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Exports the unconnected mandatory plugs
-        ppl_edt_tabs.get_current_editor().current_node_name = "smooth_1"
-        (
-            ppl_edt_tabs.get_current_editor
-        )().export_node_unconnected_mandatory_plugs()
+        # Export unconnected mandatory plugs
+        editor.current_node_name = "smooth_1"
+        editor.export_node_unconnected_mandatory_plugs()
 
-        # Displays parameters of 'inputs' node
+        # Display parameters of the 'inputs' node
         input_process = pipeline.nodes[""].process
         self.main_window.pipeline_manager.displayNodeParameters(
             "inputs", input_process
         )
 
-        # Opens the attributes filter, selects item and closes it
+        # Open attributes filter, select a row, and confirm
         node_controller.filter_attributes()
         attributes_filter = node_controller.pop_up
         attributes_filter.table_data.selectRow(0)
         attributes_filter.ok_clicked()
 
-        # Opens the attributes filter, does not select an item and closes it
+        # Open attributes filter again and confirm without selection
         node_controller.filter_attributes()
         attributes_filter = node_controller.pop_up
         attributes_filter.search_str("!@#")
@@ -7205,53 +7218,86 @@ class TestMIANodeController(TestMIACase):
 
     def test_capsul_node_controller(self):
         """
-        Adds, changes and deletes processes using the capsul node controller.
+        Validates the behavior of the CapsulNodeController for process
+        management within a pipeline editor GUI.
 
-        Displays the attributes filter.
+        This test simulates a realistic sequence of user interactions and
+        verifies the following capabilities:
 
-        Tests: CapsulNodeController
+        - Adding two 'Rename' nodes to the pipeline ('rename_1' and
+          'rename_2')
+        - Displaying and interacting with node parameters
+        - Attempting to rename 'rename_2' to an existing name (should fail)
+        - Renaming 'rename_2' to a new unique name ('rename_3') successfully
+        - Deleting an existing node ('rename_3')
+        - Exporting unconnected mandatory input plugs for a node
+        - Setting input plug values using a test document
+        - Executing the pipeline and expecting an error due to unexported
+          output
+        - Opening the attributes filter dialog, selecting a row, and
+          confirming
+        - Releasing and updating the process associated with the controller
+
+        Methods tested:
+            - CapsulNodeController.update_node_name
+            - CapsulNodeController.display_parameters
+            - CapsulNodeController.filter_attributes
+            - CapsulNodeController.release_process
+            - CapsulNodeController.update_parameters
+            - PipelineEditor.export_unconnected_mandatory_inputs
+            - PipelineManager.runPipeline
+
+        Notes:
+            - The test assumes that running the pipeline raises an error
+              because the output plug is not exported, which is intentional.
+            - A QDialog.exec() mock is used to simulate dialog confirmation
+              during pipeline execution.
         """
 
-        # Opens project 8 and switches to it
+        # Open and switch to test project
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
+        # Retrieve document name from test database
+        with self.main_window.project.database.data() as db_data:
+            DOCUMENT_1 = db_data.get_document_names(COLLECTION_CURRENT)[0]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
+        editor = ppl_edt_tabs.get_current_editor()
 
-        # Adds 2 processes Rename, creates 2 nodes called "rename_1" and
-        # "rename_2":
-        process_class = Rename
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        # Add two Rename nodes
+        self.main_window.tabs.setCurrentIndex(2)
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
+        editor.add_named_process(Rename)
+
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Displays parameters of "rename_2" node
+        # Display parameters of 'rename_2'
         rename_process = pipeline.nodes["rename_2"].process
         self.main_window.pipeline_manager.displayNodeParameters(
             "rename_2", rename_process
         )
 
-        # Tries changing its name to "rename_2" and then to "rename_3"
+        # Attempt invalid and valid renaming
         node_ctrler.update_node_name()
         self.assertEqual(node_ctrler.node_name, "rename_2")
+
         node_ctrler.update_node_name(
             new_node_name="rename_1", old_node_name="rename_2"
         )
+        # Rename should fail
         self.assertEqual(node_ctrler.node_name, "rename_2")
+
         node_ctrler.update_node_name(
             new_node_name="rename_3", old_node_name="rename_2"
         )
+        # Rename should succeed
         self.assertEqual(node_ctrler.node_name, "rename_3")
 
-        # Deletes node "rename_3"
-        ppl_edt_tabs.get_current_editor().del_node("rename_3")
+        # Delete renamed node
+        editor.del_node("rename_3")
 
         # Display parameters of the "inputs" node
         input_process = pipeline.nodes[""].process
@@ -7259,45 +7305,57 @@ class TestMIANodeController(TestMIACase):
             "inputs", get_process_instance(input_process), pipeline
         )
 
-        # Displays parameters of "rename_1" node
+        # Display parameters of 'rename_1'
         rename_process = pipeline.nodes["rename_1"].process
         self.main_window.pipeline_manager.displayNodeParameters(
             "rename_1", rename_process
         )
 
-        # Exports plugs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Export input plugs for "rename_1"
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        # We do not export the node output, in order to make an error when the
+        # pipeline is subsequently executed:
+        # ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
 
+        # Set input values for the Rename process
         pipeline.nodes["rename_1"].set_plug_value("in_file", DOCUMENT_1)
         pipeline.nodes["rename_1"].set_plug_value(
             "format_string", "new_name.nii"
         )
 
         # Runs pipeline and expects an error
-        # self.main_window.pipeline_manager.runPipeline()
-        # FIXME: running the pipeline gives the error:
-        #        ModuleNotFoundError: No module named 'capsul'
+        with patch.object(QDialog, "exec", return_value=QDialog.Accepted):
+            self.main_window.pipeline_manager.runPipeline()
 
-        # Displays the attributes filter
+        # Test attribute filter
         node_ctrler.filter_attributes()
         attributes_filter = node_ctrler.pop_up
         attributes_filter.table_data.selectRow(0)
         attributes_filter.ok_clicked()
 
-        # Releases the process
+        # Release and refresh process
         node_ctrler.release_process()
         node_ctrler.update_parameters()
 
     def test_display_filter(self):
-        """Displays parameters of a node and displays a plug filter."""
+        """
+        Tests the display and modification of node parameters and plug filters
+        in the CapsulNodeController V1 interface.
+
+        Steps:
+            - Ensures the GUI uses the V1 node controller.
+            - Adds a 'Threshold' process to the pipeline.
+            - Exports input plugs and sets the 'synchronize' input to 2.
+            - Displays and validates the plug filter editor for 'synchronize'.
+            - Restores original GUI controller version after the test.
+        """
 
         config = Config(properties_path=self.properties_path)
-        controlV1_ver = config.isControlV1()
+        was_control_v1 = config.isControlV1()
 
-        # Switch to V1 node controller GUI, if necessary
-        if not controlV1_ver:
+        # Ensure we're using the V1 controller
+        if not was_control_v1:
             config.setControlV1(True)
             self.restart_MIA()
 
@@ -7306,28 +7364,24 @@ class TestMIANodeController(TestMIACase):
         )
         node_controller = self.main_window.pipeline_manager.nodeController
 
-        # Adding a process
-        process_class = Threshold
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        # Creates a node called "threshold_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        # Switch to pipeline manager tab and add a Threshold node
+        self.main_window.tabs.setCurrentIndex(2)
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Threshold)  # Adds 'threshold_1' node
+
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-        # Exporting the input plugs and modifying the "synchronize" input plug
-        (pipeline_editor_tabs.get_current_editor)().current_node_name = (
-            "threshold_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_node_all_unconnected_inputs()
+        # Export all unconnected input plugs and display parameters
+        editor.current_node_name = "threshold_1"
+        editor.export_node_all_unconnected_inputs()
 
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters(
             "inputs", get_process_instance(input_process), pipeline
         )
 
+        # Set the 'synchronize' input plug to 2 and trigger the update
         if hasattr(node_controller, "get_index_from_plug_name"):
             index = node_controller.get_index_from_plug_name(
                 "synchronize", "in"
@@ -7347,9 +7401,8 @@ class TestMIANodeController(TestMIACase):
 
         # Switches back to node controller V2, if necessary (return to initial
         # state)
-        config = Config(properties_path=self.properties_path)
-
-        if not controlV1_ver:
+        if not was_control_v1:
+            config = Config(properties_path=self.properties_path)
             config.setControlV1(False)
 
     @unittest.skip("skip this test until it has been repaired.")
