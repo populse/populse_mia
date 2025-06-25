@@ -772,6 +772,12 @@ class TestMIACase(unittest.TestCase):
         if os.path.exists(cls.project_path):
             shutil.rmtree(cls.project_path)
 
+        # Reset the engine and clear the cache
+        if Config.capsul_engine is not None:
+            Config.capsul_engine = None
+            # Clear the cache so next call will recreate the engine
+            Config.get_capsul_engine.cache_clear()
+
         cls._app.quit()
         del cls._app
 
