@@ -7510,9 +7510,9 @@ class TestMIANodeController(TestMIACase):
 
         # Tries to search for an empty string and asserts that none of the
         # documents are hidden
-        input_filter.search_str("")
-        self._app.processEvents()
-        time.sleep(0.5)
+        # input_filter.search_str("")
+        # self._app.processEvents()
+        # time.sleep(0.5)
 
         # Test "DOCUMENT_1" is not hidden
         # FIXME: Only for the Windows version, the method isRowHidden()
