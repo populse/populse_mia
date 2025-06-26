@@ -35,6 +35,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 
 # import threading
 import unittest
@@ -68,6 +69,7 @@ from PyQt5.QtCore import (
     QModelIndex,
     QPoint,
     Qt,
+    QTimer,
     qInstallMessageHandler,
 )
 from PyQt5.QtTest import QSignalSpy, QTest
@@ -319,36 +321,60 @@ class TestMIACase(unittest.TestCase):
             - tearDownClass: called after tests in the individual class
     """
 
-    def add_visualized_tag(self, tag):
-        """With the "Visualized tags" pop-up open, selects a tag to display.
-
-        - Should be called, with a delay, before opening the "Visualized tags"
-          pop-up, i.e.:
-              QTimer.singleShot(1000, lambda:self.add_visualized_tag(
-              'AcquisitionDate'))
-          It's currently not the case
-          (see TestMIANodeController.test_filter_widget()).
-
-        :param tag: the tag to be displayed (str)
+    def add_visualized_tag(self, input_filter, tag, timeout=5000):
         """
+        Selects a tag to display from the "Visualized tags" pop-up.
 
-        w = self._app.activeWindow()
+        This method waits for the tag selection dialog to become available
+        within the given timeout period, locates the specified tag in the
+        tag list, selects it, and confirms the dialog.
 
-        if isinstance(w, QDialog):
-            visualized_tags = w.layout().itemAt(0).widget()
-            tags_list = visualized_tags.list_widget_tags
+        :param input_filter: The input filter containing the dialog
+                                   with visualized tags.
+        :param tag (str): The tag name to select and visualize.
+        :param timeout (int): Maximum time to wait for the dialog to appear,
+                              in milliseconds. Defaults to 5000 ms.
 
-            if version.parse(QT_VERSION_STR) == version.parse("5.9.2"):
-                found_item = tags_list.findItems(tag, Qt.MatchExactly)
+        :raises RuntimeError: If the dialog or visualized tags widget is
+                              not found.
+        :raises ValueError: If the specified tag is not found in the list.
+        """
+        start_time = time.time()
+        timeout_secs = timeout / 1000
 
-            else:
-                found_item = tags_list.findItems(
-                    tag, Qt.MatchFlag.MatchExactly
-                )
+        while time.time() - start_time < timeout_secs:
 
-            tags_list.setCurrentItem(found_item[0])
-            visualized_tags.click_select_tag()
-            w.accept()
+            if getattr(input_filter, "dialog", None):
+                break
+
+            self._app.processEvents()
+            time.sleep(0.01)
+
+        else:
+            raise RuntimeError("Dialog not available")
+
+        dialog = input_filter.dialog
+        visualized_tags = dialog.layout().itemAt(0).widget()
+
+        if not visualized_tags:
+            raise RuntimeError(
+                "PopUpVisualizedTags widget not found in dialog"
+            )
+
+        tag_list_widget = visualized_tags.list_widget_tags
+        match_flag = (
+            Qt.MatchExactly
+            if version.parse(QT_VERSION_STR) == version.parse("5.9.2")
+            else Qt.MatchFlag.MatchExactly
+        )
+        matching_items = tag_list_widget.findItems(tag, match_flag)
+
+        if not matching_items:
+            raise ValueError(f"Tag '{tag}' not found in the list")
+
+        tag_list_widget.setCurrentItem(matching_items[0])
+        visualized_tags.click_select_tag()
+        dialog.accept()
 
     def clean_uts_packages(self, proc_lib_view):
         """
@@ -7411,7 +7437,7 @@ class TestMIANodeController(TestMIACase):
             config = Config(properties_path=self.properties_path)
             config.setControlV1(False)
 
-    @unittest.skip("skip this test until it has been repaired.")
+    # @unittest.skip("skip this test until it has been repaired.")
     def test_filter_widget(self):
         """Places a node of the "Input_Filter" process, feeds in documents
         and opens up the "FilterWidget()" to modify its parameters.
@@ -7480,7 +7506,7 @@ class TestMIANodeController(TestMIACase):
         input_filter = ppl_edt_tabs.filter_widget
 
         index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
-        # index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
+        index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
 
         # Tries to search for an empty string and asserts that none of the
         # documents are hidden
@@ -7490,16 +7516,17 @@ class TestMIANodeController(TestMIACase):
         # FIXME: Only for the Windows version, the method isRowHidden()
         #        does not seem to give the expected result. Waiting to look at
         #        this, we comment ..
-        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
         # Test "DOCUMENT_2" is not hidden
         # FIXME: Only for the Windows version, the method isRowHidden()
         #        does not seem to give the expected result. Waiting to look at
         #        this, we comment ..
-        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
+        self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
 
         # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
         input_filter.search_str(DOCUMENT_2)
         self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
 
         # Resets the search bar and assert that none of the documents
         # are hidden
@@ -7509,18 +7536,24 @@ class TestMIANodeController(TestMIACase):
         # FIXME: Only for the Windows version, the method isRowHidden()
         #        does not seem to give the expected result. Waiting to look at
         #        this, we comment ..
-        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
         # Test "DOCUMENT_1" is not hidden
         # FIXME: Only for the Windows version, the method isRowHidden()
         #        does not seem to give the expected result. Waiting to look at
         #        this, we comment ..
-        # self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
+        self.assertFalse(input_filter.table_data.isRowHidden(index_DOCUMENT_2))
 
         # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag
         # QTimer.singleShot(1000, lambda:self.add_visualized_tag(
         #       'AcquisitionDate'))
+        QTimer.singleShot(
+            100,
+            lambda: self.add_visualized_tag(
+                input_filter, "AcquisitionDate", timeout=5000
+            ),
+        )
         input_filter.update_tags()
-        self.add_visualized_tag("AcquisitionDate")
+        # self.add_visualized_tag("AcquisitionDate")
         # FIXME: The following statement is always True (not the correct test)
         self.assertTrue(
             type(input_filter.table_data.get_tag_column("AcquisitionDate"))
@@ -7528,10 +7561,10 @@ class TestMIANodeController(TestMIACase):
         )
 
         # Updates the tag to filter with
-        # with patch.object(
-        # PopUpSelectTagCountTable, 'exec_', return_value=True
-        # ):
-        input_filter.update_tag_to_filter()
+        with patch.object(
+            PopUpSelectTagCountTable, "exec_", return_value=True
+        ):
+            input_filter.update_tag_to_filter()
 
         input_filter.push_button_tag_filter.setText(TAG_FILENAME)
         # TODO: select tag to filter with
