@@ -1065,7 +1065,12 @@ class FilterWidget(QWidget):
 
     def update_tags(self):
         """Update the list of visualized tags."""
-        dialog = QDialog()
+
+        if hasattr(self, "dialog") and self.dialog:
+            self.dialog.deleteLater()
+            self.dialog = None
+
+        self.dialog = QDialog()
         visualized_tags = PopUpVisualizedTags(self.project, self.visible_tags)
         layout = QVBoxLayout()
         layout.addWidget(visualized_tags)
@@ -1073,16 +1078,16 @@ class FilterWidget(QWidget):
         buttons = QDialogButtonBox(
             QDialogButtonBox.Ok | QDialogButtonBox.Cancel
         )
-        buttons.accepted.connect(dialog.accept)
-        buttons.rejected.connect(dialog.reject)
+        buttons.accepted.connect(self.dialog.accept)
+        buttons.rejected.connect(self.dialog.reject)
         buttons_layout.addWidget(buttons)
         layout.addLayout(buttons_layout)
-        dialog.setLayout(layout)
-        dialog.show()
-        dialog.setMinimumHeight(600)
-        dialog.setMinimumWidth(600)
+        self.dialog.setLayout(layout)
+        self.dialog.show()
+        self.dialog.setMinimumHeight(600)
+        self.dialog.setMinimumWidth(600)
 
-        if dialog.exec():
+        if self.dialog.exec():
             new_visibilities = []
 
             for x in range(visualized_tags.list_widget_selected_tags.count()):
@@ -1106,6 +1111,10 @@ class FilterWidget(QWidget):
 
                 fields.model().sort(0)
                 fields.addItem("All visualized tags")
+
+        # Clean up the dialog reference at the end
+        self.dialog.deleteLater()
+        self.dialog = None
 
 
 # Node controller V1 style
