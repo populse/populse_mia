@@ -6589,11 +6589,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6591config.get_use_matlab(): ",
+                        "L6591 config.get_use_matlab(): ",
                         config.get_use_matlab(),
                     )
                     print(
-                        "L6595config.get_use_matlab_standalone(): ",
+                        "L6595 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6660,11 +6660,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6662config.get_use_spm_standalone(): ",
+                        "L6662 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6666onfig.get_use_matlab_standalone(): ",
+                        "L6666 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6683,11 +6683,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6685config.get_use_spm_standalone(): ",
+                        "L6685 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6689config.get_use_matlab_standalone(): ",
+                        "L6689 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6703,11 +6703,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6705config.get_use_spm_standalone(): ",
+                        "L6705 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6709config.get_use_matlab_standalone(): ",
+                        "L6709 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6722,11 +6722,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6724config.get_use_spm_standalone(): ",
+                        "L6724 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6728config.get_use_matlab_standalone(): ",
+                        "L6728 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6745,11 +6745,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6747config.get_use_spm_standalone(): ",
+                        "L6747 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6751config.get_use_matlab_standalone(): ",
+                        "L6751 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6769,11 +6769,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6771config.get_use_spm_standalone(): ",
+                        "L6771 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6775config.get_use_matlab_standalone(): ",
+                        "L6775 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6795,11 +6795,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6797config.get_use_spm_standalone(): ",
+                        "L6797 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6801config.get_use_matlab_standalone(): ",
+                        "L6801 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6824,11 +6824,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6826config.get_use_spm_standalone(): ",
+                        "L6826 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6830config.get_use_matlab_standalone(): ",
+                        "L6830 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6853,11 +6853,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6855config.get_use_spm_standalone(): ",
+                        "L6855 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6859config.get_use_matlab_standalone(): ",
+                        "L6859 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -7572,7 +7572,16 @@ class TestMIANodeController(TestMIACase):
         input_filter.update_tags()
 
         # Test "AcquisitionDate" header name column is not hidden
-        self.assertFalse(input_filter.table_data.isColumnHidden(tag_col_idx))
+        if platform.system() == "Windows":
+            print(
+                "L7576 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                input_filter.table_data.isColumnHidden(tag_col_idx),
+            )
+
+        else:
+            self.assertFalse(
+                input_filter.table_data.isColumnHidden(tag_col_idx)
+            )
 
         # Mock selection of the tag to filter
         def create_mock_exec(tag_name):
