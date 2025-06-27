@@ -321,7 +321,7 @@ class TestMIACase(unittest.TestCase):
             - tearDownClass: called after tests in the individual class
     """
 
-    def add_visualized_tag(self, input_filter, tag, timeout=5000):
+    def add_visualized_tag(self, widget, tag, timeout=5000):
         """
         Selects a tag to display from the "Visualized tags" pop-up.
 
@@ -329,8 +329,8 @@ class TestMIACase(unittest.TestCase):
         within the given timeout period, locates the specified tag in the
         tag list, selects it, and confirms the dialog.
 
-        :param input_filter: The input filter containing the dialog
-                                   with visualized tags.
+        :param widget: The input filter containing the dialog
+                       with visualized tags.
         :param tag (str): The tag name to select and visualize.
         :param timeout (int): Maximum time to wait for the dialog to appear,
                               in milliseconds. Defaults to 5000 ms.
@@ -344,7 +344,7 @@ class TestMIACase(unittest.TestCase):
 
         while time.time() - start_time < timeout_secs:
 
-            if getattr(input_filter, "dialog", None):
+            if getattr(widget, "dialog", None):
                 break
 
             self._app.processEvents()
@@ -353,7 +353,7 @@ class TestMIACase(unittest.TestCase):
         else:
             raise RuntimeError("Dialog not available")
 
-        dialog = input_filter.dialog
+        dialog = widget.dialog
         visualized_tags = dialog.layout().itemAt(0).widget()
 
         if not visualized_tags:
@@ -7443,19 +7443,31 @@ class TestMIANodeController(TestMIACase):
     #       system in order to make the necessary corrections.
     # @unittest.skip("skip this test until it has been repaired.")
     def test_filter_widget(self):
-        """Places a node of the "Input_Filter" process, feeds in documents
-        and opens up the "FilterWidget()" to modify its parameters.
+        """
+        Tests the `FilterWidget` class used for filtering input data within a
+        Capsul pipeline node.
 
-        Tests the class FilterWidget() within the Node Controller V1
-        (class NodeController()). The class FilterWidget() is
-        independent on the Node
-        Controller version (V1 or V2) and can be used in both of them.
+        This test:
+            - Switches to the V1 node controller (if not already active)
+            - Adds an `Input_Filter` process to the pipeline
+            - Feeds in documents from a test project
+            - Opens the filter widget for the added node
+            - Performs various filtering actions:
+                * Searching for documents by name
+                * Toggling tag visibility
+                * Filtering by a specific tag (mocking user interaction)
+
+        The `FilterWidget` is GUI-independent and works in both V1 and V2 node
+        controller UIs. Only the V1 GUI is exercised here.
+
+        Mocks:
+            - `PopUpSelectTagCountTable.exec_()`
         """
         config = Config(properties_path=self.properties_path)
-        controlV1_ver = config.isControlV1()
+        controlV1 = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
-        if not controlV1_ver:
+        if not controlV1:
             config.setControlV1(True)
             self.restart_MIA()
 
@@ -7463,126 +7475,94 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
-                1
-            ]
+        with self.main_window.project.database.data() as db:
+            doc1, doc2 = db.get_document_names(COLLECTION_CURRENT)[:2]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
         self.main_window.tabs.setCurrentIndex(2)
 
-        # Adds the process "input_filter_1"
-        process_class = Input_Filter
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        # Add Input_Filter node
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Input_Filter)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Exports the input plugs for "input_filter_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "input_filter_1"
-        (
-            ppl_edt_tabs.get_current_editor
-        )().export_node_unconnected_mandatory_plugs()
-
-        # Displays parameters of the "inputs" node
+        # Export mandatory plugs and display parameters
+        editor.current_node_name = "input_filter_1"
+        editor.export_node_unconnected_mandatory_plugs()
         input_process = pipeline.nodes[""].process
         node_ctrler.display_parameters(
             "inputs", get_process_instance(input_process), pipeline
         )
 
-        # Opens a filter for the plug "input" of the "inputs" node
-        parameters = (0, pipeline, type(Undefined))
+        # Show filter for input plug of "inputs" node
         node_ctrler.display_filter(
-            "inputs", "input", parameters, input_process
+            "inputs", "input", (0, pipeline, type(Undefined)), input_process
         )
+        node_ctrler.pop_up.ok_clicked()  # Select all records
 
-        # Selects all records in the "input" node
-        plug_filter = node_ctrler.pop_up
-
-        plug_filter.ok_clicked()
-
-        # Opens the filter widget for the node "input_filter_1"
+        # Open FilterWidget
         ppl_edt_tabs.open_filter("input_filter_1")
         input_filter = ppl_edt_tabs.filter_widget
 
-        index_DOCUMENT_1 = input_filter.table_data.get_scan_row(DOCUMENT_1)
-        index_DOCUMENT_2 = input_filter.table_data.get_scan_row(DOCUMENT_2)
+        idx_doc1 = input_filter.table_data.get_scan_row(doc1)
+        idx_doc2 = input_filter.table_data.get_scan_row(doc2)
 
-        # Tries to search for an empty string and asserts that none of the
-        # documents are hidden
+        # Filter with empty string, all rows should be visible
         input_filter.search_str("")
 
-        # Test "DOCUMENT_1" is not hidden
+        # Test doc1 and doc2 are not hidden
         if platform.system() == "Windows":
             print(
-                "L7522input_filter.table_data.isRowHidden(index_DOCUMENT_1): ",
-                input_filter.table_data.isRowHidden(index_DOCUMENT_1),
+                "L7517 input_filter.table_data.isRowHidden(idx_doc1): ",
+                input_filter.table_data.isRowHidden(idx_doc1),
+            )
+            print(
+                "L7521 input_filter.table_data.isRowHidden(idx_doc2): ",
+                input_filter.table_data.isRowHidden(idx_doc2),
             )
 
         else:
-            self.assertFalse(
-                input_filter.table_data.isRowHidden(index_DOCUMENT_1)
-            )
+            self.assertFalse(input_filter.table_data.isRowHidden(idx_doc1))
+            self.assertFalse(input_filter.table_data.isRowHidden(idx_doc2))
 
-        # Test "DOCUMENT_2" is not hidden
-        if platform.system() == "Windows":
-            print(
-                "L7534input_filter.table_data.isRowHidden(index_DOCUMENT_2): ",
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2),
-            )
-
-        else:
-            self.assertFalse(
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2)
-            )
-
-        # Searches for "DOCUMENT_2" and verifies that "DOCUMENT_1" is hidden
-        input_filter.search_str(DOCUMENT_2)
-        self.assertTrue(input_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        # Search for doc2: doc1 hidden, doc2 visible
+        input_filter.search_str(doc2)
+        self.assertTrue(input_filter.table_data.isRowHidden(idx_doc1))
 
         if platform.system() == "Windows":
             print(
-                "L7547input_filter.table_data.isRowHidden(index_DOCUMENT_2): ",
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2),
+                "L7535 input_filter.table_data.isRowHidden(idx_doc2): ",
+                input_filter.table_data.isRowHidden(idx_doc2),
             )
 
         else:
-            self.assertFalse(
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2)
-            )
+            self.assertFalse(input_filter.table_data.isRowHidden(idx_doc2))
 
-        # Resets the search bar and assert that none of the documents
-        # are hidden
+        # Reset search, both documents visible again
         input_filter.reset_search_bar()
 
-        # Test "DOCUMENT_1" is not hidden
         if platform.system() == "Windows":
             print(
-                "L7563input_filter.table_data.isRowHidden(index_DOCUMENT_1): ",
-                input_filter.table_data.isRowHidden(index_DOCUMENT_1),
+                "L7547 input_filter.table_data.isRowHidden(idx_doc1): ",
+                input_filter.table_data.isRowHidden(idx_doc1),
+            )
+            print(
+                "L7551 input_filter.table_data.isRowHiddenidx_doc2): ",
+                input_filter.table_data.isRowHidden(idx_doc2),
             )
 
         else:
-            self.assertFalse(
-                input_filter.table_data.isRowHidden(index_DOCUMENT_1)
-            )
+            self.assertFalse(input_filter.table_data.isRowHidden(idx_doc1))
+            self.assertFalse(input_filter.table_data.isRowHidden(idx_doc2))
 
-        # Test "DOCUMENT_2" is not hidden
-        if platform.system() == "Windows":
-            print(
-                "L7575input_filter.table_data.isRowHidden(index_DOCUMENT_2): ",
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2),
-            )
+        tag_col_idx = input_filter.table_data.get_tag_column("AcquisitionDate")
 
-        else:
-            self.assertFalse(
-                input_filter.table_data.isRowHidden(index_DOCUMENT_2)
-            )
+        # Test "AcquisitionDate" header name column is hidden
+        self.assertTrue(input_filter.table_data.isColumnHidden(tag_col_idx))
 
-        # Opens the "Visualized tags" pop up and adds the "AcquisitionDate" tag
+        # Add "AcquisitionDate" as a visualized tag
         QTimer.singleShot(
             100,
             lambda: self.add_visualized_tag(
@@ -7591,29 +7571,64 @@ class TestMIANodeController(TestMIACase):
         )
         input_filter.update_tags()
 
-        # FIXME: The following statement is always True (not the correct test)
-        self.assertTrue(
-            type(input_filter.table_data.get_tag_column("AcquisitionDate"))
-            == int
-        )
+        # Test "AcquisitionDate" header name column is not hidden
+        self.assertFalse(input_filter.table_data.isColumnHidden(tag_col_idx))
 
-        # Updates the tag to filter with
+        # Mock selection of the tag to filter
+        def create_mock_exec(tag_name):
+            """
+            Create a mock function for PopUpSelectTagCountTable.exec_() that
+            simulates user tag selection behavior.
+
+            This function returns a mock implementation that programmatically
+            selects a specific tag from the popup's list widget and triggers
+            the OK action, simulating the user workflow without requiring
+            actual UI interaction.
+
+            :param tag_name (str): The name of the tag to select from the
+                                   list. This should match the text of one of
+                                   the items in the popup's list widget.
+
+            :return: A mock function that can be used to replace exec_()
+                     method.
+            """
+
+            def mock_exec(self):
+                """
+                Mock implementation of exec_() that simulates tag selection.
+
+                Searches through the popup's list widget for an item with text
+                matching the specified tag name, checks it, and calls
+                ok_clicked() to simulate the user confirming their selection.
+
+                :param self: The PopUpSelectTagCountTable instance
+
+                :return: True to simulate successful dialog execution
+                """
+                # Find and select the specific tag
+                for i in range(self.list_widget_tags.count()):
+                    item = self.list_widget_tags.item(i)
+
+                    if item.text() == tag_name:
+                        item.setCheckState(Qt.Checked)
+                        break
+
+                self.ok_clicked()
+                return True
+
+            return mock_exec
+
         with patch.object(
-            PopUpSelectTagCountTable, "exec_", return_value=True
+            PopUpSelectTagCountTable, "exec_", create_mock_exec(TAG_FILENAME)
         ):
             input_filter.update_tag_to_filter()
 
-        input_filter.push_button_tag_filter.setText(TAG_FILENAME)
-        # TODO: select tag to filter with
+        input_filter.ok_clicked()  # Close widget
 
-        # Closes the filter
-        input_filter.ok_clicked()
-
-        # Switches back to node controller V2, if necessary (return to initial
-        # state)
+        # Restore controller to V2 if needed
         config = Config(properties_path=self.properties_path)
 
-        if not controlV1_ver:
+        if not controlV1:
             config.setControlV1(False)
 
     def test_node_controller(self):
