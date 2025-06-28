@@ -66,6 +66,7 @@ from PyQt5.QtCore import (
     QT_VERSION_STR,
     QCoreApplication,
     QEvent,
+    QEventLoop,
     QModelIndex,
     QPoint,
     Qt,
@@ -83,6 +84,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QPushButton,
     QTableWidgetItem,
+    QWidget,
 )
 from traits.api import TraitListObject, Undefined
 
@@ -761,32 +763,57 @@ class TestMIACase(unittest.TestCase):
                 sys.stderr = sys.__stderr__
 
     def tearDown(self):
-        """Called after each test"""
+        """
+        Cleans up after each test to ensure test isolation and prevent state
+        leakage.
 
+        This method performs the following actions:
+            - Closes and deletes the main window if it exists.
+            - Clears the list of opened projects in the application config.
+            - Closes and deletes all top-level Qt widgets.
+            - Processes any pending Qt events and runs a short event loop to
+              flush timers/signals.
+            - Resets internal references to ensure proper garbage collection.
+        """
+
+        timeout_ms = 500
+
+        # Close and delete the main window
         if self.main_window:
             self.main_window.close()
             self.main_window.deleteLater()
             self.main_window = None
 
-        # Removing the opened projects (in CI, the tests are run twice)
+        # Reset opened projects in the configuration
         config = Config(properties_path=self.properties_path)
         config.set_opened_projects([])
         config.saveConfig()
 
+        # Clean up all top-level Qt widgets
         for widget in self._app.topLevelWidgets():
 
-            try:
+            if isinstance(widget, QWidget) and not sip.isdeleted(widget):
 
-                if not sip.isdeleted(widget):
+                try:
                     widget.close()
                     widget.deleteLater()
 
-            except Exception as e:
-                print(f"Error closing widget: {e}")
+                except Exception as e:
+                    print(f"Warning during widget cleanup: {e}")
 
+        # Process any pending deletions or signals
         self._app.processEvents()
+
+        # Run a short event loop to allow timers or delayed signals to complete
+        loop = QEventLoop()
+        QTimer.singleShot(timeout_ms, loop.quit)
+        loop.exec_()
+
+        # Final cleanup pass
+        self._app.processEvents()
+
+        # Clear project reference
         self.project = None
-        self.main_window = None
 
     @classmethod
     def tearDownClass(cls):
