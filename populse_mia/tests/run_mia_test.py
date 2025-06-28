@@ -7563,13 +7563,16 @@ class TestMIANodeController(TestMIACase):
         self.assertTrue(input_filter.table_data.isColumnHidden(tag_col_idx))
 
         # Add "AcquisitionDate" as a visualized tag
-        QTimer.singleShot(
-            100,
-            lambda: self.add_visualized_tag(
-                input_filter, "AcquisitionDate", timeout=5000
-            ),
-        )
-        input_filter.update_tags()
+        with patch.object(
+            QDialog, "exec", side_effect=lambda: (QTest.qWait(300), True)
+        ):
+            QTimer.singleShot(
+                100,
+                lambda: self.add_visualized_tag(
+                    input_filter, "AcquisitionDate", timeout=5000
+                ),
+            )
+            input_filter.update_tags()
 
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
