@@ -7204,6 +7204,9 @@ class TestMIANodeController(TestMIACase):
 
     :Contains:
         :Method:
+            - create_mock_exec: create a mock function for
+              PopUpSelectTagCountTable.exec_() that simulates user
+              tag selection behavior.
             - test_attributes_filter: displays an attributes filter and
               modifies it.
             - test_capsul_node_controller: adds, changes and deletes
@@ -7218,6 +7221,49 @@ class TestMIANodeController(TestMIACase):
             - test_update_node_name: displays node parameters and
               updates its name.
     """
+
+    def create_mock_exec(self, tag_name):
+        """
+        Create a mock function for PopUpSelectTagCountTable.exec_() that
+        simulates user tag selection behavior.
+
+        This function returns a mock implementation that programmatically
+        selects a specific tag from the popup's list widget and triggers
+        the OK action, simulating the user workflow without requiring
+        actual UI interaction.
+
+        :param tag_name (str): The name of the tag to select from the
+                                list. This should match the text of one of
+                                the items in the popup's list widget.
+
+        :return: A mock function that can be used to replace exec_()
+                    method.
+        """
+
+        def mock_exec(self):
+            """
+            Mock implementation of exec_() that simulates tag selection.
+
+            Searches through the popup's list widget for an item with text
+            matching the specified tag name, checks it, and calls
+            ok_clicked() to simulate the user confirming their selection.
+
+            :param self: The PopUpSelectTagCountTable instance
+
+            :return: True to simulate successful dialog execution
+            """
+            # Find and select the specific tag
+            for i in range(self.list_widget_tags.count()):
+                item = self.list_widget_tags.item(i)
+
+                if item.text() == tag_name:
+                    item.setCheckState(Qt.Checked)
+                    break
+
+            self.ok_clicked()
+            return True
+
+        return mock_exec
 
     def test_attributes_filter(self):
         """
@@ -7375,8 +7421,6 @@ class TestMIANodeController(TestMIACase):
         editor.export_unconnected_mandatory_inputs()
         # We do not export the node output, in order to make an error when the
         # pipeline is subsequently executed:
-        # ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
         # Set input values for the Rename process
         pipeline.nodes["rename_1"].set_plug_value("in_file", DOCUMENT_1)
         pipeline.nodes["rename_1"].set_plug_value(
@@ -7468,7 +7512,6 @@ class TestMIANodeController(TestMIACase):
     #       is why we make no "assert" regarding hidden documents under
     #       Windows). This test will need to be reworked directly on a Windows
     #       system in order to make the necessary corrections.
-    # @unittest.skip("skip this test until it has been repaired.")
     def test_filter_widget(self):
         """
         Tests the `FilterWidget` class used for filtering input data within a
@@ -7542,11 +7585,11 @@ class TestMIANodeController(TestMIACase):
         # Test doc1 and doc2 are not hidden
         if platform.system() == "Windows":
             print(
-                "L7517 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7587 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7521 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7591 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7560,7 +7603,7 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7535 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7605 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7572,11 +7615,11 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7547 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7617 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7551 input_filter.table_data.isRowHiddenidx_doc2): ",
+                "L7621 input_filter.table_data.isRowHiddenidx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7604,7 +7647,7 @@ class TestMIANodeController(TestMIACase):
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
             print(
-                "L7576 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                "L7649 input_filter.table_data.isColumnHidden(tag_col_idx): ",
                 input_filter.table_data.isColumnHidden(tag_col_idx),
             )
 
@@ -7614,51 +7657,10 @@ class TestMIANodeController(TestMIACase):
             )
 
         # Mock selection of the tag to filter
-        def create_mock_exec(tag_name):
-            """
-            Create a mock function for PopUpSelectTagCountTable.exec_() that
-            simulates user tag selection behavior.
-
-            This function returns a mock implementation that programmatically
-            selects a specific tag from the popup's list widget and triggers
-            the OK action, simulating the user workflow without requiring
-            actual UI interaction.
-
-            :param tag_name (str): The name of the tag to select from the
-                                   list. This should match the text of one of
-                                   the items in the popup's list widget.
-
-            :return: A mock function that can be used to replace exec_()
-                     method.
-            """
-
-            def mock_exec(self):
-                """
-                Mock implementation of exec_() that simulates tag selection.
-
-                Searches through the popup's list widget for an item with text
-                matching the specified tag name, checks it, and calls
-                ok_clicked() to simulate the user confirming their selection.
-
-                :param self: The PopUpSelectTagCountTable instance
-
-                :return: True to simulate successful dialog execution
-                """
-                # Find and select the specific tag
-                for i in range(self.list_widget_tags.count()):
-                    item = self.list_widget_tags.item(i)
-
-                    if item.text() == tag_name:
-                        item.setCheckState(Qt.Checked)
-                        break
-
-                self.ok_clicked()
-                return True
-
-            return mock_exec
-
         with patch.object(
-            PopUpSelectTagCountTable, "exec_", create_mock_exec(TAG_FILENAME)
+            PopUpSelectTagCountTable,
+            "exec_",
+            self.create_mock_exec(TAG_FILENAME),
         ):
             input_filter.update_tag_to_filter()
 
@@ -7671,17 +7673,31 @@ class TestMIANodeController(TestMIACase):
             config.setControlV1(False)
 
     def test_node_controller(self):
-        """Adds, changes and deletes processes to the node controller,
-        display the attributes filter.
+        """
+        Tests the behavior of the V1 `NodeController` interface for:
+            - Adding, renaming, and deleting nodes
+            - Displaying and updating process parameters
+            - Interacting with plug filters and values
 
-        Tests the class NodeController().
+        Workflow:
+            - Switches to V1 node controller mode if not already enabled
+            - Opens a test project and adds two Rename processes as
+              "rename_1" and "rename_2"
+            - Attempts renaming "rename_2" to an existing name (fails)
+              then to a unique one
+            - Deletes the renamed node
+            - Exports input/output plugs and tests plug interaction
+            - Displays parameters and plug filters
+            - Updates plug values with and without providing new values
+            - Releases and refreshes the process
+            - Restores the original node controller mode after testing
         """
 
         config = Config(properties_path=self.properties_path)
-        controlV1_ver = config.isControlV1()
+        original_v1_mode = config.isControlV1()
 
         # Switch to V1 node controller GUI, if necessary
-        if not controlV1_ver:
+        if not original_v1_mode:
             config.setControlV1(True)
             self.restart_MIA()
 
@@ -7689,20 +7705,18 @@ class TestMIANodeController(TestMIACase):
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
+        with self.main_window.project.database.data() as db_data:
+            DOCUMENT_1 = db_data.get_document_names(COLLECTION_CURRENT)[0]
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         node_ctrler = self.main_window.pipeline_manager.nodeController
 
         # Add, twice, the process Rename, creates the "rename_1" and "rename_2"
         # nodes
-        process_class = Rename
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
+        editor.add_named_process(Rename)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Displays parameters of "rename_2" node
@@ -7711,26 +7725,28 @@ class TestMIANodeController(TestMIACase):
             "rename_2", rename_process
         )
 
-        # Tries to change its name to "rename_1" and then to "rename_3"
+        # Attempt invalid rename, then valid rename
         node_ctrler.update_node_name()
         self.assertEqual(node_ctrler.node_name, "rename_2")
+
         node_ctrler.update_node_name(new_node_name="rename_1")
         self.assertEqual(node_ctrler.node_name, "rename_2")
+
         node_ctrler.update_node_name(new_node_name="rename_3")
         self.assertEqual(node_ctrler.node_name, "rename_3")
 
         # Deletes node "rename_2"
-        ppl_edt_tabs.get_current_editor().del_node("rename_3")
-        self.assertRaises(KeyError, lambda: pipeline.nodes["rename_3"])
+        editor.del_node("rename_3")
 
-        # Exports the input plugs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        (
-            ppl_edt_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        with self.assertRaises(KeyError):
+            _ = pipeline.nodes["rename_3"]
 
-        # Display parameters of the "inputs" node
+        # Export unconnected inputs/outputs for "rename_1"
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
+
+        # Display parameters and plug filter of "inputs" node
         input_process = pipeline.nodes[""].process
         node_ctrler.display_parameters(
             "inputs", get_process_instance(input_process), pipeline
@@ -7747,12 +7763,12 @@ class TestMIANodeController(TestMIACase):
         pipeline.nodes[""].set_plug_value("format_string", "new_file.nii")
 
         # Checks the indexed of input and output plug labels
-        in_plug_index = node_ctrler.get_index_from_plug_name("in_file", "in")
-        self.assertEqual(in_plug_index, 1)
-        out_plug_index = node_ctrler.get_index_from_plug_name(
-            "_out_file", "out"
+        self.assertEqual(
+            node_ctrler.get_index_from_plug_name("in_file", "in"), 1
         )
-        self.assertEqual(out_plug_index, 0)
+        self.assertEqual(
+            node_ctrler.get_index_from_plug_name("_out_file", "out"), 0
+        )
 
         # Tries to update the plug value without a new value
         node_ctrler.update_plug_value(
@@ -7777,22 +7793,29 @@ class TestMIANodeController(TestMIACase):
         node_ctrler.release_process()
         node_ctrler.update_parameters()
 
-        # Switches back to node controller V2, if necessary (return to initial
-        # state)
+        # Restore original V1 setting
         config = Config(properties_path=self.properties_path)
 
-        if not controlV1_ver:
+        if not original_v1_mode:
             config.setControlV1(False)
 
-    @unittest.skip("skip this test until it has been repaired.")
+    # TODO: Currently, this test does not work properly under Windows (which
+    #       is why we make no "assert" regarding hidden documents under
+    #       Windows). This test will need to be reworked directly on a Windows
+    #       system in order to make the necessary corrections.
     def test_plug_filter(self):
-        """Displays the parameters of a node, displays a plug filter and
-        modifies it.
-
-        Tests the class PlugFilter() within the Node Controller V1
-        (class NodeController()).
         """
+        Tests plug filtering in the Node Controller V1 interface.
 
+        This test covers:
+            - Switching to Node Controller V1 if not already enabled
+            - Opening a test project and retrieving documents
+            - Adding and configuring a 'Smooth' node in the pipeline
+            - Displaying and modifying a plug filter
+            - Searching and filtering table rows
+            - Modifying visible tag columns
+            - Verifying plug value assignment from filtered selections
+        """
         config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
 
@@ -7806,13 +7829,8 @@ class TestMIANodeController(TestMIACase):
         self.main_window.switch_project(project_8_path, "project_8")
 
         # Get the 2 first documents/records
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
-                1
-            ]
+        with self.main_window.project.database.data() as db_data:
+            doc1, doc2 = db_data.get_document_names(COLLECTION_CURRENT)[:2]
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -7820,24 +7838,18 @@ class TestMIANodeController(TestMIACase):
         node_controller = self.main_window.pipeline_manager.nodeController
 
         # Add the "Smooth" process, creates a node called "smooth_1"
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        self.main_window.tabs.setCurrentIndex(2)
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Smooth)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
         # Exports the mandatory plugs
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "smooth_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_node_unconnected_mandatory_plugs()
+        editor.current_node_name = "smooth_1"
+        editor.export_node_unconnected_mandatory_plugs()
 
         # Display parameters of "smooth_1" node
         input_process = pipeline.nodes[""].process
-
         node_controller.display_parameters(
             "inputs", get_process_instance(input_process), pipeline
         )
@@ -7855,54 +7867,70 @@ class TestMIANodeController(TestMIACase):
 
         # Look for "DOCUMENT_2" in the input documents
         plug_filter = node_controller.pop_up
-        plug_filter.search_str(DOCUMENT_2)
-        index_DOCUMENT_1 = plug_filter.table_data.get_scan_row(DOCUMENT_1)
+        plug_filter.search_str(doc2)
+        index_doc1 = plug_filter.table_data.get_scan_row(doc1)
 
         # if "DOCUMENT_1" is hidden
-        self.assertTrue(plug_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        self.assertTrue(plug_filter.table_data.isRowHidden(index_doc1))
 
         # Resets the search bar
         plug_filter.reset_search_bar()
 
         # if "DOCUMENT_1" is not hidden
-        self.assertFalse(plug_filter.table_data.isRowHidden(index_DOCUMENT_1))
+        self.assertFalse(plug_filter.table_data.isRowHidden(index_doc1))
 
         # Tries search for an empty string
         plug_filter.search_str("")
 
         # Search for "DOCUMENT_2" and changes tags
-        plug_filter.search_str(DOCUMENT_2)
+        plug_filter.search_str(doc2)
 
-        index_DOCUMENT_2 = plug_filter.table_data.get_scan_row(DOCUMENT_2)
-        plug_filter.table_data.selectRow(index_DOCUMENT_2)
+        index_doc2 = plug_filter.table_data.get_scan_row(doc2)
+        plug_filter.table_data.selectRow(index_doc2)
 
-        # FIXME: we need to find a better way to interact with the plug_filter
-        #        objects. At the moment, QTimer.singleShoot does not give a
-        #        good result because it is an asynchronous action and we can
-        #        observe mixtures of QT signals. Since we are not
-        #        instantiating exactly the right objects, this results in a
-        #        mixture of signals that can crash the execution. Currently
-        #        the QTimer.singleShoot is removed (this should not change
-        #        much the test coverage because the objects are still used
-        #        (update_tags, update_tag_to_filter)
+        tag_col_idx = plug_filter.table_data.get_tag_column("AcquisitionDate")
 
-        plug_filter.update_tags()
+        # Test "AcquisitionDate" header name column is hidden
+        self.assertTrue(plug_filter.table_data.isColumnHidden(tag_col_idx))
 
-        self.assertTrue(
-            type(plug_filter.table_data.get_tag_column("AcquisitionDate"))
-            == int
-        )
+        # Add "AcquisitionDate" as a visualized tag
+        with patch.object(
+            QDialog, "exec", side_effect=lambda: (QTest.qWait(300), True)
+        ):
+            QTimer.singleShot(
+                100,
+                lambda: self.add_visualized_tag(
+                    plug_filter, "AcquisitionDate", timeout=5000
+                ),
+            )
+            plug_filter.update_tags()
 
-        plug_filter.update_tag_to_filter()
-        plug_filter.push_button_tag_filter.setText(TAG_FILENAME)
-        # TODO: select tag to filter with
+        # Test "AcquisitionDate" header name column is not hidden
+        if platform.system() == "Windows":
+            print(
+                "L7899 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                plug_filter.table_data.isColumnHidden(tag_col_idx),
+            )
+
+        else:
+            self.assertFalse(
+                plug_filter.table_data.isColumnHidden(tag_col_idx)
+            )
+
+        # Mock selection of the tag to filter
+        with patch.object(
+            PopUpSelectTagCountTable,
+            "exec_",
+            self.create_mock_exec(TAG_FILENAME),
+        ):
+            plug_filter.update_tag_to_filter()
 
         # Closes the filter for the plug "in_files"
         plug_filter.ok_clicked()
 
         # Assert the modified value
         self.assertIn(
-            str(Path(DOCUMENT_2)),
+            str(Path(doc2)),
             str(Path(node.get_plug_value("in_files")[0])),
         )
 
@@ -7916,6 +7944,7 @@ class TestMIANodeController(TestMIACase):
             "inputs", "in_files", parameters, input_process
         )
 
+        plug_filter = node_controller.pop_up
         # Look for something that does not give any match
         plug_filter.search_str("!@#")
         # this will empty the "plug_filter.table_data.selectedIndexes()"
@@ -7923,8 +7952,7 @@ class TestMIANodeController(TestMIACase):
 
         plug_filter.ok_clicked()
 
-        # Switches back to node controller V2, if necessary (return to initial
-        # state)
+        # Revert to V2 controller if it was originally set
         config = Config(properties_path=self.properties_path)
 
         if not controlV1_ver:
