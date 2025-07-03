@@ -7959,98 +7959,125 @@ class TestMIANodeController(TestMIACase):
             config.setControlV1(False)
 
     def test_update_node_name(self):
-        """Displays parameters of a node and updates its name."""
+        """
+        Tests renaming of nodes in the pipeline and verifies the correct
+        update or rejection of name changes based on naming conflicts.
+
+        This test ensures:
+        - A node name can be changed via the NodeController interface.
+        - Duplicate names are not accepted.
+        - Node renaming preserves the connections (links) between nodes.
+        """
+
+        def simulate_rename(new_name: str):
+            """
+            Helper to rename the selected node via the GUI line edit.
+
+            This simulates the user typing a new name and pressing Enter.
+
+            :param new_name: The new name to set for the node.
+            """
+            node_controller.line_edit_node_name.setText(new_name)
+            key_event = QtGui.QKeyEvent(
+                QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
+            )
+            QCoreApplication.postEvent(
+                node_controller.line_edit_node_name, key_event
+            )
+            QTest.qWait(100)
 
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_editor_tabs = pipeline_manager.pipelineEditorTabs
 
         # Adding a process => creates a node called "smooth_1"
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        self.main_window.tabs.setCurrentIndex(2)
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Smooth)
 
         # Displaying the smooth_1 node parameters
         pipeline = pipeline_editor_tabs.get_current_pipeline()
+
+        # Check initial state
+        expected_keys = {"", "smooth_1"}
+        self.assertEqual(set(pipeline.nodes.keys()), expected_keys)
+
+        # Rename "smooth_1" → "smooth_test"
         process = pipeline.nodes["smooth_1"].process
         pipeline_manager.displayNodeParameters("smooth_1", process)
         node_controller = pipeline_manager.nodeController
+        simulate_rename("smooth_test")
 
-        # Change the node name from smooth_1 to smooth_test, test if it's ok
-        node_controller.line_edit_node_name.setText("smooth_test")
-        keyEvent = QtGui.QKeyEvent(
-            QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
-        )
-        QCoreApplication.postEvent(
-            node_controller.line_edit_node_name, keyEvent
-        )
-        QTest.qWait(100)
-        self.assertTrue("smooth_test" in pipeline.nodes.keys())
+        # Check that the name has been changed.
+        expected_keys = {"", "smooth_test"}
+        self.assertEqual(set(pipeline.nodes.keys()), expected_keys)
 
-        # Add 2 another Smooth process => Creates nodes called
-        # smooth_1 and smooth_2
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        # Add two more nodes (smooth_1 and smooth_2)
+        editor.add_named_process(Smooth)
+        editor.add_named_process(Smooth)
 
-        # Adding link between smooth_test and smooth_1 nodes
+        # Check that the processes have been added correctly.
+        expected_keys = {"", "smooth_test", "smooth_1", "smooth_2"}
+        self.assertEqual(set(pipeline.nodes.keys()), expected_keys)
+
+        # Add links: smooth_test → smooth_1 and smooth_1 → smooth_2
         source = ("smooth_test", "_smoothed_files")
         dest = ("smooth_1", "in_files")
-        pipeline_editor_tabs.get_current_editor().add_link(
-            source, dest, True, False
-        )
-
-        # Adding link between smooth_2 and smooth_1 nodes
+        editor.add_link(source, dest, True, False)
         source = ("smooth_1", "_smoothed_files")
         dest = ("smooth_2", "in_files")
-        pipeline_editor_tabs.get_current_editor().add_link(
-            source, dest, True, False
-        )
+        editor.add_link(source, dest, True, False)
 
         # Displaying the smooth_1 node parameters
         process = pipeline.nodes["smooth_1"].process
         pipeline_manager.displayNodeParameters("smooth_1", process)
         node_controller = pipeline_manager.nodeController
 
-        # Change node name from smooth_1 to smooth_test.
-        # This should not change the node name because there is already a
-        # "smooth_test" process in the pipeline.
-        # Test if smooth_1 is still in the pipeline
-        node_controller.line_edit_node_name.setText("smooth_test")
-        keyEvent = QtGui.QKeyEvent(
-            QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
-        )
-        QCoreApplication.postEvent(
-            node_controller.line_edit_node_name, keyEvent
-        )
-        QTest.qWait(100)
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        node_controller.line_edit_node_name.setText("smooth_test_2")
-        keyEvent = QtGui.QKeyEvent(
-            QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
-        )
-        QCoreApplication.postEvent(
-            node_controller.line_edit_node_name, keyEvent
-        )
-        QTest.qWait(100)
-        self.assertTrue("smooth_test_2" in pipeline.nodes.keys())
+        # Try renaming "smooth_1" to an existing name ("smooth_test") — should fail
+        simulate_rename("smooth_test")
 
-        # Verifying that the updated node has the same links
+        # Test if smooth_1 is still in the pipeline
+        expected_keys = {"", "smooth_test", "smooth_1", "smooth_2"}
+        self.assertEqual(set(pipeline.nodes.keys()), expected_keys)
+
+        # Rename "smooth_1" → "smooth_test_2" — should succeed
+        simulate_rename("smooth_test_2")
+
+        # Test change from smooth_1 to smooth_test_2
+        expected_keys = {"", "smooth_test", "smooth_2", "smooth_test_2"}
+        self.assertEqual(set(pipeline.nodes.keys()), expected_keys)
+
+        # Check that links are preserved after renaming
+        # Note:
+        #     - links_to : set (node_name, plug_name, node, plug, is_weak):
+        #       the successor plugs of this plug
+        #     - links_from : set (node_name, plug_name, node, plug, is_weak):
+        #       the predecessor plugs of this plug
+        expected_links_from = {
+            (
+                "smooth_test",
+                "_smoothed_files",
+                pipeline.nodes["smooth_test"],
+                pipeline.nodes["smooth_test"].plugs["_smoothed_files"],
+                False,
+            )
+        }
         self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_test_2"].plugs["in_files"].links_from),
+            pipeline.nodes["smooth_test_2"].plugs["in_files"].links_from,
+            expected_links_from,
         )
+        expected_links_to = {
+            (
+                "smooth_2",
+                "in_files",
+                pipeline.nodes["smooth_2"],
+                pipeline.nodes["smooth_2"].plugs["in_files"],
+                False,
+            )
+        }
         self.assertEqual(
-            1,
-            len(
-                pipeline.nodes["smooth_test_2"]
-                .plugs["_smoothed_files"]
-                .links_to
-            ),
+            pipeline.nodes["smooth_test_2"].plugs["_smoothed_files"].links_to,
+            expected_links_to,
         )
 
 
