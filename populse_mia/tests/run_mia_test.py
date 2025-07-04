@@ -8110,40 +8110,60 @@ class TestMIAPipelineEditor(TestMIACase):
     """
 
     def test_add_tab(self):
-        """Adds tabs to the PipelineEditorTabs."""
+        """
+        Test the addition of new tabs in the PipelineEditorTabs.
 
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
+        Ensures that:
+            - A new tab increases the tab count.
+            - Tabs are named incrementally as 'New Pipeline',
+              'New Pipeline 1', etc.
+        """
 
-        # Adding two new tabs
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 3)
-        self.assertEqual(pipeline_editor_tabs.tabText(1), "New Pipeline 1")
-        pipeline_editor_tabs.new_tab()
-        self.assertEqual(pipeline_editor_tabs.count(), 4)
-        self.assertEqual(pipeline_editor_tabs.tabText(2), "New Pipeline 2")
+        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Check initial state
+        self.assertEqual(ppl_edt_tabs.count(), 2)
+        self.assertEqual(ppl_edt_tabs.tabText(0), "New Pipeline")
+
+        # Add a first new tab and check
+        ppl_edt_tabs.new_tab()
+        self.assertEqual(ppl_edt_tabs.count(), 3)
+        self.assertEqual(ppl_edt_tabs.tabText(1), "New Pipeline 1")
+
+        # Add a second new tab and check
+        ppl_edt_tabs.new_tab()
+        self.assertEqual(ppl_edt_tabs.count(), 4)
+        self.assertEqual(ppl_edt_tabs.tabText(2), "New Pipeline 2")
 
     def test_close_tab(self):
-        """Closes a tab in the pipeline editor tabs.
+        """
+        Tests the `PipelineEditor.close_tab()` method under various conditions.
 
-        Indirectly tests PopUpClosePipeline.
+        This method indirectly tests the behavior of the `PopUpClosePipeline`
+        dialog when attempting to close tabs that are either unmodified or
+        modified.
 
-        - Tests: PipelineEditor.close_tab
-
-        - Mocks: PopUpClosePipeline.exec
+        Scenarios covered:
+            - Closing an unmodified tab (no dialog shown)
+            - Closing a modified tab and choosing:
+                - "Save As"
+                - "Do Not Save"
+                - "Cancel"
         """
 
         # Sets shortcuts for objects that are often used
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        self.main_window.tabs.setCurrentIndex(2)
 
-        # Closes an unmodified tab
+        # Case 1: Close an unmodified tab (should close silently)
         ppl_edt_tabs.close_tab(0)
 
-        # Adds a process to modify the pipeline
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-        self.assertEqual(ppl_edt_tabs.tabText(0)[-2:], " *")
+        # Case 2: Close a modified tab and simulate "Save As"
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
+        self.assertTrue(ppl_edt_tabs.tabText(0).endswith(" *"))
 
         # Mocks the execution of the 'QDialog'
         # Instead of showing it, directly chooses 'save_as_clicked'
@@ -8155,8 +8175,18 @@ class TestMIAPipelineEditor(TestMIACase):
         # Tries to close the modified tab and saves the pipeline as
         ppl_edt_tabs.close_tab(0)
 
+        # with patch.object(
+        #     PopUpClosePipeline, "exec_",
+        #     side_effect=lambda: ppl_edt_tabs.pop_up_close.save_as_clicked()
+        # ):
+
+        #     with patch.object(ppl_edt_tabs, "save_pipeline") as mock_save:
+        #         ppl_edt_tabs.close_tab(0)
+        #         mock_save.assert_called_once()
+
         # Asserts that 'undos' and 'redos' were deleted
         editor = ppl_edt_tabs.get_editor_by_index(0)
+
         with self.assertRaises(KeyError):
             ppl_edt_tabs.undos[editor]
             ppl_edt_tabs.redos[editor]
