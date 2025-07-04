@@ -1298,14 +1298,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             self.pop_up_close.exec()
             can_exit = self.pop_up_close.can_exit()
 
-            if self.pop_up_close.bool_save_as:
-
-                if idx == self.currentIndex():
-                    self.set_tab_index(max(0, self.currentIndex() - 1))
-
-                self.removeTab(idx)
-                return
-
         else:
             can_exit = True
 
