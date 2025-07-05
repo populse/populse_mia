@@ -8189,10 +8189,6 @@ class TestMIAPipelineEditor(TestMIACase):
 
         self.assertEqual(ppl_edt_tabs.undos[editor], [])
         self.assertEqual(ppl_edt_tabs.redos[editor], [])
-        
-        with self.assertRaises(KeyError):
-            ppl_edt_tabs.undos[editor]
-            ppl_edt_tabs.redos[editor]
 
         # Directly chooses 'do_not_save_clicked'
         PopUpClosePipeline.exec = Mock(
