@@ -8187,6 +8187,9 @@ class TestMIAPipelineEditor(TestMIACase):
         # Asserts that 'undos' and 'redos' were deleted
         editor = ppl_edt_tabs.get_editor_by_index(0)
 
+        self.assertEqual(ppl_edt_tabs.undos[editor], [])
+        self.assertEqual(ppl_edt_tabs.redos[editor], [])
+        
         with self.assertRaises(KeyError):
             ppl_edt_tabs.undos[editor]
             ppl_edt_tabs.redos[editor]
