@@ -8155,169 +8155,241 @@ class TestMIAPipelineEditor(TestMIACase):
         # Sets shortcuts for objects that are often used
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         self.main_window.tabs.setCurrentIndex(2)
+        [original_pipeline_editor] = ppl_edt_tabs.undos.keys()
 
         # Case 1: Close an unmodified tab (should close silently)
         ppl_edt_tabs.close_tab(0)
+
+        [new_pipeline_editor] = ppl_edt_tabs.undos.keys()
+
+        # Check that the pipeline editor has been modified after closing a tab.
+        self.assertIsNot(original_pipeline_editor, new_pipeline_editor)
+
+        # Check that the pipeline is not an unregistered pipeline.
+        self.assertFalse(ppl_edt_tabs.tabText(0).endswith(" *"))
 
         # Case 2: Close a modified tab and simulate "Save As"
         editor = ppl_edt_tabs.get_current_editor()
         editor.click_pos = QPoint(450, 500)
         editor.add_named_process(Rename)
+
+        # Check that the pipeline is an unregistered pipeline.
         self.assertTrue(ppl_edt_tabs.tabText(0).endswith(" *"))
+
+        # Check that the value matches the expected list.
+        [pipeline_editor] = ppl_edt_tabs.undos.keys()
+        expected_value = [["add_process", "rename_1", Rename]]
+        actual_value = ppl_edt_tabs.undos[pipeline_editor]
+        self.assertEqual(actual_value, expected_value)
 
         # Mocks the execution of the 'QDialog'
         # Instead of showing it, directly chooses 'save_as_clicked'
-        PopUpClosePipeline.exec = Mock(
-            side_effect=lambda: ppl_edt_tabs.pop_up_close.save_as_clicked()
-        )
-        ppl_edt_tabs.save_pipeline = Mock()
+        with patch.object(
+            PopUpClosePipeline,
+            "exec",
+            side_effect=lambda: ppl_edt_tabs.pop_up_close.save_as_clicked(),
+        ):
 
-        # Tries to close the modified tab and saves the pipeline as
-        ppl_edt_tabs.close_tab(0)
-
-        # with patch.object(
-        #     PopUpClosePipeline, "exec_",
-        #     side_effect=lambda: ppl_edt_tabs.pop_up_close.save_as_clicked()
-        # ):
-
-        #     with patch.object(ppl_edt_tabs, "save_pipeline") as mock_save:
-        #         ppl_edt_tabs.close_tab(0)
-        #         mock_save.assert_called_once()
+            with patch.object(ppl_edt_tabs, "save_pipeline") as mock_save:
+                ppl_edt_tabs.close_tab(0)
+                mock_save.assert_called_once()
 
         # Asserts that 'undos' and 'redos' were deleted
         editor = ppl_edt_tabs.get_editor_by_index(0)
-
         self.assertEqual(ppl_edt_tabs.undos[editor], [])
         self.assertEqual(ppl_edt_tabs.redos[editor], [])
 
-        # Directly chooses 'do_not_save_clicked'
-        PopUpClosePipeline.exec = Mock(
-            side_effect=lambda: ppl_edt_tabs.pop_up_close.do_not_save_clicked()
-        )
+        # Case 3: Close a modified tab and simulate "Do Not Save"
+        with patch.object(
+            PopUpClosePipeline,
+            "exec",
+            side_effect=lambda: ppl_edt_tabs.pop_up_close.do_not_save_clicked(),
+        ):
+            # Adds a new tab and a process
+            ppl_edt_tabs.new_tab()
+            ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+            ppl_edt_tabs.get_current_editor().add_named_process(Rename)
 
-        # Adds a new tab and a process
-        ppl_edt_tabs.new_tab()
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+            # Tries to close the modified tab and cancels saving
+            ppl_edt_tabs.close_tab(1)
 
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
+        # Case 4: Close a modified tab and simulate "Cancel"
+        with patch.object(
+            PopUpClosePipeline,
+            "exec",
+            side_effect=lambda: ppl_edt_tabs.pop_up_close.cancel_clicked(),
+        ):
+            # Adds a new process
+            ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
+            ppl_edt_tabs.get_current_editor().add_named_process(Rename)
 
-        # Directly chooses 'cancel_clicked'
-        PopUpClosePipeline.exec = Mock(
-            side_effect=lambda: ppl_edt_tabs.pop_up_close.cancel_clicked()
-        )
+            [original_pipeline_editor] = ppl_edt_tabs.undos.keys()
 
-        # Adds a process
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+            # Tries to close the modified tab and cancels saving
+            ppl_edt_tabs.close_tab(0)
 
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
+            [new_pipeline_editor] = ppl_edt_tabs.undos.keys()
 
-        # Directly chooses 'cancel_clicked'
-        PopUpClosePipeline.exec = Mock(
-            side_effect=lambda: ppl_edt_tabs.pop_up_close.cancel_clicked()
-        )
-
-        # Adds a new process
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Tries to close the modified tab and cancels saving
-        ppl_edt_tabs.close_tab(0)
+            # Check that the pipeline editor is the same after closing a tab.
+            self.assertIs(original_pipeline_editor, new_pipeline_editor)
 
     def test_drop_process(self):
-        """Adds a Nipype SPM's Smooth process to the pipeline editor."""
+        """
+        Tests the addition of a Nipype SPM 'Smooth' process to the pipeline
+        editor.
 
+        Verifies that dropping the 'nipype.interfaces.spm.Smooth' process at a
+        specific position in the pipeline editor results in the creation of a
+        node named 'smooth_1'.
+        """
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        self.assertFalse(
-            "smooth_1"
-            in (pipeline_editor_tabs.get_current_pipeline)().nodes.keys()
-        )
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().drop_process(
-            "nipype.interfaces.spm.Smooth"
-        )
-        self.assertTrue(
-            "smooth_1"
-            in (pipeline_editor_tabs.get_current_pipeline)().nodes.keys()
-        )
+        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        self.assertNotIn("smooth_1", pipeline.nodes)
+
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.drop_process("nipype.interfaces.spm.Smooth")
+        self.assertIn("smooth_1", pipeline.nodes)
 
     def test_export_plug(self):
-        """Adds a process and exports plugs in the pipeline editor.
-
-        -Tests: PipelineEditor.test_export_plug
-
-        - Mocks:
-            - QMessageBox.question
-            - QInputDialog.getText
         """
+        Tests the export of plugs in the pipeline editor.
 
+        This test verifies:
+            - Exporting a plug with no parameters.
+            - Exporting a plug when a node is added.
+            - Behavior when a plug is exported multiple times with overwrite
+              confirmation.
+            - Behavior when overwriting is denied and a new name is entered.
+        """
         # Set shortcuts for objects that are often used
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
         ppl_edt = ppl_edt_tabs.get_current_editor()
+
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # We verify that there is no process in the current pipeline and
+        # that the input/output nodes are not connected.
+        pipeline = ppl_edt_tabs.get_current_pipeline()
+        [io_node] = pipeline.nodes.keys()
+        self.assertEqual(io_node, "")
+        self.assertEqual(pipeline.nodes[io_node].plugs, {})
 
         # Mocks 'PipelineEditor' attributes
         ppl_edt._temp_plug_name = ("", "")
         ppl_edt._temp_plug = Mock()
         ppl_edt._temp_plug.optional = False
 
-        # Mocks the execution of a plug edit dialog
-        PipelineEditor._PlugEdit.exec_ = Mock()
+        # Simulates the execution of a plug-in editing dialogue box and the
+        # choice to cancel.
+        with patch.object(
+            PipelineEditor._PlugEdit, "exec_", return_value=None
+        ) as mock_exec:
+            ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
+            mock_exec.assert_called_once_with()
 
-        # Exports a plug with no parameters
-        ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
-
-        PipelineEditor._PlugEdit.exec_.assert_called_once_with()
+        # We verify that there are still no processes in the current pipeline
+        # and that the input/output nodes are still not connected.
+        [io_node] = pipeline.nodes.keys()
+        self.assertEqual(io_node, "")
+        self.assertEqual(pipeline.nodes[io_node].plugs, {})
 
         # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        ppl_edt.click_pos = QPoint(450, 500)
+        ppl_edt.add_named_process(Rename)
 
-        # Exports a plug value
+        # Export a plug value for the first time
         res = ppl_edt._export_plug(
             temp_plug_name=("rename_1", "_out_file"),
             pipeline_parameter="_out_file",
         )
 
+        # We verify that the appropriate plug has been created in the
+        # I/O node and that the appropriate link has been created.
         self.assertIsNone(res)
-
-        # Mocks 'QMessageBox.question' to click accept
-        QMessageBox.question = Mock(return_value=QMessageBox.Yes)
-
-        # Tries to export the same plug value, accepts overwriting it
-        # With 'multi_export' then the temp_plug_value will be returned
-        res = ppl_edt._export_plug(
-            temp_plug_name=("rename_1", "_out_file"),
-            pipeline_parameter="_out_file",
-            multi_export=True,
+        expected_nodes = ["", "rename_1"]
+        expected_links_to = {
+            (
+                io_node,
+                "_out_file",
+                pipeline.nodes[io_node],
+                pipeline.nodes[io_node].plugs["_out_file"],
+                False,
+            )
+        }
+        self.assertCountEqual(pipeline.nodes.keys(), expected_nodes)
+        self.assertEqual(pipeline.nodes[io_node].plugs.keys(), ["_out_file"])
+        self.assertEqual(
+            pipeline.nodes["rename_1"].plugs["_out_file"].links_from, set()
+        )
+        self.assertEqual(
+            pipeline.nodes["rename_1"].plugs["_out_file"].links_to,
+            expected_links_to,
         )
 
-        QMessageBox.question.assert_called_once()
-        self.assertEqual(res, "_out_file")
+        # Case: user accepts to overwrite an already exported plug
+        with patch(
+            "PyQt5.QtWidgets.QMessageBox.question",
+            return_value=QMessageBox.Yes,
+        ) as mock_question:
+            res = ppl_edt._export_plug(
+                temp_plug_name=("rename_1", "_out_file"),
+                pipeline_parameter="_out_file",
+                multi_export=True,
+            )
+            mock_question.assert_called_once()
+            self.assertEqual(res, "_out_file")
 
-        # Mocks again 'QMessageBox.question' to click reject
-        QMessageBox.question = Mock(return_value=QMessageBox.No)
-        QInputDialog.getText = Mock(return_value=("new_name", True))
+        # Case: user refuses to overwrite, and provides a new name
+        with (
+            patch(
+                "PyQt5.QtWidgets.QMessageBox.question",
+                return_value=QMessageBox.No,
+            ) as mock_question,
+            patch(
+                "PyQt5.QtWidgets.QInputDialog.getText",
+                return_value=("new_name", True),
+            ) as mock_get_text,
+        ):
+            res = ppl_edt._export_plug(
+                temp_plug_name=("rename_1", "_out_file"),
+                pipeline_parameter="_out_file",
+                multi_export=True,
+            )
 
-        # Mocks 'export_parameter' to throw a 'TraitError'
-        # from traits.api import TraitError
-        # ppl_edt.scene.pipeline.export_parameter = Mock(
-        #    side_effect=TraitError())
-
-        # Tries to export the same plug value, denies overwriting it
-        res = ppl_edt._export_plug(
-            temp_plug_name=("rename_1", "_out_file"),
-            pipeline_parameter="_out_file",
-            multi_export=True,
-        )
-
-        QMessageBox.question.assert_called_once()
-        QInputDialog.getText.assert_called_once()
-        self.assertEqual(res, "_out_file")
+            # We verify that the appropriate plug has been created in the
+            # I/O node and that the appropriate link has been created.
+            mock_question.assert_called_once()
+            mock_get_text.assert_called_once()
+            self.assertEqual(res, "_out_file")
+            self.assertCountEqual(
+                pipeline.nodes[io_node].plugs.keys(), ["_out_file", "new_name"]
+            )
+            self.assertEqual(
+                pipeline.nodes["rename_1"].plugs["_out_file"].links_from, set()
+            )
+            expected_links_to = {
+                (
+                    io_node,
+                    "_out_file",
+                    pipeline.nodes[io_node],
+                    pipeline.nodes[io_node].plugs["_out_file"],
+                    False,
+                ),
+                (
+                    io_node,
+                    "new_name",
+                    pipeline.nodes[io_node],
+                    pipeline.nodes[io_node].plugs["new_name"],
+                    False,
+                ),
+            }
+            self.assertEqual(
+                pipeline.nodes["rename_1"].plugs["_out_file"].links_to,
+                expected_links_to,
+            )
 
     def test_save_pipeline(self):
         """Creates a pipeline and tries to save it.
