@@ -79,7 +79,6 @@ from PyQt5.QtWidgets import (
     QApplication,
     QDialog,
     QFileDialog,
-    QInputDialog,
     QLabel,
     QMessageBox,
     QPushButton,
@@ -653,10 +652,10 @@ class TestMIACase(unittest.TestCase):
         """Called once at the beginning of the class"""
 
         cls.properties_path = os.path.join(
-            tempfile.mkdtemp(prefix="mia_tests"), "dev"
+            tempfile.mkdtemp(prefix="mia_tests_"), "dev"
         )
         cls.project_path = os.path.join(
-            tempfile.mkdtemp(prefix="mia_project"), "project"
+            tempfile.mkdtemp(prefix="mia_project_"), "project"
         )
         # hack the Config class to get properties path, because some Config
         # instances are created out of our control in the code
@@ -8392,23 +8391,37 @@ class TestMIAPipelineEditor(TestMIACase):
             )
 
     def test_save_pipeline(self):
-        """Creates a pipeline and tries to save it.
+        """
+        Creates a pipeline and verifies various scenarios when saving it.
 
-        - Tests:
+        This test covers:
+            - Saving an empty pipeline (should return None).
+            - Saving with user cancellation (should return None).
+            - Saving with filenames starting with a digit (should return
+              None).
+            - Saving without an extension ('.py' should be added
+              automatically).
+            - Saving with an incorrect extension (should be corrected
+              to '.py').
+            - Handling restricted user mode where saving is not allowed.
+            - Saving using an explicitly provided filename.
+
+        Targeted methods:
             - PipelineEditor.save_pipeline
             - PipelineEditorTabs.save_pipeline
-            - save_pipeline inside pipeline_editor.py
+            - save_pipeline function in pipeline_editor.py
 
-        - Mocks:
+        Mocked:
             - QMessageBox.exec
             - QFileDialog.getSaveFileName
         """
-
-        # Save the state of the current process library
         config = Config(properties_path=self.properties_path)
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
+        # Backup user processes folder and process_config.yml. The files will
+        # be restored at the end of the last method (test_zz_del_pack) of
+        # TestMIAPipelineEditor.
         shutil.copytree(
             usr_proc_folder,
             os.path.join(
@@ -8432,89 +8445,127 @@ class TestMIAPipelineEditor(TestMIACase):
         # Switch to pipeline manager
         self.main_window.tabs.setCurrentIndex(2)
 
-        # Tries to save a pipeline that is empty
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertIsNone(res)
+        # Test saving an empty pipeline
+        self.assertIsNone(ppl_edt_tabs.save_pipeline())
 
-        # Adds a process
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Smooth)
+        # Add a process
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Smooth)
 
-        # Exports the input and output plugs
-        ppl_edt_tabs.get_current_editor().current_node_name = "smooth_1"
-        # fmt: off
-        (
-            ppl_edt_tabs.get_current_editor().
-            export_node_unconnected_mandatory_plugs()
-        )
-        (
-            ppl_edt_tabs.get_current_editor().
-            export_node_all_unconnected_outputs()
-        )
-        # fmt: on
+        # Export required plugs
+        editor.current_node_name = "smooth_1"
+        editor.export_node_unconnected_mandatory_plugs()
+        editor.export_node_all_unconnected_outputs()
 
-        # Mocks the execution of a dialog box
-        QMessageBox.exec = lambda *args: None
+        with patch(
+            "PyQt5.QtWidgets.QFileDialog.getSaveFileName", return_value=[""]
+        ):
+            # User cancels save dialog
+            self.assertIsNone(ppl_edt_tabs.save_pipeline())
 
-        # Tries to save the pipeline with the user cancelling it
-        QFileDialog.getSaveFileName = lambda *args: [""]
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertIsNone(res)
-
-        # Mocks the execution of a QFileDialog
-        QFileDialog.getSaveFileName = lambda *args: [filename]
-
-        # Removes the config.get_properties_path()/processes/User_processes
-        # folder, to increase coverage
-        shutil.rmtree(usr_proc_folder)
-
-        # Tries to save the pipeline with a filename starting by a digit
+        # Prepare to test filename logic
+        shutil.rmtree(usr_proc_folder)  # Increase coverage by removing folder
         config = Config(properties_path=self.properties_path)
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
-        filename = os.path.join(usr_proc_folder, "1_test_pipeline")
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertIsNone(res)
 
-        # Tries to save the pipeline with a filename without extension,
-        # which is automatically completed to .py
-        filename = os.path.join(usr_proc_folder, "test_pipeline_1")
-        QFileDialog.getSaveFileName = lambda *args: [filename]
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertTrue(res)  # The resulting filename is not empty
+        with (
+            patch(
+                "PyQt5.QtWidgets.QMessageBox.exec",
+                return_value=QMessageBox.Close,
+            ),
+            patch(
+                "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+                return_value=[
+                    os.path.join(usr_proc_folder, "1_test_pipeline")
+                ],
+            ),
+        ):
+            # Test saving a pipeline with a filename starting with a digit
+            self.assertIsNone(ppl_edt_tabs.save_pipeline())
 
-        # Save the pipeline with a filename with the wrong .c extension,
-        # which is automatically corrected to .py
-        filename = os.path.join(usr_proc_folder, "test_pipeline_2.c")
-        QFileDialog.getSaveFileName = lambda *args: [filename]
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertTrue(res)  # The resulting filename is not empty
+        # Saving with missing extension -> should append .py
+        with patch(
+            "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+            return_value=[os.path.join(usr_proc_folder, "test_pipeline_1")],
+        ):
+            self.assertEqual(
+                ppl_edt_tabs.save_pipeline(), "test_pipeline_1.py"
+            )
 
-        # Sets user mode to true
-        Config(properties_path=self.properties_path).set_user_mode(True)
+        # Saving with wrong extension -> should correct to .py
+        with (
+            patch(
+                "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Ok
+            ),
+            patch(
+                "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+                return_value=[
+                    os.path.join(usr_proc_folder, "test_pipeline_2.c")
+                ],
+            ),
+        ):
+            self.assertEqual(
+                ppl_edt_tabs.save_pipeline(), "test_pipeline_2.py"
+            )
 
-        # Tries to overwrite the previously saved pipeline without
-        # permissions
-        res = ppl_edt_tabs.save_pipeline()
-        self.assertIsNone(res)
+        # Set user mode to True -> should prevent overwrite
+        config.set_user_mode(True)
+
+        with (
+            patch(
+                "PyQt5.QtWidgets.QMessageBox.exec", return_value=QMessageBox.Ok
+            ),
+            patch(
+                "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+                return_value=[
+                    os.path.join(usr_proc_folder, "test_pipeline_2.py")
+                ],
+            ),
+        ):
+            self.assertIsNone(ppl_edt_tabs.save_pipeline())
 
         # Sets user mode back to false
-        Config(properties_path=self.properties_path).set_user_mode(True)
+        config.set_user_mode(False)
 
-        # Saves a pipeline by specifying a filename
+        # Explicit save with full filename
         filename = os.path.join(usr_proc_folder, "test_pipeline_3.py")
-        res = ppl_edt_tabs.save_pipeline(new_file_name=filename)
-        self.assertTrue(res)  # The resulting filename is not empty
+        self.assertEqual(
+            ppl_edt_tabs.save_pipeline(new_file_name=filename), filename
+        )
 
     def test_update_plug_value(self):
-        """Displays parameters of a node and updates a plug value."""
+        """
+        Tests updating plug values through the node controller UI.
+
+        This test verifies that:
+            - A process node ("threshold_1") can be added and its parameters
+              displayed.
+            - Input and output plugs ("synchronize" and "_activation_forced")
+              can be updated through the GUI.
+            - The internal pipeline state reflects these updated plug values.
+            - Exported input plugs can also be modified and reflected
+              correctly.
+            - The test maintains the original node controller configuration
+              (V1/V2).
+
+        Tested methods:
+            - NodeController.get_index_from_plug_name
+            - NodeController.update_plug_value
+            - PipelineEditor.export_node_all_unconnected_inputs
+            - ProcessNode.get_plug_value
+
+        Notes:
+            - This test specifically targets NodeController V1 behavior.
+        """
 
         config = Config(properties_path=self.properties_path)
-        controlV1_ver = config.isControlV1()
+        original_v1_setting = config.isControlV1()
 
-        # Switch to V1 node controller GUI, if necessary
-        if not controlV1_ver:
+        # Ensure NodeController V1 is active
+        if not original_v1_setting:
             config.setControlV1(True)
             self.restart_MIA()
 
@@ -8522,107 +8573,115 @@ class TestMIAPipelineEditor(TestMIACase):
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
         node_controller = self.main_window.pipeline_manager.nodeController
+        self.main_window.tabs.setCurrentIndex(2)
 
-        # Adding a process, creates a node called "threshold_1"
-        process_class = Threshold
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        # Add a new Threshold process node
+        pipeline_editor = pipeline_editor_tabs.get_current_editor()
+        pipeline_editor.click_pos = QPoint(450, 500)
+        pipeline_editor.add_named_process(Threshold)
 
         # Displaying the node parameters
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         node_controller.display_parameters(
-            "threshold_1", get_process_instance(process_class), pipeline
+            "threshold_1", get_process_instance(Threshold), pipeline
         )
 
-        # Updating the value of the "synchronize" input plug and
-        # "_activation_forced" output plugs.
+        # Update input plug "synchronize"
         # get_index_from_plug_name() only exists on the NodeController class
         # (v1).
-        if hasattr(node_controller, "get_index_from_plug_name"):
-            index = node_controller.get_index_from_plug_name(
-                "synchronize", "in"
-            )
-            node_controller.line_edit_input[index].setText("1")
+        index = node_controller.get_index_from_plug_name("synchronize", "in")
+        node_controller.line_edit_input[index].setText("1")
 
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_input[index].returnPressed.emit()
-            self.assertEqual(
-                1, pipeline.nodes["threshold_1"].get_plug_value("synchronize")
-            )
-
-            # Updating the value of the "_activation_forced" plug
-            index = node_controller.get_index_from_plug_name(
-                "_activation_forced", "out"
-            )
-            node_controller.line_edit_output[index].setText("True")
-
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_output[index].returnPressed.emit()
-            self.assertEqual(
-                True,
-                pipeline.nodes["threshold_1"].get_plug_value(
-                    "_activation_forced"
-                ),
-            )
-
-        # Exporting the input plugs and modifying the "synchronize" input plug
-        (pipeline_editor_tabs.get_current_editor)().current_node_name = (
-            "threshold_1"
+        # This calls "update_plug_value" method:
+        node_controller.line_edit_input[index].returnPressed.emit()
+        self.assertEqual(
+            1, pipeline.nodes["threshold_1"].get_plug_value("synchronize")
         )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_node_all_unconnected_inputs()
+
+        # Update output plug "_activation_forced"
+        index = node_controller.get_index_from_plug_name(
+            "_activation_forced", "out"
+        )
+        node_controller.line_edit_output[index].setText("True")
+
+        # This calls "update_plug_value" method:
+        node_controller.line_edit_output[index].returnPressed.emit()
+        self.assertEqual(
+            True,
+            pipeline.nodes["threshold_1"].get_plug_value("_activation_forced"),
+        )
+
+        # Export input plugs and update "synchronize" again
+        pipeline_editor.current_node_name = "threshold_1"
+        pipeline_editor.export_node_all_unconnected_inputs()
 
         input_process = pipeline.nodes[""].process
         node_controller.display_parameters(
             "inputs", get_process_instance(input_process), pipeline
         )
 
-        # Updating the value of the "synchronize" input plug.
-        # get_index_from_plug_name() only exists on the NodeController class
-        # (v1).
-        if hasattr(node_controller, "get_index_from_plug_name"):
-            index = node_controller.get_index_from_plug_name(
-                "synchronize", "in"
-            )
-            node_controller.line_edit_input[index].setText("2")
+        # Update input plug "synchronize"
+        index = node_controller.get_index_from_plug_name("synchronize", "in")
+        node_controller.line_edit_input[index].setText("2")
 
-            # This calls "update_plug_value" method:
-            node_controller.line_edit_input[index].returnPressed.emit()
-            self.assertEqual(
-                2, pipeline.nodes["threshold_1"].get_plug_value("synchronize")
-            )
+        # This calls "update_plug_value" method:
+        node_controller.line_edit_input[index].returnPressed.emit()
+        self.assertEqual(
+            2, pipeline.nodes["threshold_1"].get_plug_value("synchronize")
+        )
 
-        # Switches back to node controller V2, if necessary (return to initial
-        # state)
+        # Restore the original NodeController version if changed
         config = Config(properties_path=self.properties_path)
 
-        if not controlV1_ver:
+        if not original_v1_setting:
             config.setControlV1(False)
 
     def test_z_check_modif(self):
-        """Opens a pipeline, opens it as a process in another tab, modifies it
-        and check the modifications.
+        """
+        Tests plug modification propagation when a pipeline is opened as a
+        sub-process.
+
+        This test performs the following steps:
+            - Loads a user-defined pipeline from a .py file, ensuring it
+              contains a "smooth_1" node.
+            - Opens a new tab and adds the above pipeline as a process
+              ("test_pipeline_1_1").
+            - Adds two "Smooth" nodes and links them to form a processing
+              chain.
+            - Verifies correct connections between nodes.
+            - Exports plugs from the original pipeline in the first tab and
+              saves it.
+            - Re-checks the second tab for updated plugs via
+              `check_modifications()`.
+            - Asserts that the new plug ("fwhm") is now present in
+              "test_pipeline_1_1".
+
+        Tested features:
+            - Pipeline loading
+            - Process instantiation from library
+            - Node linking
+            - Plug export and save
+            - Detection of modifications in sub-pipeline processes
         """
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
 
-        # Adding a process from a .py file, creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
+        # Load a pipeline from file, ensure it has node "smooth_1"
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
         config = Config(properties_path=self.properties_path)
-        filename = os.path.join(
+        pipeline_path = os.path.join(
             config.get_properties_path(),
             "processes",
             "User_processes",
             "test_pipeline_1.py",
         )
-        pipeline_editor_tabs.load_pipeline(filename)
+        pipeline_editor_tabs.load_pipeline(pipeline_path)
         pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
+        self.assertIn("smooth_1", pipeline.nodes)
 
         # Make a new pipeline editor tab
         pipeline_editor_tabs.new_tab()
@@ -8630,60 +8689,91 @@ class TestMIAPipelineEditor(TestMIACase):
 
         # Adding a process from Packages library, creates a node called
         # "test_pipeline_1_1"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().drop_process(
-            "User_processes.Test_pipeline_1"
-        )
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.drop_process("User_processes.Test_pipeline_1")
         pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("test_pipeline_1_1" in pipeline.nodes.keys())
+        self.assertIn("test_pipeline_1_1", pipeline.nodes)
 
-        # Adding two processes, creates nodes called "smooth_1" and "smooth_2"
-        pipeline_editor_tabs.get_current_editor().drop_process(
-            "nipype.interfaces.spm.Smooth"
-        )
-        pipeline_editor_tabs.get_current_editor().drop_process(
-            "nipype.interfaces.spm.Smooth"
-        )
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
+        # Add two Smooth processes, creates nodes called "smooth_1"
+        # and "smooth_2"
+        editor.drop_process("nipype.interfaces.spm.Smooth")
+        editor.drop_process("nipype.interfaces.spm.Smooth")
+        self.assertIn("smooth_1", pipeline.nodes)
+        self.assertIn("smooth_2", pipeline.nodes)
 
-        # Adding a link between smooth_1 and test_pipeline_1_1 nodes
-        pipeline_editor_tabs.get_current_editor().add_link(
+        # Link smooth_1 to test_pipeline_1_1
+        editor.add_link(
             ("smooth_1", "_smoothed_files"),
             ("test_pipeline_1_1", "in_files"),
             active=True,
             weak=False,
         )
+
+        # Verify that the link has been created correctly
+        expected_links_from = {
+            (
+                "smooth_1",
+                "_smoothed_files",
+                pipeline.nodes["smooth_1"],
+                pipeline.nodes["smooth_1"].plugs["_smoothed_files"],
+                False,
+            )
+        }
+        expected_links_to = {
+            (
+                "test_pipeline_1_1",
+                "in_files",
+                pipeline.nodes["test_pipeline_1_1"],
+                pipeline.nodes["test_pipeline_1_1"].plugs["in_files"],
+                False,
+            )
+        }
         self.assertEqual(
-            1,
-            len(
-                pipeline.nodes["test_pipeline_1_1"]
-                .plugs["in_files"]
-                .links_from
-            ),
+            pipeline.nodes["test_pipeline_1_1"].plugs["in_files"].links_from,
+            expected_links_from,
         )
         self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
+            pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to,
+            expected_links_to,
         )
 
-        # Adding a link between test_pipeline_1_1 and smooth_2 nodes
-        pipeline_editor_tabs.get_current_editor().add_link(
+        # Link test_pipeline_1_1 to smooth_2
+        editor.add_link(
             ("test_pipeline_1_1", "_smoothed_files"),
             ("smooth_2", "in_files"),
             active=True,
             weak=False,
         )
+
+        # Verify that the link has been created correctly
+        expected_links_from = {
+            (
+                "test_pipeline_1_1",
+                "_smoothed_files",
+                pipeline.nodes["test_pipeline_1_1"],
+                pipeline.nodes["test_pipeline_1_1"].plugs["_smoothed_files"],
+                False,
+            )
+        }
+        expected_links_to = {
+            (
+                "smooth_2",
+                "in_files",
+                pipeline.nodes["smooth_2"],
+                pipeline.nodes["smooth_2"].plugs["in_files"],
+                False,
+            )
+        }
         self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
+            pipeline.nodes["smooth_2"].plugs["in_files"].links_from,
+            expected_links_from,
         )
         self.assertEqual(
-            1,
-            len(
-                pipeline.nodes["test_pipeline_1_1"]
-                .plugs["_smoothed_files"]
-                .links_to
-            ),
+            pipeline.nodes["test_pipeline_1_1"]
+            .plugs["_smoothed_files"]
+            .links_to,
+            expected_links_to,
         )
 
         # Return to the first tab
@@ -8692,26 +8782,22 @@ class TestMIAPipelineEditor(TestMIACase):
         )
 
         # Export all plugs of the smooth_1 node
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().export_node_plugs(
-            "smooth_1", optional=True
-        )
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.export_node_plugs("smooth_1", optional=True)
 
         # Save the pipeline
         self.main_window.pipeline_manager.savePipeline(uncheck=True)
 
-        # Go back to the second tab
+        # Go back to second tab and verify that "fwhm" is not yet present
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
-        pipeline_editor_tabs.get_current_editor().scene.pos[
-            "test_pipeline_1_1"
-        ] = QPoint(450, 500)
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.scene.pos["test_pipeline_1_1"] = QPoint(450, 500)
+        self.assertNotIn("fwhm", pipeline.nodes["test_pipeline_1_1"].plugs)
 
-        # Check if the nodes of the pipeline have been modified
-        pipeline_editor_tabs.get_current_editor().check_modifications()
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue(
-            "fwhm" in pipeline.nodes["test_pipeline_1_1"].plugs.keys()
-        )
+        # Trigger modification check and confirm "fwhm" was added
+        editor.check_modifications()
+        self.assertIn("fwhm", pipeline.nodes["test_pipeline_1_1"].plugs)
 
     def test_z_get_editor(self):
         """Gets the instance of an editor.
