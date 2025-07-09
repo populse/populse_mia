@@ -135,7 +135,7 @@ class Project:
 
         if project_root_folder is None:
             self.isTempProject = True
-            self.folder = tempfile.mkdtemp(prefix="temp_mia_project")
+            self.folder = tempfile.mkdtemp(prefix="temp_mia_project_")
 
         else:
             self.isTempProject = False
