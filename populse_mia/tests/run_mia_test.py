@@ -8419,25 +8419,6 @@ class TestMIAPipelineEditor(TestMIACase):
         usr_proc_folder = os.path.join(
             config.get_properties_path(), "processes", "User_processes"
         )
-        # Backup user processes folder and process_config.yml. The files will
-        # be restored at the end of the last method (test_zz_del_pack) of
-        # TestMIAPipelineEditor.
-        shutil.copytree(
-            usr_proc_folder,
-            os.path.join(
-                self.properties_path,
-                "4UTs_TestMIAPipelineEditor",
-                "User_processes",
-            ),
-        )
-        shutil.copy(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-            os.path.join(self.properties_path, "4UTs_TestMIAPipelineEditor"),
-        )
 
         # Sets often used shortcuts
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
@@ -8800,18 +8781,22 @@ class TestMIAPipelineEditor(TestMIACase):
         self.assertIn("fwhm", pipeline.nodes["test_pipeline_1_1"].plugs)
 
     def test_z_get_editor(self):
-        """Gets the instance of an editor.
-
-        - Tests:
-            - PipelineEditorTabs.get_editor_by_index
-            - PipelineEditorTabs.get_current_editor
-            - PipelineEditorTabs.get_editor_by_tab_name
-            - PipelineEditorTabs.get_editor_by_filename
         """
+        Verify that editor instances in PipelineEditorTabs are correctly
+        retrieved using various access methods.
 
+        Tests the following methods:
+            - get_editor_by_index
+            - get_current_editor
+            - get_editor_by_tab_name
+            - get_editor_by_file_name
+        """
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Load an existing pipeline into the first tab
         config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
@@ -8822,36 +8807,49 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.load_pipeline(filename)
         editor0 = pipeline_editor_tabs.get_current_editor()
 
-        # create new tab with new editor and make it current:
+        # Add a new tab and retrieve the new current editor
         pipeline_editor_tabs.new_tab()
         editor1 = pipeline_editor_tabs.get_current_editor()
 
-        # Perform various tests on the pipeline editor tabs
+        # Validate editor retrieval by index
         self.assertEqual(pipeline_editor_tabs.get_editor_by_index(0), editor0)
         self.assertEqual(pipeline_editor_tabs.get_editor_by_index(1), editor1)
+
+        # Validate current editor
         self.assertEqual(pipeline_editor_tabs.get_current_editor(), editor1)
+
+        # Validate editor retrieval by tab name
         self.assertEqual(
-            editor0,
             pipeline_editor_tabs.get_editor_by_tab_name("test_pipeline_1.py"),
+            editor0,
         )
         self.assertEqual(
-            editor1,
             pipeline_editor_tabs.get_editor_by_tab_name("New Pipeline 1"),
+            editor1,
         )
+        self.assertIsNone(pipeline_editor_tabs.get_editor_by_tab_name("dummy"))
+
+        # Validate editor retrieval by filename
         self.assertEqual(
-            None, pipeline_editor_tabs.get_editor_by_tab_name("dummy")
+            pipeline_editor_tabs.get_editor_by_file_name(filename), editor0
         )
-        self.assertEqual(
-            editor0, pipeline_editor_tabs.get_editor_by_file_name(filename)
-        )
-        self.assertEqual(
-            None, pipeline_editor_tabs.get_editor_by_file_name("dummy")
+        self.assertIsNone(
+            pipeline_editor_tabs.get_editor_by_file_name("dummy")
         )
 
     def test_z_get_filename(self):
-        """Gets the relative path to a previously saved pipeline file.
+        """
+        Tests retrieval of the filename associated with a pipeline editor tab.
 
-        - Tests:
+        - Verifies:
+            - `PipelineEditorTabs.get_filename_by_index` returns the correct
+            absolute path for a loaded pipeline in a given tab index.
+            - `PipelineEditorTabs.get_filename_by_index` returns `None` for a
+              tab without a file.
+            - `PipelineEditorTabs.get_current_filename` returns the correct
+              absolute path of the currently selected tab's pipeline.
+
+        - Target methods:
             - PipelineEditorTabs.get_filename_by_index
             - PipelineEditorTabs.get_current_filename
         """
@@ -8859,6 +8857,8 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
+
         config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
@@ -8869,27 +8869,40 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.load_pipeline(filename)
 
         self.assertEqual(
-            filename,
+            os.path.abspath(filename),
             os.path.abspath(pipeline_editor_tabs.get_filename_by_index(0)),
         )
-        self.assertEqual(None, pipeline_editor_tabs.get_filename_by_index(1))
+        self.assertIsNone(pipeline_editor_tabs.get_filename_by_index(1))
         self.assertEqual(
-            filename,
+            os.path.abspath(filename),
             os.path.abspath(pipeline_editor_tabs.get_current_filename()),
         )
 
     def test_z_get_index(self):
-        """Gets the index of an editor.
+        """
+        Verifies that editor tab indices can be correctly retrieved by tab
+        name, filename, and editor instance.
 
         - Tests:
             - PipelineEditorTabs.get_index_by_tab_name
             - PipelineEditorTabs.get_index_by_filename
             - PipelineEditorTabs.get_index_by_editor
-        """
 
+        The test performs the following steps:
+            1. Loads a saved pipeline file into a new tab.
+            2. Creates an additional empty pipeline in a second tab.
+            3. Retrieves and checks tab indices using:
+                - the tab name
+                - the full file path
+                - the editor instance
+            4. Confirms that querying with an invalid name, path, or editor
+               returns None.
+        """
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
+
         config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
@@ -8904,58 +8917,69 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.new_tab()
         editor1 = pipeline_editor_tabs.get_current_editor()
 
+        # Index by tab name
         self.assertEqual(
-            0, pipeline_editor_tabs.get_index_by_tab_name("test_pipeline_1.py")
+            pipeline_editor_tabs.get_index_by_tab_name("test_pipeline_1.py"), 0
         )
         self.assertEqual(
-            1, pipeline_editor_tabs.get_index_by_tab_name("New Pipeline 1")
+            pipeline_editor_tabs.get_index_by_tab_name("New Pipeline 1"), 1
         )
-        self.assertEqual(
-            None, pipeline_editor_tabs.get_index_by_tab_name("dummy")
-        )
+        self.assertIsNone(pipeline_editor_tabs.get_index_by_tab_name("dummy"))
 
+        # Index by filename
         self.assertEqual(
-            0, pipeline_editor_tabs.get_index_by_filename(filename)
+            pipeline_editor_tabs.get_index_by_filename(filename), 0
         )
-        self.assertEqual(
-            None, pipeline_editor_tabs.get_index_by_filename("dummy")
-        )
+        self.assertIsNone(pipeline_editor_tabs.get_index_by_filename("dummy"))
 
-        self.assertEqual(0, pipeline_editor_tabs.get_index_by_editor(editor0))
-        self.assertEqual(1, pipeline_editor_tabs.get_index_by_editor(editor1))
-        self.assertEqual(
-            None, pipeline_editor_tabs.get_index_by_editor("dummy")
-        )
+        # Index by editor instance
+        self.assertEqual(pipeline_editor_tabs.get_index_by_editor(editor0), 0)
+        self.assertEqual(pipeline_editor_tabs.get_index_by_editor(editor1), 1)
+        self.assertIsNone(pipeline_editor_tabs.get_index_by_editor("dummy"))
 
     def test_z_get_tab_name(self):
-        """Gets the tab name of the editor.
+        """
+        Verify that the tab names of pipeline editors are correctly retrieved.
+
+        This test checks both direct index-based retrieval and the currently
+        selected tab name.
 
         - Tests:
             - PipelineEditorTabs.get_tab_name_by_index
             - PipelineEditorTabs.get_current_tab_name
         """
-
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
 
         self.assertEqual(
-            "New Pipeline", pipeline_editor_tabs.get_tab_name_by_index(0)
+            pipeline_editor_tabs.get_tab_name_by_index(0), "New Pipeline"
         )
-        self.assertEqual(None, pipeline_editor_tabs.get_tab_name_by_index(1))
+        self.assertIsNone(pipeline_editor_tabs.get_tab_name_by_index(1))
         self.assertEqual(
-            "New Pipeline", pipeline_editor_tabs.get_current_tab_name()
+            pipeline_editor_tabs.get_current_tab_name(), "New Pipeline"
         )
 
     def test_z_load_pipeline(self):
-        """Loads a pipeline."""
+        """
+        Loads a pipeline file into the editor and verifies its content.
 
+        - Tests:
+            - PipelineEditorTabs.load_pipeline
+            - PipelineEditorTabs.get_current_pipeline
+
+        - Verifies:
+            - The pipeline is loaded correctly.
+            - The node 'smooth_1' exists in the loaded pipeline.
+        """
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
-        config = Config(properties_path=self.properties_path)
+        self.main_window.tabs.setCurrentIndex(2)
+
         filename = os.path.join(
-            config.get_properties_path(),
+            self.properties_path,
             "processes",
             "User_processes",
             "test_pipeline_1.py",
@@ -8963,14 +8987,29 @@ class TestMIAPipelineEditor(TestMIACase):
         pipeline_editor_tabs.load_pipeline(filename)
 
         pipeline = pipeline_editor_tabs.get_current_pipeline()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
+        self.assertIn("smooth_1", pipeline.nodes)
 
     def test_z_open_sub_pipeline(self):
-        """Opens a sub_pipeline."""
+        """
+        Tests the ability to open a sub-pipeline in a new editor tab.
 
+        This test:
+            - Adds the "Test_pipeline_1" process from the "User_processes"
+              module.
+            - Simulates a user click to insert the process into the current
+              pipeline.
+            - Opens the sub-pipeline associated with the inserted process.
+            - Verifies that a new editor tab is created and named correctly.
+
+        - Tests:
+            - PipelineEditorTabs.open_sub_pipeline
+            - PipelineEditorTabs.get_filename_by_index
+        """
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
+
         config = Config(properties_path=self.properties_path)
 
         # Adding the "config.get_properties_path()/processes" path to the
@@ -8984,38 +9023,54 @@ class TestMIAPipelineEditor(TestMIACase):
         __import__(package_name)
         pkg = sys.modules[package_name]
 
-        for name, cls in sorted(list(pkg.__dict__.items())):
-            if name == "Test_pipeline_1":
-                process_class = cls
+        process_class = next(
+            (
+                cls
+                for name, cls in sorted(pkg.__dict__.items())
+                if name == "Test_pipeline_1"
+            ),
+            None,
+        )
+
+        self.assertIsNotNone(
+            process_class, "Process class 'Test_pipeline_1' not found."
+        )
 
         # Adding the "test_pipeline_1" as a process
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        editor = pipeline_editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(process_class)
 
         # Opening the sub-pipeline in a new editor
         pipeline = pipeline_editor_tabs.get_current_pipeline()
         process_instance = pipeline.nodes["test_pipeline_1_1"].process
         pipeline_editor_tabs.open_sub_pipeline(process_instance)
-        self.assertTrue(3, pipeline_editor_tabs.count())
+
+        self.assertEqual(pipeline_editor_tabs.count(), 3)
         self.assertEqual(
-            "test_pipeline_1.py",
             os.path.basename(pipeline_editor_tabs.get_filename_by_index(1)),
+            "test_pipeline_1.py",
         )
 
     def test_z_set_current_editor(self):
-        """Sets the current editor.
+        """
+        Tests setting the current editor using different criteria.
 
-        - Tests:
+        Validates that the active tab can be correctly switched using:
+            - Tab name
+            - Pipeline file name
+            - Editor instance
+
+        Targets the following methods:
             - PipelineEditorTabs.set_current_editor_by_tab_name
             - PipelineEditorTabs.set_current_editor_by_file_name
             - PipelineEditorTabs.set_current_editor_by_editor
         """
-
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        self.main_window.tabs.setCurrentIndex(2)
+
         config = Config(properties_path=self.properties_path)
         filename = os.path.join(
             config.get_properties_path(),
@@ -9034,6 +9089,7 @@ class TestMIAPipelineEditor(TestMIACase):
             "test_pipeline_1.py"
         )
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 0)
+
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 1)
 
@@ -9042,63 +9098,38 @@ class TestMIAPipelineEditor(TestMIACase):
 
         pipeline_editor_tabs.set_current_editor_by_editor(editor1)
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 1)
+
         pipeline_editor_tabs.set_current_editor_by_editor(editor0)
         self.assertEqual(pipeline_editor_tabs.currentIndex(), 0)
 
     def test_zz_del_pack(self):
-        """Remove the bricks created during the unit tests.
-
-        Take advantage of this to cover the part of the code used to remove the
-        packages.
         """
+        Deletes the 'Test_pipeline_1' brick from the package library and
+        verifies its removal.
 
-        pkg = PackageLibraryDialog(self.main_window)
+        This test ensures that:
+            - The brick 'Test_pipeline_1' exists before deletion.
+            - The `delete_package` method removes it correctly.
+            - The internal package tree reflects the deletion.
+
+        It also implicitly covers the functionality related to package removal.
+        """
+        self.main_window.tabs.setCurrentIndex(2)
+        pkg_dialog = PackageLibraryDialog(self.main_window)
 
         # The Test_pipeline brick was added in the package library
-        self.assertTrue(
-            "Test_pipeline_1"
-            in pkg.package_library.package_tree["User_processes"]
-        )
+        user_packages = pkg_dialog.package_library.package_tree[
+            "User_processes"
+        ]
+        self.assertIn("Test_pipeline_1", user_packages)
 
-        pkg.delete_package(
-            to_delete="User_processes.Test_pipeline_1", loop=True
+        pkg_dialog.delete_package(
+            to_delete="User_processes.Test_pipeline_1",
+            loop=True,
         )
 
         # The Test_pipeline brick has been removed from the package library
-        self.assertFalse(
-            "Test_pipeline_1"
-            in pkg.package_library.package_tree["User_processes"]
-        )
-
-        # Restore the initial process library (before test_save_pipeline test)
-        config = Config(properties_path=self.properties_path)
-        usr_proc_folder = os.path.join(
-            config.get_properties_path(), "processes", "User_processes"
-        )
-        shutil.rmtree(usr_proc_folder)
-        os.remove(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            )
-        )
-        shutil.copytree(
-            os.path.join(
-                self.properties_path,
-                "4UTs_TestMIAPipelineEditor",
-                "User_processes",
-            ),
-            os.path.join(usr_proc_folder),
-        )
-        shutil.copy(
-            os.path.join(
-                self.properties_path,
-                "4UTs_TestMIAPipelineEditor",
-                "process_config.yml",
-            ),
-            os.path.join(config.get_properties_path(), "properties"),
-        )
+        self.assertNotIn("Test_pipeline_1", user_packages)
 
 
 class TestMIAPipelineManagerTab(TestMIACase):
