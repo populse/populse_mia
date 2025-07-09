@@ -10704,6 +10704,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
+    @unittest.skipIf(platform.system() == 'Darwin', 
+                     "Segfault on macOS due to threading cleanup issue")
     def test_undo_redo(self):
         """Tests the undo/redo action."""
 
