@@ -57,6 +57,7 @@ from nipype.interfaces.base.traits_extension import (
     InputMultiObject,
     OutputMultiPath,
 )
+from nipype.interfaces.cat12 import CAT12Segment
 from nipype.interfaces.spm import Smooth, Threshold
 from packaging import version
 
@@ -9186,46 +9187,62 @@ class TestMIAPipelineManagerTab(TestMIACase):
     """
 
     def test_add_plug_value_to_database_list_type(self):
-        """Opens a project, adds a 'Select' process, exports a list type
-        input plug and adds it to the database.
-
-        - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database().
         """
+        Tests adding a list-type plug value to the database from a process
+        node.
 
-        # Opens project 8 and switches to it
+        This test:
+            - Opens a test project.
+            - Adds a 'CAT12Segment' process to the pipeline.
+            - Exports its input/output plugs.
+            - Assigns a list of files as input to the 'in_files' plug.
+            - Simulates metadata attributes.
+            - Calls `add_plug_value_to_database()` to register the plug
+              values.
+            - Verifies that both documents and their metadata are stored in
+              the database.
+
+            - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
+        """
+        # Open a new test project and switch to the pipeline editor tab
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
+        self.main_window.tabs.setCurrentIndex(2)
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
-            DOCUMENT_2 = database_data.get_document_names(COLLECTION_CURRENT)[
-                1
-            ]
+        # Retrieve two document paths from the current collection
+        with self.main_window.project.database.data() as db:
+            doc1 = db.get_document_names(COLLECTION_CURRENT)[0]
+            doc2 = db.get_document_names(COLLECTION_CURRENT)[1]
+
+        # Reconstruct full paths with test prefix
+        project_folder = Path(self.main_window.project.folder)
+        doc1_path = str(
+            project_folder / Path(doc1).parent / f"test_{Path(doc1).name}"
+        )
+        doc2_path = str(
+            project_folder / Path(doc2).parent / f"test_{Path(doc2).name}"
+        )
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
 
-        # Adds the process Select, creates the "select_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+        # Add a CAT12Segment process to the pipeline
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(CAT12Segment)
+        editor.current_node_name = "cat12segment_1"
+
+        # Exports the mandatory input and output plugs for "cat12segment_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
+
         pipeline = ppl_edt_tabs.get_current_pipeline()
-
-        # Exports the mandatory input and output plugs for "select_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-
         pipeline_manager = self.main_window.pipeline_manager
 
-        # Initializes the workflow manually
+        # Initialize the workflow and set up a fake brick job
         pipeline_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
-
-        # Gets the 'job' and mocks adding a brick to the collection
         job = pipeline_manager.workflow.jobs[0]
-
         brick_id = str(uuid.uuid4())
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
@@ -9236,46 +9253,56 @@ class TestMIAPipelineManagerTab(TestMIACase):
             database_data.add_document(COLLECTION_BRICK, brick_id)
 
         # Sets the mandatory plug values corresponding to "inputs" node
-        trait_list_inlist = TraitListObject(
-            InputMultiObject(), pipeline, "inlist", [DOCUMENT_1, DOCUMENT_2]
+        trait_list_in_files = TraitListObject(
+            InputMultiObject(), pipeline, "in_files", [doc1_path, doc2_path]
         )
 
         # Mocks the creation of a completion engine
         process = job.process()
-        plug_name = "inlist"
-        trait = process.trait(plug_name)
+        trait = process.trait("in_files")
         inputs = process.get_inputs()
 
         # Mocks the attributes dict
         attributes = {
-            "not_list": "not_list_value",
-            "small_list": ["list_item1"],
-            "large_list": ["list_item1", "list_item2", "list_item3"],
+            "ProtocolName": "test",
+            "BandWidth": "[12345.6]",
+            "FOV": "[1.2, 3.4, 5.6]",
         }
 
-        # Adds plug value of type 'TraitListObject'
+        # Add the plug value to the database
         pipeline_manager.add_plug_value_to_database(
-            trait_list_inlist,
+            trait_list_in_files,
             brick_id,
             "",
-            "select_1",
-            plug_name,
-            "select_1",
+            "cat12segment_1",
+            "in_files",
+            "cat12segment_1",
             job,
             trait,
             inputs,
             attributes,
         )
 
-        # Asserts that both 'DOCUMENT_1' and 'DOCUMENT_2' are stored in
-        # the database
-        with pipeline_manager.project.database.data() as database_data:
-            self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
-            )
-            self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_2)
-            )
+        # Verify both documents and metadata values were stored
+        with pipeline_manager.project.database.data() as db:
+
+            for doc in (doc1_path, doc2_path):
+                rel_path = str(
+                    Path(doc).relative_to(self.main_window.project.folder)
+                )
+                self.assertTrue(db.has_document(COLLECTION_CURRENT, rel_path))
+                self.assertEqual(
+                    db.get_value(COLLECTION_CURRENT, rel_path, "BandWidth"),
+                    "[12345.6]",
+                )
+                self.assertEqual(
+                    db.get_value(COLLECTION_CURRENT, rel_path, "FOV"),
+                    "[1.2, 3.4, 5.6]",
+                )
+                self.assertEqual(
+                    db.get_value(COLLECTION_CURRENT, rel_path, "ProtocolName"),
+                    "test",
+                )
 
     def test_add_plug_value_to_database_non_list_type(self):
         """Opens a project, adds a 'Rename' process, exports a non list type
@@ -10704,8 +10731,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
-    @unittest.skipIf(platform.system() == 'Darwin', 
-                     "Segfault on macOS due to threading cleanup issue")
+    @unittest.skipIf(
+        platform.system() == "Darwin",
+        "Segfault on macOS due to threading cleanup issue",
+    )
     def test_undo_redo(self):
         """Tests the undo/redo action."""
 
