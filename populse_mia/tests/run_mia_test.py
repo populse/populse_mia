@@ -2,6 +2,7 @@
 
 :Contains:
     :Class:
+        - LogCapture
         - TestMIACase
         - TestMIADataBrowser
         - TestMIAMainWindow
@@ -9,6 +10,9 @@
         - TestMIAPipelineEditor
         - TestMIAPipelineManagerTab
         - Test_Z_MIAOthers
+    :function:
+        - add_to_syspath
+        - qt_message_handler
 
 """
 
@@ -29,6 +33,7 @@ import contextlib
 import copy
 import io
 import json
+import logging
 import os
 import platform
 import shutil
@@ -40,7 +45,6 @@ import time
 # import threading
 import unittest
 import uuid
-from contextlib import contextmanager
 from datetime import datetime
 from hashlib import sha256
 from pathlib import Path
@@ -204,7 +208,9 @@ from populse_mia.data_manager import (  # noqa: E402
     TAG_ORIGIN_USER,
     TAG_TYPE,
     TAG_UNIT_MHZ,
+    TYPE_MAT,
     TYPE_NII,
+    TYPE_TXT,
 )
 
 # Populse_mia import
@@ -295,6 +301,38 @@ def qt_message_handler(mode, context, message):
         sys.stderr.write(f"{cleaned_message}\n")
 
 
+class LogCapture(logging.Handler):
+    """
+    Custom logging handler to capture log records for inspection during tests.
+
+    This handler stores emitted log records in a list, allowing assertions
+    on log content, level, or message during unit tests.
+    """
+
+    def __init__(self):
+        """
+        Initializes the LogCapture handler.
+
+        Sets up an empty list to store log records.
+        """
+        super().__init__()
+        self.records = []
+
+    def emit(self, record):
+        """
+        Appends a log record to the internal list.
+
+        :param record (logging.LogRecord): The log record to store.
+        """
+        self.records.append(record)
+
+    def clear(self):
+        """
+        Clears all captured log records.
+        """
+        self.records.clear()
+
+
 class TestMIACase(unittest.TestCase):
     """Parent class for the test classes of mia.
 
@@ -302,6 +340,7 @@ class TestMIACase(unittest.TestCase):
         :Method:
             - add_visualized_tag: selects a tag to display with the
               "Visualized tags" pop-up
+            - capture_logs: context manager to temporarily capture log records
             - clean_uts_packages: deleting the package added during the UTs or
               old one still existing
             - create_mock_jar: creates a mocked java (.jar) executable
@@ -377,6 +416,52 @@ class TestMIACase(unittest.TestCase):
         tag_list_widget.setCurrentItem(matching_items[0])
         visualized_tags.click_select_tag()
         dialog.accept()
+
+    @contextlib.contextmanager
+    def capture_logs(self, logger_name, level=logging.INFO):
+        """
+        Context manager to temporarily capture log records from a specific
+        logger.
+
+        Attaches a LogCapture handler to the specified logger and yields it,
+        allowing inspection of emitted log records during the context block.
+        Restores the logger's original state after the block is executed.
+
+        Note: Capture a priority levels and all higher priority levels
+              (WARNING, ERROR, CRITICAL), but not lower priority levels.
+              The logging levels have this hierarchy (from lowest to highest
+              priority):
+                  - NOTSET (level 0) - Captures everything
+                  - DEBUG (10) - Lowest priority
+                  - INFO (20)
+                  - WARNING (30)
+                  - ERROR (40)
+                  - CRITICAL (50) - Highest priority
+
+        :param logger_name (str): The name of the logger to capture logs from.
+        :param level (int): The logging level to use during capture
+                            (default: logging.INFO).
+
+        :yields (LogCapture): A custom log handler with a `records` attribute
+                              containing captured LogRecord entries.
+        """
+        handler = LogCapture()
+        logger = logging.getLogger(logger_name)
+
+        # Store original level
+        original_level = logger.level
+
+        # Add handler and set level
+        logger.addHandler(handler)
+        logger.setLevel(level)
+
+        try:
+            yield handler
+
+        finally:
+            # Clean up
+            logger.removeHandler(handler)
+            logger.setLevel(original_level)
 
     def clean_uts_packages(self, proc_lib_view):
         """
@@ -1243,7 +1328,7 @@ class TestMIADataBrowser(TestMIACase):
 
         return visible_scans
 
-    @contextmanager
+    @contextlib.contextmanager
     def suppress_item_changed_signal(self, table_data):
         """
         Temporarily disables the itemChanged signal to prevent unwanted slot
@@ -9305,88 +9390,86 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 )
 
     def test_add_plug_value_to_database_non_list_type(self):
-        """Opens a project, adds a 'Rename' process, exports a non list type
-        input plug and adds it to the database.
+        """
+        Tests the behavior of `add_plug_value_to_database()` when handling a
+        non-list input plug value in different contexts.
+
+        Scenarios covered:
+            - Plug value is outside the project directory (should not be
+              indexed)
+            - Plug value is inside the project directory (should be indexed)
+            - Plug value is already in the database (logs an info message)
+            - Plug values with different file extensions (.nii.gz, .mat, .txt)
+            - Handling of `parent_files` via `auto_inheritance_dict` and
+              `inheritance_dict`
+            - Adding and removing tags based on the inheritance information
 
         - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
         """
 
-        # Opens project 8 and switches to it
+        # Open test project and switch to it
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_8")
+        self.main_window.tabs.setCurrentIndex(2)
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
+        with self.main_window.project.database.data() as db:
+            document = db.get_document_names(COLLECTION_CURRENT)[0]
+
+        doc_path = str(Path(document).parent / f"test_{Path(document).name}")
+        project_folder = Path(self.main_window.project.folder)
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
         )
+        editor = pipeline_editor_tabs.get_current_editor()
 
-        # Adds the process Rename, creates the "rename_1" node
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(Rename)
+        # Add 'Rename' process and export its plugs
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
+
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-        # Exports the mandatory input and output plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "rename_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_all_unconnected_outputs()
-
-        old_scan_name = DOCUMENT_1.split("/")[-1]
-        new_scan_name = "new_name.nii"
-
-        # Changes the "_out_file" in the "outputs" node
+        # Set the "_out_file" plug in the "outputs" node
         pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+            "_out_file", doc_path.replace(Path(document).name, "new_name.nii")
         )
 
+        # Create a workflow and assign a UUID
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
-
         job = pipeline_manager.workflow.jobs[0]
-
         brick_id = str(uuid.uuid4())
         job.uuid = brick_id
         pipeline_manager.brick_list.append(brick_id)
 
-        with pipeline_manager.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
+        with pipeline_manager.project.database.data(write=True) as db:
+            db.add_document(COLLECTION_BRICK, brick_id)
 
-        # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
+        # Set the mandatory plug values in the "inputs" node
+        pipeline.nodes[""].set_plug_value("in_file", document)
+        pipeline.nodes[""].set_plug_value("format_string", "new_name.nii")
 
         process = job.process()
-        plug_name = "in_file"
-        trait = process.trait(plug_name)
-
+        trait = process.trait("in_file")
         inputs = process.get_inputs()
-
         attributes = {}
         completion = ProcessCompletionEngine.get_completion_engine(process)
 
         if completion:
             attributes = completion.get_attribute_values().export_to_dict()
 
-        # Plug value is file location outside project directory
+        # Case 1: Plug value is outside project directory (not added)
         pipeline_manager.add_plug_value_to_database(
-            DOCUMENT_1,
+            doc_path,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9394,25 +9477,61 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        with pipeline_manager.project.database.data() as database_data:
+        with pipeline_manager.project.database.data() as db:
+            self.assertFalse(db.has_document(COLLECTION_CURRENT, doc_path))
+
+        # Case 2: Plug value inside project (should be added)
+        inside_path = str(project_folder / Path(doc_path))
+        pipeline_manager.add_plug_value_to_database(
+            inside_path,
+            brick_id,
+            "",
+            "rename_1",
+            "in_file",
+            "rename_1",
+            job,
+            trait,
+            inputs,
+            attributes,
+        )
+
+        with pipeline_manager.project.database.data() as db:
+            self.assertTrue(db.has_document(COLLECTION_CURRENT, doc_path))
+
+        # Case 3: Plug value already exists (should log an info message)
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
+            pipeline_manager.add_plug_value_to_database(
+                inside_path,
+                brick_id,
+                "",
+                "rename_1",
+                "in_file",
+                "rename_1",
+                job,
+                trait,
+                inputs,
+                attributes,
+            )
+            self.assertEqual(len(log_handler.records), 1)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
             self.assertTrue(
-                database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1)
+                any("already in database." in msg for msg in info_messages)
             )
 
-        # Plug values outside the directory are not registered into the
-        # database, therefore only plug values inside the project will be used
-        # from now on.
-
-        # Plug value is file location inside project directory
-        inside_project = os.path.join(
-            pipeline_manager.project.folder, DOCUMENT_1.split("/")[-1]
-        )
+        # Case 4: Plug value is a .nii.gz file
+        gz_file = os.path.join(project_folder, "scan.nii.gz")
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            gz_file,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9420,13 +9539,21 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # Plug value that is already in the database
+        with pipeline_manager.project.database.data() as db:
+            self.assertTrue(db.has_document(COLLECTION_CURRENT, "scan.nii.gz"))
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, "scan.nii.gz", TAG_TYPE),
+                TYPE_NII,
+            )
+
+        # Case 5: Plug value is a .mat file
+        mat_file = os.path.join(project_folder, "file.mat")
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            mat_file,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9434,14 +9561,21 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # Plug value is tag
-        tag_value = os.path.join(pipeline_manager.project.folder, "tag.gz")
+        with pipeline_manager.project.database.data() as db:
+            self.assertTrue(db.has_document(COLLECTION_CURRENT, "file.mat"))
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, "file.mat", TAG_TYPE),
+                TYPE_MAT,
+            )
+
+        # Case 6: Plug value is a .txt file
+        txt_file = os.path.join(project_folder, "file.txt")
         pipeline_manager.add_plug_value_to_database(
-            tag_value,
+            txt_file,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9449,47 +9583,31 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # Plug value is .mat
-        mat_value = os.path.join(pipeline_manager.project.folder, "file.mat")
-        pipeline_manager.add_plug_value_to_database(
-            mat_value,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
-
-        # Plug value is .txt
-        txt_value = os.path.join(pipeline_manager.project.folder, "file.txt")
-        pipeline_manager.add_plug_value_to_database(
-            txt_value,
-            brick_id,
-            "",
-            "rename_1",
-            plug_name,
-            "rename_1",
-            job,
-            trait,
-            inputs,
-            attributes,
-        )
+        with pipeline_manager.project.database.data() as db:
+            self.assertTrue(db.has_document(COLLECTION_CURRENT, "file.txt"))
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, "file.txt", TAG_TYPE),
+                TYPE_TXT,
+            )
 
         # 'parent_files' are extracted from the 'inheritance_dict' and
-        # 'auto_inheritance_dict' attributes of 'job'. They test cases are
-        # listed below:
-        # 'parent_files' inside 'auto_inheritance_dict'
-        job.auto_inheritance_dict = {inside_project: "parent_files_value"}
+        # 'auto_inheritance_dict' attributes of 'job'.
+
+        # Case 7: Add FOV tag via auto_inheritance_dict
+        with pipeline_manager.project.database.data() as db:
+            self.assertIsNone(
+                db.get_value(COLLECTION_CURRENT, doc_path, "FOV")
+            )
+
+        job.auto_inheritance_dict = {
+            inside_path: str(project_folder / Path(document))
+        }
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            inside_path,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9497,15 +9615,25 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # 'parent_files' inside 'inheritance_dict'
+        with pipeline_manager.project.database.data() as db:
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, doc_path, "FOV"), [2.6, 2.6]
+            )
+
+        # Case 8: Add FOV via inheritance_dict
+        with pipeline_manager.project.database.data() as db:
+            self.assertIsNone(
+                db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV")
+            )
+
         job.auto_inheritance_dict = None
-        job.inheritance_dict = {inside_project: "parent_files_value"}
+        job.inheritance_dict = {gz_file: str(project_folder / Path(document))}
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            gz_file,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9513,30 +9641,41 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # 'parent_files' inside 'inheritance_dict', dict type
+        with pipeline_manager.project.database.data() as db:
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV"),
+                [2.6, 2.6],
+            )
+
+        # Case 9: Add tag via inheritance_dict dict type
+        with pipeline_manager.project.database.data() as db:
+            self.assertIsNone(
+                db.get_value(COLLECTION_CURRENT, doc_path, "Test_tag_name")
+            )
+
         job.inheritance_dict = {
-            inside_project: {
+            inside_path: {
                 "own_tags": [
                     {
-                        "name": "tag_name",
+                        "name": "Test_tag_name",
                         "field_type": FIELD_TYPE_STRING,
-                        "description": "description_content",
-                        "visibility": "visibility_content",
-                        "origin": "origin_content",
-                        "unit": "unit_content",
-                        "value": "value_content",
-                        "default_value": "default_value_content",
+                        "description": "test_description",
+                        "visibility": True,
+                        "origin": TAG_ORIGIN_USER,
+                        "unit": TAG_UNIT_MHZ,
+                        "value": "test_value",
+                        "default_value": "test_default_value",
                     }
                 ],
-                "parent": "parent_content",
+                "parent": str(project_folder / Path(document)),
             }
         }
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            inside_path,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9544,38 +9683,36 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         )
 
-        # 'parent_files' inside 'inheritance_dict', output is one of the inputs
+        with pipeline_manager.project.database.data() as db:
+            self.assertEqual(
+                db.get_value(COLLECTION_CURRENT, doc_path, "Test_tag_name"),
+                "test_value",
+            )
+
+        # Case 10: Remove tag via inheritance_dict
         job.inheritance_dict = {
-            inside_project: {
-                "own_tags": [
-                    {
-                        "name": "tag_name",
-                        "field_type": FIELD_TYPE_STRING,
-                        "description": "description_content",
-                        "visibility": "visibility_content",
-                        "origin": "origin_content",
-                        "unit": "unit_content",
-                        "value": "value_content",
-                        "default_value": "default_value_content",
-                    }
-                ],
-                "parent": "parent_content",
-                "output": inside_project,
+            inside_path: {
+                "tags2del": ["Test_tag_name"],
+                "parent": str(project_folder / Path(document)),
             }
         }
-
         pipeline_manager.add_plug_value_to_database(
-            inside_project,
+            inside_path,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
             inputs,
             attributes,
         )
+
+        with pipeline_manager.project.database.data() as db:
+            self.assertIsNone(
+                db.get_value(COLLECTION_CURRENT, doc_path, "Test_tag_name")
+            )
 
     def test_add_plug_value_to_database_several_inputs(self):
         """Creates a new project folder, adds a 'Rename' process, exports a
@@ -11084,7 +11221,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         fake_db_data = Mock()
         fake_db_data.has_document.return_value = True
 
-        @contextmanager
+        @contextlib.contextmanager
         def fake_data_cm():
             """
             Context manager that yields mock database data for testing
