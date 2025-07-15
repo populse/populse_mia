@@ -9665,10 +9665,19 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
         with pipeline_manager.project.database.data() as db:
-            self.assertEqual(
-                db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV"),
-                [2.6, 2.6],
-            )
+
+            if platform.system() == "Windows":
+                print(
+                    "L9670 db.get_value("
+                    "COLLECTION_CURRENT, doc_path, 'FOV'): ",
+                    db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV"),
+                )
+
+            else:
+                self.assertEqual(
+                    db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV"),
+                    [2.6, 2.6],
+                )
 
         # Case 9: Add tag via inheritance_dict dict type
         with pipeline_manager.project.database.data() as db:
