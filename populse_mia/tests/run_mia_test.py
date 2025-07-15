@@ -9747,89 +9747,124 @@ class TestMIAPipelineManagerTab(TestMIACase):
             )
 
     def test_add_plug_value_to_database_several_inputs(self):
-        """Creates a new project folder, adds a 'Rename' process, exports a
-        non list type input plug and with several possible inputs.
+        """
+        Tests adding a plug value to the database with various input
+        configurations.
 
-        Independently opens an inheritance dict pop-up.
+        This test:
+            - Creates a project and adds a 'Rename' process with exported
+              inputs/outputs.
+            - Simulates database state and input variations for
+              `add_plug_value_to_database`.
+            - Validates behavior with:
+                1. `parent_files` containing identical values.
+                2. `parent_files` with distinct values triggering
+                   inheritance pop-up.
+                3. Custom key in `PipelineManagerTab.key` with node
+                   name as index.
+                4. Custom key indexed by node name + plug value.
 
-        The test cases are divided into:
-        - 1) 'parent_files' is a dict with 2 keys and identical values
-        - 2) 'parent_files' is a dict with 2 keys and distinct values
-        - 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
-        - 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name +
-             plug value
+        Additionally tests:
+            - The `PopUpInheritanceDict` interactive methods.
 
-        - Tests:
+        :Tests:
             - PipelineManagerTab.add_plug_value_to_database
-            - PopUpInheritanceDict.
+            - PopUpInheritanceDict methods
 
-        - Mocks:
+        :Mocks:
             - PopUpInheritanceDict.exec
+            - Project database `get_document` and `set_values`
         """
 
-        def mock_get_document(collection, relfile):
-            """Blabla"""
+        # def mock_get_document(collection, relfile):
+        #     """
+        #     Mock method to simulate retrieval of a document from the database.
 
-            SCAN_1_ = SCAN_1
+        #     Depending on the `relfile` name provided, it alters the 4th value
+        #     (index 3) of the global `scan_mock` document to represent different
+        #     'Exp Type' values, simulating distinct experimental types in
+        #     the database.
 
-            if relfile == "mock_val_1":
-                SCAN_1_._values[3] = "Exp Type 1"
-                return SCAN_1_
-            elif relfile == "mock_val_2":
-                SCAN_1_._values[3] = "Exp Type 2"
-                return SCAN_1_
+        #     :param collection: Name of the collection being queried (ignored).
+        #     :param relfile: The relative file name used to determine which
+        #                     simulated 'Exp Type' to assign.
 
-            return None
+        #     :returns: The global `scan_mock` document with its 4th value
+        #               potentially updated.
+        #     """
+
+        #     if relfile == "mock_val_1":
+        #         scan_mock._values[3] = "Exp Type 1"
+
+        #     elif relfile == "mock_val_2":
+        #         scan_mock._values[3] = "Exp Type 2"
+
+        #     return scan_mock
 
         # Those methods are called prior to adding a plug to the database
         def reset_inheritance_dicts():
-            """Blabla"""
+            """
+            Reset the inheritance dictionaries for the current job.
 
-            job.inheritance_dict = {DOCUMENT_1: None}
-            job.auto_inheritance_dict = {DOCUMENT_1: parent_files}
+            This sets:
+                - `inheritance_dict` to map the test document to None,
+                  effectively clearing any existing inheritance for that
+                  document.
+                - `auto_inheritance_dict` to map the test document to the
+                  provided `parent_files` dict, simulating auto-inheritance
+                  relationships for testing.
+            """
+
+            job.inheritance_dict = {document_path: None}
+            job.auto_inheritance_dict = {document_path: parent_files}
 
         def reset_collections():
-            """Blabla"""
+            """
+            Remove specific test documents from the project database.
 
-            with ppl_manager.project.database.data(
-                write=True
-            ) as database_data:
+            This utility function ensures a clean database state by removing
+            `p_value` and `document_1` from both the `COLLECTION_CURRENT` and
+            `COLLECTION_INITIAL` collections if they exist. It is useful for
+            resetting the database between test cases to prevent interference
+            from previous data.
 
-                if database_data.has_document(COLLECTION_CURRENT, P_VALUE):
-                    database_data.remove_document(COLLECTION_CURRENT, P_VALUE)
+            Documents removed:
+                - `p_value`
+                - `document_1`
 
-                if database_data.has_document(COLLECTION_CURRENT, DOCUMENT_1):
-                    database_data.remove_document(
-                        COLLECTION_CURRENT, DOCUMENT_1
-                    )
+            Collections affected:
+                - `COLLECTION_CURRENT`
+                - `COLLECTION_INITIAL`
+            """
+            with ppl_manager.project.database.data(write=True) as db:
 
-                if database_data.has_document(COLLECTION_INITIAL, P_VALUE):
-                    database_data.remove_document(COLLECTION_INITIAL, P_VALUE)
+                for collection in [COLLECTION_CURRENT, COLLECTION_INITIAL]:
 
-                if database_data.has_document(COLLECTION_INITIAL, DOCUMENT_1):
-                    database_data.remove_document(
-                        COLLECTION_INITIAL, DOCUMENT_1
-                    )
+                    for doc in [plug_value, document_path]:
+
+                        if db.has_document(collection, doc):
+
+                            db.remove_document(collection, doc)
 
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl_edt_tab = ppl_edt_tabs.get_current_editor()
 
-        # Creates a new project folder and adds one document to the
-        # project, sets the plug value that is added to the database
-        project_8_path = self.get_new_test_project()
-        ppl_manager.project.folder = project_8_path
-        folder = os.path.join(project_8_path, "data", "raw_data")
-        NII_FILE_1 = (
+        # Project setup
+        project_path = self.get_new_test_project()
+        ppl_manager.project.folder = project_path
+        data_folder = Path(project_path, "data", "raw_data")
+        nii_file = data_folder / (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
             "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
         )
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        P_VALUE = DOCUMENT_1.replace(os.path.abspath(project_8_path), "")[1:]
+        document_path = str(nii_file.resolve())
+        plug_value = os.path.relpath(document_path, project_path)
 
+        # Insert document_path in the database
         with ppl_manager.project.database.data(write=True) as database_data:
-            database_data.add_document(COLLECTION_CURRENT, DOCUMENT_1)
+            database_data.add_document(COLLECTION_CURRENT, document_path)
 
         # Adds the processes Rename, creates the "rename_1" node
         ppl_edt_tab.click_pos = QPoint(450, 500)
@@ -9841,70 +9876,78 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tab.export_unconnected_mandatory_inputs()
         ppl_edt_tab.export_all_unconnected_outputs()
 
-        old_scan_name = DOCUMENT_1.split("/")[-1]
+        old_scan_name = Path(document_path).name
         new_scan_name = "new_name.nii"
 
         # Changes the "_out_file" in the "outputs" node
         pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+            "_out_file", document_path.replace(old_scan_name, new_scan_name)
         )
 
         ppl_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
-
         job = ppl_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
+        job.uuid = brick_id = str(uuid.uuid4())
         ppl_manager.brick_list.append(brick_id)
 
-        with ppl_manager.project.database.data(write=True) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
+        with ppl_manager.project.database.data(write=True) as db_data:
+            db_data.add_document(COLLECTION_BRICK, brick_id)
+            scan_mock = db_data.get_document(COLLECTION_CURRENT, document_path)
 
         # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+        pipeline.nodes[""].set_plug_value("in_file", document_path)
         pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
 
         process = job.process()
-        plug_name = "in_file"
-        trait = process.trait(plug_name)
-
+        trait = process.trait("in_file")
         inputs = process.get_inputs()
-
-        attributes = {}
         completion = ProcessCompletionEngine.get_completion_engine(process)
+        attributes = (
+            completion.get_attribute_values().export_to_dict()
+            if completion
+            else {}
+        )
 
-        if completion:
-            attributes = completion.get_attribute_values().export_to_dict()
+        parent_files = {
+            "mock_key_1": os.path.join(project_path, "mock_val_1"),
+            "mock_key_2": os.path.join(project_path, "mock_val_1"),
+        }
 
-        # Mocks the document getter to always return a scan
-        with ppl_manager.project.database.data() as database_data:
-            SCAN_1 = database_data.get_document(COLLECTION_CURRENT, DOCUMENT_1)
-            database_data.get_document = mock_get_document
+        def mock_get_document(*args, **kwargs):
+            """
+            Mock method to simulate retrieval of a document from the
+            database.
 
-            # Mocks the value setter on the database
-            database_data.set_values = Mock()
+            Depending on the `relfile` name provided, it alters the
+            4th value (index 3) of the global `scan_mock` document to
+            represent different 'Exp Type' values, simulating
+            distinct experimental types in the database.
 
-            # 1) 'parent_files' is a dict with 2 keys and identical values
-            parent_files = {
-                "mock_key_1": os.path.join(
-                    ppl_manager.project.folder, "mock_val_1"
-                ),
-                "mock_key_2": os.path.join(
-                    ppl_manager.project.folder, "mock_val_1"
-                ),
-            }
+            :param collection: Name of the collection being queried
+                                (ignored).
+            :param relfile: The relative file name used to determine
+                            which simulated 'Exp Type' to assign.
 
-        reset_inheritance_dicts()
-        reset_collections()
+            :returns: The global `scan_mock` document with its 4th
+                        value potentially updated.
+            """
+            primary_keys = kwargs.get("primary_keys")
+
+            if primary_keys == "mock_val_1":
+                scan_mock[0]["Exp Type"] = "Exp Type 1"
+
+            elif primary_keys == "mock_val_2":
+                scan_mock[0]["Exp Type"] = "Exp Type 2"
+
+            return scan_mock
 
         args = [
-            DOCUMENT_1,
+            document_path,
             brick_id,
             "",
             "rename_1",
-            plug_name,
+            "in_file",
             "rename_1",
             job,
             trait,
@@ -9912,41 +9955,66 @@ class TestMIAPipelineManagerTab(TestMIACase):
             attributes,
         ]
 
-        ppl_manager.add_plug_value_to_database(*args)
+        reset_inheritance_dicts()
+        reset_collections()
+
+        with (
+            patch(
+                "populse_mia.data_manager.database_mia.DatabaseMiaData.get_document",
+                new=mock_get_document,
+            ),
+            patch(
+                "populse_mia.data_manager.database_mia.DatabaseMiaData.set_value",
+                new=MagicMock(),
+            ) as mock_set_value,
+        ):
+
+            # Test case 1:
+            # 'parent_files' is a dict with 2 keys and identical values
+
+            ppl_manager.add_plug_value_to_database(*args)
 
         # Mocks the execution of 'PopUpInheritanceDict' to avoid
         # asynchronous shot
         PopUpInheritanceDict.exec = Mock()
 
-        # 2) 'parent_files' is a dict with 2 keys and distinct values
+        # Test case 2:
+        # 'parent_files' is a dict with 2 keys and distinct values:
         # Triggers the execution of 'PopUpInheritanceDict'
-        parent_files["mock_key_2"] = os.path.join(
-            ppl_manager.project.folder, "mock_val_2"
-        )
-
+        parent_files["mock_key_2"] = os.path.join(project_path, "mock_val_2")
         reset_inheritance_dicts()
         reset_collections()
 
-        ppl_manager.add_plug_value_to_database(*args)
+        # Mocks the execution of 'PopUpInheritanceDict' to avoid
+        # asynchronous shot
+        with patch.object(
+            PopUpInheritanceDict, "exec", return_value=None
+        ) as mock_exec:
+            ppl_manager.add_plug_value_to_database(*args)
+            self.assertTrue(
+                mock_exec.called,
+                "PopUpInheritanceDict.exec should be "
+                "called when parent_files differ",
+            )
 
-        # 3) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
+        # Test case 3:
+        # 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
         ppl_manager.key = {"rename_1": "mock_key_2"}
 
         reset_inheritance_dicts()
         reset_collections()
-
         ppl_manager.add_plug_value_to_database(*args)
 
-        # 4) 'mock_key_2' is in 'ppl_manager.key' indexed by the node name
-        # + plug value
+        # Test case 4:
+        # 'mock_key_2' is in 'ppl_manager.key' indexed by
+        # the node name + plug value
         ppl_manager.key = {"rename_1in_file": "mock_key_2"}
 
         reset_inheritance_dicts()
         reset_collections()
-
         ppl_manager.add_plug_value_to_database(*args)
 
-        # Independently tests 'PopUpInheritanceDict'
+        # Independently test PopUpInheritanceDict buttons
         pop_up = PopUpInheritanceDict(
             {"mock_key": "mock_value"},
             "mock_full_name",
@@ -9959,6 +10027,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
         pop_up.ignore_clicked()
         pop_up.ignoreall_clicked()
         pop_up.ignore_node_clicked()
+
+        # Assert default states or expected effects if any
+        self.assertIsNotNone(pop_up.inheritance_dict)
 
     def test_ask_iterated_pipeline_plugs(self):
         """Adds the process 'Rename', export mandatory input and output plug
