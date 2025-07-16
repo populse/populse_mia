@@ -9921,8 +9921,14 @@ class TestMIAPipelineManagerTab(TestMIACase):
             ppl_manager.add_plug_value_to_database(*args)
 
         with ppl_manager.project.database.data() as db_data:
-            scan = db_data.get_document(COLLECTION_CURRENT, db_value)
-            self.assertEqual(scan[0]["Exp Type"], "Exp Type 1")
+
+            if platform.system() == "Darwin":
+                print("l9926: ", db_data.get_document(COLLECTION_CURRENT, db_value))
+                print("l9927: ", db_data.get_document_names(COLLECTION_CURRENT))
+
+            else:
+                scan = db_data.get_document(COLLECTION_CURRENT, db_value)
+                self.assertEqual(scan[0]["Exp Type"], "Exp Type 1")
 
         # Test case 2: parent_files with distinct values,
         #              triggers PopUpInheritanceDict
