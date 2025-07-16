@@ -756,7 +756,7 @@ class PipelineManagerTab(QWidget):
                     not self.ignore_node
                     and len(all_cvalues) >= 2
                     and (node_name not in self.ignore)
-                    and (f"{node_name}{plug_name}" not in self.ignore)
+                    and (f"{node_name}.{plug_name}" not in self.ignore)
                 ):
                     # if all inputs have the same tags set: then pick either
                     # of them, they are all the same, there is no ambiguity
@@ -813,8 +813,8 @@ class PipelineManagerTab(QWidget):
                             all_cvalues = {param: all_cvalues[param]}
                             all_ivalues = {param: all_ivalues[param]}
 
-                        elif f"{node_name}{plug_name}" in self.key:
-                            param = self.key[f"{node_name}{plug_name}"]
+                        elif f"{node_name}.{plug_name}" in self.key:
+                            param = self.key[f"{node_name}.{plug_name}"]
                             value = parent_files[param]
                             inheritance_dict[old_value] = value
                             all_cvalues = {param: all_cvalues[param]}
@@ -853,7 +853,7 @@ class PipelineManagerTab(QWidget):
                                     self.ignore[node_name] = True
 
                                 else:
-                                    self.ignore[f"{node_name}{plug_name}"] = (
+                                    self.ignore[f"{node_name}.{plug_name}"] = (
                                         True
                                     )
 
@@ -864,7 +864,7 @@ class PipelineManagerTab(QWidget):
                                     self.key[node_name] = pop_up.key
 
                                 else:
-                                    self.key[f"{node_name}{plug_name}"] = (
+                                    self.key[f"{node_name}.{plug_name}"] = (
                                         pop_up.key
                                     )
 

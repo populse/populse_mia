@@ -1833,7 +1833,6 @@ class PopUpInheritanceDict(QDialog):
         Accepts the dialog with current selection applied to current plug.
         """
         self.accept()
-        self.close()
 
     def okall_clicked(self):
         """
@@ -1844,7 +1843,6 @@ class PopUpInheritanceDict(QDialog):
         """
         self.all = True
         self.accept()
-        self.close()
 
     def on_clicked(self):
         """
@@ -1873,7 +1871,6 @@ class PopUpInheritanceDict(QDialog):
         self.ignore = True
         self.all = True
         self.accept()
-        self.close()
 
     def ignore_clicked(self):
         """
@@ -1883,7 +1880,6 @@ class PopUpInheritanceDict(QDialog):
         """
         self.ignore = True
         self.accept()
-        self.close()
 
     def ignore_node_clicked(self):
         """
@@ -1896,7 +1892,6 @@ class PopUpInheritanceDict(QDialog):
         self.all = True
         self.everything = True
         self.accept()
-        self.close()
 
 
 class PopUpMultipleSort(QDialog):
