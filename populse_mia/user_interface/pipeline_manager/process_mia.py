@@ -1186,9 +1186,9 @@ class ProcessMIA(Process):
 
         elif (
             plug_name is not None
-            and f"{node_name}{plug_name}" in ProcessMIA.key
+            and f"{node_name}.{plug_name}" in ProcessMIA.key
         ):
-            param = ProcessMIA.key[f"{node_name}{plug_name}"]
+            param = ProcessMIA.key[f"{node_name}.{plug_name}"]
             value = in_files[param]
             value_param = all_current_values.get(param)
             all_current_values.clear()
@@ -1235,7 +1235,7 @@ class ProcessMIA(Process):
                 ProcessMIA.ignore[node_name] = True
 
             else:
-                ProcessMIA.ignore[f"{node_name}{plug_name}"] = True
+                ProcessMIA.ignore[f"{node_name}.{plug_name}"] = True
 
         else:
             value = pop_up.value
@@ -1244,7 +1244,7 @@ class ProcessMIA(Process):
                 ProcessMIA.key[node_name] = pop_up.key
 
             else:
-                ProcessMIA.key[f"{node_name}{plug_name}"] = pop_up.key
+                ProcessMIA.key[f"{node_name}.{plug_name}"] = pop_up.key
 
             self.inheritance_dict[out_file]["parent"] = value
             value = all_current_values.get(pop_up.key)
@@ -1641,7 +1641,7 @@ class ProcessMIA(Process):
             not ProcessMIA.ignore_node
             and len(all_current_values) >= 2
             and (node_name not in ProcessMIA.ignore)
-            and (f"{node_name}{plug_name}" not in ProcessMIA.ignore)
+            and (f"{node_name}.{plug_name}" not in ProcessMIA.ignore)
         ):
             self._resolve_inheritance_ambiguity(
                 all_current_values,

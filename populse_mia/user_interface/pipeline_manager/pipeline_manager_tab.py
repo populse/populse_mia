@@ -692,7 +692,10 @@ class PipelineManagerTab(QWidget):
                 if isinstance(parent_files, dict):
                     own_tags = parent_files.get("own_tags")
                     tags2del = parent_files.get("tags2del")
-                    parent_files = {None: parent_files["parent"]}
+                    parent = parent_files.get("parent")
+                    parent_files = (
+                        {None: parent} if parent is not None else None
+                    )
 
                 elif isinstance(parent_files, str):
                     parent_files = {None: parent_files}
@@ -1371,10 +1374,6 @@ class PipelineManagerTab(QWidget):
                                            retrieves the current pipeline
                                            or process.
         """
-        # FIXME: It seems that the following line is only used for UTs (test.
-        #        testMIAPipelineManageTab.test_complete_pipeline_parameters).
-        #        I think we could find a cleaner way ...
-        _ = self.get_capsul_engine()
 
         if not pipeline:
             pipeline = self.get_pipeline_or_process()
