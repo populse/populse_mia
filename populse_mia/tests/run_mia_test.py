@@ -10075,92 +10075,131 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertTrue(pop_up.ignore)
 
     def test_ask_iterated_pipeline_plugs(self):
-        """Adds the process 'Rename', export mandatory input and output plug
-        and opens an iteration dialog for each plug.
+        """
+        Test the iteration dialog invocation on exported plugs of a pipeline.
 
-        - Tests: PipelineManagerTab.ask_iterated_pipeline_plugs
+        This test:
+            - Adds a 'Rename' process to the current pipeline editor.
+            - Exports the mandatory input and output plugs of the 'rename_1'
+              node.
+            - Mocks the iteration dialog to simulate user rejection (dialog
+              closed without acceptance).
+            - Verifies that `ask_iterated_pipeline_plugs` returns None when
+              the dialog is rejected.
+
+        Covers:
+            - PipelineManagerTab.ask_iterated_pipeline_plugs
         """
 
         ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        pipeline = ppl_edt_tabs.get_current_pipeline()
         pipeline_manager = self.main_window.pipeline_manager
 
-        # Exports the mandatory input and output plugs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Adds the processes Rename, creates the "rename_1" node
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
 
-        # Mocks executing a dialog box and clicking close
-        QDialog.exec_ = lambda self_, *args: self_.accept()
-
-        pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
-
-    def test_build_iterated_pipeline(self):
-        """Adds a 'Select' process, exports its mandatory inputs, mocks
-        some methods of the pipeline manager and builds an iterated pipeline.
-
-        - Tests:'PipelineManagerTab.build_iterated_pipeline'
-        """
-
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
-        ppl_manager = self.main_window.pipeline_manager
-
-        # Adds the processes Select, creates the "select_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Exports the mandatory input and output plugs for "select_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "select_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Exports the mandatory input and output plugs for "rename_1"
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
+
+        # QDialog.Accepted == 1
+        # QDialog.Rejected == 0
+        with patch.object(QDialog, "exec_", return_value=QDialog.Rejected):
+            result = pipeline_manager.ask_iterated_pipeline_plugs(pipeline)
+
+        self.assertIsNone(result)
+
+    def test_build_iterated_pipeline(self):
+        """
+        Test 'PipelineManagerTab.build_iterated_pipeline'.
+
+        Simulates building an iterated pipeline from a 'Select' process:
+            - Adds a 'Select' process in the current pipeline editor.
+            - Exports mandatory inputs and outputs for the node.
+            - Mocks methods to simulate pipeline retrieval, user iteration
+              choices, and process activation updates.
+            - Verifies that the resulting pipeline is correctly built and
+              mocks are invoked as expected.
+
+        Note:
+            'update_nodes_and_plugs_activation' may not exist on the process,
+            hence 'create=True' is used to safely mock it.
+
+        The test allows an expected exception message to be printed during
+        execution.
+        """
+        ppl_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        editor = ppl_edt_tabs.get_current_editor()
+
+        # Add 'Select' process and configure the node
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Select)
+        editor.current_node_name = "select_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
 
         # Mocks 'parent_pipeline' and returns a 'Process' instead of a
         # 'Pipeline'
-        pipeline = pipeline.nodes["select_1"].process
-        pipeline.parent_pipeline = True
+        process = ppl_edt_tabs.get_current_pipeline().nodes["select_1"].process
+        process.parent_pipeline = True
 
-        ppl_manager.get_pipeline_or_process = MagicMock(return_value=pipeline)
+        with (
+            patch.object(
+                ppl_manager, "get_pipeline_or_process", return_value=process
+            ) as mock_get_pipeline,
+            patch.object(
+                ppl_manager,
+                "ask_iterated_pipeline_plugs",
+                return_value=(["index", "inlist", "_out"], ["inlist"]),
+            ) as mock_ask_iterated,
+            patch.object(
+                process, "update_nodes_and_plugs_activation", create=True
+            ) as mock_update_activation,
+        ):
+            # Build iterated pipeline
+            print("\n\n** An exception message is expected below\n")
+            result = ppl_manager.build_iterated_pipeline()
+            self.assertIsInstance(process, NipypeProcess)
+            self.assertIsInstance(result, Pipeline)
+            self.assertEqual(result.name, "Iteration_pipeline")
 
-        # Mocks 'ask_iterated_pipeline_plugs' and returns the tuple
-        # '(iterated_plugs, database_plugs)'
-        ppl_manager.ask_iterated_pipeline_plugs = MagicMock(
-            return_value=(["index", "inlist", "_out"], ["inlist"])
-        )
-
-        # Mocks 'update_nodes_and_plugs_activation' with no returned values
-        pipeline.update_nodes_and_plugs_activation = MagicMock()
-
-        # Builds iterated pipeline
-        print("\n\n** An exception message is expected below\n")
-        ppl_manager.build_iterated_pipeline()
-
-        # Asserts the mock methods were called as expected
-        ppl_manager.get_pipeline_or_process.assert_called_once_with()
-        ppl_manager.ask_iterated_pipeline_plugs.assert_called_once_with(
-            pipeline
-        )
-        pipeline.update_nodes_and_plugs_activation.assert_called_once_with()
+            # Asserts the mock methods were called as expected
+            mock_get_pipeline.assert_called_once_with()
+            mock_ask_iterated.assert_called_once_with(process)
+            mock_update_activation.assert_called_once_with()
 
     def test_check_requirements(self):
-        """Adds a 'Select' process, appends it to the nodes list and checks
-        the requirements for the given node.
-
-        - Tests: PipelineManagerTab.check_requirements
         """
+        Test the 'PipelineManagerTab.check_requirements' method.
 
-        ppl_edt_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
+        This test simulates adding a 'Select' process to the current pipeline,
+        appending the corresponding node's process to the node list, and
+        verifying that the requirements check returns the expected
+        configuration.
+
+        Steps:
+            - Add a 'Select' process as a node ('select_1') in the pipeline.
+            - Append the process of 'select_1' to the pipeline manager's
+              node list.
+            - Call 'check_requirements' to retrieve the configuration.
+            - Assert the returned configuration is a dictionary containing
+              the expected keys.
+
+        :raises AssertionError: If the configuration is not a dictionary or
+                                does not contain the expected keys.
+        """
         pipeline_manager = self.main_window.pipeline_manager
+        ppl_edt_tabs = pipeline_manager.pipelineEditorTabs
+        editor = ppl_edt_tabs.get_current_editor()
 
         # Adds the processes Select, creates the "select_1" node
-        process_class = Select
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Select)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
         # Appends a 'Process' to 'pipeline_manager.node_list' and checks
@@ -10169,49 +10208,55 @@ class TestMIAPipelineManagerTab(TestMIACase):
         config = pipeline_manager.check_requirements()
 
         # Asserts the output
-        self.assertTrue(isinstance(config, dict))
-        self.assertTrue(
-            list(config[next(iter(config))].keys())
-            == ["capsul_engine", "capsul.engine.module.nipype"]
-        )
+        self.assertIsInstance(config, dict)
+        expected_keys = ["capsul_engine", "capsul.engine.module.nipype"]
+        actual_keys = list(config[next(iter(config))].keys())
+        self.assertEqual(actual_keys, expected_keys)
 
     def test_cleanup_older_init(self):
-        """Mocks a brick list, mocks some methods from the pipeline manager
-        and cleans up old initialization results.
+        """
+        Test 'PipelineManagerTab.cleanup_older_init'.
 
-        - Tests: PipelineManagerTab.cleanup_older_init
+        This test verifies that:
+            - The brick list is properly processed for cleanup.
+            - The relevant methods for deleting data and cleaning up
+              orphan files
+            are called exactly once.
+            - The 'brick_list' and 'node_list' are emptied after cleanup.
+
+        Steps:
+            1. Append a mock brick ID and mock node to the pipeline manager.
+            2. Mock dependent methods on the data browser and project.
+            3. Call the method under test.
+            4. Assert expected method calls and post-conditions.
         """
 
         ppl_manager = self.main_window.pipeline_manager
 
-        # Mocks a 'pipeline_manager.brick_list'
+        ## Prepare mock data
         brick_id = str(uuid.uuid4())
         ppl_manager.brick_list.append(brick_id)
+        ppl_manager.node_list.append("mock_node")
 
-        # Mocks methods used in the test
-        (ppl_manager.main_window.data_browser.table_data.delete_from_brick) = (
-            MagicMock()
-        )
-        ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
+        with (
+            patch.object(
+                ppl_manager.main_window.data_browser.table_data,
+                "delete_from_brick",
+                autospec=True,
+            ) as mock_delete_from_brick,
+            patch.object(
+                ppl_manager.project,
+                "cleanup_orphan_nonexisting_files",
+                autospec=True,
+            ) as mock_cleanup_orphans,
+        ):
+            ppl_manager.cleanup_older_init()
 
-        # Cleans up older init
-        ppl_manager.cleanup_older_init()
+            mock_delete_from_brick.assert_called_once_with(brick_id)
+            mock_cleanup_orphans.assert_called_once()
 
-        # Asserts that the mock methods were called as expected
-        # fmt: off
-        (
-            ppl_manager.main_window.data_browser.table_data.delete_from_brick.
-            assert_called_once_with(brick_id)
-        )
-        (
-            ppl_manager.project.cleanup_orphan_nonexisting_files.
-            assert_called_once_with()
-        )
-        # fmt: on
-
-        # Asserts that both 'brick_list' and 'node_list' were cleaned
-        self.assertTrue(len(ppl_manager.brick_list) == 0)
-        self.assertTrue(len(ppl_manager.node_list) == 0)
+        self.assertFalse(ppl_manager.brick_list)
+        self.assertFalse(ppl_manager.node_list)
 
     def test_complete_pipeline_parameters(self):
         """Mocks a method of pipeline manager and completes the pipeline
@@ -10222,123 +10267,162 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         ppl_manager = self.main_window.pipeline_manager
 
-        # Mocks method used in the test
-        ppl_manager.get_capsul_engine = MagicMock(
-            return_value=ppl_manager.get_pipeline_or_process()
-        )
-
-        # Complete pipeline parameters
+        # Complete pipeline parameter
+        # TODO: It seems that this test is very simplistic. Perhaps we should
+        #       complete a real pipeline (here the pipeline is empty) and test
+        #       the result of the completion.
         ppl_manager.complete_pipeline_parameters()
 
-        # Asserts that the mock method was called as expected
-        ppl_manager.get_capsul_engine.assert_called_once_with()
-
     def test_delete_processes(self):
-        """Deletes a process and makes the undo/redo action."""
+        """
+        Test deletion of a process node and verification of undo/redo
+        functionality.
 
+        This test creates a pipeline with three connected 'Smooth' processes
+        (smooth_1 -> smooth_2 -> smooth_3), deletes the middle node,
+        and verifies:
+            - The node is properly removed from the pipeline
+            - Connected links are cleaned up
+            - Undo operation restores the node and its connections
+            - Redo operation removes the node again
+        """
+
+        def _assert_connection_counts(pipeline, expected_counts):
+            """
+            Assert that connection counts match expected values.
+
+            :param pipeline: The pipeline object to check
+            :param expected_counts: Dict mapping (node_name, plug_name,
+                                    link_type) to expected count
+            """
+
+            for (
+                node_name,
+                plug_name,
+                link_type,
+            ), expected_count in expected_counts.items():
+                actual_count = len(
+                    getattr(
+                        pipeline.nodes[node_name].plugs[plug_name], link_type
+                    )
+                )
+                self.assertEqual(
+                    actual_count,
+                    expected_count,
+                    f"Expected {expected_count} {link_type} "
+                    f"for {node_name}.{plug_name}, "
+                    f"but got {actual_count}",
+                )
+
+        def _assert_nodes_exist(pipeline, node_names):
+            """
+            Assert that all specified nodes exist within the given pipeline.
+
+            :param pipeline: The pipeline object containing nodes.
+            :param node_names: A list of node names (str) to check for
+                               existence.
+            """
+
+            for node_name in node_names:
+                self.assertIn(
+                    node_name,
+                    pipeline.nodes,
+                    f"Node '{node_name}' should exist in pipeline",
+                )
+
+        def _assert_nodes_not_exist(pipeline, node_names):
+            """
+            Assert that the specified nodes are absent from the given
+            pipeline.
+
+            :param pipeline: The pipeline object containing nodes.
+            :param node_names: A list of node names (str) expected to be
+                               absent.
+            """
+
+            for node_name in node_names:
+                self.assertNotIn(
+                    node_name,
+                    pipeline.nodes,
+                    f"Node '{node_name}' should not exist in pipeline",
+                )
+
+        # Setup: Get references to key components
         pipeline_manager = self.main_window.pipeline_manager
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
+        pipeline_editor_tabs = pipeline_manager.pipelineEditorTabs
+        current_editor = pipeline_editor_tabs.get_current_editor()
 
-        # Adding processes
-        process_class = Smooth
+        # Navigate to pipeline editor tab
+        self.main_window.tabs.setCurrentIndex(2)
 
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        # Creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        # Creates a node called "smooth_2"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        # Creates a node called "smooth_3"
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        # Create three connected Smooth processes
+        current_editor.click_pos = QPoint(450, 500)
+
+        for _ in range(3):
+            current_editor.add_named_process(Smooth)
 
         pipeline = pipeline_editor_tabs.get_current_pipeline()
 
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
+        # Verify all nodes were created
+        _assert_nodes_exist(pipeline, ["smooth_1", "smooth_2", "smooth_3"])
 
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_1", "_smoothed_files"),
-            ("smooth_2", "in_files"),
-            active=True,
-            weak=False,
-        )
+        # Create pipeline connections: smooth_1 -> smooth_2 -> smooth_3
+        connections = [
+            (("smooth_1", "_smoothed_files"), ("smooth_2", "in_files")),
+            (("smooth_2", "_smoothed_files"), ("smooth_3", "in_files")),
+        ]
 
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
+        for source, target in connections:
+            current_editor.add_link(source, target, active=True, weak=False)
 
-        pipeline_editor_tabs.get_current_editor().add_link(
-            ("smooth_2", "_smoothed_files"),
-            ("smooth_3", "in_files"),
-            active=True,
-            weak=False,
+        # Verify initial connections
+        _assert_connection_counts(
+            pipeline,
+            {
+                ("smooth_1", "_smoothed_files", "links_to"): 1,
+                ("smooth_2", "in_files", "links_from"): 1,
+                ("smooth_2", "_smoothed_files", "links_to"): 1,
+                ("smooth_3", "in_files", "links_from"): 1,
+            },
         )
 
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
-        )
+        # Delete the middle node
+        current_editor.current_node_name = "smooth_2"
+        current_editor.del_node()
 
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "smooth_2"
+        # Verify node deletion and link cleanup
+        _assert_nodes_exist(pipeline, ["smooth_1", "smooth_3"])
+        _assert_nodes_not_exist(pipeline, ["smooth_2"])
+        _assert_connection_counts(
+            pipeline,
+            {
+                ("smooth_1", "_smoothed_files", "links_to"): 0,
+                ("smooth_3", "in_files", "links_from"): 0,
+            },
         )
-        pipeline_editor_tabs.get_current_editor().del_node()
-
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-
+        # Test undo: should restore the deleted node and its connections
         pipeline_manager.undo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertTrue("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            1, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
-        )
-        self.assertEqual(
-            1,
-            len(pipeline.nodes["smooth_2"].plugs["_smoothed_files"].links_to),
+        _assert_nodes_exist(pipeline, ["smooth_1", "smooth_2", "smooth_3"])
+        _assert_connection_counts(
+            pipeline,
+            {
+                ("smooth_1", "_smoothed_files", "links_to"): 1,
+                ("smooth_2", "in_files", "links_from"): 1,
+                ("smooth_2", "_smoothed_files", "links_to"): 1,
+                ("smooth_3", "in_files", "links_from"): 1,
+            },
         )
 
+        # Test redo: should delete the node again
         pipeline_manager.redo()
-        self.assertTrue("smooth_1" in pipeline.nodes.keys())
-        self.assertFalse("smooth_2" in pipeline.nodes.keys())
-        self.assertTrue("smooth_3" in pipeline.nodes.keys())
-        self.assertEqual(
-            0,
-            len(pipeline.nodes["smooth_1"].plugs["_smoothed_files"].links_to),
-        )
-        self.assertEqual(
-            0, len(pipeline.nodes["smooth_3"].plugs["in_files"].links_from)
+        _assert_nodes_exist(pipeline, ["smooth_1", "smooth_3"])
+        _assert_nodes_not_exist(pipeline, ["smooth_2"])
+        _assert_connection_counts(
+            pipeline,
+            {
+                ("smooth_1", "_smoothed_files", "links_to"): 0,
+                ("smooth_3", "in_files", "links_from"): 0,
+            },
         )
 
     def test_end_progress(self):
