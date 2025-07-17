@@ -6781,11 +6781,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6791 config.get_use_spm_standalone(): ",
+                        "L6783 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6795 config.get_use_matlab_standalone(): ",
+                        "L6787 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6804,11 +6804,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6814 config.get_use_spm_standalone(): ",
+                        "L6806 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6818 config.get_use_matlab_standalone(): ",
+                        "L6810 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6824,11 +6824,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6834 config.get_use_spm_standalone(): ",
+                        "L6826 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6838 config.get_use_matlab_standalone(): ",
+                        "L6830 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6843,11 +6843,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6853 config.get_use_spm_standalone(): ",
+                        "L6845 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6857 config.get_use_matlab_standalone(): ",
+                        "L6849 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6866,11 +6866,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6876 config.get_use_spm_standalone(): ",
+                        "L6868 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6880 config.get_use_matlab_standalone(): ",
+                        "L6872 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6890,11 +6890,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6900 config.get_use_spm_standalone(): ",
+                        "L6892 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6904 config.get_use_matlab_standalone(): ",
+                        "L6896 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6916,11 +6916,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6926 config.get_use_spm_standalone(): ",
+                        "L6918 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6930 config.get_use_matlab_standalone(): ",
+                        "L6922 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6945,11 +6945,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6955 config.get_use_spm_standalone(): ",
+                        "L6947 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6959 config.get_use_matlab_standalone(): ",
+                        "L6951 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6974,11 +6974,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6984 config.get_use_spm_standalone(): ",
+                        "L6976 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6988 config.get_use_matlab_standalone(): ",
+                        "L6980 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -7679,11 +7679,11 @@ class TestMIANodeController(TestMIACase):
         # Test doc1 and doc2 are not hidden
         if platform.system() == "Windows":
             print(
-                "L7689 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7681 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7693 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7685 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7697,7 +7697,7 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7707 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7699 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7709,11 +7709,11 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7719 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7711 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7723 input_filter.table_data.isRowHiddenidx_doc2): ",
+                "L7715 input_filter.table_data.isRowHiddenidx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7741,7 +7741,7 @@ class TestMIANodeController(TestMIACase):
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
             print(
-                "L7751 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                "L7743 input_filter.table_data.isColumnHidden(tag_col_idx): ",
                 input_filter.table_data.isColumnHidden(tag_col_idx),
             )
 
@@ -8002,7 +8002,7 @@ class TestMIANodeController(TestMIACase):
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
             print(
-                "L8012 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                "L8004 input_filter.table_data.isColumnHidden(tag_col_idx): ",
                 plug_filter.table_data.isColumnHidden(tag_col_idx),
             )
 
@@ -9632,7 +9632,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Windows":
                 print(
-                    "L9643 db.get_value("
+                    "L9634 db.get_value("
                     "COLLECTION_CURRENT, doc_path, 'FOV'): ",
                     db.get_value(COLLECTION_CURRENT, doc_path, "FOV"),
                 )
@@ -9746,6 +9746,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 db.get_value(COLLECTION_CURRENT, doc_path, "Test_tag_name")
             )
 
+    # TODO: Currently, this test does not work properly under MacOs (this is
+    #       why we do not check that the documents are updated in the MacOS
+    #       database under MacOs). This test will need to be reworked directly
+    #       on a MacOs system in order to make the necessary corrections.
     def test_add_plug_value_to_database_several_inputs(self):
         """
         Test `add_plug_value_to_database` under various inheritance and input
@@ -9920,14 +9924,16 @@ class TestMIAPipelineManagerTab(TestMIACase):
             reset_collections()
             ppl_manager.add_plug_value_to_database(*args)
 
-        with ppl_manager.project.database.data() as db_data:
+        with ppl_manager.project.database.data() as db:
 
             if platform.system() == "Darwin":
-                print("l9926: ", db_data.get_document(COLLECTION_CURRENT, db_value))
-                print("l9927: ", db_data.get_document_names(COLLECTION_CURRENT))
+                print(
+                    "L9931 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    db.get_document_names(COLLECTION_CURRENT),
+                )
 
             else:
-                scan = db_data.get_document(COLLECTION_CURRENT, db_value)
+                scan = db.get_document(COLLECTION_CURRENT, db_value)
                 self.assertEqual(scan[0]["Exp Type"], "Exp Type 1")
 
         # Test case 2: parent_files with distinct values,
@@ -9947,9 +9953,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
             reset_collections()
             ppl_manager.add_plug_value_to_database(*args)
 
-        with ppl_manager.project.database.data() as db_data:
-            scan = db_data.get_document(COLLECTION_CURRENT, db_value)
-            self.assertEqual(scan[0]["Exp Type"], "Exp Type 2")
+        with ppl_manager.project.database.data() as db:
+
+            if platform.system() == "Darwin":
+                print(
+                    "L9960 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    db.get_document_names(COLLECTION_CURRENT),
+                )
+
+            else:
+                scan = db.get_document(COLLECTION_CURRENT, db_value)
+                self.assertEqual(scan[0]["Exp Type"], "Exp Type 2")
 
         # Test case 3: ppl_manager.key indexed by node name
         with patch(
@@ -9963,9 +9977,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
             reset_collections()
             ppl_manager.add_plug_value_to_database(*args)
 
-        with ppl_manager.project.database.data() as db_data:
-            scan = db_data.get_document(COLLECTION_CURRENT, db_value)
-            self.assertEqual(scan[0]["Exp Type"], "Exp Type 1")
+        with ppl_manager.project.database.data() as db:
+
+            if platform.system() == "Darwin":
+                print(
+                    "L9984 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    db.get_document_names(COLLECTION_CURRENT),
+                )
+
+            else:
+                scan = db.get_document(COLLECTION_CURRENT, db_value)
+                self.assertEqual(scan[0]["Exp Type"], "Exp Type 1")
 
         # Test case 4: ppl_manager.key indexed by node name + plug value
         with patch(
@@ -9979,9 +10001,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
             reset_collections()
             ppl_manager.add_plug_value_to_database(*args)
 
-        with ppl_manager.project.database.data(write=True) as db_data:
-            scan = db_data.get_document(COLLECTION_CURRENT, db_value)
-            self.assertEqual(scan[0]["Exp Type"], "Exp Type 2")
+        with ppl_manager.project.database.data() as db:
+
+            if platform.system() == "Darwin":
+                print(
+                    "L10008 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    db.get_document_names(COLLECTION_CURRENT),
+                )
+
+            else:
+                scan = db.get_document(COLLECTION_CURRENT, db_value)
+                self.assertEqual(scan[0]["Exp Type"], "Exp Type 2")
 
         # ---- Test PopUpInheritanceDict buttons ----
         # ok_clicked
