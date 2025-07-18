@@ -899,45 +899,17 @@ class TestMIACase(unittest.TestCase):
                 except Exception as e:
                     print(f"Warning during widget cleanup: {e}")
 
-        # Process any pending deletions or signals
-        self._app.processEvents()
+        # Process pending events multiple times to ensure cleanup
+        for _ in range(10):  # Process events multiple times
+            self._app.processEvents()
 
-        # Only create event loop if we're not already in one and it's safe
-        try:
+            if not self._app.hasPendingEvents():
+                break
 
-            # Check if we can safely create an event loop
-            if (
-                hasattr(self._app, "thread")
-                and self._app.thread() == QThread.currentThread()
-            ):
-                loop = QEventLoop()
-                timer = QTimer()
-                timer.setSingleShot(True)
-                timer.timeout.connect(loop.quit)
-                timer.start(100)  # Shorter timeout - 100ms
-
-                # Use exception handling around the event loop
-                try:
-                    loop.exec_()
-
-                except Exception as e:
-                    print(f"Warning during event loop cleanup: {e}")
-
-                finally:
-                    timer.stop()
-                    timer.deleteLater()
-
-            else:
-
-                # Fallback: just process events without nested loop
-                for _ in range(5):
-                    self._app.processEvents()
-
-        except Exception as e:
-            print(f"Warning during cleanup event processing: {e}")
-
-        # Final cleanup pass
-        self._app.processEvents()
+        # Additional cleanup with a small delay to allow deleteLater()
+        # to complete
+        time.sleep(0.05)  # 50ms delay
+        self._app.processEvents()  # Final cleanup
 
         # Clear project reference
         self.project = None
@@ -10600,52 +10572,58 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
     def test_get_missing_mandatory_parameters(self):
         """
-        Adds a process, exports input and output plugs and tries to initialize
-        the pipeline with missing mandatory parameters.
+        Tests 'PipelineManagerTab.get_missing_mandatory_parameters'.
 
-        -Tests: PipelineManagerTab.get_missing_mandatory_parameters
+        This test simulates adding a 'Rename' process to the pipeline,
+        exporting its mandatory input and output plugs, and checking
+        for missing mandatory parameters at different stages.
+
+        Steps:
+        1. Add 'Rename' process to the pipeline.
+        2. Export the required input and output plugs.
+        3. Initialize the pipeline and check that two mandatory parameters
+        are initially missing.
+        4. Set a value for one mandatory parameter ('format_string') and
+        verify that only one mandatory parameter remains missing ('in_file').
         """
 
         ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
+        self.main_window.tabs.setCurrentIndex(2)
 
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-        pipeline = ppl_edt_tabs.get_current_pipeline()
+        ppl_editor.click_pos = QPoint(450, 500)
+        ppl_editor.add_named_process(Rename)
+        pipeline = ppl_manager.pipelineEditorTabs.get_current_pipeline()
 
-        # Exports the mandatory inputs and outputs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        (
-            ppl_edt_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor()._export_plug(
+        # Export mandatory input and output plugs
+        ppl_editor.current_node_name = "rename_1"
+        ppl_editor.export_unconnected_mandatory_inputs()
+        ppl_editor._export_plug(
             temp_plug_name=("rename_1", "_out_file"),
             pipeline_parameter="_out_file",
             optional=False,
             weak_link=False,
         )
 
-        # Initializes the pipeline
+        # Initialize the workflow and refresh the node list
         ppl_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
         ppl_manager.update_node_list()
 
-        # Asserts that 2 mandatory parameters are missing
-        ppl_manager.update_node_list()
+        # Assert that 2 mandatory parameters are initially missing
         missing_inputs = ppl_manager.get_missing_mandatory_parameters()
-        self.assertEqual(len(missing_inputs), 2)
-        self.assertEqual(missing_inputs[0], "rename_1.format_string")
-        self.assertEqual(missing_inputs[1], "rename_1.in_file")
+        self.assertEqual(
+            missing_inputs, ["rename_1.format_string", "rename_1.in_file"]
+        )
 
-        # Empties the jobs list
+        # Clear jobs and set a value for 'format_string'
         ppl_manager.workflow.jobs = []
+        pipeline.nodes[""].set_plug_value("format_string", "mock_file.nii")
 
-        # Asserts that 2 mandatory parameters are still missing
+        # Assert that only 'rename_1.in_file' remains missing
         missing_inputs = ppl_manager.get_missing_mandatory_parameters()
-        self.assertEqual(len(missing_inputs), 2)
-        self.assertEqual(missing_inputs[0], "rename_1.format_string")
-        self.assertEqual(missing_inputs[1], "rename_1.in_file")
+        self.assertEqual(missing_inputs, ["rename_1.in_file"])
 
     def test_get_pipeline_or_process(self):
         """Adds a process and gets a pipeline and a process from the pipeline
