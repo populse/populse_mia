@@ -75,6 +75,7 @@ from PyQt5.QtCore import (
     QModelIndex,
     QPoint,
     Qt,
+    QThread,
     QTimer,
     qInstallMessageHandler,
 )
@@ -871,12 +872,9 @@ class TestMIACase(unittest.TestCase):
             - Closes and deletes the main window if it exists.
             - Clears the list of opened projects in the application config.
             - Closes and deletes all top-level Qt widgets.
-            - Processes any pending Qt events and runs a short event loop to
-              flush timers/signals.
+            - Uses a safer event loop approach with exception handling.
             - Resets internal references to ensure proper garbage collection.
         """
-
-        timeout_ms = 500
 
         # Close and delete the main window
         if self.main_window:
@@ -904,10 +902,39 @@ class TestMIACase(unittest.TestCase):
         # Process any pending deletions or signals
         self._app.processEvents()
 
-        # Run a short event loop to allow timers or delayed signals to complete
-        loop = QEventLoop()
-        QTimer.singleShot(timeout_ms, loop.quit)
-        loop.exec_()
+        # Only create event loop if we're not already in one and it's safe
+        try:
+
+            # Check if we can safely create an event loop
+            if (
+                hasattr(self._app, "thread")
+                and self._app.thread() == QThread.currentThread()
+            ):
+                loop = QEventLoop()
+                timer = QTimer()
+                timer.setSingleShot(True)
+                timer.timeout.connect(loop.quit)
+                timer.start(100)  # Shorter timeout - 100ms
+
+                # Use exception handling around the event loop
+                try:
+                    loop.exec_()
+
+                except Exception as e:
+                    print(f"Warning during event loop cleanup: {e}")
+
+                finally:
+                    timer.stop()
+                    timer.deleteLater()
+
+            else:
+
+                # Fallback: just process events without nested loop
+                for _ in range(5):
+                    self._app.processEvents()
+
+        except Exception as e:
+            print(f"Warning during cleanup event processing: {e}")
 
         # Final cleanup pass
         self._app.processEvents()
@@ -10438,8 +10465,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
               success handling.
             - Mocks `raise_for_status` to raise `WorkflowExecutionError` to
               verify error handling.
-
-        Note: The last assertion triggers a segmentation fault on AppVeyor.
         """
 
         # Sets shortcuts for objects that are often used
@@ -10471,102 +10496,107 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "raise_for_status",
             side_effect=WorkflowExecutionError({}, {}, verbose=False),
         ) as mock_status:
-            # FIXME: This call may lead to a segmentation fault on AppVeyor.
             ppl_manager.progress.end_progress()
 
             mock_status.assert_called_once_with(worker.status, worker.exec_id)
 
     def test_garbage_collect(self):
-        """Mocks several objects of the pipeline manager and collects the
-        garbage of the pipeline.
+        """
+        Tests 'PipelineManagerTab.garbage_collect' both in integrated and
+        isolated contexts.
 
-        - Tests: PipelineManagerTab.test_garbage_collect
+        - Integrated test: Verifies that invoking 'garbage_collect' sets the
+                           pipeline editor's 'initialized' attribute to False.
+        - Isolated test: In addition to the 'initialized' reset, verifies that
+                         dependent methods are called exactly once:
+            * postprocess_pipeline_execution
+            * project.cleanup_orphan_nonexisting_files
+            * project.cleanup_orphan_history
+            * main_window.data_browser.table_data.update_table
+            * update_user_buttons_states
         """
 
         ppl_manager = self.main_window.pipeline_manager
+        editor = ppl_manager.pipelineEditorTabs.get_current_editor()
 
-        # INTEGRATED TEST
-
+        # ---- INTEGRATED TEST ----
         # Mocks the 'initialized' object
-        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
+        editor.initialized = True
 
         # Collects the garbage
         ppl_manager.garbage_collect()
-
-        # Asserts that the 'initialized' object changed state
         self.assertFalse(
-            ppl_manager.pipelineEditorTabs.get_current_editor().initialized
+            editor.initialized,
+            "Editor should be uninitialized after garbage collection",
         )
 
-        # ISOLATED TEST
-
+        # ---- ISOLATED TEST ----
         # Mocks again the 'initialized' object
-        ppl_manager.pipelineEditorTabs.get_current_editor().initialized = True
+        editor.initialized = True
 
         # Mocks the methods used in the test
-        ppl_manager.postprocess_pipeline_execution = MagicMock()
-        ppl_manager.project.cleanup_orphan_nonexisting_files = MagicMock()
-        ppl_manager.project.cleanup_orphan_history = MagicMock()
-        (ppl_manager.main_window.data_browser.table_data.update_table) = (
-            MagicMock()
-        )
-        ppl_manager.update_user_buttons_states = MagicMock()
-
-        # Collects the garbage
-        ppl_manager.garbage_collect()
+        with (
+            patch.object(
+                ppl_manager, "postprocess_pipeline_execution"
+            ) as mock_ppe,
+            patch.object(
+                ppl_manager.project, "cleanup_orphan_nonexisting_files"
+            ) as mock_cleanup_files,
+            patch.object(
+                ppl_manager.project, "cleanup_orphan_history"
+            ) as mock_cleanup_history,
+            patch.object(
+                ppl_manager.main_window.data_browser.table_data, "update_table"
+            ) as mock_update_table,
+            patch.object(
+                ppl_manager, "update_user_buttons_states"
+            ) as mock_update_buttons,
+        ):
+            # Collects the garbage
+            ppl_manager.garbage_collect()
 
         # Asserts that the 'initialized' object changed state
         self.assertFalse(
-            ppl_manager.pipelineEditorTabs.get_current_editor().initialized
+            editor.initialized,
+            "Editor should be uninitialized after garbage collection",
         )
 
         # Asserts that the mocked methods were called as expected
-        ppl_manager.postprocess_pipeline_execution.assert_called_once_with()
-        # fmt: off
-        (
-            ppl_manager.project.cleanup_orphan_nonexisting_files.
-            assert_called_once_with()
-        )
-        # fmt: on
-        ppl_manager.project.cleanup_orphan_history.assert_called_once_with()
-        # fmt:off
-        (
-            ppl_manager.main_window.data_browser.table_data.update_table.
-            assert_called_once_with()
-        )
-        # fmt:on
-        ppl_manager.update_user_buttons_states.assert_called_once_with()
+        mock_ppe.assert_called_once_with()
+        mock_cleanup_files.assert_called_once_with()
+        mock_cleanup_history.assert_called_once_with()
+        mock_update_table.assert_called_once_with()
+        mock_update_buttons.assert_called_once_with()
 
     def test_get_capsul_engine(self):
-        """Mocks an object in the pipeline manager and gets the capsul engine
-        of the pipeline.
-
-        - Tests: PipelineManagerTab.get_capsul_engine
         """
+        Tests 'PipelineManagerTab.get_capsul_engine' in both integrated
+        and isolated contexts.
 
+        - Integrated test: Ensures that calling 'get_capsul_engine' returns
+                           an instance of 'CapsulEngine'.
+        - Isolated test: Mocks 'pipelineEditorTabs.get_capsul_engine' to
+                         verify that it is called exactly once when invoked
+                         via 'PipelineManagerTab.get_capsul_engine'.
+        """
         ppl_manager = self.main_window.pipeline_manager
 
-        # INTEGRATED
-
+        # ---- INTEGRATED TEST ----
         # Gets the capsul engine
         capsul_engine = ppl_manager.get_capsul_engine()
 
         # Asserts that the 'capsul_engine' is of class 'CapsulEngine'
         self.assertIsInstance(capsul_engine, CapsulEngine)
 
-        # ISOLATED
-        ppl_manager.pipelineEditorTabs.get_capsul_engine = MagicMock()
+        # ---- ISOLATED TEST ----
+        with patch.object(
+            ppl_manager.pipelineEditorTabs, "get_capsul_engine"
+        ) as mock_get_capsul_engine:
+            # Gets the capsul engine
+            _ = ppl_manager.get_capsul_engine()
 
-        # Gets the capsul engine
-        _ = ppl_manager.get_capsul_engine()
-
-        # Asserts that the mocked method was called as expected
-        # fmt: off
-        (
-            ppl_manager.pipelineEditorTabs.get_capsul_engine.
-            assert_called_once_with()
-        )
-        # fmt: on
+            # Asserts that the mocked method was called as expected
+            mock_get_capsul_engine.assert_called_once_with()
 
     def test_get_missing_mandatory_parameters(self):
         """
