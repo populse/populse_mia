@@ -902,14 +902,27 @@ class TestMIACase(unittest.TestCase):
         # Process pending events multiple times to ensure cleanup
         for _ in range(10):  # Process events multiple times
             self._app.processEvents()
+            QTest.qWait(10)  # Wait for 10ms to process events
 
             if not self._app.hasPendingEvents():
                 break
 
         # Additional cleanup with a small delay to allow deleteLater()
         # to complete
-        time.sleep(0.05)  # 50ms delay
+        QTest.qWait(50)
         self._app.processEvents()  # Final cleanup
+
+        # Double-check for any remaining top-level widgets
+        for widget in self._app.topLevelWidgets():
+
+            if isinstance(widget, QWidget) and widget.isVisible():
+
+                try:
+                    widget.close()
+                    widget.deleteLater()
+
+                except Exception as e:
+                    print(f"Warning during final widget cleanup: {e}")
 
         # Clear project reference
         self.project = None
@@ -6709,11 +6722,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6720 config.get_use_matlab(): ",
+                        "L6724 config.get_use_matlab(): ",
                         config.get_use_matlab(),
                     )
                     print(
-                        "L6724 config.get_use_matlab_standalone(): ",
+                        "L6728 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6780,11 +6793,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6783 config.get_use_spm_standalone(): ",
+                        "L6795 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6787 config.get_use_matlab_standalone(): ",
+                        "L6799 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6803,11 +6816,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6806 config.get_use_spm_standalone(): ",
+                        "L6818 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6810 config.get_use_matlab_standalone(): ",
+                        "L6822 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6823,11 +6836,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6826 config.get_use_spm_standalone(): ",
+                        "L6838 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6830 config.get_use_matlab_standalone(): ",
+                        "L6842 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6842,11 +6855,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6845 config.get_use_spm_standalone(): ",
+                        "L6857 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6849 config.get_use_matlab_standalone(): ",
+                        "L6861 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6865,11 +6878,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6868 config.get_use_spm_standalone(): ",
+                        "L6880 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6872 config.get_use_matlab_standalone(): ",
+                        "L6884 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6889,11 +6902,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6892 config.get_use_spm_standalone(): ",
+                        "L6904 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6896 config.get_use_matlab_standalone(): ",
+                        "L6908 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6915,11 +6928,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6918 config.get_use_spm_standalone(): ",
+                        "L6930 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6922 config.get_use_matlab_standalone(): ",
+                        "L6935 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6944,11 +6957,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6947 config.get_use_spm_standalone(): ",
+                        "L6959 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6951 config.get_use_matlab_standalone(): ",
+                        "L6963 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -6973,11 +6986,11 @@ echo {output}
 
                 if platform.system() == "Windows":
                     print(
-                        "L6976 config.get_use_spm_standalone(): ",
+                        "L6988 config.get_use_spm_standalone(): ",
                         config.get_use_spm_standalone(),
                     )
                     print(
-                        "L6980 config.get_use_matlab_standalone(): ",
+                        "L6992 config.get_use_matlab_standalone(): ",
                         config.get_use_matlab_standalone(),
                     )
 
@@ -7678,11 +7691,11 @@ class TestMIANodeController(TestMIACase):
         # Test doc1 and doc2 are not hidden
         if platform.system() == "Windows":
             print(
-                "L7681 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7693 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7685 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7697 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7696,7 +7709,7 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7699 input_filter.table_data.isRowHidden(idx_doc2): ",
+                "L7711 input_filter.table_data.isRowHidden(idx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7708,11 +7721,11 @@ class TestMIANodeController(TestMIACase):
 
         if platform.system() == "Windows":
             print(
-                "L7711 input_filter.table_data.isRowHidden(idx_doc1): ",
+                "L7723 input_filter.table_data.isRowHidden(idx_doc1): ",
                 input_filter.table_data.isRowHidden(idx_doc1),
             )
             print(
-                "L7715 input_filter.table_data.isRowHiddenidx_doc2): ",
+                "L7727 input_filter.table_data.isRowHiddenidx_doc2): ",
                 input_filter.table_data.isRowHidden(idx_doc2),
             )
 
@@ -7740,7 +7753,7 @@ class TestMIANodeController(TestMIACase):
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
             print(
-                "L7743 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                "L7755 input_filter.table_data.isColumnHidden(tag_col_idx): ",
                 input_filter.table_data.isColumnHidden(tag_col_idx),
             )
 
@@ -8001,7 +8014,7 @@ class TestMIANodeController(TestMIACase):
         # Test "AcquisitionDate" header name column is not hidden
         if platform.system() == "Windows":
             print(
-                "L8004 input_filter.table_data.isColumnHidden(tag_col_idx): ",
+                "L8017 input_filter.table_data.isColumnHidden(tag_col_idx): ",
                 plug_filter.table_data.isColumnHidden(tag_col_idx),
             )
 
@@ -9631,7 +9644,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Windows":
                 print(
-                    "L9634 db.get_value("
+                    "L9646 db.get_value("
                     "COLLECTION_CURRENT, doc_path, 'FOV'): ",
                     db.get_value(COLLECTION_CURRENT, doc_path, "FOV"),
                 )
@@ -9667,7 +9680,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Windows":
                 print(
-                    "L9670 db.get_value("
+                    "L9682 db.get_value("
                     "COLLECTION_CURRENT, doc_path, 'FOV'): ",
                     db.get_value(COLLECTION_CURRENT, "scan.nii.gz", "FOV"),
                 )
@@ -9927,7 +9940,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Darwin":
                 print(
-                    "L9931 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    "L9942 db.get_document_names(" "COLLECTION_CURRENT): ",
                     db.get_document_names(COLLECTION_CURRENT),
                 )
 
@@ -9956,7 +9969,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Darwin":
                 print(
-                    "L9960 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    "L9971 db.get_document_names(" "COLLECTION_CURRENT): ",
                     db.get_document_names(COLLECTION_CURRENT),
                 )
 
@@ -9980,7 +9993,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Darwin":
                 print(
-                    "L9984 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    "L9995 db.get_document_names(" "COLLECTION_CURRENT): ",
                     db.get_document_names(COLLECTION_CURRENT),
                 )
 
@@ -10004,7 +10017,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             if platform.system() == "Darwin":
                 print(
-                    "L10008 db.get_document_names(" "COLLECTION_CURRENT): ",
+                    "L10018 db.get_document_names(" "COLLECTION_CURRENT): ",
                     db.get_document_names(COLLECTION_CURRENT),
                 )
 
@@ -10626,40 +10639,49 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertEqual(missing_inputs, ["rename_1.in_file"])
 
     def test_get_pipeline_or_process(self):
-        """Adds a process and gets a pipeline and a process from the pipeline
+        """
+        Test retrieving either a pipeline or a process from the pipeline
         manager.
+
+        - Verifying that the pipeline is returned when no process node is
+          selected.
+        - Adding a 'Rename' process node and verifying that the method returns
+          the corresponding `NipypeProcess` when a process is selected.
 
         - Tests: PipelineManagerTab.get_pipeline_or_process
         """
-
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        editor = ppl_manager.pipelineEditorTabs.get_current_editor()
 
-        # Gets the pipeline
-        pipeline = ppl_manager.get_pipeline_or_process()
+        # No process selected: should return the Pipeline
+        result = ppl_manager.get_pipeline_or_process()
+        self.assertIsInstance(result, Pipeline)
 
-        # Asserts that the object 'pipeline' is a 'Pipeline'
-        self.assertIsInstance(pipeline, Pipeline)
+        # Add 'Rename' process node at specified position
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
 
-        # Adds the processes Rename, creates the "rename_1" node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
-
-        # Gets a process
-        process = ppl_manager.get_pipeline_or_process()
-
-        # Asserts that the process 'pipeline' is indeed a 'NipypeProcess'
-        self.assertIsInstance(process, NipypeProcess)
+        # Now should return a NipypeProcess
+        result = ppl_manager.get_pipeline_or_process()
+        self.assertIsInstance(result, NipypeProcess)
 
     def test_initialize(self):
-        """Adds Select process, exports its plugs, mocks objects from the
-        pipeline manager and initializes the workflow.
-
-        - Tests: the PipelineManagerTab.initialize
         """
+        Tests the `initialize` method of `PipelineManagerTab`.
 
-        # Gets the paths of 2 documents
+        This method:
+            - Adds a `Rename` process to the pipeline editor.
+            - Exports its mandatory input and output plugs.
+            - Sets required parameters for the node.
+            - Mocks the `init_pipeline` method to prevent segmentation faults.
+            - Checks that initialization resets internal flags and
+              dictionaries.
+            - Induces an exception path by setting `init_pipeline` to None.
+
+        - Tests: PipelineManagerTab.initialize
+        """
+        # Resolve the test document path
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "mia_ut_data",
@@ -10670,67 +10692,67 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "raw_data",
         )
 
-        NII_FILE_1 = (
+        document_1 = os.path.join(
+            folder,
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
         )
-
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        editor = ppl_edt_tabs.get_current_editor()
+        self.main_window.tabs.setCurrentIndex(2)
 
-        # Adds the process 'Rename' as the node 'rename_1'
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        # Add a 'Rename' process to the editor
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Exports the mandatory inputs and outputs for 'select_1'
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Export mandatory inputs and outputs
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
 
-        # Sets mandatory parameters 'select_1'
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+        # Set required parameters on the root pipeline node
+        pipeline.nodes[""].set_plug_value(
+            "in_file", os.path.abspath(document_1)
+        )
         pipeline.nodes[""].set_plug_value("format_string", "new_name.nii")
 
         # Checks that there is no workflow index
         self.assertIsNone(ppl_manager.workflow)
 
-        # Mocks objects
+        # Initialize internal attributes
         ppl_manager.init_clicked = True
         ppl_manager.ignore_node = True
         ppl_manager.key = {"item": "item_value"}
         ppl_manager.ignore = {"item": "item_value"}
 
-        # Mocks methods
-        ppl_manager.init_pipeline = Mock()
         # FIXME: if the method 'init_pipeline' is not mocked the whole
         #        test routine fails with a 'Segmentation Fault'
+        with patch.object(ppl_manager, "init_pipeline") as mock_init_pipeline:
+            # Initializes the pipeline
+            ppl_manager.initialize()
 
-        # Initializes the pipeline
-        ppl_manager.initialize()
+            # Asserts that a workflow has been created
+            # self.assertIsNotNone(ppl_manager.workflow)
+            # from soma_workflow.client_types import Workflow
+            # self.assertIsInstance(ppl_manager.workflow, Workflow)
+            # FIXME: the above code else leads to 'Segmentation Fault'
 
-        # Asserts that a workflow has been created
-        # self.assertIsNotNone(ppl_manager.workflow)
-        # from soma_workflow.client_types import Workflow
-        # self.assertIsInstance(ppl_manager.workflow, Workflow)
-        # FiXME: the above code else leads to 'Segmentation Fault'
+            self.assertFalse(ppl_manager.ignore_node)
+            self.assertDictEqual(ppl_manager.key, {})
+            self.assertDictEqual(ppl_manager.ignore, {})
+            mock_init_pipeline.assert_called_once_with()
 
-        self.assertFalse(ppl_manager.ignore_node)
-        self.assertEqual(len(ppl_manager.key), 0)
-        self.assertEqual(len(ppl_manager.ignore), 0)
-        ppl_manager.init_pipeline.assert_called_once_with()
-
-        # Mocks an object to induce an exception
+        # Induce an exception by setting init_pipeline to None
         ppl_manager.init_pipeline = None
 
-        # Induces an exception in the pipeline initialization
         print("\n\n** an exception message is expected below")
         ppl_manager.initialize()
-
         self.assertFalse(ppl_manager.ignore_node)
+        self.assertFalse(ppl_manager.test_init)
 
     def test_register_completion_attributes(self):
         """Mocks methods of the pipeline manager and registers completion
