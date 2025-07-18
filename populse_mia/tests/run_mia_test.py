@@ -10426,44 +10426,55 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
     def test_end_progress(self):
-        """Creates a pipeline manager progress object and tries to end it.
+        """
+        Tests `RunProgress.end_progress` under different worker execution
+        states.
 
-        - Tests RunProgress.end_progress
+        This test:
+            - Initializes a `RunProgress` instance from the current
+              pipeline manager.
+            - Calls `end_progress()` when no `exec_id` is set on the worker.
+            - Mocks `exec_id` and `raise_for_status` on the engine to validate
+              success handling.
+            - Mocks `raise_for_status` to raise `WorkflowExecutionError` to
+              verify error handling.
+
+        Note: The last assertion triggers a segmentation fault on AppVeyor.
         """
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
-        ppl_edt_tabs = ppl_manager.pipelineEditorTabs
-        ppl = ppl_edt_tabs.get_current_pipeline()
+        ppl = ppl_manager.pipelineEditorTabs.get_current_pipeline()
 
         # Creates a 'RunProgress' object
         ppl_manager.progress = RunProgress(ppl_manager)
 
-        # 'ppl_manager.worker' does not have a 'exec_id'
-        ppl_manager.progress.end_progress()
-
-        # Mocks an 'exec_id' and an 'get_pipeline_or_process'
-        ppl_manager.progress.worker.exec_id = str(uuid.uuid4())
+        worker = ppl_manager.progress.worker
         engine = ppl.get_study_config().engine
-        engine.raise_for_status = Mock()
 
-        # Ends the progress with success
-        ppl_manager.progress.end_progress()
+        # Case 1: No exec_id, raise_for_status should NOT be called
+        with patch.object(engine, "raise_for_status") as mock_status:
+            ppl_manager.progress.end_progress()
+            mock_status.assert_not_called()
 
-        engine.raise_for_status.assert_called_once_with(
-            ppl_manager.progress.worker.status,
-            ppl_manager.progress.worker.exec_id,
-        )
+        # Case 2: exec_id present, raise_for_status succeeds
+        worker.exec_id = str(uuid.uuid4())
 
-        # Mocks a 'WorkflowExecutionError' exception
-        engine.raise_for_status = Mock(
-            side_effect=WorkflowExecutionError({}, {}, verbose=False)
-        )
+        with patch.object(engine, "raise_for_status") as mock_status:
+            ppl_manager.progress.end_progress()
 
-        # Raises a 'WorkflowExecutionError' while ending progress
-        # ppl_manager.progress.end_progress()
-        # FIXME: the above call to the function leads to a Segmentation
-        #        fault when the test routine is launched in AppVeyor.
+            mock_status.assert_called_once_with(worker.status, worker.exec_id)
+
+        # Case 3: raise_for_status raises WorkflowExecutionError
+        with patch.object(
+            engine,
+            "raise_for_status",
+            side_effect=WorkflowExecutionError({}, {}, verbose=False),
+        ) as mock_status:
+            # FIXME: This call may lead to a segmentation fault on AppVeyor.
+            ppl_manager.progress.end_progress()
+
+            mock_status.assert_called_once_with(worker.status, worker.exec_id)
 
     def test_garbage_collect(self):
         """Mocks several objects of the pipeline manager and collects the
