@@ -10755,21 +10755,32 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertFalse(ppl_manager.test_init)
 
     def test_register_completion_attributes(self):
-        """Mocks methods of the pipeline manager and registers completion
-        attributes.
-
-        Since a method of the ProcessCompletionEngine class is mocked,
-        this test may render the upcoming test routine unstable.
-
-        - Tests: PipelineManagerTab.register_completion_attributes
         """
+        Test the registration of completion attributes in the pipeline manager.
 
-        # Sets shortcuts for objects that are often used
+        This method tests the behavior of the pipeline manager when
+        registering completion attributes with and without provided
+        attributes. It performs the following steps:
+            1. Adds a Select process to the current pipeline.
+            2. Exports mandatory input and output plugs.
+            3. Sets plug values for input and output files.
+            4. Mocks 'get_capsul_engine' to prevent errors during completion.
+            5. Mocks 'get_attribute_values().export_to_dict' to return custom
+               attributes.
+            6. Calls 'register_completion_attributes' both without and with
+               mocked attributes.
+            7. Asserts the expected behavior in both scenarios.
+        """
+        # Set shortcuts for frequently used objects
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
 
-        # Gets the path of one document
+        # Switch to the pipeline editor tab
+        self.main_window.tabs.setCurrentIndex(2)
+        editor = ppl_edt_tabs.get_current_editor()
+
+        # Define paths for test documents
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "mia_ut_data",
@@ -10779,52 +10790,70 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "data",
             "raw_data",
         )
-
-        NII_FILE_1 = (
+        document_1 = os.path.join(
+            folder,
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
-            "Guerbet_Anat-RAREpvm-000220_000.nii"
+            "Guerbet_Anat-RAREpvm-000220_000.nii",
         )
-        NII_FILE_2 = (
+        document_2 = os.path.join(
+            folder,
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii",
         )
 
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.abspath(os.path.join(folder, NII_FILE_2))
-
-        # Adds a Select processes, creates the 'select_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Select)
+        # Add a Select process and create the 'select_1' node
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Select)
 
         # Export plugs and sets their values
         print("\n\n** an exception message is expected below\n")
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
-        ppl.nodes[""].set_plug_value("inlist", [DOCUMENT_1, DOCUMENT_2])
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(ppl_manager.project.folder)), ""
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
+        ppl.nodes[""].set_plug_value("inlist", [document_1, document_2])
+
+        # Set output directory
+        proj_dir = os.path.abspath(
+            os.path.normpath(ppl_manager.project.folder)
         )
         output_dir = os.path.join(proj_dir, "output_file.nii")
         ppl.nodes[""].set_plug_value("_out", output_dir)
 
-        # Register completion without 'attributes'
+        # First registration without mocked attributes
         ppl_manager.register_completion_attributes(ppl)
 
-        # Mocks 'get_capsul_engine' for the method not to throw an error
-        # with the insertion of the upcoming mock
+        with ppl_edt_tabs.project.database.data() as db:
+            self.assertEqual(db.get_document_names(COLLECTION_CURRENT), [])
+
+        # Mock 'get_capsul_engine' and 'get_attribute_values().export_to_dict'
         capsul_engine = ppl_edt_tabs.get_capsul_engine()
-        ppl_manager.get_capsul_engine = Mock(return_value=capsul_engine)
 
-        # Mocks attributes values that are in the tags list
-        attributes = {TAG_CHECKSUM: "Checksum_value"}
-        (
-            ProcessCompletionEngine.get_completion_engine(
-                ppl
-            ).get_attribute_values
-        )().export_to_dict = Mock(return_value=attributes)
+        with (
+            patch.object(
+                ppl_manager, "get_capsul_engine", return_value=capsul_engine
+            ),
+            patch.object(
+                ProcessCompletionEngine.get_completion_engine(ppl),
+                "get_attribute_values",
+            ) as mock_get_attrs,
+        ):
+            mock_attrs = {TAG_CHECKSUM: "Checksum_value"}
+            mock_export = Mock(return_value=mock_attrs)
+            mock_get_attrs.return_value.export_to_dict = mock_export
 
-        # Register completion with mocked 'attributes'
-        ppl_manager.register_completion_attributes(ppl)
+            # Second registration with mocked attributes
+            ppl_manager.register_completion_attributes(ppl)
+
+            mock_get_attrs.assert_called_once()
+            mock_export.assert_called_once()
+
+        # Assert the expected behavior with mocked attributes
+        with ppl_edt_tabs.project.database.data() as db:
+            self.assertEqual(
+                db.get_value(
+                    COLLECTION_CURRENT, "output_file.nii", TAG_CHECKSUM
+                ),
+                "Checksum_value",
+            )
 
     def test_register_node_io_in_database(self):
         """Adds a process, sets input and output parameters and registers them
