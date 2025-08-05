@@ -11011,15 +11011,30 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertFalse(hasattr(ppl_manager, "progress"))
 
     def test_run(self):
-        """Adds a process, creates a pipeline manager progress object and
-        tries to run it while mocking methods of the pipeline manager.
+        """
+        Tests the execution behavior of a pipeline run under various
+        conditions.
 
-        - Tests: RunWorker.run
+        This test verifies:
+            - Running a pipeline with a valid process.
+            - Handling of pipelines with missing processes.
+            - Handling of pipelines with a sub-pipeline as a process.
+            - Proper behavior when `get_pipeline_or_process` returns a
+              NipypeProcess.
+            - Handling of exceptions raised during post-processing.
+            - Proper behavior when an interruption request is set.
+
+        :tests: RunWorker.run
         """
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
+
+        # Switch to the pipeline editor tab
+        self.main_window.tabs.setCurrentIndex(2)
+
+        # Prepare a test NIfTI file path
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "mia_ut_data",
@@ -11029,57 +11044,52 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "data",
             "raw_data",
         )
-        # project_8_path = self.get_new_test_project()
-        # ppl_manager.project.folder = project_8_path
-        # folder = os.path.join(project_8_path, "data", "raw_data")
-        NII_FILE_1 = (
+        nii_file = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
         )
 
-        DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        document_path = os.path.abspath(os.path.join(folder, nii_file))
 
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        # Add a Rename process
+        editor = ppl_edt_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
 
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
 
-        # Sets the mandatory parameters
-        ppl.nodes[""].set_plug_value("in_file", DOCUMENT_1)
+        # Set mandatory parameters
+        ppl.nodes[""].set_plug_value("in_file", document_path)
         ppl.nodes[""].set_plug_value("format_string", "new_name.nii")
 
-        # Creates a 'RunProgress' object
+        # Create a RunProgress object and add special nodes for testing
         ppl_manager.progress = RunProgress(ppl_manager)
-
-        # Mocks a node that does not have a process and a node that has
-        # a pipeline as a process
         ppl.nodes["switch"] = Switch(ppl, "", [""], [""])
         ppl.nodes["pipeline"] = ProcessNode(ppl, "pipeline", Pipeline())
 
+        # Case 1: Normal run with mixed nodes
         ppl_manager.progress.worker.run()
 
-        # Mocks 'get_pipeline_or_process' to return a 'NipypeProcess' instead
-        # of a 'Pipeline' and 'postprocess_pipeline_execution' to throw an
-        # exception
+        # Case 2: Mock methods to simulate NipypeProcess and postprocess error
         ppl_manager.progress = RunProgress(ppl_manager)
-        # fmt: off
-        (
-            ppl_manager.progress.worker.pipeline_manager.
-            get_pipeline_or_process
-        ) = Mock(return_value=ppl.nodes["rename_1"].process)
-        (
-            ppl_manager.progress.worker.pipeline_manager.
-            postprocess_pipeline_execution
-        ) = Mock(side_effect=ValueError())
-        # fmt: on
-        # print("\n\n** an exception message is expected below\n")
-        ppl_manager.progress.worker.run()
 
-        # Mocks an interruption request
+        with (
+            patch.object(
+                ppl_manager.progress.worker.pipeline_manager,
+                "get_pipeline_or_process",
+                return_value=ppl.nodes["rename_1"].process,
+            ),
+            patch.object(
+                ppl_manager.progress.worker.pipeline_manager,
+                "postprocess_pipeline_execution",
+                side_effect=ValueError(),
+            ),
+        ):
+            ppl_manager.progress.worker.run()
+
+        # Case 3: Simulate interruption
         ppl_manager.progress.worker.interrupt_request = True
-
         ppl_manager.progress.worker.run()
 
     def test_savePipeline(self):
