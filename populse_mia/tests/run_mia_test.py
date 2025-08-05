@@ -10923,7 +10923,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         with pipeline_manager.project.database.data(write=True) as db_data:
             db_data.add_document(COLLECTION_BRICK, brick_id)
             self.assertNotIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
 
@@ -10932,14 +10932,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         with pipeline_manager.project.database.data(write=True) as db_data:
             self.assertIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
             db_data.remove_document(
-                COLLECTION_CURRENT, f"data/derived_data/{new_scan_name}"
+                COLLECTION_CURRENT,
+                os.path.join("data", "derived_data", new_scan_name),
             )
             self.assertNotIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
 
@@ -10949,14 +10950,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         with pipeline_manager.project.database.data(write=True) as db_data:
             self.assertIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
             db_data.remove_document(
-                COLLECTION_CURRENT, f"data/derived_data/{new_scan_name}"
+                COLLECTION_CURRENT,
+                os.path.join("data", "derived_data", new_scan_name),
             )
             self.assertNotIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
 
@@ -10966,7 +10968,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         with pipeline_manager.project.database.data() as db_data:
             self.assertNotIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
 
@@ -10982,7 +10984,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         with pipeline_manager.project.database.data() as db_data:
             self.assertIn(
-                f"data/derived_data/{new_scan_name}",
+                os.path.join("data", "derived_data", new_scan_name),
                 db_data.get_document_names(COLLECTION_CURRENT),
             )
 
