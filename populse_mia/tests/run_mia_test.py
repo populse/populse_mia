@@ -10856,107 +10856,156 @@ class TestMIAPipelineManagerTab(TestMIACase):
             )
 
     def test_register_node_io_in_database(self):
-        """Adds a process, sets input and output parameters and registers them
-        in database.
+        """
+        Tests the registration of node input/output data in the project
+        database for different types of process nodes.
 
-        - Tests: PipelineManagerTab._register_node_io_in_database
+        Steps:
+            1. Opens a new project and switches to it.
+            2. Adds a Rename process node to the current pipeline.
+            3. Exports mandatory inputs/outputs for the process.
+            4. Sets plug values for the process and output nodes.
+            5. Creates a workflow and job for the pipeline.
+            6. Tests `_register_node_io_in_database` with:
+                - NipypeProcess instance
+                - ProcessNode instance
+                - PipelineNode instance
+                - Switch instance
+                - Process with no outputs
+
+        Verifies:
+            - Output file is correctly added to `COLLECTION_CURRENT`.
+            - Output file is removed when expected.
+            - Unsupported process types do not incorrectly register outputs.
+
+        :raises AssertionError: If any database check fails.
         """
 
-        # Opens project 8 and switches to it
+        # Open and switch to a new project
         project_8_path = self.get_new_test_project()
         self.main_window.switch_project(project_8_path, "project_9")
 
-        with self.main_window.project.database.data() as database_data:
-            DOCUMENT_1 = database_data.get_document_names(COLLECTION_CURRENT)[
-                0
-            ]
+        with self.main_window.project.database.data() as db_data:
+            document_1 = db_data.get_document_names(COLLECTION_CURRENT)[0]
 
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-        )
+        self.main_window.tabs.setCurrentIndex(2)
+        editor_tabs = self.main_window.pipeline_manager.pipelineEditorTabs
 
-        # Adds the processes Rename, creates the "rename_1" node
-        process_class = Rename
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
+        # Add Rename process node
+        editor = editor_tabs.get_current_editor()
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
+        pipeline = editor_tabs.get_current_pipeline()
 
-        # Exports the mandatory input and output plugs for "rename_1"
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "rename_1"
-        )
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_unconnected_mandatory_inputs()
-        (
-            pipeline_editor_tabs.get_current_editor
-        )().export_all_unconnected_outputs()
+        # Export mandatory plugs
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
 
-        old_scan_name = DOCUMENT_1.split("/")[-1]
+        # Set plug values
         new_scan_name = "new_name.nii"
-
-        # Sets the mandatory plug values in the "inputs" node
-        pipeline.nodes[""].set_plug_value("in_file", DOCUMENT_1)
-        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
-
-        # Changes the "_out_file" in the "outputs" node
-        pipeline.nodes[""].set_plug_value(
-            "_out_file", DOCUMENT_1.replace(old_scan_name, new_scan_name)
+        out_file = os.path.join(
+            project_8_path, "data", "derived_data", new_scan_name
         )
+        pipeline.nodes[""].set_plug_value("in_file", document_1)
+        pipeline.nodes[""].set_plug_value("format_string", new_scan_name)
+        pipeline.nodes[""].set_plug_value("_out_file", out_file)
 
+        # Create workflow and job
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
-
         job = pipeline_manager.workflow.jobs[0]
-
-        brick_id = str(uuid.uuid4())
-        job.uuid = brick_id
+        job.uuid = brick_id = str(uuid.uuid4())
         pipeline_manager.brick_list.append(brick_id)
 
-        with pipeline_manager.project.database.data(
-            write=True
-        ) as database_data:
-            database_data.add_document(COLLECTION_BRICK, brick_id)
+        with pipeline_manager.project.database.data(write=True) as db_data:
+            db_data.add_document(COLLECTION_BRICK, brick_id)
+            self.assertNotIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
 
+        # Test with NipypeProcess
         pipeline_manager._register_node_io_in_database(job, job.process())
 
-        # Simulates a 'ProcessNode()' as 'process'
+        with pipeline_manager.project.database.data(write=True) as db_data:
+            self.assertIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
+            db_data.remove_document(
+                COLLECTION_CURRENT, f"data/derived_data/{new_scan_name}"
+            )
+            self.assertNotIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
+
+        # Test with ProcessNode
         process_node = ProcessNode(pipeline, "", job.process())
         pipeline_manager._register_node_io_in_database(job, process_node)
 
-        # Simulates a 'PipelineNode()' as 'process'
+        with pipeline_manager.project.database.data(write=True) as db_data:
+            self.assertIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
+            db_data.remove_document(
+                COLLECTION_CURRENT, f"data/derived_data/{new_scan_name}"
+            )
+            self.assertNotIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
+
+        # Test with PipelineNode
         pipeline_node = PipelineNode(pipeline, "", job.process())
         pipeline_manager._register_node_io_in_database(job, pipeline_node)
 
-        # Simulates a 'Switch()' as 'process'
+        with pipeline_manager.project.database.data() as db_data:
+            self.assertNotIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
+
+        # Test with Switch
         switch = Switch(pipeline, "", [""], [""])
         switch.completion_engine = None
         pipeline_manager._register_node_io_in_database(job, switch)
 
-        # Simulates a list of outputs in 'process'
+        # Test with process having a list of outputs
         job.process().list_outputs = []
         job.process().outputs = []
         pipeline_manager._register_node_io_in_database(job, job.process())
 
-    def test_remove_progress(self):
-        """Mocks an object of the pipeline manager and removes its progress.
+        with pipeline_manager.project.database.data() as db_data:
+            self.assertIn(
+                f"data/derived_data/{new_scan_name}",
+                db_data.get_document_names(COLLECTION_CURRENT),
+            )
 
-        - Tests: PipelineManagerTab.remove_progress
+    def test_remove_progress(self):
+        """
+        Verify that `PipelineManagerTab.remove_progress` correctly deletes the
+        `progress` attribute.
+
+        This test creates a temporary `RunProgress` instance in the pipeline
+        manager, invokes `remove_progress`, and ensures the attribute no longer exists.
+
+        :tests: PipelineManagerTab.remove_progress
         """
 
         ppl_manager = self.main_window.pipeline_manager
 
-        # Mocks the 'progress' object
+        # Create a temporary 'progress' instance
         ppl_manager.progress = RunProgress(ppl_manager)
 
-        # Removes progress
+        # Remove the progress instance
         ppl_manager.remove_progress()
 
-        # Asserts that the object 'progress' was deleted
+        # Assert that 'progress' is no longer an attribute
         self.assertFalse(hasattr(ppl_manager, "progress"))
 
     def test_run(self):
