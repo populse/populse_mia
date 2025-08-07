@@ -11069,23 +11069,54 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl.nodes["pipeline"] = ProcessNode(ppl, "pipeline", Pipeline())
 
         # Case 1: Normal run with mixed nodes
-        ppl_manager.progress.worker.run()
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
+            ppl_manager.progress.worker.run()
+
+            self.assertEqual(len(log_handler.records), 2)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("Pipeline running" in msg for msg in info_messages),
+                "'Pipeline running' not found in info_messages",
+            )
 
         # Case 2: Mock methods to simulate NipypeProcess and postprocess error
         ppl_manager.progress = RunProgress(ppl_manager)
 
         with (
-            patch.object(
-                ppl_manager.progress.worker.pipeline_manager,
-                "get_pipeline_or_process",
-                return_value=ppl.nodes["rename_1"].process,
-            ),
-            patch.object(
-                ppl_manager.progress.worker.pipeline_manager,
-                "postprocess_pipeline_execution",
-                side_effect=ValueError(),
-            ),
+            # patch.object(
+            #     ppl_manager.progress.worker.pipeline_manager,
+            #     "get_pipeline_or_process",
+            #     return_value=ppl.nodes["rename_1"].process,
+            # ),
+            # patch.object(
+            #     ppl_manager.progress.worker.pipeline_manager,
+            #     "postprocess_pipeline_execution",
+            #     side_effect=ValueError(),
+            # ),
+            # self.capture_logs(
+            # "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+            # ) as log_handler
+            self.capture_logs("", level=logging.DEBUG) as log_handler
         ):
+            ppl_manager.progress.worker.run()
+
+            self.assertEqual(len(log_handler.records), 2)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("Pipeline running" in msg for msg in info_messages),
+                "'Pipeline running' not found in info_messages",
+            )
+
             ppl_manager.progress.worker.run()
 
         # Case 3: Simulate interruption
