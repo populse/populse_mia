@@ -7,6 +7,8 @@ Contains:
         - RunProgress
         - RunWorker
         - StatusWidget
+    Function:
+        - protected_logging
 
 """
 
@@ -19,6 +21,7 @@ Contains:
 ##########################################################################
 
 # Other imports
+import contextlib
 import copy
 import datetime
 import functools
@@ -118,6 +121,58 @@ from populse_mia.user_interface.pipeline_manager.process_mia import ProcessMIA
 from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 
 logger = logging.getLogger(__name__)
+
+
+@contextlib.contextmanager
+def protected_logging():
+    """
+    Context manager to protect logging system from soma-workflow interference
+    """
+    # Store all current loggers and their configurations
+    loggers_backup = {}
+
+    # Get all existing loggers
+    for name in logging.Logger.manager.loggerDict:
+        logger = logging.getLogger(name)
+        loggers_backup[name] = {
+            "handlers": logger.handlers.copy(),
+            "level": logger.level,
+            "disabled": logger.disabled,
+            "propagate": logger.propagate,
+        }
+
+    # Also backup root logger
+    root = logging.getLogger()
+    loggers_backup["root"] = {
+        "handlers": root.handlers.copy(),
+        "level": root.level,
+        "disabled": root.disabled,
+        "propagate": root.propagate,
+    }
+
+    try:
+        yield
+
+    finally:
+
+        # Restore all loggers after soma-workflow
+        for name, config in loggers_backup.items():
+
+            if name == "root":
+                logger = logging.getLogger()
+
+            else:
+                logger = logging.getLogger(name)
+
+            # Clear current handlers and restore originals
+            logger.handlers.clear()
+
+            for handler in config["handlers"]:
+                logger.addHandler(handler)
+
+            logger.setLevel(config["level"])
+            logger.disabled = config["disabled"]
+            logger.propagate = config["propagate"]
 
 
 class PipelineManagerTab(QWidget):
@@ -4045,7 +4100,7 @@ class RunWorker(QThread):
                 return
 
         logger.info("- Pipeline running")
-        logger.info("  ****************\n")
+        logger.info("  ****************")
         workflow = self.pipeline_manager.workflow
         # if we are running with file transfers / translations, then we must
         # rebuild the workflow, because it has not been made with them.
@@ -4066,11 +4121,14 @@ class RunWorker(QThread):
             logger.info("Running now...")
 
         try:
-            exec_id, pipeline = engine.start(
-                pipeline,
-                workflow=workflow,
-                get_pipeline=True,
-            )
+
+            with protected_logging():
+                exec_id, pipeline = engine.start(
+                    pipeline,
+                    workflow=workflow,
+                    get_pipeline=True,
+                )
+
             self.exec_id = exec_id
 
             while self.status in (
