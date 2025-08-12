@@ -126,25 +126,29 @@ logger = logging.getLogger(__name__)
 @contextlib.contextmanager
 def protected_logging():
     """
-    Context manager to protect logging system from soma-workflow interference
+    Context manager to protect logging system from soma-workflow interference.
+
+    While preserving any new handlers/filters added inside the context.
     """
-    # Store all current loggers and their configurations
+    # Backup all loggers' configurations
     loggers_backup = {}
 
-    # Get all existing loggers
+    # Backup all named loggers
     for name in logging.Logger.manager.loggerDict:
         logger = logging.getLogger(name)
         loggers_backup[name] = {
-            "handlers": logger.handlers.copy(),
+            "handlers": list(logger.handlers),  # copy handler list
+            "filters": list(logger.filters),  # copy filters
             "level": logger.level,
             "disabled": logger.disabled,
             "propagate": logger.propagate,
         }
 
-    # Also backup root logger
+    # Backup root logger separately
     root = logging.getLogger()
     loggers_backup["root"] = {
-        "handlers": root.handlers.copy(),
+        "handlers": list(root.handlers),
+        "filters": list(root.filters),
         "level": root.level,
         "disabled": root.disabled,
         "propagate": root.propagate,
@@ -155,7 +159,7 @@ def protected_logging():
 
     finally:
 
-        # Restore all loggers after soma-workflow
+        # Restore configs but merge handlers/filters
         for name, config in loggers_backup.items():
 
             if name == "root":
@@ -164,12 +168,23 @@ def protected_logging():
             else:
                 logger = logging.getLogger(name)
 
-            # Clear current handlers and restore originals
-            logger.handlers.clear()
+            # Merge handlers: keep existing, re-add missing originals
+            existing_handlers = {id(h): h for h in logger.handlers}
 
-            for handler in config["handlers"]:
-                logger.addHandler(handler)
+            for h in config["handlers"]:
 
+                if id(h) not in existing_handlers:
+                    logger.addHandler(h)
+
+            # Merge filters the same way
+            existing_filters = {id(f): f for f in logger.filters}
+
+            for f in config["filters"]:
+
+                if id(f) not in existing_filters:
+                    logger.addFilter(f)
+
+            # Restore basic logger settings
             logger.setLevel(config["level"])
             logger.disabled = config["disabled"]
             logger.propagate = config["propagate"]
