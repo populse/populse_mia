@@ -1,18 +1,52 @@
 """
-This module provides a tool designed to verify and visualize the presence of
-scans in a project based on selected tags. It allows users to dynamically add
-and remove tags, and it displays the results in a table format, indicating the
-presence or absence of scans with green plus or red cross icons, respectively.
+Medical Scan Completeness Verification Tool
 
-Key Features:
-- Dynamic tag selection and visualization.
-- Automatic table generation based on tag combinations.
-- Clear visual indicators for scan presence or absence.
-- Integration with a project's scan data for real-time verification.
+This module provides a sophisticated quality assurance tool for medical
+imaging projects, enabling systematic verification of scan completeness
+through interactive tag-based analysis. The tool helps identify missing
+scans, incomplete datasets, and data inconsistencies across multiple metadata
+dimensions.
+
+The primary component is a dynamic table-based interface that visualizes all
+possible combinations of selected metadata tags (patient names, scan types,
+time points, etc.) and indicates which combinations have corresponding scan
+data available.
+
+Core Functionality:
+    - Interactive tag selection with expandable interface (2 to n tags)
+    - Real-time database querying and scan counting
+    - Matrix visualization of tag combinations vs. data availability
+    - Visual indicators: ✓ (green checkmark) for present data,
+                         ✗ (red cross) for missing
+    - Detailed tooltips showing specific scan filenames
+    - Statistical summaries with total counts per category
+
+Use Cases:
+    - Quality assurance before data analysis
+    - Identifying incomplete patient visits or missing sequences
+    - Verifying protocol compliance across studies
+    - Dataset completeness reporting
+    - Pre-processing validation for longitudinal studies
+
+Technical Features:
+    - Efficient database integration with lazy loading
+    - Dynamic UI generation based on selected metadata
+    - Scalable to handle large datasets with multiple tag dimensions
+    - Qt-based interface with responsive table resizing
+    - Memory-efficient combination generation using odometer algorithms
+
+Example Workflow:
+    1. Select relevant metadata tags (e.g., PatientName, TimePoint,
+       SequenceName)
+    2. Generate combination matrix showing all expected data points
+    3. Review visual indicators to identify missing scans
+    4. Use tooltips to examine specific scan files
+    5. Export or act on completeness findings
 
 Contains:
     Class:
-        - CountTable
+        - CountTable: Main dialog class providing the scan verification
+                      interface
 """
 
 ##########################################################################
@@ -25,7 +59,8 @@ Contains:
 
 import operator
 import os
-from functools import reduce  # Valid in Python 2.6+, required in Python 3
+from functools import reduce
+from typing import Any, Callable
 
 # PyQt5 imports
 import PyQt5.QtCore as QtCore
@@ -36,6 +71,7 @@ from PyQt5.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QPushButton,
+    QStackedLayout,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -53,22 +89,56 @@ from populse_mia.user_interface.pop_ups import (
 
 class CountTable(QDialog):
     """
-    Tool to verify the scans of a project by visualizing combinations of
-    tags.
+    A visual tool for verifying medical scan completeness through tag
+    combination analysis.
 
-    This tool allows users to select tags and visualize their combinations
-    in a table format. It is composed of push buttons on its top, each one
-    corresponding to a tag selected by the user. When, the "Count scans"
-    button is clicked, a table is created with all the combinations possible
-    for the values of the first n-1 tags. Then, the m values that can take the
-    last tag are displayed in the header of the m last columns of the table.
-    The cells are then filled with a green plus or a red cross depending on if
-    there is at least a scan that has all the tags values or not.
+    This dialog provides an interactive interface to analyze medical scan
+    data by selecting multiple tags (metadata fields) and displaying their
+    combinations in a matrix format. The tool helps identify missing scans
+    by showing which combinations of tag values have corresponding data.
+
+    The interface consists of:
+    - Dynamic tag selection buttons (expandable from 2 to n tags)
+    - Add/remove controls for tag management
+    - A results table showing all possible combinations
+    - Visual indicators (✓/✗) for data presence/absence
+
+    Table Structure:
+        - Rows: All combinations of the first (n-1) selected tags
+        - Columns: First (n-1) tag names + values of the last tag
+        - Cells: Count of matching scans or absence indicator
+        - Footer: Total counts per column
+
+    Example:
+        With tags [PatientName, TimePoint, SequenceName] for 2 patients
+        (P1, P2), 3 timepoints (T1, T2, T3), and sequences
+        (RARE, MDEFT, FLASH):
+
+        +-------------+-----------+------+-------+-------+
+        | PatientName | TimePoint | RARE | MDEFT | FLASH |
+        +=============+===========+======+=======+=======+
+        | P1          | T1        | ✓(2) | ✓(1)  | ✓(1)  |
+        | P1          | T2        | ✓(1) | ✓(1)  | ✓(1)  |  ← Missing 1 RARE
+        | P1          | T3        | ✓(2) | ✓(1)  | ✓(1)  |
+        | P2          | T1        | ✓(2) | ✓(1)  | ✓(1)  |
+        | P2          | T2        | ✓(2) | ✓(1)  | ✓(1)  |
+        | P2          | T3        | ✓(2) | ✓(1)  | ✗     |  ← Missing FLASH
+        +-------------+-----------+------+-------+-------+
+        | Total       |           | 11   | 6     | 5     |
+        +-------------+-----------+------+-------+-------+
+
+    Key Features:
+        - Dynamic tag addition/removal
+        - Real-time scan counting
+        - Visual missing data indicators
+        - Hover tooltips showing specific scan files
+        - Automatic table resizing
 
     .. Methods:
         - _create_clickable_label: Create a clickable label with an image
         - _create_push_button: Create and configure a push button for tag
                                selection
+        - _setup_components: Initialize basic UI components
         - _setup_labels: Set up the add/remove tag labels with icons
         - _setup_layout: Set up the layout of the widget
         - _setup_table: Set up the table and count button
@@ -79,114 +149,42 @@ class CountTable(QDialog):
                            (n-1) first selected tags
         - fill_headers: Fills the headers of the table depending on the
                         selected tags
-        - fill_last_tag: Fills the cells corresponding to the last selected tag
+        - fill_last_tag: Fills the cells corresponding to the last selected
+                         tag
         - fill_values: Fill values_list depending on the visualized tags
         - prepare_filter: Prepares the filter in order to fill the count table
         - refresh_layout: Updates the layout of the widget
         - remove_tag: Removes a tag to visualize in the count table
         - select_tag: Opens a pop-up to select which tag to visualize in
                       the count table
-
-    :Example:
-
-    Assume that the current project has scans for two patients (P1 and P2)
-    and three time points (T1, T2 and T3). For each (patient, time point),
-    several sequences have been made (two RARE, one MDEFT and one FLASH).
-    Selecting [PatientName, TimePoint, SequenceName] as tags, the table will
-    be:
-
-    +-------------+-----------+------+-------+-------+
-    | PatientName | TimePoint | RARE | MDEFT | FLASH |
-    +=============+===========+======+=======+=======+
-    | P1          | T1        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P1          | T2        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P1          | T3        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T1        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T2        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T3        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-
-    with v(n) meaning that n scans corresponds of the selected values for
-    (PatientName, TimePoint,SequenceName).
-
-    If no scans corresponds for a triplet value, a red cross will be
-    displayed. For example, if the user forgets to import one RARE for P1 at
-    T2 and one FLASH for P2 at T3. The table will be:
-
-    +-------------+-----------+------+-------+-------+
-    | PatientName | TimePoint | RARE | MDEFT | FLASH |
-    +=============+===========+======+=======+=======+
-    | P1          | T1        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P1          | T2        | v(1) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P1          | T3        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T1        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T2        | v(2) | v(1)  | v(1)  |
-    +-------------+-----------+------+-------+-------+
-    | P2          | T3        | v(2) | v(1)  | x     |
-    +-------------+-----------+------+-------+-------+
-
-    Thus, thanks to the CountTable tool, he or she directly knows if some
-    scans are missing.
-
     """
 
-    def __init__(self, project):
+    def __init__(self, project) -> None:
         """
         Initialize the CountTable with the given project.
 
-        :param project: The current project in the software.
+        :param project: The current medical imaging project containing
+                        scan database
         """
         super().__init__()
         self.project = project
         self.setWindowTitle("Count table")
-        # Font
+        # UI properties
         self.font = QFont()
         self.font.setBold(True)
-        # values_list will contain the different values of each selected tag
-        self.values_list = [[], []]
-        self.label_tags = QLabel("Tags: ")
-        # Each push button will allow the user to add a tag to the count table
-        self.push_buttons = [
-            self._create_push_button(f"Tag n°{i + 1}", i) for i in range(2)
-        ]
+        # Data structures
+        # Tag values for each selected tag
+        self.values_list: list[list[Any]] = [[], []]
+        self.push_buttons: list[QPushButton] = []
+        # Initialize UI components
+        self._setup_components()
         self._setup_labels()
         self._setup_table()
         self._setup_layout()
 
-    def _create_push_button(self, text, idx):
-        """
-        Create and configure a push button for tag selection.
-
-        :param text (str): The text to display on the button.
-        :param idx (int): The index associated with the button for tag
-                          selection.
-
-        :return (QPushButton): A configured QPushButton that triggers the
-                               tag selection when clicked.
-        """
-        button = QPushButton(text)
-        button.clicked.connect(lambda: self.select_tag(idx))
-        return button
-
-    def _setup_labels(self):
-        """Set up the add/remove tag labels with icons."""
-        self.remove_tag_label = self._create_clickable_label(
-            "red_minus.png", self.remove_tag
-        )
-        self.add_tag_label = self._create_clickable_label(
-            "green_plus.png", self.add_tag
-        )
-
-    def _create_clickable_label(self, image_name, click_handler):
+    def _create_clickable_label(
+        self, image_name: str, click_handler: Callable
+    ) -> "ClickableLabel":
         """
          Create a clickable label with an image.
 
@@ -201,30 +199,83 @@ class CountTable(QDialog):
         """
         sources_images_dir = Config().getSourceImageDir()
         label = ClickableLabel()
-        label.setObjectName(image_name.split("_")[1].split(".")[0])
-        pixmap = QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, image_name))
-        )
-        pixmap = pixmap.scaledToHeight(
-            20 if image_name == "red_minus.png" else 15
-        )
+        # Extract color from filename for object naming
+        color = image_name.split("_")[1].split(".")[0]
+        label.setObjectName(color)
+        # Load and scale icon
+        pixmap_path = os.path.join(sources_images_dir, image_name)
+        pixmap = QPixmap(os.path.relpath(pixmap_path))
+        height = 20 if image_name == "red_minus.png" else 15
+        pixmap = pixmap.scaledToHeight(height)
         label.setPixmap(pixmap)
         label.clicked.connect(click_handler)
         return label
 
-    def _setup_table(self):
-        """Set up the table and count button."""
+    def _create_push_button(self, text: str, idx: int) -> QPushButton:
+        """
+        Create and configure a tag selection button.
+
+        :param text (str): The text to display on the button.
+        :param idx (int): The index associated with the button for tag
+                          selection.
+
+        :return (QPushButton): A configured QPushButton that triggers the
+                               tag selection when clicked.
+        """
+        button = QPushButton(text)
+        button.clicked.connect(lambda: self.select_tag(idx))
+        return button
+
+    def _setup_components(self) -> None:
+        """
+        Initialize basic UI components.
+        """
+        self.label_tags = QLabel("Tags: ")
+        # Each push button will allow the user to add a tag to the count table
+        self.push_buttons = [
+            self._create_push_button(f"Tag n°{i + 1}", i) for i in range(2)
+        ]
+
+    def _setup_labels(self) -> None:
+        """
+        Initialize add/remove control labels with icons.
+        """
+        self.remove_tag_label = self._create_clickable_label(
+            "red_minus.png", self.remove_tag
+        )
+        self.add_tag_label = self._create_clickable_label(
+            "green_plus.png", self.add_tag
+        )
+
+    def _setup_layout(self) -> None:
+        """
+        Initialize main widget layout.
+        """
+        self.v_box_final = QVBoxLayout()
+        self.setLayout(self.v_box_final)
+        # Stacked area to switch between table and placeholder message
+        self.content_stack = QStackedLayout()
+        self.content_stack.addWidget(self.table)  # index 0
+        self.content_stack.addWidget(self.placeholder)  # index 1
+        self.content_stack.setCurrentWidget(self.table)
+        self.refresh_layout()
+        self.v_box_final.addLayout(self.content_stack)
+
+    def _setup_table(self) -> None:
+        """
+        Initialize table widget, placeholder label and count button.
+        """
         self.table = QTableWidget()
+        # Placeholder message shown when tags are missing
+        self.placeholder = QLabel(
+            "At least one of the tags does not contain any values.\n"
+            "The result cannot be constructed."
+        )
+        self.placeholder.setAlignment(Qt.AlignCenter)
         self.push_button_count = QPushButton("Count Scans")
         self.push_button_count.clicked.connect(self.count_scans)
 
-    def _setup_layout(self):
-        """Set up the layout of the widget."""
-        self.v_box_final = QVBoxLayout()
-        self.setLayout(self.v_box_final)
-        self.refresh_layout()
-
-    def add_tag(self):
+    def add_tag(self) -> None:
         """
         Add a new tag to visualize in the count table.
         """
@@ -233,15 +284,21 @@ class CountTable(QDialog):
         self.push_buttons.append(new_button)
         self.refresh_layout()
 
-    def count_scans(self):
+    def count_scans(self) -> None:
         """
-        Count the number of scans based on selected tags and display the
-        result.
+        Generate and populate the scan count table.
+
+        Creates a matrix showing all combinations of selected tag values,
+        with counts or indicators for each combination's scan availability.
+        Early returns if no tags are selected or if database access fails.
         """
 
+        # Validate that all tags have values
         if any(not tag_values for tag_values in self.values_list):
+            self.content_stack.setCurrentWidget(self.placeholder)
             return
 
+        # Validate last button corresponds to database field
         with self.project.database.data() as database_data:
 
             if (
@@ -250,12 +307,16 @@ class CountTable(QDialog):
                 )
                 is None
             ):
+                # Show message if the last tag isn't a valid field
+                self.content_stack.setCurrentWidget(self.placeholder)
                 return
 
-        # Clearing the table
+        # We have valid tags: show the table view
+        self.content_stack.setCurrentWidget(self.table)
+        # Reset and build the table
         self.table.clear()
-        # nb_values will contain, for each index, the number of
-        # different values that a tag can take
+        # Calculate dimensions
+        # nb_values: number of distinct values for each selected tag
         self.nb_values = [len(values) for values in self.values_list]
         # The number of rows will be the multiplication of all these
         # values
@@ -264,163 +325,142 @@ class CountTable(QDialog):
         # selected tags (minus 1) and the number of different values
         # that can take the last selected tag
         self.nb_col = len(self.values_list) - 1 + self.nb_values[-1]
+        # Configure table
         self.table.setRowCount(self.nb_row)
         self.table.setColumnCount(self.nb_col)
+        # Fill table with headers and data
         self.fill_headers()
         self.fill_first_tags()
         self.fill_last_tag()
         self.table.resizeColumnsToContents()
 
-    def fill_first_tags(self):
+    def fill_first_tags(self) -> None:
         """
-        Fill the table cells for the first (n-1) selected tags."
+        Populate table cells for the first (n-1) selected tags.
+
+        Generates all possible combinations of the first n-1 tag values
+        and fills corresponding table cells. Also adds total counts
+        in the bottom row.
         """
         # import set_item_data only here to prevent circular import issue
         from populse_mia.utils import set_item_data
 
         with self.project.database.data() as database_data:
-            cell_text = []
+            # Initialize with first values for each tag
+            # current_combination will contain the n-1 element to display
+            current_combination = [
+                values[0] for values in self.values_list[:-1]
+            ]
 
-            for col in range(len(self.values_list) - 1):
-                # cell_text will contain the n-1 element to display
-                cell_text.append(self.values_list[col][0])
-                # Filling the last "Total" column
-                item = QTableWidgetItem()
-                item.setText(str(self.nb_values[col]))
+            # Fill the total row with tag value counts
+            for col, count in enumerate(self.nb_values[:-1]):
+                item = QTableWidgetItem(str(count))
                 item.setFont(self.font)
                 self.table.setItem(self.nb_row, col, item)
 
-            # Filling the cells of the n-1 first tags
+            # Generate all combinations and fill cells
             for row in range(self.nb_row):
 
-                for col in range(len(self.values_list) - 1):
+                # Fill a single row with tag combination values
+                for col, value in enumerate(current_combination):
                     item = QTableWidgetItem()
                     tag_name = self.push_buttons[col].text()
                     tag_type = database_data.get_field_attributes(
                         COLLECTION_CURRENT, tag_name
                     )["field_type"]
-                    set_item_data(item, cell_text[col], tag_type)
+                    set_item_data(item, value, tag_type)
                     self.table.setItem(row, col, item)
 
-                # Looping from the (n-1)th tag
-                col_checked = len(self.values_list) - 2
-                # Flag up will be True when all values of the tag
-                # have been iterated
-                flag_up = False
+                # Advance to next combination using odometer-like logic
+                if not current_combination:
+                    return
 
-                while col_checked >= 0:
+                # Start from rightmost position
+                pos = len(current_combination) - 1
 
-                    if flag_up:
+                while pos >= 0:
+                    current_idx = self.values_list[pos].index(
+                        current_combination[pos]
+                    )
 
-                        # In this case, the value of the right column has
-                        # reach its last value
-                        # This value has been reset to the first value
-                        if (
-                            cell_text[col_checked]
-                            == self.values_list[col_checked][-1]
-                        ):
-                            # If the value that has been displayed is the
-                            # last one, the flag stays the same, the value
-                            # of the column on the left has to be changed
-                            cell_text[col_checked] = self.values_list[
-                                col_checked
-                            ][0]
+                    if current_idx < len(self.values_list[pos]) - 1:
+                        # Can increment this position
+                        current_combination[pos] = self.values_list[pos][
+                            current_idx + 1
+                        ]
+                        break
 
-                        else:
-                            # Else we iterate on the next value
-                            idx = self.values_list[col_checked].index(
-                                cell_text[col_checked]
-                            )
-                            cell_text[col_checked] = self.values_list[
-                                col_checked
-                            ][idx + 1]
-                            flag_up = False
+                    else:
+                        # Reset this position and carry over
+                        current_combination[pos] = self.values_list[pos][0]
+                        pos -= 1
 
-                    if (col_checked > 0 and len(self.values_list) - 1 > 1) or (
-                        len(self.values_list) - 1 == 1
-                    ):
-
-                        if (
-                            cell_text[col_checked]
-                            == self.values_list[col_checked][-1]
-                        ):
-                            # If the value that has been displayed is the
-                            # last one, the flag is set to True, the value of
-                            # the column on the left has to be changed
-                            cell_text[col_checked] = self.values_list[
-                                col_checked
-                            ][0]
-                            flag_up = True
-
-                        else:
-                            # Else we iterate on the next value and reset the
-                            # flag
-                            idx = self.values_list[col_checked].index(
-                                cell_text[col_checked]
-                            )
-                            cell_text[col_checked] = self.values_list[
-                                col_checked
-                            ][idx + 1]
-                            flag_up = False
-
-                        if not flag_up:
-                            # If there is nothing to do, we quit the loop
-                            break
-
-                    col_checked -= 1
-
-    def fill_headers(self):
+    def fill_headers(self) -> None:
         """
-        Fills the headers of the table depending on the selected tags
+        Populate table headers with tag names and last tag values.
+
+        Sets horizontal headers for:
+            - First n-1 columns: tag names
+            - Remaining columns: values of the last selected tag
+
+        Also adds a "Total" row header.
         """
 
         # import set_item_data only here to prevent circular import issue
         from populse_mia.utils import set_item_data
 
-        idx_end = 0
-
-        # Headers
+        # Set headers for first n-1 tags
         for idx in range(len(self.values_list) - 1):
             header_name = self.push_buttons[idx].text()
-            item = QTableWidgetItem()
-            item.setText(header_name)
+            item = QTableWidgetItem(header_name)
             self.table.setHorizontalHeaderItem(idx, item)
-            idx_end = idx
 
         # idx_last_tag corresponds to the index of the (n-1)th tag
-        self.idx_last_tag = idx_end
-        last_tag = self.push_buttons[len(self.values_list) - 1].text()
+        self.idx_last_tag = len(self.values_list) - 2
+
+        # Set headers for last tag values
+        # Fill headers with last tag's possible values
+        last_tag = self.push_buttons[-1].text()
 
         with self.project.database.data() as database_data:
             last_tag_type = database_data.get_field_attributes(
                 COLLECTION_CURRENT, last_tag
             )["field_type"]
 
-        for header_name in self.values_list[-1]:
-            idx_end += 1
+        for col_offset, header_value in enumerate(self.values_list[-1]):
+            col_idx = self.idx_last_tag + 1 + col_offset
             item = QTableWidgetItem()
-            set_item_data(item, header_name, last_tag_type)
-            self.table.setHorizontalHeaderItem(idx_end, item)
+            set_item_data(item, header_value, last_tag_type)
+            self.table.setHorizontalHeaderItem(col_idx, item)
 
-        # Adding a "Total" row and to count the scans
+        # Add and configure the totals row
         self.table.insertRow(self.nb_row)
-        item = QTableWidgetItem()
-        item.setText("Total")
+        item = QTableWidgetItem("Total")
         item.setFont(self.font)
         self.table.setVerticalHeaderItem(self.nb_row, item)
 
-    def fill_last_tag(self):
+    def fill_last_tag(self) -> None:
         """
-        Fills the cells corresponding to the last selected tag
+        Populate cells for the last selected tag with scan counts or
+        indicators.
+
+        For each combination of first n-1 tags and each value of the last tag:
+            - Queries database for matching scans
+            - Shows count with checkmark if scans exist
+            - Shows red X if no scans found
+            - Adds scan filenames as tooltip
+            - Updates column totals
         """
         # import table_to_database only here to prevent circular import issue
         from populse_mia.utils import table_to_database
 
+        sources_images_dir = Config().getSourceImageDir()
+
         with self.project.database.data() as database_data:
 
-            # Cells of the last tag
+            # Process each column for the last tag
             for col in range(self.idx_last_tag + 1, self.nb_col):
-                nb_scans_ok = 0
+                total_scans = 0
 
                 # Creating a tag_list that will contain
                 # couples tag_name/tag_value that
@@ -428,172 +468,187 @@ class CountTable(QDialog):
                 for row in range(self.nb_row):
                     tag_list = []
 
-                    for idx_first_columns in range(self.idx_last_tag + 1):
+                    # Add filters for first n-1 tags
+                    for tag_col in range(self.idx_last_tag + 1):
                         tag_name = self.table.horizontalHeaderItem(
-                            idx_first_columns
+                            tag_col
                         ).text()
                         tag_type = database_data.get_field_attributes(
                             COLLECTION_CURRENT, tag_name
                         )["field_type"]
-                        value_str = self.table.item(
-                            row, idx_first_columns
-                        ).data(Qt.EditRole)
-                        value_database = table_to_database(value_str, tag_type)
-                        tag_list.append([tag_name, value_database])
+                        value_display = self.table.item(row, tag_col).data(
+                            Qt.EditRole
+                        )
+                        value_db = table_to_database(value_display, tag_type)
+                        tag_list.append([tag_name, value_db])
 
-                    tag_last_columns = self.push_buttons[-1].text()
-                    tag_last_columns_type = database_data.get_field_attributes(
-                        COLLECTION_CURRENT, tag_last_columns
+                    # Add filter for the last tag
+                    last_tag_name = self.push_buttons[-1].text()
+                    last_tag_type = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, last_tag_name
                     )["field_type"]
-                    value_last_columns_str = self.table.horizontalHeaderItem(
+                    last_value_display = self.table.horizontalHeaderItem(
                         col
                     ).data(Qt.EditRole)
-                    value_last_columns_database = table_to_database(
-                        value_last_columns_str, tag_last_columns_type
+                    last_value_db = table_to_database(
+                        last_value_display, last_tag_type
                     )
-                    tag_list.append(
-                        [tag_last_columns, value_last_columns_database]
-                    )
-                    item = QTableWidgetItem()
-                    item.setFlags(QtCore.Qt.ItemIsEnabled)
-                    # Getting the list of the scans that corresponds to the
-                    # couples tag_name/tag_values
+                    tag_list.append([last_tag_name, last_value_db])
+                    # Query database for scans matching the filter criteria
+                    filter_query = self.prepare_filter(tag_list)
                     filtered_scans = database_data.filter_documents(
-                        COLLECTION_CURRENT, self.prepare_filter(tag_list)
+                        COLLECTION_CURRENT, filter_query
                     )
-                    # List of scans created, given the generator
-                    list_scans = [
+                    matching_scans = [
                         scan[TAG_FILENAME] for scan in filtered_scans
                     ]
-                    sources_images_dir = Config().getSourceImageDir()
+                    # Create table item showing scan count with appropriate
+                    # icon
+                    item = QTableWidgetItem()
+                    item.setFlags(QtCore.Qt.ItemIsEnabled)
 
-                    if list_scans:
+                    if matching_scans:
                         icon = QIcon(
                             os.path.join(sources_images_dir, "green_v.png")
                         )
-                        length = len(list_scans)
-                        nb_scans_ok += length
-                        text = str(length)
-                        item.setText(text)
+                        item.setText(str(len(matching_scans)))
                         # Setting as tooltip all the corresponding scans
-                        tool_tip = "\n".join(list_scans)
-                        item.setToolTip(tool_tip)
+                        item.setToolTip("\n".join(matching_scans))
 
                     else:
+                        # No scans - show red X
                         icon = QIcon(
                             os.path.join(sources_images_dir, "red_cross.png")
                         )
 
                     item.setIcon(icon)
                     self.table.setItem(row, col, item)
+                    total_scans += len(matching_scans)
 
-                item = QTableWidgetItem()
-                item.setText(str(nb_scans_ok))
+                item = QTableWidgetItem(str(total_scans))
                 item.setFont(self.font)
                 self.table.setItem(self.nb_row, col, item)
 
-    def fill_values(self, idx):
+    def fill_values(self, idx: int) -> None:
         """
-        Fill values_list depending on the visualized tags
+        Populate values list for the tag at the specified index.
 
-        :param idx: index of the select tag
+        Extracts all unique values for the selected tag from the database
+        and stores them for table generation.
+
+        :param idx (Int): Index of the select tag
         """
 
         tag_name = self.push_buttons[idx].text()
-        values = []
+        unique_values = []
 
         with self.project.database.data() as database_data:
 
             for scan in database_data.get_document_names(COLLECTION_CURRENT):
-                current_value = database_data.get_value(
+                value = database_data.get_value(
                     collection_name=COLLECTION_CURRENT,
                     primary_key=scan,
                     field=tag_name,
                 )
-                if current_value is not None:
-                    values.append(current_value)
+                if value is not None and value not in unique_values:
+                    unique_values.append(value)
 
-        idx_to_fill = len(self.values_list)
+        # Ensure values_list has enough slots
+        while len(self.values_list) < idx + 1:
+            self.values_list.append([])
 
-        while len(self.values_list) <= idx:
-            self.values_list.insert(idx_to_fill, [])
-            idx_to_fill += 1
-
-        if self.values_list[idx] is not None:
-            self.values_list[idx] = []
-
-        for value in values:
-            if value not in self.values_list[idx]:
-                self.values_list[idx].append(value)
+        self.values_list[idx] = sorted(unique_values)
 
     @staticmethod
-    def prepare_filter(couples):
+    def prepare_filter(tag_value_pairs: list[tuple[str, Any]]) -> str:
         """
-        Prepares the filter in order to fill the count table.
+        Build database query string from tag-value pairs.
 
-        :param couples: (tag, value) couples
-        :return: Str query of the corresponding filter
+        :param tag_value_pairs: List of (tag_name, value) tuples
+
+        :return: Query string for database filtering
         """
-        query_parts = []
+        conditions = []
 
-        for tag, value in couples:
+        for tag, value in tag_value_pairs:
 
             if isinstance(value, list):
-                query_parts.append(f"({{{tag}}} == {value})")
+                conditions.append(f"({{{tag}}} == {value})")
 
             else:
-                query_parts.append(f'({{{tag}}} == "{value}")')
+                conditions.append(f'({{{tag}}} == "{value}")')
 
-        return f"({' AND '.join(query_parts)})"
+        return f"({' AND '.join(conditions)})"
 
-    def refresh_layout(self):
+    def refresh_layout(self) -> None:
         """
-        Updates the layout of the widget
+        Update the widget layout after adding/removing tags.
         """
 
+        # Clear existing top layout content
+        if hasattr(self, "h_box_top"):
+
+            while self.h_box_top.count():
+                child = self.h_box_top.takeAt(0)
+
+                if child.widget():
+                    child.widget().setParent(None)
+
+        # Rebuild top controls
         self.h_box_top = QHBoxLayout()
         self.h_box_top.setSpacing(10)
+
+        # Add all components
         self.h_box_top.addWidget(self.label_tags)
 
-        for tag_label in self.push_buttons:
-            self.h_box_top.addWidget(tag_label)
+        for button in self.push_buttons:
+            self.h_box_top.addWidget(button)
 
         self.h_box_top.addWidget(self.add_tag_label)
         self.h_box_top.addWidget(self.remove_tag_label)
         self.h_box_top.addWidget(self.push_button_count)
         self.h_box_top.addStretch(1)
 
+        # Add to main layout
         self.v_box_final.addLayout(self.h_box_top)
-        self.v_box_final.addWidget(self.table)
 
-    def remove_tag(self):
+    def remove_tag(self) -> None:
         """
-        Removes a tag to visualize in the count table
+        Remove the last tag selection button and its data.
         """
 
-        push_button = self.push_buttons[-1]
-        push_button.deleteLater()
-        push_button = None
-        del self.push_buttons[-1]
-        del self.values_list[-1]
+        if len(self.push_buttons) <= 2:  # Maintain minimum of 2 tags
+            return
+
+        # Clean up last button
+        last_button = self.push_buttons.pop()
+        last_button.deleteLater()
+
+        # Remove corresponding data
+        if self.values_list:
+            self.values_list.pop()
+
         self.refresh_layout()
 
-    def select_tag(self, idx):
+    def select_tag(self, idx: int) -> None:
         """
-        Opens a pop-up to select which tag to visualize in the count table
+        Open tag selection dialog for the specified button.
 
-        :param idx: the index of the selected push button
+        :param idx (Int): The index of the button/tag to configure
         """
 
         with self.project.database.data() as database_data:
-            field_names = database_data.get_field_names(COLLECTION_CURRENT)
+            available_fields = database_data.get_field_names(
+                COLLECTION_CURRENT
+            )
 
-        pop_up = PopUpSelectTagCountTable(
+        popup = PopUpSelectTagCountTable(
             self.project,
-            field_names,
+            available_fields,
             self.push_buttons[idx].text(),
         )
-        if pop_up.exec_():
-            if pop_up.selected_tag is not None:
-                self.push_buttons[idx].setText(pop_up.selected_tag)
+        if popup.exec_():
+
+            if popup.selected_tag is not None:
+                self.push_buttons[idx].setText(popup.selected_tag)
                 self.fill_values(idx)
