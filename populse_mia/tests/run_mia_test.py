@@ -1925,29 +1925,31 @@ class TestMIADataBrowser(TestMIACase):
         # Check headers
         self.assertEqual(get_header_text(count_table.table, 0), BANDWIDTH)
         self.assertEqual(get_header_text(count_table.table, 1), "5.0")
-        self.assertEqual(float(get_header_text(count_table.table, 2)), 75.0)
-        self.assertEqual(get_header_text(count_table.table, 3), "5.8239923")
+        self.assertEqual(
+            float(get_header_text(count_table.table, 2)), 5.8239923
+        )
+        self.assertEqual(get_header_text(count_table.table, 3), "75.0")
         self.assertEqual(
             count_table.table.verticalHeaderItem(3).text(), "Total"
         )
 
         # Expected values for table cells
         expected_cells = {
-            (0, 0): "65789.48",
+            (0, 0): "25000.0",
             (1, 0): "50000.0",
-            (2, 0): "25000.0",
+            (2, 0): "65789.48",
             (3, 0): "3",
-            (0, 1): "5",
+            (0, 1): "",
             (1, 1): "",
-            (2, 1): "",
+            (2, 1): "5",
             (3, 1): "5",
-            (0, 2): "",
-            (1, 2): "2",
+            (0, 2): "2",
+            (1, 2): "",
             (2, 2): "",
             (3, 2): "2",
             (0, 3): "",
-            (1, 3): "",
-            (2, 3): "2",
+            (1, 3): "2",
+            (2, 3): "",
             (3, 3): "2",
         }
 
