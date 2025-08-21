@@ -9279,7 +9279,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - test_remove_progress: removes the progress of the pipeline
             - test_run: creates a pipeline manager progress object and
                         attempts to execute it in various cases
-            - test_save_pipeline: saves a simple pipeline
+            - test_savePipeline: tries to save the pipeline over several
+                                 conditions
             - test_savePipelineAs: saves a pipeline under another name
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
             - test_show_status: shows the status of pipeline execution
@@ -11221,22 +11222,22 @@ class TestMIAPipelineManagerTab(TestMIACase):
             )
 
     def test_savePipeline(self):
-        """Mocks methods of the pipeline manager and tries to save the pipeline
-        over several conditions.
-
-        -Tests: PipelineManagerTab.savePipeline
         """
+        Test the behavior of `PipelineManagerTab.savePipeline` under different
+        conditions by mocking dependent methods.
 
-        def click_yes(self_):
-            """Blabla"""
-
-            close_button = self_.button(QMessageBox.Yes)
-            QTest.mouseClick(close_button, Qt.LeftButton)
-
-        # Set shortcuts for objects that are often used
+        This test simulates saving a pipeline in various scenarios:
+            - Saving with no filename set (unchecked option).
+            - Mocks ppl_edt_tabs.save_pipeline() to return a string.
+            - Saving with a valid filename (unchecked option).
+            - Aborting save via a QMessageBox ('Abort' clicked).
+            - Confirming save via a QMessageBox ('Yes' clicked).
+        """
+        # Shortcuts for readability
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
+        # Set pipeline path
         config = Config(properties_path=self.properties_path)
         ppl_path = os.path.join(
             config.get_properties_path(),
@@ -11245,68 +11246,108 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "test_pipeline_1.py",
         )
 
+        # --- Case 1: Save pipeline with empty filename (unchecked)
+        ppl_manager.savePipeline(uncheck=True)
+
+        # --- Case 2: Mocks 'savePipeline' from 'ppl_edt_tabs'
+
+        with patch.object(
+            ppl_edt_tabs, "save_pipeline", return_value="not_empty"
+        ):
+            ppl_manager.savePipeline(uncheck=True)
+
+        # Case 3: Save pipeline with valid filename (unchecked)
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
-
-        # Save pipeline as with empty filename, unchecked
         ppl_manager.savePipeline(uncheck=True)
 
-        # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
+        # Case 4: Abort saving pipeline via QMessageBox
+        with patch.object(QMessageBox, "exec", return_value=QMessageBox.Abort):
+            ppl_manager.savePipeline()
 
-        # Saves pipeline as with empty filename, checked
-        ppl_manager.savePipeline(uncheck=True)
-
-        # Sets the path to save the pipeline
-        ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
-
-        # Saves pipeline as with filled filename, uncheck
-        ppl_manager.savePipeline(uncheck=True)
-
-        # Mocks executing a dialog box and clicking close
-        QMessageBox.exec = lambda self_, *args: self_.close()
-
-        # Aborts pipeline saving with filled filename
-        ppl_manager.savePipeline()
-
-        # Mocks executing a dialog box and clicking yes
-        QMessageBox.exec = click_yes
-
-        # Accept pipeline saving with filled filename
-        ppl_manager.savePipeline()
+        # Case 5: Confirm saving pipeline via QMessageBox
+        with patch.object(QMessageBox, "exec", return_value=QMessageBox.Yes):
+            ppl_manager.savePipeline()
 
     def test_savePipelineAs(self):
-        """Mocks a method from pipeline manager and saves a pipeline under
-        another name.
-
-        - Tests: PipelineManagerTab.savePipelineAs
         """
+        Verify that saving a pipeline under a new name works correctly by
+        mocking the underlying `save_pipeline` method.
 
+        This test ensures:
+            - When no filename is provided, `PipelineManagerTab.savePipelineAs`
+              completes without error and the status bar displays a warning.
+            - When `save_pipeline` returns a non-empty filename, the method
+              handles the renamed pipeline and the status bar confirms success.
+
+        :raises AssertionError: If the displayed status bar messages do not
+                                match the expected content.
+        """
         # Set shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
-        # Saves pipeline with empty filename
+        # --- Case 1: Save pipeline with empty filename and no pipeline
         ppl_manager.savePipelineAs()
+        self.assertIn(
+            "pipeline was not saved",
+            self.main_window.statusBar().currentMessage(),
+        )
 
-        # Mocks 'savePipeline' from 'ppl_edt_tabs'
-        ppl_edt_tabs.save_pipeline = Mock(return_value="not_empty")
-
-        # Saves pipeline with not empty filename
-        ppl_manager.savePipelineAs()
+        # --- Case 2: Save pipeline with a non-empty filename
+        with patch.object(
+            ppl_edt_tabs, "save_pipeline", return_value="not_empty"
+        ) as mock_save:
+            ppl_manager.savePipelineAs()
+            self.assertIn(
+                "pipeline has been saved",
+                self.main_window.statusBar().currentMessage(),
+            )
+            mock_save.assert_called_once()
 
     def test_set_anim_frame(self):
-        """Runs the 'rotatingBrainVISA.gif' animation."""
+        """
+        Verify that `_set_anim_frame` updates the pipeline status action icon
+        with the current frame of the animated GIF.
+
+        This test ensures that:
+            1. The rotatingBrainVISA.gif file exists and can be loaded as a
+               QMovie.
+            2. The QMovie produces a valid first frame (non-null QPixmap).
+            3. Calling `_set_anim_frame` sets the action's icon.
+            4. The resulting QAction icon matches the movie frame in size.
+        """
 
         pipeline_manager = self.main_window.pipeline_manager
 
-        config = Config()
-        sources_images_dir = config.getSourceImageDir()
-        self.assertTrue(sources_images_dir)  # if the string is not empty
+        # Locate the test animation file
+        sources_images_dir = Config().getSourceImageDir()
+        self.assertTrue(sources_images_dir, "Source images directory is empty")
 
-        pipeline_manager._mmovie = QtGui.QMovie(
-            os.path.join(sources_images_dir, "rotatingBrainVISA.gif")
-        )
+        gif_path = os.path.join(sources_images_dir, "rotatingBrainVISA.gif")
+        self.assertTrue(os.path.isfile(gif_path), f"Missing file: {gif_path}")
+
+        # Attach the QMovie to the pipeline manager
+        pipeline_manager._mmovie = QtGui.QMovie(gif_path)
+
+        # Ensure the movie provides a valid frame
+        pipeline_manager._mmovie.jumpToFrame(0)
+        pixmap = pipeline_manager._mmovie.currentPixmap()
+        self.assertFalse(pixmap.isNull(), "Movie's first frame is null")
+
+        # Act: update the action icon
         pipeline_manager._set_anim_frame()
+
+        # Assert: the action's icon was updated and is not null
+        action_icon = pipeline_manager.show_pipeline_status_action.icon()
+        self.assertFalse(action_icon.isNull(), "Action icon was not set")
+
+        # Compare the icon's pixmap size with the movie frame size
+        action_pixmap = action_icon.pixmap(pixmap.size())
+        self.assertEqual(
+            action_pixmap.size(),
+            pixmap.size(),
+            "Action icon size does not match movie pixmap size",
+        )
 
     def test_show_status(self):
         """Shows the status of the pipeline execution.
