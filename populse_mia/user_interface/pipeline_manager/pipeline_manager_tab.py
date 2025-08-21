@@ -1604,7 +1604,10 @@ class PipelineManagerTab(QWidget):
         to ensure it remains consistent and up-to-date. It also updates the
         user interface and the state of the pipeline editor.
         """
-        self.postprocess_pipeline_execution()
+
+        with protected_logging():
+            self.postprocess_pipeline_execution()
+
         self.project.cleanup_orphan_nonexisting_files()
         self.project.cleanup_orphan_history()
         self.main_window.data_browser.table_data.update_table()
@@ -4162,7 +4165,9 @@ class RunWorker(QThread):
             # if self.status == swconstants.WORKFLOW_DONE:
             # do it even in case of failure to get partial outputs and clean
             # the remainings
-            self.pipeline_manager.postprocess_pipeline_execution(pipeline)
+
+            with protected_logging():
+                self.pipeline_manager.postprocess_pipeline_execution(pipeline)
 
         except (OSError, ValueError, Exception) as e:
             logger.warning(
