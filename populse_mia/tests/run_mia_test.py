@@ -146,6 +146,8 @@ add_to_syspath(root_dev_dir / "capsul", name="capsul")
 add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma-base")
 add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma-workflow")
 
+import soma_workflow.constants as swconstants
+
 # Imports after defining the location of populse packages:
 # Capsul import
 from capsul.api import (  # noqa: E402
@@ -9276,7 +9278,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               parameters and registers them in database
             - test_remove_progress: removes the progress of the pipeline
             - test_run: creates a pipeline manager progress object and
-                        tries to run it
+                        attempts to execute it in various cases
             - test_save_pipeline: saves a simple pipeline
             - test_savePipelineAs: saves a pipeline under another name
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
@@ -10487,6 +10489,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             mock_status.assert_called_once_with(worker.status, worker.exec_id)
 
+    # For now, we are keeping the following two @mock.patch() comments solely
+    # to keep track of what was needed before tyty commit in order to pass the
+    # following test:
+    # from unittest import mock
+    # @mock.patch('logging.config.dictConfig', lambda cfg: None)
+    # @mock.patch('logging.basicConfig', lambda *a, **kw: None)
     def test_garbage_collect(self):
         """
         Tests 'PipelineManagerTab.garbage_collect' both in integrated and
@@ -11014,21 +11022,23 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
     def test_run(self):
         """
-        Tests the execution behavior of a pipeline run under various
-        conditions.
+        Tests the standard execution of a pipeline with mixed node types
+        (process, sub-pipeline, switch).
 
         This test verifies:
-            - Running a pipeline with a valid process.
-            - Handling of pipelines with missing processes.
-            - Handling of pipelines with a sub-pipeline as a process.
-            - Proper behavior when `get_pipeline_or_process` returns a
-              NipypeProcess.
-            - Handling of exceptions raised during post-processing.
-            - Proper behavior when an interruption request is set.
+            - The pipeline runs correctly with valid nodes.
+            - Expected INFO log messages are emitted during execution.
+            - Error handling and interruption scenarios are covered.
+
+        Test Cases:
+            1. Normal run: Validates INFO logs for pipeline execution.
+            2. Mocked error: Simulates a post-processing error and checks
+               warning logs.
+            3. Interruption: Ensures interruption is logged correctly.
 
         :tests: RunWorker.run
         """
-        # Sets shortcuts for objects that are often used
+        # Setup: Shortcuts and test file
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
@@ -11036,7 +11046,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Switch to the pipeline editor tab
         self.main_window.tabs.setCurrentIndex(2)
 
-        # Prepare a test NIfTI file path
+        # Prepare test NIfTI file path
         folder = os.path.join(
             os.path.dirname(os.path.dirname(os.path.realpath(__file__))),
             "mia_ut_data",
@@ -11070,29 +11080,145 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl.nodes["switch"] = Switch(ppl, "", [""], [""])
         ppl.nodes["pipeline"] = ProcessNode(ppl, "pipeline", Pipeline())
 
-        # Case 1: Normal run with mixed nodes
-        ppl_manager.progress.worker.run()
-
-        # Case 2: Mock methods to simulate NipypeProcess and postprocess error
-        ppl_manager.progress = RunProgress(ppl_manager)
-
-        with (
-            patch.object(
-                ppl_manager.progress.worker.pipeline_manager,
-                "get_pipeline_or_process",
-                return_value=ppl.nodes["rename_1"].process,
-            ),
-            patch.object(
-                ppl_manager.progress.worker.pipeline_manager,
-                "postprocess_pipeline_execution",
-                side_effect=ValueError(),
-            ),
-        ):
+        # --- Case 1: Normal run with mixed nodes
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
             ppl_manager.progress.worker.run()
 
-        # Case 3: Simulate interruption
-        ppl_manager.progress.worker.interrupt_request = True
-        ppl_manager.progress.worker.run()
+            self.assertEqual(len(log_handler.records), 2)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("Pipeline running" in msg for msg in info_messages),
+                "'Pipeline running' not found in info_messages",
+            )
+
+        # --- Case 2: Mock methods to simulate NipypeProcess and postprocess
+        #             error
+        ppl_manager.progress = RunProgress(ppl_manager)
+
+        def fake_start(pipeline, workflow=None, get_pipeline=True):
+            """Mock engine.start to log a fake call."""
+            logger = logging.getLogger(
+                "populse_mia.user_interface.pipeline_manager."
+                "pipeline_manager_tab"
+            )
+            logger.info("Fake engine.start called")
+            return (500, pipeline)
+
+        # Prepare mocked engine
+        mock_engine = MagicMock()
+        mock_engine.start = MagicMock(side_effect=fake_start)
+
+        # Simulate that the workflow completes after one wait
+        mock_engine.wait = MagicMock(
+            side_effect=[
+                swconstants.WORKFLOW_IN_PROGRESS,  # first call to wait
+                swconstants.WORKFLOW_DONE,  # second call ends the loop
+            ]
+        )
+        mock_engine.connected_to = MagicMock(return_value="dummy_resource_id")
+        mock_engine.settings.select_configurations = MagicMock(
+            return_value={"capsul.engine.module.somaworkflow": {}}
+        )
+        mock_engine.get_process_instance = MagicMock(side_effect=lambda p: p)
+        mock_engine.study_config.reset_process_counter = MagicMock()
+
+        # Patch get_capsul_engine to return this mock_engine
+        with patch.object(
+            ppl_manager.progress.worker.pipeline_manager,
+            "get_capsul_engine",
+            return_value=mock_engine,
+        ):
+
+            # Also patch pipeline_manager.get_pipeline_or_process to return
+            # a valid process for coverage
+            with (
+                patch.object(
+                    ppl_manager.progress.worker.pipeline_manager,
+                    "get_pipeline_or_process",
+                    return_value=ppl.nodes["rename_1"].process,
+                ),
+                patch.object(
+                    ppl_manager.progress.worker.pipeline_manager,
+                    "postprocess_pipeline_execution",
+                    # simulate exception in post-processing
+                    side_effect=ValueError(),
+                ),
+            ):
+                logger_name = (
+                    "populse_mia.user_interface.pipeline_manager."
+                    "pipeline_manager_tab"
+                )
+
+                with self.capture_logs(logger_name) as log_handler:
+                    ppl_manager.progress.worker.run()
+
+                    info_messages = [
+                        record.getMessage()
+                        for record in log_handler.records
+                        if record.levelname == "INFO"
+                    ]
+
+                    # Assert the engine.start message was logged
+                    engine_call_found = any(
+                        "Fake engine.start called" in msg
+                        for msg in info_messages
+                    )
+                    self.assertTrue(
+                        engine_call_found,
+                        "'Fake engine.start called' not found in info_messages",
+                    )
+
+                    # Assert the pipeline running message was logged
+                    pipeline_running_found = any(
+                        "- Pipeline running" in msg for msg in info_messages
+                    )
+
+                    self.assertTrue(
+                        pipeline_running_found,
+                        "'- Pipeline running' not found in info_messages",
+                    )
+
+                    # Assert postprocessing exception warning is logged
+                    warning_messages = [
+                        record.getMessage()
+                        for record in log_handler.records
+                        if record.levelname == "WARNING"
+                    ]
+                    failure_warning_found = any(
+                        "has not run correctly" in msg
+                        for msg in warning_messages
+                    )
+
+                    self.assertTrue(
+                        failure_warning_found,
+                        "Expected warning about pipeline failure not found",
+                    )
+
+        # --- Case 3: Simulate interruption
+        ppl_manager.progress = RunProgress(ppl_manager)
+
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
+            ppl_manager.progress.worker.interrupt_request = True
+            ppl_manager.progress.worker.run()
+
+            self.assertEqual(len(log_handler.records), 1)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("INTERRUPT" in msg for msg in info_messages),
+                "'INTERRUPT' not found in info_messages",
+            )
 
     def test_savePipeline(self):
         """Mocks methods of the pipeline manager and tries to save the pipeline
