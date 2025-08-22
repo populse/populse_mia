@@ -3156,7 +3156,7 @@ class PipelineManagerTab(QWidget):
         """
         Show the last run status and execution info, errors etc.
         """
-        logger.info("show_status")
+        logger.info("Open Execution Status Window")
         status_widget = StatusWidget(self)
         status_widget.show()
         self.status_widget = status_widget
@@ -4247,8 +4247,11 @@ class StatusWidget(QWidget):
             )
 
             model = ApplicationModel()
-            sw_widget = MainWindow(
-                model, None, True, None, None, interactive=False
-            )
+
+            with protected_logging():
+                sw_widget = MainWindow(
+                    model, None, True, None, None, interactive=False
+                )
+
             self.swf_widget = sw_widget
             self.swf_box.layout().addWidget(sw_widget)
