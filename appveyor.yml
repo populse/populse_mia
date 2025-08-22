@@ -38,6 +38,9 @@ install:
 
   - cd ..
 
+  - echo "Before upgrade - SQLite version:"
+  - python -c "import sqlite3; print('SQLite version:', sqlite3.sqlite_version)"
+
   # Force recent SQLite version (3.47)
   - sh: |
       if [[ $(uname -s) == Linux ]]; then
@@ -119,6 +122,8 @@ install:
       tar -xf sqlite-tools-win-x64-3470100.zip -C C:\sqlite
       set PATH=C:\sqlite;%PATH%
 
+  - echo "After upgrade - SQLite version:"
+  - sqlite3 --version
   - python --version
   - python -m pip install pip --upgrade
   - python -m pip -V
@@ -157,6 +162,11 @@ install:
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
 
   - cd populse-mia
+
+  # We need to pull rotatingBrainVISA.gif file for the UTs
+  - git lfs install
+  - git lfs pull --include="populse_mia/sources_images/rotatingBrainVISA.gif"
+
   - python generate_requirements.py
   - cd ..
   - python -m pip install -r requirements-all.txt
