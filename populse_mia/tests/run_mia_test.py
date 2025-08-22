@@ -11350,37 +11350,64 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
     def test_show_status(self):
-        """Shows the status of the pipeline execution.
+        """
+        Tests the behavior of the pipeline status display in the
+        `PipelineManagerTab`.
 
-        Indirectly tests StatusWidget.__init__ and
-        StatusWidget.toggle_soma_workflow.
+        Indirectly validates:
+            - `StatusWidget.__init__`
+            - `StatusWidget.toggle_soma_workflow`
 
-        -Tests: PipelineManagerTab.test_show_status
+        The test verifies that:
+            - Initially, no status widget is present.
+            - Calling `show_status` creates the widget with the checkbox
+              unchecked and no associated `swf_widget`.
+            - Toggling the checkbox enables/disables Soma-Workflow monitoring,
+              creating and hiding the `swf_widget` accordingly.
         """
 
         # Set shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
 
-        # Shows the status of the pipeline's execution
+        # Status widget should not exist before first call
+        self.assertFalse(hasattr(ppl_manager, "status_widget"))
+
+        # Create and initialize the status widget
         ppl_manager.show_status()
+        status_widget = ppl_manager.status_widget
 
-        self.assertIsNone(ppl_manager.status_widget.swf_widget)
+        # Initial state
+        self.assertFalse(status_widget.swf_box.isChecked())
+        self.assertIsNone(status_widget.swf_widget)
 
-        # Creates 'ppl_manager.status_widget.swf_widget', not visible by
-        # default (the argument is irrelevant)
-        ppl_manager.status_widget.toggle_soma_workflow(False)
+        # Simulate user enabling Soma-Workflow monitoring
+        with patch.object(
+            status_widget.swf_box,
+            "setChecked",
+            wraps=status_widget.swf_box.setChecked,
+        ) as mock_set_checked:
+            status_widget.swf_box.setChecked(True)
+            self._app.processEvents()
+            mock_set_checked.assert_called_once_with(True)
 
-        # Asserts that 'swf_widget' has been created and is visible
-        self.assertIsNotNone(ppl_manager.status_widget.swf_widget)
-        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+        # Verify checkbox is now checked and swf_widget was created
+        self.assertTrue(status_widget.swf_box.isChecked())
+        self.assertIsNotNone(status_widget.swf_widget)
+        self.assertTrue(status_widget.swf_widget.isVisible())
 
-        # Toggles visibility on
-        ppl_manager.status_widget.toggle_soma_workflow(False)
-        self.assertFalse(ppl_manager.status_widget.swf_widget.isVisible())
+        # Simulate user disabling Soma-Workflow monitoring
+        with patch.object(
+            status_widget.swf_box,
+            "setChecked",
+            wraps=status_widget.swf_box.setChecked,
+        ) as mock_set_checked:
+            status_widget.swf_box.setChecked(False)
+            self._app.processEvents()
+            mock_set_checked.assert_called_once_with(False)
 
-        # Toggles visibility off
-        ppl_manager.status_widget.toggle_soma_workflow(True)
-        self.assertTrue(ppl_manager.status_widget.swf_widget.isVisible())
+        # Verify checkbox is unchecked and swf_widget behavior
+        self.assertFalse(status_widget.swf_box.isChecked())
+        self.assertFalse(status_widget.swf_widget.isVisible())
 
     def test_stop_execution(self):
         """Shows the status window of the pipeline manager.
