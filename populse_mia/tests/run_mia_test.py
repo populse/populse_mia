@@ -11410,9 +11410,18 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertFalse(status_widget.swf_widget.isVisible())
 
     def test_stop_execution(self):
-        """Shows the status window of the pipeline manager.
+        """
+        Verify that stopping execution in the pipeline manager behaves as
+        expected.
 
-        - Tests: PipelineManagerTab.test_show_status
+        This test ensures that:
+            - A `RunProgress` worker is created without an interrupt request.
+            - Calling `stop_execution` logs both a "CANCEL" message and a
+              "Pipeline execution interrupted" message at the INFO level.
+            - The worker's interrupt request flag is set to True after
+              stopping.
+
+        Related test: PipelineManagerTab.test_show_status
         """
 
         # Set shortcuts for objects that are often used
@@ -11420,15 +11429,37 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Creates a 'RunProgress' object
         ppl_manager.progress = RunProgress(ppl_manager)
+        self.assertFalse(ppl_manager.progress.worker.interrupt_request)
 
-        ppl_manager.stop_execution()
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
+            ppl_manager.stop_execution()
+
+            self.assertEqual(len(log_handler.records), 2)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("CANCEL" in msg for msg in info_messages),
+                "'CANCEL' not found in info_messages",
+            )
+            self.assertTrue(
+                any(
+                    "Pipeline execution interrupted" in msg
+                    for msg in info_messages
+                ),
+                "'Pipeline execution interrupted' not found in info_messages",
+            )
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
-    @unittest.skip(
-        "skip this test until it has been repaired: "
-        "Segfault on macOS and linux due to threading cleanup issue"
-    )
+    # @unittest.skip(
+    #     "skip this test until it has been repaired: "
+    #     "Segfault on macOS and linux due to threading cleanup issue"
+    # )
     def test_undo_redo(self):
         """Tests the undo/redo action."""
 
