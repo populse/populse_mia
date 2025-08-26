@@ -3165,7 +3165,7 @@ class PipelineManagerTab(QWidget):
         """
         Request interruption of pipeline execution.
         """
-        logger.info("stop_execution")
+        logger.info("Pipeline execution interrupted")
         self.progress.stop_execution()
 
     def undo(self):
