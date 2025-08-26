@@ -11410,9 +11410,18 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertFalse(status_widget.swf_widget.isVisible())
 
     def test_stop_execution(self):
-        """Shows the status window of the pipeline manager.
+        """
+        Verify that stopping execution in the pipeline manager behaves as
+        expected.
 
-        - Tests: PipelineManagerTab.test_show_status
+        This test ensures that:
+            - A `RunProgress` worker is created without an interrupt request.
+            - Calling `stop_execution` logs both a "CANCEL" message and a
+              "Pipeline execution interrupted" message at the INFO level.
+            - The worker's interrupt request flag is set to True after
+              stopping.
+
+        Related test: PipelineManagerTab.test_show_status
         """
 
         # Set shortcuts for objects that are often used
@@ -11420,17 +11429,52 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Creates a 'RunProgress' object
         ppl_manager.progress = RunProgress(ppl_manager)
+        self.assertFalse(ppl_manager.progress.worker.interrupt_request)
 
-        ppl_manager.stop_execution()
+        with self.capture_logs(
+            "populse_mia.user_interface.pipeline_manager.pipeline_manager_tab"
+        ) as log_handler:
+            ppl_manager.stop_execution()
+
+            self.assertEqual(len(log_handler.records), 2)
+            info_messages = [
+                record.getMessage()
+                for record in log_handler.records
+                if record.levelname == "INFO"
+            ]
+            self.assertTrue(
+                any("CANCEL" in msg for msg in info_messages),
+                "'CANCEL' not found in info_messages",
+            )
+            self.assertTrue(
+                any(
+                    "Pipeline execution interrupted" in msg
+                    for msg in info_messages
+                ),
+                "'Pipeline execution interrupted' not found in info_messages",
+            )
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
-    @unittest.skip(
-        "skip this test until it has been repaired: "
-        "Segfault on macOS and linux due to threading cleanup issue"
-    )
+    # @unittest.skip(
+    #     "skip this test until it has been repaired: "
+    #     "Segfault on macOS and linux due to threading cleanup issue"
+    # )
     def test_undo_redo(self):
-        """Tests the undo/redo action."""
+        """
+        Test the consistency and correctness of undo/redo operations in the
+        pipeline editor.
+
+        This test verifies that the pipeline editor's undo/redo stack correctly
+        handles:
+            - Node creation, deletion, and renaming
+            - Plug export, removal, and value updates
+            - Link creation, deletion, and restoration
+            - Document deletion (in-memory only; disk behavior is not tested)
+
+        The test ensures that all operations are reversible and that the
+        editor's state remains consistent after each undo/redo cycle.
+        """
 
         config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
@@ -11442,47 +11486,56 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Set shortcuts for objects that are often used
         pipeline_manager = self.main_window.pipeline_manager
-        pipeline_editor_tabs = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
+        pipeline = pipeline_manager.pipelineEditorTabs.get_current_pipeline()
+        pipeline_editor = (
+            pipeline_manager.pipelineEditorTabs.get_current_editor()
         )
 
-        # Creates a new project folder and adds one document to the
-        # project
-        # test_proj_path = self.get_new_test_project()
-        # folder = os.path.join(test_proj_path, 'data', 'raw_data')
-        # NII_FILE_1 = ('Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-
-        #                      '04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii')
-        # DOCUMENT_1 = os.path.abspath(os.path.join(folder, NII_FILE_1))
+        # Creates a new project folder and adds one document
+        test_proj_path = self.get_new_test_project()
+        folder = os.path.join(test_proj_path, "data", "raw_data")
+        nii_file = (
+            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-"
+            "04-G3_Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
+        )
+        document = os.path.abspath(os.path.join(folder, nii_file))
 
-        # Creates a project with another project already opened
-        # self.main_window.data_browser.table_data.add_path()
+        self.main_window.data_browser.table_data.add_path()
 
-        # pop_up_add_path = (self.main_window.data_browser.
-        #                                         table_data.pop_up_add_path)
+        pop_up_add_path = (
+            self.main_window.data_browser.table_data.pop_up_add_path
+        )
 
-        # pop_up_add_path.file_line_edit.setText(DOCUMENT_1)
-        # pop_up_add_path.save_path()
+        pop_up_add_path.file_line_edit.setText(f"['{document}']")
+        pop_up_add_path.save_path()
 
-        # self.main_window.undo()
+        # We are keeping the following tests for now, although it no longer
+        # really makes sense. Indeed, there is, among other things, a point of
+        # discussion in populse_mia that is still ongoing: what should we do
+        # if we delete a document from the DataBrowser? Currently, if we
+        # delete a document from the DataBrowser, it is removed both from the
+        # database and physically from the hard drive. This prevents, after an
+        # undo(), from performing a redo() for the physical part on the disk.
+        # wever, things are a bit complicated for various reasons outside the
+        # scope of this discussion. The result is that the undo and redo
+        # functions are quite permissive on this subject (there is no specific
+        # management of data on the disk in theses methods).We can therefore
+        # test this part, even if it doesn’t have much real meaning concerning
+        # the current operation of Mia.
+        self.main_window.undo()
+        self.main_window.redo()
 
-        # self.main_window.redo()
-
-        # Mocks not saving the pipeline
-        # QMessageBox.exec = lambda self_, *arg: self_.buttons(
-        #                                                  )[-1].clicked.emit()
-
-        # Switches to pipeline manager
-        self.main_window.tabs.setCurrentIndex(2)
+        with patch.object(
+            QMessageBox, "exec", return_value=QMessageBox.Discard
+        ):
+            # Switches to pipeline manager
+            self.main_window.tabs.setCurrentIndex(2)
 
         # Add a Smooth process => creates a node called "smooth_1",
         # test if Smooth_1 is a node in the current pipeline / editor
-        process_class = Smooth
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        pipeline_editor.click_pos = QPoint(450, 500)
+        pipeline_editor.add_named_process(Smooth)
 
-        pipeline = pipeline_editor_tabs.get_current_pipeline()
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
         # Undo (remove the node), test if the node was removed
@@ -11494,10 +11547,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertTrue("smooth_1" in pipeline.nodes.keys())
 
         # Delete the node, test if the node was removed
-        pipeline_editor_tabs.get_current_editor().current_node_name = (
-            "smooth_1"
-        )
-        pipeline_editor_tabs.get_current_editor().del_node()
+        pipeline_editor.current_node_name = "smooth_1"
+        pipeline_editor.del_node()
         self.assertFalse("smooth_1" in pipeline.nodes.keys())
 
         # Undo (add again the node), test if the node was added
@@ -11506,17 +11557,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Redo (delete again the node), test if the node was removed
         pipeline_manager.redo()
-        self.assertFalse("smooth1" in pipeline.nodes.keys())
+        self.assertFalse("smooth_1" in pipeline.nodes.keys())
 
         # Adding a new Smooth process => creates a node called "smooth_1"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        pipeline_editor.click_pos = QPoint(450, 500)
+        pipeline_editor.add_named_process(Smooth)
 
         # Export the "out_prefix" plug as "prefix_smooth" in Input node, test
         # if the Input node have a prefix_smooth plug
-        pipeline_editor_tabs.get_current_editor()._export_plug(
+        pipeline_editor._export_plug(
             temp_plug_name=("smooth_1", "out_prefix"),
             pipeline_parameter="prefix_smooth",
             optional=False,
@@ -11536,7 +11585,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Delete the "prefix_smooth" plug from the Input node,
         # test if the Input node have not a prefix_smooth plug
-        pipeline_editor_tabs.get_current_editor()._remove_plug(
+        pipeline_editor._remove_plug(
             _temp_plug_name=("inputs", "prefix_smooth")
         )
         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
@@ -11550,17 +11599,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # test if the Input node have not a prefix_smooth plug
         pipeline_manager.redo()
         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
-        # FIXME: export_plugs (currently there is a bug if a plug is
-        #        of type list)
 
         # Adding a new Smooth process => creates a node called "smooth_2"
-        pipeline_editor_tabs.get_current_editor().click_pos = QPoint(450, 550)
-        pipeline_editor_tabs.get_current_editor().add_named_process(
-            process_class
-        )
+        pipeline_editor.click_pos = QPoint(450, 550)
+        pipeline_editor.add_named_process(Smooth)
 
         # Adding a link
-        pipeline_editor_tabs.get_current_editor().add_link(
+        pipeline_editor.add_link(
             ("smooth_1", "_smoothed_files"),
             ("smooth_2", "in_files"),
             active=True,
@@ -11598,7 +11643,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Removing the link, test if the 2 nodes have not the links
         link = "smooth_1._smoothed_files->smooth_2.in_files"
-        pipeline_editor_tabs.get_current_editor()._del_link(link)
+        pipeline_editor._del_link(link)
         self.assertEqual(
             0, len(pipeline.nodes["smooth_2"].plugs["in_files"].links_from)
         )
@@ -11628,7 +11673,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
         # Re-adding a link
-        pipeline_editor_tabs.get_current_editor().add_link(
+        pipeline_editor.add_link(
             ("smooth_1", "_smoothed_files"),
             ("smooth_2", "in_files"),
             active=True,

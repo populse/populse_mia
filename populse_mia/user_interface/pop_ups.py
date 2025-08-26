@@ -520,15 +520,15 @@ class PopUpAddPath(QDialog):
         """
 
         try:
+            path_value = self.file_line_edit.text()
             path_list = (
-                ast.literal_eval(self.file_line_edit.text())
-                if self.file_line_edit.text()
+                ast.literal_eval(path_value.replace("\\", "\\\\"))
+                if path_value
                 else [""]
             )
+            type_value = self.type_line_edit.text()
             path_type_list = (
-                ast.literal_eval(self.type_line_edit.text())
-                if self.type_line_edit.text()
-                else [""]
+                ast.literal_eval(type_value) if type_value else [""]
             )
 
         except (SyntaxError, ValueError):
@@ -537,9 +537,9 @@ class PopUpAddPath(QDialog):
             self.msg.setText("- Invalid Data! -")
             self.msg.setInformativeText(
                 f"Invalid file(s) in:\n"
-                f"{path_list}\n"
+                f"{self.file_line_edit.text()}\n"
                 f" or type format(s) in:\n"
-                f"{path_type_list}"
+                f"{self.type_line_edit.text()}"
             )
             self.msg.setWindowTitle("Warning: Invalid data!")
             self.msg.setStandardButtons(QMessageBox.Ok)
