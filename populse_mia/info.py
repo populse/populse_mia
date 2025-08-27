@@ -123,6 +123,7 @@ CLASSIFIERS = CLASSIFIERS
 PLATFORMS = "OS Independent"
 
 REQUIRES = [
+    "argon2-cffi==25.1.0",
     "capsul >= 2.6.0, < 3.0.0",
     "cryptography",
     "matplotlib",
