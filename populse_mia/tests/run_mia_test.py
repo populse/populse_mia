@@ -27,7 +27,6 @@
 
 # General imports:
 
-# Other import
 import ast
 import contextlib
 import copy
@@ -46,11 +45,12 @@ import time
 import unittest
 import uuid
 from datetime import datetime
-from hashlib import sha256
 from pathlib import Path
 from time import sleep
 from unittest.mock import MagicMock, Mock, patch
 
+# Other import
+import argon2
 import psutil
 import yaml
 
@@ -71,11 +71,9 @@ from PyQt5.QtCore import (
     QT_VERSION_STR,
     QCoreApplication,
     QEvent,
-    QEventLoop,
     QModelIndex,
     QPoint,
     Qt,
-    QThread,
     QTimer,
     qInstallMessageHandler,
 )
@@ -92,6 +90,8 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 from traits.api import TraitListObject, Undefined
+
+ph = argon2.PasswordHasher()
 
 
 def add_to_syspath(path: Path, position: int = 1, name: str = ""):
@@ -6015,8 +6015,7 @@ class TestMIAMainWindow(TestMIACase):
 
         # Sets the admin password to be 'mock_admin_password'
         admin_password = "mock_admin_password"
-        hash_psswd = sha256((prefs.salt + admin_password).encode()).hexdigest()
-        config.set_admin_hash(hash_psswd)
+        config.set_admin_hash(ph.hash(admin_password))
 
         # Calls 'admin_mode_switch' without checking the box
         prefs.admin_mode_switch()
@@ -11456,10 +11455,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         self.assertTrue(ppl_manager.progress.worker.interrupt_request)
 
-    # @unittest.skip(
-    #     "skip this test until it has been repaired: "
-    #     "Segfault on macOS and linux due to threading cleanup issue"
-    # )
     def test_undo_redo(self):
         """
         Test the consistency and correctness of undo/redo operations in the

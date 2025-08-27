@@ -57,6 +57,7 @@ from datetime import datetime
 from functools import partial
 from typing import get_origin
 
+import argon2
 import yaml
 
 # Capsul imports
@@ -149,6 +150,7 @@ from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
 
 logger = logging.getLogger(__name__)
+ph = argon2.PasswordHasher()
 
 
 class ClickableLabel(QLabel):
@@ -2352,7 +2354,6 @@ class PopUpPreferences(QDialog):
         self.setModal(True)
         self.main_window = main_window
         self.clicked = 0
-        self.salt = "P0pulseM1@"
         self.setup_ui()
         self.load_config()
         # Disabling widgets
@@ -2395,19 +2396,18 @@ class PopUpPreferences(QDialog):
             )
 
             if ok:
-                salt_psswd = f"{self.salt}{psswd}"
-                hash_psswd = hashlib.sha256(salt_psswd.encode()).hexdigest()
 
-                if hash_psswd != config.get_admin_hash():
+                try:
+                    ph.verify(config.get_admin_hash(), psswd)
+                    self.change_psswd.setVisible(True)
+                    self.edit_config.setVisible(True)
+                    self.status_label.clear()
+
+                except argon2.exceptions.VerifyMismatchError:
                     self.admin_mode_checkbox.setChecked(False)
                     self.status_label.setText(
                         "<i style='color:red'>Wrong password.</i>"
                     )
-
-                else:
-                    self.change_psswd.setVisible(True)
-                    self.edit_config.setVisible(True)
-                    self.status_label.clear()
 
             else:
                 self.admin_mode_checkbox.setChecked(False)
@@ -2563,34 +2563,45 @@ class PopUpPreferences(QDialog):
         change.setLayout(layout)
         event = change.exec()
 
-        if not event:
-            change.close()
-
-        else:
+        if event:
             config = Config()
-            old_psswd = f"{self.salt}{change.old_psswd.text()}"
-            hash_psswd = hashlib.sha256(old_psswd.encode()).hexdigest()
 
-            if (
-                hash_psswd == config.get_admin_hash()
-                and change.new_psswd.text() == change.new_psswd_conf.text()
-                and len(change.new_psswd.text()) > 6
-            ):
-                new_psswd = f"{self.salt}{change.new_psswd.text()}"
-                config.set_admin_hash(
-                    hashlib.sha256(new_psswd.encode()).hexdigest()
-                )
+            try:
+                ph.verify(config.get_admin_hash(), change.old_psswd.text())
 
-            elif hash_psswd != config.get_admin_hash():
+            except argon2.exceptions.VerifyMismatchError:
                 self.change_admin_psswd("The old password is incorrect.")
 
-            elif len(change.new_psswd.text()) <= 6:
+            except argon2.exceptions.InvalidHash:
                 self.change_admin_psswd(
-                    "Your password must have more than 6 characters"
+                    "Password hash is corrupted. "
+                    "Please contact administrator."
                 )
 
-            elif change.new_psswd.text() != change.new_psswd_conf.text():
-                self.change_admin_psswd("The new passwords are not the same.")
+            except Exception as e:
+                self.change_admin_psswd(f"Unexpected error: {str(e)}")
+
+            else:
+
+                if len(change.new_psswd.text()) <= 8:
+                    self.change_admin_psswd(
+                        "The new password must have more than 8 characters"
+                    )
+
+                elif change.new_psswd.text() != change.new_psswd_conf.text():
+                    self.change_admin_psswd(
+                        "The new passwords are not the same."
+                    )
+
+                else:
+                    config.set_admin_hash(ph.hash(change.new_psswd.text()))
+                    # Clear password fields for security
+                    change.old_psswd.clear()
+                    change.new_psswd.clear()
+                    change.new_psswd_conf.clear()
+                    QMessageBox.information(
+                        self, "Success", "Password changed successfully!"
+                    )
 
     def control_checkbox_toggled(self):
         """Check if the user really wants to change the controller version."""

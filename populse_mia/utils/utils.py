@@ -51,6 +51,7 @@ from functools import partial
 from pathlib import Path
 from typing import get_args, get_origin
 
+import argon2
 import dateutil.parser
 import yaml
 
@@ -96,6 +97,9 @@ from populse_mia.data_manager.project_properties import (  # noqa E402
 from populse_mia.user_interface.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
+
+default_password = "admin1234"
+ph = argon2.PasswordHasher()
 
 
 class PackagesInstall:
@@ -1858,10 +1862,7 @@ def verify_setup(
                     )
 
                 if not config.get_admin_hash():
-                    config.set_admin_hash(
-                        "60cfd1916033576b0f2368603fe612fb"
-                        "78b8c20e4f5ad9cf39c9cf7e912dd282"
-                    )
+                    config.set_admin_hash(ph.hash(default_password))
 
             except Exception as e:
                 logger.warning(
@@ -1890,10 +1891,7 @@ def verify_setup(
                 )
 
             if not config.get_admin_hash():
-                config.set_admin_hash(
-                    "60cfd1916033576b0f2368603fe612fb"
-                    "78b8c20e4f5ad9cf39c9cf7e912dd282"
-                )
+                config.set_admin_hash(ph.hash(default_password))
 
         if config is not None:
 
