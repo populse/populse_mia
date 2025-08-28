@@ -11511,12 +11511,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # delete a document from the DataBrowser, it is removed both from the
         # database and physically from the hard drive. This prevents, after an
         # undo(), from performing a redo() for the physical part on the disk.
-        # wever, things are a bit complicated for various reasons outside the
-        # scope of this discussion. The result is that the undo and redo
+        # However, things are a bit complicated for various reasons outside the
+        # scope of this comment. The result is that the undo and redo
         # functions are quite permissive on this subject (there is no specific
-        # management of data on the disk in theses methods).We can therefore
-        # test this part, even if it doesn’t have much real meaning concerning
-        # the current operation of Mia.
+        # management of data on the disk in theses methods). So, we can
+        # therefore test this part, even if it doesn’t have much real meaning
+        # concerning the current operation of Mia.
         self.main_window.undo()
         self.main_window.redo()
 
@@ -11763,57 +11763,70 @@ class TestMIAPipelineManagerTab(TestMIACase):
             config.setControlV1(False)
 
     def test_update_auto_inheritance(self):
-        """Adds a process and updates the job's auto inheritance dict.
-
-        - Tests: PipelineManagerTab.update_auto_inheritance
         """
+        Test that PipelineManagerTab.update_auto_inheritance correctly sets
+        the `auto_inheritance_dict` attribute of a job under different
+        scenarios.
 
+        This test covers:
+            - Adding a process and verifying that the job's
+              `auto_inheritance_dict` is created with the expected key/value
+              mapping.
+            - Handling multiple candidate inputs (ensuring correct key/value
+              selection when outputs cannot be inferred automatically).
+            - Behavior when the node lacks a project (the attribute should
+              not exist).
+            - Behavior when the node is not a valid Process (the attribute
+              should not exist).
+
+        :raises AssertionError: If expectations about the existence, type,
+                                or contents of `auto_inheritance_dict` are not
+                                met.
+        """
         project_8_path = self.get_new_test_project()
-        folder = os.path.join(
+        raw_data_folder = os.path.join(
             project_8_path,
             "data",
             "raw_data",
         )
-
-        NII_FILE_1 = (
+        derived_data_folder = os.path.join(
+            project_8_path,
+            "data",
+            "derived_data",
+        )
+        nii_file_1 = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
         )
-        NII_FILE_2 = (
-            "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-04-G3_"
-            "Guerbet_MDEFT-MDEFTpvm-000940_800.nii"
-        )
+        doc_1 = os.path.realpath(os.path.join(raw_data_folder, nii_file_1))
 
-        DOCUMENT_1 = os.path.realpath(os.path.join(folder, NII_FILE_1))
-        DOCUMENT_2 = os.path.realpath(os.path.join(folder, NII_FILE_2))
-
-        # Set shortcuts for objects that are often used
+        # Shortcuts for commonly used objects
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
+        ppl_editor = ppl_edt_tabs.get_current_editor()
 
-        # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        self.main_window.tabs.setCurrentIndex(2)
 
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Add Rename process node
+        ppl_editor.click_pos = QPoint(450, 500)
+        ppl_editor.add_named_process(Rename)
 
-        ppl.nodes["rename_1"].set_plug_value("in_file", DOCUMENT_1)
+        ppl_editor.export_unconnected_mandatory_inputs()
+        ppl_editor.export_all_unconnected_outputs()
+
         node = ppl.nodes["rename_1"]
+        node.set_plug_value("in_file", doc_1)
 
-        # Initializes the workflow manually
+        # Initialize workflow manually
         ppl_manager.workflow = workflow_from_pipeline(
             ppl, complete_parameters=True
         )
 
         job = ppl_manager.workflow.jobs[0]
 
-        # Mocks the node's parameters
+        # Prepare mock project and database
         node.auto_inheritance_dict = {}
-        process = node.process
-
-        real_project = Mock()
         fake_db_data = Mock()
         fake_db_data.has_document.return_value = True
 
@@ -11827,11 +11840,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
             """
             yield fake_db_data
 
-        real_project.database = Mock()
-        real_project.database.data = fake_data_cm
+        real_project = Mock()
+        real_project.database = Mock(data=fake_data_cm)
+        real_project.folder = os.path.dirname(project_8_path)
 
+        process = node.process
         process.study_config.project = real_project
-        process.study_config.project.folder = os.path.dirname(project_8_path)
         process.outputs = []
         process.list_outputs = []
         process.auto_inheritance_dict = {}
@@ -11839,26 +11853,105 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Mocks 'job.param_dict' to share items with both the inputs and
         # outputs list of the process
         # Note: only 'in_file' and '_out_file' are file trait types
-        job.param_dict["_out_file"] = "_out_file_value"
-
-        ppl_manager.update_auto_inheritance(node, job)
-
-        # 'job.param_dict' as list of objects
-        job.param_dict["inlist"] = [DOCUMENT_1, DOCUMENT_2]
-        process.get_outputs = Mock(return_value={"_out": ["_out_value"]})
-        process.add_trait(
-            "_out", OutputMultiPath(File(exists=True), desc="out files")
+        out_file_value = os.path.realpath(
+            os.path.join(derived_data_folder, "out_file_value.nii")
         )
-        job.param_dict["_out"] = ["_out_value"]
+        job.param_dict["_out_file"] = out_file_value
+
+        # --- Case 1: Only one entry is eligible
+        with self.assertRaises(AttributeError) as context:
+            _ = job.auto_inheritance_dict
+
+        self.assertIn(
+            "'Job' object has no attribute 'auto_inheritance_dict'",
+            str(context.exception),
+        )
+
         ppl_manager.update_auto_inheritance(node, job)
 
-        # 'node' does not have a 'project'
+        # Test auto_inheritance_dict exists and is a dictionary
+        self.assertIsInstance(job.auto_inheritance_dict, dict)
+
+        # Check that auto_inheritance_dict contains exactly one element.
+        self.assertEqual(
+            len(job.auto_inheritance_dict),
+            1,
+            "auto_inheritance_dict should contain exactly one element",
+        )
+
+        # Test key and value pattern
+        expected_key_path = (
+            Path("data") / "derived_data" / "out_file_value.nii"
+        )
+        self.assertTrue(
+            any(
+                str(expected_key_path) in str(Path(key))
+                for key in job.auto_inheritance_dict
+            )
+        )
+        expected_value_path = Path("data") / "raw_data" / nii_file_1
+        self.assertTrue(
+            any(
+                str(expected_value_path) in str(Path(value))
+                for value in job.auto_inheritance_dict.values()
+            )
+        )
+
+        # --- Case 2: multiple candidate inputs
+        del job.auto_inheritance_dict
+
+        with patch.object(
+            process,
+            "get_inputs",
+            return_value={"in_file": doc_1, "_out": [out_file_value]},
+        ):
+            process.add_trait(
+                "_out", InputMultiObject(File(exists=True), desc="out files")
+            )
+            job.param_dict["_out"] = [out_file_value]
+            ppl_manager.update_auto_inheritance(node, job)
+
+        # Test auto_inheritance_dict exists and is a dictionary
+        self.assertIsInstance(job.auto_inheritance_dict, dict)
+
+        # Check that auto_inheritance_dict contains exactly one element.
+        self.assertEqual(
+            len(job.auto_inheritance_dict),
+            1,
+            "auto_inheritance_dict should contain exactly one element",
+        )
+        # Test key and value pattern
+        key, value = next(iter(job.auto_inheritance_dict.items()))
+        self.assertTrue(key.endswith(str(expected_key_path)))
+        self.assertTrue(value["in_file"].endswith(str(expected_value_path)))
+        self.assertTrue(value["_out"].endswith(str(expected_key_path)))
+
+        # --- Case 3: node has no project
+        del job.auto_inheritance_dict
         del node.process.study_config.project
         ppl_manager.update_auto_inheritance(node, job)
 
-        # 'node' is not a 'Process'
+        # Verify that auto_inheritance_dict attribute doesn't exist
+        with self.assertRaises(AttributeError) as context:
+            _ = job.auto_inheritance_dict
+
+        self.assertIn(
+            "'Job' object has no attribute 'auto_inheritance_dict'",
+            str(context.exception),
+        )
+
+        # --- Case 4: node is not a Process
         node = {}
         ppl_manager.update_auto_inheritance(node, job)
+
+        # Verify that auto_inheritance_dict attribute doesn't exist
+        with self.assertRaises(AttributeError) as context:
+            _ = job.auto_inheritance_dict
+
+        self.assertIn(
+            "'Job' object has no attribute 'auto_inheritance_dict'",
+            str(context.exception),
+        )
 
     def test_update_inheritance(self):
         """Adds a process and updates the job's inheritance dict.
