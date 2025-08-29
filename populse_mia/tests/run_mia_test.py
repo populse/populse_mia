@@ -11962,26 +11962,37 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
     def test_update_inheritance(self):
-        """Adds a process and updates the job's inheritance dict.
+        """
+        Verify that `PipelineManagerTab.update_inheritance` correctly updates
+        a job's inheritance dictionary based on the associated node.
 
-        - Tests: PipelineManagerTab.update_inheritance
+        :tests: PipelineManagerTab.update_inheritance
+            - Ensures that jobs do not initially have `inheritance_dict`
+              attribute
+            - Validates update when the node name does not contain "Pipeline".
+            - Validates update when the node name contains "Pipeline".
+            - Validates update when the node's inheritance history is recorded
+              in the project.
         """
 
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
         ppl = ppl_edt_tabs.get_current_pipeline()
+        ppl_editor = ppl_edt_tabs.get_current_editor()
+
+        self.main_window.tabs.setCurrentIndex(2)
 
         # Adds a Rename processes, creates the 'rename_1' node
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(Rename)
+        ppl_editor.click_pos = QPoint(450, 500)
+        ppl_editor.add_named_process(Rename)
 
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        ppl_editor.export_unconnected_mandatory_inputs()
+        ppl_editor.export_all_unconnected_outputs()
 
         node = ppl.nodes["rename_1"]
 
-        # Initializes the workflow manually
+        # Initialize workflow manually
         ppl_manager.workflow = workflow_from_pipeline(
             ppl, complete_parameters=True
         )
@@ -11989,22 +12000,34 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Gets the 'job' and mocks adding a brick to the collection
         job = ppl_manager.workflow.jobs[0]
 
-        # Node's name does not contains 'Pipeline'
+        # --- Case 1: Node's name does not contains 'Pipeline'
         node.context_name = ""
         node.process.inheritance_dict = {"item": "value"}
         ppl_manager.project.node_inheritance_history = {}
+
+        with self.assertRaises(AttributeError) as context:
+            _ = job.inheritance_dict
+
+        self.assertIn(
+            "'Job' object has no attribute 'inheritance_dict'",
+            str(context.exception),
+        )
+
         ppl_manager.update_inheritance(job, node)
 
         self.assertEqual(job.inheritance_dict, {"item": "value"})
 
-        # Node's name contains 'Pipeline'
+        # --- Case 2: Node name contains "Pipeline"
+        del job.inheritance_dict
         node.context_name = "Pipeline.rename_1"
+
         ppl_manager.update_inheritance(job, node)
 
         self.assertEqual(job.inheritance_dict, {"item": "value"})
 
-        # Node's name in 'node_inheritance_history'
-        (ppl_manager.project.node_inheritance_history["rename_1"]) = [
+        # --- Case 3: Node's name in 'node_inheritance_history'
+        del job.inheritance_dict
+        ppl_manager.project.node_inheritance_history["rename_1"] = [
             {0: "new_value"}
         ]
         ppl_manager.update_inheritance(job, node)
@@ -12012,36 +12035,44 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertEqual(job.inheritance_dict, {0: "new_value"})
 
     def test_update_node_list(self):
-        """Adds a process, exports input and output plugs, initializes a
-        workflow and adds the process to the "pipline_manager.node_list".
+        """
+        Test that adding a process updates the PipelineManagerTab node list.
 
-        - Tests: PipelineManagerTab.update_node_list
+        This test performs the following steps:
+            1. Adds a `Rename` process to the pipeline editor.
+            2. Exports the mandatory inputs and outputs for the process.
+            3. Initializes the workflow from the pipeline.
+            4. Verifies that the `node_list` is initially empty.
+            5. Calls `update_node_list` and checks that the process is added.
+
+        :raises AssertionError: If the node list is not updated as expected.
         """
 
         # Set shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
+        editor = ppl_edt_tabs.get_current_editor()
+        self.main_window.tabs.setCurrentIndex(2)
 
-        process_class = Rename
-        ppl_edt_tabs.get_current_editor().click_pos = QPoint(450, 500)
-        ppl_edt_tabs.get_current_editor().add_named_process(process_class)
+        editor.click_pos = QPoint(450, 500)
+        editor.add_named_process(Rename)
         pipeline = ppl_edt_tabs.get_current_pipeline()
 
-        # Exports the mandatory inputs and outputs for "rename_1"
-        ppl_edt_tabs.get_current_editor().current_node_name = "rename_1"
-        ppl_edt_tabs.get_current_editor().export_unconnected_mandatory_inputs()
-        ppl_edt_tabs.get_current_editor().export_all_unconnected_outputs()
+        # Export mandatory inputs and outputs for the added process
+        editor.current_node_name = "rename_1"
+        editor.export_unconnected_mandatory_inputs()
+        editor.export_all_unconnected_outputs()
 
         # Initializes the workflow
         ppl_manager.workflow = workflow_from_pipeline(
             pipeline, complete_parameters=True
         )
 
-        # Asserts that the "node_list" is empty by default
-        node_list = self.main_window.pipeline_manager.node_list
+        # Node list should be empty initially
+        node_list = ppl_manager.node_list
         self.assertEqual(len(node_list), 0)
 
-        # Asserts that the process "Rename" was added to "node_list"
+        # Update and check that Rename was added to node_list
         ppl_manager.update_node_list()
         self.assertEqual(len(node_list), 1)
         self.assertEqual(node_list[0]._nipype_class, "Rename")
