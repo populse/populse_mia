@@ -741,7 +741,7 @@ class TestMIACase(unittest.TestCase):
 
     def setUp(self):
         """Called before each test"""
-
+        super().setUp()
         # Make _app available at instance level
         self._app = self.__class__._app
         # All the tests are run in admin mode
@@ -754,7 +754,7 @@ class TestMIACase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Called once at the beginning of the class"""
-
+        super().setUpClass()
         cls.properties_path = os.path.join(
             tempfile.mkdtemp(prefix="mia_tests_"), "dev"
         )
@@ -928,6 +928,7 @@ class TestMIACase(unittest.TestCase):
 
         # Clear project reference
         self.project = None
+        super().tearDown()
 
     @classmethod
     def tearDownClass(cls):
@@ -947,6 +948,7 @@ class TestMIACase(unittest.TestCase):
 
         cls._app.quit()
         del cls._app
+        super().tearDownClass()
 
 
 # class Test_Z_MIAOthers(TestMIACase):
@@ -11794,11 +11796,11 @@ class TestMIAPipelineManagerTab(TestMIACase):
             "data",
             "derived_data",
         )
-        nii_file_1 = (
+        nii_file = (
             "Guerbet-C6-2014-Rat-K52-Tube27-2014-02-14102317-01-G1_"
             "Guerbet_Anat-RAREpvm-000220_000.nii"
         )
-        doc_1 = os.path.realpath(os.path.join(raw_data_folder, nii_file_1))
+        doc = os.path.realpath(os.path.join(raw_data_folder, nii_file))
 
         # Shortcuts for commonly used objects
         ppl_manager = self.main_window.pipeline_manager
@@ -11816,7 +11818,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_editor.export_all_unconnected_outputs()
 
         node = ppl.nodes["rename_1"]
-        node.set_plug_value("in_file", doc_1)
+        node.set_plug_value("in_file", doc)
 
         # Initialize workflow manually
         ppl_manager.workflow = workflow_from_pipeline(
@@ -11826,7 +11828,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         job = ppl_manager.workflow.jobs[0]
 
         # Prepare mock project and database
-        node.auto_inheritance_dict = {}
         fake_db_data = Mock()
         fake_db_data.has_document.return_value = True
 
@@ -11842,93 +11843,99 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         real_project = Mock()
         real_project.database = Mock(data=fake_data_cm)
-        real_project.folder = os.path.dirname(project_8_path)
+        real_project.folder = project_8_path
 
         process = node.process
-        process.study_config.project = real_project
-        process.outputs = []
-        process.list_outputs = []
-        process.auto_inheritance_dict = {}
-
-        # Mocks 'job.param_dict' to share items with both the inputs and
-        # outputs list of the process
-        # Note: only 'in_file' and '_out_file' are file trait types
-        out_file_value = os.path.realpath(
-            os.path.join(derived_data_folder, "out_file_value.nii")
-        )
-        job.param_dict["_out_file"] = out_file_value
-
-        # --- Case 1: Only one entry is eligible
-        with self.assertRaises(AttributeError) as context:
-            _ = job.auto_inheritance_dict
-
-        self.assertIn(
-            "'Job' object has no attribute 'auto_inheritance_dict'",
-            str(context.exception),
-        )
-
-        ppl_manager.update_auto_inheritance(node, job)
-
-        # Test auto_inheritance_dict exists and is a dictionary
-        self.assertIsInstance(job.auto_inheritance_dict, dict)
-
-        # Check that auto_inheritance_dict contains exactly one element.
-        self.assertEqual(
-            len(job.auto_inheritance_dict),
-            1,
-            "auto_inheritance_dict should contain exactly one element",
-        )
-
-        # Test key and value pattern
-        expected_key_path = (
-            Path("data") / "derived_data" / "out_file_value.nii"
-        )
-        self.assertTrue(
-            any(
-                str(expected_key_path) in str(Path(key))
-                for key in job.auto_inheritance_dict
-            )
-        )
-        expected_value_path = Path("data") / "raw_data" / nii_file_1
-        self.assertTrue(
-            any(
-                str(expected_value_path) in str(Path(value))
-                for value in job.auto_inheritance_dict.values()
-            )
-        )
-
-        # --- Case 2: multiple candidate inputs
-        del job.auto_inheritance_dict
 
         with patch.object(
-            process,
-            "get_inputs",
-            return_value={"in_file": doc_1, "_out": [out_file_value]},
+            process.study_config, "project", real_project, create=True
         ):
-            process.add_trait(
-                "_out", InputMultiObject(File(exists=True), desc="out files")
+            process.outputs = []
+            process.list_outputs = []
+            process.auto_inheritance_dict = {}
+
+            out_file_value = os.path.realpath(
+                os.path.join(derived_data_folder, "out_file_value.nii")
             )
-            job.param_dict["_out"] = [out_file_value]
+            # Mocks 'job.param_dict' to share items with both the inputs and
+            # outputs list of the process
+            # Note: only 'in_file' and '_out_file' are file trait types
+            job.param_dict["_out_file"] = out_file_value
+
+            # --- Case 1: Only one entry is eligible
+            with self.assertRaises(AttributeError) as context:
+                _ = job.auto_inheritance_dict
+
+            self.assertIn(
+                "'Job' object has no attribute 'auto_inheritance_dict'",
+                str(context.exception),
+            )
+
             ppl_manager.update_auto_inheritance(node, job)
 
-        # Test auto_inheritance_dict exists and is a dictionary
-        self.assertIsInstance(job.auto_inheritance_dict, dict)
+            # Test auto_inheritance_dict exists and is a dictionary
+            self.assertIsInstance(job.auto_inheritance_dict, dict)
 
-        # Check that auto_inheritance_dict contains exactly one element.
-        self.assertEqual(
-            len(job.auto_inheritance_dict),
-            1,
-            "auto_inheritance_dict should contain exactly one element",
-        )
-        # Test key and value pattern
-        key, value = next(iter(job.auto_inheritance_dict.items()))
-        self.assertTrue(key.endswith(str(expected_key_path)))
-        self.assertTrue(value["in_file"].endswith(str(expected_value_path)))
-        self.assertTrue(value["_out"].endswith(str(expected_key_path)))
+            # Check that auto_inheritance_dict contains exactly one element.
+            self.assertEqual(
+                len(job.auto_inheritance_dict),
+                1,
+                "auto_inheritance_dict should contain exactly one element",
+            )
+
+            # Test key and value pattern
+            expected_key_path = (
+                Path("data") / "derived_data" / "out_file_value.nii"
+            )
+            self.assertTrue(
+                any(
+                    str(expected_key_path) in str(Path(key))
+                    for key in job.auto_inheritance_dict
+                )
+            )
+            expected_value_path = Path("data") / "raw_data" / nii_file
+            self.assertTrue(
+                any(
+                    str(expected_value_path) in str(Path(value))
+                    for value in job.auto_inheritance_dict.values()
+                )
+            )
+
+            # --- Case 2: multiple candidate inputs
+            del job.auto_inheritance_dict
+
+            with patch.object(
+                process,
+                "get_inputs",
+                return_value={"in_file": doc, "_out": [out_file_value]},
+            ):
+                process.add_trait(
+                    "_out",
+                    InputMultiObject(File(exists=True), desc="out files"),
+                )
+                job.param_dict["_out"] = [out_file_value]
+                ppl_manager.update_auto_inheritance(node, job)
+
+            # Test auto_inheritance_dict exists and is a dictionary
+            self.assertIsInstance(job.auto_inheritance_dict, dict)
+
+            # Check that auto_inheritance_dict contains exactly one element.
+            self.assertEqual(
+                len(job.auto_inheritance_dict),
+                1,
+                "auto_inheritance_dict should contain exactly one element",
+            )
+            # Test key and value pattern
+            key, value = next(iter(job.auto_inheritance_dict.items()))
+            self.assertTrue(key.endswith(str(expected_key_path)))
+            self.assertTrue(
+                value["in_file"].endswith(str(expected_value_path))
+            )
+            self.assertTrue(value["_out"].endswith(str(expected_key_path)))
 
         # --- Case 3: node has no project
         del job.auto_inheritance_dict
-        del node.process.study_config.project
+
         ppl_manager.update_auto_inheritance(node, job)
 
         # Verify that auto_inheritance_dict attribute doesn't exist
@@ -11942,6 +11949,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # --- Case 4: node is not a Process
         node = {}
+
         ppl_manager.update_auto_inheritance(node, job)
 
         # Verify that auto_inheritance_dict attribute doesn't exist
