@@ -35,6 +35,7 @@ import threading
 import time
 import traceback
 import uuid
+from pathlib import Path
 
 # Soma_workflow import
 import soma_workflow.constants as swconstants
@@ -3393,10 +3394,7 @@ class PipelineManagerTab(QWidget):
             # no databasing, nothing to be done.
             return None
 
-        proj_dir = os.path.join(
-            os.path.abspath(os.path.normpath(project.folder)), ""
-        )
-        pl = len(proj_dir)
+        proj_dir = str(Path(project.folder).resolve())
 
         # retrieve inputs and outputs keys in process,
         if isinstance(process, Process):
@@ -3492,10 +3490,10 @@ class PipelineManagerTab(QWidget):
                     paths.append(value)
 
                 for path in paths:
-                    path = os.path.abspath(os.path.normpath(path))
+                    path = str(Path(path).resolve())
 
                     if path.startswith(proj_dir):
-                        rpath = path[pl:]
+                        rpath = str(Path(path).relative_to(Path(proj_dir)))
 
                         if database_data.has_document(
                             collection_name=COLLECTION_CURRENT,
@@ -3554,7 +3552,7 @@ class PipelineManagerTab(QWidget):
                     todo.extend(value)
 
                 elif isinstance(value, str):
-                    path = os.path.abspath(os.path.normpath(value))
+                    path = str(Path(value).resolve())
 
                     if path.startswith(proj_dir):
                         plug_values.add(value)
