@@ -5978,10 +5978,8 @@ def mock_matlab():
 
     if "--version" in args:
         # Only print to stderr if output is the special version string
-        {
-            f'print("Version check completed", file=sys.stderr)'
-            if should_print_stderr else ''
-        }
+        {f'print("Version check completed", file=sys.stderr)'
+         if should_print_stderr else ''}
         return
 
     # Simulate MATLAB exit
@@ -5992,7 +5990,7 @@ if __name__ == "__main__":
     {f'print("{output}")'}
     {f'print("{err_msg}", file=sys.stderr)' if failing else ''}
     {'sys.exit(1)' if failing else ''}
-"""  # noqa: E122
+"""
 
                 # Write the script to the file
                 with open(path, "w") as file:
