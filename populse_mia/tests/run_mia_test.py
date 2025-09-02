@@ -5992,7 +5992,7 @@ if __name__ == "__main__":
     {f'print("{output}")'}
     {f'print("{err_msg}", file=sys.stderr)' if failing else ''}
     {'sys.exit(1)' if failing else ''}
-"""
+"""  # noqa: E122
 
                 # Write the script to the file
                 with open(path, "w") as file:
