@@ -5978,9 +5978,11 @@ def mock_matlab():
 
     if "--version" in args:
         # Only print to stderr if output is the special version string
-        {(f'print("Version check completed", '
-           f'file=sys.stderr)')
-          if should_print_stderr else ''}
+        {
+            (f'print("Version check completed", '
+             f'file=sys.stderr)')
+            if should_print_stderr else ''
+        }
         return
 
     # Simulate MATLAB exit
