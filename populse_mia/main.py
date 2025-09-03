@@ -56,7 +56,7 @@ def add_to_sys_path(path, name, index=0):
         return True
 
     else:
-        logger.info(f"{name} package was not found from {path}!")
+        logger.info(f"    {name} package was not found from {path}!")
         return False
 
 
@@ -161,26 +161,26 @@ def main(args):
                     root_dev_dir / populse_bdir / "populse_mia" / branch
                 )
             },
-            {"capsul": (root_dev_dir / capsul_bdir / "capsul" / branch)},
-            {
-                "soma": (
-                    root_dev_dir / soma_bdir / "soma-base" / branch / "python"
-                )
-            },
-            {
-                "soma_workflow": (
-                    root_dev_dir
-                    / soma_bdir
-                    / "soma-workflow"
-                    / branch
-                    / "python"
-                )
-            },
             {
                 "populse_db": (
                     root_dev_dir
                     / populse_bdir
                     / "populse_db"
+                    / branch
+                    / "python"
+                )
+            },
+            {
+                "soma": (
+                    root_dev_dir / soma_bdir / "soma-base" / branch / "python"
+                )
+            },
+            {"capsul": (root_dev_dir / capsul_bdir / "capsul" / branch)},
+            {
+                "soma_workflow": (
+                    root_dev_dir
+                    / soma_bdir
+                    / "soma-workflow"
                     / branch
                     / "python"
                 )
@@ -193,9 +193,8 @@ def main(args):
         ]
         # Adding populse packages in sys.path
         logger.info("- Mia in 'developer' mode")
-        i = 0
 
-        for package in packages:
+        for i, package in enumerate(packages):
 
             for name, dev_path in package.items():
 
@@ -208,14 +207,59 @@ def main(args):
 
                 try:
                     importlib.import_module(name)
+
+                    if sys.modules[name].__version__ is None:
+                        raise AttributeError
+
                     logger.info(
                         f"    {name} version: "
                         f"{sys.modules[name].__version__}"
                     )
 
                 except (ModuleNotFoundError, AttributeError):
-                    # version is not found
-                    pass
+
+                    # Version is not found.
+                    # Try to find version in a version submodule
+                    try:
+                        importlib.import_module(f"{name}.version")
+                        logger.info(
+                            f"    {name} version: "
+                            f"{sys.modules[name + '.version'].fullVersion}"
+                        )
+
+                    except (ModuleNotFoundError, AttributeError):
+
+                        # Version is not found.
+                        # Try to find version in pyproject.toml
+                        try:
+                            path_value = next(iter(package.values()))
+                            pyproject_toml_path = (
+                                path_value.parent / "pyproject.toml"
+                            )
+
+                            with open(pyproject_toml_path, "rb") as f:
+                                import tomli
+
+                                pyproject = tomli.load(f)
+
+                                if pyproject["project"]["name"].replace(
+                                    "-", "_"
+                                ) == name.replace("-", "_"):
+                                    version = pyproject["project"]["version"]
+                                    logger.info(
+                                        f"    {name} version: {version}"
+                                    )
+
+                                else:
+                                    raise AttributeError
+
+                        except Exception as e:
+                            # Version is not found.
+                            logger.warning(
+                                f"Version was not found for {name} package!: "
+                                f"{e}",
+                                exc_info=True,
+                            )
 
         if package_not_found:
             error_msg = "\n".join(f"- {pkg}" for pkg in package_not_found)
