@@ -19,10 +19,13 @@ This will execute the main entry point of the application.
 # Populse_MIA imports
 from populse_mia.main import main
 
+from .cli_args import parse_args
+
 if __name__ == "__main__":
 
     try:
-        main()
+        args = parse_args()
+        main(args)
 
     except Exception as e:
         print(f"Error while running populse_mia: {e}")
