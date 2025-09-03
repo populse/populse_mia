@@ -2403,7 +2403,10 @@ class PopUpPreferences(QDialog):
                     self.edit_config.setVisible(True)
                     self.status_label.clear()
 
-                except argon2.exceptions.VerifyMismatchError:
+                except (
+                    argon2.exceptions.VerifyMismatchError,
+                    argon2.exceptions.InvalidHashError,
+                ):
                     self.admin_mode_checkbox.setChecked(False)
                     self.status_label.setText(
                         "<i style='color:red'>Wrong password.</i>"
