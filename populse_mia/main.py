@@ -21,13 +21,20 @@ mia's GUI.
 # for details.
 ###############################################################################
 
-import argparse
 import importlib
 import logging
 import os
 import sys
 import tempfile
 from pathlib import Path
+
+try:
+    # Running inside the package (installed or `python -m populse_mia.main`)
+    from .cli_args import parse_args
+
+except ImportError:
+    # Running as a top-level script (python main.py)
+    from cli_args import parse_args
 
 # PyQt5 imports
 from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
@@ -119,7 +126,7 @@ def main(args):
     QApplication.setOverrideCursor(Qt.WaitCursor)
 
     # Adding the populse projects path to sys.path, if in developer mode
-    if Path(__file__).resolve().parents[1] not in sys.path:
+    if str(Path(__file__).resolve().parents[1]) not in sys.path:
         # "developer" mode
         DEV_MODE = True
         os.environ["MIA_DEV_MODE"] = "1"
@@ -311,8 +318,22 @@ def main(args):
                 )
 
             except (ModuleNotFoundError, AttributeError):
-                # version is not found
-                pass
+
+                # Version is not found.
+                # Try to find version in a version submodule
+                try:
+                    importlib.import_module(f"{module}.version")
+                    logger.info(
+                        f"    {module} version: "
+                        f"{sys.modules[module + '.version'].fullVersion}"
+                    )
+
+                except Exception as e:
+                    # Version is not found.
+                    logger.warning(
+                        f"Version was not found for {name} package!: " f"{e}",
+                        exc_info=True,
+                    )
 
     # Check if nipype is available on the station.
     # If not available ask the user to install it.
@@ -384,16 +405,7 @@ def qt_message_handler(message):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Populse Mia Application Entry Point."
-    )
-    parser.add_argument(
-        "--multi_instance",
-        type=bool,
-        default=False,
-        help="Set the value of multi_instance.",
-    )
-    args = parser.parse_args()
+    args = parse_args()
     # Print the multi_instance argument value
     logger.info(f"--multi_instance is set to: {args.multi_instance}")
     # This will only be executed when this module is run directly
