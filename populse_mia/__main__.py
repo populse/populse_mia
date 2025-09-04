@@ -16,15 +16,22 @@ This will execute the main entry point of the application.
 # for details.
 ##########################################################################
 
+import logging
+
 # Populse_MIA imports
 from populse_mia.main import main
 
 from .cli_args import parse_args
 
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+logger = logging.getLogger(__name__)
+
 if __name__ == "__main__":
 
     try:
         args = parse_args()
+        # Print the multi_instance argument value
+        logger.info(f"--multi_instance is set to: {args.multi_instance}")
         main(args)
 
     except Exception as e:
