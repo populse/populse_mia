@@ -28,6 +28,7 @@
 import ast
 import contextlib
 import copy
+import importlib
 import io
 import json
 import logging
@@ -96,13 +97,22 @@ def add_to_syspath(path: Path, position: int = 1, name: str = ""):
     :param path (Path): The directory path to be added to sys.path.
     :param position (int): The index at which to insert the path.
                            Defaults to 1.
-    :param name (str): The name of the package (used for
-                       informative printing).
+    :param name (str): The name of the package.
     """
 
     if path.is_dir() and str(path) not in sys.path:
         print(f"- Using {name} package from {path} ...")
         sys.path.insert(position, str(path))
+
+    else:
+
+        try:
+            mod = importlib.import_module(name)
+            mod_dir = Path(mod.__file__).resolve().parents[1]
+            print(f"- Using {name} package from {mod_dir}")
+
+        except ImportError:
+            print(f"Failed to import {name} package!")
 
 
 # Base directories
@@ -138,8 +148,8 @@ for name in ("populse-mia", "populse_mia"):
 add_to_syspath(root_dev_dir / "mia_processes", name="mia_processes")
 add_to_syspath(root_dev_dir / "populse_db" / "python", name="populse_db")
 add_to_syspath(root_dev_dir / "capsul", name="capsul")
-add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma-base")
-add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma-workflow")
+add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma")
+add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma_workflow")
 
 import soma_workflow.constants as swconstants  # noqa: E402
 
