@@ -62,6 +62,7 @@ from packaging import version
 # PyQt5 imports
 from PyQt5.QtCore import QDate, QDateTime, QDir, QLockFile, Qt, QTime, QVariant
 from PyQt5.QtWidgets import (
+    QApplication,
     QDialog,
     QFileDialog,
     QHBoxLayout,
@@ -589,7 +590,18 @@ def launch_mia(app, args):
     deleted_projects = _verify_saved_projects()
     project = Project(None, True)
     main_window = MainWindow(project, deleted_projects=deleted_projects)
-    main_window.setAttribute(Qt.WA_DeleteOnClose | Qt.WA_QuitOnClose)
+    main_window.setAttribute(Qt.WA_DeleteOnClose)
+
+    def cleanup_and_quit():
+        """
+        Closes all open application windows and terminates the current
+        QApplication instance.
+        """
+        QApplication.closeAllWindows()
+        QApplication.instance().quit()
+
+    # Connect to the main window's close event instead
+    main_window.destroyed.connect(cleanup_and_quit)
     main_window.show()
     # make sure to instantiate the QtThreadCall singleton from the main thread
     QtThreadCall()
