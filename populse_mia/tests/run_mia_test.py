@@ -65,6 +65,7 @@ from PyQt5.QtCore import (
     QT_VERSION_STR,
     QCoreApplication,
     QEvent,
+    QEventLoop,
     QModelIndex,
     QPoint,
     Qt,
@@ -895,17 +896,18 @@ class TestMIACase(unittest.TestCase):
                     print(f"Warning during widget cleanup: {e}")
 
         # Process pending events multiple times to ensure cleanup
-        for _ in range(10):  # Process events multiple times
-            self._app.processEvents()
-            QTest.qWait(10)  # Wait for 10ms to process events
+        try:
+            # Single event processing with timeout
+            self._app.processEvents(QEventLoop.AllEvents, 100)
 
-            if not self._app.hasPendingEvents():
-                break
+            # Small delay to allow deleteLater() to complete
+            time.sleep(0.05)
 
-        # Additional cleanup with a small delay to allow deleteLater()
-        # to complete
-        QTest.qWait(50)
-        self._app.processEvents()  # Final cleanup
+            # Final event processing
+            self._app.processEvents(QEventLoop.AllEvents, 50)
+
+        except Exception as e:
+            print(f"Warning during event processing: {e}")
 
         # Double-check for any remaining top-level widgets
         for widget in self._app.topLevelWidgets():
