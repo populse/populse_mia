@@ -5,7 +5,6 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "populse_mia"
-#version = "3.0.0"
 dynamic = ["version"]
 authors = [
     {name = "Populse team", email = "populse-support@univ-grenoble-alpes.fr"},
@@ -49,6 +48,7 @@ dependencies = [
     "traits",
 ]
 
+
 [project.optional-dependencies]
 doc = [
     "sphinx >=1.0",
@@ -57,6 +57,12 @@ doc = [
 [project.urls]
 homepage = "http://populse.github.io/populse_mia/"
 repository = "https://github.com/populse/populse_mia"
+
+[tool.setuptools]
+packages = ["populse_mia"]
+
+[tool.setuptools.dynamic]
+version = {attr = "populse_mia.info.__version__"}
 
 [tool.black]
 line-length = 79
