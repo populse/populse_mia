@@ -1268,7 +1268,7 @@ class MainWindow(QMainWindow):
             == "Pipeline Manager"
         ):
             # In Pipeline Manager
-            self.pipeline_manager.savePipelineAs()
+            self.pipeline_manager.save_pipeline_as()
 
     def save_project_as(self):
         """Open a pop-up to save the current project as"""

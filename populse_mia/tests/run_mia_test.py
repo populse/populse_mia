@@ -8576,7 +8576,9 @@ class TestMIAPipelineEditor(TestMIACase):
         editor.export_node_plugs("smooth_1", optional=True)
 
         # Save the pipeline
-        self.main_window.pipeline_manager.savePipeline(uncheck=True)
+        self.main_window.pipeline_manager.savePipeline(
+            skip_overwrite_warning=True
+        )
 
         # Go back to second tab and verify that "fwhm" is not yet present
         pipeline_editor_tabs.set_current_editor_by_tab_name("New Pipeline 1")
@@ -8978,7 +8980,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                         attempts to execute it in various cases
             - test_savePipeline: tries to save the pipeline over several
                                  conditions
-            - test_savePipelineAs: saves a pipeline under another name
+            - test_save_pipeline_as: saves a pipeline under another name
             - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
             - test_show_status: shows the status of pipeline execution
             - test_stop_execution: shows the status window of the pipeline
@@ -9248,7 +9250,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 if record.levelname == "INFO"
             ]
             self.assertTrue(
-                any("already in database." in msg for msg in info_messages)
+                any("already in database!" in msg for msg in info_messages)
             )
 
         # Case 4: Plug value is a .nii.gz file
@@ -10708,15 +10710,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
         """
 
         ppl_manager = self.main_window.pipeline_manager
+        self.assertFalse(hasattr(ppl_manager, "progress"))
 
         # Create a temporary 'progress' instance
         ppl_manager.progress = RunProgress(ppl_manager)
+        self.assertIsNotNone(ppl_manager.progress)
 
         # Remove the progress instance
         ppl_manager.remove_progress()
 
-        # Assert that 'progress' is no longer an attribute
-        self.assertFalse(hasattr(ppl_manager, "progress"))
+        # Assert that 'progress' is None
+        self.assertIsNone(ppl_manager.progress)
 
     def test_run(self):
         """
@@ -10945,18 +10949,18 @@ class TestMIAPipelineManagerTab(TestMIACase):
         )
 
         # --- Case 1: Save pipeline with empty filename (unchecked)
-        ppl_manager.savePipeline(uncheck=True)
+        ppl_manager.savePipeline(skip_overwrite_warning=True)
 
         # --- Case 2: Mocks 'savePipeline' from 'ppl_edt_tabs'
 
         with patch.object(
             ppl_edt_tabs, "save_pipeline", return_value="not_empty"
         ):
-            ppl_manager.savePipeline(uncheck=True)
+            ppl_manager.savePipeline(skip_overwrite_warning=True)
 
         # Case 3: Save pipeline with valid filename (unchecked)
         ppl_edt_tabs.get_current_editor()._pipeline_filename = ppl_path
-        ppl_manager.savePipeline(uncheck=True)
+        ppl_manager.savePipeline(skip_overwrite_warning=True)
 
         # Case 4: Abort saving pipeline via QMessageBox
         with patch.object(QMessageBox, "exec", return_value=QMessageBox.Abort):
@@ -10966,14 +10970,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
         with patch.object(QMessageBox, "exec", return_value=QMessageBox.Yes):
             ppl_manager.savePipeline()
 
-    def test_savePipelineAs(self):
+    def test_save_pipeline_as(self):
         """
         Verify that saving a pipeline under a new name works correctly by
         mocking the underlying `save_pipeline` method.
 
         This test ensures:
-            - When no filename is provided, `PipelineManagerTab.savePipelineAs`
-              completes without error and the status bar displays a warning.
+            - When no filename is provided,
+              `PipelineManagerTab.save_pipline_as` completes without error
+              and the status bar displays a warning.
             - When `save_pipeline` returns a non-empty filename, the method
               handles the renamed pipeline and the status bar confirms success.
 
@@ -10985,7 +10990,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
 
         # --- Case 1: Save pipeline with empty filename and no pipeline
-        ppl_manager.savePipelineAs()
+        ppl_manager.save_pipeline_as()
         self.assertIn(
             "pipeline was not saved",
             self.main_window.statusBar().currentMessage(),
@@ -10995,7 +11000,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         with patch.object(
             ppl_edt_tabs, "save_pipeline", return_value="not_empty"
         ) as mock_save:
-            ppl_manager.savePipelineAs()
+            ppl_manager.save_pipeline_as()
             self.assertIn(
                 "pipeline has been saved",
                 self.main_window.statusBar().currentMessage(),
@@ -11141,7 +11146,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 if record.levelname == "INFO"
             ]
             self.assertTrue(
-                any("CANCEL" in msg for msg in info_messages),
+                any(
+                    "Requesting pipeline execution cancellation" in msg
+                    for msg in info_messages
+                ),
                 "'CANCEL' not found in info_messages",
             )
             self.assertTrue(
