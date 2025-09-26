@@ -521,19 +521,35 @@ class PopulseUndefinedControlWidget:
     def create_widget(
         parent,
         control_name,
+        control_value,
+        trait,
         label_class=None,
+        user_data=None,
     ):
         """
-        Create a widget for displaying Undefined values.
+        Create a widget for displaying Undefined values in the UI.
 
-        :param parent (QWidget): The parent widget.
-        :param control_name (str): The name of the control to create.
-        :param label_class: The class to use for the label widget. Default is
-                            QLabel if None.
+        This method creates a read-only QLabel widget that displays a styled
+        representation of undefined/null values, along with an optional label.
 
-        :return (tuple): (control_widget, label_widget) where control_widget
-                          is a QLabel displaying the Undefined value and
-                          label_widget is the associated label.
+        :param parent (QWidget): The parent widget that will contain the
+                                 created widgets.
+        :param control_name (str): The name/text for the label widget.
+                                   If None, no label is created.
+        :param control_value: The undefined value to display (currently
+                              unused in implementation).
+        :param trait: trait: The trait object associated with this control
+                             (currently unused in implementation).
+        :param label_class: The Qt widget class to use for creating the label.
+                            Defaults to QtGui.QLabel if None.
+        :param user_data: Additional user-defined data (currently unused in
+                          implementation).
+
+        :return (tuple): A tuple containing:
+            - control_widget: A QLabel displaying the styled undefined value
+                              text
+            - label_widget: The associated label widget, or None if
+                            control_name is None
         """
         # Create widget with styled representation of Undefined
         widget = Qt.QLabel(
