@@ -470,7 +470,7 @@ def get_value(project, collection, file_name, field):
         return database_data.get_value(collection, file_name, field)
 
 
-def launch_mia(app, args):
+def launch_mia(args):
     """
     Launches the Mia software application.
 
@@ -483,7 +483,6 @@ def launch_mia(app, args):
       projects if necessary.
     - Instantiates the 'project' object and launches Mia's GUI.
 
-    :param app (QApplication): The Qt application instance.
     :param args (Namespace): Command line arguments.
 
     :Private functions:
@@ -605,7 +604,7 @@ def launch_mia(app, args):
     main_window.show()
     # make sure to instantiate the QtThreadCall singleton from the main thread
     QtThreadCall()
-    app.exec()
+    QApplication.instance().exec()  # Just start event loop
 
 
 def message_already_exists():

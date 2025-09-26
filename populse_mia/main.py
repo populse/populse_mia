@@ -122,7 +122,7 @@ def main(args):
     os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
     # General QApplication class instantiation
     QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-    app = QApplication(sys.argv)
+    app = QApplication(sys.argv)  # noqa: F841
     QApplication.setOverrideCursor(Qt.WaitCursor)
 
     # Adding the populse projects path to sys.path, if in developer mode
@@ -377,17 +377,20 @@ def main(args):
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(app, args)
+        launch_mia(args)
         os.chdir(cwd)
 
 
-def qt_message_handler(message):
+def qt_message_handler(msg_type, context, message):
     """
-    Custom Qt message handler to filter out specific unwanted messages and
-    output the remaining ones.
+    Custom Qt message handler to filter out specific unwanted messages
+    and print the remaining ones to stderr.
 
-    :param message (str): The message to be handled, potentially filtered and
-                          then output.
+    :param msg_type (QtMsgType): The type of Qt message (debug, warning,
+                                 critical, etc.).
+    :param context (QMessageLogContext): Context information about where the
+                                         message originated.
+    :param message (str): The log message string.
     """
 
     for unwanted_message in unwanted_messages:
@@ -395,11 +398,11 @@ def qt_message_handler(message):
         if message.strip() == unwanted_message:
             return
 
-        elif unwanted_message in message:
+        if unwanted_message in message:
             # Remove the unwanted message but keep the rest of the line
             message = message.replace(unwanted_message, "").strip()
 
-    # Output the remaining message (if any)
+    # Print if anything remains
     if message:
         sys.stderr.write(message + "\n")
 
