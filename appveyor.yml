@@ -164,8 +164,10 @@ install:
   - cd populse-mia
 
   # We need to pull rotatingBrainVISA.gif file for the UTs
-  - git lfs install
-  - git lfs pull --include="populse_mia/sources_images/rotatingBrainVISA.gif"
+  # TODO: We comment out the following two lines because, for reasons that remain unclear, this sometimes does not work correctly. For now, we are using a dummy .gif file that we retrieve from Wikipedia.
+  # - git lfs install
+  # - git lfs pull --include="populse_mia/sources_images/rotatingBrainVISA.gif"
+  - curl -L -o populse_mia/sources_images/rotatingBrainVISA.gif https://upload.wikimedia.org/wikipedia/commons/9/9c/Rotating_brain_colored.gif
 
   - python generate_requirements.py
   - cd ..
