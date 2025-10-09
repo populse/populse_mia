@@ -331,22 +331,39 @@ def check_value_type(value, value_type, is_subvalue=False):
         )
 
     # Mapping for basic types
+    # type_validators = {
+    #     FIELD_TYPE_INTEGER: lambda v: v.lstrip("-").isdigit(),
+    #     FIELD_TYPE_FLOAT: lambda v: (
+    #         v.replace(".", "", 1).lstrip("-").isdigit()
+    #     ),
+    #     FIELD_TYPE_BOOLEAN: lambda v: str(v) in {"True", "False"},
+    #     FIELD_TYPE_STRING: lambda v: isinstance(v, str),
+    #     FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)
+    #     or (isinstance(v, str) and _is_valid_date(v, "%d/%m/%Y")),
+    #     FIELD_TYPE_DATETIME: lambda v: (
+    #         isinstance(v, QDateTime)
+    #         or (
+    #             isinstance(v, str)
+    #             and _is_valid_date(v, "%d/%m/%Y %H:%M:%S.%f")
+    #         )
+    #     ),
+    #     FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)
+    #     or (isinstance(v, str) and _is_valid_date(v, "%H:%M:%S.%f")),
+    # }
     type_validators = {
-        FIELD_TYPE_INTEGER: lambda v: v.lstrip("-").isdigit(),
-        FIELD_TYPE_FLOAT: lambda v: (
-            v.replace(".", "", 1).lstrip("-").isdigit()
+        FIELD_TYPE_INTEGER: lambda v: isinstance(v, int)
+        or (isinstance(v, str) and v.lstrip("-").isdigit()),
+        FIELD_TYPE_FLOAT: lambda v: isinstance(v, float)
+        or (
+            isinstance(v, str) and v.replace(".", "", 1).lstrip("-").isdigit()
         ),
-        FIELD_TYPE_BOOLEAN: lambda v: str(v) in {"True", "False"},
+        FIELD_TYPE_BOOLEAN: lambda v: isinstance(v, bool)
+        or (isinstance(v, str) and v in {"True", "False"}),
         FIELD_TYPE_STRING: lambda v: isinstance(v, str),
         FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)
         or (isinstance(v, str) and _is_valid_date(v, "%d/%m/%Y")),
-        FIELD_TYPE_DATETIME: lambda v: (
-            isinstance(v, QDateTime)
-            or (
-                isinstance(v, str)
-                and _is_valid_date(v, "%d/%m/%Y %H:%M:%S.%f")
-            )
-        ),
+        FIELD_TYPE_DATETIME: lambda v: isinstance(v, QDateTime)
+        or (isinstance(v, str) and _is_valid_date(v, "%d/%m/%Y %H:%M:%S.%f")),
         FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)
         or (isinstance(v, str) and _is_valid_date(v, "%H:%M:%S.%f")),
     }
