@@ -1748,7 +1748,7 @@ class MainWindow(QMainWindow):
             table_data.scans_to_search = documents
             table_data.itemChanged.disconnect()
             table_data.fill_cells_update_table()
-            table_data.itemChanged.connect(table_data.change_cell_color)
+            table_data.itemChanged.connect(table_data.on_cell_changed)
             table_data.update_visualized_rows(old_scans)
             # Advanced search + search_bar opened
             old_search = self.project.currentFilter.search_bar
