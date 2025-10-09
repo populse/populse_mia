@@ -1654,7 +1654,7 @@ class Project:
                         )
 
             table.update_colors()
-            table.itemChanged.connect(table.change_cell_color)
+            table.itemChanged.connect(table.on_cell_changed)
 
         elif action == "modified_visibilities":
             # To revert the modifications of the visualized tags
@@ -1915,7 +1915,7 @@ class Project:
 
             table.itemChanged.disconnect()
             table.update_colors()
-            table.itemChanged.connect(table.change_cell_color)
+            table.itemChanged.connect(table.on_cell_changed)
 
         elif action == "modified_values":
             # To revert a value changed in the databrowser,
@@ -1974,7 +1974,7 @@ class Project:
                             item.setFont(font)
 
             table.update_colors()
-            table.itemChanged.connect(table.change_cell_color)
+            table.itemChanged.connect(table.on_cell_changed)
 
         elif action == "modified_visibilities":
             # To revert the modifications of the visualized tags
