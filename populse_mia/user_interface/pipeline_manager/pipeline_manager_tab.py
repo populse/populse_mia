@@ -2913,17 +2913,18 @@ class PipelineManagerTab(QWidget):
                                     `self.last_run_pipeline` or fetch the
                                     currently selected pipeline from the
                                     pipeline editor.
-
-        Question 1: do we have to postprocess failed runs (pipelines which
-        started and failed) ? Probably yes because they may have produced some
-        results during the first steps, and failed later.
-
-        Question 2: how to decide which pipelines / runs have to be
-        posptocessed now ? A pipeline may be started, then stopped or could
-        have failed, then be postprocessed. But the user can still restart
-        them in soma-workflow (or maybe Mia one day), thus they should be
-        postprocessed again then.
         """
+        # TODO:
+        # Question 1: do we have to postprocess failed runs (pipelines which
+        # started and failed) ? Probably yes because they may have produced
+        # some results during the first steps, and failed later.
+
+        # Question 2: how to decide which pipelines / runs have to be
+        # posptocessed now ? A pipeline may be started, then stopped or could
+        # have failed, then be postprocessed. But the user can still restart
+        # them in soma-workflow (or maybe Mia one day), thus they should be
+        # postprocessed again then.
+
         # Resolve the pipeline if not provided
         pipeline = pipeline or getattr(self, "last_run_pipeline", None)
 
@@ -3196,12 +3197,6 @@ class PipelineManagerTab(QWidget):
             )
 
         pipeline_name = pipeline_name.removesuffix(".py")
-        # Reset execution state
-        self.brick_list = []
-        self.key = {}
-        self.ignore = {}
-        self.ignore_node = False
-        self.init_clicked = False
         # Set pipeline execution metadata
         self.last_run_pipeline = self.get_pipeline_or_process()
         self.last_status = swconstants.WORKFLOW_NOT_STARTED
@@ -3238,6 +3233,12 @@ class PipelineManagerTab(QWidget):
             if dialog.exec_() == 0:  # User cancelled
                 return
 
+            # Reset execution state
+            self.ignore = {}
+            self.ignore_node = False
+            self.key = {}
+            self.brick_list = []
+            self.init_clicked = False
             # Extract connection details
             resource = dialog.ui.combo_resources.currentText()
             password = dialog.ui.lineEdit_password.text()
@@ -3865,7 +3866,10 @@ class PipelineManagerTab(QWidget):
         inheritance_dict = {}
 
         if node_name in self.project.node_inheritance_history:
-            param_values = set(job.param_dict.values())
+            param_values = {
+                tuple(v) if isinstance(v, list) else v
+                for v in job.param_dict.values()
+            }
 
             for inherit_dict in self.project.node_inheritance_history[
                 node_name
