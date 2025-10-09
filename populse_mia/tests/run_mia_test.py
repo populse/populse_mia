@@ -1126,7 +1126,7 @@ class TestMIADataBrowser(TestMIACase):
             yield
 
         finally:
-            table_data.itemChanged.connect(table_data.change_cell_color)
+            table_data.itemChanged.connect(table_data.on_cell_changed)
 
     def test_add_path(self):
         """
@@ -1530,7 +1530,7 @@ class TestMIADataBrowser(TestMIACase):
         bw_item.setSelected(True)
         table.itemChanged.disconnect()
         table.clear_cell()
-        table.itemChanged.connect(table.change_cell_color)
+        table.itemChanged.connect(table.on_cell_changed)
 
         # Confirm the cell text is now marked as not defined
         bw_item = table.item(0, bw_column)
@@ -1967,7 +1967,7 @@ class TestMIADataBrowser(TestMIACase):
 
         # Step 3: Open multiple sort popup and configure sorting
         table.multiple_sort_pop_up()
-        table.itemChanged.connect(table.change_cell_color)
+        table.itemChanged.connect(table.on_cell_changed)
         multiple_sort = table.pop_up
 
         # Step 4: Apply multi-sort using two criteria
@@ -2507,14 +2507,37 @@ class TestMIADataBrowser(TestMIACase):
         tb_data.selectColumn(0)
 
         # --- Act & Assert: Cancel Removal ---
-        with patch.object(
-            PopUpRemoveScan, "exec", lambda x: tb_data.pop.cancel_clicked()
-        ):
+        def fake_exec_cancel(popup):
+            """
+            Simulates a user cancelling the popup dialog.
+
+            This helper function directly triggers the `cancel_clicked` method
+            of the provided popup instance, effectively mocking user
+            interaction with the dialog’s Cancel button during testing.
+
+            :param popup (PopUpRemoveScan): The popup dialog instance to
+                                            cancel.
+            """
+            popup.cancel_clicked()
+
+        with patch.object(PopUpRemoveScan, "exec", new=fake_exec_cancel):
             tb_data.remove_scan()
 
-        with patch.object(
-            PopUpRemoveScan, "exec", lambda x: tb_data.pop.no_all_clicked()
-        ):
+        def fake_exec_no_all(popup):
+            """
+            Simulates a user selecting the "No to All" option in the popup
+            dialog.
+
+            This helper function directly invokes the `no_all_clicked` method
+            of the provided popup instance, emulating a user clicking the
+            "No to All" button during testing.
+
+            :param popup (PopUpRemoveScan): The popup dialog instance to act
+                                            upon.
+            """
+            popup.no_all_clicked()
+
+        with patch.object(PopUpRemoveScan, "exec", new=fake_exec_no_all):
             tb_data.remove_scan()
 
         # Asserts that the data browser kept both scans
@@ -2525,9 +2548,21 @@ class TestMIADataBrowser(TestMIACase):
         )
 
         # --- Act & Assert: Confirm Removal of Both ---
-        with patch.object(
-            PopUpRemoveScan, "exec", lambda x: tb_data.pop.yes_all_clicked()
-        ):
+        def fake_exec_yes_all(popup):
+            """
+            Simulates a user selecting the "Yes to All" option in the popup
+            dialog.
+
+            This helper function directly triggers the `yes_all_clicked`
+            method of the provided popup instance, emulating a user clicking
+            the "Yes to All" button during testing.
+
+            :param popup (PopUpRemoveScan): The popup dialog instance to act
+                                            upon.
+            """
+            popup.yes_all_clicked()
+
+        with patch.object(PopUpRemoveScan, "exec", new=fake_exec_yes_all):
             tb_data.remove_scan()
 
         # Asserts that the scans were deleted
@@ -2539,20 +2574,28 @@ class TestMIADataBrowser(TestMIACase):
 
         # --- Arrange Again: Add one scan ---
         with self.main_window.project.database.data(write=True) as db:
-            # Adds one scan to the current database
             db.add_document(COLLECTION_CURRENT, nii_file_1)
             db.add_document(COLLECTION_INITIAL, nii_file_1)
 
         self.main_window.update_project(project_path)
         ppl_manager.scan_list.append(nii_file_1)
-
-        # Selects the scan
         tb_data.selectColumn(0)
 
         # --- Act & Assert: Confirm Single Removal ---
-        with patch.object(
-            PopUpRemoveScan, "exec", lambda x: tb_data.pop.yes_clicked()
-        ):
+        def fake_exec_yes(popup):
+            """
+            Simulates a user confirming the action in the popup dialog.
+
+            This helper function directly calls the `yes_clicked` method
+            of the provided popup instance, emulating a user clicking the
+            "Yes" button during testing.
+
+            :param popup (PopUpRemoveScan): The popup dialog instance to act
+                                            upon.
+            """
+            popup.yes_clicked()
+
+        with patch.object(PopUpRemoveScan, "exec", new=fake_exec_yes):
             tb_data.remove_scan()
 
         self.assertEqual(
@@ -2924,8 +2967,17 @@ class TestMIADataBrowser(TestMIACase):
         scan_item = table.item(1, 0)
         scan_item.setSelected(True)
 
-        with self.suppress_item_changed_signal(table):
+        with (
+            self.suppress_item_changed_signal(table),
+            patch(
+                "populse_mia.user_interface.data_browser.data_browser."
+                "QMessageBox.exec_",
+                return_value=QMessageBox.Ok,
+            ) as mock_exec,
+        ):
             table.reset_row()
+            # Assert that exec_ was called
+            mock_exec.assert_called_once()
 
         # Check if value in DataBrowser as been reset
         curr, init, gui, type_item = self.get_db_and_databrowser_value(
@@ -3486,7 +3538,7 @@ class TestMIADataBrowser(TestMIACase):
         Test various behaviors of the table data view in the data browser.
 
         This includes verifying correct interaction with:
-            - TableDataBrowser.change_cell_color
+            - TableDataBrowser.on_cell_changed
             - TableDataBrowser.section_moved
             - TableDataBrowser.selectColumn
 
@@ -3601,7 +3653,7 @@ class TestMIADataBrowser(TestMIACase):
             table_data.item(3, 8).setText("1.0")
 
             # Changing the same tag does not trigger the 'valueChanged' and
-            # thus not the 'change_cell_color' method
+            # thus not the 'on_cell_changed' method
             table_data.item(3, 8).setSelected(False)
 
             # Asserts that the tag value was changed
@@ -3663,60 +3715,155 @@ class TestMIADataBrowser(TestMIACase):
 
     def test_table_data_context_menu(self):
         """
-        Simulates a right-click on a scan to display the context menu in the
-        data table and triggers each available action to ensure correct
-        behavior.
+        Test that context menu actions correctly call their respective
+        methods on the data table.
 
-        This test verifies that the `TableDataBrowser.context_menu_table`
-        method handles various context menu actions without error.
+        This covers both:
+        - Confirm actions (that trigger a QMessageBox before executing)
+        - Direct actions (executed immediately)
 
-        Mocks:
-            - QMenu.exec_: Simulates user selection of context menu actions.
-            - QMessageBox.exec: Suppresses message box dialogs during the
-                                test.
+        QMessageBox is auto-accepted by simulating a click on the OK button.
         """
         # Create a new lightweight test project and switch to it
         new_proj_path = self.get_new_test_project(light=True)
         self.main_window.switch_project(new_proj_path, "test_light_project")
-
         # Get a reference to the data table
         table_data = self.main_window.data_browser.table_data
+        # Mapping: label -> (target object, method name, args)
+        # Note: confirm actions receive False from the button's clicked signal
+        confirm_actions = {
+            "Reset cell(s)": (table_data, "reset_cell", [False]),
+            "Reset column(s)": (table_data, "reset_column", [False]),
+            "Reset row(s)": (table_data, "reset_row", [False]),
+            "Clear cell(s)": (table_data, "clear_cell", [False]),
+            "Remove document(s)": (table_data, "remove_scan", [False]),
+        }
+        direct_actions = {
+            "Add document": (table_data, "add_path", []),
+            "Sort column": (table_data, "sort_column", [0]),
+            "Sort column (descending)": (table_data, "sort_column", [1]),
+            "Visualized tags": (table_data, "visualized_tags_pop_up", []),
+            "Select column(s)": (table_data, "select_all_columns", []),
+            "Multiple sort": (table_data, "multiple_sort_pop_up", []),
+            "Send documents to the Pipeline Manager": (
+                table_data.data_browser,
+                "send_documents_to_pipeline",
+                [],
+            ),
+            "Tries to read a file": (table_data, "display_file", []),
+        }
+        # Mock QMessageBox to capture instances and simulate OK click
+        original_init = QMessageBox.__init__
+        msgbox_instances = []
 
-        with (
-            patch.object(QMessageBox, "exec", return_value=None),
-            patch.object(QMenu, "exec_", return_value=None),
-        ):
-            # Trigger the context menu once before simulating individual
-            # actions
-            table_data.context_menu_table(QPoint(10, 10))
+        def capture_init(self, *args, **kwargs):
+            """
+            Wrap the original __init__ method to capture instances of the
+            object.
 
-            # List of action names to simulate from the context menu
-            action_names = [
-                "action_reset_cell",
-                "action_reset_column",
-                "action_reset_row",
-                "action_clear_cell",
-                "action_add_scan",
-                "action_remove_scan",
-                "action_sort_column",
-                "action_sort_column_descending",
-                "action_visualized_tags",
-                "action_select_column",
-                "action_multiple_sort",
-                "action_send_documents_to_pipeline",
-                "action_display_file",
-                # Note: 'action_sort_column' may cause instability
-            ]
+            This method calls the original initializer and appends the created
+            instance to the `msgbox_instances` list for later reference or
+            testing.
 
-            # Simulate selecting each action via the context menu
-            for action_name in action_names:
+            :param args: Positional arguments passed to the original __init__.
+            :param kwargs: Keyword arguments passed to the original __init__.
+            """
+            original_init(self, *args, **kwargs)
+            msgbox_instances.append(self)
 
-                with patch.object(
-                    QMenu,
-                    "exec_",
-                    return_value=getattr(table_data, action_name),
-                ):
-                    table_data.context_menu_table(QPoint(10, 10))
+        # When exec is called, emit the OK button's clicked signal
+        def auto_click_ok():
+            """
+            Automatically "click" the OK button of the most recently
+            created QMessageBox.
+
+            This function is intended for testing purposes. If there
+            are any captured QMessageBox instances in
+            `msgbox_instances`, it emits a click signal on the OK
+            button of the last instance. It always returns
+            `QMessageBox.Ok`.
+
+            :returns (QMessageBox.StandardButton): The standard OK
+                                                    button value.
+            """
+
+            if msgbox_instances:
+                msgbox = msgbox_instances[-1]
+                ok_button = msgbox.button(QMessageBox.Ok)
+                ok_button.clicked.emit()
+
+            return QMessageBox.Ok
+
+        with patch.object(QMessageBox, "__init__", capture_init):
+
+            with patch.object(QMessageBox, "exec", side_effect=auto_click_ok):
+
+                # Helper to simulate menu selection
+                def run_action(label, target, method_name, args):
+                    """
+                    Simulate triggering a context menu action in a table for
+                    testing purposes.
+
+                    This function patches the target object's specified method
+                    and the QMenu's `addAction` and `exec_` methods to
+                    intercept and simulate user interaction with context menu
+                    items. It captures the QAction objects created,
+                    automatically triggers the action corresponding to `label`,
+                    and verifies that the target method was called with the
+                    provided arguments.
+
+                    :param label (str): The label of the QAction to trigger.
+                    :param target (QObject): The object containing the method
+                                             to be called.
+                    :param method_name (str): The name of the method to be
+                                              patched on the target.
+                    :param args (tuple): Arguments expected to be passed to the
+                                         target method.
+                    """
+                    created_actions = {}
+
+                    # Patch addAction to capture QAction objects
+                    def fake_add_action(action_label):
+                        """
+                        Create a fake QAction and store it for testing purposes.
+
+                        This function is used to patch QMenu.addAction during
+                        tests. It creates a QAction with the given label,
+                        stores it in the `created_actions` dictionary, and
+                        returns the action.
+
+                        :param action_label (str): The label of the QAction to
+                                                   create.
+                        :returns (QAction): The created QAction object.
+                        """
+                        action = QAction(action_label, table_data)
+                        created_actions[action_label] = action
+
+                        return action
+
+                    with (
+                        patch.object(target, method_name) as mock_method,
+                        patch.object(
+                            QMenu, "addAction", side_effect=fake_add_action
+                        ),
+                        patch.object(
+                            QMenu,
+                            "exec_",
+                            side_effect=lambda *_: created_actions.get(label),
+                        ),
+                    ):
+                        # Clear the list before each action
+                        msgbox_instances.clear()
+                        table_data.context_menu_table(QPoint(10, 10))
+                        mock_method.assert_called_once_with(*args)
+
+                # Run all confirm + direct actions
+                for label, (
+                    target,
+                    method_name,
+                    args,
+                ) in {**confirm_actions, **direct_actions}.items():
+                    run_action(label, target, method_name, args)
 
     def test_undo_redo_databrowser(self):
         """
