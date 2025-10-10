@@ -8241,7 +8241,7 @@ class TestMIAPipelineEditor(TestMIACase):
         with patch.object(
             PipelineEditor._PlugEdit, "exec_", return_value=None
         ) as mock_exec:
-            ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
+            ppl_edt._export_plug(pipeline_parameter=None, temp_plug_name=None)
             mock_exec.assert_called_once_with()
 
         # We verify that there are still no processes in the current pipeline
