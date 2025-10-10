@@ -1,15 +1,18 @@
 """
-Module that execute the pipeline manager tab menu actions
-and allow to edit graphically a pipeline.
+Module that executes the actions in the pipeline manager menu and allows
+to graphically modify a pipeline.
+
 
 Contains:
+
     Class:
         - PipelineEditor
         - PipelineEditorTabs
+
     Function:
-        - save_pipeline
-        - get_path
         - find_filename
+        - get_path
+        - save_pipeline
         - values
 
 """
@@ -88,19 +91,24 @@ class PipelineEditor(PipelineDeveloperView):
         - update_plug_value: updates a plug value
     """
 
-    # The signal that will be emitted when the pipeline is saved
+    # The signal emitted when the pipeline is saved
     pipeline_saved = QtCore.pyqtSignal(str)
-    # The signal that will be emitted when the pipeline is modified
+    # The signal emitted when the pipeline is modified
     pipeline_modified = QtCore.pyqtSignal(PipelineDeveloperView)
 
     def __init__(self, project, main_window):
-        """Initialization of the PipelineEditor.
-
-        :param project: current project in the software
-        :param main_window: current main window
         """
-        PipelineDeveloperView.__init__(
-            self,
+        Initialize the PipelineEditor for visual pipeline development.
+
+        Sets up the pipeline editor with project context and initializes
+        undo/redo functionality.
+
+        :param project: The current project instance containing pipeline data
+                        and configuration.
+        :parm main_window: The main application window instance for UI
+                           integration.
+        """
+        super().__init__(
             pipeline=None,
             allow_open_controller=True,
             show_sub_pipelines=True,
@@ -110,28 +118,37 @@ class PipelineEditor(PipelineDeveloperView):
         self.scene.pipeline.set_study_config(engine.study_config)
         self.project = project
         self.main_window = main_window
-        # Undo/Redo
+        # Initialize undo/redo stacks
         self.undos = []
         self.redos = []
         self.userlevel = Config().get_user_level()
 
     def _del_link(self, link=None, from_undo=False, from_redo=False):
-        """Delete a link.
-
-        :param link: string representation of a link
-           (e.g. "process1.out->process2.in")
-        :param from_undo: boolean, True if the action has been made using an
-           undo
-        :param from_redo: boolean, True if the action has been made using a
-           redo
         """
+        Delete a link between two pipeline nodes.
 
-        if not link:
-            link = self._current_link
+        Removes a connection between a source node's output plug and a
+        destination node's input plug, updates the pipeline state, and
+        records the action in history.
 
-        else:
-            self._current_link = link
+        :param link: Link specification string in the format
+                     "source_node.output_plug->dest_node.input_plug".If None,
+                     uses the current link stored in self._current_link.
+        :param from_undo: Whether this deletion is being performed as part of
+                          an undo operation. Affects history recording.
+        :param from_redo: Whether this deletion is being performed as part of
+                          a redo operation. Affects history recording.
 
+        Side Effects:
+            - Updates self._current_link to the deleted link
+            - Modifies self._current_link_def with link component references
+            - Calls parent class's _del_link() to perform actual deletion
+            - Records action in history unless from undo/redo
+        """
+        # Use provided link or fall back to current link
+        link = link or self._current_link
+        self._current_link = link
+        # Parse link into its components
         (
             source_node_name,
             source_plug_name,
@@ -142,23 +159,28 @@ class PipelineEditor(PipelineDeveloperView):
             dest_node,
             dest_plug,
         ) = self.scene.pipeline.parse_link(link)
+        # Extract destination details from the source plug's first link
         (
             dest_node_name,
-            dest_parameter,
+            _,
             dest_node,
             dest_plug,
             weak_link,
-        ) = list(source_plug.links_to)[0]
+        ) = list(
+            source_plug.links_to
+        )[0]
+        # Determine if both plugs are active
         active = source_plug.activated and dest_plug.activated
+        # Store link definition for potential restoration
         self._current_link_def = (
             source_node,
             source_plug,
             dest_node,
             dest_plug,
         )
-        # Calling the original method
-        PipelineDeveloperView._del_link(self)
-        # For history
+        # Perform the actual deletion via parent class
+        super()._del_link()
+        # Record action in history
         history_maker = [
             "delete_link",
             (source_node_name, source_plug_name),
@@ -167,13 +189,14 @@ class PipelineEditor(PipelineDeveloperView):
             weak_link,
         ]
         self.update_history(history_maker, from_undo, from_redo)
+        # Provide user feedback
         self.main_window.statusBar().showMessage(
             f"Link {link} has been deleted."
         )
 
     def _export_plug(
         self,
-        pipeline_parameter=False,
+        pipeline_parameter=None,
         optional=None,
         weak_link=None,
         from_undo=False,
@@ -181,159 +204,179 @@ class PipelineEditor(PipelineDeveloperView):
         temp_plug_name=None,
         multi_export=False,
     ):
-        """Export a plug to a pipeline global input or output.
-
-        :param pipeline_parameter: name of the pipeline input/output
-        :param optional: True if the plug is optional
-        :param weak_link: True if the link is weak
-        :param from_undo: True if this method is called from an undo action
-        :param from_redo: True if this method is called from a redo action
-        :param temp_plug_name: tuple containing (the name of the node, the
-           name of the plug) to export
-        :param multi_export: True if this method is called in export plugs case
         """
-        # TODO: Bug: the first parameter (here pipeline_parameter) cannot be
-        #            None even if we write pipeline_parameter=None in the
-        #            line above, it will be False...
+        Export a plug to a pipeline global input or output.
 
-        if temp_plug_name is None:
-            temp_plug_name = self._temp_plug_name
+        This method exports a node plug to the pipeline level, making it
+        accessible as a pipeline parameter. It handles name conflicts, creates
+        appropriate links, and maintains operation history for undo/redo
+        functionality.
 
-        if not pipeline_parameter:
-            dial = self._PlugEdit()
-            dial.name_line.setText(temp_plug_name[1])
-            dial.optional.setChecked(self._temp_plug.optional)
-            res = dial.exec_()
+        :param pipeline_parameter (str): Name for the exported pipeline
+                                         parameter. If None, prompts user for
+                                         a name via dialog. Defaults to None.
+        :param optional (bool): Whether the exported plug is optional. If
+                                None, derived from dialog checkbox or plug
+                                configuration. Defaults to None.
+        :param weak_link (bool): Whether to create a weak link (doesn't
+                                 enforce execution order). If None, derived
+                                 from dialog or defaults to False.
+        :param from_undo (bool): True when called during an undo operation.
+                                 Used to prevent circular history updates.
+                                 Defaults to False.
+        :param from_redo (bool): True when called during a redo operation.
+                                 Used to prevent circular history updates.
+                                 Defaults to False.
+        :param temp_plug_name (tuple): A (node_name, plug_name) tuple
+                                       specifying the plug to export. If None,
+                                       uses self._temp_plug_name. Defaults to
+                                       None.
+        :param multi_export (bool): True when exporting multiple plugs
+                                    simultaneously. Changes return behavior
+                                    and error handling. Defaults to False.
+
+        :return (str): When multi_export is True, returns the plug name on
+                       success or None on failure. When multi_export is False,
+                       returns None after updating the UI and history.
+
+        :raises TraitError: Logged as warning when plug export fails due to
+                            trait issues.
+        :raises ValueError: Logged as warning when export fails due to invalid
+                            values.
+
+        Side Effects:
+            - May display dialog boxes for user input
+            - Updates pipeline structure and UI
+            - Adds entry to operation history (unless from_undo/from_redo)
+            - Shows status message in main window
+        """
+        temp_plug_name = temp_plug_name or self._temp_plug_name
+
+        # Get plug name from user dialog or use provided parameter
+        if pipeline_parameter is None:
+            dialog = self._PlugEdit()
+            dialog.name_line.setText(temp_plug_name[1])
+            dialog.optional.setChecked(self._temp_plug.optional)
+
+            if not dialog.exec_():
+                return None
+
+            plug_name = str(dialog.name_line.text())
+            optional = (
+                optional
+                if optional is not None
+                else dialog.optional.isChecked()
+            )
+            weak_link = (
+                weak_link if weak_link is not None else dialog.weak.isChecked()
+            )
 
         else:
-            res = True
+            plug_name = pipeline_parameter
+            weak_link = weak_link if weak_link is not None else False
 
-        if res:
-            allow_existing_plug = False
-            check_plug = True
+        # Handle name conflicts interactively
+        allow_existing_plug = False
 
-            if not pipeline_parameter:
-                plug_name = str(dial.name_line.text())
+        while True:
+            existing_plugs = self.scene.pipeline.pipeline_node.plugs
 
-            else:
-                plug_name = pipeline_parameter
+            if plug_name not in existing_plugs:
+                break  # Unique plug name → done
 
-            while check_plug is True:
+            # Ask user if they want to connect to the existing plug
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setWindowTitle(
+                "populse_mia - Warning: Duplicate pipeline plug"
+            )
+            msg_box.setText(
+                f"The '{plug_name}' pipeline plug already exists.\n"
+                "Do you want to connect to this existing plug?"
+            )
+            reply = msg_box.question(
+                self,
+                msg_box.windowTitle(),
+                msg_box.text(),
+                QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+            )
 
-                if plug_name in self.scene.pipeline.pipeline_node.plugs:
-                    msg = QMessageBox()
-                    msg.setIcon(QMessageBox.Warning)
-                    title = "populse_mia - Warning: Duplicate pipeline plug"
-                    msgtext = (
-                        f"The '{plug_name}' pipeline plug already exists, do "
-                        f"you want to connect to this existing plug ?"
-                    )
-                    reply = msg.question(
-                        self, title, msgtext, QMessageBox.Yes | QMessageBox.No
-                    )
+            if reply == QMessageBox.Cancel:
+                return None
 
-                    if reply == QMessageBox.Yes:
-                        allow_existing_plug = True
-                        check_plug = False
+            if reply == QMessageBox.Yes:
+                allow_existing_plug = True
+                break
 
-                    elif reply == QMessageBox.No:
-                        new_name, ok = QInputDialog.getText(
-                            self,
-                            "Plug name Input Dialog",
-                            f"The plug {plug_name} already exists, "
-                            f"please choose a new name.",
-                        )
+            # Otherwise (No), ask for a new name
+            new_name, ok = QInputDialog.getText(
+                self,
+                "Plug name Input Dialog",
+                f"The plug '{plug_name}' already exists.\n"
+                "Please choose a new name:",
+            )
 
-                        if (
-                            ok
-                            and new_name
-                            and not new_name.isspace()
-                            and plug_name != new_name
-                        ):
-                            plug_name = new_name
+            if not ok or not new_name.strip():
+                return None
 
-                            if (
-                                plug_name
-                                not in self.scene.pipeline.pipeline_node.plugs
-                            ):
-                                check_plug = False
+            plug_name = new_name.strip()
 
-                else:
-                    allow_existing_plug = False
-                    check_plug = False
+        # Attempt the export
+        try:
+            self.scene.pipeline.export_parameter(
+                temp_plug_name[0],
+                temp_plug_name[1],
+                plug_name,
+                weak_link=weak_link,
+                is_optional=optional,
+                allow_existing_plug=allow_existing_plug,
+            )
 
-            pipeline_parameter = plug_name
+        except TraitError:
+            logger.warning(
+                f"Cannot export {temp_plug_name[0]}.{plug_name} plug."
+            )
+            return None
 
-            if optional is None:
+        except ValueError as e:
+            logger.warning(f"\n{e}")
+            return None
 
-                try:
-                    optional = dial.optional.isChecked()
+        # If multiple exports, only return plug name
+        if multi_export:
+            return temp_plug_name[1]
 
-                except UnboundLocalError:
-                    pass
+        # Update UI and history
+        self.scene.update_pipeline()
+        self.update_history(
+            ["export_plugs", plug_name, temp_plug_name[0]],
+            from_undo,
+            from_redo,
+        )
+        self.main_window.statusBar().showMessage(
+            f"Plug {plug_name} has been exported."
+        )
+        return None
 
-            if weak_link is None:
-
-                try:
-                    weak_link = dial.weak.isChecked()
-
-                except UnboundLocalError:
-                    weak_link = False
-
-            try:
-                self.scene.pipeline.export_parameter(
-                    temp_plug_name[0],
-                    temp_plug_name[1],
-                    pipeline_parameter,
-                    weak_link=weak_link,
-                    is_optional=optional,
-                    allow_existing_plug=allow_existing_plug,
-                )
-
-            except TraitError:
-                logger.warning(
-                    f"Cannot export {temp_plug_name[0]}.{plug_name} plug."
-                )
-
-                if multi_export:
-                    return None
-
-            except ValueError as e:
-                logger.warning(f"\n{e}")
-
-                if multi_export:
-                    return None
-
-            else:
-
-                # For history
-                if multi_export:
-                    return temp_plug_name[1]
-
-                else:
-                    self.scene.update_pipeline()
-                    history_maker = [
-                        "export_plugs",
-                        plug_name,
-                        temp_plug_name[0],
-                    ]
-                    self.update_history(history_maker, from_undo, from_redo)
-                    self.main_window.statusBar().showMessage(
-                        f"Plug {plug_name} has been exported."
-                    )
-
-    def _release_grab_link(self, event, ret=False):
-        """Method called when a link is released.
-
-        :param event: mouse event corresponding to the release
-        :param ret: boolean that is set to True in the original method to
-           return the link
+    def _release_grab_link(self, event):
         """
-        # Calling the original method
-        link = PipelineDeveloperView._release_grab_link(self, event, ret=True)
-        # For history
-        history_maker = ["add_link", link]
-        self.update_history(history_maker, from_undo=False, from_redo=False)
+        Handle link release event and update pipeline history.
+
+        Called when a user releases a link in the pipeline editor. This method
+        extends the parent class behavior by recording the link addition in
+        the history and displaying a status message.
+
+        :param event: Mouse event corresponding to the link release.
+        """
+        # TODO: Is this method still used?
+
+        # Retrieve the created link from parent implementation
+        link = super()._release_grab_link(event, ret=True)
+        # Record link creation in history for undo/redo functionality
+        self.update_history(
+            history_maker=["add_link", link], from_undo=False, from_redo=False
+        )
+        # Provide user feedback
         self.main_window.statusBar().showMessage(
             f"Link {link} has been added."
         )
