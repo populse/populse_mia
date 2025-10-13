@@ -85,12 +85,11 @@ from . import type_editors
 
 logger = logging.getLogger(__name__)
 
-if sys.version_info[0] >= 3:
-    # In Python 3, str is equivalent to unicode in Python 2
-    unicode = str
+# In Python 3, str is equivalent to unicode in Python 2
+unicode = str
 
-    def values(d):
-        """
+def values(d):
+    """
         Return a list of all values in the dictionary.
 
         In Python 3, `dict.values()` returns a view, which is then
@@ -104,26 +103,8 @@ if sys.version_info[0] >= 3:
             list: A list of values in the dictionary.
         """
 
-        return list(d.values())
+    return list(d.values())
 
-else:
-
-    def values(d):
-        """
-        Return a list of all values in the dictionary.
-
-        In Python 2, `dict.values()` returns a list directly, so no
-        conversion is necessary. This function ensures compatibility
-        across Python versions by returning a list of the dictionary's values.
-
-        Args:
-            d (dict): The dictionary from which to retrieve values.
-
-        Returns:
-            list: A list of values in the dictionary.
-        """
-
-        return d.values()
 
 
 class PlugFilter(QWidget):
