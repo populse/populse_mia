@@ -20,7 +20,6 @@
 
 import logging
 import os
-import sys
 from functools import partial
 
 import sip
@@ -85,45 +84,19 @@ from . import type_editors
 
 logger = logging.getLogger(__name__)
 
-if sys.version_info[0] >= 3:
-    # In Python 3, str is equivalent to unicode in Python 2
-    unicode = str
 
-    def values(d):
-        """
-        Return a list of all values in the dictionary.
+def values(d):
+    """
+    Return a list of all values in the dictionary.
 
-        In Python 3, `dict.values()` returns a view, which is then
-        converted to a list. This function ensures compatibility
-        across Python versions by returning a list of the dictionary's values.
+    In Python 3, `dict.values()` returns a view, which is then
+    converted to a list for compatibility with older code that
+    expects a list of values.
 
-        Args:
-            d (dict): The dictionary from which to retrieve values.
-
-        Returns:
-            list: A list of values in the dictionary.
-        """
-
-        return list(d.values())
-
-else:
-
-    def values(d):
-        """
-        Return a list of all values in the dictionary.
-
-        In Python 2, `dict.values()` returns a list directly, so no
-        conversion is necessary. This function ensures compatibility
-        across Python versions by returning a list of the dictionary's values.
-
-        Args:
-            d (dict): The dictionary from which to retrieve values.
-
-        Returns:
-            list: A list of values in the dictionary.
-        """
-
-        return d.values()
+    :param d (dict): The dictionary from which to retrieve values.
+    :returns (list): A list of values in the dictionary.
+    """
+    return list(d.values())
 
 
 class PlugFilter(QWidget):
