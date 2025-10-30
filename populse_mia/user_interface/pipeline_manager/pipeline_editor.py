@@ -383,74 +383,89 @@ class PipelineEditor(PipelineDeveloperView):
 
     def _remove_plug(
         self,
-        _temp_plug_name=None,
+        plug_names=None,
         from_undo=False,
         from_redo=False,
         from_export_plugs=False,
     ):
-        """Remove a plug
-
-        :param _temp_plug_name: tuple containing (the name of the node,
-           the name of the plug) to remove
-        :param from_undo: True if this method is called from an undo action
-        :param from_redo: True if this method is called from a redo action
-        :param from_export_plugs: True if this method is called from a
-           "from_export_plugs" undo or redo action
         """
-        tot_plug_name = []
+        Remove one or more plugs from the pipeline.
 
-        if not _temp_plug_name:
-            _temp_plug_name = self._temp_plug_name
+        This method removes plugs from the pipeline, tracks their connections
+        for potential undo/redo operations, and updates the application
+        history unless called from an export operation.
 
-        if isinstance(_temp_plug_name, tuple):
-            _temp_plug_name = [_temp_plug_name]
+        :param plug_names: A tuple (node_name, plug_name) or list of such
+                           tuples specifying the plug(s) to remove. If None,
+                           uses self._temp_plug_name.
+        :param from_undo: Whether this method is being called from an undo
+                          operation.
+        :param from_redo: Whether this method is being called from a redo
+                          operation.
+        :param from_export_plugs: Whether this method is being called from an
+                                  export plugs undo/redo operation. When True,
+                                  history is not updated.
 
-        for pip_plug_name in _temp_plug_name:
+        Note:
+            For each removed plug, stores [plug_info, connected_plugs,
+            optional_flag] in the history for potential restoration.
+        """
+        # Use provided plug names or fall back to instance variable
+        plug_names = plug_names or self._temp_plug_name
 
-            if pip_plug_name[0] in ("inputs", "outputs"):
-                plug_name = pip_plug_name[1]
-                plug = self.scene.pipeline.pipeline_node.plugs[plug_name]
-                optional = plug.optional
-                # contains the plugs that are connected
-                # to the input or output plug
-                new_temp_plugs = []
+        # Normalize to list format for uniform processing
+        if isinstance(plug_names, tuple):
+            plug_names = [plug_names]
 
-                for link in plug.links_to:
-                    temp_plug = (link[0], link[1])
-                    new_temp_plugs.append(temp_plug)
+        removed_plugs_info = []
 
-                for link in plug.links_from:
-                    temp_plug = (link[0], link[1])
-                    new_temp_plugs.append(temp_plug)
+        for node_name, plug_name in plug_names:
 
-                # To avoid the "_items" bug: setting the has_items attribute
-                # of the trait's handler to False
-                node = self.scene.pipeline.nodes[""]
-                source_trait = node.get_trait(plug_name)
+            # Only process pipeline input/output plugs
+            if node_name not in ("inputs", "outputs"):
+                continue
 
-                if source_trait.handler.has_items:
-                    source_trait.handler.has_items = False
+            plug = self.scene.pipeline.pipeline_node.plugs[plug_name]
+            # Collect all connected plugs for history tracking
+            connected_plugs = [
+                (link[0], link[1])
+                for link in (*plug.links_to, *plug.links_from)
+            ]
+            # Fix potential "_items" bug by disabling has_items attribute
+            pipeline_node = self.scene.pipeline.nodes[""]
+            source_trait = pipeline_node.get_trait(plug_name)
 
-                self.scene.pipeline.remove_trait(pip_plug_name[1])
-                self.scene.update_pipeline()
-                tot_plug_name.append([pip_plug_name, new_temp_plugs, optional])
+            if source_trait.handler.has_items:
+                source_trait.handler.has_items = False
 
-        # if not from_undo and not from_redo:
-        if not from_export_plugs and tot_plug_name:
-            # For history
-            history_maker = ["remove_plug", tot_plug_name]
-            self.update_history(history_maker, from_undo, from_redo)
+            # Remove the plug and update pipeline
+            self.scene.pipeline.remove_trait(plug_name)
+            self.scene.update_pipeline()
 
-            if len(tot_plug_name) == 1:
-                self.main_window.statusBar().showMessage(
-                    f"'{tot_plug_name[0][0][1]}' plug has been removed."
+            # Store removal information for history
+            removed_plugs_info.append(
+                [(node_name, plug_name), connected_plugs, plug.optional]
+            )
+
+            # Update history and status bar (unless called from export
+            # operation)
+            if not from_export_plugs and removed_plugs_info:
+                self.update_history(
+                    ["remove_plug", removed_plugs_info], from_undo, from_redo
                 )
 
-            else:
-                self.main_window.statusBar().showMessage(
-                    f"{tuple(i[0][1] for i in tot_plug_name)} plugs "
-                    f"has been removed."
-                )
+                # Display appropriate status message
+                if len(removed_plugs_info) == 1:
+                    plug_name = removed_plugs_info[0][0][1]
+                    message = f"'{plug_name}' plug has been removed."
+
+                else:
+                    plug_names_str = tuple(
+                        info[0][1] for info in removed_plugs_info
+                    )
+                    message = f"{plug_names_str} plugs have been removed."
+
+                self.main_window.statusBar().showMessage(message)
 
     def add_link(
         self,
@@ -462,26 +477,41 @@ class PipelineEditor(PipelineDeveloperView):
         from_redo=False,
         allow_export=False,
     ):
-        """Add a link between two nodes.
-
-        :param source: tuple containing the node and plug source names
-        :param dest: tuple containing the node and plug destination names
-        :param active: boolean that is True if the link is activated
-        :param weak: boolean that is True if the link is weak
-        :param from_undo: boolean that is True if the action has been made
-           using an undo
-        :param from_redo: boolean that is True if the action has been made
-           using a redo
         """
-        # Writing a string to represent the link
-        source_parameters = ".".join(source)
-        dest_parameters = ".".join(dest)
-        link = "->".join((source_parameters, dest_parameters))
+        Add a link between two nodes in the pipeline.
+
+        Creates a connection between a source node's output plug and a
+        destination node's input plug. The link is represented as
+        "node.plug->node.plug" format and added to the pipeline scene.
+
+        :param source: A tuple of (node_name, plug_name) for the source
+                       connection.
+        :param dest: A tuple of (node_name, plug_name) for the destination
+                     connection.
+        :param active: Whether the link is currently active/enabled.
+        :param weak: Whether the link is a weak reference that doesn't enforce
+                     strict execution dependencies.
+        :param from_undo: Whether this action originates from an undo
+                          operation. Defaults to False.
+        :param from_redo: Whether this action originates from a redo
+                          operation. Defaults to False.
+        :param allow_export: Whether to allow this link in exported pipelines.
+                             Defaults to False.
+
+        Side Effects:
+            - Adds the link to the pipeline scene
+            - Updates the pipeline visualization
+            - Records the action in history (unless from undo/redo)
+            - Displays a status message in the main window
+        """
+        # Create link representation in "node.plug->node.plug" format
+        link = f"{'.'.join(source)}->{'.'.join(dest)}"
+        # Add link to pipeline and refresh visualization
         self.scene.pipeline.add_link(link, allow_export=allow_export)
         self.scene.update_pipeline()
-        # For history
-        history_maker = ["add_link", link]
-        self.update_history(history_maker, from_undo, from_redo)
+        # Record action in history for undo/redo functionality
+        self.update_history(["add_link", link], from_undo, from_redo)
+        # Provide user feedback
         self.main_window.statusBar().showMessage(
             f"Link {link} has been added."
         )
@@ -492,29 +522,52 @@ class PipelineEditor(PipelineDeveloperView):
         node_name=None,
         from_undo=False,
         from_redo=False,
-        links=[],
+        links=None,
     ):
-        """Add a process to the pipeline.
-
-        :param class_process: process class's name (str)
-        :param node_name: name of the corresponding node (using when
-          undo/redo) (str)
-        :param from_undo: boolean that is True if the action has been made
-          using an undo
-        :param from_redo: boolean that is True if the action has been made
-          using a redo
-        :param links: list of links (using when undo/redo)
         """
+        Add a process to the pipeline with optional link restoration.
+
+        This method adds a named process to the pipeline and configures it
+        according to project settings. It also handles link restoration when
+        the action is part of an undo/redo operation.
+
+        :param class_process (str): The name of the process class to
+                                    instantiate.
+        :param node_name (str): Custom name for the node. If None, the name is
+                                derived from the process's context_name or
+                                name attribute. Defaults to None.
+        :param from_undo (bool): Whether this action is part of an undo
+                                 operation. Defaults to False.
+        :param from_redo (bool): Whether this action is part of a redo
+                                 operation. Defaults to False.
+        :param links (list): List of link tuples to restore, where each tuple
+                             contains (source, dest, active, weak). Used
+                             during undo/redo operations. Defaults to None.
+
+        Side Effects:
+            - Adds process to the pipeline
+            - Configures project settings if applicable
+            - Restores links if provided
+            - Updates history for undo/redo
+            - Updates UI status bar and buttons
+        """
+
+        if links is None:
+            links = []
+
+        # Add the process via parent class
         process = super().add_named_process(class_process, node_name)
 
+        # Determine node name from process if not provided
         if node_name is None:
-            node_name = getattr(process, "context_name", process.name).split(
-                "."
-            )[-1]
+            context_name = getattr(process, "context_name", process.name)
+            node_name = context_name.split(".")[-1]
 
-        if hasattr(process, "use_project") and process.use_project:
+        # Configure project if process requires it
+        if getattr(process, "use_project", False):
             process.project = self.project
 
+        # Set SPM script file user level for process and nested process
         if hasattr(process, "_spm_script_file"):
             process.trait("_spm_script_file").userlevel = 1
 
@@ -523,42 +576,51 @@ class PipelineEditor(PipelineDeveloperView):
         ):
             process.process.trait("_spm_script_file").userlevel = 1
 
-        # If the process is added from a undo, all the links
-        # that were connected to the corresponding node has to be reset
-        for link in links:
-            source = link[0]
-            dest = link[1]
-            active = link[2]
-            weak = link[3]
+        # Restore links if this is part of an undo operation
+        for source, dest, active, weak in links:
+            # Add link to scene
             self.scene.add_link(source, dest, active, weak)
-            # Writing a string to represent the link
-            source_parameters = ".".join(source)
-            dest_parameters = ".".join(dest)
-            link_to_add = "->".join((source_parameters, dest_parameters))
-            self.scene.pipeline.add_link(link_to_add)
+            # Create string representation of link
+            link_string = "->".join([".".join(source), ".".join(dest)])
+            # Add link to pipeline
+            self.scene.pipeline.add_link(link_string)
+
+        # Update pipeline once after all links are restored
+        if links:
             self.scene.update_pipeline()
 
-        # For history
-        history_maker = ["add_process"]
+        # Update history for undo/redo functionality
+        history_maker = ["add_process", node_name]
 
-        if from_undo:
-            # Adding the arguments to make the redo correctly
-            history_maker.append(node_name)
-
-        else:
-            # Adding the arguments to make the undo correctly
-            history_maker.append(node_name)
+        if not from_undo:
             history_maker.append(class_process)
 
         self.update_history(history_maker, from_undo, from_redo)
+        # Update UI
         self.main_window.statusBar().showMessage(
             f"Node {node_name} has been added."
         )
         self.main_window.pipeline_manager.update_user_buttons_states()
 
     def check_modifications(self):
-        """Check if the nodes of the pipeline have been modified."""
-        # import verCmp only here to prevent circular import issue
+        """
+        Check and update pipeline nodes that have been modified.
+
+        This method iterates through all pipeline nodes and detects if the
+        underlying process definition has changed (added/removed
+        inputs/outputs).
+
+        When changes are detected, it:
+            - Recreates the node with the updated process definition
+            - Preserves the node's position in the scene
+            - Attempts to restore compatible links
+            - Removes incompatible links and notifies the user
+
+        Side Effects:
+            Modifies self.scene.gnodes, self.scene.glinks, and pipeline.nodes.
+            Displays a warning dialog if any links are removed.
+        """
+        # Import verCmp only here to prevent circular import issue
         from populse_mia.utils import verCmp
 
         pipeline = self.scene.pipeline
@@ -566,164 +628,135 @@ class PipelineEditor(PipelineDeveloperView):
         # List to store the removed links
         removed_links = []
 
-        for node_name, node in pipeline.nodes.items():
-            # Only if the node is a pipeline node ?
+        # Load process configuration once for all nodes
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
 
-            if node_name and isinstance(node, PipelineNode):
-                sub_pipeline_process = node.process
-
-                # Reading the process configuration file
-                with open(
-                    os.path.join(
-                        config.get_properties_path(),
-                        "properties",
-                        "process_config.yml",
-                    ),
-                ) as stream:
-
-                    try:
-
-                        if verCmp(yaml.__version__, "5.1", "sup"):
-                            dic = yaml.load(stream, Loader=yaml.FullLoader)
-
-                        else:
-                            dic = yaml.load(stream)
-
-                    except yaml.YAMLError as exc:
-                        logger.warning(exc)
-                        dic = {}
-
-                sub_pipeline_name = sub_pipeline_process.name
-                # Finding from where comes from the pipeline
-                pckg = sub_pipeline_process.__module__.split(".", 1)[0]
-
-                if pckg == "mia_processes":
-                    paths_list = [
-                        os.path.dirname(
-                            sys.modules["mia_processes"].__path__[0]
-                        )
-                    ]
+        try:
+            with open(config_path) as stream:
+                if verCmp(yaml.__version__, "5.1", "sup"):
+                    process_config = yaml.load(stream, Loader=yaml.FullLoader)
 
                 else:
-                    paths_list = dic["Paths"]
+                    process_config = yaml.load(stream)
 
-                # get_path returns a list that is the package path
-                # to the sub_pipeline file
-                sub_pipeline_list = get_path(
-                    sub_pipeline_name, dic["Packages"], None, pckg
-                )
-                sub_pipeline_name = sub_pipeline_list.pop()
-                # Finding the real sub-pipeline filename
-                sub_pipeline_filename = find_filename(
-                    paths_list, sub_pipeline_list, sub_pipeline_name
-                )
-                saved_process = get_process_instance(sub_pipeline_filename)
-                current_inputs = list(sub_pipeline_process.get_inputs().keys())
-                current_outputs = list(
-                    sub_pipeline_process.get_outputs().keys()
-                )
-                saved_inputs = list(saved_process.get_inputs().keys())
-                saved_outputs = list(saved_process.get_outputs().keys())
-                new_inputs = [
-                    item for item in saved_inputs if item not in current_inputs
-                ]
-                new_outputs = [
-                    item
-                    for item in saved_outputs
-                    if item not in current_outputs
-                ]
-                removed_inputs = [
-                    item for item in current_inputs if item not in saved_inputs
-                ]
-                removed_outputs = [
-                    item
-                    for item in current_outputs
-                    if item not in saved_outputs
+        except yaml.YAMLError as exc:
+            logger.warning(f"Failed to load process config: {exc}")
+            process_config = {}
+
+        for node_name, node in pipeline.nodes.items():
+
+            # Only if the node is a pipeline node ?
+            if not (node_name and isinstance(node, PipelineNode)):
+                continue
+
+            sub_pipeline_process = node.process
+            sub_pipeline_name = sub_pipeline_process.name
+            # Finding from where comes from the pipeline
+            package = sub_pipeline_process.__module__.split(".", 1)[0]
+
+            # Determine search paths based on package
+            if package == "mia_processes":
+                paths_list = [
+                    os.path.dirname(sys.modules["mia_processes"].__path__[0])
                 ]
 
-                if (
-                    new_inputs
-                    or new_outputs
-                    or removed_inputs
-                    or removed_outputs
+            else:
+                paths_list = process_config.get("Paths", [])
+
+            # Locate and load the saved process
+            # get_path returns a list that is the package path
+            # to the sub_pipeline file
+            sub_pipeline_list = get_path(
+                sub_pipeline_name,
+                process_config.get("Packages", {}),
+                None,
+                package,
+            )
+            sub_pipeline_name = sub_pipeline_list.pop()
+            # Finding the real sub-pipeline filename
+            sub_pipeline_filename = find_filename(
+                paths_list, sub_pipeline_list, sub_pipeline_name
+            )
+            saved_process = get_process_instance(sub_pipeline_filename)
+            # Compare process signatures using set operations
+            current_inputs = set(sub_pipeline_process.get_inputs().keys())
+            current_outputs = set(sub_pipeline_process.get_outputs().keys())
+            saved_inputs = set(saved_process.get_inputs().keys())
+            saved_outputs = set(saved_process.get_outputs().keys())
+            new_inputs = saved_inputs - current_inputs
+            new_outputs = saved_outputs - current_outputs
+            removed_inputs = current_inputs - saved_inputs
+            removed_outputs = current_outputs - saved_outputs
+
+            if not (
+                new_inputs or new_outputs or removed_inputs or removed_outputs
+            ):
+                continue
+
+            # Remove all links connected to this node
+            links_to_restore = [
+                (link, glink)
+                for link, glink in self.scene.glinks.items()
+                if link[0][0] == node_name or link[1][0] == node_name
+            ]
+
+            for link, glink in links_to_restore:
+                self.scene.removeItem(glink)
+                del self.scene.glinks[link]
+
+            # Create and configure new node
+            new_node = saved_process.pipeline_node
+            new_node.name = node_name
+            new_node.pipeline = pipeline
+            saved_process.parent_pipeline = weak_proxy(pipeline)
+            pipeline.nodes[node_name] = new_node
+            # Create new graphical node and preserve position
+            gnode = NodeGWidget(
+                node_name,
+                new_node.plugs,
+                pipeline,
+                sub_pipeline=saved_process,
+                process=saved_process,
+                colored_parameters=self.scene.colored_parameters,
+                logical_view=self.scene.logical_view,
+                labels=self.scene.labels,
+            )
+            gnode.setPos(self.scene.pos.get(node_name))
+            # Replace old node with new one
+            self.scene.removeItem(self.scene.gnodes[node_name])
+            del self.scene.gnodes[node_name]
+            self.scene.gnodes[node_name] = gnode
+            self.scene.addItem(gnode)
+
+            # Attempt to restore compatible links
+            for link, _ in links_to_restore:
+                source, dest = link[0], link[1]
+
+                # Normalize special nodes (inputs/outputs)
+                if source[0] == "inputs":
+                    source = ("", source[1])
+                if dest[0] == "outputs":
+                    dest = ("", dest[1])
+
+                # Create link representation
+                pipeline_link = f"{'.'.join(source)}->{'.'.join(dest)}"
+
+                # Skip if connected plug was removed
+                if (dest[0] == node_name and dest[1] in removed_inputs) or (
+                    source[0] == node_name and source[1] in removed_outputs
                 ):
-                    # Checking the links of the node
-                    link_to_del = set()
+                    removed_links.append(pipeline_link)
+                    continue
 
-                    for link, glink in self.scene.glinks.items():
+                # Restore valid link
+                self.scene.pipeline.add_link(pipeline_link)
+                self.scene.add_link(source, dest, active=True, weak=False)
 
-                        if link[0][0] == node_name or link[1][0] == node_name:
-                            self.scene.removeItem(glink)
-                            link_to_del.add((link, glink))
+            self.scene.update_pipeline()
 
-                    for link, glink in link_to_del:
-                        del self.scene.glinks[link]
-
-                    # Creating a new node
-                    new_node = saved_process.pipeline_node
-                    new_node.name = node_name
-                    new_node.pipeline = pipeline
-                    saved_process.parent_pipeline = weak_proxy(pipeline)
-                    pipeline.nodes[node_name] = new_node
-                    # Creating a new graphical node
-                    gnode = NodeGWidget(
-                        node_name,
-                        new_node.plugs,
-                        pipeline,
-                        sub_pipeline=saved_process,
-                        process=saved_process,
-                        colored_parameters=self.scene.colored_parameters,
-                        logical_view=self.scene.logical_view,
-                        labels=self.scene.labels,
-                    )
-                    # Setting the new node to the same position as the
-                    # previous one
-                    pos = self.scene.pos.get(node_name)
-                    gnode.setPos(pos)
-                    # Removing the old node
-                    self.scene.removeItem(self.scene.gnodes[node_name])
-                    del self.scene.gnodes[node_name]
-                    # Adding the new node to the scene
-                    self.scene.gnodes[node_name] = gnode
-                    self.scene.addItem(gnode)
-
-                    for link, glink in link_to_del:
-                        source = link[0]
-                        dest = link[1]
-
-                        if source[0] == "inputs":
-                            link_plug = source[1]
-                            source = ("", link_plug)
-
-                        if dest[0] == "outputs":
-                            link_plug = dest[1]
-                            dest = ("", link_plug)
-
-                        # Writing a string to represent the link
-                        source_parameters = ".".join(source)
-                        dest_parameters = ".".join(dest)
-                        pipeline_link = "->".join(
-                            (source_parameters, dest_parameters)
-                        )
-
-                        # Checking if a connected plug has been deleting
-                        if dest[0] == node_name and dest[1] in removed_inputs:
-                            removed_links.append(pipeline_link)
-                            continue
-
-                        if (
-                            source[0] == node_name
-                            and source[1] in removed_outputs
-                        ):
-                            removed_links.append(pipeline_link)
-                            continue
-
-                        # Adding the link
-                        self.scene.pipeline.add_link(pipeline_link)
-                        self.scene.add_link(source, dest, True, False)
-
-                    self.scene.update_pipeline()
-
+        # Notify user if any links were removed
         if removed_links:
             dialog_text = (
                 f"Pipeline {node_name} has been updated.\nRemoved links:"
@@ -735,10 +768,8 @@ class PipelineEditor(PipelineDeveloperView):
             pop_up = QtWidgets.QMessageBox()
             pop_up.setIcon(QtWidgets.QMessageBox.Warning)
             pop_up.setText(dialog_text)
-            pop_up.setWindowTitle("Warning: links have been removed")
-            pop_up.setStandardButtons(
-                QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel
-            )
+            pop_up.setWindowTitle("Warning: Links Removed During Update")
+            pop_up.setStandardButtons(QtWidgets.QMessageBox.Ok)
             pop_up.exec_()
 
     def del_node(self, node_name=None, from_undo=False, from_redo=False):

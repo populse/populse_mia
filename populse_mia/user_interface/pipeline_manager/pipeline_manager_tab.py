@@ -3002,7 +3002,7 @@ class PipelineManagerTab(QWidget):
         elif action == "export_plugs":
             (plug_name, _) = args
             editor._remove_plug(
-                _temp_plug_name=("inputs", plug_name), from_redo=True
+                plug_names=("inputs", plug_name), from_redo=True
             )
 
         elif action == "remove_plug":
@@ -3499,7 +3499,7 @@ class PipelineManagerTab(QWidget):
                 plugs_to_remove.append((plug_type, parameter))
 
             current_editor._remove_plug(
-                _temp_plug_name=plugs_to_remove,
+                plug_names=plugs_to_remove,
                 from_undo=True,
                 from_export_plugs=False,
             )

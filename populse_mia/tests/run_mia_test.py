@@ -11434,9 +11434,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Delete the "prefix_smooth" plug from the Input node,
         # test if the Input node have not a prefix_smooth plug
-        pipeline_editor._remove_plug(
-            _temp_plug_name=("inputs", "prefix_smooth")
-        )
+        pipeline_editor._remove_plug(plug_names=("inputs", "prefix_smooth"))
         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
 
         # Undo (export again the "out_prefix" plug),
