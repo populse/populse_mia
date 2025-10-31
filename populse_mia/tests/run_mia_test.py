@@ -8395,7 +8395,8 @@ class TestMIAPipelineEditor(TestMIACase):
         editor.export_node_all_unconnected_outputs()
 
         with patch(
-            "PyQt5.QtWidgets.QFileDialog.getSaveFileName", return_value=[""]
+            "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+            return_value=("", ""),
         ):
             # User cancels save dialog
             self.assertIsNone(ppl_edt_tabs.save_pipeline())
@@ -8414,9 +8415,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "1_test_pipeline")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "1_test_pipeline"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             # Test saving a pipeline with a filename starting with a digit
@@ -8425,7 +8427,10 @@ class TestMIAPipelineEditor(TestMIACase):
         # Saving with missing extension -> should append .py
         with patch(
             "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-            return_value=[os.path.join(usr_proc_folder, "test_pipeline_1")],
+            return_value=(
+                os.path.join(usr_proc_folder, "test_pipeline_1"),
+                "Compatible files (*.py)",
+            ),
         ):
             self.assertEqual(
                 ppl_edt_tabs.save_pipeline(), "test_pipeline_1.py"
@@ -8438,9 +8443,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "test_pipeline_2.c")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "test_pipeline_2.c"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             self.assertEqual(
@@ -8456,9 +8462,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "test_pipeline_2.py")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "test_pipeline_2.py"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             self.assertIsNone(ppl_edt_tabs.save_pipeline())

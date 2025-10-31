@@ -28,6 +28,7 @@ Contains:
 import logging
 import os
 import sys
+from pathlib import Path
 
 import yaml
 
@@ -647,7 +648,7 @@ class PipelineEditor(PipelineDeveloperView):
 
         for node_name, node in pipeline.nodes.items():
 
-            # Only if the node is a pipeline node ?
+            # Skip if the node is a pipeline node
             if not (node_name and isinstance(node, PipelineNode)):
                 continue
 
@@ -773,108 +774,96 @@ class PipelineEditor(PipelineDeveloperView):
             pop_up.exec_()
 
     def del_node(self, node_name=None, from_undo=False, from_redo=False):
-        """Delete a node.
+        """
+        Deletes a node from the pipeline and updates the GUI and history
+        accordingly.
 
-        :param node_name: name of the corresponding node (using when undo/redo)
-        :param from_undo: boolean, True if the action has been made using an
-           undo
-        :param from_redo: boolean, True if the action has been made using a
-           redo
+        :param node_name (str): The name of the node to delete. If not
+                                provided, the currently selected node is used.
+        :param from_undo (bool): True if the deletion was triggered by an undo
+                                 operation.
+        :param from_redo (bool): True if the deletion was triggered by a redo
+                                 operation.
         """
         pipeline = self.scene.pipeline
-
-        if not node_name:
-            node_name = self.current_node_name
-
-        invert_io = False
-
-        if node_name in ("inputs", "outputs"):
-            node = pipeline.pipeline_node
-            invert_io = True
-
-        else:
-            node = pipeline.nodes[node_name]
-
-        # Collecting the links from the node that is being deleted
+        node_name = node_name or self.current_node_name
+        # Determine the node and whether to invert input/output logic
+        invert_io = node_name in ("inputs", "outputs")
+        node = (
+            pipeline.pipeline_node if invert_io else pipeline.nodes[node_name]
+        )
+        # Collect all links related to this node
         links = []
 
         for plug_name, plug in node.plugs.items():
+            connected_links = (
+                plug.links_to
+                if (plug.output or (invert_io and not plug.output))
+                else plug.links_from
+            )
 
-            if plug.output or (invert_io and not plug.output):
-
-                for link_to in plug.links_to:
+            for link in connected_links:
+                (
+                    linked_node_name,
+                    _,
+                    linked_node,
+                    linked_plug,
+                    weak_link,
+                ) = link
+                active = plug.activated
+                # Find the plug name in the linked node
+                linked_plug_name = next(
                     (
-                        dest_node_name,
-                        dest_parameter,
-                        dest_node,
-                        dest_plug,
+                        n
+                        for n, p in linked_node.plugs.items()
+                        if p == linked_plug
+                    ),
+                    None,
+                )
+
+                # Build the link structure:
+                # [
+                #     (src_node, src_plug),
+                #     (dst_node, dst_plug),
+                #     active,
+                #     weak_link
+                # ]
+                if plug.output or (invert_io and not plug.output):
+                    link_to_add = [
+                        (node_name, plug_name),
+                        (linked_node_name, linked_plug_name),
+                        active,
                         weak_link,
-                    ) = link_to
-                    active = plug.activated
-                    # Looking for the name of dest_plug in dest_node
-                    dest_plug_name = None
+                    ]
 
-                    for plug_name_d, plug_d in dest_node.plugs.items():
-
-                        if plug_d == dest_plug:
-                            dest_plug_name = plug_name_d
-                            break
-
-                    link_to_add = [(node_name, plug_name)]
-                    link_to_add.append((dest_node_name, dest_plug_name))
-                    link_to_add.append(active)
-                    link_to_add.append(weak_link)
-                    links.append(link_to_add)
-
-            else:
-
-                for link_from in plug.links_from:
-                    (
-                        source_node_name,
-                        source_parameter,
-                        source_node,
-                        source_plug,
+                else:
+                    link_to_add = [
+                        (linked_node_name, linked_plug_name),
+                        (node_name, plug_name),
+                        active,
                         weak_link,
-                    ) = link_from
-                    active = plug.activated
-                    # Looking for the name of source_plug in source_node
-                    source_plug_name = None
+                    ]
+                links.append(link_to_add)
 
-                    for plug_name_d, plug_d in source_node.plugs.items():
-
-                        if plug_d == source_plug:
-                            source_plug_name = plug_name_d
-                            break
-
-                    link_to_add = [(source_node_name, source_plug_name)]
-                    link_to_add.append((node_name, plug_name))
-                    link_to_add.append(active)
-                    link_to_add.append(weak_link)
-                    links.append(link_to_add)
-
-        # Calling the original method
+        # Call parent method to perform the actual deletion
         super().del_node(node_name)
-        # For history
-        process = node
-
-        if isinstance(process, ProcessNode):
-            process = node.process
-
-        history_maker = ["delete_process", node_name, process, links]
-        self.update_history(history_maker, from_undo, from_redo)
+        # Update history and GUI
+        process = node.process if isinstance(node, ProcessNode) else node
+        history_entry = ["delete_process", node_name, process, links]
+        self.update_history(history_entry, from_undo, from_redo)
         self.main_window.statusBar().showMessage(
             f"Node {node_name} has been deleted."
         )
 
-        for node_name, node in pipeline.nodes.items():
-            process = node
+        # Refresh parameter display for all remaining nodes
+        for name, node in pipeline.nodes.items():
 
-            if isinstance(process, ProcessNode):
-                process = node.process
-
-            if node_name != "":
+            if name:
+                process = (
+                    node.process if isinstance(node, ProcessNode) else node
+                )
                 self.main_window.pipeline_manager.displayNodeParameters(
-                    node_name, process
+                    name, process
                 )
 
         self.main_window.pipeline_manager.update_user_buttons_states()
@@ -888,22 +877,34 @@ class PipelineEditor(PipelineDeveloperView):
         from_undo=False,
         from_redo=False,
     ):
-        """Export all the plugs of a node
-
-        :param node_name: node name
-        :param inputs: True if the inputs have to be exported
-        :param outputs: True if the outputs have to be exported
-        :param optional: True if the optional plugs have to be exported
-        :param from_undo: True if this method is called from an undo action
-        :param from_redo: True if this method is called from a redo action
         """
-        pipeline = self.scene.pipeline
-        node = pipeline.nodes[node_name]
-        parameter_list = []
+        Export plugs (parameters) from a pipeline node to make them available
+        externally.
 
-        for parameter_name, plug in node.plugs.items():
+        This method identifies and exports node plugs that meet the specified
+        criteria (input/output type, optional status, unlinked status) and are
+        not in the pipeline's exclusion list.
 
-            if parameter_name in (
+        :param node_name: Name of the node whose plugs should be exported.
+        :param inputs: Whether to export input plugs. Defaults to True.
+        :param outputs: Whether to export output plugs. Defaults to True.
+        :param optional: Whether to include optional plugs in the export.
+                         Defaults to False.
+        :param from_undo: Whether this call originates from an undo operation.
+                          Defaults to False.
+        :param from_redo: Whether this call originates from a redo operation.
+                          Defaults to False.
+
+        Note:
+            - Only unlinked plugs are exported (outputs without links_to,
+              inputs without links_from)
+            - Certain system plugs are automatically excluded
+              (nodes_activation, selection_changed, etc.)
+            - The operation is recorded in the history for undo/redo support
+        """
+        # System plugs that should never be exported
+        EXCLUDED_PLUGS = frozenset(
+            {
                 "nodes_activation",
                 "selection_changed",
                 "output_directory",
@@ -912,163 +913,229 @@ class PipelineEditor(PipelineDeveloperView):
                 "matlab_cmd",
                 "mfile",
                 "spm_script_file",
-            ):
+            }
+        )
+        pipeline = self.scene.pipeline
+        node = pipeline.nodes[node_name]
+        # Collect exportable plugs
+        exported_plugs = []
+
+        for param_name, plug in node.plugs.items():
+
+            # Skip system plugs
+            if param_name in EXCLUDED_PLUGS:
                 continue
 
+            # Skip plugs in the do-not-export list
+            if (node_name, param_name) in pipeline.do_not_export:
+                continue
+
+            # Check if plug meets export criteria
+            is_unlinked_output = outputs and plug.output and not plug.links_to
+            is_unlinked_input = (
+                inputs and not plug.output and not plug.links_from
+            )
+            is_optional_allowed = (
+                optional or not node.get_trait(param_name).optional
+            )
+
             if (
-                (node_name, parameter_name) not in pipeline.do_not_export
-                and (
-                    (outputs and plug.output and not plug.links_to)
-                    or (inputs and not plug.output and not plug.links_from)
-                )
-                and (optional or not node.get_trait(parameter_name).optional)
-            ):
-                p_name = self._export_plug(
-                    parameter_name,
-                    temp_plug_name=(node_name, parameter_name),
+                is_unlinked_output or is_unlinked_input
+            ) and is_optional_allowed:
+                exported_name = self._export_plug(
+                    param_name,
+                    temp_plug_name=(node_name, param_name),
                     multi_export=True,
                 )
-                parameter_list.append(p_name)
 
-        parameter_list = list(filter(None, parameter_list))
+                if exported_name:  # Only add non-None values
+                    exported_plugs.append(exported_name)
+
+        # Update pipeline state
         self.scene.update_pipeline()
-        # For history
-        history_maker = ["export_plugs", parameter_list, node_name]
-        self.update_history(history_maker, from_undo, from_redo)
+        # Record in history for undo/redo
+        history_entry = ["export_plugs", exported_plugs, node_name]
+        self.update_history(history_entry, from_undo, from_redo)
+        # Notify user
+        plug_list_str = (
+            ", ".join(exported_plugs) if exported_plugs else "No plugs"
+        )
         self.main_window.statusBar().showMessage(
-            f"Plugs {str(parameter_list)} have been exported."
+            f"{plug_list_str} exported from node '{node_name}'."
         )
 
     def get_current_filename(self):
-        """Return the relative path the pipeline was last saved to.
-        Empty if never saved.
-
-        :return: the current pipeline file name
         """
+        Return the relative path to the last saved pipeline file.
 
-        if hasattr(self, "_pipeline_filename") and self._pipeline_filename:
-            return os.path.relpath(self._pipeline_filename)
+        Returns the relative path from the current working directory to the
+        file where this pipeline was most recently saved. If the pipeline has
+        never been saved, returns an empty string.
 
-        else:
-            return ""
+        :return (str): Relative path to the pipeline file, or empty string if
+                       never saved.
+        """
+        filename = getattr(self, "_pipeline_filename", None)
+
+        return os.path.relpath(filename) if filename else ""
 
     def save_pipeline(self, filename=None):
-        """Save the pipeline.
-
-        :return: the name of the file where the pipeline was saved
         """
+        Save the pipeline to a Python file.
+
+        This method saves the current pipeline configuration to a file. If no
+        filename is provided, it prompts the user with a file dialog. The
+        method performs validation to ensure the filename is valid (doesn't
+        start with a digit, has .py extension) and checks user permissions.
+
+        :param filename (str): Path where the pipeline should be saved. If
+                               None, a file dialog will be shown. Defaults to
+                               None.
+
+        :return (str): The absolute path of the saved pipeline file,
+                       or None if:
+                - The pipeline is empty (fewer than 2 nodes)
+                - The user cancelled the save dialog
+                - The filename is invalid
+                - The user lacks permission to overwrite an existing file
+
+        Note:
+            pipeline_saved: Signal emitted with the filename when save is
+                            successful.
+        """
+
+        def _show_warning(title, message):
+            """
+            Display a warning message box to the user.
+
+            :param title (str): The title displayed in the warning dialog
+                                window.
+            :param message (str): The message text shown inside the warning
+                                  dialog box.
+            """
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setWindowTitle(title)
+            msg.setText(message)
+            msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            msg.exec()
+
         self.check_modifications()
 
+        # Don't save empty pipelines
         if len(self.scene.pipeline.nodes) < 2:
-            logger.info(
-                "\nThe pipeline hasn't been saved because it is empty ..."
-            )
+            logger.info("Pipeline not saved: it is empty")
             return None
 
         config = Config()
+        pipeline = self.scene.pipeline
 
-        if (
-            not filename
-            or os.path.join("mia_processes", "mia_processes") in filename
+        # Determine filename through dialog if not provided or if it's in
+        # mia_processes (prohibition on modifying the mia_processes library)
+        if (not filename) or (
+            Path("mia_processes") / "mia_processes" in Path(filename).parents
         ):
-            pipeline = self.scene.pipeline
-            folder = os.path.join(
-                config.get_properties_path(), "processes", "User_processes"
+            folder = (
+                Path(config.get_properties_path())
+                / "processes"
+                / "User_processes"
             )
-
-            if not os.path.isdir(folder):
-                os.mkdir(folder)
-
-            if not os.path.isfile(os.path.join(folder, "__init__.py")):
-                with open(os.path.join(folder, "__init__.py"), "w"):
-                    pass
-
-            filename = QtWidgets.QFileDialog.getSaveFileName(
+            folder.mkdir(parents=True, exist_ok=True)
+            # Ensure __init__.py exists
+            (folder / "__init__.py").touch(exist_ok=True)
+            filename, _ = QtWidgets.QFileDialog.getSaveFileName(
                 None,
                 "Save the pipeline",
-                folder,
+                str(folder),
                 "Compatible files (*.py);; All (*)",
-            )[0]
-
-            if not filename:  # save widget was cancelled by the user
-                return None
-
-            if os.path.basename(filename)[0].isdigit():
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle("populse_mia - Save pipeline as Warning!")
-                msg.setText(
-                    "Python does not allow to use a module name "
-                    "starting with a number ...!"
-                    "please change the name of your pipeline!"
-                )
-                msg.setStandardButtons(QMessageBox.Close)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
-                return None
-
-            filename_temp = os.path.split(filename)
-            filename = os.path.join(
-                filename_temp[0], filename_temp[-1].lower()
             )
 
-            if os.path.splitext(filename)[1] == "":  # which means no extension
-                filename += ".py"
-
-            elif os.path.splitext(filename)[1] != ".py":
-                msg = QtWidgets.QMessageBox()
-                msg.setIcon(QtWidgets.QMessageBox.Warning)
-                msg.setText(
-                    f"The pipeline will be saved with a '.py' extension "
-                    f"instead of {os.path.splitext(filename)[1]}!"
-                )
-                msg.setWindowTitle("Warning")
-                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
-                filename = f"{os.path.splitext(filename)[0]}.py"
-
-            if os.path.exists(filename) and config.get_user_mode():
-                msg = QtWidgets.QMessageBox()
-                msg.setIcon(QtWidgets.QMessageBox.Warning)
-                msg.setText(
-                    "This file already exists, you do not have the "
-                    "rights to overwrite it."
-                )
-                msg.setWindowTitle("Warning")
-                msg.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                msg.buttonClicked.connect(msg.close)
-                msg.exec()
+            if not filename:  # User cancelled
                 return None
 
-        if filename:
-            posdict = {
-                key: (value.x(), value.y())
-                for key, value in self.scene.pos.items()
-            }
-            dimdict = {
-                key: (value[0], value[1])
-                for key, value in self.scene.dim.items()
-            }
-            pipeline.node_dimension = dimdict
-            old_pos = pipeline.node_position
-            pipeline.node_position = posdict
+            path = Path(filename)
+
+            # Check if filename starts with a digit
+            if path.stem[0].isdigit():
+                _show_warning(
+                    "Invalid Pipeline Name",
+                    "Python module names cannot start with a digit. "
+                    "Please choose a different name.",
+                )
+                return None
+
+            # Normalize to lowercase
+            filename = str(path.parent / path.name.lower())
+            path = Path(filename)
+
+            # Handle file extension
+            if not path.suffix:
+                filename = f"{filename}.py"
+
+            elif path.suffix != ".py":
+                _show_warning(
+                    "Extension Changed",
+                    f"The pipeline will be saved with a '.py' extension "
+                    f"instead of '{path.suffix}'.",
+                )
+                filename = f"{path.with_suffix('').as_posix()}.py"
+
+            # Check overwrite permissions
+            if Path(filename).exists() and config.get_user_mode():
+                _show_warning(
+                    "Permission Denied",
+                    "This file already exists and you do not have "
+                    "permission to overwrite it.",
+                )
+                return None
+
+        # Prepare and save pipeline with position and dimension data
+        posdict = {
+            key: (value.x(), value.y())
+            for key, value in self.scene.pos.items()
+        }
+        dimdict = {
+            key: (value[0], value[1]) for key, value in self.scene.dim.items()
+        }
+        pipeline.node_dimension = dimdict
+        old_pos = pipeline.node_position
+        pipeline.node_position = posdict
+
+        try:
             save_pipeline(pipeline, filename)
             self._pipeline_filename = str(filename)
-            pipeline.node_position = old_pos
             self.pipeline_saved.emit(filename)
             return filename
 
-    def update_history(self, history_maker, from_undo, from_redo):
-        """Update the history for undos and redos.
-        This method is called after each action in the PipelineEditor.
+        finally:
+            # Restore original position
+            pipeline.node_position = old_pos
 
-        :param history_maker: list that contains information about what has
-            been done
-        :param from_undo: boolean that is True if the action has been made
-            using an undo
-        :param from_redo: boolean that is True if the action has been made
-            using a redo
+    def update_history(self, history_maker, from_undo, from_redo):
+        """
+        Update the undo/redo history after a pipeline action.
+
+        Manages the undo and redo stacks based on the action performed. When
+        an action is undone, it's moved to the redo stack. When a new action
+        is performed (not from undo/redo), it's added to the undo stack and
+        complementary redo entries are cleaned up to maintain consistency.
+
+        :param history_maker: A list describing the action, where
+                              history_maker[0] is the action type
+                              (e.g., 'add_process', 'delete_process',
+                              'update_node_name') and history_maker[1] is
+                              typically the affected node identifier.
+        :param from_undo (bool): Whether this update stems from an undo
+                                 operation. Defaults to False.
+        :param from_redo (bool): Whether this update stems from a redo
+                                 operation. Defaults to False.
+
+        Note:
+            - 'update_node_name' actions are not added to the undo stack
+            - Complementary actions (add/delete for the same process) are
+              removed from the redo stack when a new action occurs
+            - pipeline_modified: Signal emitted indicating the pipeline has
+              been modified.
         """
 
         if from_undo:
@@ -1077,23 +1144,27 @@ class PipelineEditor(PipelineDeveloperView):
         else:
             self.undos.append(history_maker)
 
-            # If the action does not comes from an undo or a redo,
-            # redos must be updated with care
+            # If the action was not triggered by a redo, adjust the redo list
             if not from_redo:
-                to_redo = None
+                action_map = {
+                    "add_process": "delete_process",
+                    "delete_process": "add_process",
+                }
+                action_type = history_maker[0]
+                to_redo = action_map.get(action_type)
 
-                if history_maker[0] == "add_process":
-                    to_redo = "delete_process"
-
-                elif history_maker[0] == "delete_process":
-                    to_redo = "add_process"
-
-                elif history_maker[0] == "update_node_name":
+                # "update_node_name" actions remove the last undo entry
+                if action_type == "update_node_name":
                     self.undos.pop()
 
-                for i, item in enumerate(self.redos):
-                    if item[0] == to_redo and history_maker[1] == item[1]:
-                        self.redos.pop(i)
+                if to_redo:
+                    self.redos = [
+                        item
+                        for item in self.redos
+                        if not (
+                            item[0] == to_redo and item[1] == history_maker[1]
+                        )
+                    ]
 
         self.pipeline_modified.emit(self)
 
