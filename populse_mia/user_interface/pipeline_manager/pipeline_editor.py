@@ -1176,82 +1176,100 @@ class PipelineEditor(PipelineDeveloperView):
         from_undo=False,
         from_redo=False,
     ):
-        """Update a node name.
+        """
+        Update a node's name in the pipeline, preserving all connections.
 
-        :param old_node: Node object to change
-        :param old_node_name: original name of the node (str)
-        :param new_node_name: new name of the node (str)
-        :param from_undo: boolean, True if the action has been made using an
-           undo
-        :param from_redo: boolean, True if the action has been made using a
-           redo
+        This method renames a node by:
+        1. Temporarily removing all links connected to the node
+        2. Renaming the node in the pipeline
+        3. Restoring all links with the updated node name
+        4. Recording the action in the history for undo/redo support
+
+        :param old_node: The node object to rename.
+        :param old_node_name: The current name of the node.
+        :param new_node_name: The desired new name for the node.
+        :param from_undo: Whether this action is being performed as part of an
+                          undo operation. Defaults to False.
+        :param from_redo: Whether this action is being performed as part of a
+                          redo operation. Defaults to False.
+
+        Side Effects:
+            - Updates the pipeline's node registry
+            - Removes and recreates all links connected to the node
+            - Updates pipeline activation states
+            - Records action in history
+            - Displays status message to user
         """
         pipeline = self.scene.pipeline
-        # Removing links of the selected node and copy the origin/destination
-        links_to_copy = []
+        # Collect all links connected to this node before removal
+        links_to_restore = []
 
-        for source_parameter, source_plug in old_node.plugs.items():
+        for source_param, source_plug in old_node.plugs.items():
 
-            for (
-                dest_node_name,
-                dest_parameter,
-                dest_node,
-                dest_plug,
-                weak_link,
-            ) in source_plug.links_to.copy():
-                pipeline.remove_link(
-                    f"{old_node_name}.{source_parameter}->"
-                    f"{dest_node_name}.{dest_parameter}"
+            # Collect outgoing links (this node -> other nodes)
+            for dest_node_name, dest_param, *_ in source_plug.links_to.copy():
+                link_spec = (
+                    f"{old_node_name}.{source_param}->"
+                    f"{dest_node_name}.{dest_param}"
                 )
-                links_to_copy.append(
-                    ("to", source_parameter, dest_node_name, dest_parameter)
+                pipeline.remove_link(link_spec)
+                links_to_restore.append(
+                    ("outgoing", source_param, dest_node_name, dest_param)
                 )
 
+            # Collect incoming links (other nodes -> this node)
             for (
                 dest_node_name,
-                dest_parameter,
-                dest_node,
-                dest_plug,
-                weak_link,
+                dest_param,
+                *_,
             ) in source_plug.links_from.copy():
-                pipeline.remove_link(
-                    f"{dest_node_name}.{dest_parameter}->"
-                    f"{old_node_name}.{source_parameter}"
+                link_spec = (
+                    f"{dest_node_name}.{dest_param}->"
+                    f"{old_node_name}.{source_param}"
                 )
-                links_to_copy.append(
-                    ("from", source_parameter, dest_node_name, dest_parameter)
-                )
-
-        # Creating a new node with the new name and deleting the previous one
-        pipeline.nodes[new_node_name] = pipeline.nodes[old_node_name]
-        del pipeline.nodes[old_node_name]
-
-        # Setting the same links as the original node
-        for link in links_to_copy:
-
-            if link[0] == "to":
-                pipeline.add_link(
-                    f"{new_node_name}.{link[1]}->{link[2]}.{link[3]}"
+                pipeline.remove_link(link_spec)
+                links_to_restore.append(
+                    ("incoming", source_param, dest_node_name, dest_param)
                 )
 
-            elif link[0] == "from":
-                pipeline.add_link(
-                    f"{link[2]}.{link[3]}->{new_node_name}.{link[1]}"
+        # Rename the node in the pipeline
+        pipeline.nodes[new_node_name] = pipeline.nodes.pop(old_node_name)
+
+        # Restore all links with the new node name
+        for (
+            direction,
+            source_param,
+            dest_node_name,
+            dest_param,
+        ) in links_to_restore:
+
+            if direction == "outgoing":
+                link_spec = (
+                    f"{new_node_name}.{source_param}->"
+                    f"{dest_node_name}.{dest_param}"
                 )
 
-        # Updating the pipeline
+            else:  # incoming
+                link_spec = (
+                    f"{dest_node_name}.{dest_param}->"
+                    f"{new_node_name}.{source_param}"
+                )
+
+            pipeline.add_link(link_spec)
+
+        # Update pipeline state
         pipeline.update_nodes_and_plugs_activation()
-        # For history
-        history_maker = [
+        # Record action in history for undo/redo
+        history_entry = [
             "update_node_name",
             pipeline.nodes[new_node_name],
             new_node_name,
             old_node_name,
         ]
-        self.update_history(history_maker, from_undo, from_redo)
+        self.update_history(history_entry, from_undo, from_redo)
+        # Notify user
         self.main_window.statusBar().showMessage(
-            f"Node name '{old_node_name}' has been "
-            f"changed to '{new_node_name}'."
+            f"Node '{old_node_name}' renamed to '{new_node_name}'."
         )
 
     def update_plug_value(
@@ -1263,35 +1281,44 @@ class PipelineEditor(PipelineDeveloperView):
         from_undo=False,
         from_redo=False,
     ):
-        """Update a plug value.
-
-        :param node_name: name of the node (str)
-        :param new_value: new value to set to the plug
-        :param plug_name: name of the plug to change (str)
-        :param value_type: type of the new value
-        :param from_undo: boolean, True if the action has been made using an
-                          undo
-        :param from_redo: boolean, True if the action has been made using a
-                          redo
         """
-        old_value = self.scene.pipeline.nodes[node_name].get_plug_value(
-            plug_name
+        Update a node's plug value and record the change in history.
+
+        Updates the specified plug on the given node with a new value. The
+        update is recorded in the history for undo/redo operations unless it's
+        already part of an undo/redo action.
+
+        :param node_name: The name of the node containing the plug.
+        :param  new_value: The new value to assign to the plug. Will be cast
+                           to value_type unless from_undo or from_redo is True.
+        :param plug_name: The name of the plug to update.
+        :param value_type: The type constructor to apply to new_value
+                           (e.g., int, float, str). Ignored when from_undo or
+                           from_redo is True.
+        :param from_undo: If True, indicates this update is from an undo
+                          operation. Defaults to False.
+        :param from_redo: If True, indicates this update is from a redo
+                          operation. Defaults to False.
+
+        Side Effects:
+            - Updates the plug value in the pipeline
+            - Records the change in history (unless from undo/redo)
+            - Displays a status message in the main window
+            - Pops from the undo stack if from undo/redo
+        """
+        node = self.scene.pipeline.nodes[node_name]
+        old_value = node.get_plug_value(plug_name)
+        # Skip type conversion for undo/redo - value is already correctly typed
+        value_to_set = (
+            new_value if (from_undo or from_redo) else value_type(new_value)
         )
+        node.set_plug_value(plug_name, value_to_set)
 
-        if from_undo or from_redo:
-            self.scene.pipeline.nodes[node_name].set_plug_value(
-                plug_name, new_value
-            )
-
-        else:
-            self.scene.pipeline.nodes[node_name].set_plug_value(
-                plug_name, value_type(new_value)
-            )
-
+        # Remove from undo stack if this is an undo/redo operation
         if from_undo or from_redo:
             self.undos.pop()
 
-        # For history
+        # Record in history
         history_maker = [
             "update_plug_value",
             node_name,
@@ -1300,9 +1327,10 @@ class PipelineEditor(PipelineDeveloperView):
             value_type,
         ]
         self.update_history(history_maker, from_undo, from_redo)
+        # User feedback
         self.main_window.statusBar().showMessage(
-            f"Plug '{plug_name}' of node '{node_name}' has been "
-            f"changed to '{new_value}'."
+            f"Plug '{plug_name}' of node '{node_name}' changed "
+            f"to '{new_value}'"
         )
 
 
