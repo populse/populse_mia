@@ -40,6 +40,7 @@ from capsul.api import (
     Switch,
     get_process_instance,
 )
+from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.python_export import save_py_pipeline
 from capsul.pipeline.xml import save_xml_pipeline
@@ -1336,7 +1337,19 @@ class PipelineEditor(PipelineDeveloperView):
 
 class PipelineEditorTabs(QtWidgets.QTabWidget):
     """
-    Tab widget that contains pipeline editors.
+    Tab widget for managing multiple pipeline editors.
+
+    This widget provides a tabbed interface for creating, editing, and
+    managing multiple pipeline configurations. Each tab contains a
+    PipelineEditor instance with its own undo/redo history.
+
+    .. Signals:
+        pipeline_saved (str): Emitted when a pipeline is saved, passes
+                              filename.
+        node_clicked (str, Node): Emitted when a node is clicked in any editor.
+        process_clicked (str, Process): Emitted when a process is clicked.
+        switch_clicked (str, Switch): Emitted when a switch is clicked.
+
 
     .. Methods:
         - check_modifications: check if the nodes of the current pipeline have
@@ -1385,33 +1398,32 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
     switch_clicked = QtCore.pyqtSignal(str, Switch)
 
     def __init__(self, project, scan_list, main_window):
-        """Initialization of the Pipeline Editor tabs.
+        """
+        Initialize the pipeline editor tabs.
 
-        :param project: current project in the software
-        :param scan_list: list of the selected database files
-        :param main_window: main window of the software
+        :param project: Current project instance in the software.
+        :param scan_list: List of selected database files.
+        :param main_window: Main application window reference.
         """
         super().__init__()
         self.project = project
         self.main_window = main_window
-        self.setStyleSheet(
-            "QTabBar{font-size:12pt;font-family:Arial;"
-            "text-align: center;color:black;}"
-        )
-        self.setTabsClosable(True)
-        self.tabCloseRequested.connect(self.close_tab)
         self.scan_list = scan_list
         self.undos = {}
         self.redos = {}
+        self.previousIndex = 0
+        # Configure the visual styling of the tab widget.
+        self.setStyleSheet(
+            "QTabBar {"
+            "    font-size: 12pt;"
+            "    font-family: Arial;"
+            "    text-align: center;"
+            "    color: black;"
+            "}"
+        )
+        self.setTabsClosable(True)
+        # Create and configure the default pipeline editor.
         p_e = PipelineEditor(self.project, self.main_window)
-        p_e.node_clicked.connect(self.emit_node_clicked)
-        p_e.process_clicked.connect(self.emit_node_clicked)
-        p_e.switch_clicked.connect(self.emit_switch_clicked)
-        p_e.pipeline_saved.connect(self.emit_pipeline_saved)
-        p_e.pipeline_modified.connect(self.update_pipeline_editors)
-        p_e.edit_sub_pipeline.connect(self.open_sub_pipeline)
-        p_e.open_filter.connect(self.open_filter)
-        p_e.export_to_db_scans.connect(self.export_to_db_scans)
         p_e.initialized = False
         p_e.iterated = False
         p_e.iterated_tag = None
@@ -1420,52 +1432,76 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         p_e.all_tag_values_list = []
         p_e.node_parameters = {}
         p_e.node_parameters_tmp = {}
+        # Connect signals from a pipeline editor to this widget's handlers.
+        p_e.node_clicked.connect(self.emit_node_clicked)
+        p_e.process_clicked.connect(self.emit_node_clicked)
+        p_e.switch_clicked.connect(self.emit_switch_clicked)
+        p_e.pipeline_saved.connect(self.emit_pipeline_saved)
+        p_e.pipeline_modified.connect(self.update_pipeline_editors)
+        p_e.edit_sub_pipeline.connect(self.open_sub_pipeline)
+        p_e.open_filter.connect(self.open_filter)
+        p_e.export_to_db_scans.connect(self.export_to_db_scans)
         # Setting a default editor called "New Pipeline"
         self.addTab(p_e, "New Pipeline")
         self.undos[p_e] = []
         self.redos[p_e] = []
-        # Tool button to add a tab
-        tb = QtWidgets.QToolButton()
-        tb.setText("+")
-        tb.clicked.connect(self.new_tab)
-        self.addTab(QtWidgets.QLabel('Add tabs by pressing "+"'), "")
+        # Create and configure the '+' button for adding new tabs.
+        add_button = QtWidgets.QToolButton()
+        add_button.setText("+")
+        add_button.clicked.connect(self.new_tab)
+        placeholder_label = QtWidgets.QLabel('Add tabs by pressing "+"')
+        self.addTab(placeholder_label, "")
         self.setTabEnabled(1, False)
-        self.tabBar().setTabButton(1, QtWidgets.QTabBar.RightSide, tb)
-        # Checking if the pipeline nodes have been modified
+        self.tabBar().setTabButton(1, QtWidgets.QTabBar.RightSide, add_button)
+        # Connect internal widget signals to their handlers.
+        self.tabCloseRequested.connect(self.close_tab)
         self.tabBarClicked.connect(self.check_modifications)
         self.currentChanged.connect(self.update_current_node)
-        self.previousIndex = 0
-        # init capsul engine config
+        # Initialize the CAPSUL engine configuration.
         self.get_capsul_engine()
 
     def check_modifications(self, current_index):
-        """Check if the nodes of the current pipeline have been modified.
-
-        :param current_index: index to check
         """
-        # If the user click on the last tab (with the '+'),
-        # it will throw an AttributeError
+        Check if nodes in the current pipeline have been modified.
+
+        Validates modifications when switching between pipeline tabs. Skips
+        validation for the special "add new pipeline" tab (last position).
+
+        :param current_index: The index of the tab being switched to.
+
+        Note:
+            The last tab ('+' button) may not have a widget, which is
+            handled gracefully by catching AttributeError.
+        """
+
+        if current_index == self.previousIndex:
+            return
+
+        self.previousIndex = current_index
 
         try:
-
-            if current_index != self.previousIndex:
-                self.previousIndex = current_index
-
             self.widget(current_index).check_modifications()
 
         except AttributeError:
+            # Last tab ('+' button) has no widget to check
             pass
 
     def close_tab(self, idx):
-        """Close the selected tab and editor.
+        """
+        Close a tab and its associated editor, prompting to save if modified.
+
+        Removes the specified tab and cleans up its undo/redo history. If the
+        tab contains unsaved changes (indicated by " *" suffix), prompts the
+        user to save before closing. If all tabs are closed, creates a new
+        default pipeline.
 
         :param idx: index of the tab to close
         """
         filename = os.path.basename(self.get_filename_by_index(idx))
         editor = self.get_editor_by_index(idx)
 
-        # If the pipeline has been modified and not saved
-        if self.tabText(idx)[-2:] == " *":
+        # Check if pipeline has unsaved modifications
+        if self.tabText(idx).endswith(" *"):
             self.pop_up_close = PopUpClosePipeline(filename)
             self.pop_up_close.save_as_signal.connect(self.save_pipeline)
             self.pop_up_close.exec()
@@ -1477,17 +1513,20 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         if not can_exit:
             return
 
-        del self.undos[editor]
-        del self.redos[editor]
+        # Clean up undo/redo history
+        self.undos.pop(editor, None)
+        self.redos.pop(editor, None)
 
+        # Adjust current tab if necessary
         if idx == self.currentIndex():
             self.set_tab_index(max(0, self.currentIndex() - 1))
 
         self.removeTab(idx)
 
-        # If there is no more editor, adding one
+        # Create a new default pipeline if all tabs are closed
         if self.count() == 1:
             p_e = PipelineEditor(self.project, self.main_window)
+            # Connect signals
             p_e.node_clicked.connect(self.emit_node_clicked)
             p_e.process_clicked.connect(self.emit_node_clicked)
             p_e.switch_clicked.connect(self.emit_switch_clicked)
@@ -1496,6 +1535,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             p_e.edit_sub_pipeline.connect(self.open_sub_pipeline)
             p_e.open_filter.connect(self.open_filter)
             p_e.export_to_db_scans.connect(self.export_to_db_scans)
+            # Initialize editor state
             p_e.initialized = False
             p_e.iterated = False
             p_e.iterated_tag = None
@@ -1503,69 +1543,80 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             p_e.all_tag_values_list = []
             p_e.node_parameters = {}
             p_e.node_parameters_tmp = {}
-            # Setting a default editor called "New Pipeline"
+            # # Add the new tab
             self.insertTab(0, p_e, "New Pipeline")
             self.set_tab_index(0)
             self.undos[p_e] = []
             self.redos[p_e] = []
             self.get_capsul_engine()
 
-        for node_name, node in self.get_current_pipeline().nodes.items():
-            process = getattr(node, "process", node)
-            self.main_window.pipeline_manager.displayNodeParameters(
-                node_name, process
-            )
-
+        # Update pipeline display (last node settings)
+        *_, (node_name, node_obj) = self.get_current_pipeline().nodes.items()
+        process = getattr(node_obj, "process", node_obj)
+        self.main_window.pipeline_manager.displayNodeParameters(
+            node_name, process
+        )
         self.update_iteration_checkbox()
 
     def emit_node_clicked(self, node_name, process):
-        """Emit a signal when a node is clicked.
-
-        :param node_name: node name
-        :param process: process of the corresponding node
         """
+        Emit the appropriate signal when a node is clicked.
 
-        if isinstance(process, Process):
-            self.process_clicked.emit(node_name, process)
+        Emits either `process_clicked` or `node_clicked` signal depending on
+        whether the process parameter is a Process instance.
 
-        else:
-            self.node_clicked.emit(node_name, process)
+        :param node_name: The name of the clicked node.
+        :param process: The process associated with the node. If this is a
+                        Process instance, emits `process_clicked`; otherwise
+                        emits `node_clicked`.
+        """
+        signal = (
+            self.process_clicked
+            if isinstance(process, Process)
+            else self.node_clicked
+        )
+        signal.emit(node_name, process)
 
     def emit_pipeline_saved(self, filename):
-        """Emit a signal when a pipeline is saved.
-
-        :param filename: file name of the pipeline
         """
-        self.setTabText(self.currentIndex(), os.path.basename(filename))
+        Update the current tab title and emit the *pipeline_saved* signal.
+
+        :param filename: Path to the saved pipeline file.
+        """
+        self.setTabText(self.currentIndex(), Path(filename).name)
         self.pipeline_saved.emit(filename)
 
     def emit_switch_clicked(self, node_name, switch):
-        """Emit a signal when a switch is clicked.
+        """
+        Emit a signal when a switch is toggled.
 
-        :param node_name: node name
-        :param switch: process of the corresponding node
+        :param node_name: The name of the node whose switch was clicked.
+        :param switch:  The Switch associated with the node.
+
+        :Emits: switch_clicked: Signal containing the node name and the Switch.
         """
         self.switch_clicked.emit(node_name, switch)
 
     def export_to_db_scans(self, node_name):
-        """Export the input of a filter to "database_scans" plug.
-
-        :param node_name: the name of the node from which to export
         """
+        Export the input of a filter to "database_scans" plug.
 
-        # If database_scans is already a pipeline global input, the plug
-        # cannot be exported. A link as to be added between database_scans
-        # and the input of the filter.
-        if (
-            "database_scans"
-            in self.get_current_pipeline().user_traits().keys()
-        ):
-            self.get_current_pipeline().add_link(
-                f"database_scans->{node_name}.input"
-            )
+        If database_scans already exists as a pipeline parameter, creates a
+        link from database_scans to the node's input. Otherwise, exports the
+        node's input parameter as database_scans at the pipeline level.
+
+        :param node_name: Name of the node whose input should be exported.
+
+        Note: This method automatically updates the editor scene after
+              modification.
+        """
+        pipeline = self.get_current_pipeline()
+
+        if "database_scans" in pipeline.user_traits():
+            pipeline.add_link(f"database_scans->{node_name}.input")
 
         else:
-            self.get_current_pipeline().export_parameter(
+            pipeline.export_parameter(
                 node_name, "input", pipeline_parameter="database_scans"
             )
 
@@ -1573,30 +1624,39 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
     def get_capsul_engine(self):
         """
-        Get a CapsulEngine object from the edited pipeline, and set it up from
-        MIA config object
+        Configure and return a CapsulEngine for the current pipeline.
+
+        Retrieves a CapsulEngine instance from the MIA configuration and sets
+        up the study configuration with project-specific directories. If the
+        current pipeline has completion attributes, they are preserved during
+        the engine setup process.
+
+        :returns (CapsulEngine): Configured engine instance with study
+                                 directories set to the project's raw_data
+                                 and derived_data folders.
+
+        Notes: This method temporarily saves and restores completion engine
+               attributes to prevent loss of configuration when switching
+               between pipelines.
         """
         # save completion attributes for the current pipeline (other pipelines
         # will lose their values)
         pipeline = self.get_current_pipeline()
         completion = getattr(pipeline, "completion_engine", None)
-
-        if completion:
-            att_values = completion.get_attribute_values().export_to_dict()
-
+        att_values = (
+            completion.get_attribute_values().export_to_dict()
+            if completion
+            else None
+        )
+        # Configure engine with project directories
         engine = Config.get_capsul_engine()
         study_config = engine.study_config
-        study_config.input_directory = os.path.join(
-            os.path.abspath(self.project.folder), "data", "raw_data"
-        )
-        study_config.output_directory = os.path.join(
-            os.path.abspath(self.project.folder), "data", "derived_data"
-        )
+        project_data_path = Path(self.project.folder).resolve() / "data"
+        study_config.input_directory = str(project_data_path / "raw_data")
+        study_config.output_directory = str(project_data_path / "derived_data")
 
-        # restore completion attributes
-        from capsul.attributes.completion_engine import ProcessCompletionEngine
-
-        if completion:
+        # Restore completion attributes if they existed
+        if att_values is not None:
             completion = ProcessCompletionEngine.get_completion_engine(
                 pipeline
             )
