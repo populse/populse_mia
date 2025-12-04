@@ -1667,47 +1667,53 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         return engine
 
     def get_current_editor(self):
-        """Get the instance of the current editor.
+        """
+        Return the editor corresponding to the currently selected tab.
 
-        :return: the current editor
+        :return: Editor instance for the active tab.
         """
         return self.get_editor_by_index(self.currentIndex())
 
     def get_current_filename(self):
-        """Get the relative path to the file the pipeline in the current editor
-        has been last saved to.
-        If the pipeline has never been saved, returns the title of the tab.
+        """
+        Return the relative path of the file last saved in the current editor.
 
-        :return: the filename of the current editor
+        If the pipeline has never been saved, the current tab title is
+        returned.
+
+        :return: The filename for the current editor.
         """
         return self.get_filename_by_index(self.currentIndex())
 
     def get_current_pipeline(self):
-        """Get the instance of the current pipeline.
+        """
+        Return the pipeline associated with the current editor.
 
-        :return: the pipeline of the current editor
+        Returns None if no editor or scene is available.
+
+        :return: The pipeline for the current editor
         """
         editor = self.get_current_editor()
-
-        if editor is None or editor.scene is None:
-            return None
-
-        return editor.scene.pipeline
+        return editor.scene.pipeline if editor and editor.scene else None
 
     def get_current_tab_name(self):
-        """Get the tab name of the editor in the current tab.
+        """
+        Return the name of the currently selected tab.
 
-        Trailing "*" and ampersand ("&") characters are removed.
+        Trailing "*" and "&" characters are stripped.
 
-        :return: the current tab name
+        :return: The current tab name.
         """
         return self.get_tab_name_by_index(self.currentIndex())
 
     def get_editor_by_file_name(self, file_name):
-        """Get the instance of an editor from its file name.
+        """
+        Return the editor associated with the given pipeline filename.
 
-        :param file_name: name of the file the pipeline was last saved to
-        :return: the editor corresponding to the file name
+        The filename corresponds to the last saved location of the pipeline.
+
+        :param file_name: Name of the file the pipeline was last saved to.
+        :return: The editor corresponding to the file name.
         """
         return self.get_editor_by_index(self.get_index_by_filename(file_name))
 
