@@ -408,9 +408,8 @@ class PipelineEditor(PipelineDeveloperView):
                                   export plugs undo/redo operation. When True,
                                   history is not updated.
 
-        Note:
-            For each removed plug, stores [plug_info, connected_plugs,
-            optional_flag] in the history for potential restoration.
+        :note: For each removed plug, stores [plug_info, connected_plugs,
+               optional_flag] in the history for potential restoration.
         """
         # Use provided plug names or fall back to instance variable
         plug_names = plug_names or self._temp_plug_name
@@ -896,7 +895,7 @@ class PipelineEditor(PipelineDeveloperView):
         :param from_redo: Whether this call originates from a redo operation.
                           Defaults to False.
 
-        Note:
+        :note:
             - Only unlinked plugs are exported (outputs without links_to,
               inputs without links_from)
             - Certain system plugs are automatically excluded
@@ -1000,9 +999,9 @@ class PipelineEditor(PipelineDeveloperView):
                 - The filename is invalid
                 - The user lacks permission to overwrite an existing file
 
-        Note:
-            pipeline_saved: Signal emitted with the filename when save is
-                            successful.
+        :note:
+            - pipeline_saved: Signal emitted with the filename when save is
+                              successful.
         """
 
         def _show_warning(title, message):
@@ -1131,7 +1130,7 @@ class PipelineEditor(PipelineDeveloperView):
         :param from_redo (bool): Whether this update stems from a redo
                                  operation. Defaults to False.
 
-        Note:
+        :note:
             - 'update_node_name' actions are not added to the undo stack
             - Complementary actions (add/delete for the same process) are
               removed from the redo stack when a new action occurs
@@ -1469,9 +1468,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param current_index: The index of the tab being switched to.
 
-        Note:
-            The last tab ('+' button) may not have a widget, which is
-            handled gracefully by catching AttributeError.
+        :note: The last tab ('+' button) may not have a widget, which is
+               handled gracefully by catching AttributeError.
         """
 
         if current_index == self.previousIndex:
@@ -1607,8 +1605,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param node_name: Name of the node whose input should be exported.
 
-        Note: This method automatically updates the editor scene after
-              modification.
+        :note: This method automatically updates the editor scene after
+               modification.
         """
         pipeline = self.get_current_pipeline()
 
@@ -1635,7 +1633,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                                  directories set to the project's raw_data
                                  and derived_data folders.
 
-        Notes: This method temporarily saves and restores completion engine
+        :note: This method temporarily saves and restores completion engine
                attributes to prevent loss of configuration when switching
                between pipelines.
         """
@@ -1713,53 +1711,84 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         The filename corresponds to the last saved location of the pipeline.
 
         :param file_name: Name of the file the pipeline was last saved to.
+
         :return: The editor corresponding to the file name.
         """
         return self.get_editor_by_index(self.get_index_by_filename(file_name))
 
     def get_editor_by_index(self, idx):
-        """Get the instance of an editor from its index in the editors.
+        """
+        Retrieve an editor widget by its tab index.
 
-        :param idx: index of the editor
-        :return: the editor corresponding to the index
+        :param idx: Zero-based index of the editor tab, or None if not found.
+
+        :return: The editor widget at the specified index, or None if idx is
+                 None or if the index corresponds to the "add tab" button
+                 (last tab) or if index out of range.
+
+        :note: The last tab position is reserved for the "add tab" button and
+               does not contain an editor widget.
         """
 
-        # last tab has "add tab" button, no editor
-        if idx in range(self.count() - 1):
+        if idx is not None and 0 <= idx < self.count() - 1:
             return self.widget(idx)
 
-    def get_editor_by_tab_name(self, tab_name):
-        """Get the instance of an editor from its tab name.
+        return None
 
-        :param tab_name: name of the tab
-        :return: the editor corresponding to the tab name
+    def get_editor_by_tab_name(self, tab_name):
         """
-        return self.get_editor_by_index(self.get_index_by_tab_name(tab_name))
+        Retrieve the editor instance associated with a specific tab name.
+
+        :param tab_name (str): The name of the tab to search for.
+
+        :return: The editor instance corresponding to the specified tab name,
+                 or None if the tab is not found.
+
+        :raises:
+            - ValueError: If tab_name is empty or None.
+            - KeyError: If no tab exists with the given name.
+        """
+        tab_index = self.get_index_by_tab_name(tab_name)
+
+        return self.get_editor_by_index(tab_index)
 
     def get_filename_by_index(self, idx):
-        """Get the relative path to the file the pipeline in the editor at the
-        given index has been last saved to.
-        If the pipeline has never been saved, returns the title of the tab.
+        """
+        Get the filename for the pipeline at the specified editor index.
 
-        :param idx: index of the editor
-        :return: the file name corresponding to the index
+        Returns the relative path to the file where the pipeline was last
+        saved. If the pipeline has never been saved, returns the tab title
+        instead.
+
+        :param idx: The zero-based index of the editor tab.
+
+        :return: str or None. The filename or tab title if the editor exists,
+                 None if no editor exists at the given index.
         """
         editor = self.get_editor_by_index(idx)
 
-        if editor is not None:
-            return editor.get_current_filename()
+        return editor.get_current_filename() if editor is not None else None
 
     def get_index_by_editor(self, editor):
-        """Get the index of the editor corresponding to the given editor.
+        """
+        Find the tab index for a given editor widget.
 
-        :param editor: searched pipeline editor
-        :return: the index corresponding to the editor
+        :param editor: The pipeline editor widget to locate.
+
+        :return: The zero-based index of the editor's tab, or None if not
+                 found.
+
+        :note: Searches all tabs except the last one (count() - 1).
         """
 
-        for idx in range(self.count() - 1):
-
-            if self.get_editor_by_index(idx) == editor:
-                return idx
+        return next(
+            (
+                idx
+                for idx in range(self.count() - 1)
+                if self.get_editor_by_index(idx) == editor
+            ),
+            None,
+        )
 
     def get_index_by_filename(self, filename):
         """Get the index of the first editor corresponding to the given
