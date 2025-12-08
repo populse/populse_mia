@@ -1791,127 +1791,173 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         )
 
     def get_index_by_filename(self, filename):
-        """Get the index of the first editor corresponding to the given
-        pipeline filename.
+        """
+        Get the index of the first tab with the specified filename.
 
-        :param filename: filename of the searched pipeline
-        :return: the index corresponding to the file name
+        :param filename (str): The pipeline filename to search for. Can be an
+                               absolute or relative path; will be normalized
+                               to relative.
+
+        :return (int): The zero-based index of the matching tab, or None
+                       if no match is found.
+
+        :note: Filenames are internally stored as relative paths for
+               consistency. Only searches up to count() - 1 to exclude special
+               tabs if any.
         """
 
-        if filename:
-            # we always store file names as relative paths
-            filename = os.path.relpath(filename)
+        if not filename:
+            return None
 
-            for idx in range(self.count() - 1):
+        # Normalize to relative path for consistent comparison
+        filename = os.path.relpath(filename)
 
-                if self.get_filename_by_index(idx) == filename:
-                    return idx
+        return next(
+            (
+                idx
+                for idx in range(self.count() - 1)
+                if self.get_filename_by_index(idx) == filename
+            ),
+            None,
+        )
 
     def get_index_by_tab_name(self, tab_name):
-        """Get the index of the editor corresponding to the given tab name.
+        """
+        Find the index of a tab by its name.
 
-        :param tab_name: name of the tab with the searched pipeline
-        :return: the index corresponding to the tab name
+        Searches through all tabs (excluding the last one) to find a tab
+        matching the given name.
+
+        :param tab_name (str): The name of the tab to locate.
+
+        :return (int): The zero-based index of the matching tab, or None if no
+                       match is found.
         """
 
-        for idx in range(self.count() - 1):
-
-            if self.get_tab_name_by_index(idx) == tab_name:
-                return idx
+        return next(
+            (
+                idx
+                for idx in range(self.count() - 1)
+                if self.get_tab_name_by_index(idx) == tab_name
+            ),
+            None,
+        )
 
     def get_tab_name_by_index(self, idx):
-        """Get the tab name of the editor at the given index.
+        """
+        Get the clean tab name at the specified index.
 
-        Trailing "*" and ampersand ("&") characters are removed.
+        Retrieves the tab text at the given index and removes formatting
+        characters:
+            - Qt keyboard shortcut indicators (ampersands)
+            - Unsaved file indicators (trailing " *")
 
-        :param idx: index of the editor
-        :return: the tab name corresponding to the index
+        :param idx: Zero-based index of the tab.
+
+        :return (str): The cleaned tab name, or None if the index is invalid
+                       or corresponds to the "add tab" button (last position).
         """
 
-        # last tab has "add tab" button, no tab name
-        if idx in range(self.count() - 1):
-            # remove Qt keyboard shortcut indicator
-            tab_name = self.tabText(idx).replace("&", "", 1)
+        # Last tab position is reserved for the "add tab" button
+        if not 0 <= idx < self.count() - 1:
+            return None
 
-            if tab_name[-2:] == " *":
-                tab_name = tab_name[:-2]
+        # Get raw tab text and remove Qt keyboard shortcut indicator
+        tab_name = self.tabText(idx).replace("&", "", 1)
 
-            return tab_name
+        # Remove trailing unsaved indicator if present
+        return tab_name.removesuffix(" *")
 
     def has_pipeline_nodes(self):
-        """Check if any of the pipelines in the editor tabs have pipeline
-        nodes.
+        """
+        Check if any pipeline in the editor tabs contains nodes.
 
-        :return: True or False depending on if there are nodes in the editors
+        Iterates through all tab widgets and checks if any pipeline editor
+        contains nodes by examining the presence of plugs in the pipeline's
+        root node.
+
+        :return (bool): True if at least one pipeline contains nodes,
+                        False otherwise.
         """
 
-        for idx in range(self.count()):
-            p_e = self.widget(idx)
-
-            if hasattr(p_e, "scene"):
-
-                # if the widget is a tab editor
-                if p_e.scene.pipeline.nodes[""].plugs:
-                    return True
-
-        return False
+        return any(
+            hasattr(widget := self.widget(idx), "scene")
+            and widget.scene.pipeline.nodes[""].plugs
+            for idx in range(self.count())
+        )
 
     def load_pipeline(self, filename=None):
-        """Load a new pipeline.
-
-        :param filename: not None only when this method is called from
-          "open_sub_pipeline"
         """
-        current_tab_not_empty = (
-            len(self.get_current_editor().scene.pipeline.nodes.keys()) > 1
-        )
-        new_tab_opened = False
+        Load a pipeline into the editor.
 
+        Opens a pipeline file in a new or existing tab. If the pipeline is
+        already open, switches to that tab. If the current tab is not empty,
+        creates a new tab for the pipeline.
+
+        :param filename (str): Path to the pipeline file to load. If None,
+                               prompts the user to select a file. Defaults to
+                               None.
+
+        :return (None): Returns early on success, or cleans up and returns on
+                        failure.
+
+        :note: This method is also called from `open_sub_pipeline` with a
+               filename.
+
+        """
+        current_editor = self.get_current_editor()
+        current_tab_not_empty = len(current_editor.scene.pipeline.nodes) > 1
+        new_tab_opened = False
+        working_index = None
+
+        # Prompt for filename if not provided
         if filename is None:
 
             # Open new tab if the current PipelineEditor is not empty
             if current_tab_not_empty:
-                # create new tab with new editor and make it current
                 self.new_tab()
                 working_index = self.currentIndex()
                 new_tab_opened = True
 
-            # get only the file name to load
-            filename = self.get_current_editor().load_pipeline("", False)
+            filename = current_editor.load_pipeline("", False)
             self.get_capsul_engine()
 
-        if filename:
-            # Check if this pipeline is already open
-            existing_pipeline_tab = self.get_index_by_filename(filename)
+        if not filename:
 
-            if existing_pipeline_tab is not None:
-                self.set_tab_index(existing_pipeline_tab)
+            # User cancelled or no file selected
+            if new_tab_opened:
+                self.close_tab(working_index)
 
-            else:
+            return
 
-                # we need to actually load the pipeline
-                if current_tab_not_empty and not new_tab_opened:
-                    self.new_tab()
-                    new_tab_opened = True
+        # Switch to tab if pipeline already open
+        existing_tab = self.get_index_by_filename(filename)
 
-                working_index = self.currentIndex()
-                editor = self.get_editor_by_index(working_index)
-                # actually load the pipeline
-                filename = editor.load_pipeline(filename)
-                self.get_capsul_engine()
+        if existing_tab is not None:
+            self.set_tab_index(existing_tab)
+            return
 
-                if filename:
-                    self.setTabText(working_index, os.path.basename(filename))
-                    self.update_scans_list()
-                    # fmt: off
-                    (
-                        self.main_window.pipeline_manager
-                        .run_pipeline_action.setDisabled(False)
-                    )
-                    # fmt: on
-                    return  # success
+        # Create new tab if needed
+        if current_tab_not_empty and not new_tab_opened:
+            self.new_tab()
+            new_tab_opened = True
 
-        # if we're still here, something went wrong. clean up.
+        working_index = self.currentIndex()
+        editor = self.get_editor_by_index(working_index)
+        # Load the pipeline
+        loaded_filename = editor.load_pipeline(filename)
+        self.get_capsul_engine()
+
+        if loaded_filename:
+            # Success - update UI
+            self.setTabText(working_index, os.path.basename(loaded_filename))
+            self.update_scans_list()
+            self.main_window.pipeline_manager.run_pipeline_action.setDisabled(
+                False
+            )
+            return
+
+        # Loading failed - clean up
         if new_tab_opened:
             self.close_tab(working_index)
 
