@@ -1962,117 +1962,157 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             self.close_tab(working_index)
 
     def load_pipeline_parameters(self):
-        """Load parameters to the pipeline of the current editor"""
-        self.get_current_editor().load_pipeline_parameters(
-            os.path.expanduser("~")
-        )
+        """
+        Load pipeline parameters for the current editor.
+
+        Opens a file dialog in the user's home directory to select a JSON
+        file containing pipeline configuration parameters, then loads those
+        parameters into the currently active editor's pipeline.
+        """
+        self.get_current_editor().load_pipeline_parameters(Path.home())
 
     def new_tab(self):
-        """Create a new tab and a new editor and makes the new tab current."""
-        # Creating a new editor
-        p_e = PipelineEditor(self.project, self.main_window)
-        p_e.node_clicked.connect(self.emit_node_clicked)
-        p_e.process_clicked.connect(self.emit_node_clicked)
-        p_e.switch_clicked.connect(self.emit_switch_clicked)
-        p_e.pipeline_saved.connect(self.emit_pipeline_saved)
-        p_e.pipeline_modified.connect(self.update_pipeline_editors)
-        p_e.edit_sub_pipeline.connect(self.open_sub_pipeline)
-        p_e.open_filter.connect(self.open_filter)
-        p_e.export_to_db_scans.connect(self.export_to_db_scans)
-        p_e.initialized = False
-        p_e.iterated = False
-        p_e.iterated_tag = None
-        p_e.tag_values_list = []
-        p_e.node_parameters = {}
-        p_e.node_parameters_tmp = {}
-        # A unique editor name has to be automatically generated
-        idx = 1
+        """
+        Create and initialize a new pipeline editor tab.
 
-        while True and idx < 50:
+        Creates a new PipelineEditor instance, connects all necessary signals,
+        initializes its state, generates a unique tab name, and makes it the
+        current tab. The new tab is inserted atthe last tab position.
+
+        The tab name follows the pattern "New Pipeline {n}" where n is the
+        first available index from 1 to 49.
+        """
+        # Create and configure new editor
+        editor = PipelineEditor(self.project, self.main_window)
+        # Connect signals
+        signal_mappings = {
+            "node_clicked": self.emit_node_clicked,
+            "process_clicked": self.emit_node_clicked,
+            "switch_clicked": self.emit_switch_clicked,
+            "pipeline_saved": self.emit_pipeline_saved,
+            "pipeline_modified": self.update_pipeline_editors,
+            "edit_sub_pipeline": self.open_sub_pipeline,
+            "open_filter": self.open_filter,
+            "export_to_db_scans": self.export_to_db_scans,
+        }
+
+        for signal_name, slot in signal_mappings.items():
+            getattr(editor, signal_name).connect(slot)
+
+        # Initialize state
+        editor.initialized = False
+        editor.iterated = False
+        editor.iterated_tag = None
+        editor.tag_values_list = []
+        editor.node_parameters = {}
+        editor.node_parameters_tmp = {}
+        # Generate unique tab name
+        tab_name = None
+
+        for idx in range(1, 50):
             name = f"New Pipeline {idx}"
 
-            if self.get_index_by_tab_name(name):
-                idx += 1
-                continue
-
-            else:
+            if not self.get_index_by_tab_name(name):
+                tab_name = name
                 break
 
-        if name is not None:
-            self.undos[p_e] = []
-            self.redos[p_e] = []
-
-        else:
-            logger.info("Too many tabs in the Pipeline Editor")
+        if tab_name is None:
+            logger.info(
+                "Maximum number of tabs (50) reached in Pipeline Editor"
+            )
             return
 
-        self.insertTab(self.count() - 1, p_e, name)
-        self.set_tab_index(self.count() - 2)
+        # Initialize undo/redo stacks
+        self.undos[editor] = []
+        self.redos[editor] = []
+        # Insert tab at the last position and switch to it
+        insertion_index = self.count() - 1
+        self.insertTab(insertion_index, editor, tab_name)
+        self.set_tab_index(insertion_index)
+        # Finalize setup
         self.get_capsul_engine()
         self.update_iteration_checkbox()
 
     def open_filter(self, node_name):
-        """Open a filter widget.
+        """
+        Open a filter widget for the specified pipeline node.
 
-        :param node_name: name of the corresponding node
+        Creates and displays a FilterWidget instance for filtering data
+        associated with the given node in the current pipeline.
+
+        :param node_name: The name of the node to apply filters to.
         """
         node = self.get_current_pipeline().nodes[node_name]
-        self.filter_widget = FilterWidget(self.project, node_name, node, self)
+        self.filter_widget = FilterWidget(
+            project=self.project,
+            node_name=node_name,
+            node=node,
+            main_window=self.main_window,
+        )
         self.filter_widget.show()
 
     def open_sub_pipeline(self, sub_pipeline):
-        """Open a sub-pipeline in a new tab.
-
-        :param sub_pipeline: the pipeline to open
         """
-        # import verCmp only here to prevent circular import issue
+        Open a sub-pipeline in a new tab.
+
+        This method locates and loads a sub-pipeline by:
+            1. Reading the process configuration to find package paths
+            2. Determining the pipeline's source package (mia_processes or
+               custom)
+            3. Resolving the full filesystem path to the pipeline file
+            4. Loading the pipeline in a new tab
+
+        :param sub_pipeline: The pipeline object to open. Must have a 'name'
+                             attribute and '__module__' attribute for package
+                             resolution.
+        """
+        # Import locally to prevent circular dependencies
         from populse_mia.utils import verCmp
 
-        # Reading the process configuration file
+        # Load process configuration
         config = Config()
+        config_path = os.path.join(
+            config.get_properties_path(), "properties", "process_config.yml"
+        )
 
-        with open(
-            os.path.join(
-                config.get_properties_path(),
-                "properties",
-                "process_config.yml",
-            ),
-        ) as stream:
-            try:
+        try:
+
+            with open(config_path) as stream:
 
                 if verCmp(yaml.__version__, "5.1", "sup"):
-                    dic = yaml.load(stream, Loader=yaml.FullLoader)
+                    process_config = yaml.load(stream, Loader=yaml.FullLoader)
 
                 else:
-                    dic = yaml.load(stream)
+                    process_config = yaml.load(stream)
 
-            except yaml.YAMLError as exc:
-                logger.warning(exc)
-                dic = {}
+        except yaml.YAMLError as exc:
+            logger.warning(f"Failed to load process configuration: {exc}")
+            process_config = {}
 
-        sub_pipeline_name = sub_pipeline.name
-        # Finding from where comes from the pipeline
-        pckg = sub_pipeline.__module__.split(".", 1)[0]
+        # Determine pipeline source package
+        package_name = sub_pipeline.__module__.split(".", 1)[0]
 
-        if pckg == "mia_processes":
-            paths_list = [
+        if package_name == "mia_processes":
+            search_paths = [
                 os.path.dirname(sys.modules["mia_processes"].__path__[0])
             ]
 
         else:
-            paths_list = dic["Paths"]
+            search_paths = process_config.get("Paths", [])
 
-        # get_path returns a list that is the package path to
-        # the sub_pipeline file
-        sub_pipeline_list = get_path(
-            sub_pipeline_name, dic["Packages"], None, pckg
+        # Resolve pipeline path
+        pipeline_path_components = get_path(
+            sub_pipeline.name,
+            process_config.get("Packages"),
+            None,
+            package_name,
         )
-        sub_pipeline_name = sub_pipeline_list.pop()
-        # Finding the real sub-pipeline filename
-        sub_pipeline_filename = find_filename(
-            paths_list, sub_pipeline_list, sub_pipeline_name
+        pipeline_name = pipeline_path_components.pop()
+        # Locate and load the pipeline file
+        pipeline_file = find_filename(
+            search_paths, pipeline_path_components, pipeline_name
         )
-        self.load_pipeline(sub_pipeline_filename)
+        self.load_pipeline(pipeline_file)
 
     def reset_pipeline(self):
         """Reset the pipeline of the current editor."""
