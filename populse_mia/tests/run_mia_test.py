@@ -8476,7 +8476,8 @@ class TestMIAPipelineEditor(TestMIACase):
         # Explicit save with full filename
         filename = os.path.join(usr_proc_folder, "test_pipeline_3.py")
         self.assertEqual(
-            ppl_edt_tabs.save_pipeline(new_file_name=filename), filename
+            ppl_edt_tabs.save_pipeline(new_file_name=filename),
+            os.path.basename(filename),
         )
 
     def test_update_plug_value(self):

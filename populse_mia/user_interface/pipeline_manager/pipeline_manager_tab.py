@@ -3359,7 +3359,7 @@ class PipelineManagerTab(QWidget):
 
             # Execute save or show cancellation message
             if should_save:
-                self.pipelineEditorTabs.save_pipeline(
+                pipeline_name = self.pipelineEditorTabs.save_pipeline(
                     new_file_name=current_filename
                 )
                 self.main_window.statusBar().showMessage(

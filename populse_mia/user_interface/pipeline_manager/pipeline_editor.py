@@ -2115,93 +2115,148 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         self.load_pipeline(pipeline_file)
 
     def reset_pipeline(self):
-        """Reset the pipeline of the current editor."""
+        """
+        Reset and refresh the currently active editor's pipeline display.
+
+        This triggers an asynchronous update of the pipeline view after a
+        short delay (20ms). The update strategy depends on the editor's view
+        mode:
+            - Logical view: Displays logical representations of nodes, plugs,
+                            and links
+            - Normal view: Displays standard representations of nodes, plugs,
+                           and links
+
+        :note: The update is performed asynchronously via a single-shot timer
+               to allow the UI thread to remain responsive.
+
+        """
         self.get_current_editor()._reset_pipeline()
 
     def save_pipeline(self, new_file_name=None):
-        """Save the pipeline of the current editor."""
+        """
+        Save the current pipeline to a file.
 
+        Performs either a "Save" or "Save As" operation depending on whether
+        a filename is provided. Updates the tab text and emits a signal upon
+        successful save.
+
+        :param new_file_name (str): Target filename for the pipeline. If None,
+                                    triggers a "Save As" dialog. Defaults to
+                                    None.
+
+        :return (str or None): The basename of the saved file if successful,
+                               None otherwise.
+
+        Side Effects:
+            - Updates the current tab text with the new filename
+            - Emits pipeline_saved signal (only for explicit saves)
+            - Modifies the editor's _pipeline_filename attribute
+        """
+        editor = self.get_current_editor()
+
+        # Handle "Save As" action
         if new_file_name is None:
-            # Doing a "Save as" action
-            new_file_name = self.get_current_editor().save_pipeline()
+            new_file_name = editor.save_pipeline()
 
-            if new_file_name:
-                new_file_name = os.path.basename(new_file_name)
+            if not new_file_name:
+                return None
 
-            if (
-                new_file_name
-                and os.path.basename(self.get_current_filename())
-                != new_file_name
-            ):
-                self.setTabText(self.currentIndex(), new_file_name)
+            basename = os.path.basename(new_file_name)
+            current_basename = os.path.basename(self.get_current_filename())
 
-            return new_file_name
+            if basename != current_basename:
+                self.setTabText(self.currentIndex(), basename)
 
-        else:
-            # Saving the current pipeline
-            pipeline = self.get_current_pipeline()
+            return basename
+
+        # Handle explicit save with provided filename
+        pipeline = self.get_current_pipeline()
+        scene = editor.scene
+        # Extract node positions, handling both QPointF objects and tuples
+        posdict = {}
+
+        for key, value in scene.pos.items():
 
             try:
-                posdict = {
-                    key: (value.x(), value.y())
-                    for key, value in (
-                        self.get_current_editor().scene.pos
-                    ).items()
-                }
+                posdict[key] = (value.x(), value.y())
 
-            except Exception:
-                posdict = {
-                    key: (value[0], value[1])
-                    for key, value in (
-                        self.get_current_editor().scene.pos
-                    ).items()
-                }
+            except AttributeError:
+                posdict[key] = (value[0], value[1])
 
-            dimdict = {
-                key: (value[0], value[1])
-                for key, value in (self.get_current_editor().scene.dim).items()
-            }
-            pipeline.node_dimension = dimdict
-            old_pos = pipeline.node_position
-            pipeline.node_position = posdict
-            save_pipeline(pipeline, new_file_name)
-            self.get_current_editor()._pipeline_filename = str(new_file_name)
-            pipeline.node_position = old_pos
-            self.pipeline_saved.emit(new_file_name)
-            self.setTabText(
-                self.currentIndex(), os.path.basename(new_file_name)
-            )
-            return new_file_name
+        # Extract node dimensions
+        dimdict = {
+            key: (value[0], value[1]) for key, value in scene.dim.items()
+        }
+        # Update pipeline with current scene data
+        pipeline.node_dimension = dimdict
+        old_pos = pipeline.node_position
+        pipeline.node_position = posdict
+        # Save to file
+        save_pipeline(pipeline, new_file_name)
+        # Update editor state
+        editor._pipeline_filename = str(new_file_name)
+        pipeline.node_position = old_pos
+        # Notify and update UI
+        basename = os.path.basename(new_file_name)
+        self.pipeline_saved.emit(new_file_name)
+        self.setTabText(self.currentIndex(), basename)
+
+        return basename
 
     def save_pipeline_parameters(self):
-        """Save the pipeline parameters of the current editor."""
+        """
+        Save pipeline parameters from the currently active editor.
+
+        Delegates the save operation to the current editor's save method.
+        """
         self.get_current_editor().save_pipeline_parameters()
 
     def set_current_editor_by_editor(self, editor):
-        """Set the current editor.
+        """
+        Set the specified editor as the currently active editor.
 
-        :param editor: editor in the tab that should be made current
+        Activates the tab containing the given editor by switching to its
+        index.
+
+        :param editor: The editor instance to make active. Must be an editor
+                       that exists within one of the managed tabs.
         """
         self.set_tab_index(self.get_index_by_editor(editor))
 
     def set_current_editor_by_file_name(self, file_name):
-        """Set the current editor from file name.
+        """
+        Activate the editor tab containing the specified file.
 
-        :param file_name: name of the file the pipeline was last saved to
+        Sets the active editor tab to the one associated with the given file
+        name, typically used when reopening a previously saved pipeline.
+
+        :parame file_name: The name of the file whose editor tab should be
+                           activated.
         """
         self.set_tab_index(self.get_index_by_filename(file_name))
 
     def set_current_editor_by_tab_name(self, tab_name):
-        """Set the current editor from tab name.
-
-        :param tab_name: name of the tab
         """
-        self.set_tab_index(self.get_index_by_tab_name(tab_name))
+        Activate the editor tab with the specified name.
+
+        :param tab_name: The display name of the tab to activate.
+        """
+
+        if (index := self.get_index_by_tab_name(tab_name)) is not None:
+            self.set_tab_index(index)
+
+        else:
+            logger.warning(f"No tab found with name: {tab_name}")
 
     def set_tab_index(self, index):
-        """Set the current tab index and disable the run pipeline action.
+        """
+        Activate the tab at the specified index and update the current node.
 
-        :param index: index of the editor
+        Sets the active tab, stores it as the previous index for navigation
+        history, and updates the current node state for the newly active
+        editor.
+
+        :param index: The zero-based index of the tab to activate.
         """
         self.setCurrentIndex(index)
         self.previousIndex = index
