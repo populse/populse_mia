@@ -2143,8 +2143,7 @@ class PipelineManagerTab(QWidget):
                 self.main_window.statusBar().showMessage(error_message)
 
             # Update UI state
-            current_index = self.pipelineEditorTabs.currentIndex()
-            self.pipelineEditorTabs.update_current_node(current_index)
+            self.pipelineEditorTabs.update_current_node()
             # Deep copy node parameters from temporary storage
             current_editor = self.pipelineEditorTabs.get_current_editor()
             current_editor.node_parameters = copy.deepcopy(
@@ -2152,7 +2151,7 @@ class PipelineManagerTab(QWidget):
             )
             # Update UI state again after parameter
             # changes (TODO: not sure if needed)
-            self.pipelineEditorTabs.update_current_node(current_index)
+            self.pipelineEditorTabs.update_current_node()
 
         finally:
             # Always restore cursor and set init_clicked, even if an

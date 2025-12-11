@@ -2260,105 +2260,121 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         self.setCurrentIndex(index)
         self.previousIndex = index
-        self.update_current_node(index)
+        self.update_current_node()
 
     def update_iteration_checkbox(self):
-        """blabla"""
-        pipeline = self.get_current_pipeline()
-
-        if not pipeline or not hasattr(pipeline, "nodes"):
-            # fmt: off
-            (
-                self.main_window.pipeline_manager.iterationTable.
-                check_box_iterate.setCheckState
-            )(Qt.Qt.Unchecked)
-            # fmt: on
-
-        else:
-            has_iteration = False
-
-            for key in pipeline.nodes.sortedKeys:
-
-                if "iterated_" in key:
-                    has_iteration = True
-
-            if has_iteration:
-                # fmt: off
-                (
-                    self.main_window.pipeline_manager.iterationTable.
-                    check_box_iterate.setCheckState
-                )(Qt.Qt.Checked)
-                # fmt: on
-
-            else:
-                # fmt: off
-                (
-                    self.main_window.pipeline_manager.iterationTable.
-                    check_box_iterate.setCheckState
-                )(Qt.Qt.Unchecked)
-                # fmt: on
-
-    def update_current_node(self, index):
-        """Update the node parameters
-
-        :param index: index of the editor
         """
+        Update the iteration checkbox state based on pipeline node names.
 
-        try:
+        Sets the iteration checkbox to checked if any pipeline node has
+        'iterated_' in its key name, otherwise sets it to unchecked. If no
+        valid pipeline exists or the pipeline lacks nodes, the checkbox is
+        unchecked.
+        """
+        pipeline = self.get_current_pipeline()
+        checkbox = (
+            self.main_window.pipeline_manager.iterationTable.check_box_iterate
+        )
 
-            for node_name, node in self.get_current_pipeline().nodes.items():
-                self.main_window.pipeline_manager.displayNodeParameters(
-                    node_name, node.process
-                )
+        # Default to unchecked if pipeline is invalid or has no nodes
+        if not pipeline or not hasattr(pipeline, "nodes"):
+            checkbox.setCheckState(Qt.Qt.Unchecked)
+            return
 
-        except AttributeError:
-            pass
+        # Check if any node key contains 'iterated_'
+        has_iteration = any(
+            "iterated_" in key for key in pipeline.nodes.sortedKeys
+        )
+        checkbox.setCheckState(
+            Qt.Qt.Checked if has_iteration else Qt.Qt.Unchecked
+        )
 
-        self.main_window.pipeline_manager.update_user_buttons_states()
+    def update_current_node(self):
+        """Update the node parameters display for the current pipeline.
+
+        Refreshes the UI to display parameters for all nodes in the current
+        pipeline, updates user button states, iteration checkbox, and iterated
+        tag display.
+        """
+        pipeline = self.get_current_pipeline()
+        pipeline_manager = self.main_window.pipeline_manager
+
+        # Display parameters for all nodes in the pipeline
+        if pipeline and hasattr(pipeline, "nodes"):
+
+            for node_name, node in pipeline.nodes.items():
+                pipeline_manager.displayNodeParameters(node_name, node.process)
+
+        # Update UI state
+        pipeline_manager.update_user_buttons_states()
         self.update_iteration_checkbox()
+        # Update iterated tag if an editor is active
+        current_editor = self.get_current_editor()
 
-        # fmt: off
-        if self.get_current_editor():
-            (
-                self.main_window.pipeline_manager.iterationTable.
-                update_iterated_tag
-            )(self.get_current_editor().iterated_tag)
-        # fmt: on
+        if current_editor:
+            pipeline_manager.iterationTable.update_iterated_tag(
+                current_editor.iterated_tag
+            )
 
     def update_history(self, editor):
-        """Update undo/redo history of an editor.
+        """
+        Update the undo/redo history for the specified editor.
 
-        :param editor: editor
+        Saves the editor's current undo and redo stacks and marks the active
+        tab as modified by appending an asterisk to its title if not already
+        present.
+
+        :param editor: The editor instance whose history should be saved.
+
+        :note: This method assumes the editor is in the currently active tab.
         """
         self.undos[editor] = editor.undos
         self.redos[editor] = editor.redos
-        self.setTabText(
-            self.currentIndex(), f"{self.get_current_tab_name()} *"
-        )
-        # TODO: make sure the " *" is there
+        current_tab_name = self.get_current_tab_name()
+
+        if not current_tab_name.endswith(" *"):
+            self.setTabText(self.currentIndex(), f"{current_tab_name} *")
 
     def update_pipeline_editors(self, editor):
-        """Update editor.
+        """
+        Update the pipeline editors after changes to the specified editor.
 
-        :param editor: editor
+        Synchronizes the editor's undo/redo history and refreshes the scans
+        list to reflect any modifications made in the pipeline editor.
+
+        :param editor: The editor instance that was modified.
         """
         self.update_history(editor)
         self.update_scans_list()
 
     def update_scans_list(self):
-        """Update the list of database scans in every editor."""
+        """
+        Update the list of database scans in every pipeline editor.
+
+        Iterates through all editor tabs (excluding the last tab) and updates
+        the database_scans attribute for each pipeline that supports it.
+        Also refreshes the iteration checkbox state after updating.
+
+        :note: Silently continues if updating a pipeline fails, logging the
+               error without interrupting the update process for remaining
+               pipelines.
+        """
 
         for i in range(self.count() - 1):
             pipeline = self.widget(i).scene.pipeline
 
-            if pipeline.trait("database_scans"):
+            if not pipeline.trait("database_scans"):
+                continue
 
-                try:
-                    setattr(pipeline, "database_scans", self.scan_list)
+            try:
+                pipeline.database_scans = self.scan_list
 
-                except Exception:
-                    logger.warning("An error occurred", exc_info=True)
-                    # but continue...
+            except Exception as e:
+                logger.warning(
+                    f"Failed to update database_scans for "
+                    f"pipeline at index {i}: {e}",
+                    exc_info=True,
+                )
 
         self.update_iteration_checkbox()
 
