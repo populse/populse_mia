@@ -1977,7 +1977,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Creates a new PipelineEditor instance, connects all necessary signals,
         initializes its state, generates a unique tab name, and makes it the
-        current tab. The new tab is inserted atthe last tab position.
+        current tab. The new tab is inserted at the last tab position.
 
         The tab name follows the pattern "New Pipeline {n}" where n is the
         first available index from 1 to 49.
@@ -2351,9 +2351,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Update the list of database scans in every pipeline editor.
 
-        Iterates through all editor tabs (excluding the last tab) and updates
-        the database_scans attribute for each pipeline that supports it.
-        Also refreshes the iteration checkbox state after updating.
+        Iterates through all editor tabs (excluding the last tab, reserved for
+        the "add tab" button) and updates the database_scans attribute for
+        each pipeline that supports it. Also refreshes the iteration checkbox
+        state after updating.
 
         :note: Silently continues if updating a pipeline fails, logging the
                error without interrupting the update process for remaining
@@ -2381,46 +2382,64 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
 def find_filename(paths_list, packages_list, file_name):
     """
-    Find the corresponding file name in the paths list of process_config.yml.
+    Locate a pipeline file within configured paths.
 
-    :param paths_list: list of all the paths contained in process_config.yml
-    :param packages_list: packages path
-    :param file_name: name of the sub-pipeline
-    :return: name of the corresponding file if it is found, else None
+    Searches for a file with the given name (with .py or .xml extension) by
+    traversing through base paths combined with package subdirectories.
+    Performs case-insensitive matching to handle filesystem sensitivity issues.
+
+    :param paths_list: Base directory paths from process_config.yml
+    :param packages_list: Ordered list of package subdirectories to traverse
+    :param file_name: Base name of the sub-pipeline file (without extension)
+
+    :return: Absolute path to the matched file, or None if not found
     """
-    filenames = [f"{file_name}.py", f"{file_name}.xml"]
+    extensions = (".py", ".xml")
 
-    for filename in filenames:
+    for base_path in paths_list:
+        # Build the target directory path
+        target_dir = Path(base_path).joinpath(*packages_list)
 
-        for path in paths_list:
-            new_path = path
+        if not target_dir.is_dir():
+            continue
 
-            for package in packages_list:
-                new_path = os.path.join(new_path, package)
+        # Search for matching files with case-insensitive comparison
+        for file_path in target_dir.iterdir():
 
-            # Making sure that the filename is found (has some issues
-            # with case sensitivity)
-            if os.path.isdir(new_path):
+            if not file_path.is_file():
+                continue
 
-                for f in os.listdir(new_path):
-                    new_file = os.path.join(new_path, f)
+            stem_lower = file_path.stem.lower()
+            suffix_lower = file_path.suffix.lower()
 
-                    if (os.path.isfile(new_file)) and (
-                        f.lower() == filename.lower()
-                    ):
-                        return new_file
+            if stem_lower == file_name.lower() and suffix_lower in extensions:
+                return str(file_path)
+
+    return None
 
 
 def get_path(name, dictionary, prev_paths=None, pckg=None):
-    """Return the package path to the selected sub-pipeline.
+    """
+    Recursively search for a module name inside a nested dictionary structure
+    and return its full path as a list of keys.
 
-    :param name: name of the sub-pipeline
-    :param dictionary: package tree
-    :param prev_paths: paths of the last call of this function
-    :param pckg: package root
-    :return: the package path of the sub-pipeline if it is found, else None
+    The tree is assumed to be a mapping where:
+        - Intermediate nodes are dictionaries (packages),
+        - Leaf nodes are strings (module names).
+
+    :param name (str): Name of the module to locate in the tree.
+    :param dictionary (dict): The nested dictionary representing the tree
+                              structure.
+    :param prev_paths (list[str]): The accumulated path leading to the current
+                                   dictionary. If None, a new path list is
+                                   created.
+    :param pckg (str): If provided, navigation starts inside that package name.
+
+    :return (list[str]): A list of keys representing the path to the module, or
+                         None if the module is not found.
     """
 
+    # Initialize accumulated path
     if prev_paths is None:
         prev_paths = []
 
@@ -2428,62 +2447,68 @@ def get_path(name, dictionary, prev_paths=None, pckg=None):
             prev_paths.append(pckg)
             dictionary = dictionary.get(pckg, {})
 
-    # new_paths is a list containing the packages to the desired module
+    # Copy because new_paths will be mutated
     new_paths = prev_paths.copy()
 
-    for idx, (key, value) in enumerate(dictionary.items()):
-        # If the value is a string, this means
-        # that this is a "leaf" of the tree
-        # so the key is a module name.
+    for key, value in dictionary.items():
 
+        # Leaf: module name
         if isinstance(value, str):
 
             if key == name:
-                new_paths.append(key)
-                return new_paths
+                return new_paths + [key]
 
-            else:
-                continue
+            continue
 
-        # Else, this means that the value is still a dictionary,
-        # we are still in the tree
-        else:
-            new_paths.append(key)
-            final_res = get_path(name, value, new_paths)
+        # Branch: subpackage
+        new_paths.append(key)
+        result = get_path(name, value, new_paths)
 
-            # final_res is None if the module name has not
-            # been found in the tree
-            if final_res:
-                return final_res
+        if result is not None:
+            return result
 
-            else:
-                new_paths = prev_paths.copy()
+        # Reset new_paths when going back up
+        new_paths = prev_paths.copy()
+
+    # Not found in this branch
+    return None
 
 
 def save_pipeline(pipeline, filename):
-    """Save the pipeline either in XML or .py source file.
-
-    :param pipeline: the pipeline to save
-    :param filename: name of the file where to save the pipeline
     """
-    formats = {".py": save_py_pipeline, ".xml": save_xml_pipeline}
-    saved = False
+    Save a pipeline to a file in the appropriate format.
 
-    for ext, writer in formats.items():
+    Automatically detects the output format based on the file extension.
+    Supported formats are Python source (.py) and XML (.xml). If no
+    recognized extension is provided, defaults to Python format.
 
-        if filename.endswith(ext):
-            writer(pipeline, filename)
-            saved = True
-            break
+    :param pipeline: The pipeline object to serialize and save.
+    :param filename: Path to the output file. The extension determines
+                     the output format (.py or .xml).
 
-    if not saved:
-        # fallback to .py
-        save_py_pipeline(pipeline, filename)
+    :note: Unrecognized extensions will default to Python source format (.py)
+
+    Examples:
+        >>> save_pipeline(my_pipeline, "model.py")
+        >>> save_pipeline(my_pipeline, "config.xml")
+        >>> save_pipeline(my_pipeline, "output")  # Defaults to .py format
+    """
+    FORMATS = {
+        ".py": save_py_pipeline,
+        ".xml": save_xml_pipeline,
+    }
+
+    suffix = Path(filename).suffix.lower()
+    writer = FORMATS.get(suffix, save_py_pipeline)
+    writer(pipeline, filename)
 
 
 def values(d):
-    """Return a variable as a list.
+    """
+    Extract all values from a dictionary as a list.
 
-    :return (list): A variable as a list.
+    :param d (dict): The dictionary to extract values from.
+
+    :return (list): A list containing all values from the dictionary.
     """
     return list(d.values())
