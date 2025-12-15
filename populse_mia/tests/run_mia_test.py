@@ -8241,7 +8241,7 @@ class TestMIAPipelineEditor(TestMIACase):
         with patch.object(
             PipelineEditor._PlugEdit, "exec_", return_value=None
         ) as mock_exec:
-            ppl_edt._export_plug(pipeline_parameter=False, temp_plug_name=None)
+            ppl_edt._export_plug(pipeline_parameter=None, temp_plug_name=None)
             mock_exec.assert_called_once_with()
 
         # We verify that there are still no processes in the current pipeline
@@ -8395,7 +8395,8 @@ class TestMIAPipelineEditor(TestMIACase):
         editor.export_node_all_unconnected_outputs()
 
         with patch(
-            "PyQt5.QtWidgets.QFileDialog.getSaveFileName", return_value=[""]
+            "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
+            return_value=("", ""),
         ):
             # User cancels save dialog
             self.assertIsNone(ppl_edt_tabs.save_pipeline())
@@ -8414,9 +8415,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "1_test_pipeline")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "1_test_pipeline"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             # Test saving a pipeline with a filename starting with a digit
@@ -8425,7 +8427,10 @@ class TestMIAPipelineEditor(TestMIACase):
         # Saving with missing extension -> should append .py
         with patch(
             "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-            return_value=[os.path.join(usr_proc_folder, "test_pipeline_1")],
+            return_value=(
+                os.path.join(usr_proc_folder, "test_pipeline_1"),
+                "Compatible files (*.py)",
+            ),
         ):
             self.assertEqual(
                 ppl_edt_tabs.save_pipeline(), "test_pipeline_1.py"
@@ -8438,9 +8443,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "test_pipeline_2.c")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "test_pipeline_2.c"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             self.assertEqual(
@@ -8456,9 +8462,10 @@ class TestMIAPipelineEditor(TestMIACase):
             ),
             patch(
                 "PyQt5.QtWidgets.QFileDialog.getSaveFileName",
-                return_value=[
-                    os.path.join(usr_proc_folder, "test_pipeline_2.py")
-                ],
+                return_value=(
+                    os.path.join(usr_proc_folder, "test_pipeline_2.py"),
+                    "Compatible files (*.py)",
+                ),
             ),
         ):
             self.assertIsNone(ppl_edt_tabs.save_pipeline())
@@ -8469,7 +8476,8 @@ class TestMIAPipelineEditor(TestMIACase):
         # Explicit save with full filename
         filename = os.path.join(usr_proc_folder, "test_pipeline_3.py")
         self.assertEqual(
-            ppl_edt_tabs.save_pipeline(new_file_name=filename), filename
+            ppl_edt_tabs.save_pipeline(new_file_name=filename),
+            os.path.basename(filename),
         )
 
     def test_update_plug_value(self):
@@ -11434,9 +11442,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Delete the "prefix_smooth" plug from the Input node,
         # test if the Input node have not a prefix_smooth plug
-        pipeline_editor._remove_plug(
-            _temp_plug_name=("inputs", "prefix_smooth")
-        )
+        pipeline_editor._remove_plug(plug_names=("inputs", "prefix_smooth"))
         self.assertFalse("prefix_smooth" in pipeline.nodes[""].plugs.keys())
 
         # Undo (export again the "out_prefix" plug),
