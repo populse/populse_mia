@@ -2143,8 +2143,7 @@ class PipelineManagerTab(QWidget):
                 self.main_window.statusBar().showMessage(error_message)
 
             # Update UI state
-            current_index = self.pipelineEditorTabs.currentIndex()
-            self.pipelineEditorTabs.update_current_node(current_index)
+            self.pipelineEditorTabs.update_current_node()
             # Deep copy node parameters from temporary storage
             current_editor = self.pipelineEditorTabs.get_current_editor()
             current_editor.node_parameters = copy.deepcopy(
@@ -2152,7 +2151,7 @@ class PipelineManagerTab(QWidget):
             )
             # Update UI state again after parameter
             # changes (TODO: not sure if needed)
-            self.pipelineEditorTabs.update_current_node(current_index)
+            self.pipelineEditorTabs.update_current_node()
 
         finally:
             # Always restore cursor and set init_clicked, even if an
@@ -3002,7 +3001,7 @@ class PipelineManagerTab(QWidget):
         elif action == "export_plugs":
             (plug_name, _) = args
             editor._remove_plug(
-                _temp_plug_name=("inputs", plug_name), from_redo=True
+                plug_names=("inputs", plug_name), from_redo=True
             )
 
         elif action == "remove_plug":
@@ -3359,7 +3358,7 @@ class PipelineManagerTab(QWidget):
 
             # Execute save or show cancellation message
             if should_save:
-                self.pipelineEditorTabs.save_pipeline(
+                pipeline_name = self.pipelineEditorTabs.save_pipeline(
                     new_file_name=current_filename
                 )
                 self.main_window.statusBar().showMessage(
@@ -3499,7 +3498,7 @@ class PipelineManagerTab(QWidget):
                 plugs_to_remove.append((plug_type, parameter))
 
             current_editor._remove_plug(
-                _temp_plug_name=plugs_to_remove,
+                plug_names=plugs_to_remove,
                 from_undo=True,
                 from_export_plugs=False,
             )
