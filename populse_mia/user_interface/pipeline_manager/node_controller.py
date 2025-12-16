@@ -1,12 +1,16 @@
 """Module to handle the node of a pipeline and its plugs.
 
 :Contains:
-    :Class:
+
+    Class:
         - PlugFilter (must be declared before AttributesFilter)
         - AttributesFilter
         - CapsulNodeController
         - FilterWidget
         - NodeController
+
+    Function:
+        - values (commented out)
 
 """
 
@@ -83,20 +87,6 @@ from populse_mia.user_interface.pop_ups import (
 from . import type_editors
 
 logger = logging.getLogger(__name__)
-
-
-def values(d):
-    """
-    Return a list of all values in the dictionary.
-
-    In Python 3, `dict.values()` returns a view, which is then
-    converted to a list for compatibility with older code that
-    expects a list of values.
-
-    :param d (dict): The dictionary from which to retrieve values.
-    :returns (list): A list of values in the dictionary.
-    """
-    return list(d.values())
 
 
 class PlugFilter(QWidget):
@@ -1678,3 +1668,17 @@ class NodeController(QWidget):
         """
         # only implemented in CapsulNodeController
         pass
+
+
+# It appears that this function is no longer in use. We are commenting it out
+# to verify this (16/12/2015). If everything works correctly, we will be able
+# to remove it completely at a later date.
+# def values(d):
+#     """
+#     Extract all values from a dictionary as a list.
+
+#     :param d (dict): The dictionary to extract values from.
+
+#     :return (list): A list containing all values from the dictionary.
+#     """
+#     return list(d.values())

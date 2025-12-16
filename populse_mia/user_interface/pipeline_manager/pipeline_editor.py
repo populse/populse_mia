@@ -13,7 +13,7 @@ Contains:
         - find_filename
         - get_path
         - save_pipeline
-        - values
+        - values (commented out)
 
 """
 
@@ -2521,12 +2521,15 @@ def save_pipeline(pipeline, filename):
     writer(pipeline, filename)
 
 
-def values(d):
-    """
-    Extract all values from a dictionary as a list.
+# It appears that this function is no longer in use. We are commenting it out
+# to verify this (16/12/2015). If everything works correctly, we will be able
+# to remove it completely at a later date.
+# def values(d):
+#     """
+#     Extract all values from a dictionary as a list.
 
-    :param d (dict): The dictionary to extract values from.
+#     :param d (dict): The dictionary to extract values from.
 
-    :return (list): A list containing all values from the dictionary.
-    """
-    return list(d.values())
+#     :return (list): A list containing all values from the dictionary.
+#     """
+#     return list(d.values())
