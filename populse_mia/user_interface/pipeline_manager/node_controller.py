@@ -118,28 +118,34 @@ class PlugFilter(QWidget):
         main_window,
     ):
         """
-        Initialization of the PlugFilter widget
+        Initialize the PlugFilter widget for filtering database scans.
 
-        :param project: current project in the software
-        :param scans_list: list of database files to filter
-        :param process: process instance of the selected node
-        :param node_name: name of the current node
-        :param plug_name: name of the selected node plug
-        :param node_controller: parent node controller
-        :param main_window: parent main window
+        Creates a filterable data browser interface with search capabilities,
+        tag visualization controls, and scan selection. Automatically excludes
+        scans that are outputs from existing pipeline bricks.
+
+        :param project: Current project instance containing database and
+                        folder paths
+        :param scans_list: Initial list of database file paths to filter. If
+                           empty, all scans from COLLECTION_CURRENT are
+                           included
+        :param process: Process instance associated with the selected pipeline
+                        node
+        :param node_name: Display name of the current pipeline node
+        :param plug_name: Name of the selected node plug/connection point
+        :param node_controller: Parent controller managing node visibility and
+                                tags
+        :param main_window: Main application window containing the pipeline
+                            manager
         """
         super().__init__(None)
-        from populse_mia.data_manager.project import COLLECTION_CURRENT
-        from populse_mia.user_interface.data_browser.rapid_search import (
-            RapidSearch,
-        )
-
         self.project = project
         self.node_controller = node_controller
         self.main_window = main_window
         self.process = process
         self.plug_name = plug_name
-        doc_list = []
+        # Collect all brick output paths to exclude from scan list
+        brick_outputs = set()
 
         with self.project.database.data() as database_data:
 
@@ -148,42 +154,32 @@ class PlugFilter(QWidget):
                     collection_name=COLLECTION_BRICK, primary_keys=brick
                 )
 
-                if doc:
+                if doc and BRICK_OUTPUTS in doc[0]:
+                    # Extract non-empty string outputs as relative paths
+                    outputs = (
+                        os.path.relpath(value, self.project.folder)
+                        for value in doc[0][BRICK_OUTPUTS].values()
+                        if isinstance(value, str) and value
+                    )
+                    brick_outputs.update(outputs)
 
-                    for key in doc[0][BRICK_OUTPUTS]:
-
-                        if isinstance(doc[0][BRICK_OUTPUTS][key], str):
-
-                            if doc[0][BRICK_OUTPUTS][key] != "":
-                                doc_delete = os.path.relpath(
-                                    doc[0][BRICK_OUTPUTS][key],
-                                    self.project.folder,
-                                )
-                                doc_list.append(doc_delete)
-
+            # Filter scans or use all current collection documents
             if scans_list:
-                scans_list_copy = []
+                self.scans_list = [
+                    scan.replace(self.project.folder, "").lstrip("\\/")
+                    for scan in scans_list
+                    if scan.replace(self.project.folder, "").lstrip("\\/")
+                    not in brick_outputs
+                ]
 
-                for scan in scans_list:
-                    scan_no_pfolder = scan.replace(self.project.folder, "")
-
-                    if scan_no_pfolder[0] in ["\\", "/"]:
-                        scan_no_pfolder = scan_no_pfolder[1:]
-
-                    if scan_no_pfolder not in doc_list:
-                        scans_list_copy.append(scan_no_pfolder)
-
-                self.scans_list = scans_list_copy
-
-            # If there is no element in scans_list, this means that all the
-            # scans of the database needs to be taken into account
             else:
                 self.scans_list = database_data.get_document_names(
                     COLLECTION_CURRENT
                 )
 
+        # Configure window
         self.setWindowTitle(f"Filter - {node_name} - {plug_name}")
-        # Graphical components
+        # Create main table browser
         self.table_data = TableDataBrowser(
             self.project,
             self,
@@ -197,18 +193,19 @@ class PlugFilter(QWidget):
         self.table_data.scans_to_visualize = self.scans_list
         self.table_data.scans_to_search = self.scans_list
         self.table_data.update_visualized_rows(all_scans)
-        search_bar_layout = QHBoxLayout()
+        # Create search bar with clear button
         self.rapid_search = RapidSearch(self)
         self.rapid_search.textChanged.connect(partial(self.search_str))
-        sources_images_dir = Config().getSourceImageDir()
         self.button_cross = QToolButton()
         self.button_cross.setStyleSheet("background-color:rgb(255, 255, 255);")
         self.button_cross.setIcon(
-            QIcon(os.path.join(sources_images_dir, "gray_cross.png"))
+            QIcon(os.path.join(Config().getSourceImageDir(), "gray_cross.png"))
         )
         self.button_cross.clicked.connect(self.reset_search_bar)
+        search_bar_layout = QHBoxLayout()
         search_bar_layout.addWidget(self.rapid_search)
         search_bar_layout.addWidget(self.button_cross)
+        # Create advanced search
         self.advanced_search = AdvancedSearch(
             self.project,
             self,
@@ -217,6 +214,7 @@ class PlugFilter(QWidget):
             from_pipeline=True,
         )
         self.advanced_search.show_search()
+        # Create control buttons
         push_button_tags = QPushButton("Visualized tags")
         push_button_tags.clicked.connect(self.update_tags)
         self.push_button_tag_filter = QPushButton(TAG_FILENAME)
@@ -225,7 +223,7 @@ class PlugFilter(QWidget):
         push_button_ok.clicked.connect(self.ok_clicked)
         push_button_cancel = QPushButton("Cancel")
         push_button_cancel.clicked.connect(self.close)
-        # Layout
+        # Assemble layouts
         buttons_layout = QHBoxLayout()
         buttons_layout.addWidget(push_button_tags)
         buttons_layout.addWidget(self.push_button_tag_filter)
@@ -238,10 +236,10 @@ class PlugFilter(QWidget):
         main_layout.addWidget(self.table_data)
         main_layout.addLayout(buttons_layout)
         self.setLayout(main_layout)
+        # Set window size based on screen resolution
         screen_resolution = QApplication.instance().desktop().screenGeometry()
-        width, height = screen_resolution.width(), screen_resolution.height()
-        self.setMinimumWidth(round(0.6 * width))
-        self.setMinimumHeight(round(0.8 * height))
+        self.setMinimumWidth(round(0.6 * screen_resolution.width()))
+        self.setMinimumHeight(round(0.8 * screen_resolution.height()))
 
     def ok_clicked(self):
         """Set the new value to the node plug and closes the widget."""
