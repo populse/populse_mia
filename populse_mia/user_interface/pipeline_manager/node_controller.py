@@ -242,16 +242,28 @@ class PlugFilter(QWidget):
         self.setMinimumHeight(round(0.8 * screen_resolution.height()))
 
     def ok_clicked(self):
-        """Set the new value to the node plug and closes the widget."""
+        """
+        Handle OK button click by applying changes and closing the dialog.
+
+        Commits the current widget value to the associated node plug, then
+        closes the widget dialog.
+        """
         self.set_plug_value()
         self.close()
 
     def reset_search_bar(self):
-        """Reset the search bar of the rapid search."""
+        """
+        Reset search interface to initial state and restore all scan rows.
+
+        Clears the rapid search text field, resets advanced search rows,
+        and restores the full scan list to the table view, updating the
+        display to reflect all available scans.
+        """
+        # Clear search UI components
         self.rapid_search.setText("")
         self.advanced_search.rows = []
         self.advanced_search.show_search()
-        # All rows reput
+        # Restore full scan list
         old_scan_list = self.table_data.scans_to_visualize
         self.table_data.scans_to_visualize = self.scans_list
         self.table_data.scans_to_search = self.scans_list
@@ -259,44 +271,54 @@ class PlugFilter(QWidget):
 
     def search_str(self, str_search):
         """
-        Update the files to display in the browser.
+        Filter and update the list of scans displayed in the browser based on
+        search criteria.
 
-        :param str_search: String typed in the rapid search
+        This method updates `scans_to_visualize` by applying either a rapid
+        search filter or showing all available scans when the search is empty.
+        Special handling is provided for the NOT_DEFINED_VALUE constant to
+        filter scans with undefined tag values.
+
+        :parm str_search (str): The search string entered by the user. An
+                                empty string shows all scans, NOT_DEFINED_VALUE
+                                filters for scans with undefined tags, and any
+                                other value performs a rapid search filter.
+
+        Side Effects:
+            - Updates self.table_data.scans_to_visualize with filtered scan
+              list
+            - Updates self.advanced_search.scans_list with the same filtered
+              list
+            - Triggers UI update via self.table_data.update_visualized_rows()
         """
         old_scan_list = self.table_data.scans_to_visualize
 
-        # Every scan taken if empty search
-        if str_search == "":
-            return_list = self.table_data.scans_to_search
+        # Return all scans if search is empty
+        if not str_search:
+            filtered_scans = self.table_data.scans_to_search
 
         else:
 
             with self.project.database.data() as database_data:
-
-                # Scans with at least a not defined value
-                if str_search == NOT_DEFINED_VALUE:
-                    filter = self.prepare_not_defined_filter(
-                        database_data.get_shown_tags()
+                shown_tags = database_data.get_shown_tags()
+                # Determine filter based on search type
+                filter_func = (
+                    self.prepare_not_defined_filter(shown_tags)
+                    if str_search == NOT_DEFINED_VALUE
+                    else self.rapid_search.prepare_filter(
+                        str_search, shown_tags, self.table_data.scans_to_search
                     )
-
-                # Scans matching the search
-                else:
-                    filter = self.rapid_search.prepare_filter(
-                        str_search,
-                        database_data.get_shown_tags(),
-                        self.table_data.scans_to_search,
-                    )
-
+                )
                 scans = database_data.filter_documents(
-                    COLLECTION_CURRENT, filter
+                    COLLECTION_CURRENT, filter_func
                 )
 
-            # Creating the list of scans
-            return_list = [scan[TAG_FILENAME] for scan in scans]
+            # Extract filenames from filtered scans
+            filtered_scans = [scan[TAG_FILENAME] for scan in scans]
 
-        self.table_data.scans_to_visualize = return_list
-        self.advanced_search.scans_list = return_list
-        # Rows updated
+        # Update state with filtered results
+        self.table_data.scans_to_visualize = filtered_scans
+        self.advanced_search.scans_list = filtered_scans
         self.table_data.update_visualized_rows(old_scan_list)
 
     def set_plug_value(self):
