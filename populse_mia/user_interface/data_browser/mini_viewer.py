@@ -121,79 +121,153 @@ class MiniViewer(QWidget):
 
     def __init__(self, project):
         """
-        Initialize the MiniViewer object.
+        Initialize the MiniViewer with project configuration.
 
-        :param project: Current project in the software.
+        The MiniViewer provides a thumbnail preview interface for scans,
+        initially hidden to maximize space for the data browser.
+
+        :param project: The current project instance containing scan data and
+                        project-specific configuration.
         """
         super().__init__()
         self.project = project
+        # first_time (bool) is a flag tracking whether this is the first
+        # display
         self.first_time = True
-        # The MiniViewer is set hidden to give more space to the data_browser
-        self.setHidden(True)
-        # Config that allows to read the software preferences
-        self.config = Config()
-        # When multiple selection, limiting the number of thumbnails to
-        # max_scans
-        self.max_scans = self.config.get_max_thumbnails()
+        # file_paths (str) is the currently selected file path(s)
         self.file_paths = ""
+        # config that allows to read the software preferences
+        self.config = Config()
+        # max_scans (int) is the maximum number of thumbnails to display for
+        # multiple selections
+        self.max_scans = self.config.get_max_thumbnails()
+        # start hidden to maximize data browser space
+        self.setHidden(True)
+        # Setup UI components
         self._initialize_components()
         self._create_layouts()
         self._initialize_checkboxes()
 
     def _create_layouts(self):
-        """Create the layouts for the MiniViewer."""
+        """
+        Initialize and configure all layout managers for the MiniViewer widget.
+
+        Creates a hierarchical layout structure with:
+            - Horizontal layouts for images, sliders (3D/4D/5D), checkboxes,
+              and thumbnails
+            - Vertical layouts for main content organization and slider
+              grouping
+            - Sets the final vertical layout as the widget's root layout
+
+        All layouts are stored as instance attributes for later population
+        with widgets.
+        """
+        # Image display layouts
         self.h_box_images = QHBoxLayout()
         self.h_box_images.setSpacing(10)
+        # Main vertical layouts
         self.v_box = QVBoxLayout()
         self.v_box_final = QVBoxLayout()
+        # Slider layouts for different dimensions
         self.h_box_slider_3D = QHBoxLayout()
         self.h_box_slider_4D = QHBoxLayout()
         self.h_box_slider_5D = QHBoxLayout()
         self.v_box_sliders = QVBoxLayout()
+        # Control layouts
         self.h_box = QHBoxLayout()
         self.h_box_check_box = QHBoxLayout()
+        # Thumbnail layouts
         self.v_box_thumb = QVBoxLayout()
         self.h_box_thumb = QHBoxLayout()
+        # Set root layout
         self.setLayout(self.v_box_final)
 
     def _initialize_checkboxes(self):
-        """Initialize the checkboxes for the MiniViewer."""
-        self.check_box_slices = QCheckBox("Show all slices (no cursors)")
-        self.check_box_slices.setCheckState(
-            Qt.Checked if self.config.getShowAllSlices() else Qt.Unchecked
+        """
+        Initialize checkboxes for controlling visualization behavior.
+
+        Creates two checkboxes:
+            - 'Show all slices': Toggles between displaying all slices or
+                                 using cursors
+            - 'Chain cursors': Links cursors across multiple selected documents
+
+        Both checkboxes are initialized with their states from the current
+        config and connected to their respective event handlers.
+        """
+
+        def _create_checkbox(text, checked, callback, tooltip=None):
+            """
+            Create a configured checkbox with consistent styling.
+
+            :param text: Label text for the checkbox.
+            :param checked: Initial checked state.
+            :param callback: Function to call when state changes.
+            :param tooltip: Optional tooltip text.
+
+            :return: Configured QCheckBox instance.
+            """
+            checkbox = QCheckBox(text)
+            checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
+            checkbox.stateChanged.connect(callback)
+
+            if tooltip:
+                checkbox.setToolTip(tooltip)
+
+            return checkbox
+
+        # Show all slices checkbox
+        self.check_box_slices = _create_checkbox(
+            text="Show all slices (no cursors)",
+            checked=self.config.getShowAllSlices(),
+            callback=self.update_visualization_method,
         )
-        self.check_box_slices.stateChanged.connect(
-            self.update_visualization_method
-        )
-        self.check_box_cursors = QCheckBox("Chain cursors")
-        self.check_box_cursors.setToolTip(
-            "Allows to connect all cursors when selecting multiple documents"
-        )
-        self.check_box_cursors.setCheckState(
-            Qt.Checked if self.config.getChainCursors() else Qt.Unchecked
-        )
-        self.check_box_cursors.stateChanged.connect(
-            self.check_box_cursors_state_changed
+        # Chain cursors checkbox
+        self.check_box_cursors = _create_checkbox(
+            text="Chain cursors",
+            checked=self.config.getChainCursors(),
+            callback=self.check_box_cursors_state_changed,
+            tooltip=(
+                "Allows to connect all cursors when selecting "
+                "multiple documents"
+            ),
         )
 
     def _initialize_components(self):
-        """Initialize the components of the MiniViewer."""
+        """
+        Initialize UI components for the MiniViewer.
+
+        Creates and configures the main UI elements including:
+            - Frame containers and scroll area for layout management
+            - Slice count control with label and editable line input
+            - Orientation label (radiological vs neurological view)
+            - Empty collections for dynamic image display elements (sliders,
+              labels, images)
+
+        Note: Image-related collections are initialized as empty lists and
+              populated dynamically based on the loaded data dimensions.
+        """
+        # Main container widgets
         self.labels = QWidget()
         self.frame = QFrame()
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.frame)
         self.frame_final = QFrame()
+        # Slice count controls
+        max_slices = self.config.getNbAllSlicesMax()
         self.label_nb_slices = QLabel("Maximum number of slices: ")
-        self.line_edit_nb_slices = QLineEdit(
-            f"{self.config.getNbAllSlicesMax()}"
-        )
+        self.line_edit_nb_slices = QLineEdit(str(max_slices))
         self.line_edit_nb_slices.returnPressed.connect(self.update_nb_slices)
-        self.label_orientation = QLabel(
-            "Radiological orientation"
-            if self.config.isRadioView()
-            else "Neurological orientation"
+        # Orientation label
+        orientation = (
+            "Radiological" if self.config.isRadioView() else "Neurological"
         )
+        self.label_orientation = QLabel(f"{orientation} orientation")
+        # Dynamic image display components (populated on data load)
         self.im_2D = []
+        self.img = []
+        self.imageLabel = []
+        self.label_description = []
+        # 3D/4D/5D navigation components
         self.slider_3D = []
         self.slider_4D = []
         self.slider_5D = []
@@ -203,109 +277,154 @@ class MiniViewer(QWidget):
         self.label3D = []
         self.label4D = []
         self.label5D = []
-        self.imageLabel = []
-        self.img = []
-        self.label_description = []
 
     def boxSlider(self, idx):
         """
-        Define horizontal sliders connections and thumbnail labels.
+        Initialize dimensional sliders and value fields for a given index.
 
-        :param idx (int): The selected index.
+        Creates three sliders (3D, 4D, 5D) with their corresponding text
+        fields and connects each slider's valueChanged signal to the
+        appropriate position update handler.
+
+        :param idx (int): The index position where sliders should be inserted.
+
+        Note: Each slider is connected to changePosValue with dimension
+              offsets:
+                - 3D slider: dimension 1
+                - 4D slider: dimension 2
+                - 5D slider: dimension 3
         """
-        self.slider_3D.insert(idx, self.create_slider(0, 0, 0))
-        self.slider_4D.insert(idx, self.create_slider(0, 0, 0))
-        self.slider_5D.insert(idx, self.create_slider(0, 0, 0))
+        # Define slider configurations: (slider_list, dimension_offset)
+        slider_configs = [
+            (self.slider_3D, 1),
+            (self.slider_4D, 2),
+            (self.slider_5D, 3),
+        ]
+        # Create and configure sliders
+        for slider_list, dimension in slider_configs:
+            slider = self.create_slider(0, 0, 0)
+            slider.valueChanged.connect(
+                partial(self.changePosValue, idx, dimension)
+            )
+            slider_list.insert(idx, slider)
 
-        self.slider_3D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 1)
-        )
-        self.slider_4D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 2)
-        )
-        self.slider_5D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 3)
-        )
-
-        self.txt_slider_3D.insert(idx, self.createFieldValue())
-        self.txt_slider_4D.insert(idx, self.createFieldValue())
-        self.txt_slider_5D.insert(idx, self.createFieldValue())
+        # Create corresponding text fields
+        for text_field_list in (
+            self.txt_slider_3D,
+            self.txt_slider_4D,
+            self.txt_slider_5D,
+        ):
+            text_field_list.insert(idx, self.createFieldValue())
 
     def changePosValue(self, idx, cursor_to_change):
         """
-        Change the value of a cursor for the selected index.
+        Synchronize cursor positions across multiple image viewers when chain
+        mode is enabled.
 
-        :param idx: the selected index
-        :param cursor_to_change: the cursor to change (1, 2 or 3)
+        When the "Chain cursors" checkbox is checked, this method propagates
+        the cursor value from the modified viewer to all other viewers,
+        scaling the value proportionally to account for different cursor
+        ranges.
+
+        :param idx (int): Index of the viewer whose cursor was changed.
+        :param cursor_to_change (int): Cursor identifier (1=3D, 2=4D, 3=5D).
+
+        Notes:
+            - If chain mode is disabled, only updates the image for the given
+              index.
+            - Boundary values (min/max) are preserved exactly.
+            - Intermediate values are scaled linearly to maintain relative
+              position.
         """
-        # If the "Chain cursors" mode is not selected, there is nothing to do
-        if self.check_box_cursors.checkState() == Qt.Unchecked:
+
+        # Early return if chain mode is disabled
+        if not self.check_box_cursors.isChecked():
             self.navigImage(idx)
-        else:
-            # Checking with cursor has been modified
-            if cursor_to_change == 1:
-                cursor = self.slider_3D
-            elif cursor_to_change == 2:
-                cursor = self.slider_4D
-            else:
-                cursor = self.slider_5D
+            return
 
-            # Loop on the thumbnails
-            for idx_loop in range(min(self.max_scans, len(self.file_paths))):
-                # Disconnecting the connection when changing other cursors
-                # values
-                cursor[idx_loop].valueChanged.disconnect()
-                # Do something only when the cursor is not the one that has
-                # been changed by the user
-                if idx_loop != idx:
-                    if cursor[idx].value() == cursor[idx].maximum():
-                        value = cursor[idx_loop].maximum()
+        # Map cursor identifier to the appropriate slider array
+        cursor_map = {
+            1: self.slider_3D,
+            2: self.slider_4D,
+            3: self.slider_5D,
+        }
+        cursors = cursor_map[cursor_to_change]
+        source_cursor = cursors[idx]
+        source_value = source_cursor.value()
+        source_min = source_cursor.minimum()
+        source_max = source_cursor.maximum()
+        num_viewers = min(self.max_scans, len(self.file_paths))
 
-                    elif cursor[idx].value() == cursor[idx].minimum():
-                        value = cursor[idx_loop].minimum()
+        for idx_loop in range(num_viewers):
+            target_cursor = cursors[idx_loop]
+            # Temporarily disconnect to prevent recursive updates
+            target_cursor.valueChanged.disconnect()
 
-                    else:
-                        # Updating the new value as the value of the cursor
-                        # that has been changed by the user
-                        value = round(
-                            (cursor[idx_loop].maximum() + 1)
-                            * (cursor[idx].value() + 1)
-                            / max(1, cursor[idx].maximum() + 1)
-                        )
-                        value = min(cursor[idx_loop].maximum(), value - 1)
-                        value = max(0, int(value))
-                    cursor[idx_loop].setValue(value)
+            if idx_loop != idx:
+                target_min = target_cursor.minimum()
+                target_max = target_cursor.maximum()
 
-                # Changing the image to show
-                self.navigImage(idx_loop)
-                # Reconnecting
-                cursor[idx_loop].valueChanged.connect(
-                    partial(self.changePosValue, idx_loop, cursor_to_change)
-                )
+                # Explicit boundary handling
+                if source_value == source_min:
+                    value = target_min
+
+                elif source_value == source_max:
+                    value = target_max
+
+                else:
+                    # Linear scaling for intermediate values
+                    delta_source = source_value - source_min
+                    range_source = source_max - source_min
+                    range_target = target_max - target_min
+                    proportion = delta_source / range_source
+                    value = round(proportion * range_target + target_min)
+
+                target_cursor.setValue(value)
+
+            # Update the displayed image
+            self.navigImage(idx_loop)
+            # Restore the signal connection
+            target_cursor.valueChanged.connect(
+                partial(self.changePosValue, idx_loop, cursor_to_change)
+            )
 
     def check_box_cursors_state_changed(self):
         """
-        Update the config file when the state of the checkbox to chain the
-        cursors changes.
+        Update cursor chaining configuration based on checkbox state.
+
+        Synchronizes the cursor chaining setting in the configuration with the
+        current state of the checkbox. When enabled, cursors will be chained
+        together across views.
         """
-        self.config.setChainCursors(
-            self.check_box_cursors.checkState() == Qt.Checked
-        )
+        self.config.setChainCursors(self.check_box_cursors.isChecked())
 
     def clear(self):
         """
-        Remove the Nibabel images to be able to remove it in the unit tests.
+        Clear cached Nibabel image to free memory.
+
+        Removes the internal image reference if it exists, allowing the image
+        object to be garbage collected.
         """
 
-        if hasattr(self, "img"):
+        try:
             del self.img
 
-    def clear_layouts(self):
-        """Clear the final layout."""
+        except AttributeError:
+            pass
 
-        for i in reversed(range(self.v_box_final.count())):
-            if self.v_box_final.itemAt(i).widget() is not None:
-                self.v_box_final.itemAt(i).widget().setParent(None)
+    def clear_layouts(self):
+        """
+        Remove all widgets from the final layout.
+
+        This prepares the layout for new content by detaching and deleting
+        all existing widgets.
+        """
+
+        while self.v_box_final.count():
+            item = self.v_box_final.takeAt(0)
+
+            if widget := item.widget():
+                widget.deleteLater()
 
     def createDimensionLabels(self, idx):
         """Create the dimension labels for the selected index.
