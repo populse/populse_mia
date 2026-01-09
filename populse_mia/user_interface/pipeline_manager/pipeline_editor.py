@@ -13,7 +13,6 @@ Contains:
         - find_filename
         - get_path
         - save_pipeline
-        - values
 
 """
 
@@ -2519,14 +2518,3 @@ def save_pipeline(pipeline, filename):
     suffix = Path(filename).suffix.lower()
     writer = FORMATS.get(suffix, save_py_pipeline)
     writer(pipeline, filename)
-
-
-def values(d):
-    """
-    Extract all values from a dictionary as a list.
-
-    :param d (dict): The dictionary to extract values from.
-
-    :return (list): A list containing all values from the dictionary.
-    """
-    return list(d.values())

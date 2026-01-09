@@ -162,7 +162,7 @@ class ClickableLabel(QLabel):
           the clicked signal
 
     .. Signals:
-        - clicked(): Emitted when the label is clicked.
+        - clicked: Emitted when the label is clicked.
     """
 
     clicked = QtCore.pyqtSignal()

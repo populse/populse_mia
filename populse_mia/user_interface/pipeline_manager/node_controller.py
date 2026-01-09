@@ -85,20 +85,6 @@ from . import type_editors
 logger = logging.getLogger(__name__)
 
 
-def values(d):
-    """
-    Return a list of all values in the dictionary.
-
-    In Python 3, `dict.values()` returns a view, which is then
-    converted to a list for compatibility with older code that
-    expects a list of values.
-
-    :param d (dict): The dictionary from which to retrieve values.
-    :returns (list): A list of values in the dictionary.
-    """
-    return list(d.values())
-
-
 class PlugFilter(QWidget):
     """Filter widget used on a node plug.
 
