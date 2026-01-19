@@ -524,7 +524,7 @@ class TestMIACase(unittest.TestCase):
         :returns (int): 0 if creation succeeded, 1 otherwise.
         """
 
-        (folder, name) = os.path.split(path)
+        folder, name = os.path.split(path)
 
         java_source = (
             "public class MockApp {\n"

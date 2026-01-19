@@ -2999,7 +2999,7 @@ class PipelineManagerTab(QWidget):
             editor.del_node(node_name, from_redo=True)
 
         elif action == "export_plugs":
-            (plug_name, _) = args
+            plug_name, _ = args
             editor._remove_plug(
                 plug_names=("inputs", plug_name), from_redo=True
             )
