@@ -644,7 +644,7 @@ class Project:
         3. Removes orphaned file documents from both current and initial
            collections, along with their corresponding physical files
         """
-        (obsolete_histories, obsolete_bricks, orphan_files) = (
+        obsolete_histories, obsolete_bricks, orphan_files = (
             self.get_orphan_history()
         )
         logger.info(f"Orphan histories: {obsolete_histories}")
@@ -1716,7 +1716,7 @@ class Project:
 
         from PyQt5.QtWidgets import QMessageBox
 
-        (fields, conditions, values, links, nots) = custom_filters
+        fields, conditions, values, links, nots = custom_filters
         self.currentFilter.fields = fields
         self.currentFilter.conditions = conditions
         self.currentFilter.values = values

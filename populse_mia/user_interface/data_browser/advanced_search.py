@@ -546,7 +546,7 @@ class AdvancedSearch(QWidget):
         """Start the search and update the table."""
 
         # Filters gotten
-        (fields, conditions, values, links, nots) = self.get_filters(True)
+        fields, conditions, values, links, nots = self.get_filters(True)
         old_scans_list = self.dataBrowser.table_data.scans_to_visualize
 
         try:
@@ -676,7 +676,7 @@ class AdvancedSearch(QWidget):
         """
 
         # Old values stored
-        (fields, conditions, values, links, nots) = self.get_filters(False)
+        fields, conditions, values, links, nots = self.get_filters(False)
         # We remove the old layout
         # self.clearLayout(self.layout())
         QObjectCleanupHandler().add(self.layout())
