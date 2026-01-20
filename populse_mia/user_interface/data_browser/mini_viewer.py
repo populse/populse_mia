@@ -113,87 +113,160 @@ class MiniViewer(QWidget):
         - setThumbnail: set the thumbnail tag value under the image frame
         - show_slices: create the thumbnails from the selected file paths
         - update_nb_slices: update the config file and the thumbnails
-        - update_visualization_method: update the config file and the
-                                       thumbnails
+        - update_visualization: update the config file and the thumbnails
         - verify_slices: verify the number of selected documents
 
     """
 
     def __init__(self, project):
         """
-        Initialize the MiniViewer object.
+        Initialize the MiniViewer with project configuration.
 
-        :param project: Current project in the software.
+        The MiniViewer provides a thumbnail preview interface for scans,
+        initially hidden to maximize space for the data browser.
+
+        :param project: The current project instance containing scan data and
+                        project-specific configuration.
         """
         super().__init__()
         self.project = project
+        # first_time (bool) is a flag tracking whether this is the first
+        # display
         self.first_time = True
-        # The MiniViewer is set hidden to give more space to the data_browser
-        self.setHidden(True)
-        # Config that allows to read the software preferences
-        self.config = Config()
-        # When multiple selection, limiting the number of thumbnails to
-        # max_scans
-        self.max_scans = self.config.get_max_thumbnails()
+        # file_paths (str) is the currently selected file path(s)
         self.file_paths = ""
+        # config that allows to read the software preferences
+        self.config = Config()
+        # max_scans (int) is the maximum number of thumbnails to display for
+        # multiple selections
+        self.max_scans = self.config.get_max_thumbnails()
+        # start hidden to maximize data browser space
+        self.setHidden(True)
+        # Setup UI components
         self._initialize_components()
         self._create_layouts()
         self._initialize_checkboxes()
 
     def _create_layouts(self):
-        """Create the layouts for the MiniViewer."""
+        """
+        Initialize and configure all layout managers for the MiniViewer widget.
+
+        Creates a hierarchical layout structure with:
+            - Horizontal layouts for images, sliders (3D/4D/5D), checkboxes,
+              and thumbnails
+            - Vertical layouts for main content organization and slider
+              grouping
+            - Sets the final vertical layout as the widget's root layout
+
+        All layouts are stored as instance attributes for later population
+        with widgets.
+        """
+        # Image display layouts
         self.h_box_images = QHBoxLayout()
         self.h_box_images.setSpacing(10)
+        # Main vertical layouts
         self.v_box = QVBoxLayout()
         self.v_box_final = QVBoxLayout()
+        # Slider layouts for different dimensions
         self.h_box_slider_3D = QHBoxLayout()
         self.h_box_slider_4D = QHBoxLayout()
         self.h_box_slider_5D = QHBoxLayout()
         self.v_box_sliders = QVBoxLayout()
+        # Control layouts
         self.h_box = QHBoxLayout()
         self.h_box_check_box = QHBoxLayout()
+        # Thumbnail layouts
         self.v_box_thumb = QVBoxLayout()
         self.h_box_thumb = QHBoxLayout()
+        # Set root layout
         self.setLayout(self.v_box_final)
 
     def _initialize_checkboxes(self):
-        """Initialize the checkboxes for the MiniViewer."""
-        self.check_box_slices = QCheckBox("Show all slices (no cursors)")
-        self.check_box_slices.setCheckState(
-            Qt.Checked if self.config.getShowAllSlices() else Qt.Unchecked
+        """
+        Initialize checkboxes for controlling visualization behavior.
+
+        Creates two checkboxes:
+            - 'Show all slices': Toggles between displaying all slices or
+                                 using cursors
+            - 'Chain cursors': Links cursors across multiple selected documents
+
+        Both checkboxes are initialized with their states from the current
+        config and connected to their respective event handlers.
+        """
+
+        def _create_checkbox(text, checked, callback, tooltip=None):
+            """
+            Create a configured checkbox with consistent styling.
+
+            :param text: Label text for the checkbox.
+            :param checked: Initial checked state.
+            :param callback: Function to call when state changes.
+            :param tooltip: Optional tooltip text.
+
+            :return: Configured QCheckBox instance.
+            """
+            checkbox = QCheckBox(text)
+            checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
+            checkbox.stateChanged.connect(callback)
+
+            if tooltip:
+                checkbox.setToolTip(tooltip)
+
+            return checkbox
+
+        # Show all slices checkbox
+        self.check_box_slices = _create_checkbox(
+            text="Show all slices (no cursors)",
+            checked=self.config.getShowAllSlices(),
+            callback=self.update_visualization,
         )
-        self.check_box_slices.stateChanged.connect(
-            self.update_visualization_method
-        )
-        self.check_box_cursors = QCheckBox("Chain cursors")
-        self.check_box_cursors.setToolTip(
-            "Allows to connect all cursors when selecting multiple documents"
-        )
-        self.check_box_cursors.setCheckState(
-            Qt.Checked if self.config.getChainCursors() else Qt.Unchecked
-        )
-        self.check_box_cursors.stateChanged.connect(
-            self.check_box_cursors_state_changed
+        # Chain cursors checkbox
+        self.check_box_cursors = _create_checkbox(
+            text="Chain cursors",
+            checked=self.config.getChainCursors(),
+            callback=self.check_box_cursors_state_changed,
+            tooltip=(
+                "Allows to connect all cursors when selecting "
+                "multiple documents"
+            ),
         )
 
     def _initialize_components(self):
-        """Initialize the components of the MiniViewer."""
+        """
+        Initialize UI components for the MiniViewer.
+
+        Creates and configures the main UI elements including:
+            - Frame containers and scroll area for layout management
+            - Slice count control with label and editable line input
+            - Orientation label (radiological vs neurological view)
+            - Empty collections for dynamic image display elements (sliders,
+              labels, images)
+
+        Note: Image-related collections are initialized as empty lists and
+              populated dynamically based on the loaded data dimensions.
+        """
+        # Main container widgets
         self.labels = QWidget()
         self.frame = QFrame()
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.frame)
         self.frame_final = QFrame()
+        # Slice count controls
+        max_slices = self.config.getNbAllSlicesMax()
         self.label_nb_slices = QLabel("Maximum number of slices: ")
-        self.line_edit_nb_slices = QLineEdit(
-            f"{self.config.getNbAllSlicesMax()}"
-        )
+        self.line_edit_nb_slices = QLineEdit(str(max_slices))
         self.line_edit_nb_slices.returnPressed.connect(self.update_nb_slices)
-        self.label_orientation = QLabel(
-            "Radiological orientation"
-            if self.config.isRadioView()
-            else "Neurological orientation"
+        # Orientation label
+        orientation = (
+            "Radiological" if self.config.isRadioView() else "Neurological"
         )
+        self.label_orientation = QLabel(f"{orientation} orientation")
+        # Dynamic image display components (populated on data load)
         self.im_2D = []
+        self.img = []
+        self.imageLabel = []
+        self.label_description = []
+        # 3D/4D/5D navigation components
         self.slider_3D = []
         self.slider_4D = []
         self.slider_5D = []
@@ -203,733 +276,921 @@ class MiniViewer(QWidget):
         self.label3D = []
         self.label4D = []
         self.label5D = []
-        self.imageLabel = []
-        self.img = []
-        self.label_description = []
 
     def boxSlider(self, idx):
         """
-        Define horizontal sliders connections and thumbnail labels.
+        Initialize dimensional sliders and value fields for a given index.
 
-        :param idx (int): The selected index.
+        Creates three sliders (3D, 4D, 5D) with their corresponding text
+        fields and connects each slider's valueChanged signal to the
+        appropriate position update handler.
+
+        :param idx (int): The index position where sliders should be inserted.
+
+        Note: Each slider is connected to changePosValue with dimension
+              offsets:
+                - 3D slider: dimension 1
+                - 4D slider: dimension 2
+                - 5D slider: dimension 3
         """
-        self.slider_3D.insert(idx, self.create_slider(0, 0, 0))
-        self.slider_4D.insert(idx, self.create_slider(0, 0, 0))
-        self.slider_5D.insert(idx, self.create_slider(0, 0, 0))
+        # Define slider configurations: (slider_list, dimension_offset)
+        slider_configs = [
+            (self.slider_3D, 1),
+            (self.slider_4D, 2),
+            (self.slider_5D, 3),
+        ]
+        # Create and configure sliders
+        for slider_list, dimension in slider_configs:
+            slider = self.create_slider(0, 0, 0)
+            slider.valueChanged.connect(
+                partial(self.changePosValue, idx, dimension)
+            )
+            slider_list.insert(idx, slider)
 
-        self.slider_3D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 1)
-        )
-        self.slider_4D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 2)
-        )
-        self.slider_5D[idx].valueChanged.connect(
-            partial(self.changePosValue, idx, 3)
-        )
-
-        self.txt_slider_3D.insert(idx, self.createFieldValue())
-        self.txt_slider_4D.insert(idx, self.createFieldValue())
-        self.txt_slider_5D.insert(idx, self.createFieldValue())
+        # Create corresponding text fields
+        for text_field_list in (
+            self.txt_slider_3D,
+            self.txt_slider_4D,
+            self.txt_slider_5D,
+        ):
+            text_field_list.insert(idx, self.createFieldValue())
 
     def changePosValue(self, idx, cursor_to_change):
         """
-        Change the value of a cursor for the selected index.
+        Synchronize cursor positions across multiple image viewers when chain
+        mode is enabled.
 
-        :param idx: the selected index
-        :param cursor_to_change: the cursor to change (1, 2 or 3)
+        When the "Chain cursors" checkbox is checked, this method propagates
+        the cursor value from the modified viewer to all other viewers,
+        scaling the value proportionally to account for different cursor
+        ranges.
+
+        :param idx (int): Index of the viewer whose cursor was changed.
+        :param cursor_to_change (int): Cursor identifier (1=3D, 2=4D, 3=5D).
+
+        Notes:
+            - If chain mode is disabled, only updates the image for the given
+              index.
+            - Boundary values (min/max) are preserved exactly.
+            - Intermediate values are scaled linearly to maintain relative
+              position.
         """
-        # If the "Chain cursors" mode is not selected, there is nothing to do
-        if self.check_box_cursors.checkState() == Qt.Unchecked:
+
+        # Early return if chain mode is disabled
+        if not self.check_box_cursors.isChecked():
             self.navigImage(idx)
-        else:
-            # Checking with cursor has been modified
-            if cursor_to_change == 1:
-                cursor = self.slider_3D
-            elif cursor_to_change == 2:
-                cursor = self.slider_4D
-            else:
-                cursor = self.slider_5D
+            return
 
-            # Loop on the thumbnails
-            for idx_loop in range(min(self.max_scans, len(self.file_paths))):
-                # Disconnecting the connection when changing other cursors
-                # values
-                cursor[idx_loop].valueChanged.disconnect()
-                # Do something only when the cursor is not the one that has
-                # been changed by the user
-                if idx_loop != idx:
-                    if cursor[idx].value() == cursor[idx].maximum():
-                        value = cursor[idx_loop].maximum()
+        # Map cursor identifier to the appropriate slider array
+        cursor_map = {
+            1: self.slider_3D,
+            2: self.slider_4D,
+            3: self.slider_5D,
+        }
+        cursors = cursor_map[cursor_to_change]
+        source_cursor = cursors[idx]
+        source_value = source_cursor.value()
+        source_min = source_cursor.minimum()
+        source_max = source_cursor.maximum()
+        num_viewers = min(self.max_scans, len(self.file_paths))
 
-                    elif cursor[idx].value() == cursor[idx].minimum():
-                        value = cursor[idx_loop].minimum()
+        for idx_loop in range(num_viewers):
+            target_cursor = cursors[idx_loop]
+            # Temporarily disconnect to prevent recursive updates
+            target_cursor.valueChanged.disconnect()
 
-                    else:
-                        # Updating the new value as the value of the cursor
-                        # that has been changed by the user
-                        value = round(
-                            (cursor[idx_loop].maximum() + 1)
-                            * (cursor[idx].value() + 1)
-                            / max(1, cursor[idx].maximum() + 1)
-                        )
-                        value = min(cursor[idx_loop].maximum(), value - 1)
-                        value = max(0, int(value))
-                    cursor[idx_loop].setValue(value)
+            if idx_loop != idx:
+                target_min = target_cursor.minimum()
+                target_max = target_cursor.maximum()
 
-                # Changing the image to show
-                self.navigImage(idx_loop)
-                # Reconnecting
-                cursor[idx_loop].valueChanged.connect(
-                    partial(self.changePosValue, idx_loop, cursor_to_change)
-                )
+                # Explicit boundary handling
+                if source_value == source_min:
+                    value = target_min
+
+                elif source_value == source_max:
+                    value = target_max
+
+                else:
+                    # Linear scaling for intermediate values
+                    delta_source = source_value - source_min
+                    range_source = source_max - source_min
+                    range_target = target_max - target_min
+                    proportion = delta_source / range_source
+                    value = round(proportion * range_target + target_min)
+
+                target_cursor.setValue(value)
+
+            # Update the displayed image
+            self.navigImage(idx_loop)
+            # Restore the signal connection
+            target_cursor.valueChanged.connect(
+                partial(self.changePosValue, idx_loop, cursor_to_change)
+            )
 
     def check_box_cursors_state_changed(self):
         """
-        Update the config file when the state of the checkbox to chain the
-        cursors changes.
+        Update cursor chaining configuration based on checkbox state.
+
+        Synchronizes the cursor chaining setting in the configuration with the
+        current state of the checkbox. When enabled, cursors will be chained
+        together across views.
         """
-        self.config.setChainCursors(
-            self.check_box_cursors.checkState() == Qt.Checked
-        )
+        self.config.setChainCursors(self.check_box_cursors.isChecked())
 
     def clear(self):
         """
-        Remove the Nibabel images to be able to remove it in the unit tests.
+        Clear cached Nibabel image to free memory.
+
+        Removes the internal image reference if it exists, allowing the image
+        object to be garbage collected.
         """
 
-        if hasattr(self, "img"):
+        try:
             del self.img
 
-    def clear_layouts(self):
-        """Clear the final layout."""
+        except AttributeError:
+            pass
 
-        for i in reversed(range(self.v_box_final.count())):
-            if self.v_box_final.itemAt(i).widget() is not None:
-                self.v_box_final.itemAt(i).widget().setParent(None)
+    def clear_layouts(self):
+        """
+        Remove all widgets from the final layout.
+
+        This prepares the layout for new content by detaching and deleting
+        all existing widgets.
+        """
+
+        while self.v_box_final.count():
+            item = self.v_box_final.takeAt(0)
+
+            if widget := item.widget():
+                widget.deleteLater()
 
     def createDimensionLabels(self, idx):
-        """Create the dimension labels for the selected index.
+        """
+        Create and configure dimension labels for the specified index.
 
-        :param idx: the selected index
+        Creates three QLabel widgets (3D, 4D, and 5D) at the given index
+        position, configures them with a 9-point font, and sets their text
+        labels.
+
+        :param idx: The index position where the labels should be inserted.
         """
         font = QFont()
         font.setPointSize(9)
+        # Configuration for each dimension label
+        label_configs = [
+            (self.label3D, "3D: "),
+            (self.label4D, "4D: "),
+            (self.label5D, "5D: "),
+        ]
 
-        self.label3D.insert(idx, QLabel())
-        self.label4D.insert(idx, QLabel())
-        self.label5D.insert(idx, QLabel())
-
-        self.label3D[idx].setFont(font)
-        self.label4D[idx].setFont(font)
-        self.label5D[idx].setFont(font)
-
-        self.label3D[idx].setText("3D: ")
-        self.label4D[idx].setText("4D: ")
-        self.label5D[idx].setText("5D: ")
+        # Create and configure all labels
+        for label_list, text in label_configs:
+            label = QLabel()
+            label.setFont(font)
+            label.setText(text)
+            label_list.insert(idx, label)
 
     def createFieldValue(self):
-        """Create a field where will be displayed the position of a cursor.
-
-        :return: the corresponding field
         """
-        fieldValue = QLineEdit()
-        fieldValue.setEnabled(False)
-        fieldValue.setFixedWidth(65)
-        fieldValue.setAlignment(Qt.AlignCenter)
-        fieldValue.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        font = QFont()
+        Create a read-only field for displaying cursor position.
+
+        :return (QLineEdit): A disabled, center-aligned text field with fixed
+                             width (65px) and font size (9pt) for displaying
+                             coordinate values.
+        """
+        field_value = QLineEdit()
+        field_value.setEnabled(False)
+        field_value.setFixedWidth(65)
+        field_value.setAlignment(Qt.AlignCenter)
+        field_value.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        font = field_value.font()
         font.setPointSize(9)
-        fieldValue.setFont(font)
-        return fieldValue
+        field_value.setFont(font)
+        return field_value
 
-    def create_slider(self, maxm=0, minm=0, pos=0):
-        """Generate an horizontal slider.
+    def create_slider(self, minimum=0, maximum=0, position=0):
+        """
+        Create a horizontal slider widget.
 
-        :param maxm: slider's maximum
-        :param minm: slider's minimum
-        :param pos: slider's initial value
-        :return: the slider object
+        :param minimum: The minimum value of the slider. Defaults to 0.
+        :param maximum: The maximum value of the slider. Defaults to 0.
+        :param position: The initial position/value of the slider.
+                         Defaults to 0.
+
+        :return QSlider: A configured horizontal slider widget, initially
+                         disabled.
+
+        Note:
+        The slider is created with strong focus policy and a tick interval of
+        1. It starts in a disabled state. With default parameters (min=0,
+        max=0), the slider has no range and should be configured before
+        enabling.
         """
         slider = QSlider(Qt.Horizontal)
         slider.setFocusPolicy(Qt.StrongFocus)
         slider.setTickInterval(1)
-        slider.setMaximum(maxm)
-        slider.setMinimum(minm)
-        slider.setValue(pos)
+        slider.setMinimum(minimum)
+        slider.setMaximum(maximum)
+        slider.setValue(position)
         slider.setEnabled(False)
         return slider
 
     def displayPosValue(self, idx):
-        """Display the position of each cursor for the selected index.
-
-        :param idx: the selected index
         """
-        self.txt_slider_3D[idx].setText(
-            f"{self.slider_3D[idx].value() + 1} "
-            f"/ {self.slider_3D[idx].maximum() + 1}"
-        )
-        self.txt_slider_4D[idx].setText(
-            f"{self.slider_4D[idx].value() + 1} "
-            f"/ {self.slider_4D[idx].maximum() + 1}"
-        )
-        self.txt_slider_5D[idx].setText(
-            f"{self.slider_5D[idx].value() + 1} "
-            f"/ {self.slider_5D[idx].maximum() + 1}"
-        )
+        Update position display for all dimensional sliders at the given index.
+
+        Updates the text labels for 3D, 4D, and 5D sliders to show the current
+        position (1-indexed) and maximum value in the format "current / max".
+
+        :param idx: Index of the slider group to update (0-based).
+        """
+
+        for slider, text_widget in [
+            (self.slider_3D[idx], self.txt_slider_3D[idx]),
+            (self.slider_4D[idx], self.txt_slider_4D[idx]),
+            (self.slider_5D[idx], self.txt_slider_5D[idx]),
+        ]:
+            current = slider.value() + 1
+            maximum = slider.maximum() + 1
+            text_widget.setText(f"{current} / {maximum}")
 
     def enableSliders(self, idx):
-        """Enable all the horizontal slider.
-
-        :param idx: the slider's index
         """
-        self.slider_3D[idx].setEnabled(True)
-        self.slider_4D[idx].setEnabled(True)
-        self.slider_5D[idx].setEnabled(True)
+        Enable sliders at the specified index across all dimensions.
+
+        :param idx: Index of the sliders to enable across 3D, 4D, and 5D
+                    slider collections.
+        """
+
+        for slider_collection in (
+            self.slider_3D,
+            self.slider_4D,
+            self.slider_5D,
+        ):
+            slider_collection[idx].setEnabled(True)
 
     def image2DModifications(self, idx, im2D=None):
-        """Apply modifications to display the image correctly.
+        """
+        Apply display modifications to a 2D image slice.
 
-        :param idx: the selected index
-        :param im2D: image to modify
+        Processes an image for optimal display by:
+        1. Resizing to standard display dimensions
+        2. Rescaling intensities with percentile-based clipping
+        3. Converting to appropriate display data type
+        4. Applying orientation rotation (radiological/neurological)
+
+        :param idx: Index of the image slice in the internal array
+        :param im2D: Optional 2D numpy array to modify. If None, uses
+                     self.im_2D[idx]
+
+        Note: When im2D is not provided, the modified image is stored in
+              self.im_2D[idx]
         """
 
-        display_size = (128, 128)
-        display_type = np.uint8  # this MUST be an integer data type
-        display_pctl = 0.5  # percentile (0.5%) of values to clip at the
-        # low and high end of intensities.
-        display_max = np.iinfo(display_type).max
-        display_min = np.iinfo(display_type).min
+        def _resize_image(image, target_size):
+            """Resize image with version-aware anti-aliasing handling.
 
+            :param image: 2D numpy array to resize
+            :param target_size: Tuple of (height, width) for output dimensions
+
+            :return (numpy.ndarray): Resized image
+            """
+            resize_kwargs = {"output_shape": target_size, "mode": "constant"}
+
+            # Add anti_aliasing for newer skimage versions
+            if version.parse(sk.__version__) >= version.Version("0.14.0"):
+                resize_kwargs["anti_aliasing"] = False
+
+            try:
+                return resize(image, **resize_kwargs)
+
+            except ValueError:
+
+                # Handle byte order issues
+                return resize(image.byteswap().newbyteorder(), **resize_kwargs)
+
+        def _rescale_intensities(image, min_val, max_val, pctl):
+            """Rescale image intensities using percentile-based normalization.
+
+            Handles NaN and infinite values gracefully by masking them out
+            during percentile calculations.
+
+            :param image: 2D numpy array to rescale (modified in-place)
+            :param min_val: Minimum value for output range
+            :param max_val: Maximum value for output range
+            :param pctl: Percentile for clipping at both ends
+
+            :returns (numpy.ndarray): Rescaled image with values in [min_val,
+                                      max_val]
+            """
+            finite_mask = np.isfinite(image)
+
+            if np.any(finite_mask):  # Only rescale if we have finite values
+                # Shift the lower percentile to 0.0
+                lower_bound = np.percentile(image[finite_mask], pctl)
+                image -= lower_bound
+                # Calculate upper percentile after shifting
+                im_max = np.percentile(image[finite_mask], 100.0 - pctl)
+
+                if im_max > 0:  # Avoid division by zero
+                    # Re-scale to display range
+                    image *= (max_val - min_val) / im_max
+
+                # Shift to lower limit of display range
+                image += min_val
+
+            # Always clip, regardless of whether rescaling occurred
+            # This removes infinite values and enforces display range
+            np.clip(image, min_val, max_val, out=image)
+
+            return image
+
+        def _apply_rotation(image):
+            """Apply orientation-specific rotation to image.
+
+            :param image: 2D numpy array to rotate
+
+            :return (numpy.ndarray): Rotated image with contiguous memory
+                                     layout
+
+            Note:
+                Copy is made to ensure contiguous memory (Qt compatibility)
+            """
+
+            if self.config.isRadioView():
+                # Radiological view
+                return np.rot90(image.T, 2).copy()
+
+            else:
+                # Neurological view
+                return np.rot90(image, 1).copy()
+
+        # Display configuration constants
+        DISPLAY_SIZE = (128, 128)
+        DISPLAY_TYPE = np.uint8  # Must be an integer data type
+        DISPLAY_PCTL = 0.5  # Percentile for intensity clipping
+        DISPLAY_MAX = np.iinfo(DISPLAY_TYPE).max
+        DISPLAY_MIN = np.iinfo(DISPLAY_TYPE).min
         im2d_provided = im2D is not None
-        if not im2d_provided:
+
+        if im2D is None:
             im2D = self.im_2D[idx]
 
-        # Resize image first, for three reasons:
-        #  1 - it may slightly changes the intensity scale, so re-scaling
+        # Resize image (before rescaling for performance and accuracy)
+        # - it may slightly changes the intensity scale, so re-scaling
         #      should be done after this
-        #  2 - rescaling before rotation is slightly faster, specially for
+        # - rescaling before rotation is slightly faster, specially for
         #      large images (> display_size).
-        #  3 - rescaling may alter the occurrence of nan or infinite values
+        # - rescaling may alter the occurrence of nan or infinite values
         #      (e.g. an image may become all-nan), anti_aliasing keyword is
         #      defined in skimage since version 0.14.0
+        im2D = _resize_image(im2D, DISPLAY_SIZE)
+        # Rescale intensities while handling NaN and infinite values
+        im2D = _rescale_intensities(
+            im2D, DISPLAY_MIN, DISPLAY_MAX, DISPLAY_PCTL
+        )
+        # Convert to display data type (NaNs become 0)
+        im2D = im2D.astype(DISPLAY_TYPE)
+        # Apply orientation rotation and ensure contiguous memory layout
+        im2D = _apply_rotation(im2D)
 
-        if version.parse(sk.__version__) >= version.Version("0.14.0"):
-            try:
-                im2D = resize(
-                    im2D, display_size, mode="constant", anti_aliasing=False
-                )
-
-            except ValueError:
-                im2D = resize(
-                    im2D.byteswap().newbyteorder(),
-                    display_size,
-                    mode="constant",
-                    anti_aliasing=False,
-                )
-        else:
-            try:
-                im2D = resize(im2D, display_size, mode="constant")
-
-            except ValueError:
-                im2D = resize(
-                    im2D.byteswap().newbyteorder(),
-                    display_size,
-                    mode="constant",
-                )
-
-        # Rescale image while handling Nans and infinite values
-        im_mask = np.isfinite(im2D)
-        if np.any(im_mask):  # if we have any finite value to work with
-            # shift the lower percentile chosen to 0.0
-            im2D -= np.percentile(im2D[im_mask], display_pctl)
-            # determine max from upper percentile
-            im_max = np.percentile(im2D[im_mask], 100.0 - display_pctl)
-            if im_max > 0:  # avoid dividing by zero
-                # re-scale to display range
-                im2D *= (display_max - display_min) / im_max
-            # shift lowest value to lower limit of display range
-            im2D += display_min
-
-        # clip all values to display range, remove infinite values
-        np.clip(im2D, display_min, display_max, im2D)
-        # convert to integer display data type. NaNs get converted to 0.
-        im2D = im2D.astype(display_type)
-
-        # Rotate. Copy array to avoid negative strides (Qt doesn't handle that)
-        if self.config.isRadioView() is True:
-            im2D = np.rot90(im2D.T, 2).copy()  # radiological
-
-        else:
-            im2D = np.rot90(im2D, 1).copy()  # neurological
-
+        # Return or store the result
         if im2d_provided:
             return im2D
+
         else:
             self.im_2D[idx] = im2D
+            return None
 
     def image_to_pixmap(self, im, i):
-        """Create a 2D pixmap from a N-D Nifti image.
-
-        :param im: Nifti image
-        :param i: index of the slide
-        :return: the corresponding pixmap
         """
+        Convert an N-dimensional NIfTI image to a 2D Qt pixmap.
 
-        # The image to display depends on the dimension of the image
-        # In the 3D case, each slice is displayed
-        if len(im.shape) == 3:
-            # im_2D = im.get_fdata()[:, :, i].copy()
+        Extracts a 2D slice from multi-dimensional medical imaging data and
+        converts it to a Qt pixmap for display. The extraction strategy
+        depends on dimensionality:
+
+        - 3D images: Extract slice at index i along the z-axis
+        - 4D images: Extract middle z-slice from the 3D volume at time index i
+        - 5D images: Extract middle z-slice from the 3D volume at time index 1
+                     of the 4D volume at the 5th dimension index i
+
+        :param im: NIfTI image object with a dataobj attribute
+        :param i: Index for slice/volume selection along the outermost
+                  variable dimension
+
+        :return (QPixmap): Qt pixmap ready for display, or pixmap from empty
+                           array if dimensionality is unsupported
+        """
+        ndim = len(im.shape)
+
+        # Dispatch to appropriate extraction method based on dimensionality
+        if ndim == 3:
+            # 3D case, each slice is displayed
             im_2D = np.asarray(im.dataobj)[:, :, i].copy()
 
-        # In the 4D case, each middle slice of the 3D dimension is displayed
-        # for each time in the 4D dimension
-        elif len(im.shape) == 4:
-            # im_3D = im.get_fdata()[:, :, :, i].copy()
+        elif ndim == 4:
+            # 4D case, each middle slice of the 3D dimension is displayed
+            # for each time in the 4D dimension
             im_3D = np.asarray(im.dataobj)[:, :, :, i].copy()
-            middle_slice = int(im_3D.shape[2] / 2)
-            im_2D = im_3D[:, :, middle_slice]
+            im_2D = im_3D[:, :, im_3D.shape[2] // 2]
 
-        # In the 5D case, each first time of the 4D dimension and
-        # its middle slice of the 3D dimension is displayed
-        elif len(im.shape) == 5:
-            # im_4D = im.get_fdata()[:, :, :, :, i].copy()
+        elif ndim == 5:
+            # 5D case, each first time of the 4D dimension and its middle
+            # slice of the 3D dimension is displayed
             im_4D = np.asarray(im.dataobj)[:, :, :, :, i].copy()
             im_3D = im_4D[:, :, :, 1]
-            middle_slice = int(im_3D.shape[2] / 2)
-            im_2D = im_3D[:, :, middle_slice]
+            im_2D = im_3D[:, :, im_3D.shape[2] // 2]
 
         else:
-            im_2D = [0]
+            im_2D = np.array([0])
 
-        # Making some pixel modification to display the image correctly
+        # Apply display-specific transformations
         im_2D = self.image2DModifications(0, im_2D)
-
-        w, h = im_2D.shape
-
+        # Convert to Qt pixmap
+        h, w = im_2D.shape
         im_Qt = QImage(im_2D.data, w, h, QImage.Format_Indexed8)
-        pixm = QPixmap.fromImage(im_Qt)
 
-        return pixm
+        return QPixmap.fromImage(im_Qt)
 
     def indexImage(self, idx):
-        """Update all slider values according to the size of the current image.
-
-        :param idx: the selected index
         """
+        Update the displayed 2D image slice and adjust slider ranges according
+        to the dimensionality of the selected image.
+
+        The current values of the 3D, 4D, and 5D sliders are used to extract
+        the corresponding slice from the image data. Sliders that exceed the
+        image dimensionality are reset to a maximum value of 0.
+
+        :param idx: Index of the selected image
+        """
+        # Reading the image data
+        img = self.img[idx]
+        data = np.asarray(img.dataobj)
+        shape = img.shape
+        ndim = img.ndim
 
         # Getting the sliders value
         sl3D = self.slider_3D[idx].value()
         sl4D = self.slider_4D[idx].value()
         sl5D = self.slider_5D[idx].value()
 
-        # Depending on the dimension, reading the image data and
-        # changing the cursors maximum
-        if len(self.img[idx].shape) == 3:
-            self.im_2D.insert(
-                idx, np.asarray(self.img[idx].dataobj)[:, :, sl3D].copy()
-            )
-            self.slider_3D[idx].setMaximum(self.img[idx].shape[2] - 1)
+        # Depending on the dimension, define the displayed 2D slice and
+        # modify the maximum value of the cursors.
+        if ndim == 3:
+            self.im_2D.insert(idx, data[:, :, sl3D].copy())
+            self.slider_3D[idx].setMaximum(shape[2] - 1)
             self.slider_4D[idx].setMaximum(0)
             self.slider_5D[idx].setMaximum(0)
 
-        if len(self.img[idx].shape) == 4:
-            self.im_2D.insert(
-                idx, np.asarray(self.img[idx].dataobj)[:, :, sl3D, sl4D].copy()
-            )
-            self.slider_3D[idx].setMaximum(self.img[idx].shape[2] - 1)
-            self.slider_4D[idx].setMaximum(self.img[idx].shape[3] - 1)
+        elif ndim == 4:
+            self.im_2D.insert(idx, data[:, :, sl3D, sl4D].copy())
+            self.slider_3D[idx].setMaximum(shape[2] - 1)
+            self.slider_4D[idx].setMaximum(shape[3] - 1)
             self.slider_5D[idx].setMaximum(0)
 
-        if len(self.img[idx].shape) == 5:
-            self.im_2D.insert(
-                idx,
-                np.asarray(self.img[idx].dataobj)[
-                    :, :, sl3D, sl4D, sl5D
-                ].copy(),
-            )
-            self.slider_3D[idx].setMaximum(self.img[idx].shape[2] - 1)
-            self.slider_4D[idx].setMaximum(self.img[idx].shape[3] - 1)
-            self.slider_5D[idx].setMaximum(self.img[idx].shape[4] - 1)
+        elif ndim == 5:
+            self.im_2D.insert(idx, data[:, :, sl3D, sl4D, sl5D].copy())
+            self.slider_3D[idx].setMaximum(shape[2] - 1)
+            self.slider_4D[idx].setMaximum(shape[3] - 1)
+            self.slider_5D[idx].setMaximum(shape[4] - 1)
 
     def mem_release(self):
-        """Reset all object lists to zero in order to preserve memory"""
+        """
+        Release memory by clearing all internal lists holding images, sliders,
+        labels, and related UI elements.
 
-        del self.im_2D[:]
-        del self.slider_3D[:]
-        del self.slider_4D[:]
-        del self.slider_5D[:]
-        del self.txt_slider_3D[:]
-        del self.txt_slider_4D[:]
-        del self.txt_slider_5D[:]
-        del self.label3D[:]
-        del self.label4D[:]
-        del self.label5D[:]
-        del self.imageLabel[:]
-        del self.img[:]
-        del self.label_description[:]
-
-    def navigImage(self, idx):
-        """Display the 2D image for the selected index.
-
-        :param idx: the selected index
+        This method empties the existing lists in place (without
+        reassigning them) to ensure that all references are removed
+        and memory can be reclaimed.
         """
 
+        for attr in (
+            "im_2D",
+            "slider_3D",
+            "slider_4D",
+            "slider_5D",
+            "txt_slider_3D",
+            "txt_slider_4D",
+            "txt_slider_5D",
+            "label3D",
+            "label4D",
+            "label5D",
+            "imageLabel",
+            "img",
+            "label_description",
+        ):
+            getattr(self, attr).clear()
+
+    def navigImage(self, idx):
+        """
+        Display the 2D image corresponding to the given index.
+
+        This method updates the navigation state, applies image-specific
+        modifications, converts the image to a Qt pixmap, and displays it in
+        the associated label.
+
+        :param idx (int): Index of the image to display
+        """
+        # Update navigation and position
         self.indexImage(idx)
         self.displayPosValue(idx)
-
+        # Apply image-specific modifications
         self.image2DModifications(idx)
-        w, h = self.im_2D[idx].shape
-
-        image = QImage(self.im_2D[idx].data, w, h, QImage.Format_Indexed8)
-        pixm = QPixmap.fromImage(image)
-        self.imageLabel[idx].setPixmap(pixm)
+        # Convert the NumPy array to a QPixmap and display it
+        height, width = self.im_2D[idx].shape
+        qimage = QImage(
+            self.im_2D[idx].data,
+            width,
+            height,
+            QImage.Format_Indexed8,
+        )
+        self.imageLabel[idx].setPixmap(QPixmap.fromImage(qimage))
 
     def openTagsPopUp(self):
-        """Open a pop-up to select the legend of the thumbnails."""
+        """
+        Open a modal dialog allowing the user to select the tag used as the
+        thumbnail legend.
 
+        If the dialog is accepted, slice verification is triggered for the
+        current file paths.
+
+        Notes:
+        The dialog instance is stored on ``self.popUp`` to allow access from
+        unit tests.
+        """
         self.popUp = PopUpSelectTag(self.project)
         self.popUp.setWindowTitle("Select the image viewer tag")
+
         if self.popUp.exec_():
             self.verify_slices(self.file_paths)
 
-    def setThumbnail(self, file_path_base_name, idx):
-        """Set the thumbnail tag value under the image frame.
+    def setThumbnail(self, file_path_db, idx):
+        """
+        Set the thumbnail description label for a given image index.
 
-        :param file_path_base_name: basename of the selected path
-        :param idx: index of the image
+        Retrieves the value of the configured thumbnail tag from the database
+        and displays it under the image frame. If the value is not defined,
+        a default placeholder is used. The tooltip shows the tag name.
+
+        :param file_path_db (str): Path of selected image in database
+                                   format (ex. data/raw_data/mymri.nii')
+        :param idx (int): Index of the image in the UI.
         """
 
         with self.project.database.data() as database_data:
 
             # Looking for the tag value to display as a legend of the
             # thumbnail
-            for scan in database_data.get_document_names(COLLECTION_CURRENT):
-                if scan == file_path_base_name:
-                    value = database_data.get_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=scan,
-                        field=self.config.getThumbnailTag(),
-                    )
-                    if value is not None:
-                        self.label_description[idx].setText(
-                            str(value)[: self.nb_char_max]
-                        )
-                    else:
-                        self.label_description[idx].setText(
-                            NOT_DEFINED_VALUE[: self.nb_char_max]
-                        )
-                    self.label_description[idx].setToolTip(
-                        os.path.basename(self.config.getThumbnailTag())
-                    )
+            if file_path_db in database_data.get_document_names(
+                COLLECTION_CURRENT
+            ):
+                value = database_data.get_value(
+                    collection_name=COLLECTION_CURRENT,
+                    primary_key=file_path_db,
+                    field=self.config.getThumbnailTag(),
+                )
+                # fmt: off
+                display_text = (
+                    str(value)[:self.nb_char_max]
+                    if value is not None
+                    else NOT_DEFINED_VALUE[:self.nb_char_max]
+                )
+                # fmt: on
+                self.label_description[idx].setText(display_text)
+                self.label_description[idx].setToolTip(
+                    self.config.getThumbnailTag()
+                )
 
     def show_slices(self, file_paths):
-        """Creates the thumbnails from the selected file paths.
+        """
+        Display thumbnail previews of neuroimaging files with interactive
+        controls.
 
-        :param file_paths: the selected file paths
+        Creates a thumbnail viewer showing either cursor-controlled slices or
+        multiple slices from the selected neuroimaging files. On first call,
+        makes the MiniViewer visible. Does nothing if the viewer is hidden by
+        the user.
+
+        The viewer supports two display modes:
+        - Cursor mode (default): Shows one slice per image with interactive
+          3D/4D/5D sliders
+        - All slices mode: Displays multiple consecutive slices from each image
+
+        :param file_paths: List of paths to neuroimaging files (NIfTI format)
+                           to display. Invalid or non-existent files are
+                           automatically filtered out with warnings.
+
+        Side effects:
+            - Modifies self.file_paths by removing invalid entries
+            - Updates self.img list with loaded image objects
+            - Creates and configures numerous Qt widgets for the thumbnail
+              display
+            - Logs warnings for files that cannot be loaded or displayed
+
+        Note:
+            Maximum thumbnails displayed is controlled by
+            self.config.get_max_thumbnails() in cursor mode, and by
+            self.line_edit_nb_slices.text() in all slices mode.
         """
 
-        # If it's the first time that this function is called, the MiniViewer
-        # has to be shown
+        # Show viewer on first call
         if self.first_time:
             self.setHidden(False)
             self.first_time = False
 
-        # If the user has willingly hidden the MiniViewer, the Processes are
-        # not made
+        # Skip processing if viewer is hidden
         if self.isHidden():
-            pass
-        else:
-            self.do_nothing = [False] * len(file_paths)
+            return
 
-            self.file_paths = file_paths
-            self.max_scans = self.config.get_max_thumbnails()
-            self.setMinimumHeight(220)
-            self.clear_layouts()
-            self.frame = QFrame(self)
-            self.frame_final = QFrame(self)
+        # Initialize state
+        self.file_paths = file_paths
+        self.do_nothing = [False] * len(file_paths)
+        self.max_scans = self.config.get_max_thumbnails()
+        self.nb_char_max = 60  # Limiting the legend of the thumbnails
+        self.setMinimumHeight(220)
+        self.clear_layouts()
+        self.frame = QFrame(self)
+        self.frame_final = QFrame(self)
+        font = QFont()
+        font.setPointSize(9)
 
-            # Limiting the legend of the thumbnails
-            self.nb_char_max = 60
+        # Load neuroimaging files and populate self.img list, filtering
+        # invalid files
+        for idx, file_path in enumerate(self.file_paths.copy()):
+            chk = False
 
-            font = QFont()
-            font.setPointSize(9)
+            try:
+                chk = nib.as_closest_canonical(nib.load(file_path, mmap=False))
 
-            # Reading the images from the file paths
-            for idx, file_path in enumerate(self.file_paths.copy()):
+            except nib.filebasedimages.ImageFileError:
+                logger.warning(
+                    f"MiniViewer: Error while trying to display "
+                    f"{os.path.abspath(file_path)} image",
+                    exc_info=True,
+                )
+                self.file_paths.remove(file_path)
+
+            except FileNotFoundError:
+                logger.warning(
+                    f"MiniViewer: File "
+                    f"{os.path.abspath(file_path)} does not exist"
+                )
+                self.file_paths.remove(file_path)
+
+            # Only validate data if image loaded successfully
+            if chk is not False:
+
                 try:
-                    chk = nib.as_closest_canonical(
-                        nib.load(file_path, mmap=False)
-                    )
-                    # chk = nib.as_closest_canonical(nib.load(file_path))
-                    # chk = nib.load(file_path)
+                    np.asarray(chk.dataobj)
 
-                except nib.filebasedimages.ImageFileError:
+                except Exception:
                     logger.warning(
-                        f"Error while trying to display "
-                        f"the {os.path.abspath(file_path)} image ...!",
+                        f"MiniViewer: Error while trying to display "
+                        f"{os.path.abspath(file_path)} image",
                         exc_info=True,
                     )
                     self.file_paths.remove(file_path)
-                    chk = False
 
-                except FileNotFoundError:
-                    logger.warning(
-                        f"File {os.path.abspath(file_path)} is "
-                        f"not existing..."
-                    )
-                    self.file_paths.remove(file_path)
-                    chk = False
+                else:
+                    self.img.insert(idx, chk)
 
-                if chk is not False:
-                    try:
-                        np.asarray(chk.dataobj)
+        # Render appropriate display mode
+        if self.check_box_slices.checkState() == Qt.Unchecked:
+            # Render thumbnails in cursor mode with interactive sliders.
+            self.h_box_thumb = QHBoxLayout()
 
-                    except Exception:
-                        logger.warning(
-                            f"Error while trying to display "
-                            f"the {os.path.abspath(file_path)} image ...!\n",
-                            exc_info=True,
-                        )
-                        self.file_paths.remove(file_path)
+            # idx represents the index of the selected image
+            for idx in range(min(self.max_scans, len(self.file_paths))):
 
-                    else:
-                        self.img.insert(idx, chk)
+                if not self.do_nothing[idx]:
+                    # Setup sliders and controls
+                    self.boxSlider(idx)
+                    self.enableSliders(idx)
+                    self.createDimensionLabels(idx)
+                    # Getting the sliders value and reading the image data
+                    self.indexImage(idx)
+                    # Modifying pixels to display the image correctly
+                    self.image2DModifications(idx)
 
-            # If we are in the "cursors" display mode
-            if self.check_box_slices.checkState() == Qt.Unchecked:
-                # Layout to align each thumbnail (image + cursors)
-                self.h_box_thumb = QHBoxLayout()
+                self.displayPosValue(idx)
+                # Create thumbnail image
+                w, h = self.im_2D[idx].shape
+                im_Qt = QImage(
+                    self.im_2D[idx].data, w, h, QImage.Format_Indexed8
+                )
+                pixm = QPixmap.fromImage(im_Qt)
+                # Setup image label
+                file_path_base_name = os.path.basename(self.file_paths[idx])
+                # imageLabel is the label where the image is displayed
+                # (as a pixmap)
+                self.imageLabel.insert(idx, QLabel(self))
+                self.imageLabel[idx].setPixmap(pixm)
+                self.imageLabel[idx].setToolTip(file_path_base_name)
+                # Setup description label
+                self.label_description.insert(idx, ClickableLabel())
+                self.label_description[idx].setFont(font)
+                self.label_description[idx].clicked.connect(self.openTagsPopUp)
+                # Looking for the tag value to display as a legend of the
+                # thumbnail
+                file_path_rel = os.path.relpath(
+                    self.file_paths[idx], self.project.folder
+                )
+                self.setThumbnail(file_path_rel, idx)
+                # Build slider layouts
+                slider_layouts = [
+                    (
+                        self.label3D[idx],
+                        self.txt_slider_3D[idx],
+                        self.slider_3D[idx],
+                    ),
+                    (
+                        self.label4D[idx],
+                        self.txt_slider_4D[idx],
+                        self.slider_4D[idx],
+                    ),
+                    (
+                        self.label5D[idx],
+                        self.txt_slider_5D[idx],
+                        self.slider_5D[idx],
+                    ),
+                ]
+                v_box_sliders = QVBoxLayout()
 
-                # idx represents the index of the selected image
-                for idx in range(min(self.max_scans, len(self.file_paths))):
-                    if not self.do_nothing[idx]:
-                        # Creating sliders and labels
-                        self.boxSlider(idx)
-                        self.enableSliders(idx)
-                        self.createDimensionLabels(idx)
+                for label, txt, slider in slider_layouts:
+                    h_box = QHBoxLayout()
+                    h_box.addWidget(label)
+                    h_box.addWidget(txt)
+                    h_box.addWidget(slider)
+                    v_box_sliders.addLayout(h_box)
 
-                        # Getting the sliders value and reading the image data
-                        self.indexImage(idx)
+                # Combine image and sliders
+                h_box = QHBoxLayout()
+                h_box.addWidget(self.imageLabel[idx])
+                h_box.addLayout(v_box_sliders)
+                # Add description
+                v_box_thumb = QVBoxLayout()
+                v_box_thumb.addLayout(h_box)
+                v_box_thumb.addWidget(self.label_description[idx])
+                # Layout that will contain all the thumbnails
+                self.h_box_thumb.addLayout(v_box_thumb)
 
-                        # Making some pixel modification to display the image
-                        # correctly
-                        self.image2DModifications(idx)
+            self.frame.setLayout(self.h_box_thumb)
 
-                    self.displayPosValue(idx)
+        else:
+            # Render thumbnails showing all slices from each image
+            h_box_images = QHBoxLayout()
+            h_box_images.setSpacing(10)
+            v_box_scans = QVBoxLayout()
 
-                    w, h = self.im_2D[idx].shape
+            # idx represents the index of the selected image
+            for idx, file_path in enumerate(self.file_paths):
+                file_path_rel = os.path.relpath(file_path, self.project.folder)
+                # Setup description label
+                self.label_description.insert(idx, ClickableLabel())
+                self.label_description[idx].setFont(font)
+                self.label_description[idx].clicked.connect(self.openTagsPopUp)
+                # Looking for the tag value to display as a legend of the
+                # thumbnail
+                self.setThumbnail(file_path_rel, idx)
 
-                    im_Qt = QImage(
-                        self.im_2D[idx].data, w, h, QImage.Format_Indexed8
-                    )
-                    pixm = QPixmap.fromImage(im_Qt)
+                if self.do_nothing[idx]:
+                    continue
 
-                    file_path_base_name = os.path.basename(
-                        self.file_paths[idx]
-                    )
+                # Determine slice parameters based on dimensions
+                shape_len = len(self.img[idx].shape)
 
-                    # imageLabel is the label where the image is displayed
-                    # (as a pixmap)
-                    self.imageLabel.insert(idx, QLabel(self))
-                    self.imageLabel[idx].setPixmap(pixm)
-                    self.imageLabel[idx].setToolTip(file_path_base_name)
+                # Depending of the dimension of the image, the legend of each
+                # image and the number of images to display will change
+                if shape_len == 3:
+                    nb_slices, txt = self.img[idx].shape[2], "Slice n°"
 
-                    self.label_description.insert(idx, ClickableLabel())
-                    self.label_description[idx].setFont(font)
-                    self.label_description[idx].clicked.connect(
-                        self.openTagsPopUp
-                    )
+                elif shape_len == 4:
+                    nb_slices, txt = self.img[idx].shape[3], "Time n°"
 
-                    # Looking for the tag value to display as a
-                    # legend of the thumbnail
-                    file_path_base_name = os.path.relpath(
-                        self.file_paths[idx], self.project.folder
-                    )
-                    self.setThumbnail(file_path_base_name, idx)
+                elif shape_len == 5:
+                    nb_slices, txt = self.img[idx].shape[4], "Study n°"
 
-                    # Layout that corresponds to the 3D dimension
-                    self.h_box_slider_3D = QHBoxLayout()
-                    self.h_box_slider_3D.addWidget(self.label3D[idx])
-                    self.h_box_slider_3D.addWidget(self.txt_slider_3D[idx])
-                    self.h_box_slider_3D.addWidget(self.slider_3D[idx])
+                else:
+                    continue
 
-                    # Layout that corresponds to the 4D dimension
-                    self.h_box_slider_4D = QHBoxLayout()
-                    self.h_box_slider_4D.addWidget(self.label4D[idx])
-                    self.h_box_slider_4D.addWidget(self.txt_slider_4D[idx])
-                    self.h_box_slider_4D.addWidget(self.slider_4D[idx])
+                # Limiting the number of images to the number chosen by the
+                # user
+                max_slices = min(
+                    nb_slices, int(self.line_edit_nb_slices.text())
+                )
 
-                    # Layout that corresponds to the 5D dimension
-                    self.h_box_slider_5D = QHBoxLayout()
-                    self.h_box_slider_5D.addWidget(self.label5D[idx])
-                    self.h_box_slider_5D.addWidget(self.txt_slider_5D[idx])
-                    self.h_box_slider_5D.addWidget(self.slider_5D[idx])
+                # Create slice thumbnails
+                for i in range(max_slices):
+                    pixm = self.image_to_pixmap(self.img[idx], i)
+                    # label corresponds to the label where one image is
+                    # displayed
+                    label = QLabel(self)
+                    label.setPixmap(pixm)
+                    label.setToolTip(os.path.basename(file_path))
+                    # Legend of the image (depends on the number of dimensions)
+                    label_info = QLabel(f"{txt}{i + 1}")
+                    label_info.setFont(font)
+                    label_info.setAlignment(QtCore.Qt.AlignCenter)
+                    v_box = QVBoxLayout()
+                    v_box.addWidget(label)
+                    v_box.addWidget(label_info)
+                    # This layout allows to chain each image
+                    h_box_images.addLayout(v_box)
 
-                    # Layout for the three sliders
-                    self.v_box_sliders = QVBoxLayout()
-                    self.v_box_sliders.addLayout(self.h_box_slider_3D)
-                    self.v_box_sliders.addLayout(self.h_box_slider_4D)
-                    self.v_box_sliders.addLayout(self.h_box_slider_5D)
+                v_box_scans.addLayout(h_box_images)
+                v_box_scans.addWidget(self.label_description[idx])
 
-                    # Layout that corresponds to the image + the sliders
-                    self.h_box = QHBoxLayout()
-                    self.h_box.addWidget(self.imageLabel[idx])
-                    self.h_box.addLayout(self.v_box_sliders)
+            self.frame.setLayout(v_box_scans)
 
-                    # Layout that corresponds to the image and sliders +
-                    # the description
-                    self.v_box_thumb = QVBoxLayout()
-                    self.v_box_thumb.addLayout(self.h_box)
-                    self.v_box_thumb.addWidget(self.label_description[idx])
+        # Setup scroll area and control checkboxes for the thumbnail viewer
+        self.scroll_area = QScrollArea()
+        self.scroll_area.setWidget(self.frame)
+        h_box_check_box = QHBoxLayout()
 
-                    # Layout that will contain all the thumbnails
-                    self.h_box_thumb.addLayout(self.v_box_thumb)
+        if self.check_box_slices.isChecked():
+            h_box_check_box.addStretch(1)
+            h_box_check_box.addWidget(self.label_orientation)
+            h_box_check_box.addStretch(1)
+            self.label_nb_slices.setHidden(False)
+            self.line_edit_nb_slices.setHidden(False)
+            h_box_check_box.addWidget(self.label_nb_slices)
+            h_box_check_box.addWidget(self.line_edit_nb_slices)
+            self.check_box_cursors.setHidden(True)
 
-                self.frame.setLayout(self.h_box_thumb)
+        else:
+            self.check_box_cursors.setHidden(False)
+            h_box_check_box.addWidget(self.check_box_cursors)
+            h_box_check_box.addStretch(1)
+            h_box_check_box.addWidget(self.label_orientation)
+            h_box_check_box.addStretch(1)
+            self.label_nb_slices.setHidden(True)
+            self.line_edit_nb_slices.setHidden(True)
 
-            # If we are in the "all slices" display mode
-            else:
-                self.h_box_images = QHBoxLayout()
-                self.h_box_images.setSpacing(10)
-                self.v_box_scans = QVBoxLayout()
-
-                # idx represents the index of the selected image
-                for idx in range(len(self.file_paths)):
-                    file_path_base_name = os.path.relpath(
-                        self.file_paths[idx], self.project.folder
-                    )
-
-                    self.label_description.insert(idx, ClickableLabel())
-                    self.label_description[idx].setFont(font)
-                    self.label_description[idx].clicked.connect(
-                        self.openTagsPopUp
-                    )
-
-                    # Looking for the tag value to display as a legend
-                    # of the thumbnail
-                    self.setThumbnail(file_path_base_name, idx)
-
-                    # Depending of the dimension of the image,
-                    # the legend of each image and the number of images to
-                    # display will change
-                    if not self.do_nothing[idx]:
-                        if len(self.img[idx].shape) == 3:
-                            nb_slices = self.img[idx].shape[2]
-                            txt = "Slice n°"
-                        elif len(self.img[idx].shape) == 4:
-                            nb_slices = self.img[idx].shape[3]
-                            txt = "Time n°"
-                        elif len(self.img[idx].shape) == 5:
-                            nb_slices = self.img[idx].shape[4]
-                            txt = "Study n°"
-                        else:
-                            nb_slices = 0
-
-                        # Limiting the number of images to the number
-                        # chosen by the user
-                        for i in range(
-                            min(
-                                nb_slices, int(self.line_edit_nb_slices.text())
-                            )
-                        ):
-                            pixm = self.image_to_pixmap(self.img[idx], i)
-
-                            self.v_box = QVBoxLayout()
-
-                            # label corresponds to the label where one image
-                            # is displayed
-                            label = QLabel(self)
-                            label.setPixmap(pixm)
-                            label.setToolTip(
-                                os.path.basename(self.file_paths[idx])
-                            )
-
-                            # Legend of the image (depends on the number
-                            # of dimensions)
-                            label_info = QLabel()
-                            label_info.setFont(font)
-                            label_info.setText(f"{txt}{i + 1}")
-                            label_info.setAlignment(QtCore.Qt.AlignCenter)
-
-                            self.v_box.addWidget(label)
-                            self.v_box.addWidget(label_info)
-
-                            # This layout allows to chain each image
-                            self.h_box_images.addLayout(self.v_box)
-                        self.v_box_scans.addLayout(self.h_box_images)
-                        self.v_box_scans.addWidget(self.label_description[idx])
-                self.frame.setLayout(self.v_box_scans)
-
-            # Adding a scroll area if the thumbnails are too large
-            self.scroll_area = QScrollArea()
-            self.scroll_area.setWidget(self.frame)
-
-            self.h_box_check_box = QHBoxLayout()
-
-            if self.check_box_slices.isChecked():
-                self.h_box_check_box.addStretch(1)
-                self.h_box_check_box.addWidget(self.label_orientation)
-                self.h_box_check_box.addStretch(1)
-                self.label_nb_slices.setHidden(False)
-                self.line_edit_nb_slices.setHidden(False)
-                self.h_box_check_box.addWidget(self.label_nb_slices)
-                self.h_box_check_box.addWidget(self.line_edit_nb_slices)
-                self.check_box_cursors.setHidden(True)
-            else:
-                self.check_box_cursors.setHidden(False)
-                self.h_box_check_box.addWidget(self.check_box_cursors)
-                self.h_box_check_box.addStretch(1)
-                self.h_box_check_box.addWidget(self.label_orientation)
-                self.h_box_check_box.addStretch(1)
-                self.label_nb_slices.setHidden(True)
-                self.line_edit_nb_slices.setHidden(True)
-
-            self.h_box_check_box.addWidget(self.check_box_slices)
-
-            self.v_box_final.addLayout(self.h_box_check_box)
-            self.v_box_final.addWidget(self.scroll_area)
+        h_box_check_box.addWidget(self.check_box_slices)
+        self.v_box_final.addLayout(h_box_check_box)
+        self.v_box_final.addWidget(self.scroll_area)
 
     def update_nb_slices(self):
-        """Update the config file and the thumbnails.
+        """
+        Update slice configuration and refresh thumbnails.
 
-        Called when the number of slices to visualize changes.
+        Triggered when the user modifies the number of slices to visualize.
+        Updates the configuration with the new slice count and re-validates
+        the current file paths to regenerate thumbnails accordingly.
+
+        Notes:
+        The slice count is retrieved from the UI line edit widget and applied
+        to all loaded files.
         """
         nb_slices = self.line_edit_nb_slices.text()
         self.config.setNbAllSlicesMax(nb_slices)
         self.verify_slices(self.file_paths)
 
-    def update_visualization_method(self):
-        """Update the config file and the thumbnails.
-
-        Called when the state of the checkbox to show all slices changes.
+    def update_visualization(self):
         """
-        if self.check_box_slices.checkState() == Qt.Checked:
-            self.config.setShowAllSlices(True)
-        elif self.check_box_slices.checkState() == Qt.Unchecked:
-            self.config.setShowAllSlices(False)
+        Update visualization settings and refresh thumbnails.
+
+        Synchronizes the slice visualization preference (show all slices
+        vs. single slice) based on the checkbox state, updates the
+        configuration, and regenerates thumbnails
+        for the current file paths.
+
+        This method is triggered when the user toggles the "show all slices"
+        checkbox.
+        """
+        self.config.setShowAllSlices(self.check_box_slices.isChecked())
         self.verify_slices(self.file_paths)
 
     def verify_slices(self, file_paths):
-        """Make 'Show all slices' checkbox unclickable if len(file_paths) > 1.
-
-        :param file_paths: the selected documents
         """
-        # Updating the config
+        Update slice display settings based on the number of selected files.
+
+        When multiple files are selected, the "Show all slices" checkbox is
+        disabled and unchecked to prevent viewing slices from multiple files
+        simultaneously. For single file selection, the checkbox remains
+        enabled.
+
+        :param file_paths: List or collection of selected document file paths.
+        """
+        # Refresh configuration and release memory
         self.config = Config()
         self.mem_release()
+        # Disable slice checkbox for multiple files
+        is_multiple_files = len(file_paths) > 1
 
-        if len(file_paths) > 1:
+        if is_multiple_files:
             self.config.setShowAllSlices(False)
             self.check_box_slices.setCheckState(Qt.Unchecked)
-            self.check_box_slices.setCheckable(False)
 
-        else:
-            self.check_box_slices.setCheckable(True)
-
+        self.check_box_slices.setCheckable(not is_multiple_files)
+        # Update slice display
         self.show_slices(file_paths)
-
-        if self.config.isRadioView() is True:
-            self.label_orientation.setText("Radiological orientation")
-
-        else:
-            self.label_orientation.setText("Neurological orientation")
+        # Set orientation label based on view mode
+        orientation_text = (
+            "Radiological orientation"
+            if self.config.isRadioView()
+            else "Neurological orientation"
+        )
+        self.label_orientation.setText(orientation_text)
