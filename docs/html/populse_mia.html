@@ -5,20 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia package &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=dfa0e015" />
-    <script src="_static/documentation_options.js?v=a73ba755"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia package &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="_static/haiku.css?v=fce32b03" />
+    <script src="_static/documentation_options.js?v=4774077a"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia package</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="index.html">Contents</a>
@@ -53,6 +53,7 @@ and automate workflows.</p>
 <ul>
 <li><p>data_manager: Manages projects and their associated databases.</p></li>
 <li><p>sources_images: Contains a collection of images used in MIA.</p></li>
+<li><p>tests: Contains the unit tests</p></li>
 <li><p>user_interface: Handles the graphical user interface of MIA.</p></li>
 <li><p>utils: Provides various utility functions for MIA operations.</p></li>
 </ul>
@@ -63,7 +64,6 @@ and automate workflows.</p>
 <li><p>main.py: The primary module executed at runtime.</p></li>
 <li><p>__main__.py: Allows populse_mia to be executed as a module.</p></li>
 <li><p>software_properties.py: Manages the software’s configuration.</p></li>
-<li><p>test.py: Contains unit tests.</p></li>
 </ul>
 </li>
 </ul>
@@ -681,7 +681,7 @@ mia’s GUI.</p>
 <li><p><strong>(</strong><strong>pathlib.Path</strong><strong>)</strong> (<em>path</em>) – The directory path to be added to the
 system path.</p></li>
 <li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>name</em>) – The name of the package being added.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>index</em><em> (</em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>,</em>) – The index at which to insert the path
+<li><p><strong>optional</strong><strong>)</strong> (<em>index</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>,</em>) – The index at which to insert the path
 into sys.path. Defaults to 0.</p></li>
 </ul>
 </dd>
@@ -740,13 +740,18 @@ or is corrupted, try to create one with a valid properties path.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.main.qt_message_handler">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">qt_message_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#qt_message_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.qt_message_handler" title="Link to this definition">¶</a></dt>
-<dd><p>Custom Qt message handler to filter out specific unwanted messages and
-output the remaining ones.</p>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.main.</span></span><span class="sig-name descname"><span class="pre">qt_message_handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/main.html#qt_message_handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.main.qt_message_handler" title="Link to this definition">¶</a></dt>
+<dd><p>Custom Qt message handler to filter out specific unwanted messages
+and print the remaining ones to stderr.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>message</em>) – The message to be handled, potentially filtered and
-then output.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>QtMsgType</strong><strong>)</strong> (<em>msg_type</em>) – The type of Qt message (debug, warning,
+critical, etc.).</p></li>
+<li><p><strong>(</strong><strong>QMessageLogContext</strong><strong>)</strong> (<em>context</em>) – Context information about where the
+message originated.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>message</em>) – The log message string.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -771,297 +776,310 @@ pop-up in the config.yml file.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.software_properties.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object that handles the configuration of the software</p>
 <dl class="field-list simple">
 <dt class="field-odd">Contains<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="field-list simple">
 <dt class="field-odd">Methods<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>get_admin_hash: get the value of the hash of the admin password</p></li>
-<li><p>get_afni_path: returns the path of AFNI</p></li>
-<li><p>get_ants_path: returns the path of ANTS</p></li>
-<li><p>getBackgroundColor: get background color</p></li>
-<li><p>get_capsul_config: get CAPSUL config dictionary</p></li>
 <li><dl class="simple">
-<dt>get_capsul_engine: get a global CapsulEngine object used for all</dt><dd><p>operations in MIA application</p>
+<dt>_configure_standalone_spm: Configures standalone SPM and</dt><dd><p>MCR.</p>
+</dd>
+</dl>
+</li>
+<li><p>_configure_matlab_spm: Configures SPM and MATLAB.</p></li>
+<li><p>_configure_matlab_only: Configures MATLAB without SPM.</p></li>
+<li><p>_configure_mcr_only: Configures MCR without SPM.</p></li>
+<li><dl class="simple">
+<dt>_disable_matlab_spm: Disables all MATLAB and SPM</dt><dd><p>configurations.</p>
+</dd>
+</dl>
+</li>
+<li><p>get_admin_hash: Get the value of the hash of the admin password</p></li>
+<li><p>get_afni_path: Returns the path of AFNI</p></li>
+<li><p>get_ants_path: Returns the path of ANTS</p></li>
+<li><p>getBackgroundColor: Get background color</p></li>
+<li><p>get_capsul_config: Get CAPSUL config dictionary</p></li>
+<li><dl class="simple">
+<dt>get_capsul_engine: Get a global CapsulEngine object used for all</dt><dd><p>operations in MIA application</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>getChainCursors: returns if the “chain cursors” checkbox of the</dt><dd><p>mini-viewer is activated</p>
+<dt>getChainCursors: Returns if the “chain cursors” checkbox of the</dt><dd><p>mini-viewer is activated</p>
 </dd>
 </dl>
 </li>
-<li><p>get_freesurfer_setup: get freesurfer path</p></li>
-<li><p>get_fsl_config: returns the path of the FSL config file</p></li>
-<li><p>get_mainwindow_maximized: get the maximized (full-screen) flag</p></li>
-<li><p>get_mainwindow_size: get the main window size</p></li>
-<li><p>get_matlab_command: returns Matlab command</p></li>
-<li><p>get_matlab_path: returns the path of Matlab’s executable</p></li>
+<li><p>get_freesurfer_setup: Get freesurfer path</p></li>
+<li><p>get_fsl_config: Returns the path of the FSL config file</p></li>
+<li><p>get_mainwindow_maximized: Get the maximized (full-screen) flag</p></li>
+<li><p>get_mainwindow_size: Get the main window size</p></li>
+<li><p>get_matlab_command: Returns Matlab command</p></li>
+<li><p>get_matlab_path: Returns the path of Matlab’s executable</p></li>
 <li><dl class="simple">
-<dt>get_matlab_standalone_path: returns the path of Matlab Compiler</dt><dd><p>Runtime</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>get_max_projects: returns the maximum number of projects</dt><dd><p>displayed in the “Saved projects” menu</p>
+<dt>get_matlab_standalone_path: Returns the path of Matlab Compiler</dt><dd><p>Runtime</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_max_thumbnails:  get max thumbnails number at the data</dt><dd><p>browser bottom</p>
-</dd>
-</dl>
-</li>
-<li><p>get_properties_path: returns the software’s properties path</p></li>
-<li><p>get_mri_conv_path: returns the MRIManager.jar path</p></li>
-<li><p>get_mrtrix_path: returns mrtrix path</p></li>
-<li><dl class="simple">
-<dt>getNbAllSlicesMax: returns the maximum number of slices to</dt><dd><p>display in the mini viewer</p>
-</dd>
-</dl>
-</li>
-<li><p>get_opened_projects: returns the opened projects</p></li>
-<li><dl class="simple">
-<dt>get_projects_save_path: returns the folder where the projects</dt><dd><p>are saved</p>
+<dt>get_max_projects: Returns the maximum number of projects</dt><dd><p>displayed in the “Saved projects” menu</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_referential: returns boolean to indicate DataViewer</dt><dd><p>referential</p>
+<dt>get_max_thumbnails: Get max thumbnails number at the data</dt><dd><p>browser bottom</p>
 </dd>
 </dl>
 </li>
-<li><p>get_resources_path: get the resources path</p></li>
+<li><p>get_properties_path: Returns the software’s properties path</p></li>
+<li><p>get_mri_conv_path: Returns the MRIManager.jar path</p></li>
+<li><p>get_mrtrix_path: Returns mrtrix path</p></li>
 <li><dl class="simple">
-<dt>getShowAllSlices: returns if the “show all slices” checkbox of</dt><dd><p>the mini viewer is activated</p>
+<dt>getNbAllSlicesMax: Returns the maximum number of slices to</dt><dd><p>display in the mini viewer</p>
 </dd>
 </dl>
 </li>
-<li><p>getSourceImageDir: get the source directory for project images</p></li>
-<li><p>get_spm_path: returns the path of SPM12 (license version)</p></li>
+<li><p>get_opened_projects: Returns the opened projects</p></li>
 <li><dl class="simple">
-<dt>get_spm_standalone_path: returns the path of SPM12 (standalone</dt><dd><p>version)</p>
-</dd>
-</dl>
-</li>
-<li><p>getTextColor: return the text color</p></li>
-<li><dl class="simple">
-<dt>getThumbnailTag: returns the tag that is displayed in the mini</dt><dd><p>viewer</p>
+<dt>get_projects_save_path: Returns the folder where the projects</dt><dd><p>are saved</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_afni: returns the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
+<dt>get_referential: Returns boolean to indicate DataViewer</dt><dd><p>referential</p>
+</dd>
+</dl>
+</li>
+<li><p>get_resources_path: Get the resources path</p></li>
+<li><dl class="simple">
+<dt>getShowAllSlices: Returns if the “show all slices” checkbox of</dt><dd><p>the mini viewer is activated</p>
+</dd>
+</dl>
+</li>
+<li><p>getSourceImageDir: Get the source directory for project images</p></li>
+<li><p>get_spm_path: Returns the path of SPM12 (license version)</p></li>
+<li><dl class="simple">
+<dt>get_spm_standalone_path: Returns the path of SPM12 (standalone</dt><dd><p>version)</p>
+</dd>
+</dl>
+</li>
+<li><p>getTextColor: Return the text color</p></li>
+<li><dl class="simple">
+<dt>getThumbnailTag: Returns the tag that is displayed in the mini</dt><dd><p>viewer</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_ants: returns the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
+<dt>get_use_afni: Returns the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_clinical: returns the value of “clinical mode” checkbox</dt><dd><p>in the preferences</p>
+<dt>get_use_ants: Returns the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_freesurfer: returns the value of “use freesurfer”</dt><dd><p>checkbox in the preferences</p>
+<dt>get_use_clinical: Returns the value of “clinical mode” checkbox</dt><dd><p>in the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_fsl: returns the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
+<dt>get_use_freesurfer: Returns the value of “use freesurfer”</dt><dd><p>checkbox in the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_matlab: returns the value of “use matlab” checkbox in</dt><dd><p>the preferences</p>
+<dt>get_use_fsl: Returns the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_matlab_standalone: returns the value of “use matlab</dt><dd><p>standalone” checkbox in the
+<dt>get_use_matlab: Returns the value of “use matlab” checkbox in</dt><dd><p>the preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>get_use_matlab_standalone: Returns the value of “use matlab</dt><dd><p>standalone” checkbox in the
 preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_mrtrix: returns the value of “use mrtrix” checkbox in</dt><dd><p>the preferences</p>
+<dt>get_use_mrtrix: Returns the value of “use mrtrix” checkbox in</dt><dd><p>the preferences</p>
 </dd>
 </dl>
 </li>
-<li><p>get_user_level: get the user level in the Capsul config</p></li>
+<li><p>get_user_level: Get the user level in the Capsul config</p></li>
 <li><dl class="simple">
-<dt>get_user_mode: returns the value of “user mode” checkbox</dt><dd><p>in the preferences</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>get_use_spm: returns the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
+<dt>get_user_mode: Returns the value of “user mode” checkbox</dt><dd><p>in the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>get_use_spm_standalone: returns the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
+<dt>get_use_spm: Returns the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>getViewerConfig: returns the DataViewer configuration (neuro or</dt><dd><p>radio), by default neuro</p>
+<dt>get_use_spm_standalone: Returns the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>getViewerFramerate: returns the DataViewer framerate for</dt><dd><p>automatic time running images</p>
-</dd>
-</dl>
-</li>
-<li><p>isAutoSave: checks if auto-save mode is activated</p></li>
-<li><dl class="simple">
-<dt>isControlV1: checks if the selected display of the controller is</dt><dd><p>of V1 type</p>
+<dt>getViewerConfig: Returns the DataViewer configuration (neuro or</dt><dd><p>radio), by default neuro</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>isRadioView: checks if miniviewer in radiological orientation (if</dt><dd><p>not, then it is in neurological orientation)</p>
+<dt>getViewerFramerate: Returns the DataViewer framerate for</dt><dd><p>automatic time running images</p>
 </dd>
 </dl>
 </li>
-<li><p>loadConfig: reads the config in the config.yml file</p></li>
-<li><p>saveConfig: saves the config to the config.yml file</p></li>
-<li><p>set_admin_hash: set the password hash</p></li>
-<li><p>set_afni_path: set the path of the AFNI</p></li>
-<li><p>set_ants_path: set the path of the ANTS</p></li>
-<li><p>set_mrtrix_path: set the path of mrtrix</p></li>
-<li><p>setAutoSave: sets the auto-save mode</p></li>
-<li><p>setBackgroundColor: sets the background color</p></li>
-<li><p>set_capsul_config: set CAPSUL configuration dict into MIA config</p></li>
+<li><p>isAutoSave: Checks if auto-save mode is activated</p></li>
 <li><dl class="simple">
-<dt>setChainCursors: set the “chain cursors” checkbox of the mini</dt><dd><p>viewer</p>
+<dt>isControlV1: Checks if the selected display of the controller is</dt><dd><p>of V1 type</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_clinical_mode: set the value of “clinical mode” in</dt><dd><p>the preferences</p>
+<dt>isRadioView: Checks if miniviewer in radiological orientation (if</dt><dd><p>not, then it is in neurological orientation)</p>
+</dd>
+</dl>
+</li>
+<li><p>loadConfig: Reads the config in the config.yml file</p></li>
+<li><p>saveConfig: Saves the config to the config.yml file</p></li>
+<li><p>set_admin_hash: Set the password hash</p></li>
+<li><p>set_afni_path: Set the path of the AFNI</p></li>
+<li><p>set_ants_path: Set the path of the ANTS</p></li>
+<li><p>set_mrtrix_path: Set the path of mrtrix</p></li>
+<li><p>setAutoSave: Sets the auto-save mode</p></li>
+<li><p>setBackgroundColor: Sets the background color</p></li>
+<li><p>set_capsul_config: Set CAPSUL configuration dict into MIA config</p></li>
+<li><dl class="simple">
+<dt>setChainCursors: Set the “chain cursors” checkbox of the mini</dt><dd><p>viewer</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_clinical_mode: Set the value of “clinical mode” in</dt><dd><p>the preferences</p>
 </dd>
 </dl>
 </li>
 <li><p>setControlV1: Set controller display mode (True if V1)</p></li>
-<li><p>set_freesurfer_setup: set freesurfer path</p></li>
-<li><p>set_fsl_config: set the path of the FSL config file</p></li>
-<li><p>set_mainwindow_maximized: set the maximized (fullscreen) flag</p></li>
-<li><p>set_mainwindow_size: set main window size</p></li>
-<li><p>set_matlab_path: set the path of Matlab’s executable</p></li>
+<li><p>set_freesurfer_setup: Set freesurfer path</p></li>
+<li><p>set_fsl_config: Set the path of the FSL config file</p></li>
+<li><p>set_mainwindow_maximized: Set the maximized (fullscreen) flag</p></li>
+<li><p>set_mainwindow_size: Set main window size</p></li>
+<li><p>set_matlab_path: Set the path of Matlab’s executable</p></li>
 <li><dl class="simple">
-<dt>set_matlab_standalone_path: set the path of Matlab Compiler</dt><dd><p>Runtime</p>
+<dt>set_matlab_standalone_path: Set the path of Matlab Compiler</dt><dd><p>Runtime</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_max_projects: set the maximum number of projects displayed in</dt><dd><p>the “Saved projects” menu</p>
+<dt>set_max_projects: Set the maximum number of projects displayed in</dt><dd><p>the “Saved projects” menu</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_max_thumbnails: set max thumbnails number at the data browser</dt><dd><p>bottom</p>
+<dt>set_max_thumbnails: Set max thumbnails number at the data browser</dt><dd><p>bottom</p>
 </dd>
 </dl>
 </li>
-<li><p>set_mri_conv_path: set the MRIManager.jar path</p></li>
+<li><p>set_mri_conv_path: Set the MRIManager.jar path</p></li>
 <li><dl class="simple">
-<dt>setNbAllSlicesMax: set the maximum number of slices to display in</dt><dd><p>the mini viewer</p>
+<dt>setNbAllSlicesMax: Set the maximum number of slices to display in</dt><dd><p>the mini viewer</p>
 </dd>
 </dl>
 </li>
-<li><p>set_opened_projects: set the opened projects</p></li>
+<li><p>set_opened_projects: Set the opened projects</p></li>
 <li><dl class="simple">
-<dt>set_projects_save_path: set the folder where the projects are</dt><dd><p>saved</p>
+<dt>set_projects_save_path: Set the folder where the projects are</dt><dd><p>saved</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_radioView: set the orientation in miniviewer (True for</dt><dd><p>radiological, False for neurological orientation)</p>
+<dt>set_radioView: Set the orientation in miniviewer (True for</dt><dd><p>radiological, False for neurological orientation)</p>
 </dd>
 </dl>
 </li>
-<li><p>set_referential: set the DataViewer referential</p></li>
+<li><p>set_referential: Set the DataViewer referential</p></li>
 <li><p>set_resources_path: Set the resources path</p></li>
 <li><dl class="simple">
-<dt>setShowAllSlices: set the “show all slices” checkbox of the mini</dt><dd><p>viewer</p>
+<dt>setShowAllSlices: Set the “show all slices” checkbox of the mini</dt><dd><p>viewer</p>
 </dd>
 </dl>
 </li>
-<li><p>setSourceImageDir: set the source directory for project images</p></li>
-<li><p>set_spm_path: set the path of SPM12 (license version)</p></li>
+<li><p>setSourceImageDir: Set the source directory for project images</p></li>
+<li><p>set_spm_path: Set the path of SPM12 (license version)</p></li>
 <li><dl class="simple">
-<dt>set_spm_standalone_path: set the path of SPM12 (standalone</dt><dd><p>version)</p>
+<dt>set_spm_standalone_path: Set the path of SPM12 (standalone</dt><dd><p>version)</p>
 </dd>
 </dl>
 </li>
-<li><p>setTextColor: set the text color</p></li>
-<li><p>setThumbnailTag: set the tag that is displayed in the mini viewer</p></li>
+<li><p>setTextColor: Set the text color</p></li>
+<li><p>setThumbnailTag: Set the tag that is displayed in the mini viewer</p></li>
 <li><dl class="simple">
-<dt>set_use_afni: set the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>set_use_ants: set the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
+<dt>set_use_afni: Set the value of “use afni” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_freesurfer: set the value of “use freesurfer” checkbox</dt><dd><p>in the preferences</p>
+<dt>set_use_ants: Set the value of “use ants” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_fsl: set the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
+<dt>set_use_freesurfer: Set the value of “use freesurfer” checkbox</dt><dd><p>in the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_matlab: set the value of “use matlab” checkbox in the</dt><dd><p>preferences</p>
+<dt>set_use_fsl: Set the value of “use fsl” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_matlab_standalone: set the value of “use matlab</dt><dd><p>standalone” checkbox in the
+<dt>set_use_matlab: Set the value of “use matlab” checkbox in the</dt><dd><p>preferences</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>set_use_matlab_standalone: Set the value of “use matlab</dt><dd><p>standalone” checkbox in the
 preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_mrtrix: set the value of “use mrtrix” checkbox in the</dt><dd><p>preferences</p>
+<dt>set_use_mrtrix: Set the value of “use mrtrix” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_user_mode: set the value of “user mode” checkbox in</dt><dd><p>the preferences</p>
+<dt>set_user_mode: Set the value of “user mode” checkbox in</dt><dd><p>the preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_spm: set the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
+<dt>set_use_spm: Set the value of “use spm” checkbox in the</dt><dd><p>preferences</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>set_use_spm_standalone: set the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
+<dt>set_use_spm_standalone: Set the value of “use spm standalone”</dt><dd><p>checkbox in the preferences</p>
 </dd>
 </dl>
 </li>
-<li><p>setViewerConfig: set the Viewer configuration neuro or radio</p></li>
+<li><p>setViewerConfig: Set the Viewer configuration neuro or radio</p></li>
 <li><dl class="simple">
-<dt>setViewerFramerate: set the Viewer frame rate for automatic</dt><dd><p>running time images</p>
+<dt>setViewerFramerate: Set the Viewer frame rate for automatic</dt><dd><p>running time images</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>update_capsul_config: update a global CapsulEngine object used</dt><dd><p>for all operations in MIA application</p>
+<dt>update_capsul_config: Update a global CapsulEngine object used</dt><dd><p>for all operations in MIA application</p>
 </dd>
 </dl>
 </li>
@@ -1880,19 +1898,6 @@ AFNI, ANTs, FSL, etc.) based on the Capsul engine configuration.</p>
 <dt class="field-odd">Private function<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><dl class="simple">
-<dt>_configure_standalone_spm: Configures standalone SPM and</dt><dd><p>MCR.</p>
-</dd>
-</dl>
-</li>
-<li><p>_configure_matlab_spm: Configures SPM and MATLAB.</p></li>
-<li><p>_configure_matlab_only: Configures MATLAB without SPM.</p></li>
-<li><p>_configure_mcr_only: Configures MCR without SPM.</p></li>
-<li><dl class="simple">
-<dt>_disable_matlab_spm: Disables all MATLAB and SPM</dt><dd><p>configurations.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
 <dt>_get_module_config: Extracts module configuration from the</dt><dd><p>global Capsul configuration.</p>
 </dd>
 </dl>
@@ -2246,7 +2251,7 @@ is not initialized.</p>
 
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="index.html">Contents</a>
@@ -2256,7 +2261,7 @@ is not initialized.</p>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

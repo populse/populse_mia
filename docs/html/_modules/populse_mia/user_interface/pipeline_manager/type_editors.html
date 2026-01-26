@@ -4,22 +4,455 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
-    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -52,25 +485,25 @@
 <span class="c1"># for details.</span>
 <span class="c1">###############################################################################</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.Directory</span> <span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.File</span> <span class="kn">import</span> <span class="n">FileControlWidget</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.List_File_offscreen</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.Directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.File</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileControlWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.List_File_offscreen</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">OffscreenListFileControlWidget</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
-<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">weak_proxy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.utils.weak_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_proxy</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PopulseFileControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for selecting a file.</span>
 
@@ -88,7 +521,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -129,7 +562,7 @@
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">connected_inputs</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connected_inputs&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
 
-        <span class="k">def</span> <span class="nf">_is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Checks if a value is a number.</span>
 
@@ -181,7 +614,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a filter widget.</span>
 
@@ -191,7 +624,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># This import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -220,7 +653,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on a filter result.</span>
 
@@ -256,7 +689,7 @@
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget for selecting a directory.</span>
 
@@ -271,7 +704,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -306,7 +739,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting a directory.</span>
 
@@ -316,7 +749,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -344,7 +777,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on the filter result.</span>
 
@@ -372,7 +805,7 @@
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A control widget for entering a list of files.</span>
 
@@ -387,7 +820,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -460,7 +893,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting files.</span>
 
@@ -470,7 +903,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
         <span class="c1"># import issue.</span>
-        <span class="kn">from</span> <span class="nn">.node_controller</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
 
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -503,7 +936,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on the filter results.</span>
 
@@ -525,7 +958,7 @@
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for handling Undefined trait values in a Qt interface.</span>
 
@@ -560,7 +993,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.check">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.check">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a controller widget control is filled correctly.</span>
 
@@ -576,7 +1009,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.connect">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a &#39;StrControlWidget&#39;</span>
 <span class="sd">        controller widget control.</span>
@@ -596,22 +1029,38 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
+        <span class="n">control_value</span><span class="p">,</span>
+        <span class="n">trait</span><span class="p">,</span>
         <span class="n">label_class</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">user_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a widget for displaying Undefined values.</span>
+<span class="sd">        Create a widget for displaying Undefined values in the UI.</span>
 
-<span class="sd">        :param parent (QWidget): The parent widget.</span>
-<span class="sd">        :param control_name (str): The name of the control to create.</span>
-<span class="sd">        :param label_class: The class to use for the label widget. Default is</span>
-<span class="sd">                            QLabel if None.</span>
+<span class="sd">        This method creates a read-only QLabel widget that displays a styled</span>
+<span class="sd">        representation of undefined/null values, along with an optional label.</span>
 
-<span class="sd">        :return (tuple): (control_widget, label_widget) where control_widget</span>
-<span class="sd">                          is a QLabel displaying the Undefined value and</span>
-<span class="sd">                          label_widget is the associated label.</span>
+<span class="sd">        :param parent (QWidget): The parent widget that will contain the</span>
+<span class="sd">                                 created widgets.</span>
+<span class="sd">        :param control_name (str): The name/text for the label widget.</span>
+<span class="sd">                                   If None, no label is created.</span>
+<span class="sd">        :param control_value: The undefined value to display (currently</span>
+<span class="sd">                              unused in implementation).</span>
+<span class="sd">        :param trait: trait: The trait object associated with this control</span>
+<span class="sd">                             (currently unused in implementation).</span>
+<span class="sd">        :param label_class: The Qt widget class to use for creating the label.</span>
+<span class="sd">                            Defaults to QtGui.QLabel if None.</span>
+<span class="sd">        :param user_data: Additional user-defined data (currently unused in</span>
+<span class="sd">                          implementation).</span>
+
+<span class="sd">        :return (tuple): A tuple containing:</span>
+<span class="sd">            - control_widget: A QLabel displaying the styled undefined value</span>
+<span class="sd">                              text</span>
+<span class="sd">            - label_widget: The associated label widget, or None if</span>
+<span class="sd">                            control_name is None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create widget with styled representation of Undefined</span>
         <span class="n">widget</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
@@ -633,7 +1082,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.disconnect">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Disconnect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
 <span class="sd">        &#39;StrControlWidget&#39; controller widget control.</span>
@@ -652,7 +1101,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.is_valid">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate if the control contains an Undefined value representation.</span>
 
@@ -675,7 +1124,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_controller</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_controller</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_instance</span><span class="p">,</span>
@@ -729,7 +1178,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller_widget">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_controller_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_controller_widget</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -760,7 +1209,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -770,7 +1219,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

@@ -4,22 +4,455 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -68,31 +501,33 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">pkgutil</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">types</span>
-<span class="kn">import</span> <span class="nn">typing</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span>
 
-<span class="kn">import</span> <span class="nn">dateutil.parser</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argon2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">dateutil.parser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">get_process_instance</span>  <span class="c1"># noqa E402</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">get_process_instance</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QFileDialog</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -106,10 +541,10 @@
 <span class="p">)</span>
 
 <span class="c1"># Soma-base imports</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qtThread</span> <span class="kn">import</span> <span class="n">QtThreadCall</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qtThread</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtThreadCall</span>  <span class="c1"># noqa E402</span>
 
 <span class="c1"># Populse_mia imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
@@ -121,18 +556,21 @@
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">Project</span>  <span class="c1"># noqa E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project_properties</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
     <span class="n">SavedProjects</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.main_window</span> <span class="kn">import</span> <span class="n">MainWindow</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.main_window</span><span class="w"> </span><span class="kn">import</span> <span class="n">MainWindow</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">default_password</span> <span class="o">=</span> <span class="s2">&quot;admin1234&quot;</span>
+<span class="n">ph</span> <span class="o">=</span> <span class="n">argon2</span><span class="o">.</span><span class="n">PasswordHasher</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="PackagesInstall">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall">[docs]</a>
-<span class="k">class</span> <span class="nc">PackagesInstall</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PackagesInstall</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helps make a pipeline package available in the Mia pipeline library</span>
 <span class="sd">    recursively.</span>
@@ -156,7 +594,7 @@
 
 <div class="viewcode-block" id="PackagesInstall.__init__">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the package registry.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">packages</span> <span class="o">=</span> <span class="p">{}</span></div>
@@ -164,7 +602,7 @@
 
 <div class="viewcode-block" id="PackagesInstall.add_package">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall.add_package">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively adds a package and its subpackages/modules to the Mia</span>
 <span class="sd">        pipeline library.</span>
@@ -292,7 +730,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_is_valid_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">date_format</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">date_format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if a string matches the given date format.</span>
 
@@ -311,7 +749,7 @@
 
 <div class="viewcode-block" id="check_python_version">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.check_python_version">[docs]</a>
-<span class="k">def</span> <span class="nf">check_python_version</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_python_version</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the Python version is at least 3.10.</span>
 
@@ -328,7 +766,7 @@
 
 <div class="viewcode-block" id="check_value_type">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.check_value_type">[docs]</a>
-<span class="k">def</span> <span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks the type of new value in a table cell (QTableWidget).</span>
 
@@ -372,22 +810,39 @@
         <span class="p">)</span>
 
     <span class="c1"># Mapping for basic types</span>
+    <span class="c1"># type_validators = {</span>
+    <span class="c1">#     FIELD_TYPE_INTEGER: lambda v: v.lstrip(&quot;-&quot;).isdigit(),</span>
+    <span class="c1">#     FIELD_TYPE_FLOAT: lambda v: (</span>
+    <span class="c1">#         v.replace(&quot;.&quot;, &quot;&quot;, 1).lstrip(&quot;-&quot;).isdigit()</span>
+    <span class="c1">#     ),</span>
+    <span class="c1">#     FIELD_TYPE_BOOLEAN: lambda v: str(v) in {&quot;True&quot;, &quot;False&quot;},</span>
+    <span class="c1">#     FIELD_TYPE_STRING: lambda v: isinstance(v, str),</span>
+    <span class="c1">#     FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)</span>
+    <span class="c1">#     or (isinstance(v, str) and _is_valid_date(v, &quot;%d/%m/%Y&quot;)),</span>
+    <span class="c1">#     FIELD_TYPE_DATETIME: lambda v: (</span>
+    <span class="c1">#         isinstance(v, QDateTime)</span>
+    <span class="c1">#         or (</span>
+    <span class="c1">#             isinstance(v, str)</span>
+    <span class="c1">#             and _is_valid_date(v, &quot;%d/%m/%Y %H:%M:%S.%f&quot;)</span>
+    <span class="c1">#         )</span>
+    <span class="c1">#     ),</span>
+    <span class="c1">#     FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)</span>
+    <span class="c1">#     or (isinstance(v, str) and _is_valid_date(v, &quot;%H:%M:%S.%f&quot;)),</span>
+    <span class="c1"># }</span>
     <span class="n">type_validators</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">FIELD_TYPE_INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">(),</span>
-        <span class="n">FIELD_TYPE_FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="p">(</span>
-            <span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
+        <span class="n">FIELD_TYPE_INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()),</span>
+        <span class="n">FIELD_TYPE_FLOAT</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span>
         <span class="p">),</span>
-        <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">},</span>
+        <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;True&quot;</span><span class="p">,</span> <span class="s2">&quot;False&quot;</span><span class="p">}),</span>
         <span class="n">FIELD_TYPE_STRING</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
         <span class="n">FIELD_TYPE_DATE</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">QDate</span><span class="p">)</span>
         <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_is_valid_date</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)),</span>
-        <span class="n">FIELD_TYPE_DATETIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">)</span>
-            <span class="ow">or</span> <span class="p">(</span>
-                <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-                <span class="ow">and</span> <span class="n">_is_valid_date</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="p">),</span>
+        <span class="n">FIELD_TYPE_DATETIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_is_valid_date</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)),</span>
         <span class="n">FIELD_TYPE_TIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">QTime</span><span class="p">)</span>
         <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">_is_valid_date</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;%H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)),</span>
     <span class="p">}</span>
@@ -398,7 +853,7 @@
 
 <div class="viewcode-block" id="dict4runtime_update">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.dict4runtime_update">[docs]</a>
-<span class="k">def</span> <span class="nf">dict4runtime_update</span><span class="p">(</span><span class="n">runtime_dict</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dict4runtime_update</span><span class="p">(</span><span class="n">runtime_dict</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update a dictionary with tag values from the project&#39;s current collection.</span>
 
@@ -433,7 +888,7 @@
 
 <div class="viewcode-block" id="get_db_field_value">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_db_field_value">[docs]</a>
-<span class="k">def</span> <span class="nf">get_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve the value of a specific field for a document from the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -458,7 +913,7 @@
 
 <div class="viewcode-block" id="get_document_names">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_document_names">[docs]</a>
-<span class="k">def</span> <span class="nf">get_document_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_document_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the names of all documents in the specified collection</span>
 <span class="sd">    from the project&#39;s database.</span>
@@ -476,7 +931,7 @@
 
 <div class="viewcode-block" id="get_field_names">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_field_names">[docs]</a>
-<span class="k">def</span> <span class="nf">get_field_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_field_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of field names (i.e., column names) for documents</span>
 <span class="sd">    in the specified collection of the project&#39;s database.</span>
@@ -494,7 +949,7 @@
 
 <div class="viewcode-block" id="get_shown_tags">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_shown_tags">[docs]</a>
-<span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_shown_tags</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of tags that are marked as &#39;shown&#39; in the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -511,7 +966,7 @@
 
 <div class="viewcode-block" id="get_value">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_value">[docs]</a>
-<span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the value of a specific field from a document in the given</span>
 <span class="sd">    collection.</span>
@@ -532,7 +987,7 @@
 
 <div class="viewcode-block" id="launch_mia">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.launch_mia">[docs]</a>
-<span class="k">def</span> <span class="nf">launch_mia</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">launch_mia</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Launches the Mia software application.</span>
 
@@ -545,7 +1000,6 @@
 <span class="sd">      projects if necessary.</span>
 <span class="sd">    - Instantiates the &#39;project&#39; object and launches Mia&#39;s GUI.</span>
 
-<span class="sd">    :param app (QApplication): The Qt application instance.</span>
 <span class="sd">    :param args (Namespace): Command line arguments.</span>
 
 <span class="sd">    :Private functions:</span>
@@ -555,18 +1009,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
     <span class="c1"># useful for WebEngine</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># QtWebEngineWidgets need to be imported before QCoreApplication</span>
         <span class="c1"># instance is created (used later)</span>
-        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">QtWebEngineWidgets</span>  <span class="c1"># noqa: F401</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWebEngineWidgets</span>  <span class="c1"># noqa: F401</span>
 
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="k">pass</span>  <span class="c1"># QtWebEngineWidgets is not installed</span>
 
-    <span class="k">def</span> <span class="nf">_my_excepthook</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_my_excepthook</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Log all uncaught exceptions in non-interactive mode and cleans</span>
 <span class="sd">        up before exiting.</span>
@@ -587,7 +1041,7 @@
 <span class="sd">                               closing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_clean_up</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Cleans up Mia software during &quot;normal&quot; closing.</span>
 
 <span class="sd">            Make a cleanup of the opened projects just before exiting mia.</span>
@@ -613,7 +1067,7 @@
         <span class="c1"># there was some issue/error/problem, so exiting</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_verify_saved_projects</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_saved_projects</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verifies if saved projects still exist and updates the</span>
 <span class="sd">        list accordingly.</span>
@@ -652,17 +1106,28 @@
     <span class="n">deleted_projects</span> <span class="o">=</span> <span class="n">_verify_saved_projects</span><span class="p">()</span>
     <span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
     <span class="n">main_window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="n">deleted_projects</span><span class="p">)</span>
-    <span class="n">main_window</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_DeleteOnClose</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">WA_QuitOnClose</span><span class="p">)</span>
+    <span class="n">main_window</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_DeleteOnClose</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_and_quit</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Closes all open application windows and terminates the current</span>
+<span class="sd">        QApplication instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">closeAllWindows</span><span class="p">()</span>
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+
+    <span class="c1"># Connect to the main window&#39;s close event instead</span>
+    <span class="n">main_window</span><span class="o">.</span><span class="n">destroyed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cleanup_and_quit</span><span class="p">)</span>
     <span class="n">main_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     <span class="c1"># make sure to instantiate the QtThreadCall singleton from the main thread</span>
     <span class="n">QtThreadCall</span><span class="p">()</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+    <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>  <span class="c1"># Just start event loop</span></div>
 
 
 
 <div class="viewcode-block" id="message_already_exists">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.message_already_exists">[docs]</a>
-<span class="k">def</span> <span class="nf">message_already_exists</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">message_already_exists</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays a message box to tell that a project name already exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -679,7 +1144,7 @@
 
 <div class="viewcode-block" id="remove_document">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.remove_document">[docs]</a>
-<span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_document</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes one or multiple documents from the specified collection</span>
 <span class="sd">    in the given project&#39;s database.</span>
@@ -702,7 +1167,7 @@
 
 <div class="viewcode-block" id="set_db_field_value">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_db_field_value">[docs]</a>
-<span class="k">def</span> <span class="nf">set_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">tag_to_add</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">tag_to_add</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create or update a field and its value for a document in the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -762,7 +1227,7 @@
 
 <div class="viewcode-block" id="set_filters_directory_as_default">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_filters_directory_as_default">[docs]</a>
-<span class="k">def</span> <span class="nf">set_filters_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_filters_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the filters directory as default (Json files)</span>
 
@@ -778,7 +1243,7 @@
 
 <div class="viewcode-block" id="set_item_data">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_item_data">[docs]</a>
-<span class="k">def</span> <span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the data for a given item in the data browser based on the</span>
 <span class="sd">    expected type.</span>
@@ -848,7 +1313,7 @@
         <span class="n">FIELD_TYPE_JSON</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>  <span class="c1"># Assume valid JSON-like dict</span>
     <span class="p">}</span>
 
-    <span class="k">def</span> <span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepares the input value according to its expected type.</span>
 
@@ -892,14 +1357,14 @@
 
 <div class="viewcode-block" id="set_projects_directory_as_default">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_projects_directory_as_default">[docs]</a>
-<span class="k">def</span> <span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the projects directory as default.</span>
 
 <span class="sd">    :param dialog (QFileDialog): current file dialog.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
     <span class="n">projects_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">())</span>
@@ -910,7 +1375,7 @@
 
 <div class="viewcode-block" id="table_to_database">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.table_to_database">[docs]</a>
-<span class="k">def</span> <span class="nf">table_to_database</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">table_to_database</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepares the value to the database based on its type.</span>
 
@@ -975,7 +1440,7 @@
 
 <div class="viewcode-block" id="type_name">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.type_name">[docs]</a>
-<span class="k">def</span> <span class="nf">type_name</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">type_name</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the name of a type or a string representation for generic</span>
 <span class="sd">    aliases.</span>
@@ -992,7 +1457,7 @@
 
 <div class="viewcode-block" id="verCmp">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verCmp">[docs]</a>
-<span class="k">def</span> <span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Version comparator.</span>
 
 <span class="sd">    Compares two versions according to the specified comparator:</span>
@@ -1014,7 +1479,7 @@
 <span class="sd">              list of integer</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a version of a package to a list of integer.</span>
 
 <span class="sd">        :param v (str): version of a package (ex. 5.4.1)</span>
@@ -1043,7 +1508,7 @@
 
 <div class="viewcode-block" id="verify_processes">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verify_processes">[docs]</a>
-<span class="k">def</span> <span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Install or update to the last version available on the station, for</span>
 <span class="sd">    nipype, capsul and mia_processes processes libraries.</span>
 
@@ -1079,9 +1544,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
-    <span class="k">def</span> <span class="nf">_deepCompDic</span><span class="p">(</span><span class="n">old_dic</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_deepCompDic</span><span class="p">(</span><span class="n">old_dic</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively compares two dictionaries and retains the previous</span>
 <span class="sd">        configuration where applicable.</span>
@@ -1651,9 +2116,9 @@
 
 <div class="viewcode-block" id="verify_setup">
 <a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verify_setup">[docs]</a>
-<span class="k">def</span> <span class="nf">verify_setup</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_setup</span><span class="p">(</span>
     <span class="n">dev_mode</span><span class="p">,</span>
-    <span class="n">pypath</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">pypath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">dot_mia_config</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">,</span> <span class="s2">&quot;configuration_path.yml&quot;</span>
     <span class="p">),</span>
@@ -1663,7 +2128,7 @@
 <span class="sd">    :param dev_mode (bool): the current developer mode.</span>
 <span class="sd">                            (True: dev, False: user)</span>
 <span class="sd">    :param pypath (list): List of paths for the capsul config.</span>
-<span class="sd">    :dot_mia_config: Path to the configuration_path.yml file.</span>
+<span class="sd">    :param dot_mia_config (str): Path to the configuration_path.yml file.</span>
 
 <span class="sd">    :Contains:</span>
 <span class="sd">        :Private function:</span>
@@ -1676,9 +2141,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
-    <span class="k">def</span> <span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">pypath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pypath</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Let the user define the properties_path parameter.</span>
 
@@ -1714,7 +2182,7 @@
         <span class="k">if</span> <span class="n">existDir</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
             <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">existDir</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cancel the configuration check.</span>
 
@@ -1727,7 +2195,7 @@
         <span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create default configuration files and directories.</span>
 
@@ -1803,7 +2271,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">{user_processes_dir}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">user_processes_dir</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
 
         <span class="n">init_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span>
 
@@ -1813,7 +2281,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Default configuration checked!&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_save_yml_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_yml_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save data in a YAML file.</span>
 
 <span class="sd">        :param content (dict): The content of the file_path.</span>
@@ -1828,7 +2296,7 @@
                 <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the config is not corrupted and try to fix if necessary.</span>
 
 <span class="sd">        The purpose of this method is twofold. First, it allows to</span>
@@ -1955,10 +2423,7 @@
                     <span class="p">)</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
-                        <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
-                        <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
-                    <span class="p">)</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span><span class="n">ph</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">default_password</span><span class="p">))</span>
 
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -1987,10 +2452,7 @@
                 <span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span>
-                    <span class="s2">&quot;60cfd1916033576b0f2368603fe612fb&quot;</span>
-                    <span class="s2">&quot;78b8c20e4f5ad9cf39c9cf7e912dd282&quot;</span>
-                <span class="p">)</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span><span class="n">ph</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">default_password</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">config</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
@@ -2005,8 +2467,8 @@
                     <span class="n">save_flag</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-                <span class="k">if</span> <span class="n">save_flag</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">save_flag</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span>
 
     <span class="c1"># The directory in which the configuration is located must be</span>
     <span class="c1"># declared in ~/.populse_mia/configuration_path.yml</span>
@@ -2021,10 +2483,10 @@
             <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span><span class="si">}</span><span class="s2"> directory is &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;created...&quot;</span>
         <span class="p">)</span>
-        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">):</span>
-        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
 
     <span class="k">try</span><span class="p">:</span>
 
@@ -2169,7 +2631,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -2179,7 +2641,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>
