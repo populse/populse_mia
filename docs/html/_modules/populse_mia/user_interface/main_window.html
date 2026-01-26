@@ -4,22 +4,455 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.main_window &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.user_interface.main_window &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.main_window</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -49,25 +482,25 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">webbrowser</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">expanduser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">webbrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">expanduser</span>
 
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCoreApplication</span><span class="p">,</span> <span class="n">Qt</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QMainWindow</span><span class="p">,</span>
@@ -79,29 +512,29 @@
     <span class="n">QWidget</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="k">as</span> <span class="nn">data_loader</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">populse_mia.data_manager.data_loader</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">data_loader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CLINICAL_TAGS</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">TAG_HISTORY</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">Project</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="kn">import</span> <span class="n">SavedProjects</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="n">DataBrowser</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">SavedProjects</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.data_browser</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataBrowser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_viewer.data_viewer_tab</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataViewerTab</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PipelineManagerTab</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">InstallProcesses</span><span class="p">,</span>
     <span class="n">PackageLibraryDialog</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpDeletedProject</span><span class="p">,</span>
     <span class="n">PopUpDeleteProject</span><span class="p">,</span>
     <span class="n">PopUpNewProject</span><span class="p">,</span>
@@ -120,7 +553,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_ProcDeleter</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_ProcDeleter</span><span class="p">(</span><span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A helper class to manage the lifecycle of a subprocess.</span>
 
@@ -140,7 +573,7 @@
 <span class="sd">               references to it.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">console</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">console</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the _ProcDeleter thread with the given subprocess.</span>
 
@@ -153,7 +586,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">o</span> <span class="o">=</span> <span class="n">o</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">console</span> <span class="o">=</span> <span class="n">console</span>
 
-    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensures proper cleanup when the _ProcDeleter instance is deleted.</span>
 
@@ -173,7 +606,7 @@
             <span class="k">global</span> <span class="n">console_shell_running</span>
             <span class="n">console_shell_running</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the thread to wait for the subprocess to finish.</span>
 
@@ -202,7 +635,7 @@
 
 <div class="viewcode-block" id="MainWindow">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow">[docs]</a>
-<span class="k">class</span> <span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize software appearance and define interactions with the user.</span>
 
 <span class="sd">    .. Methods:</span>
@@ -265,7 +698,7 @@
 
 <div class="viewcode-block" id="MainWindow.__init__">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Main window class, initializes the software appearance and defines</span>
 <span class="sd">        interactions with the user.</span>
@@ -331,7 +764,7 @@
 
 <div class="viewcode-block" id="MainWindow.add_clinical_tags">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.add_clinical_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add the clinical tags to the database and the data browser.&quot;&quot;&quot;</span>
 
         <span class="n">added_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">add_clinical_tags</span><span class="p">()</span>
@@ -343,7 +776,7 @@
 
 <div class="viewcode-block" id="MainWindow.check_database">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.check_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if files in database have been modified since first import.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -376,7 +809,7 @@
 
 <div class="viewcode-block" id="MainWindow.check_unsaved_modifications">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.check_unsaved_modifications">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_unsaved_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_unsaved_modifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if there are differences between the current project and the</span>
 <span class="sd">        database.</span>
@@ -399,7 +832,7 @@
 
 <div class="viewcode-block" id="MainWindow.closeEvent">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.closeEvent">[docs]</a>
-    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override the QWidget closing event to check if there are unsaved</span>
 <span class="sd">        modifications.</span>
@@ -481,7 +914,7 @@
 
 <div class="viewcode-block" id="MainWindow.create_project_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_project_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new project.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_unsaved_modifications</span><span class="p">():</span>
@@ -542,7 +975,7 @@
 
 <div class="viewcode-block" id="MainWindow.create_view_actions">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_view_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_view_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_view_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the actions and their shortcuts in each menu&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">action_create</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="s2">&quot;Ctrl+N&quot;</span><span class="p">)</span>
@@ -605,7 +1038,7 @@
 
 <div class="viewcode-block" id="MainWindow.create_view_menus">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_view_menus">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_view_menus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_view_menus</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the menu-bar view.&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">menu_more</span><span class="o">.</span><span class="n">addMenu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menu_install_process</span><span class="p">)</span>
@@ -650,7 +1083,7 @@
 
 <div class="viewcode-block" id="MainWindow.create_view_window">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_view_window">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_view_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_view_window</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the main window view.&quot;&quot;&quot;</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
         <span class="n">app_icon</span> <span class="o">=</span> <span class="n">QIcon</span><span class="p">(</span>
@@ -676,7 +1109,7 @@
 
 <div class="viewcode-block" id="MainWindow.create_tabs">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.create_tabs">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_tabs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_tabs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create the tabs and initializes the DataBrowser and PipelineManager</span>
 <span class="sd">        classes.</span>
@@ -696,7 +1129,7 @@
 
 <div class="viewcode-block" id="MainWindow.credits">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.credits">[docs]</a>
-    <span class="k">def</span> <span class="nf">credits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">credits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the credits in a web browser&quot;&quot;&quot;</span>
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
             <span class="s2">&quot;https://github.com/populse/populse_mia/graphs/contributors&quot;</span>
@@ -705,7 +1138,7 @@
 
 <div class="viewcode-block" id="MainWindow.del_clinical_tags">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.del_clinical_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the clinical tags to the database and the data browser&quot;&quot;&quot;</span>
 
         <span class="n">removed_tags</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">del_clinical_tags</span><span class="p">()</span>
@@ -718,7 +1151,7 @@
 
 <div class="viewcode-block" id="MainWindow.delete_project">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.delete_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a pop-up to open a project and updates the recent projects list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -753,7 +1186,7 @@
 <div class="viewcode-block" id="MainWindow.documentation">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.documentation">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">documentation</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">documentation</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the documentation in a web browser.&quot;&quot;&quot;</span>
         <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span>
             <span class="s2">&quot;https://populse.github.io/populse_mia/html/index.html&quot;</span>
@@ -762,7 +1195,7 @@
 
 <div class="viewcode-block" id="MainWindow.get_controller_version">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.get_controller_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Gives the value of the controller_version_changed attribute.</span>
 
 <span class="sd">        :return: Boolean</span>
@@ -772,7 +1205,7 @@
 
 <div class="viewcode-block" id="MainWindow.import_data">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.import_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">import_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">import_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Import MRI data using the MRI File Manager and load it into</span>
 <span class="sd">        the database.</span>
@@ -899,7 +1332,7 @@
 
 <div class="viewcode-block" id="MainWindow.install_processes_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.install_processes_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">install_processes_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">install_processes_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the install processes pop-up.</span>
 
 <span class="sd">        :param folder: boolean, True if installing from a folder</span>
@@ -918,7 +1351,7 @@
 <div class="viewcode-block" id="MainWindow.last_window_closed">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.last_window_closed">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">last_window_closed</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">last_window_closed</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Force exit the event loop after ipython console is closed.</span>
 
 <span class="sd">        If the ipython console has been run, something prevents Qt from</span>
@@ -926,14 +1359,14 @@
 <span class="sd">        So: force exit the event loop.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
 
         <span class="n">Qt</span><span class="o">.</span><span class="n">QTimer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">qApp</span><span class="o">.</span><span class="n">exit</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MainWindow.open_project_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.open_project_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to select and open a project, updating recent</span>
 <span class="sd">        projects list.</span>
@@ -1023,7 +1456,7 @@
 
 <div class="viewcode-block" id="MainWindow.open_recent_project">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.open_recent_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_recent_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_recent_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a recent project.&quot;&quot;&quot;</span>
 
         <span class="c1"># We check for unsaved modifications</span>
@@ -1069,13 +1502,13 @@
 
 <div class="viewcode-block" id="MainWindow.open_shell">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.open_shell">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a Qt console shell with an IPython kernel seeing the program</span>
 <span class="sd">        internals.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="kn">import</span> <span class="n">qt_backend</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui</span><span class="w"> </span><span class="kn">import</span> <span class="n">qt_backend</span>
 
         <span class="n">ipfunc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;qtconsole&quot;</span>
@@ -1083,8 +1516,8 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="c1"># to check it is installed</span>
-            <span class="kn">import</span> <span class="nn">jupyter_core.application</span>  <span class="c1"># noqa: F401</span>
-            <span class="kn">import</span> <span class="nn">qtconsole</span>  <span class="c1"># noqa: F401</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">jupyter_core.application</span>  <span class="c1"># noqa: F401</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">qtconsole</span>  <span class="c1"># noqa: F401</span>
 
             <span class="n">ipfunc</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="s2">&quot;from jupyter_core import application; &quot;</span>
@@ -1096,7 +1529,7 @@
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">ipfunc</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">soma.subprocess</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">soma.subprocess</span>
 
             <span class="n">ipConsole</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
 
@@ -1136,7 +1569,7 @@
 
 <div class="viewcode-block" id="MainWindow.package_library_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.package_library_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">package_library_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">package_library_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the package library pop-up&quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_package_library</span> <span class="o">=</span> <span class="n">PackageLibraryDialog</span><span class="p">(</span>
@@ -1151,7 +1584,7 @@
 
 <div class="viewcode-block" id="MainWindow.project_properties_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.project_properties_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">project_properties_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">project_properties_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the project properties pop-up&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1173,7 +1606,7 @@
 
 <div class="viewcode-block" id="MainWindow.redo">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.redo">[docs]</a>
-    <span class="k">def</span> <span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Redo the last action made by the user.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span>
@@ -1194,7 +1627,7 @@
 
 <div class="viewcode-block" id="MainWindow.remove_raw_files_useless">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.remove_raw_files_useless">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_raw_files_useless</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_raw_files_useless</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the useless raw files of the current project.</span>
 
 <span class="sd">        Close the database connection. The project is not valid any longer</span>
@@ -1214,7 +1647,7 @@
 <div class="viewcode-block" id="MainWindow.run_ipconsole_kernel">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.run_ipconsole_kernel">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;qtconsole&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_ipconsole_kernel</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;qtconsole&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts and initializes an IPython kernel with support for</span>
 <span class="sd">        a Qt-based GUI.</span>
@@ -1242,15 +1675,15 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run_ipconsole_kernel: </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">IPython</span>  <span class="c1"># noqa: F401</span>
-        <span class="kn">from</span> <span class="nn">IPython.lib</span> <span class="kn">import</span> <span class="n">guisupport</span>
-        <span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">IPython</span>  <span class="c1"># noqa: F401</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.lib</span><span class="w"> </span><span class="kn">import</span> <span class="n">guisupport</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
 
         <span class="n">qtapp</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
         <span class="n">qtapp</span><span class="o">.</span><span class="n">_in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">guisupport</span><span class="o">.</span><span class="n">in_event_loop</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="kn">from</span> <span class="nn">ipykernel.kernelapp</span> <span class="kn">import</span> <span class="n">IPKernelApp</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">ipykernel.kernelapp</span><span class="w"> </span><span class="kn">import</span> <span class="n">IPKernelApp</span>
 
         <span class="n">app</span> <span class="o">=</span> <span class="n">IPKernelApp</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
@@ -1276,14 +1709,14 @@
 
             <span class="c1"># IP 2 allows just calling the current callbacks.</span>
             <span class="c1"># For IP 1 it is not sufficient.</span>
-            <span class="kn">import</span> <span class="nn">tornado</span>
-            <span class="kn">from</span> <span class="nn">zmq.eventloop</span> <span class="kn">import</span> <span class="n">ioloop</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">tornado</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">zmq.eventloop</span><span class="w"> </span><span class="kn">import</span> <span class="n">ioloop</span>
 
             <span class="k">if</span> <span class="n">tornado</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
                 <span class="c1"># tornado 5 is using a decque for _callbacks, not a</span>
                 <span class="c1"># list + explicit locking</span>
 
-                <span class="k">def</span> <span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">                    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                    Executes pending callbacks in the Tornado</span>
 <span class="sd">                    IOLoop (Tornado &gt;= 4.5).</span>
@@ -1311,7 +1744,7 @@
 
             <span class="k">else</span><span class="p">:</span>
 
-                <span class="k">def</span> <span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">my_start_ioloop_callbacks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">                    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                    Executes pending callbacks in the Tornado IOLoop</span>
 <span class="sd">                    (Tornado &lt; 4.5).</span>
@@ -1349,7 +1782,7 @@
 
 <div class="viewcode-block" id="MainWindow.save">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.save">[docs]</a>
-    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save either the current project or the current pipeline&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span>
@@ -1369,7 +1802,7 @@
 
 <div class="viewcode-block" id="MainWindow.save_as">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.save_as">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save either the current project or the current pipeline under a new</span>
 <span class="sd">        name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1385,12 +1818,12 @@
             <span class="o">==</span> <span class="s2">&quot;Pipeline Manager&quot;</span>
         <span class="p">):</span>
             <span class="c1"># In Pipeline Manager</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">savePipelineAs</span><span class="p">()</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">save_pipeline_as</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="MainWindow.save_project_as">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.save_project_as">[docs]</a>
-    <span class="k">def</span> <span class="nf">save_project_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_project_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a pop-up to save the current project as&quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1586,7 +2019,7 @@
 
 <div class="viewcode-block" id="MainWindow.saveChoice">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.saveChoice">[docs]</a>
-    <span class="k">def</span> <span class="nf">saveChoice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">saveChoice</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the project needs to be &#39;saved as&#39; or just &#39;saved&#39;.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">isTempProject</span><span class="p">:</span>
@@ -1598,7 +2031,7 @@
 
 <div class="viewcode-block" id="MainWindow.see_all_projects">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.see_all_projects">[docs]</a>
-    <span class="k">def</span> <span class="nf">see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a pop-up to show the recent projects.&quot;&quot;&quot;</span>
         <span class="c1"># Ui_Dialog() is defined in pop_ups.py</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">exPopup</span> <span class="o">=</span> <span class="n">PopUpSeeAllProjects</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_projects</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
@@ -1615,7 +2048,7 @@
 
 <div class="viewcode-block" id="MainWindow.set_controller_version">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.set_controller_version">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_controller_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reverses the value of the controller_version_changed attribute.</span>
 
 <span class="sd">        From False to True and vice versa</span>
@@ -1625,7 +2058,7 @@
 
 <div class="viewcode-block" id="MainWindow.setup_menu_actions">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.setup_menu_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_menu_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources_images_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_menu_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sources_images_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize menu actions with icons and descriptions.</span>
 
@@ -1664,7 +2097,7 @@
 
 <div class="viewcode-block" id="MainWindow.setup_window_size">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.setup_window_size">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_window_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_window_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the window size and maximize if needed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1681,7 +2114,7 @@
 
 <div class="viewcode-block" id="MainWindow.software_preferences_pop_up">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.software_preferences_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the Mia preferences pop-up.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_preferences</span> <span class="o">=</span> <span class="n">PopUpPreferences</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
@@ -1700,7 +2133,7 @@
 
 <div class="viewcode-block" id="MainWindow.switch_project">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.switch_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">switch_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">switch_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if it&#39;s possible to open the selected project and quit the</span>
 <span class="sd">        current one.</span>
@@ -1854,7 +2287,7 @@
 
 <div class="viewcode-block" id="MainWindow.tab_changed">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.tab_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">tab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the window when switching between application tab.</span>
 
@@ -1892,7 +2325,7 @@
             <span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> <span class="n">documents</span>
             <span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
             <span class="n">table_data</span><span class="o">.</span><span class="n">fill_cells_update_table</span><span class="p">()</span>
-            <span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table_data</span><span class="o">.</span><span class="n">change_cell_color</span><span class="p">)</span>
+            <span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table_data</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
             <span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">old_scans</span><span class="p">)</span>
             <span class="c1"># Advanced search + search_bar opened</span>
             <span class="n">old_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">search_bar</span>
@@ -1967,7 +2400,7 @@
 
 <div class="viewcode-block" id="MainWindow.undo">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.undo">[docs]</a>
-    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reverts the last action performed by the user, depending on the</span>
 <span class="sd">        active tab.</span>
@@ -1992,7 +2425,7 @@
 
 <div class="viewcode-block" id="MainWindow.update_project">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.update_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">call_update_table</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">call_update_table</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the project after a database change.</span>
 
@@ -2029,7 +2462,7 @@
 
 <div class="viewcode-block" id="MainWindow.update_recent_projects_actions">
 <a class="viewcode-back" href="../../../populse_mia.user_interface.html#populse_mia.user_interface.main_window.MainWindow.update_recent_projects_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_recent_projects_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_recent_projects_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the list of recent projects in the UI.</span>
 
@@ -2052,7 +2485,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -2062,7 +2495,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

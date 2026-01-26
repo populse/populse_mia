@@ -4,22 +4,455 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=a73ba755"></script>
-    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -58,36 +491,36 @@
 <span class="c1">##########################################################################</span>
 
 <span class="c1"># Other imports</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 
-<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">capsul_engine</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">capsul_engine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ProcessCompletionEngine</span><span class="p">,</span>
     <span class="n">ProcessCompletionEngineFactory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
-<span class="kn">from</span> <span class="nn">capsul.process.process</span> <span class="kn">import</span> <span class="n">NipypeProcess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.process.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipypeProcess</span>
 
 <span class="c1"># nipype imports</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">traits_extension</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">traits_extension</span>
 
 <span class="c1"># Soma-base import</span>
-<span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">relax_exists_constraint</span>
-<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">get_ref</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">relax_exists_constraint</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.utils.weak_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_ref</span>
 
 <span class="c1"># Populse_MIA imports</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">TAG_BRICKS</span><span class="p">,</span>
@@ -96,14 +529,14 @@
     <span class="n">TAG_HISTORY</span><span class="p">,</span>
     <span class="n">TAG_TYPE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine">[docs]</a>
-<span class="k">class</span> <span class="nc">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A specialized completion engine for all processes within the Populse_mia</span>
 <span class="sd">    context.</span>
@@ -155,7 +588,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.__init__">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback_engine</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback_engine</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Mia process completion engine.</span>
 
@@ -170,7 +603,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">completion_progress_total</span> <span class="o">=</span> <span class="mf">0.0</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_complete_standard_process</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_complete_standard_process</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">process_inputs</span><span class="p">,</span> <span class="n">complete_iterations</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -224,7 +657,7 @@
         <span class="c1"># Handle tag inheritance</span>
         <span class="c1"># Import here to avoid circular imports</span>
         <span class="c1"># isort: off</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager</span> <span class="kn">import</span> <span class="p">(</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
             <span class="n">pipeline_manager_tab</span><span class="p">,</span>
         <span class="p">)</span>
 
@@ -268,7 +701,7 @@
                         <span class="n">node_name</span><span class="p">,</span>
                     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_complete_mia_process</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_complete_mia_process</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">process_inputs</span><span class="p">,</span> <span class="n">complete_iterations</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -315,7 +748,7 @@
             <span class="c1"># We&#39;re only importing PipelineManagerTab now, to avoid a</span>
             <span class="c1"># circular import issue</span>
             <span class="c1"># isort: off</span>
-            <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager</span> <span class="kn">import</span> <span class="p">(</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
                 <span class="n">pipeline_manager_tab</span><span class="p">,</span>
             <span class="p">)</span>
 
@@ -390,7 +823,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_attributes_with_database">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_attributes_with_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">complete_attributes_with_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_attributes_with_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment the completion attributes with values from the Mia database.</span>
 
@@ -510,7 +943,7 @@
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_nipype_common">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_nipype_common">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">complete_nipype_common</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_nipype_common</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure Nipype/SPM parameters for a process.</span>
 
@@ -631,7 +1064,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_parameters</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">complete_iterations</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -685,7 +1118,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters_mia">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters_mia">[docs]</a>
-    <span class="k">def</span> <span class="nf">complete_parameters_mia</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">complete_parameters_mia</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -763,7 +1196,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_attribute_values">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_attribute_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_attribute_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_attribute_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get attribute values from the fallback engine.</span>
 
@@ -774,7 +1207,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_path_completion_engine">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_path_completion_engine">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_path_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_path_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the path completion engine from the fallback engine.</span>
 
@@ -786,7 +1219,7 @@
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_project">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_project">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">get_project</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_project</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the project associated with a process.</span>
 
@@ -808,7 +1241,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.path_attributes">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.path_attributes">[docs]</a>
-    <span class="k">def</span> <span class="nf">path_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">path_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get path attributes from the fallback engine.</span>
 
@@ -823,7 +1256,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.remove_switch_observer">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.remove_switch_observer">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_switch_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_switch_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a switch observer from the fallback engine.</span>
 
@@ -839,7 +1272,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngineFactory">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory">[docs]</a>
-<span class="k">class</span> <span class="nc">MIAProcessCompletionEngineFactory</span><span class="p">(</span><span class="n">ProcessCompletionEngineFactory</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MIAProcessCompletionEngineFactory</span><span class="p">(</span><span class="n">ProcessCompletionEngineFactory</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Specialization of the ProcessCompletionEngineFactory for the Populse Mia</span>
 <span class="sd">    context.</span>
@@ -870,7 +1303,7 @@
 
 <div class="viewcode-block" id="MIAProcessCompletionEngineFactory.get_completion_engine">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.get_completion_engine">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a `ProcessCompletionEngine` instance for the given process</span>
 <span class="sd">        or node.</span>
@@ -925,7 +1358,7 @@
 
 <div class="viewcode-block" id="ProcessMIA">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA">[docs]</a>
-<span class="k">class</span> <span class="nc">ProcessMIA</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProcessMIA</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extends the Capsul Process class to customize execution for Mia bricks.</span>
 
@@ -979,7 +1412,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.__init__">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the process instance with default attributes.</span>
 
@@ -993,7 +1426,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">init_result</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_add_field_to_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_schema</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">tag_def</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_field_to_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_schema</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">tag_def</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new field to the specified collection in the database.</span>
 
@@ -1029,7 +1462,7 @@
             <span class="p">{</span><span class="s2">&quot;collection_name&quot;</span><span class="p">:</span> <span class="n">collection</span><span class="p">,</span> <span class="o">**</span><span class="n">field_config</span><span class="p">}</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_or_modify_tags</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_or_modify_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">own_tags</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">field_names</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1071,7 +1504,7 @@
                     <span class="n">current_values</span><span class="p">[</span><span class="n">tag_to_add</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">tag_to_add</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
                     <span class="n">initial_values</span><span class="p">[</span><span class="n">tag_to_add</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">tag_to_add</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_all_values_identical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_all_values_identical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if all dictionaries in `values_dict` have identical content.</span>
 
@@ -1097,7 +1530,7 @@
 
         <span class="k">return</span> <span class="kc">True</span>
 
-    <span class="k">def</span> <span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve output values when the process is a NipypeProcess.</span>
 
@@ -1121,7 +1554,7 @@
                     <span class="p">):</span>
                         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mia_output</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_find_plug_for_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_find_plug_for_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the plug name associated with the given output file.</span>
 
@@ -1143,7 +1576,7 @@
 
         <span class="k">return</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">_get_relative_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_relative_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts an absolute file path to a relative path based on the</span>
 <span class="sd">        project folder.</span>
@@ -1161,7 +1594,7 @@
 
         <span class="k">return</span> <span class="n">rel_path</span>
 
-    <span class="k">def</span> <span class="nf">_remove_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags2del</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags2del</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified tags from value dictionaries and the database.</span>
 
@@ -1196,7 +1629,7 @@
                         <span class="c1"># Collection, field, or document may not exist — ignore</span>
                         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">_resolve_inheritance_ambiguity</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_inheritance_ambiguity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">all_current_values</span><span class="p">,</span>
         <span class="n">all_initial_values</span><span class="p">,</span>
@@ -1262,9 +1695,9 @@
 
         <span class="k">elif</span> <span class="p">(</span>
             <span class="n">plug_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-            <span class="ow">and</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span>
+            <span class="ow">and</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span>
         <span class="p">):</span>
-            <span class="n">param</span> <span class="o">=</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">in_files</span><span class="p">[</span><span class="n">param</span><span class="p">]</span>
             <span class="n">value_param</span> <span class="o">=</span> <span class="n">all_current_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
             <span class="n">all_current_values</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -1293,7 +1726,7 @@
         <span class="p">)</span>
         <span class="c1"># We&#39;re only importing PopUpInheritanceDict now, to avoid a</span>
         <span class="c1"># circular import issue</span>
-        <span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
 
         <span class="n">pop_up</span> <span class="o">=</span> <span class="n">PopUpInheritanceDict</span><span class="p">(</span>
             <span class="n">in_files</span><span class="p">,</span>
@@ -1311,7 +1744,7 @@
                 <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">value</span>
@@ -1320,7 +1753,7 @@
                 <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">key</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">key</span>
+                <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">key</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_up</span><span class="o">.</span><span class="n">key</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">inheritance_dict</span><span class="p">[</span><span class="n">out_file</span><span class="p">][</span><span class="s2">&quot;parent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">all_current_values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">pop_up</span><span class="o">.</span><span class="n">key</span><span class="p">)</span>
@@ -1335,11 +1768,11 @@
             <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">all_initial_values</span><span class="p">[</span><span class="n">pop_up</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the specific run method for ProcessMIA subclasses.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_process_mia</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_save_tag_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel_out_file</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_tag_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel_out_file</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save tag values to the CURRENT and INITIAL database collections.</span>
 
@@ -1391,7 +1824,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.init_default_traits">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_default_traits">[docs]</a>
-    <span class="k">def</span> <span class="nf">init_default_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_default_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize required traits for Nipype or Capsul processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1427,7 +1860,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.init_process">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_process">[docs]</a>
-    <span class="k">def</span> <span class="nf">init_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">int_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">int_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate the process attribute given a process identifier.</span>
 
@@ -1444,7 +1877,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.list_outputs">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs">[docs]</a>
-    <span class="k">def</span> <span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset and override process outputs.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">relax_nipype_exists_constraints</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -1453,7 +1886,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.load_nii">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.load_nii">[docs]</a>
-    <span class="k">def</span> <span class="nf">load_nii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_like</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_nii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_like</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a NIfTI image and return its header and data, optionally</span>
 <span class="sd">        adjusting for MATLAB conventions.</span>
@@ -1497,7 +1930,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.make_initResult">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult">[docs]</a>
-    <span class="k">def</span> <span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the initialization result dictionary.&quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;requirement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">,</span>
@@ -1529,7 +1962,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.relax_nipype_exists_constraints">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints">[docs]</a>
-    <span class="k">def</span> <span class="nf">relax_nipype_exists_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">relax_nipype_exists_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Relax the &#39;exists&#39; constraint of the process.inputs traits.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;inputs&quot;</span><span class="p">):</span>
@@ -1540,7 +1973,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.requirements">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.requirements">[docs]</a>
-    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the process requirements using MIA&#39;s requirement attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1553,7 +1986,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.run_process_mia">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.run_process_mia">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_process_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_process_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute a customized run for ProcessMIA subclasses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1574,7 +2007,7 @@
 
 <div class="viewcode-block" id="ProcessMIA.tags_inheritance">
 <a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.tags_inheritance">[docs]</a>
-    <span class="k">def</span> <span class="nf">tags_inheritance</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tags_inheritance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">in_file</span><span class="p">,</span>
         <span class="n">out_file</span><span class="p">,</span>
@@ -1743,7 +2176,7 @@
             <span class="ow">not</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore_node</span>
             <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_current_values</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>
             <span class="ow">and</span> <span class="p">(</span><span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ProcessMIA</span><span class="o">.</span><span class="n">ignore</span><span class="p">)</span>
         <span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_inheritance_ambiguity</span><span class="p">(</span>
                 <span class="n">all_current_values</span><span class="p">,</span>
@@ -1780,7 +2213,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -1790,7 +2223,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>
