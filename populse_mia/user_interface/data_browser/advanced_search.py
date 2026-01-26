@@ -61,8 +61,6 @@ class AdvancedSearch(QWidget):
     .. Methods:
         - add_search_bar: create and define the advanced research bar
         - apply_filter: apply an opened filter to update the table.
-        - clearLayout: called to clear a layout (not used currently in order
-                       to fix issue #72)
         - displayConditionRules: set the list of condition choices, depending
                                  on the tag type
         - displayValueRules: update the placeholder text when the condition
@@ -74,8 +72,6 @@ class AdvancedSearch(QWidget):
         - remove_row: remove a row
         - rows_borders_added: add the links and the added row to the good rows
         - rows_borders_removed: link and adds row removed from every row
-        - rowsContainsWidget: check if the widget is still used
-                              (not used currently)
         - show_search: reset the rows when the Advanced Search button is
                        clicked
     """
@@ -88,132 +84,164 @@ class AdvancedSearch(QWidget):
         tags_list=None,
         from_pipeline=False,
     ):
-        """Initialization of the AdvancedSearch class.
+        """
+        Initialize the AdvancedSearch widget.
 
-        :param project: current project in the software
-        :param data_browser: parent data browser widget
-        :param scans_list: current list of the documents
-        :param tags_list: list of the visualized tags
-        :param from_pipeline: True if the widget is called from the pipeline
-          manager
+        :param project: The current project instance.
+        :param data_browser: The parent DataBrowser widget that contains this
+                             search.
+        :param scans_list:  List of document scans to search within. Defaults
+                            to empty list.
+        :param tags_list: List of tags to display in the search interface.
+                          Defaults to empty list.
+        :param from_pipeline (bool): Whether the widget is instantiated from
+                                     the pipeline manager. Defaults to False.
 
         """
         super().__init__()
-
-        if scans_list is None:
-            scans_list = []
-
-        if tags_list is None:
-            tags_list = []
-
         self.project = project
-        self.dataBrowser = data_browser
-        self.rows = []
-        self.scans_list = scans_list
-        self.tags_list = tags_list
+        self.data_browser = data_browser
+        self.scans_list = scans_list or []
+        self.tags_list = tags_list or []
         self.from_pipeline = from_pipeline
+        self.rows = []
         self.search = QPushButton("Search")
         self.search.setFixedWidth(100)
 
     def add_search_bar(self):
-        """Create and define the advanced research bar."""
-        row_layout = []
-        # NOT choice
-        not_choice = QComboBox()
-        not_choice.setObjectName("not")
-        not_choice.addItem("")
-        not_choice.addItem("NOT")
-        # Field choice
-        field_choice = QComboBox()
-        field_choice.setObjectName("field")
+        """
+        Add an advanced search bar row to the search interface.
 
-        if len(self.tags_list) > 0:
+        Creates a complete search row containing:
+            - NOT operator toggle
+            - Field selector (populated with available tags)
+            - Condition operator selector (==, !=, >, <, etc.)
+            - Value input field
+            - Remove button to delete this row
 
-            for tag in self.tags_list:
-                field_choice.addItem(tag)
+        The row components are connected with signals to update dynamically
+        based on field type and selected condition.
 
-        else:
+        """
+
+        def _create_combo_box(name, items):
+            """
+            Create and return a QComboBox populated with the given items.
+
+            :param name (str): Object name assigned to the QComboBox.
+            :param items (iterable of str): Items to add to the combo box,
+                                            in order.
+
+            :return (QComboBox): The initialized combo box.
+            """
+            combo = QComboBox()
+            combo.setObjectName(name)
+
+            for item in items:
+                combo.addItem(item)
+
+            return combo
+
+        def _get_shown_tags_from_db():
+            """
+            Retrieve the tags currently marked as visible from the project
+            database.
+
+            :return (list): A list of tags configured to be shown in the
+                            project.
+            """
 
             with self.project.database.data() as database_data:
 
-                for tag in database_data.get_shown_tags():
-                    field_choice.addItem(tag)
+                return database_data.get_shown_tags()
+
+        # Create NOT operator toggle
+        not_choice = _create_combo_box("not", ["", "NOT"])
+        # Create and populate field selector with available tags
+        field_choice = QComboBox()
+        field_choice.setObjectName("field")
+        tags = self.tags_list if self.tags_list else _get_shown_tags_from_db()
+
+        for tag in tags:
+            field_choice.addItem(tag)
 
         field_choice.model().sort(0)
         field_choice.addItem("All visualized tags")
-        # Value choice
+        # Create value input
         condition_value = QLineEdit()
         condition_value.setObjectName("value")
-        # Condition choice
-        condition_choice = QComboBox()
-        condition_choice.setObjectName("condition")
-        condition_choice.addItem("==")
-        condition_choice.addItem("!=")
-        condition_choice.addItem(">=")
-        condition_choice.addItem("<=")
-        condition_choice.addItem(">")
-        condition_choice.addItem("<")
-        condition_choice.addItem("BETWEEN")
-        condition_choice.addItem("IN")
-        condition_choice.addItem("CONTAINS")
-        condition_choice.addItem("HAS VALUE")
-        condition_choice.addItem("HAS NO VALUE")
+        # Create condition operator selector
+        conditions = [
+            "==",
+            "!=",
+            ">=",
+            "<=",
+            ">",
+            "<",
+            "BETWEEN",
+            "IN",
+            "CONTAINS",
+            "HAS VALUE",
+            "HAS NO VALUE",
+        ]
+        condition_choice = _create_combo_box("condition", conditions)
         condition_choice.model().sort(0)
-        # Signal to update the placeholder text of the value
+        # Connect dynamic update signals
         condition_choice.currentTextChanged.connect(
             lambda: self.displayValueRules(condition_choice, condition_value)
         )
-        # Signal to update the list of conditions, depending on the tag type
         field_choice.currentTextChanged.connect(
             lambda: self.displayConditionRules(field_choice, condition_choice)
         )
-        # Minus to remove the row
-        sources_images_dir = Config().getSourceImageDir()
+        # Create remove button with red minus icon
+        sources_dir = Config().getSourceImageDir()
+        icon_path = os.path.join(sources_dir, "red_minus.png")
         remove_row_label = ClickableLabel()
-        remove_row_picture = QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "red_minus.png"))
-        )
-        remove_row_picture = remove_row_picture.scaledToHeight(30)
-        remove_row_label.setPixmap(remove_row_picture)
-        # Everything appended to the row
-        row_layout.append(None)  # Link room
-        row_layout.append(not_choice)
-        row_layout.append(field_choice)
-        row_layout.append(condition_choice)
-        row_layout.append(condition_value)
-        row_layout.append(remove_row_label)
-        row_layout.append(None)  # Add row room
-        # Signal to remove the row
+        pixmap = QPixmap(os.path.relpath(icon_path)).scaledToHeight(30)
+        remove_row_label.setPixmap(pixmap)
+        # Assemble row layout
+        row_layout = [
+            None,  # Link room (reserved for future use)
+            not_choice,
+            field_choice,
+            condition_choice,
+            condition_value,
+            remove_row_label,
+            None,  # Add row room (reserved for future use)
+        ]
+        # Connect remove functionality
         remove_row_label.clicked.connect(lambda: self.remove_row(row_layout))
+        # Register and initialize the row
         self.rows.append(row_layout)
         self.refresh_search()
         self.displayConditionRules(field_choice, condition_choice)
 
     def apply_filter(self, filter):
         """
-        Applies a filter to update the table data by refining the displayed
-        scans based on the filter criteria. The filter is used to query
-        documents from the database, and the results are reflected in the
-        data browser.
+        Apply a filter to update the displayed scans in the data browser.
 
-        This function handles the following tasks:
-        - Retrieves filter parameters (e.g., conditions, values, links)
-          from the provided filter object.
-        - Updates the table rows based on the filter values, including
-          conditions and fields.
-        - Prepares and applies the filter query to the database to fetch
-          relevant results.
-        - If the filter is successfully applied, updates the table data
-          with the filtered results.
-        - If an error occurs during the filtering process, displays a warning
-          message and reverts to the full set of scans.
+        Retrieves documents from the database based on the provided filter
+        criteria and updates the table visualization accordingly. If the filter
+        is invalid or an error occurs, displays a warning and reverts to
+        showing all scans.
 
-        :param filter: A filter object that contains the criteria
-                      (e.g., conditions, values, and fields) to apply when
-                      querying the database. The filter is applied to update
-                      the visible scans in the table.
+        :param filter: Filter object containing the query criteria with
+                       attributes:
+                           - nots (list): Negation flags for each condition
+                           - values (list): Values to match against
+                           - conditions (list): Comparison operators
+                                                (e.g., '==', '>', '<')
+                           - links (list): Logical operators connecting
+                                           conditions ('AND', 'OR')
+                           - fields (list): Database fields to query
+
+        Side Effects:
+            - Updates self.rows with filter parameters
+            - Modifies self.data_browser.table_data.scans_to_visualize
+            - May display a warning dialog on error
+            - Calls self.data_browser.table_data.update_visualized_rows()
         """
-        # Data
+        # Extract filter parameters
         nots = filter.nots
         values = filter.values
         conditions = filter.conditions
@@ -222,33 +250,35 @@ class AdvancedSearch(QWidget):
 
         with self.project.database.data() as database_data:
 
-            for i in range(0, len(nots)):
+            # Update UI rows with filter parameters
+            for i, (not_val, field, condition, value) in enumerate(
+                zip(nots, fields, conditions, values)
+            ):
 
                 if i >= len(self.rows):
                     self.add_search_bar()
 
                 row = self.rows[i]
 
+                # Set link operator for all rows except the first
                 if i > 0:
                     row[0].setCurrentText(links[i - 1])
 
-                row[1].setCurrentText(nots[i])
-                row[2].setCurrentText(fields[i][0])
+                row[1].setCurrentText(not_val)
+                row[2].setCurrentText(field[0])
 
-                # Replacing all visualized tags by the current list of
-                # visible tags
-                if fields[i][0] == "All visualized tags":
+                # Replace "All visualized tags" with actual visible tag list
+                if field[0] == "All visualized tags":
                     fields[i] = database_data.get_shown_tags()
 
-                row[3].setCurrentText(conditions[i])
-                row[4].setText(str(values[i]))
+                row[3].setCurrentText(condition)
+                row[4].setText(str(value))
 
-            old_rows = self.dataBrowser.table_data.scans_to_visualize
+            old_rows = self.data_browser.table_data.scans_to_visualize
 
-            # Filter applied only if at least one row
-            if len(nots) > 0:
+            # Apply filter if conditions exist, otherwise show all scans
+            if nots:
 
-                # Result gotten
                 try:
                     filter_query = self.prepare_filters(
                         links,
@@ -261,26 +291,22 @@ class AdvancedSearch(QWidget):
                     result = database_data.filter_documents(
                         COLLECTION_CURRENT, filter_query
                     )
-                    # data_browser updated with the new selection
                     result_names = [
                         document[TAG_FILENAME] for document in result
                     ]
 
                 except Exception:
                     logger.warning(
-                        "Exception occurred in populse_mia.user_interface."
-                        "data_browser.advanced_search.AdvancedSearch."
-                        "apply_filter()",
+                        "Exception in AdvancedSearch.apply_filter()",
                         exc_info=True,
                     )
-                    # Error message if the search can't be done,
-                    # and visualization of all scans in the data_browser
+                    # Display an error dialog when filter execution fails
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
                     msg.setText("Error in the search")
                     msg.setInformativeText(
                         "An issue occurred during the search. Please "
-                        "correct it and try again..."
+                        "correct it and try again."
                     )
                     msg.setWindowTitle("Warning")
                     msg.setStandardButtons(QMessageBox.Ok)
@@ -288,70 +314,59 @@ class AdvancedSearch(QWidget):
                     msg.exec()
                     result_names = self.scans_list
 
-                # data_browser updated with the new selection
-                self.dataBrowser.table_data.scans_to_visualize = result_names
-
-            # Otherwise, all the scans are reput
             else:
+                result_names = (
+                    self.scans_list
+                    if self.scans_list
+                    else database_data.get_document_names(COLLECTION_CURRENT)
+                )
 
-                # data_browser updated with every scan
-                if self.scans_list:
-                    self.dataBrowser.table_data.scans_to_visualize = (
-                        self.scans_list
-                    )
-
-                else:
-                    self.dataBrowser.table_data.scans_to_visualize = (
-                        database_data.get_document_names(COLLECTION_CURRENT)
-                    )
-
-        self.dataBrowser.table_data.update_visualized_rows(old_rows)
-
-    # def clearLayout(self, layout):
-    #     """
-    #     Called to clear a layout
-    #
-    #     :param layout: layout to clear
-    #     """
-    #     if layout is not None:
-    #         while layout.count():
-    #             item = layout.takeAt(0)
-    #             widget = item.widget()
-    #             # We clear the widget only if the row does not exist anymore
-    #             if widget is not None and not self.rowsContainsWidget(
-    #                     widget):
-    #                 pass
-    #                 widget.deleteLater()
-    #             else:
-    #                 self.clearLayout(item.layout())
+            self.data_browser.table_data.scans_to_visualize = result_names
+            self.data_browser.table_data.update_visualized_rows(old_rows)
 
     def displayConditionRules(self, field, condition):
         """
-        Updates the available condition choices based on the field's tag
+        Update available condition operators based on the selected field's
         type.
 
-        This function adjusts the list of conditions (e.g., `<`, `>`,
-        `BETWEEN`, `IN`) available in the `condition` widget, depending on
-        the type of the tag selected in the `field` widget. Certain
-        conditions are removed or added based on the tag's field type,
-        and the condition choices are sorted afterward.
+        Dynamically adjusts the condition dropdown to show only operators that
+        are
+        valid for the selected field's data type. Numeric fields allow
+        comparison operators (<, >, <=, >=, BETWEEN), while non-numeric fields
+        exclude them. List fields exclude the IN operator, while non-list
+        fields include it.
 
-        The rules for updating the condition choices are as follows:
-        - For tags with a field type of list, string, or boolean, or if
-          the tag name is "All visualized tags", certain operators
-          like `<`, `>`, `<=`, `>=`, and `BETWEEN` are removed.
-        - If the tag's field type is compatible with numeric comparisons
-          (i.e., not list, string, or boolean), operators like `<`, `>`,
-          `<=`, `>=`, and `BETWEEN` are added.
-        - If the tag is a list, the "IN" condition is removed.
-        - Otherwise, the "IN" condition is added.
+        :param field: QComboBox widget containing the selected tag name.
+        :param condition: QComboBox widget whose items will be updated based
+                          on the field's type.
 
-        :param field: The field widget representing the selected tag. Used to
-                      determine the tag type and adjust the condition choices
-                      accordingly.
-        :param condition: The condition widget where the available conditions
-                          are updated based on the tag type.
+        Behavior:
+            - Numeric types: Include <, >, <=, >=, BETWEEN operators
+            - String/Boolean/List types: Exclude comparison operators
+            - List types: Exclude IN operator
+            - Non-list types: Include IN operator
+            - Special case "All visualized tags": Treated as non-numeric
         """
+
+        def _update_operators(condition_widget, operators, should_add):
+            """
+            Add or remove operators from the condition widget.
+
+            :param condition_widget: QComboBox to modify.
+            :param operators: List of operator strings to add or remove.
+            :param should_add: If True, add missing operators; if False, remove
+                               existing ones.
+            """
+
+            for operator in operators:
+                index = condition_widget.findText(operator)
+                exists = index != -1
+
+                if should_add and not exists:
+                    condition_widget.addItem(operator)
+
+                elif not should_add and exists:
+                    condition_widget.removeItem(index)
 
         tag_name = field.currentText()
 
@@ -360,197 +375,191 @@ class AdvancedSearch(QWidget):
                 COLLECTION_CURRENT, tag_name
             )
 
-        no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
-        no_operators_tags.append(FIELD_TYPE_STRING)
-        no_operators_tags.append(FIELD_TYPE_BOOLEAN)
-        no_operators_tags.append(None)
-
-        if (
-            tag_attrib is not None
-            and tag_attrib["field_type"] in no_operators_tags
-        ) or tag_name == "All visualized tags":
-            condition.removeItem(condition.findText("<"))
-            condition.removeItem(condition.findText(">"))
-            condition.removeItem(condition.findText("<="))
-            condition.removeItem(condition.findText(">="))
-            condition.removeItem(condition.findText("BETWEEN"))
-
-        elif (
-            tag_attrib is None
-            or tag_attrib["field_type"] not in no_operators_tags
-        ):
-            operators_to_reput = ["<", ">", "<=", ">=", "BETWEEN"]
-
-            for operator in operators_to_reput:
-                is_op_existing = condition.findText(operator) != -1
-
-                if not is_op_existing:
-                    condition.addItem(operator)
-
-        if (tag_attrib is not None) and (
-            get_origin(tag_attrib["field_type"]) is list
-        ):
-            condition.removeItem(condition.findText("IN"))
-
-        elif (tag_attrib is None) or (
-            not get_origin(tag_attrib["field_type"]) is list
-        ):
-            operators_to_reput = ["IN"]
-
-            for operator in operators_to_reput:
-                is_op_existing = condition.findText(operator) != -1
-
-                if not is_op_existing:
-                    condition.addItem(operator)
-
+        # Define field types that don't support numeric comparison operators
+        non_numeric_types = [t for t in ALL_TYPES if get_origin(t) is list] + [
+            FIELD_TYPE_STRING,
+            FIELD_TYPE_BOOLEAN,
+            None,
+        ]
+        field_type = tag_attrib["field_type"] if tag_attrib else None
+        is_numeric = (
+            field_type not in non_numeric_types
+            and tag_name != "All visualized tags"
+        )
+        is_list = tag_attrib and get_origin(field_type) is list
+        # Update comparison operators (<, >, <=, >=, BETWEEN)
+        comparison_operators = ["<", ">", "<=", ">=", "BETWEEN"]
+        _update_operators(
+            condition, comparison_operators, should_add=is_numeric
+        )
+        # Update IN operator
+        _update_operators(condition, ["IN"], should_add=not is_list)
         condition.model().sort(0)
 
     def displayValueRules(self, choice, value):
         """
-        Update the placeholder text and the enabled/disabled state of the
-        value input based on the selected condition choice.
+        Configure the value input widget based on the selected condition
+        operator.
 
-        This function adjusts the `value` widget's state (enabled/disabled)
-        and its placeholder text depending on the condition selected in the
-        `choice` widget.
+        Adjusts the enabled state and placeholder text of the value input to
+        match the requirements of the selected condition operator.
 
-        The rules are as follows:
-        - "BETWEEN": Enables the `value` input and sets a placeholder text
-                     asking the user to separate the two inclusive borders
-                     with a semicolon and a space.
-        - "IN": Enables the `value` input and sets a placeholder text asking
-                the user to separate each list item with a semicolon and a
-                space.
-        - "HAS VALUE" or "HAS NO VALUE": Disables the `value` input and
-                                         clears any placeholder text or value.
-        - For all other conditions: Enables the `value` input and clears the
-                                    placeholder text.
+        :param choice: QComboBox containing the selected condition operator.
+        :param value: QLineEdit widget that will be configured.
 
-        :param choice: The choice widget, which determines the selected
-                       condition.
-        :param value: The value widget, which represents the input field
-                      whose state will be updated.
+        Behavior:
+            - BETWEEN: Enabled with placeholder "value1; value2"
+            - IN: Enabled with placeholder for semicolon-separated list
+            - HAS VALUE/HAS NO VALUE: Disabled and cleared
+            - Other operators: Enabled with no placeholder
         """
-
-        if choice.currentText() == "BETWEEN":
-            value.setDisabled(False)
-            value.setPlaceholderText(
+        operator = choice.currentText()
+        # Configuration map: operator ->
+        # (enabled, placeholder_text, clear_text)
+        config = {
+            "BETWEEN": (
+                True,
                 "Please separate the two inclusive borders of the range by a "
-                "semicolon and a space"
-            )
+                "semicolon and a space",
+                False,
+            ),
+            "IN": (
+                True,
+                "Please separate each list item by a semicolon and a space",
+                False,
+            ),
+            "HAS VALUE": (False, "", True),
+            "HAS NO VALUE": (False, "", True),
+        }
+        enabled, placeholder, should_clear = config.get(
+            operator, (True, "", False)
+        )
+        value.setDisabled(not enabled)
+        value.setPlaceholderText(placeholder)
 
-        elif choice.currentText() == "IN":
-            value.setDisabled(False)
-            value.setPlaceholderText(
-                "Please separate each list item by a semicolon and a space"
-            )
-
-        elif (
-            choice.currentText() == "HAS VALUE"
-            or choice.currentText() == "HAS NO VALUE"
-        ):
-            value.setDisabled(True)
-            value.setPlaceholderText("")
+        if should_clear:
             value.setText("")
 
-        else:
-            value.setDisabled(False)
-            value.setPlaceholderText("")
-
     def get_filters(self, replace_all_by_fields):
-        """Get the filters in a list.
-
-        :param replace_all_by_fields: to replace All visualized tags by the
-           list of visible fields
-        :return: Lists of filters (fields, conditions, values, links, nots)
         """
+        Extract filter criteria from UI widgets.
 
-        # Lists to get all the data of the search
+        Parses the filter rows to extract search criteria including fields,
+        conditions, values, logical operators, and negation flags. Handles
+        special cases like "All visualized tags" expansion and operator
+        compatibility validation.
+
+        :param replace_all_by_fields: If True, replaces "All visualized tags"
+                                      with the actual list of visible fields.
+                                      If False, keeps the literal
+                                      "All visualized tags" text.
+
+        :return (tuple): A 5-tuple containing:
+            - fields (list): Field names to filter on
+            - conditions (list): Comparison operators (e.g., '=', 'BETWEEN')
+            - values (list): Filter values (strings or lists for BETWEEN/IN)
+            - links (list): Logical operators connecting filters (AND/OR)
+            - nots (list): Negation flags for each filter
+
+        Note:
+            - BETWEEN and IN conditions have their values split into lists
+            - Fields incompatible with operators are automatically removed
+        """
+        comparison_operators = {"<", ">", "<=", ">=", "BETWEEN"}
+        incompatible_types = {
+            *[t for t in ALL_TYPES if get_origin(t) is list],
+            FIELD_TYPE_STRING,
+            FIELD_TYPE_BOOLEAN,
+        }
+        # Result containers
         fields = []
         conditions = []
         values = []
         links = []
         nots = []
 
+        # Extract widget data
         with self.project.database.data() as database_data:
 
             for row in self.rows:
 
-                for widget in row:
+                for widget in (w for w in row if w is not None):
+                    widget_name = widget.objectName()
 
-                    if widget is not None:
-                        child = widget
-                        child_name = child.objectName()
+                    if widget_name == "link":
+                        links.append(widget.currentText())
 
-                        if child_name == "link":
-                            links.append(child.currentText())
+                    elif widget_name == "condition":
+                        conditions.append(widget.currentText())
 
-                        elif child_name == "condition":
-                            conditions.append(child.currentText())
+                    elif widget_name == "field":
+                        field_value = widget.currentText()
+                        is_all_tags = field_value == "All visualized tags"
 
-                        elif child_name == "field":
+                        if is_all_tags and replace_all_by_fields:
+                            fields.append(database_data.get_shown_tags())
 
-                            if child.currentText() != "All visualized tags":
-                                fields.append([child.currentText()])
+                        else:
+                            fields.append([field_value])
 
-                            else:
+                    elif widget_name == "value":
+                        values.append(widget.displayText())
 
-                                if replace_all_by_fields:
-                                    fields.append(
-                                        database_data.get_shown_tags()
-                                    )
+                    elif widget_name == "not":
+                        nots.append(widget.currentText())
 
-                                else:
-                                    fields.append([child.currentText()])
+            # Post-process values and validate field compatibility
+            for i in range(len(conditions)):
+                condition = conditions[i]
 
-                        elif child_name == "value":
-                            values.append(child.displayText())
-
-                        elif child_name == "not":
-                            nots.append(child.currentText())
-
-            operators = ["<", ">", "<=", ">=", "BETWEEN"]
-            no_operators_tags = [t for t in ALL_TYPES if get_origin(t) is list]
-            no_operators_tags.append(FIELD_TYPE_STRING)
-            no_operators_tags.append(FIELD_TYPE_BOOLEAN)
-
-            # Converting BETWEEN and IN values into lists
-            for i in range(0, len(conditions)):
-
-                if conditions[i] == "BETWEEN" or conditions[i] == "IN":
+                # Split multi-value conditions
+                if condition in {"BETWEEN", "IN"}:
                     values[i] = values[i].split("; ")
 
-                if conditions[i] == "IN":
+                # Remove incompatible fields based on condition
+                if condition == "IN":
 
                     for tag in fields[i].copy():
-                        tag_attrib = database_data.get_field_attributes(
+                        field_type = database_data.get_field_attributes(
                             COLLECTION_CURRENT, tag
-                        )
+                        )["field_type"]
 
-                        if get_origin(tag_attrib["field_type"]) is list:
+                        if get_origin(field_type) is list:
                             fields[i].remove(tag)
 
-                elif conditions[i] in operators:
+                elif condition in comparison_operators:
 
                     for tag in fields[i].copy():
-                        tag_attrib = database_data.get_field_attributes(
+                        field_type = database_data.get_field_attributes(
                             COLLECTION_CURRENT, tag
-                        )
+                        )["field_type"]
 
-                        if tag_attrib["field_type"] in no_operators_tags:
+                        if field_type in incompatible_types:
                             fields[i].remove(tag)
 
         return fields, conditions, values, links, nots
 
     def launch_search(self):
-        """Start the search and update the table."""
+        """
+        Execute search query and update the data browser table.
 
-        # Filters gotten
+        Retrieves filter parameters, constructs and executes a database query,
+        then updates the data browser's visualized scans with the results.
+        If the search fails, displays an error dialog and reverts to showing
+        all available scans.
+
+        Side Effects:
+            - Updates self.data_browser.table_data.scans_to_visualize
+            - Updates self.data_browser.table_data.scans_to_search
+            - Updates self.project.currentFilter (if not from_pipeline)
+            - Displays error dialog on search failure
+        """
+        # Retrieve filter parameters
         fields, conditions, values, links, nots = self.get_filters(True)
-        old_scans_list = self.dataBrowser.table_data.scans_to_visualize
+        old_scans_list = self.data_browser.table_data.scans_to_visualize
 
         try:
-            # Result gotten
+            # Construct and execute database query
             filter_query = self.prepare_filters(
                 links, fields, conditions, values, nots, self.scans_list
             )
@@ -560,31 +569,30 @@ class AdvancedSearch(QWidget):
                     COLLECTION_CURRENT, filter_query
                 )
 
-            # data_browser updated with the new selection
-            result_names = [document[TAG_FILENAME] for document in result]
+            # Extract document names from results
+            result_names = [doc[TAG_FILENAME] for doc in result]
 
             if not self.from_pipeline:
-                self.project.currentFilter.nots = nots
-                self.project.currentFilter.values = values
-                self.project.currentFilter.fields = fields
-                self.project.currentFilter.links = links
-                self.project.currentFilter.conditions = conditions
+                current_filter = self.project.currentFilter
+                current_filter.nots = nots
+                current_filter.values = values
+                current_filter.fields = fields
+                current_filter.links = links
+                current_filter.conditions = conditions
 
         except Exception:
             logger.warning(
-                "Exception occurred in populse_mia.user_interface."
-                "data_browser.advanced_search.AdvancedSearch."
-                "launch_search():",
+                "Exception in populse_mia.user_interface.data_browser."
+                "advanced_search.AdvancedSearch.launch_search():",
                 exc_info=True,
             )
-            # Error message if the search can't be done, and visualization
-            # of all scans in the databrowser
+            # Display error dialog when search fails.
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setText("Error in the search")
             msg.setInformativeText(
                 "An issue occurred during the search. Please correct it and "
-                "try again...."
+                "try again."
             )
             msg.setWindowTitle("Warning")
             msg.setStandardButtons(QMessageBox.Ok)
@@ -592,207 +600,256 @@ class AdvancedSearch(QWidget):
             msg.exec()
             result_names = self.scans_list
 
-        self.dataBrowser.table_data.scans_to_visualize = result_names
-        self.dataBrowser.table_data.scans_to_search = result_names
-        self.dataBrowser.table_data.update_visualized_rows(old_scans_list)
+        self.data_browser.table_data.scans_to_visualize = result_names
+        self.data_browser.table_data.scans_to_search = result_names
+        self.data_browser.table_data.update_visualized_rows(old_scans_list)
 
     @staticmethod
     def prepare_filters(links, fields, conditions, values, nots, scans):
-        """Prepare the str representation of the filter.
+        """
+        Construct a filter query string from filter components.
 
-        :param links: list of links (AND/OR)
-        :param fields: list of fields
-        :param conditions: list of conditions (==, !=, <, >, <=, >=, IN,
-                           BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
-        :param values: list of values
-        :param nots: list of negations ("" or NOT)
-        :param scans: list of scans to search in
-        :return: str representation of the filter
+        Builds a query by combining multiple filter rows with logical
+        operators (AND/OR), where each row can filter across multiple fields
+        with optional negation.
+
+        :param links: Logical operators joining filter rows
+                      (e.g., ['AND', 'OR']). Length should be len(fields) - 1.
+        :param fields: Nested list where each sublist contains field names to
+                       filter on. Fields within a row are OR-combined.
+        :param conditions: Filter operators for each row. Supported values:
+                           '==', '!=', '<', '>', '<=', '>=', 'IN', 'BETWEEN',
+                           'CONTAINS', 'HAS VALUE', 'HAS NO VALUE'.
+        :param values: Filter values corresponding to each condition. For
+                       'BETWEEN', provide a two-element sequence [min, max].
+        :param nots: Negation flags for each row ('NOT' to negate, empty
+                     string otherwise).
+        :param scans: List of scan identifiers to restrict the search scope.
+
+        :return: Complete filter query string with all conditions and scan
+                 restrictions.
         """
 
+        def _format_value(value):
+            """
+            Convert a Python value into a string safe for use in queries.
+
+            This function casts the input `value` to a string and replaces
+            single quotes with double quotes to reduce the risk of
+            breaking query syntax.
+
+            :param value: The Python value to format (e.g., int, float,
+                          str, bool).
+
+            :return (str): A string representation of the value with single
+                           quotes replaced by double quotes.
+            """
+            return str(value).replace("'", '"')
+
+        condition_handlers = {
+            "IN": lambda field, value: (
+                f"({{{field}}} IN {_format_value(value)})"
+            ),
+            "BETWEEN": lambda field, value: (
+                f'(({{{field}}} >= "{value[0]}") AND '
+                f'({{{field}}} <= "{value[1]}"))'
+            ),
+            "HAS VALUE": lambda field, _: f"({{{field}}} != null)",
+            "HAS NO VALUE": lambda field, _: f"({{{field}}} == null)",
+            "CONTAINS": lambda field, value: f'({{{field}}} LIKE "%{value}%")',
+        }
+        # Build individual row queries
         row_queries = []
 
-        for row_fields, row_condition, row_value, row_not in zip(
+        for row_fields, condition, value, negation in zip(
             fields, conditions, values, nots
         ):
-            row_query_parts = []
+            # Build condition for each field in the row
+            handler = condition_handlers.get(condition)
 
-            for row_field in row_fields:
+            if handler:
+                field_queries = [handler(field, value) for field in row_fields]
 
-                if row_condition == "IN":
-                    escaped_row_value = str(row_value).replace("'", '"')
-                    row_field_query = (
-                        f"({{{row_field}}} IN {escaped_row_value})"
-                    )
+            else:
+                field_queries = [
+                    f'({{{field}}} {condition} "{value}")'
+                    for field in row_fields
+                ]
 
-                elif row_condition == "BETWEEN":
-                    row_field_query = (
-                        f'(({{{row_field}}} >= "{row_value[0]}") AND '
-                        f'({{{row_field}}} <= "{row_value[1]}"))'
-                    )
+            # Combine fields with OR and apply negation if needed
+            combined = " OR ".join(field_queries)
+            row_query = (
+                f"(NOT ({combined}))" if negation == "NOT" else f"({combined})"
+            )
+            row_queries.append(row_query)
 
-                elif row_condition == "HAS VALUE":
-                    row_field_query = f"({{{row_field}}} != null)"
-
-                elif row_condition == "HAS NO VALUE":
-                    row_field_query = f"({{{row_field}}} == null)"
-
-                elif row_condition == "CONTAINS":
-                    row_field_query = f'({{{row_field}}} LIKE "%{row_value}%")'
-
-                else:
-                    row_field_query = (
-                        f'({{{row_field}}} {row_condition} "{row_value}")'
-                    )
-
-                row_query_parts.append(row_field_query)
-
-            # Combine all parts with "OR"
-            row_query = " OR ".join(row_query_parts)
-
-            # Apply negation if necessary
-            if row_not == "NOT":
-                row_query = f"(NOT {row_query})"
-
-            row_queries.append(f"({row_query})")
-
-        # Combine all row queries with specified links
-        final_query = row_queries[0]
+        # Combine rows with logical operators
+        query = row_queries[0]
 
         for link, next_query in zip(links, row_queries[1:]):
-            final_query = f"{final_query} {link} {next_query}"
+            query = f"{query} {link} {next_query}"
 
-        # Add the scans condition
-        formatted_scans = str(scans).replace("'", '"')
-        final_query = (
-            f"{final_query} AND " f"({{{TAG_FILENAME}}} IN {formatted_scans})"
-        )
-        # Enclose the entire query in parentheses
-        return f"({final_query})"
+        # Add scan restrictions
+        query = f"{query} AND ({{{TAG_FILENAME}}} IN {_format_value(scans)})"
+
+        return f"({query})"
 
     def refresh_search(self):
         """
-        Refresh the widget.
-        """
+        Refresh the search widget by rebuilding its layout with the current
+        filters.
 
-        # Old values stored
-        fields, conditions, values, links, nots = self.get_filters(False)
-        # We remove the old layout
-        # self.clearLayout(self.layout())
+        This method performs the following steps:
+            1. Retrieves the current filter values without replacing
+               "All visualized tags".
+            2. Clears the old layout and cleans up its widgets.
+            3. Removes and restores row borders according to the links.
+            4. Rebuilds the main grid layout with all row widgets.
+            5. Adds the search button in a horizontal layout at the bottom.
+            6. Sets the new combined layout as the widget's layout.
+        """
+        # Retrieve current filter values
+        _, _, _, links, _ = self.get_filters(replace_all_by_fields=False)
+        # Clean up the old layout
         QObjectCleanupHandler().add(self.layout())
-        # Links and add rows removed from every row
+        # Update row borders
         self.rows_borders_removed()
-        # Links and add rows put back in the good rows
         self.rows_borders_added(links)
+        # Create new layouts
         master_layout = QVBoxLayout()
         main_layout = QGridLayout()
 
-        # Everything added to the layout
-        for i in range(0, len(self.rows)):
+        # Populate grid layout with widgets
+        for i, row in enumerate(self.rows):
 
-            for j in range(0, 7):
-                widget = self.rows[i][j]
+            for j, widget in enumerate(row):
 
                 if widget is not None:
                     main_layout.addWidget(widget, i, j)
 
-        # Search button added at the end
-        search_layout = QHBoxLayout(None)
-        search_layout.setObjectName("search layout")
+        # Add search button at the bottom
+        search_layout = QHBoxLayout()
+        search_layout.setObjectName("search_layout")
         self.search.clicked.connect(self.launch_search)
         search_layout.addWidget(self.search)
-        search_layout.setParent(None)
-        # New layout added
+        # Combine layouts and set the widget layout
         master_layout.addLayout(main_layout)
         master_layout.addLayout(search_layout)
         self.setLayout(master_layout)
 
     def remove_row(self, row_layout):
-        """Remove a row.
+        """
+        Remove a specified row from the layout while ensuring at least one row
+        remains.
 
-        :param row_layout: Row to remove
+        This method deletes all widgets in the specified row, removes the row
+        from the internal `rows` list, and refreshes the view.
+
+        :param row_layout: The row (list of widgets) to remove.
         """
 
-        # We remove the row only if there is at least 2 rows, because we
-        # always must keep at least one
+        # Remove the row only if more than one exists
         if len(self.rows) > 1:
-            index = self.rows.index(row_layout)
 
-            for i in range(0, len(self.rows[-1])):
+            try:
+                index = self.rows.index(row_layout)
 
-                if self.rows[index][i] is not None:
-                    self.rows[index][i].setParent(None)
-                    self.rows[index][i].deleteLater()
-                    self.rows[index][i] = None
+            except ValueError:
+                index = None
 
-            del self.rows[index]
+            if index is not None:
+                # Remove widgets in the row
+                for i, widget in enumerate(self.rows[index]):
+                    if widget is not None:
+                        widget.setParent(None)
+                        widget.deleteLater()
+                        self.rows[index][i] = None
 
-        # We refresh the view
+                # Remove the row from the list
+                del self.rows[index]
+
+        # Refresh the view always, even if no row was removed
         self.refresh_search()
 
     def rows_borders_added(self, links):
-        """Add the links and the added row to the good rows.
-
-        :param links: Old links to reput
         """
+        Add UI controls (links and add button) to search query rows.
 
-        # Plus added to the last row
+        Adds a green plus button to the last row for adding new search bars,
+        and adds AND/OR combo boxes to all rows except the first one for
+        linking query conditions.
+
+        :param links: List of previously selected link operators ('AND'/'OR')
+                      to restore when rebuilding the UI.
+        """
+        # Add plus button to the last row for adding new search bars
         sources_images_dir = Config().getSourceImageDir()
-        add_search_bar_label = ClickableLabel()
-        add_search_bar_label.setObjectName("plus")
-        add_search_bar_picture = QPixmap(
-            os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
+        plus_icon_path = os.path.join(sources_images_dir, "green_plus.png")
+        add_button = ClickableLabel()
+        add_button.setObjectName("plus")
+        add_button.setPixmap(
+            QPixmap(os.path.relpath(plus_icon_path)).scaledToHeight(20)
         )
-        add_search_bar_picture = add_search_bar_picture.scaledToHeight(20)
-        add_search_bar_label.setPixmap(add_search_bar_picture)
-        add_search_bar_label.clicked.connect(self.add_search_bar)
-        self.rows[len(self.rows) - 1][6] = add_search_bar_label
+        add_button.clicked.connect(self.add_search_bar)
+        self.rows[-1][6] = add_button
+        # Add link combo boxes to all rows except the first
+        link_operators = ("AND", "OR")
 
-        # Link added to every row, except the first one
-        for i in range(1, len(self.rows)):
-            row = self.rows[i]
+        for i, row in enumerate(self.rows[1:], start=1):
             link_choice = QComboBox()
             link_choice.setObjectName("link")
-            link_choice.addItem("AND")
-            link_choice.addItem("OR")
+            link_choice.addItems(link_operators)
 
-            if len(links) >= i:
+            # Restore previous selection if available
+            if i <= len(links):
                 link_choice.setCurrentText(links[i - 1])
 
             row[0] = link_choice
 
     def rows_borders_removed(self):
-        """Link and add row removed from every row."""
+        """
+        Remove the link widget and the "add row" widget from every row.
 
-        # We remove all the links and the add rows
-        for i in range(0, len(self.rows)):
+        This ensures that these widgets are properly removed from the layout
+        and scheduled for deletion, preventing memory leaks.
+        """
 
-            # Plus removed from every row
-            if self.rows[i][6] is not None:
-                self.rows[i][6].setParent(None)
-                self.rows[i][6].deleteLater()
-                self.rows[i][6] = None
+        def _remove_widget(widget_ref):
+            """
+            Safely removes a QWidget from its parent and schedules it for
+            deletion.
 
-            # Link removed from every row
-            if self.rows[i][0] is not None:
-                self.rows[i][0].setParent(None)
-                self.rows[i][0].deleteLater()
-                self.rows[i][0] = None
+            This helper function ensures that the given widget is properly
+            detached from its parent layout and deleted later, preventing
+            potential memory leaks. If the widget reference is `None`, it does
+            nothing.
 
-    # def rowsContainsWidget(self, widget):
-    #     """Check if the widget is still used
-    #
-    #     :param widget: widget to check
-    #     :return: True or False
-    #     """
-    #     for row in self.rows:
-    #         if widget in row:
-    #             return True
-    #     return False
+            :param widget_ref: The QWidget instance to remove, or `None`.
+
+            :return: Always returns `None` after removing the widget.
+            """
+
+            if widget_ref is not None:
+                widget_ref.setParent(None)
+                widget_ref.deleteLater()
+
+            return None
+
+        for row in self.rows:
+            # Remove "add row" widget (assumed at index 6)
+            row[6] = _remove_widget(row[6])
+            # Remove link widget (assumed at index 0)
+            row[0] = _remove_widget(row[0])
 
     def show_search(self):
-        """Reset the rows when the Advanced Search button is clicked."""
+        """
+        Reset the search rows and display the search bar.
 
-        if len(self.rows) < 1:
-            self.rows = []
+        This method clears the current rows if there are none or fewer than
+        one, and initializes the search bar for the advanced search
+        functionality.
+        """
+
+        if not self.rows:
+            self.rows.clear()
             self.add_search_bar()
