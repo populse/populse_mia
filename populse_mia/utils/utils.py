@@ -489,135 +489,154 @@ def get_value(project, collection, file_name, field):
 
 def launch_mia(args):
     """
-    Launches the Mia software application.
+    Launch and run the Mia software application.
 
-    This function:
-    - Overloads the sys.excepthook handler with the _my_excepthook function
-      to log uncaught exceptions in non-interactive mode.
-    - Checks if Mia is already running in another instance, and prevents
-      multiple instances from opening.
-    - Verifies if saved projects still exist, updating the list of opened
-      projects if necessary.
-    - Instantiates the 'project' object and launches Mia's GUI.
+     This function is the main entry point. It:
+        - Installs a custom sys.excepthook to handle uncaught exceptions.
+        - Prevents multiple instances unless explicitly allowed.
+        - Verifies saved projects consistency.
+        - Performs project cleanup safely before destruction.
+        - Creates and displays the main Qt window.
+        - Ensures idempotent cleanup on exit or crash.
 
-    :param args (Namespace): Command line arguments.
+    All state is local and shared via closures.
 
-    :Private functions:
-        - _my_excepthook: Logs uncaught exceptions in non-interactive mode.
-        - _verify_saved_projects: Checks if saved projects still exist and
-           updates the list.
+    :param args (argparse.Namespace): Parsed command-line arguments.
     """
-
-    # import Config only here to prevent circular import issue
+    # Import here to avoid circular dependencies
     from populse_mia.software_properties import Config
 
-    # useful for WebEngine
+    # QtWebEngineWidgets must be imported before QApplication is created
     try:
-        # QtWebEngineWidgets need to be imported before QCoreApplication
-        # instance is created (used later)
         from soma.qt_gui.qt_backend import QtWebEngineWidgets  # noqa: F401
 
     except ImportError:
         pass  # QtWebEngineWidgets is not installed
 
+    main_window = None  # Explicit lifecycle control
+    project_folder = None  # Captured early to avoid Qt destruction issues
+    cleaned_up = False  # Guard against multiple cleanups
+    config = Config()  # Shared configuration instance
+    previous_excepthook = sys.excepthook
+
+    def _clean_up():
+        """
+        Perform application cleanup tasks.
+
+        This function is safe to call multiple times. It updates the list of
+        opened projects and releases non-GUI resources without relying on
+        Qt object internals, which may already be destroyed.
+        """
+        nonlocal cleaned_up
+
+        if cleaned_up:
+            return
+
+        cleaned_up = True
+
+        try:
+
+            opened_projects = config.get_opened_projects()
+
+            if project_folder and project_folder in opened_projects:
+                opened_projects.remove(project_folder)
+
+            config.set_opened_projects(opened_projects)
+
+        except (ValueError, OSError):
+            logger.warning("Cleanup incomplete; resetting opened projects")
+            config.set_opened_projects([])
+
+        logger.info("Clean up before closing Mia completed.")
+
+    def _cleanup_and_quit():
+        """
+        Clean up application state and terminate the Qt event loop.
+
+        This function is connected to the main window's destruction signal
+        and ensures a graceful shutdown of the application.
+        """
+
+        try:
+
+            # Safely remove raw files while main_window/project exists
+            if main_window and main_window.project:
+                main_window.remove_raw_files_useless()
+
+        except Exception:
+            logger.warning(
+                "Failed to remove useless raw files during shutdown",
+                exc_info=True,
+            )
+
+        _clean_up()
+        sys.excepthook = previous_excepthook
+        QApplication.closeAllWindows()
+        QApplication.instance().quit()
+
     def _my_excepthook(etype, evalue, tback):
         """
-        Log all uncaught exceptions in non-interactive mode and cleans
-        up before exiting.
+        Handle uncaught exceptions.
 
-        All python exceptions are handled by function, stored in
-        sys.excepthook. By overloading the sys.excepthook handler with
-        _my_excepthook function, this last function is called whenever
-        there is an unhandled exception (so one that exits the interpreter).
-        We take advantage of it to clean up mia software before closing.
+        This custom exception hook logs the exception, performs cleanup,
+        delegates to Python's default exception handler, and exits the
+        application with a non-zero status code.
 
         :param etype (type): exception class
         :param evalue (Exception): exception instance
         :param tback(traceback): traceback object
-
-        :Contains:
-            :Private function:
-                - _clean_up(): cleans up the mia software during "normal"
-                               closing.
         """
-
-        def _clean_up():
-            """Cleans up Mia software during "normal" closing.
-
-            Make a cleanup of the opened projects just before exiting mia.
-            """
-            config = Config()
-            opened_projects = config.get_opened_projects()
-
-            try:
-                opened_projects.remove(main_window.project.folder)
-                config.set_opened_projects(opened_projects)
-                main_window.remove_raw_files_useless()
-
-            except (AttributeError, NameError):
-                config.set_opened_projects([])
-
-            logger.info("Clean up before closing mia completed.")
-
-        # log the exception here
-        logger.info("Exception hooking in progress ...")
+        logger.exception(
+            "Unhandled exception occurred",
+            exc_info=(etype, evalue, tback),
+        )
         _clean_up()
-        # then call the default handler
         sys.__excepthook__(etype, evalue, tback)
-        # there was some issue/error/problem, so exiting
         sys.exit(1)
 
     def _verify_saved_projects():
         """
-        Verifies if saved projects still exist and updates the
-        list accordingly.
+        Verify the existence of saved projects on disk.
 
-        :return: List of deleted projects
+        Projects whose directories no longer exist are removed from the saved
+        projects list.
+
+        :return (list[str]): Absolute paths of deleted projects.
         """
         saved_projects = SavedProjects()
         deleted_projects = [
-            os.path.abspath(proj)
-            for proj in saved_projects.pathsList
-            if not os.path.isdir(proj)
+            os.path.abspath(path)
+            for path in saved_projects.pathsList
+            if not os.path.isdir(path)
         ]
 
-        for proj in deleted_projects:
-            saved_projects.removeSavedProject(proj)
+        for path in deleted_projects:
+            saved_projects.removeSavedProject(path)
 
         return deleted_projects
 
-    global main_window
+    # Register the exception hook early
     sys.excepthook = _my_excepthook
-    # working from the scripts directory
-    # os.chdir(os.path.dirname(os.path.realpath(__file__)))
     lock_file = QLockFile(
         QDir.temp().absoluteFilePath("lock_file_populse_mia.lock")
     )
 
-    if not lock_file.tryLock(100) and args.multi_instance is False:
+    if not lock_file.tryLock(100) and not args.multi_instance:
         # software already opened in another instance
         logger.error("Another instance of Mia is already running. Exiting...")
+        sys.excepthook = previous_excepthook
         return
 
     # no instances of the software is opened, or args.multi_instance
     # is set to True, so the list of opened projects can be cleared
-    config = Config()
     config.set_opened_projects([])
     deleted_projects = _verify_saved_projects()
     project = Project(None, True)
+    project_folder = project.folder  # Capture before GUI destruction
     main_window = MainWindow(project, deleted_projects=deleted_projects)
     main_window.setAttribute(Qt.WA_DeleteOnClose)
-
-    def cleanup_and_quit():
-        """
-        Closes all open application windows and terminates the current
-        QApplication instance.
-        """
-        QApplication.closeAllWindows()
-        QApplication.instance().quit()
-
-    # Connect to the main window's close event instead
-    main_window.destroyed.connect(cleanup_and_quit)
+    # Ensure cleanup is triggered on window destruction
+    main_window.destroyed.connect(_cleanup_and_quit)
     main_window.show()
     # make sure to instantiate the QtThreadCall singleton from the main thread
     QtThreadCall()
