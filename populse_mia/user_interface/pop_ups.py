@@ -3444,7 +3444,6 @@ class PopUpPreferences(QDialog):
 
         if self.validate_and_save(OK_clicked=True):
             self.accept()
-            self.close()
 
     def save_minimal_config(self, config):
         """

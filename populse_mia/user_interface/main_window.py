@@ -411,8 +411,6 @@ class MainWindow(QMainWindow):
                 if return_value == QMessageBox.Yes:
                     config.setControlV1(not config.isControlV1())
 
-                self.msg.close()
-
             config.saveConfig()
 
             if self.project is not None:
