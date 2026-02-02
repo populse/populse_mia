@@ -516,7 +516,6 @@ def launch_mia(args):
     main_window = None  # Explicit lifecycle control
     project_folder = None  # Captured early to avoid Qt destruction issues
     cleaned_up = False  # Guard against multiple cleanups
-    config = Config()  # Shared configuration instance
     previous_excepthook = sys.excepthook
 
     def _clean_up():
@@ -528,6 +527,7 @@ def launch_mia(args):
         Qt object internals, which may already be destroyed.
         """
         nonlocal cleaned_up
+        config = Config()
 
         if cleaned_up:
             return
@@ -629,6 +629,7 @@ def launch_mia(args):
 
     # no instances of the software is opened, or args.multi_instance
     # is set to True, so the list of opened projects can be cleared
+    config = Config()
     config.set_opened_projects([])
     deleted_projects = _verify_saved_projects()
     project = Project(None, True)
