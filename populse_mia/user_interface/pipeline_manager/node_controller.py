@@ -1634,9 +1634,6 @@ class NodeController(QWidget):
             ],
         }
         current_editor.node_parameters_tmp.pop("outputs", None)
-        self.main_window.pipeline_manager.run_pipeline_action.setDisabled(
-            False
-        )
 
     def get_index_from_plug_name(self, plug_name, in_or_out):
         """

@@ -1922,6 +1922,7 @@ class PipelineManagerTab(QWidget):
         self.nodeController.update_parameters()
         self.run_pipeline_action.setDisabled(False)
         self.garbage_collect_action.setDisabled(False)
+        self.test_init = False
 
     def garbage_collect(self):
         """
@@ -4166,7 +4167,9 @@ class PipelineManagerTab(QWidget):
         has_processes = (
             pipeline is not None and len(pipeline.list_process_in_pipeline) > 0
         )
-        self.run_pipeline_action.setEnabled(has_processes)
+
+        if self.test_init is False:
+            self.run_pipeline_action.setEnabled(has_processes)
 
     def update_user_mode(self):
         """
