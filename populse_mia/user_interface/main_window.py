@@ -403,9 +403,7 @@ class MainWindow(QMainWindow):
                     f"change?"
                 )
                 self.msg.setWindowTitle("Warning")
-                self.msg.setStandardButtons(
-                    QMessageBox.Yes | QMessageBox.Cancel
-                )
+                self.msg.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
                 return_value = self.msg.exec()
 
                 if return_value == QMessageBox.Yes:
