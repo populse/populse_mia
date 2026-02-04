@@ -1108,11 +1108,8 @@ class TableDataBrowser(QTableWidget):
                                             table columns.
         :param update_values (bool): If True, enables cell editing;
                                      if False, table is read-only.
-        :param activate_selection (dict | bool): Dictionary with process
-                                                 execution metadata for
-                                                 document generation, or False
-                                                 to disable selection
-                                                 functionality.
+        :param activate_selection (bool): True to enable the selection
+                                          feature, False otherwise.
         :param link_viewer(bool): If True, links table selection to external
                                   viewer widget. Defaults to True.
 
@@ -1145,7 +1142,8 @@ class TableDataBrowser(QTableWidget):
         # Allows to move the columns (except the first column name)
         horizontal_header.setSectionsMovable(True)
         # Allows the automatic sort
-        self.setSortingEnabled(True)
+        # self.setSortingEnabled(True)
+        self.setSortingEnabled(False)
         self.verticalHeader().setMinimumSectionSize(30)
 
         # Disable editing if update_values is False
@@ -1175,36 +1173,38 @@ class TableDataBrowser(QTableWidget):
         # Initialize table content
         self.update_table(True)
 
-    def _safe_disconnect(self):
+    def _safe_disconnect(self, signal, slot):
         """
-        Safely disconnect the ``itemChanged`` signal from the
-        ``on_cell_changed`` slot.
+        Disconnect a Qt signal from a slot if connected.
 
-        This helper ensures that calling ``disconnect`` does not raise a
-        ``TypeError`` if the slot was not previously connected. It
-        effectively prevents errors when attempting to disconnect
-        redundantly.
+        Attempts to disconnect ``signal`` from ``slot`` and silently ignores
+        the error raised when the connection does not exist. This makes the
+        operation idempotent and safe to call multiple times.
+
+        :param signal: The Qt signal to disconnect from.
+        :param slot: The slot (callable) previously connected to the signal.
         """
 
         try:
-            self.itemChanged.disconnect(self.on_cell_changed)
+            signal.disconnect(slot)
 
         except TypeError:
+            # Raised by Qt when the signal/slot connection does not exist
             pass
 
-    def _safe_reconnect(self):
+    def _safe_reconnect(self, signal, slot):
         """
-        Safely reconnect the ``itemChanged`` signal to the
-        ``on_cell_changed`` slot.
+        Reconnect a Qt signal to a slot, ensuring a single connection.
 
-        This helper first ensures that any previous connection is removed
-        by calling ``_safe_disconnect()``, preventing duplicate
-        connections. After that, it connects ``itemChanged`` to
-        ``on_cell_changed``, guaranteeing that the slot is connected
-        exactly once.
+        First disconnects ``signal`` from ``slot`` (if connected) to avoid
+        duplicate connections, then connects them. This guarantees that the
+        slot is connected exactly once.
+
+        :param signal: The Qt signal to (re)connect.
+        :param slot: The slot (callable) to connect to the signal.
         """
-        self._safe_disconnect()
-        self.itemChanged.connect(self.on_cell_changed)
+        self._safe_disconnect(signal, slot)
+        signal.connect(slot)
 
     def add_column(self, column, tag):
         """
@@ -1227,9 +1227,13 @@ class TableDataBrowser(QTableWidget):
         # Import locally to avoid circular dependency
         from populse_mia.utils import set_item_data
 
-        # Temporarily disconnect signals during bulk operations
-        self._safe_disconnect()
-        self.itemSelectionChanged.disconnect()
+        # Safely disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
         try:
             # Insert column and configure header
@@ -1291,9 +1295,14 @@ class TableDataBrowser(QTableWidget):
             self.update_colors()
 
         finally:
-            # Always reconnect signals, even if an exception occurred
-            self.itemSelectionChanged.connect(self.selection_changed)
-            self._safe_reconnect()
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def add_columns(self):
         """
@@ -1321,9 +1330,13 @@ class TableDataBrowser(QTableWidget):
         # Import locally to prevent circular dependency
         from populse_mia.utils import set_item_data
 
-        # Temporarily disconnect signals to prevent cascading updates
-        self._safe_disconnect()
-        self.itemSelectionChanged.disconnect()
+        # Safely disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
         try:
 
@@ -1426,8 +1439,14 @@ class TableDataBrowser(QTableWidget):
             self.update_colors()
 
         finally:
-            self.itemSelectionChanged.connect(self.selection_changed)
-            self._safe_reconnect()
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def add_path(self):
         """
@@ -1463,139 +1482,157 @@ class TableDataBrowser(QTableWidget):
 
         # Temporarily disable sorting and disconnect signals
         self.setSortingEnabled(False)
-        self.itemSelectionChanged.disconnect()
-        self._safe_disconnect()
-        # Initialize and configure progress dialog
-        cells_number = len(rows) * self.columnCount()
-        self.progress = QProgressDialog(
-            "Please wait while the paths are being added...",
-            None,
-            0,
-            cells_number,
-        )
-        self.progress.setMinimumDuration(0)
-        self.progress.setValue(0)
-        self.progress.setMinimumWidth(350)  # For mac OS
-        self.progress.setWindowTitle("Adding the paths")
-        self.progress.setWindowFlags(
-            Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint
-        )
-        self.progress.setModal(True)
-        self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
-        self.progress.show()
-        self.setVisible(False)
-        # Add rows with database context
-        idx = 0
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        with self.project.database.data() as database_data:
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
-            for scan in rows:
+        try:
+            # Initialize and configure progress dialog
+            cells_number = len(rows) * self.columnCount()
+            self.progress = QProgressDialog(
+                "Please wait while the paths are being added...",
+                None,
+                0,
+                cells_number,
+            )
+            self.progress.setMinimumDuration(0)
+            self.progress.setValue(0)
+            self.progress.setMinimumWidth(350)  # For mac OS
+            self.progress.setWindowTitle("Adding the paths")
+            self.progress.setWindowFlags(
+                Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint
+            )
+            self.progress.setModal(True)
+            self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
+            self.progress.show()
+            self.setVisible(False)
+            # Add rows with database context
+            idx = 0
 
-                # Skip if scan already exists in table
-                if self.get_scan_row(scan) is not None:
-                    continue
+            with self.project.database.data() as database_data:
 
-                row_index = self.rowCount()
-                self.insertRow(row_index)
+                for scan in rows:
 
-                # Populate columns for the new row
-                for column_index in range(self.columnCount()):
-                    idx += 1
-                    self.progress.setValue(idx)
-                    QApplication.processEvents()
-                    tag = self.horizontalHeaderItem(column_index).text()
-                    item = QTableWidgetItem()
+                    # Skip if scan already exists in table
+                    if self.get_scan_row(scan) is not None:
+                        continue
 
-                    if column_index == 0:
-                        # First column: name tag (non-editable)
-                        item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                        set_item_data(item, scan, FIELD_TYPE_STRING)
+                    row_index = self.rowCount()
+                    self.insertRow(row_index)
 
-                    else:
-                        # Retrieve value from database
-                        cur_value = database_data.get_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=scan,
-                            field=tag,
-                        )
+                    # Populate columns for the new row
+                    for column_index in range(self.columnCount()):
+                        idx += 1
+                        self.progress.setValue(idx)
+                        QApplication.processEvents()
+                        tag = self.horizontalHeaderItem(column_index).text()
+                        item = QTableWidgetItem()
 
-                        if cur_value is not None:
-
-                            if tag == TAG_BRICKS:
-                                # Tag bricks, display list with buttons
-                                widget = QWidget()
-                                widget.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-                                layout = QVBoxLayout()
-                                brick_uuid = cur_value[-1]
-                                brick_name = database_data.get_value(
-                                    collection_name=COLLECTION_BRICK,
-                                    primary_key=brick_uuid,
-                                    field=BRICK_NAME,
-                                )
-                                brick_name_button = QPushButton(brick_name)
-                                brick_name_button.moveToThread(
-                                    QApplication.instance().thread()
-                                )
-                                self.bricks[brick_name_button] = brick_uuid
-
-                                if TAG_FILENAME in scan:
-                                    brick_name_button.clicked.connect(
-                                        partial(
-                                            self.show_brick_history,
-                                            scan[TAG_FILENAME],
-                                        )
-                                    )
-
-                                layout.addWidget(brick_name_button)
-                                widget.setLayout(layout)
-                                self.setCellWidget(
-                                    row_index, column_index, widget
-                                )
-
-                            else:
-                                # Standard cell with database value
-                                field_type = (
-                                    database_data.get_field_attributes(
-                                        COLLECTION_CURRENT, tag
-                                    )["field_type"]
-                                )
-                                set_item_data(item, cur_value, field_type)
+                        if column_index == 0:
+                            # First column: name tag (non-editable)
+                            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                            set_item_data(item, scan, FIELD_TYPE_STRING)
 
                         else:
-                            # Handle undefined values
+                            # Retrieve value from database
+                            cur_value = database_data.get_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan,
+                                field=tag,
+                            )
 
-                            if tag == TAG_BRICKS:
-                                set_item_data(item, "", FIELD_TYPE_STRING)
-                                # bricks not editable
-                                item.setFlags(
-                                    item.flags() & ~Qt.ItemIsEditable
-                                )
+                            if cur_value is not None:
+
+                                if tag == TAG_BRICKS:
+                                    # Tag bricks, display list with buttons
+                                    widget = QWidget()
+                                    widget.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    layout = QVBoxLayout()
+                                    brick_uuid = cur_value[-1]
+                                    brick_name = database_data.get_value(
+                                        collection_name=COLLECTION_BRICK,
+                                        primary_key=brick_uuid,
+                                        field=BRICK_NAME,
+                                    )
+                                    brick_name_button = QPushButton(brick_name)
+                                    brick_name_button.setFocusPolicy(
+                                        Qt.NoFocus
+                                    )
+                                    brick_name_button.moveToThread(
+                                        QApplication.instance().thread()
+                                    )
+                                    self.bricks[brick_name_button] = brick_uuid
+
+                                    if TAG_FILENAME in scan:
+                                        brick_name_button.clicked.connect(
+                                            partial(
+                                                self.show_brick_history,
+                                                scan[TAG_FILENAME],
+                                            )
+                                        )
+
+                                    layout.addWidget(brick_name_button)
+                                    widget.setLayout(layout)
+                                    self.setCellWidget(
+                                        row_index, column_index, widget
+                                    )
+
+                                else:
+                                    # Standard cell with database value
+                                    field_type = (
+                                        database_data.get_field_attributes(
+                                            COLLECTION_CURRENT, tag
+                                        )["field_type"]
+                                    )
+                                    set_item_data(item, cur_value, field_type)
 
                             else:
-                                set_item_data(
-                                    item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
-                                )
-                                font = item.font()
-                                font.setItalic(True)
-                                font.setBold(True)
-                                item.setFont(font)
+                                # Handle undefined values
 
-                    self.setItem(row_index, column_index, item)
+                                if tag == TAG_BRICKS:
+                                    set_item_data(item, "", FIELD_TYPE_STRING)
+                                    # bricks not editable
+                                    item.setFlags(
+                                        item.flags() & ~Qt.ItemIsEditable
+                                    )
 
-        # Restore table state
-        self.resizeColumnsToContents()
-        self.resizeRowsToContents()
-        # Selection updated
-        self.update_selection()
-        self.update_colors()
-        # Reconnect signals
-        self.itemSelectionChanged.connect(self.selection_changed)
-        self._safe_reconnect()
-        # Clean up
-        self.progress.close()
-        self.setVisible(True)
+                                else:
+                                    set_item_data(
+                                        item,
+                                        NOT_DEFINED_VALUE,
+                                        FIELD_TYPE_STRING,
+                                    )
+                                    font = item.font()
+                                    font.setItalic(True)
+                                    font.setBold(True)
+                                    item.setFont(font)
+
+                        self.setItem(row_index, column_index, item)
+
+            # Restore table state
+            self.resizeColumnsToContents()
+            self.resizeRowsToContents()
+            # Selection updated
+            self.update_selection()
+            self.update_colors()
+
+        finally:
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            # Clean up
+            self.progress.close()
+            self.setVisible(True)
 
     def clear_cell(self):
         """
@@ -1700,9 +1737,9 @@ class TableDataBrowser(QTableWidget):
             new document. After that, it calls ``add_path()`` to perform the
             actual addition.
             """
-            self._safe_reconnect()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
             self.add_path()
-            self._safe_disconnect()
+            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         # -- Build menu actions ---------------------------------
         confirm_actions = {
@@ -1739,7 +1776,7 @@ class TableDataBrowser(QTableWidget):
             "Tries to read a file": self.display_file,
         }
         # -- Execute --------------------------------------------
-        self._safe_disconnect()
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             menu = QMenu(self)
@@ -1763,7 +1800,7 @@ class TableDataBrowser(QTableWidget):
             self.update_colors()
 
         finally:
-            self._safe_reconnect()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def delete_from_brick(self, brick_id):
         """
@@ -1917,7 +1954,6 @@ class TableDataBrowser(QTableWidget):
         lack a raw value. The dialog includes a descriptive message and an OK
         button for dismissal.
         """
-
         warning_dialog = QMessageBox()
         warning_dialog.setIcon(QMessageBox.Warning)
         warning_dialog.setWindowTitle("Reset Warning")
@@ -2064,7 +2100,7 @@ class TableDataBrowser(QTableWidget):
 
             # Record changes for history
             history_maker = ["modified_values", []]
-            self._safe_disconnect()
+            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
             with self.project.database.data() as database_data:
 
@@ -2101,7 +2137,7 @@ class TableDataBrowser(QTableWidget):
             self.project.undos.append(history_maker)
             self.project.redos.clear()
             self.update_colors()
-            self._safe_reconnect()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
         except Exception as e:
             logger.warning(e)
@@ -2159,6 +2195,13 @@ class TableDataBrowser(QTableWidget):
         self.progress.show()
         self.setVisible(False)
         cell_index = 0
+        # Disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
         try:
 
@@ -2243,6 +2286,7 @@ class TableDataBrowser(QTableWidget):
 
                                     if brick_name:
                                         button = QPushButton(brick_name)
+                                        button.setFocusPolicy(Qt.NoFocus)
                                         button.moveToThread(
                                             QApplication.instance().thread()
                                         )
@@ -2284,11 +2328,11 @@ class TableDataBrowser(QTableWidget):
                         self.setItem(row, column, item)
 
             # Apply saved sorting preferences
-            self.setSortingEnabled(True)
+            # self.setSortingEnabled(True)
+            self.setSortingEnabled(False)
             tag_to_sort = self.project.getSortedTag()
             column_to_sort = self.get_tag_column(tag_to_sort)
             sort_order = self.project.getSortOrder()
-            self._safe_reconnect()
 
             if column_to_sort is not None:
                 self.horizontalHeader().setSortIndicator(
@@ -2304,6 +2348,14 @@ class TableDataBrowser(QTableWidget):
         finally:
             self.progress.close()
             self.setVisible(True)
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def fill_headers(self, take_tags_to_update=False):
         """
@@ -2563,6 +2615,7 @@ class TableDataBrowser(QTableWidget):
                 return
 
             brick_name_button = QPushButton(brick_name)
+            brick_name_button.setFocusPolicy(Qt.NoFocus)
             brick_name_button.moveToThread(app_thread)
             # Replace the old brick reference if needed
             old_button = (
@@ -2585,7 +2638,7 @@ class TableDataBrowser(QTableWidget):
             self.setCellWidget(row, column, widget)
             self.setItem(row, column, item)
 
-        self._safe_disconnect()
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
 
@@ -2684,8 +2737,9 @@ class TableDataBrowser(QTableWidget):
         finally:
             # Re-enable sorting and reconnect signals
             self.horizontalHeader().setSortIndicator(-1, 0)
-            self.setSortingEnabled(True)
-            self._safe_reconnect()
+            # self.setSortingEnabled(True)
+            self.setSortingEnabled(False)
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
             self.resizeRowsToContents()
             self.resizeColumnsToContents()
 
@@ -2781,139 +2835,154 @@ class TableDataBrowser(QTableWidget):
                 )
 
         # Temporarily disconnect to prevent recursive calls during updates
-        self._safe_disconnect()
-        new_value = item_origin.data(Qt.EditRole)
-        selected_items = self.selectedItems()
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        with self.project.database.data(write=True) as database_data:
-            # Collect unique field types from all selected cells
-            cells_types = []
-
-            # For each item selected, we check the validity of the types
-            for item in selected_items:
-                col = item.column()
-                tag_name = self.horizontalHeaderItem(col).text()
-
-                # Remove spaces from PatientName (used for subfolder naming)
-                if tag_name == "PatientName":
-                    new_value = new_value.replace(" ", "")
-
-                # Read-only fields - reject changes immediately
-                if tag_name in (TAG_BRICKS, TAG_FILENAME):
-                    self.update_colors()
-                    self._safe_reconnect()
-                    return
-
-                tag_attrib = database_data.get_field_attributes(
-                    COLLECTION_CURRENT, tag_name
-                )
-                tag_type = tag_attrib["field_type"]
-
-                if tag_type not in cells_types:
-                    cells_types.append(tag_type)
-
-            # Define all list types known in data_manager
-            list_types = {
-                FIELD_TYPE_LIST_DATE,
-                FIELD_TYPE_LIST_DATETIME,
-                FIELD_TYPE_LIST_TIME,
-                FIELD_TYPE_LIST_INTEGER,
-                FIELD_TYPE_LIST_STRING,
-                FIELD_TYPE_LIST_FLOAT,
-                FIELD_TYPE_LIST_BOOLEAN,
-                FIELD_TYPE_LIST_JSON,
-            }
-            has_list_type = bool(set(cells_types) & list_types)
-
-            # Error: Mixed types including list types
-            if has_list_type and len(cells_types) > 1:
-                _show_error_and_revert(
-                    "Incompatible types",
-                    f"The following types in the selection are not "
-                    f"compatible: {cells_types}",
-                    selected_items,
-                    database_data,
-                )
-                self._safe_reconnect()
-                return
-
-            # Skip validation for homogeneous list types
-            if has_list_type:
-                self._safe_reconnect()
-                return
-
-            # Validate value compatibility with all selected cell types
-            type_problem = next(
-                (
-                    cell_type
-                    for cell_type in cells_types
-                    if not check_value_type(new_value, cell_type)
-                ),
-                None,
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
             )
 
-            if type_problem:
-                _show_error_and_revert(
-                    "Invalid value",
-                    f"The value {new_value} is invalid with the "
-                    f"type {type_problem}",
-                    selected_items,
-                    database_data,
+        try:
+
+            new_value = item_origin.data(Qt.EditRole)
+            selected_items = self.selectedItems()
+
+            with self.project.database.data(write=True) as database_data:
+                # Collect unique field types from all selected cells
+                cells_types = []
+
+                # For each item selected, we check the validity of the types
+                for item in selected_items:
+                    col = item.column()
+                    tag_name = self.horizontalHeaderItem(col).text()
+
+                    # Remove spaces from PatientName (used for subfolder
+                    # naming)
+                    if tag_name == "PatientName":
+                        new_value = new_value.replace(" ", "")
+
+                    # Read-only fields - reject changes immediately
+                    if tag_name in (TAG_BRICKS, TAG_FILENAME):
+                        self.update_colors()
+                        return
+
+                    tag_attrib = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
+                    )
+                    tag_type = tag_attrib["field_type"]
+
+                    if tag_type not in cells_types:
+                        cells_types.append(tag_type)
+
+                # Define all list types known in data_manager
+                list_types = {
+                    FIELD_TYPE_LIST_DATE,
+                    FIELD_TYPE_LIST_DATETIME,
+                    FIELD_TYPE_LIST_TIME,
+                    FIELD_TYPE_LIST_INTEGER,
+                    FIELD_TYPE_LIST_STRING,
+                    FIELD_TYPE_LIST_FLOAT,
+                    FIELD_TYPE_LIST_BOOLEAN,
+                    FIELD_TYPE_LIST_JSON,
+                }
+                has_list_type = bool(set(cells_types) & list_types)
+
+                # Error: Mixed types including list types
+                if has_list_type and len(cells_types) > 1:
+                    _show_error_and_revert(
+                        "Incompatible types",
+                        f"The following types in the selection are not "
+                        f"compatible: {cells_types}",
+                        selected_items,
+                        database_data,
+                    )
+                    return
+
+                # Skip validation for homogeneous list types
+                if has_list_type:
+                    return
+
+                # Validate value compatibility with all selected cell types
+                type_problem = next(
+                    (
+                        cell_type
+                        for cell_type in cells_types
+                        if not check_value_type(new_value, cell_type)
+                    ),
+                    None,
                 )
-                self._safe_reconnect()
-                return
 
-            # All validations passed - update database and cells
-            modified_values = []
+                if type_problem:
+                    _show_error_and_revert(
+                        "Invalid value",
+                        f"The value {new_value} is invalid with the "
+                        f"type {type_problem}",
+                        selected_items,
+                        database_data,
+                    )
+                    return
 
-            for item in selected_items:
-                row = item.row()
-                col = item.column()
-                scan_path = self.item(row, 0).text()
-                tag_name = self.horizontalHeaderItem(col).text()
+                # All validations passed - update database and cells
+                modified_values = []
 
-                # Skip filename tag (read-only)
-                if tag_name == TAG_FILENAME:
-                    continue
+                for item in selected_items:
+                    row = item.row()
+                    col = item.column()
+                    scan_path = self.item(row, 0).text()
+                    tag_name = self.horizontalHeaderItem(col).text()
 
-                field_type = database_data.get_field_attributes(
-                    COLLECTION_CURRENT, tag_name
-                )["field_type"]
-                database_value = table_to_database(new_value, field_type)
-                old_value = database_data.get_value(
-                    collection_name=COLLECTION_CURRENT,
-                    primary_key=scan_path,
-                    field=tag_name,
+                    # Skip filename tag (read-only)
+                    if tag_name == TAG_FILENAME:
+                        continue
+
+                    field_type = database_data.get_field_attributes(
+                        COLLECTION_CURRENT, tag_name
+                    )["field_type"]
+                    database_value = table_to_database(new_value, field_type)
+                    old_value = database_data.get_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan_path,
+                        field=tag_name,
+                    )
+                    # Record change for history (whether updating or adding)
+                    modified_values.append(
+                        [scan_path, tag_name, old_value, database_value]
+                    )
+                    # Update database
+                    database_data.set_value(
+                        collection_name=COLLECTION_CURRENT,
+                        primary_key=scan_path,
+                        values_dict={tag_name: database_value},
+                    )
+
+                    # Reset font if this was a previously undefined cell
+                    if old_value is None:
+                        font = item.font()
+                        font.setItalic(False)
+                        font.setBold(False)
+                        item.setFont(font)
+
+                    # Update cell display
+                    set_item_data(item, new_value, field_type)
+
+                # Record in undo history
+                if modified_values:
+                    self.project.undos.append(
+                        ["modified_values", modified_values]
+                    )
+                    self.project.redos.clear()
+                    self.resizeColumnsToContents()
+
+        finally:
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
                 )
-                # Record change for history (whether updating or adding)
-                modified_values.append(
-                    [scan_path, tag_name, old_value, database_value]
-                )
-                # Update database
-                database_data.set_value(
-                    collection_name=COLLECTION_CURRENT,
-                    primary_key=scan_path,
-                    values_dict={tag_name: database_value},
-                )
 
-                # Reset font if this was a previously undefined cell
-                if old_value is None:
-                    font = item.font()
-                    font.setItalic(False)
-                    font.setBold(False)
-                    item.setFont(font)
-
-                # Update cell display
-                set_item_data(item, new_value, field_type)
-
-            # Record in undo history
-            if modified_values:
-                self.project.undos.append(["modified_values", modified_values])
-                self.project.redos.clear()
-                self.resizeColumnsToContents()
-
-        self.update_colors()
-        self._safe_reconnect()
+            self.update_colors()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def remove_scan(self):
         """
@@ -2939,103 +3008,125 @@ class TableDataBrowser(QTableWidget):
             - Updates UI table rows and marks project as having unsaved
               modifications
         """
-        selected_points = self.selectedIndexes()
+        # Safely disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        if not selected_points:
-            return
+        try:
+            selected_points = self.selectedIndexes()
 
-        scans_removed = []
-        values_removed = []
-        scan_list = self.data_browser.main_window.pipeline_manager.scan_list
-        # Track user preferences across multiple deletions
-        suppress_dialog = False
-        user_cancelled = False
+            if not selected_points:
+                return
 
-        with self.project.database.data(write=True) as database_data:
+            scans_removed = []
+            values_removed = []
+            scan_list = (
+                self.data_browser.main_window.pipeline_manager.scan_list
+            )
+            # Track user preferences across multiple deletions
+            suppress_dialog = False
+            user_cancelled = False
 
-            for point in selected_points:
-                scan_path = self.item(point.row(), 0).text()
-                scan_object = database_data.get_document(
-                    collection_name=COLLECTION_CURRENT,
-                    primary_keys=scan_path,
-                )
+            with self.project.database.data(write=True) as database_data:
 
-                if not scan_object:
-                    continue
-
-                # Confirm removal if scan is in active pipeline
-                is_in_pipeline = (
-                    scan_path in scan_list and self.data_browser.data_sent
-                )
-
-                if is_in_pipeline:
-
-                    if not suppress_dialog:
-                        popup = PopUpRemoveScan(
-                            scan_path, len(selected_points)
-                        )
-                        popup.exec()
-                        user_cancelled = popup.stop
-                        suppress_dialog = popup.repeat
-
-                    if user_cancelled:
-                        continue
-
-                # Preserve modification history for all fields except filename
-                for tag in database_data.get_field_names(COLLECTION_CURRENT):
-
-                    if tag == TAG_FILENAME:
-                        continue
-
-                    current_value = database_data.get_value(
+                for point in selected_points:
+                    scan_path = self.item(point.row(), 0).text()
+                    scan_object = database_data.get_document(
                         collection_name=COLLECTION_CURRENT,
-                        primary_key=scan_path,
-                        field=tag,
-                    )
-                    initial_value = database_data.get_value(
-                        collection_name=COLLECTION_INITIAL,
-                        primary_key=scan_path,
-                        field=tag,
+                        primary_keys=scan_path,
                     )
 
-                    # Only archive if at least one value exists
-                    if current_value is not None or initial_value is not None:
-                        values_removed.append(
-                            [
-                                scan_path,
-                                tag,
-                                current_value,
-                                initial_value,
-                            ]
+                    if not scan_object:
+                        continue
+
+                    # Confirm removal if scan is in active pipeline
+                    is_in_pipeline = (
+                        scan_path in scan_list and self.data_browser.data_sent
+                    )
+
+                    if is_in_pipeline:
+
+                        if not suppress_dialog:
+                            popup = PopUpRemoveScan(
+                                scan_path, len(selected_points)
+                            )
+                            popup.exec()
+                            user_cancelled = popup.stop
+                            suppress_dialog = popup.repeat
+
+                        if user_cancelled:
+                            continue
+
+                    # Preserve modification history for all fields except
+                    # filename
+                    for tag in database_data.get_field_names(
+                        COLLECTION_CURRENT
+                    ):
+
+                        if tag == TAG_FILENAME:
+                            continue
+
+                        current_value = database_data.get_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan_path,
+                            field=tag,
+                        )
+                        initial_value = database_data.get_value(
+                            collection_name=COLLECTION_INITIAL,
+                            primary_key=scan_path,
+                            field=tag,
                         )
 
-                # Remove from database collections
-                self.scans_to_visualize.remove(scan_path)
-                database_data.remove_document(COLLECTION_CURRENT, scan_path)
-                database_data.remove_document(COLLECTION_INITIAL, scan_path)
-                # Remove associated files from file system
-                full_scan_path = os.path.join(self.project.folder, scan_path)
-                files_to_remove = [full_scan_path]
+                        # Only archive if at least one value exists
+                        if (
+                            current_value is not None
+                            or initial_value is not None
+                        ):
+                            values_removed.append(
+                                [
+                                    scan_path,
+                                    tag,
+                                    current_value,
+                                    initial_value,
+                                ]
+                            )
 
-                # Include associated JSON for NIfTI files
-                if scan_path.endswith(".nii"):
-                    files_to_remove.append(full_scan_path[:-4] + ".json")
+                    # Remove from database collections
+                    self.scans_to_visualize.remove(scan_path)
+                    database_data.remove_document(
+                        COLLECTION_CURRENT, scan_path
+                    )
+                    database_data.remove_document(
+                        COLLECTION_INITIAL, scan_path
+                    )
+                    # Remove associated files from file system
+                    full_scan_path = os.path.join(
+                        self.project.folder, scan_path
+                    )
+                    files_to_remove = [full_scan_path]
 
-                for file_path in files_to_remove:
+                    # Include associated JSON for NIfTI files
+                    if scan_path.endswith(".nii"):
+                        files_to_remove.append(full_scan_path[:-4] + ".json")
 
-                    if os.path.isfile(file_path):
-                        os.remove(file_path)
+                    for file_path in files_to_remove:
 
-                scans_removed.append(scan_object[0])
+                        if os.path.isfile(file_path):
+                            os.remove(file_path)
 
-        # Update UI table
-        for scan in scans_removed:
-            scan_name = scan[TAG_FILENAME]
-            self.removeRow(self.get_scan_row(scan_name))
+                    scans_removed.append(scan_object[0])
 
-        if scans_removed:
-            self.project.unsavedModifications = True
-            self.resizeColumnsToContents()
+            # Update UI table
+            for scan in scans_removed:
+                scan_name = scan[TAG_FILENAME]
+                self.removeRow(self.get_scan_row(scan_name))
+
+            if scans_removed:
+                self.project.unsavedModifications = True
+                self.resizeColumnsToContents()
+
+        finally:
+            # Safely disconnect signals
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def reset_cell(self):
         """
@@ -3393,24 +3484,43 @@ class TableDataBrowser(QTableWidget):
             - Calls data_browser.connect_mini_viewer() if self.link_viewer
               is True
         """
-        # Rebuild scans list from selected items
-        self.scans.clear()
-        scan_dict = {}
+        # Disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        for point in self.selectedItems():
-            scan_name = self.item(point.row(), 0).text()
-            tag_name = self.horizontalHeaderItem(point.column()).text()
-            # Group tags by scan name using a dictionary
-            scan_dict.setdefault(scan_name, []).append(tag_name)
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
-        # Convert dictionary to list format
-        self.scans.extend(
-            [scan_name, tags] for scan_name, tags in scan_dict.items()
-        )
+        try:
+            # Rebuild scans list from selected items
+            self.scans.clear()
+            scan_dict = {}
 
-        # Update image viewer if linked
-        if self.link_viewer:
-            self.data_browser.connect_mini_viewer()
+            for point in self.selectedItems():
+                scan_name = self.item(point.row(), 0).text()
+                tag_name = self.horizontalHeaderItem(point.column()).text()
+                # Group tags by scan name using a dictionary
+                scan_dict.setdefault(scan_name, []).append(tag_name)
+
+            # Convert dictionary to list format
+            self.scans.extend(
+                [scan_name, tags] for scan_name, tags in scan_dict.items()
+            )
+
+            # Update image viewer if linked
+            if self.link_viewer:
+                self.data_browser.connect_mini_viewer()
+
+        finally:
+
+            # Reconnect signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def show_brick_history(self, scan):
         """
@@ -3452,7 +3562,7 @@ class TableDataBrowser(QTableWidget):
         if current_item is None:
             return
 
-        self._safe_reconnect()
+        self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             self.horizontalHeader().setSortIndicator(
@@ -3460,7 +3570,7 @@ class TableDataBrowser(QTableWidget):
             )
 
         finally:
-            self._safe_disconnect()
+            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
     def sort_updated(self, column, order):
         """
@@ -3482,7 +3592,7 @@ class TableDataBrowser(QTableWidget):
         if column == -1:
             return
 
-        self._safe_disconnect()
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             self.project.setSortOrder(int(order))
@@ -3492,7 +3602,7 @@ class TableDataBrowser(QTableWidget):
             self.resizeRowsToContents()
 
         finally:
-            self._safe_reconnect()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def update_colors(self):
         """
@@ -3700,7 +3810,12 @@ class TableDataBrowser(QTableWidget):
             self.scans = []
 
         # Update table structure with signals temporarily disconnected
-        self._safe_disconnect()
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+
+        if self.activate_selection:
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
         try:
             self.setRowCount(len(self.scans_to_visualize))
@@ -3708,15 +3823,20 @@ class TableDataBrowser(QTableWidget):
             self.fill_headers(take_tags_to_update)
             # Cells filled
             self.fill_cells_update_table()
-            self._safe_disconnect()
             # Adjust dimensions and styling
             self.resizeColumnsToContents()
             self.resizeRowsToContents()
             self.update_colors()
 
         finally:
+
             # Ensure signals are reconnected even if an error occurs
-            self._safe_reconnect()
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def update_visualized_columns(self, old_tags, showed):
         """
@@ -3732,10 +3852,13 @@ class TableDataBrowser(QTableWidget):
         :param old_tags (list): Previously visualized tags.
         :param showed (list): Tags to currently display in the table.
         """
-        self._safe_disconnect()
+        # Disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self.itemSelectionChanged.disconnect()
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
         try:
             # Convert to sets for efficient difference operations
@@ -3772,9 +3895,11 @@ class TableDataBrowser(QTableWidget):
             # Restore selection handling
             if self.activate_selection:
                 self.update_selection()
-                self.itemSelectionChanged.connect(self.selection_changed)
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
 
-            self._safe_reconnect()
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def update_visualized_rows(self, old_scans):
         """
@@ -3787,41 +3912,48 @@ class TableDataBrowser(QTableWidget):
         :param old_scans: Collection of scans from the previous state, used to
                           determine which rows need to be hidden.
         """
-        self._safe_disconnect()
+        # Disconnect signals
+        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        # Temporarily disable selection change signals during update
         if self.activate_selection:
-            self.itemSelectionChanged.disconnect()
+            self._safe_disconnect(
+                self.itemSelectionChanged, self.selection_changed
+            )
 
-        # Hide rows for scans removed from visualization
-        old_scan_set = set(old_scans)
-        current_scan_set = set(self.scans_to_visualize)
+        try:
+            # Hide rows for scans removed from visualization
+            old_scan_set = set(old_scans)
+            current_scan_set = set(self.scans_to_visualize)
 
-        for scan in old_scan_set - current_scan_set:
+            for scan in old_scan_set - current_scan_set:
 
-            if (row := self.get_scan_row(scan)) is not None:
-                self.setRowHidden(row, True)
+                if (row := self.get_scan_row(scan)) is not None:
+                    self.setRowHidden(row, True)
 
-        # Show rows for scans added to visualization
-        for scan in current_scan_set:
+            # Show rows for scans added to visualization
+            for scan in current_scan_set:
 
-            if (row := self.get_scan_row(scan)) is not None:
-                self.setRowHidden(row, False)
+                if (row := self.get_scan_row(scan)) is not None:
+                    self.setRowHidden(row, False)
 
-        # Update table appearance
-        self.resizeColumnsToContents()
+            # Update table appearance
+            self.resizeColumnsToContents()
 
-        # Update selection and colors
-        if self.activate_selection:
-            self.update_selection()
+            # Update selection and colors
+            if self.activate_selection:
+                self.update_selection()
 
-        self.update_colors()
+            self.update_colors()
 
-        # Re-enable selection change signals
-        if self.activate_selection:
-            self.itemSelectionChanged.connect(self.selection_changed)
+        finally:
 
-        self._safe_reconnect()
+            # Re-enable selection change signals
+            if self.activate_selection:
+                self._safe_reconnect(
+                    self.itemSelectionChanged, self.selection_changed
+                )
+
+            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def visualized_tags_pop_up(self):
         """
