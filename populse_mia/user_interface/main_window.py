@@ -1737,14 +1737,13 @@ class MainWindow(QMainWindow):
                 )
 
             table_data = self.data_browser.table_data
+            table_data.clearSelection()
             table_data.add_columns()
             table_data.fill_headers()
             table_data.add_rows(documents)
             table_data.scans_to_visualize = documents
             table_data.scans_to_search = documents
-            table_data.itemChanged.disconnect()
             table_data.fill_cells_update_table()
-            table_data.itemChanged.connect(table_data.on_cell_changed)
             table_data.update_visualized_rows(old_scans)
             # Advanced search + search_bar opened
             old_search = self.project.currentFilter.search_bar
