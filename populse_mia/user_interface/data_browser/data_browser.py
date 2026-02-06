@@ -26,6 +26,7 @@ import logging
 import os
 import platform
 import subprocess
+from contextlib import contextmanager
 from functools import partial
 from pathlib import Path
 from typing import get_origin
@@ -48,6 +49,7 @@ from PyQt5.QtWidgets import (
     QMessageBox,
     QProgressDialog,
     QPushButton,
+    QSizePolicy,
     QSplitter,
     QTableWidget,
     QTableWidgetItem,
@@ -489,19 +491,22 @@ class DataBrowser(QWidget):
 
     def create_layout(self):
         """Create the layouts of the tab."""
+        # Table + buttons frame
         self.frame_table_data.setFrameShape(QFrame.StyledPanel)
         self.frame_table_data.setFrameShadow(QFrame.Raised)
         self.frame_table_data.setObjectName("frame_table_data")
         vbox_table = QVBoxLayout()
+        self.table_data.setSizePolicy(
+            QSizePolicy.Expanding, QSizePolicy.Expanding
+        )
         vbox_table.addWidget(self.table_data)
-        # Add path button under the table
+        # Buttons row under table
         hbox_layout = QHBoxLayout()
         sources_images_dir = Config().getSourceImageDir()
         self.addRowLabel.setObjectName("plus")
         add_row_picture = QPixmap(
             os.path.relpath(os.path.join(sources_images_dir, "green_plus.png"))
-        )
-        add_row_picture = add_row_picture.scaledToHeight(20)
+        ).scaledToHeight(20)
         self.addRowLabel.setPixmap(add_row_picture)
         self.addRowLabel.setFixedWidth(20)
         self.addRowLabel.setToolTip(
@@ -514,11 +519,10 @@ class DataBrowser(QWidget):
             self.send_documents_to_pipeline
         )
         hbox_layout.addWidget(self.send_documents_to_pipeline_button)
-        vbox_table.addLayout(hbox_layout)
+        # Explicit stretch = 0 so buttons never grow vertically
+        vbox_table.addLayout(hbox_layout, 0)
         self.frame_table_data.setLayout(vbox_table)
-        # Visualization:
-        # Visualization frame, label and text edit (bot.0tom left of the
-        # screen in the application)
+        # Visualization (mini viewer)
         self.frame_visualization.setFrameShape(QFrame.StyledPanel)
         self.frame_visualization.setFrameShadow(QFrame.Raised)
         self.frame_visualization.setObjectName("frame_5")
@@ -527,7 +531,7 @@ class DataBrowser(QWidget):
         hbox_viewer = QHBoxLayout()
         hbox_viewer.addWidget(self.viewer)
         self.frame_visualization.setLayout(hbox_viewer)
-        # Advanced search:
+        # Advanced search
         self.frame_advanced_search.setFrameShape(QFrame.StyledPanel)
         self.frame_advanced_search.setFrameShadow(QFrame.Raised)
         self.frame_advanced_search.setObjectName("frame_search")
@@ -535,7 +539,7 @@ class DataBrowser(QWidget):
         layout_search = QGridLayout()
         layout_search.addWidget(self.advanced_search)
         self.frame_advanced_search.setLayout(layout_search)
-        # Splitter and layout:
+        # Splitter + main layout
         self.splitter_vertical.addWidget(self.frame_advanced_search)
         self.splitter_vertical.addWidget(self.frame_table_data)
         self.splitter_vertical.addWidget(self.frame_visualization)
@@ -1046,6 +1050,7 @@ class TableDataBrowser(QTableWidget):
         - add_columns: Add columns to the table
         - add_path: Call a pop-up to add any document to the project
         - add_rows: Insert rows if they are not already in the table
+        - batch_update: Context manager for efficient batch updates
         - clear_cell: Clear the selected cells
         - context_menu_table: Create the context menu of the table
         - delete_from_brick: Delete a document from its brick id
@@ -1483,158 +1488,197 @@ class TableDataBrowser(QTableWidget):
         from populse_mia.utils import set_item_data
 
         # Temporarily disable sorting and disconnect signals
-        self.setSortingEnabled(False)
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        with self.batch_update(disable_sorting=True):
+            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
-
-        try:
-            # Initialize and configure progress dialog
-            cells_number = len(rows) * self.columnCount()
-            self.progress = QProgressDialog(
-                "Please wait while the paths are being added...",
-                None,
-                0,
-                cells_number,
-            )
-            self.progress.setMinimumDuration(0)
-            self.progress.setValue(0)
-            self.progress.setMinimumWidth(350)  # For mac OS
-            self.progress.setWindowTitle("Adding the paths")
-            self.progress.setWindowFlags(
-                Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint
-            )
-            self.progress.setModal(True)
-            self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
-            self.progress.show()
-            self.setVisible(False)
-            # Add rows with database context
-            idx = 0
-
-            with self.project.database.data() as database_data:
-
-                for scan in rows:
-
-                    # Skip if scan already exists in table
-                    if self.get_scan_row(scan) is not None:
-                        continue
-
-                    row_index = self.rowCount()
-                    self.insertRow(row_index)
-
-                    # Populate columns for the new row
-                    for column_index in range(self.columnCount()):
-                        idx += 1
-                        self.progress.setValue(idx)
-                        QApplication.processEvents()
-                        tag = self.horizontalHeaderItem(column_index).text()
-                        item = QTableWidgetItem()
-
-                        if column_index == 0:
-                            # First column: name tag (non-editable)
-                            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                            set_item_data(item, scan, FIELD_TYPE_STRING)
-
-                        else:
-                            # Retrieve value from database
-                            cur_value = database_data.get_value(
-                                collection_name=COLLECTION_CURRENT,
-                                primary_key=scan,
-                                field=tag,
-                            )
-
-                            if cur_value is not None:
-
-                                if tag == TAG_BRICKS:
-                                    # Tag bricks, display list with buttons
-                                    widget = QWidget()
-                                    widget.moveToThread(
-                                        QApplication.instance().thread()
-                                    )
-                                    layout = QVBoxLayout()
-                                    brick_uuid = cur_value[-1]
-                                    brick_name = database_data.get_value(
-                                        collection_name=COLLECTION_BRICK,
-                                        primary_key=brick_uuid,
-                                        field=BRICK_NAME,
-                                    )
-                                    brick_name_button = QPushButton(brick_name)
-                                    brick_name_button.setFocusPolicy(
-                                        Qt.NoFocus
-                                    )
-                                    brick_name_button.moveToThread(
-                                        QApplication.instance().thread()
-                                    )
-                                    self.bricks[brick_name_button] = brick_uuid
-
-                                    if TAG_FILENAME in scan:
-                                        brick_name_button.clicked.connect(
-                                            partial(
-                                                self.show_brick_history,
-                                                scan[TAG_FILENAME],
-                                            )
-                                        )
-
-                                    layout.addWidget(brick_name_button)
-                                    widget.setLayout(layout)
-                                    self.setCellWidget(
-                                        row_index, column_index, widget
-                                    )
-
-                                else:
-                                    # Standard cell with database value
-                                    field_type = (
-                                        database_data.get_field_attributes(
-                                            COLLECTION_CURRENT, tag
-                                        )["field_type"]
-                                    )
-                                    set_item_data(item, cur_value, field_type)
-
-                            else:
-                                # Handle undefined values
-
-                                if tag == TAG_BRICKS:
-                                    set_item_data(item, "", FIELD_TYPE_STRING)
-                                    # bricks not editable
-                                    item.setFlags(
-                                        item.flags() & ~Qt.ItemIsEditable
-                                    )
-
-                                else:
-                                    set_item_data(
-                                        item,
-                                        NOT_DEFINED_VALUE,
-                                        FIELD_TYPE_STRING,
-                                    )
-                                    font = item.font()
-                                    font.setItalic(True)
-                                    font.setBold(True)
-                                    item.setFont(font)
-
-                        self.setItem(row_index, column_index, item)
-
-            # Restore table state
-            self.resizeColumnsToContents()
-            self.resizeRowsToContents()
-            # Selection updated
-            self.update_selection()
-            self.update_colors()
-
-        finally:
-
-            # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
+                self._safe_disconnect(
                     self.itemSelectionChanged, self.selection_changed
                 )
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
-            # Clean up
-            self.progress.close()
-            self.setVisible(True)
+            try:
+                # Initialize and configure progress dialog
+                cells_number = len(rows) * self.columnCount()
+                self.progress = QProgressDialog(
+                    "Please wait while the paths are being added...",
+                    None,
+                    0,
+                    cells_number,
+                )
+                self.progress.setMinimumDuration(0)
+                self.progress.setValue(0)
+                self.progress.setMinimumWidth(350)  # For mac OS
+                self.progress.setWindowTitle("Adding the paths")
+                self.progress.setWindowFlags(
+                    Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint
+                )
+                self.progress.setModal(True)
+                self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
+                self.progress.show()
+                # Add rows with database context
+                idx = 0
+
+                with self.project.database.data() as database_data:
+
+                    for scan in rows:
+
+                        # Skip if scan already exists in table
+                        if self.get_scan_row(scan) is not None:
+                            continue
+
+                        row_index = self.rowCount()
+                        self.insertRow(row_index)
+
+                        # Populate columns for the new row
+                        for column_index in range(self.columnCount()):
+                            idx += 1
+                            self.progress.setValue(idx)
+                            QApplication.processEvents()
+                            tag = self.horizontalHeaderItem(
+                                column_index
+                            ).text()
+                            item = QTableWidgetItem()
+
+                            if column_index == 0:
+                                # First column: name tag (non-editable)
+                                item.setFlags(
+                                    item.flags() & ~Qt.ItemIsEditable
+                                )
+                                set_item_data(item, scan, FIELD_TYPE_STRING)
+
+                            else:
+                                # Retrieve value from database
+                                cur_value = database_data.get_value(
+                                    collection_name=COLLECTION_CURRENT,
+                                    primary_key=scan,
+                                    field=tag,
+                                )
+
+                                if cur_value is not None:
+
+                                    if tag == TAG_BRICKS:
+                                        # Tag bricks, display list with buttons
+                                        widget = QWidget()
+                                        layout = QVBoxLayout()
+                                        brick_uuid = cur_value[-1]
+                                        brick_name = database_data.get_value(
+                                            collection_name=COLLECTION_BRICK,
+                                            primary_key=brick_uuid,
+                                            field=BRICK_NAME,
+                                        )
+                                        brick_name_button = QPushButton(
+                                            brick_name
+                                        )
+                                        brick_name_button.setFocusPolicy(
+                                            Qt.NoFocus
+                                        )
+                                        self.bricks[brick_name_button] = (
+                                            brick_uuid
+                                        )
+
+                                        if TAG_FILENAME in scan:
+                                            brick_name_button.clicked.connect(
+                                                partial(
+                                                    self.show_brick_history,
+                                                    scan[TAG_FILENAME],
+                                                )
+                                            )
+
+                                        layout.addWidget(brick_name_button)
+                                        widget.setLayout(layout)
+                                        self.setCellWidget(
+                                            row_index, column_index, widget
+                                        )
+
+                                    else:
+                                        # Standard cell with database value
+                                        field_type = (
+                                            database_data.get_field_attributes(
+                                                COLLECTION_CURRENT, tag
+                                            )["field_type"]
+                                        )
+                                        set_item_data(
+                                            item, cur_value, field_type
+                                        )
+
+                                else:
+
+                                    # Handle undefined values
+                                    if tag == TAG_BRICKS:
+                                        set_item_data(
+                                            item, "", FIELD_TYPE_STRING
+                                        )
+                                        # bricks not editable
+                                        item.setFlags(
+                                            item.flags() & ~Qt.ItemIsEditable
+                                        )
+
+                                    else:
+                                        set_item_data(
+                                            item,
+                                            NOT_DEFINED_VALUE,
+                                            FIELD_TYPE_STRING,
+                                        )
+                                        font = item.font()
+                                        font.setItalic(True)
+                                        font.setBold(True)
+                                        item.setFont(font)
+
+                            self.setItem(row_index, column_index, item)
+
+                # Restore table state
+                self.resizeColumnsToContents()
+                self.resizeRowsToContents()
+                # Selection updated
+                self.update_selection()
+                self.update_colors()
+
+            finally:
+
+                # Reconnect signals
+                if self.activate_selection:
+                    self._safe_reconnect(
+                        self.itemSelectionChanged, self.selection_changed
+                    )
+
+                self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+                # Clean up
+                self.progress.close()
+
+    @contextmanager
+    def batch_update(self, *, disable_sorting=True):
+        """
+        Context manager for efficient batch updates.
+
+        This manager temporarily disables repainting, signal emission, and
+        optionally sorting, allowing multiple modifications to the table
+        without triggering unnecessary redraws or signal handling. All previous
+        widget states are restored upon exit, even if an exception occurs.
+
+        :param disable_sorting (bool): If True (default), temporarily disables
+                                       sorting during the batch update to
+                                       prevent rearrangements.
+        """
+        prev_sorting = self.isSortingEnabled()
+
+        try:
+
+            if disable_sorting:
+                self.setSortingEnabled(False)
+
+            self.setUpdatesEnabled(False)
+            self.blockSignals(True)
+            yield
+
+        finally:
+            self.blockSignals(False)
+            self.setUpdatesEnabled(True)
+
+            if disable_sorting:
+                self.setSortingEnabled(prev_sorting)
+
+            # Force a repaint
+            self.viewport().update()
 
     def clear_cell(self):
         """
@@ -2195,169 +2239,174 @@ class TableDataBrowser(QTableWidget):
         self.progress.setModal(True)
         self.progress.setAttribute(Qt.WA_DeleteOnClose, True)
         self.progress.show()
-        self.setVisible(False)
         cell_index = 0
-        # Disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+        with self.batch_update(disable_sorting=True):
+            # Disconnect signals
+            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
 
-        try:
-
-            with self.project.database.data() as database_data:
-                primary_key = database_data.get_primary_key_name(
-                    COLLECTION_CURRENT
-                )
-
-                # Fetch scans from database
-                if self.scans_to_visualize:
-                    escaped_scans = [
-                        scan.replace("\\", "\\\\").replace('"', '\\"')
-                        for scan in self.scans_to_visualize
-                    ]
-                    joined_scans = ", ".join(
-                        f'"{scan}"' for scan in escaped_scans
-                    )
-                    query = f"{primary_key} IN [{joined_scans}]"
-                    scans = database_data.filter_documents(
-                        COLLECTION_CURRENT, query
-                    )
-
-                else:
-                    scans = []
-
-                # Extract column tags and their types
-                tags = [
-                    self.horizontalHeaderItem(col).text()
-                    for col in range(len(self.horizontalHeader()))
-                ]
-                field_names = database_data.get_field_names(COLLECTION_CURRENT)
-                tag_type_map = {
-                    field_name: (
-                        database_data.get_field_attributes(
-                            COLLECTION_CURRENT, field_name
-                        )
-                        or {}
-                    ).get("field_type", str)
-                    for field_name in field_names
-                }
-                tag_types = [tag_type_map[tag] for tag in tags]
-
-                # Populate table cells
-                for row, scan in enumerate(scans):
-
-                    for column, tag in enumerate(tags):
-                        cell_index += 1
-                        self.progress.setValue(cell_index)
-                        QApplication.processEvents()
-                        item = QTableWidgetItem()
-
-                        if column == 0:
-                            # Name column: read-only
-                            item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                            set_item_data(item, scan[tag], FIELD_TYPE_STRING)
-
-                        else:
-                            current_value = scan[tag]
-                            col_type = tag_types[column]
-
-                            if current_value:
-
-                                if tag != TAG_BRICKS:
-                                    set_item_data(
-                                        item, current_value, col_type
-                                    )
-
-                                else:
-                                    # Bricks column: create widget with button
-                                    widget = QWidget()
-                                    widget.moveToThread(
-                                        QApplication.instance().thread()
-                                    )
-                                    layout = QVBoxLayout()
-
-                                    brick_uuid = current_value[-1]
-                                    brick_name = database_data.get_value(
-                                        collection_name=COLLECTION_BRICK,
-                                        primary_key=brick_uuid,
-                                        field=BRICK_NAME,
-                                    )
-
-                                    if brick_name:
-                                        button = QPushButton(brick_name)
-                                        button.setFocusPolicy(Qt.NoFocus)
-                                        button.moveToThread(
-                                            QApplication.instance().thread()
-                                        )
-                                        self.bricks[button] = brick_uuid
-                                        button.clicked.connect(
-                                            partial(
-                                                self.show_brick_history,
-                                                scan[TAG_FILENAME],
-                                            )
-                                        )
-                                        layout.addWidget(button)
-
-                                    widget.setLayout(layout)
-                                    self.setCellWidget(row, column, widget)
-
-                            else:
-
-                                # Handle undefined values
-                                if tag != TAG_BRICKS:
-                                    set_item_data(
-                                        item,
-                                        NOT_DEFINED_VALUE,
-                                        FIELD_TYPE_STRING,
-                                    )
-                                    font = item.font()
-                                    font.setItalic(True)
-                                    font.setBold(True)
-                                    item.setFont(font)
-
-                                else:
-                                    # No brick: clear widget and mark
-                                    # non-editable
-                                    self.setCellWidget(row, column, None)
-                                    set_item_data(item, "", FIELD_TYPE_STRING)
-                                    item.setFlags(
-                                        item.flags() & ~Qt.ItemIsEditable
-                                    )
-
-                        self.setItem(row, column, item)
-
-            # Apply saved sorting preferences
-            # self.setSortingEnabled(True)
-            self.setSortingEnabled(False)
-            tag_to_sort = self.project.getSortedTag()
-            column_to_sort = self.get_tag_column(tag_to_sort)
-            sort_order = self.project.getSortOrder()
-
-            if column_to_sort is not None:
-                self.horizontalHeader().setSortIndicator(
-                    column_to_sort, sort_order
-                )
-
-            else:
-                self.horizontalHeader().setSortIndicator(0, 0)
-
-            self.resizeRowsToContents()
-            self.resizeColumnsToContents()
-
-        finally:
-            self.progress.close()
-            self.setVisible(True)
-
-            # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
+                self._safe_disconnect(
                     self.itemSelectionChanged, self.selection_changed
                 )
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            try:
+
+                with self.project.database.data() as database_data:
+                    primary_key = database_data.get_primary_key_name(
+                        COLLECTION_CURRENT
+                    )
+
+                    # Fetch scans from database
+                    if self.scans_to_visualize:
+                        escaped_scans = [
+                            scan.replace("\\", "\\\\").replace('"', '\\"')
+                            for scan in self.scans_to_visualize
+                        ]
+                        joined_scans = ", ".join(
+                            f'"{scan}"' for scan in escaped_scans
+                        )
+                        query = f"{primary_key} IN [{joined_scans}]"
+                        scans = database_data.filter_documents(
+                            COLLECTION_CURRENT, query
+                        )
+
+                    else:
+                        scans = []
+
+                    # Extract column tags and their types
+                    tags = [
+                        self.horizontalHeaderItem(col).text()
+                        for col in range(len(self.horizontalHeader()))
+                    ]
+                    field_names = database_data.get_field_names(
+                        COLLECTION_CURRENT
+                    )
+                    tag_type_map = {
+                        field_name: (
+                            database_data.get_field_attributes(
+                                COLLECTION_CURRENT, field_name
+                            )
+                            or {}
+                        ).get("field_type", str)
+                        for field_name in field_names
+                    }
+                    tag_types = [tag_type_map[tag] for tag in tags]
+
+                    # Populate table cells
+                    for row, scan in enumerate(scans):
+
+                        for column, tag in enumerate(tags):
+                            cell_index += 1
+
+                            # Only update progress every 50 cells to save time
+                            if cell_index % 50 == 0:
+                                self.progress.setValue(cell_index)
+                                QApplication.processEvents()
+
+                            item = QTableWidgetItem()
+
+                            if column == 0:
+                                # Name column: read-only
+                                item.setFlags(
+                                    item.flags() & ~Qt.ItemIsEditable
+                                )
+                                set_item_data(
+                                    item, scan[tag], FIELD_TYPE_STRING
+                                )
+
+                            else:
+                                current_value = scan[tag]
+                                col_type = tag_types[column]
+
+                                if current_value:
+
+                                    if tag != TAG_BRICKS:
+                                        set_item_data(
+                                            item, current_value, col_type
+                                        )
+
+                                    else:
+                                        # Bricks column: create widget with
+                                        # button
+                                        widget = QWidget()
+                                        layout = QVBoxLayout()
+
+                                        brick_uuid = current_value[-1]
+                                        brick_name = database_data.get_value(
+                                            collection_name=COLLECTION_BRICK,
+                                            primary_key=brick_uuid,
+                                            field=BRICK_NAME,
+                                        )
+
+                                        if brick_name:
+                                            button = QPushButton(brick_name)
+                                            button.setFocusPolicy(Qt.NoFocus)
+                                            self.bricks[button] = brick_uuid
+                                            button.clicked.connect(
+                                                partial(
+                                                    self.show_brick_history,
+                                                    scan[TAG_FILENAME],
+                                                )
+                                            )
+                                            layout.addWidget(button)
+
+                                        widget.setLayout(layout)
+                                        self.setCellWidget(row, column, widget)
+
+                                else:
+
+                                    # Handle undefined values
+                                    if tag != TAG_BRICKS:
+                                        set_item_data(
+                                            item,
+                                            NOT_DEFINED_VALUE,
+                                            FIELD_TYPE_STRING,
+                                        )
+                                        font = item.font()
+                                        font.setItalic(True)
+                                        font.setBold(True)
+                                        item.setFont(font)
+
+                                    else:
+                                        # No brick: clear widget and mark
+                                        # non-editable
+                                        self.setCellWidget(row, column, None)
+                                        set_item_data(
+                                            item, "", FIELD_TYPE_STRING
+                                        )
+                                        item.setFlags(
+                                            item.flags() & ~Qt.ItemIsEditable
+                                        )
+
+                            self.setItem(row, column, item)
+
+                # Apply saved sorting preferences
+                tag_to_sort = self.project.getSortedTag()
+                column_to_sort = self.get_tag_column(tag_to_sort)
+                sort_order = self.project.getSortOrder()
+
+                if column_to_sort is not None:
+                    self.horizontalHeader().setSortIndicator(
+                        column_to_sort, sort_order
+                    )
+
+                else:
+                    self.horizontalHeader().setSortIndicator(0, 0)
+
+                self.resizeRowsToContents()
+                self.resizeColumnsToContents()
+
+            finally:
+                self.progress.close()
+
+                # Reconnect signals
+                if self.activate_selection:
+                    self._safe_reconnect(
+                        self.itemSelectionChanged, self.selection_changed
+                    )
+
+                self._safe_reconnect(self.itemChanged, self.on_cell_changed)
 
     def fill_headers(self, take_tags_to_update=False):
         """
