@@ -1122,6 +1122,8 @@ class TableDataBrowser(QTableWidget):
               ``activate_selection`` and ``link_viewer`` are True.
         """
         super().__init__()
+        self.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
         # Store instance attributes
         self.project = project
         self.data_browser = data_browser
