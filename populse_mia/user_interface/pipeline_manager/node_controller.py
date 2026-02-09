@@ -1036,10 +1036,7 @@ class FilterWidget(QWidget):
 
         # Build scan list from node input
         self.scan_list = (
-            [
-                os.path.relpath(scan, self.project.folder)
-                for scan in self.process.input
-            ]
+            list(self.process.input)
             if self.process.input and self.process.input is not Undefined
             else []
         )
