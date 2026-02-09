@@ -76,6 +76,9 @@ class MiaViewer(DataViewer):
 
     """
 
+    # Class-level tracker for Anatomist viewers
+    _mia_viewers_count = 0
+
     def __init__(self, init_global_handlers=None):
         """
         Initialize the Mia viewer widget.
@@ -85,13 +88,9 @@ class MiaViewer(DataViewer):
         """
         super().__init__()
         self.anaviewer = AnaSimpleViewer2(init_global_handlers)
-
         # Track the total number of active viewers to manage PyAnatomist's
         # lifecycle
-        if not hasattr(DataViewer, "mia_viewers"):
-            DataViewer.mia_viewers = 0
-
-        DataViewer.mia_viewers += 1
+        type(self)._mia_viewers_count += 1
         # Set up UI and connect actions
         self._setup_ui()
         self.project = None
@@ -293,8 +292,10 @@ class MiaViewer(DataViewer):
         If this is the last MIA viewer instance, closes PyAnatomist entirely.
         """
         super().close()
-        DataViewer.mia_viewers -= 1  # decrement active viewer count
-        close_ana = DataViewer.mia_viewers == 0
+        # Decrement viewer count
+        type(self)._mia_viewers_count -= 1
+        # Close Anatomist if no viewers remain
+        close_ana = type(self)._mia_viewers_count == 0
         self.anaviewer.closeAll(close_ana)
 
     def display_files(self, files):

@@ -64,6 +64,9 @@ class MiaViewer(DataViewer):
 
     """
 
+    # Class-level tracker for Anatomist viewers
+    _mia_viewers_count = 0
+
     def __init__(self, init_global_handlers=None):
         """
         Initialize the MiaViewer.
@@ -77,10 +80,7 @@ class MiaViewer(DataViewer):
 
         # Count global number of viewers using anatomist, in order to close it
         # nicely
-        if not hasattr(DataViewer, "mia_viewers"):
-            DataViewer.mia_viewers = 0
-
-        DataViewer.mia_viewers += 1
+        type(self)._mia_viewers_count += 1
         # Set up UI components
         self._setup_ui()
         # Initialize project-related attributes
@@ -225,6 +225,7 @@ class MiaViewer(DataViewer):
         """Close the viewer and manage Anatomist viewer resources."""
         super().close()
         # Decrement viewer count
-        DataViewer.mia_viewers -= 1  # dec count
-        close_ana = DataViewer.mia_viewers == 0
+        type(self)._mia_viewers_count -= 1
+        # Close Anatomist if no viewers remain
+        close_ana = type(self)._mia_viewers_count == 0
         self.anaviewer.closeAll(close_ana)
