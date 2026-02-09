@@ -3178,117 +3178,135 @@ class PipelineManagerTab(QWidget):
         from soma_workflow import constants as swconstants
         from soma_workflow.gui.workflowGui import ConnectionDialog
 
-        # Initialize the pipeline
-        self.initialize()
+        execution_started = False
+        self.run_pipeline_action.setDisabled(True)
 
-        if not self.test_init:
-            return
+        try:
+            # Initialize the pipeline
+            self.initialize()
 
-        filename = self.pipelineEditorTabs.get_current_filename()
-
-        if filename:
-            pipeline_name = os.path.basename(filename)
-
-        else:
-            pipeline = self.pipelineEditorTabs.get_current_pipeline()
-            non_empty_nodes = [name for name in pipeline.nodes if name]
-            pipeline_name = (
-                non_empty_nodes[0] if len(non_empty_nodes) == 1 else "Unknown"
-            )
-
-        pipeline_name = pipeline_name.removesuffix(".py")
-        # Set pipeline execution metadata
-        self.last_run_pipeline = self.get_pipeline_or_process()
-        self.last_status = swconstants.WORKFLOW_NOT_STARTED
-        self.last_run_log = None
-        self.last_pipeline_name = pipeline_name
-        # Update UI status
-        self.main_window.statusBar().showMessage(
-            f"'{pipeline_name}' pipeline is getting run. Please wait."
-        )
-        QApplication.processEvents()
-        # Configure soma-workflow if enabled
-        engine = self.get_capsul_engine()
-        swf_config = engine.settings.select_configurations(
-            "global", {"somaworkflow": 'config_id=="somaworkflow"'}
-        )
-
-        if swf_config.get("use", True):
-            # Get configuration files and show connection dialog
-            config_file = configuration.Configuration.search_config_path()
-            resource_list = (
-                configuration.Configuration.get_configured_resources(
-                    config_file
-                )
-            )
-            login_list = configuration.Configuration.get_logins(config_file)
-            dialog = ConnectionDialog(login_list, resource_list)
-            # Pre-select configured resource if available
-            selected_resource = swf_config.get("computing_resource")
-
-            if selected_resource and selected_resource in resource_list:
-                dialog.ui.combo_resources.setCurrentText(selected_resource)
-
-            # Show dialog and handle user response
-            if dialog.exec_() == 0:  # User cancelled
+            if not self.test_init:
                 return
 
-            # Reset execution state
-            self.ignore = {}
-            self.ignore_node = False
-            self.key = {}
-            self.brick_list = []
-            self.init_clicked = False
-            # Extract connection details
-            resource = dialog.ui.combo_resources.currentText()
-            password = dialog.ui.lineEdit_password.text()
-            rsa_key = dialog.ui.lineEdit_rsa_password.text()
+            filename = self.pipelineEditorTabs.get_current_filename()
 
-            # Connect to remote resource if not local
-            local_resources = {
-                "",
-                "localhost",
-                configuration.Configuration.get_local_resource_id(),
-            }
+            if filename:
+                pipeline_name = os.path.basename(filename)
 
-            if resource not in local_resources:
-                study_config = engine.study_config
+            else:
+                pipeline = self.pipelineEditorTabs.get_current_pipeline()
+                non_empty_nodes = [name for name in pipeline.nodes if name]
+                pipeline_name = (
+                    non_empty_nodes[0]
+                    if len(non_empty_nodes) == 1
+                    else "Unknown"
+                )
 
-                if "SomaWorkflowConfig" in study_config.modules:
-                    # Configure the computing resource
-                    # TODO: Not sure this is needed...)
-                    study_config.somaworkflow_computing_resource = resource
-                    swc = study_config.modules["SomaWorkflowConfig"]
-                    swc.set_computing_resource_password(
-                        resource, password, rsa_key
+            pipeline_name = pipeline_name.removesuffix(".py")
+            # Set pipeline execution metadata
+            self.last_run_pipeline = self.get_pipeline_or_process()
+            self.last_status = swconstants.WORKFLOW_NOT_STARTED
+            self.last_run_log = None
+            self.last_pipeline_name = pipeline_name
+            # Update UI status
+            self.main_window.statusBar().showMessage(
+                f"'{pipeline_name}' pipeline is getting run. Please wait."
+            )
+            QApplication.processEvents()
+            # Configure soma-workflow if enabled
+            engine = self.get_capsul_engine()
+            swf_config = engine.settings.select_configurations(
+                "global", {"somaworkflow": 'config_id=="somaworkflow"'}
+            )
+
+            if swf_config.get("use", True):
+                # Get configuration files and show connection dialog
+                config_file = configuration.Configuration.search_config_path()
+                resource_list = (
+                    configuration.Configuration.get_configured_resources(
+                        config_file
                     )
+                )
+                login_list = configuration.Configuration.get_logins(
+                    config_file
+                )
+                dialog = ConnectionDialog(login_list, resource_list)
+                # Pre-select configured resource if available
+                selected_resource = swf_config.get("computing_resource")
 
-                logger.info(f"Connecting to resource: {resource}")
-                engine.connect(resource)
+                if selected_resource and selected_resource in resource_list:
+                    dialog.ui.combo_resources.setCurrentText(selected_resource)
 
-        # Setup progress widget and animation
-        self.progress = RunProgress(self)
-        self.progress.setSizePolicy(
-            QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
-        )
-        self.hLayout.addWidget(self.progress)
-        # Setup rotating brain animation
-        config = Config()
-        sources_images_dir = config.getSourceImageDir()
-        animation_path = os.path.join(
-            sources_images_dir, "rotatingBrainVISA.gif"
-        )
-        self._mmovie = QMovie(animation_path)
-        self._mmovie.stop()
-        self._mmovie.frameChanged.connect(self._set_anim_frame)
-        self._mmovie.start()
-        # Update UI state for execution
-        self.stop_pipeline_action.setEnabled(True)
-        self.run_pipeline_action.setDisabled(True)
-        self.garbage_collect_action.setDisabled(True)
-        # Connect signals and start execution
-        self.progress.worker.finished.connect(self.finish_execution)
-        self.progress.start()
+                # Show dialog and handle user response
+                if dialog.exec_() == 0:  # User cancelled
+                    return
+
+                # Reset execution state
+                self.ignore = {}
+                self.ignore_node = False
+                self.key = {}
+                self.brick_list = []
+                self.init_clicked = False
+                # Extract connection details
+                resource = dialog.ui.combo_resources.currentText()
+                password = dialog.ui.lineEdit_password.text()
+                rsa_key = dialog.ui.lineEdit_rsa_password.text()
+
+                # Connect to remote resource if not local
+                local_resources = {
+                    "",
+                    "localhost",
+                    configuration.Configuration.get_local_resource_id(),
+                }
+
+                if resource not in local_resources:
+                    study_config = engine.study_config
+
+                    if "SomaWorkflowConfig" in study_config.modules:
+                        # Configure the computing resource
+                        # TODO: Not sure this is needed...)
+                        study_config.somaworkflow_computing_resource = resource
+                        swc = study_config.modules["SomaWorkflowConfig"]
+                        swc.set_computing_resource_password(
+                            resource, password, rsa_key
+                        )
+
+                    logger.info(f"Connecting to resource: {resource}")
+                    engine.connect(resource)
+
+            # Setup progress widget and animation
+            self.progress = RunProgress(self)
+            self.progress.setSizePolicy(
+                QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed
+            )
+            self.hLayout.addWidget(self.progress)
+            # Setup rotating brain animation
+            config = Config()
+            sources_images_dir = config.getSourceImageDir()
+            animation_path = os.path.join(
+                sources_images_dir, "rotatingBrainVISA.gif"
+            )
+            self._mmovie = QMovie(animation_path)
+            self._mmovie.stop()
+            self._mmovie.frameChanged.connect(self._set_anim_frame)
+            self._mmovie.start()
+            # Update UI state for execution
+            execution_started = True
+            self.stop_pipeline_action.setEnabled(True)
+            self.garbage_collect_action.setDisabled(True)
+            # Connect signals and start execution
+            self.progress.worker.finished.connect(self.finish_execution)
+            self.progress.start()
+
+        except Exception:
+            logger.exception("Error while starting pipeline execution")
+            raise
+
+        finally:
+            # If execution never really started, restore immediately the
+            # run_pipeline_action availability
+            if not execution_started:
+                self.run_pipeline_action.setEnabled(True)
 
     def saveParameters(self):
         """
