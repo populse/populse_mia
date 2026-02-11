@@ -39,6 +39,7 @@ interface for complex pipeline interactions.
 import logging
 import os
 from functools import partial
+from pathlib import Path
 
 import sip
 
@@ -1001,6 +1002,8 @@ class FilterWidget(QWidget):
     .. Methods:
         - layout_view: Configures and initializes the main widget layout,
                        including search bars, data tables, and action buttons.
+        - normalize_scan_path: Normalize a scan path to a logical
+                               project-relative path.
         - ok_clicked: Applies the configured filter to the process and closes
                       the widget.
         - reset_search_bar: Resets the search interface to its default state,
@@ -1034,12 +1037,17 @@ class FilterWidget(QWidget):
         with self.project.database.data() as database_data:
             self.visible_tags = database_data.get_shown_tags()
 
-        # Build scan list from node input
-        self.scan_list = (
-            list(self.process.input)
-            if self.process.input and self.process.input is not Undefined
-            else []
-        )
+        # Build scan list from node inputs
+        inputs = self.process.input
+
+        if inputs is Undefined or not inputs:
+            self.scan_list = []
+
+        else:
+            self.scan_list = [
+                self.normalize_scan_path(scan) for scan in inputs
+            ]
+
         # Initialize table data browser with filtered scans
         self.table_data = TableDataBrowser(
             self.project, self, self.visible_tags, False, False
@@ -1123,6 +1131,75 @@ class FilterWidget(QWidget):
         screen_resolution = QApplication.instance().desktop().screenGeometry()
         self.setMinimumWidth(round(screen_resolution.width() * 0.6))
         self.setMinimumHeight(round(screen_resolution.height() * 0.8))
+
+    def normalize_scan_path(self, scan_path):
+        """
+        Normalize a scan path to a logical project-relative path.
+
+        Converts any scan path (absolute, relative, or symlinked) into a
+        consistent project-relative representation, preferably starting at
+        the project's data directory.
+
+        Resolution strategy (in order of preference):
+            1. Path relative to project root (if path is under project)
+            2. Path relative to 'data/' directory (semantic anchor fallback)
+            3. Absolute path string (last resort)
+
+        :param scan_path: File path to normalize (absolute or relative)
+
+        :return: Normalized path string, relative to project root when possible
+
+        Examples:
+            >>> normalize_scan_path('/abs/path/project/data/scans/001.tif')
+            'data/scans/001.tif'
+            >>> normalize_scan_path('../other/data/scans/002.tif')
+            'data/scans/002.tif'
+
+        Note:
+            Handles symlinks, mount aliases, and varying working directories
+            robustly. Does not require paths to exist on disk.
+        """
+        PROJECT_DATA_DIRNAME = "data"  # project-level semantic root
+        # Normalize project root
+        project_root = Path(self.project.folder)
+
+        if not project_root.is_absolute():
+            project_root = Path.cwd() / project_root
+
+        try:
+            project_root = project_root.resolve(strict=False)
+
+        except Exception:
+            project_root = project_root.absolute()
+
+        # Normalize scan path
+        scan = Path(scan_path)
+
+        if not scan.is_absolute():
+            scan = project_root / scan
+
+        try:
+            scan = scan.resolve(strict=False)
+
+        except Exception:
+            scan = scan.absolute()
+
+        # Strategy 1: Filesystem-correct relative path
+        try:
+            return str(scan.relative_to(project_root))
+
+        except ValueError:
+            pass
+
+        # Strategy 2: Semantic anchor on data directory
+        parts = scan.parts
+
+        if PROJECT_DATA_DIRNAME in parts:
+            data_index = parts.index(PROJECT_DATA_DIRNAME)
+            return str(Path(*parts[data_index:]))
+
+        # Strategy 3: Last resort - return as absolute path
+        return str(scan)
 
     def ok_clicked(self):
         """
