@@ -531,7 +531,7 @@ class AnaSimpleViewer2(Qt.QObject):
         pos = params["position"]
         win = params["window"]
         wref = win.getReferential()
-        # Display coords in MNI referential (preferably)
+        # Display coordinates in MNI referential (preferably)
         tr = a.getTransformation(wref, a.mniTemplateRef)
         pos2 = tr.transform(pos[:3]) if tr else pos
         self.awidget.findChild(QtCore.QObject, "coordXEdit").setText(
@@ -556,6 +556,9 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Updates the volume values displayed based on the cursor position.
 
+        Handles both 3D and 4D volumes robustly. Anatomist may provide 3D or 4D
+        positions depending on the object type and context.
+
         :param win: The current window instance for transformations.
         :param a: The Anatomist instance for transformation.
         :param pos: The current position of the cursor.
@@ -573,26 +576,36 @@ class AnaSimpleViewer2(Qt.QObject):
             aimsv = ana.cpp.AObjectConverter.aims(obj)
             oref = obj.getReferential()
             tr = a.getTransformation(win.getReferential(), oref)
-            pos2 = tr.transform(pos[:3]) if tr else pos[:3]
-            vs = obj.voxelSize()
-            pos2 = [int(round(x / y)) for x, y in zip(pos2, vs)]
+            # Spatial coordinates (x, y, z)
+            pos3 = tr.transform(pos[:3]) if tr else pos[:3]
+            vs = obj.voxelSize()[:3]
+            pos2 = [int(round(x / y)) for x, y in zip(pos3, vs)]
             newItem = Qt.QTableWidgetItem(obj.name)
             valbox.setItem(i, 0, newItem)
+            # --- Robust 3D / 4D handling ---
+            has_t = aimsv.getSizeT() > 1 and len(pos) >= 4
+            t = int(round(pos[3])) if has_t else 0
+            sizes = [
+                aimsv.getSizeX(),
+                aimsv.getSizeY(),
+                aimsv.getSizeZ(),
+                aimsv.getSizeT(),
+            ]
+            full_pos = pos2 + [t]
 
-            # Check bounds
-            if all(
-                0 <= p < size
-                for p, size in zip(
-                    pos2 + [pos[3]],
-                    [
-                        aimsv.getSizeX(),
-                        aimsv.getSizeY(),
-                        aimsv.getSizeZ(),
-                        aimsv.getSizeT(),
-                    ],
-                )
-            ):
-                txt = str(aimsv.value(*pos2))
+            # Check bounds safely
+            if all(0 <= p < size for p, size in zip(full_pos, sizes)):
+
+                try:
+
+                    if has_t:
+                        txt = str(aimsv.value(pos2[0], pos2[1], pos2[2], t))
+
+                    else:
+                        txt = str(aimsv.value(pos2[0], pos2[1], pos2[2]))
+
+                except Exception:
+                    txt = ""
 
             else:
                 txt = ""
