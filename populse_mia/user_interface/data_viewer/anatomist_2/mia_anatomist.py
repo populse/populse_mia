@@ -171,7 +171,7 @@ class MiaViewer(DataViewer):
             dialog.config_box.setCurrentIndex(1)
 
         config_layout.addWidget(dialog.config_box)
-        layout.addLayout(dialog.config_layout)
+        layout.addLayout(config_layout)
         # Frame rate slider
         frame_rate_layout = QHBoxLayout()
         frame_rate_layout.addWidget(Qt.QLabel("Automatic time image display:"))
@@ -369,10 +369,6 @@ class MiaViewer(DataViewer):
         dialog = self._create_preferences_dialog(
             current_framerate, current_config, current_ref
         )
-
-        # Show dialog and process results
-        if dialog.exec_() == Qt.QDialog.Accepted:
-            self._apply_preferences(dialog)
 
         # Show dialog and process results
         if dialog.exec_() == Qt.QDialog.Accepted:
