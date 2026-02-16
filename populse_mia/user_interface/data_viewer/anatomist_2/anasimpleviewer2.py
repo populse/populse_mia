@@ -1569,11 +1569,11 @@ class AnaSimpleViewer2(Qt.QObject):
         """
 
         # Get currently selected objects and display each one
-        for obj in self.get_selected_objects():
-            self.add_object(obj)
+        for obj in self.selectedObjects():
+            self.addObject(obj)
 
         # Update the list background colors to reflect display state
-        self.color_background_list()
+        self.colorBackgroundList()
 
     def editRemove(self):
         """
@@ -1927,6 +1927,7 @@ class AnaSimpleViewer2(Qt.QObject):
         with the current selection.
         """
         a = ana.Anatomist("-b")
+
         if (
             not getattr(self, "browser", None)
             or self.browser.isNull()
