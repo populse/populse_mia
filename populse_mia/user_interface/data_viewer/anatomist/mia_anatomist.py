@@ -231,7 +231,7 @@ class MiaViewer(DataViewer):
         # guard against calls made after the singleton has been destroyed.
         # closeAll(True) handles the equivalent C++ cleanup directly and
         # safely.
-        # super().close()
+        super().close()
         # Decrement viewer count
         type(self)._mia_viewers_count -= 1
         last_viewer = type(self)._mia_viewers_count == 0
@@ -244,23 +244,23 @@ class MiaViewer(DataViewer):
 
                 # Guard: only call closeAll if Anatomist singleton is still
                 # alive
-                try:
-
-                    import anatomist.api as anatomist
-
-                    a = anatomist.Anatomist()
-                    # Check the singleton is still functional
-
-                    if a is not None and a.anatomistinstance is not None:
-                        self.anaviewer.closeAll(True)
-
-                except Exception:
-                    # Singleton already gone, skip closeAll silently
-                    pass
-
-                self.anaviewer = None
-                # self.anaviewer.closeAll(True)
+                # try:
+                #
+                #     import anatomist.api as anatomist
+                #
+                #     a = anatomist.Anatomist()
+                #     # Check the singleton is still functional
+                #
+                #     if a is not None and a.anatomistinstance is not None:
+                #         self.anaviewer.closeAll(True)
+                #
+                # except Exception:
+                #     # Singleton already gone, skip closeAll silently
+                #     pass
+                #
                 # self.anaviewer = None
+                self.anaviewer.closeAll(True)
+                self.anaviewer = None
 
             else:
                 self.anaviewer.setParent(None)
