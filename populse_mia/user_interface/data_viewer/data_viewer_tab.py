@@ -114,9 +114,17 @@ class DataViewerTab(Qt.QWidget):
         proper resource management.
         """
 
-        for viewer in list(self.viewers_loaded):
-            self.viewers_loaded[viewer].close()
-            del self.viewers_loaded[viewer]
+        for viewer in list(self.viewers_loaded.values()):
+
+            try:
+                viewer.close()
+
+            except Exception:
+                logger.warning("Failed to close viewer safely", exc_info=True)
+
+        # process deferred Qt deletions
+        Qt.QApplication.processEvents()
+        self.viewers_loaded.clear()
 
     def closeEvent(self, event):
         """

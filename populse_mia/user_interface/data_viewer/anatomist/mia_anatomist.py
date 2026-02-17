@@ -148,7 +148,7 @@ class MiaViewer(DataViewer):
         :param files (list): List of file paths to remove.
         """
         self.anaviewer.deleteObjectsFromFiles(files)
-        self.files = [doc for doc in self.displayed if doc not in files]
+        self.displayed = [doc for doc in self.displayed if doc not in files]
 
     def set_documents(self, project, documents):
         """
@@ -223,9 +223,49 @@ class MiaViewer(DataViewer):
 
     def close(self):
         """Close the viewer and manage Anatomist viewer resources."""
-        super().close()
+        # NOTE: super().close() is intentionally NOT called here.
+        # DataViewer.close() would call clear() → remove_files() →
+        # anaviewer.deleteObjectsFromFiles() → Anatomist.getObjects(),
+        # which crashes because the Anatomist singleton is already destroyed
+        # at this point. This is a known bug in Anatomist: its API does not
+        # guard against calls made after the singleton has been destroyed.
+        # closeAll(True) handles the equivalent C++ cleanup directly and
+        # safely.
+        # super().close()
         # Decrement viewer count
         type(self)._mia_viewers_count -= 1
-        # Close Anatomist if no viewers remain
-        close_ana = type(self)._mia_viewers_count == 0
-        self.anaviewer.closeAll(close_ana)
+        last_viewer = type(self)._mia_viewers_count == 0
+
+        try:
+
+            if last_viewer:
+                # Last viewer: close all C++ objects
+                # self.anaviewer.remove_files()
+
+                # Guard: only call closeAll if Anatomist singleton is still
+                # alive
+                try:
+
+                    import anatomist.api as anatomist
+
+                    a = anatomist.Anatomist()
+                    # Check the singleton is still functional
+
+                    if a is not None and a.anatomistinstance is not None:
+                        self.anaviewer.closeAll(True)
+
+                except Exception:
+                    # Singleton already gone, skip closeAll silently
+                    pass
+
+                self.anaviewer = None
+                # self.anaviewer.closeAll(True)
+                # self.anaviewer = None
+
+            else:
+                self.anaviewer.setParent(None)
+                self.anaviewer.deleteLater()
+                self.anaviewer = None
+
+        except Exception:
+            logger.warning("Anatomist close failed", exc_info=True)
