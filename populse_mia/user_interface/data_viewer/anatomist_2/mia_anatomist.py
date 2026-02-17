@@ -314,23 +314,23 @@ class MiaViewer(DataViewer):
 
                 # Guard: only call closeAll if Anatomist singleton is still
                 # alive
-                # try:
-                #
-                #     import anatomist.api as anatomist
-                #
-                #     a = anatomist.Anatomist()
-                #
-                #     # Check the singleton is still functional
-                #     if a is not None and a.anatomistinstance is not None:
-                #         self.anaviewer.closeAll(True)
-                #
-                # except Exception:
-                #     # Singleton already gone, skip closeAll silently
-                #     pass
-                #
-                # self.anaviewer = None
-                self.anaviewer.closeAll(True)
+                try:
+
+                    import anatomist.api as anatomist
+
+                    a = anatomist.Anatomist()
+
+                    # Check the singleton is still functional
+                    if a is not None and a.anatomistinstance is not None:
+                        self.anaviewer.closeAll(True)
+
+                except Exception:
+                    # Singleton already gone, skip closeAll silently
+                    pass
+
                 self.anaviewer = None
+                # self.anaviewer.closeAll(True)
+                # self.anaviewer = None
 
             else:
                 self.anaviewer.setParent(None)
