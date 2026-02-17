@@ -571,15 +571,15 @@ def launch_mia(args):
 
         _clean_up()
         sys.excepthook = previous_excepthook
-        # QApplication.closeAllWindows()
-        # QApplication.instance().quit()
-        # WORKAROUND: os._exit(0) is used instead of QApplication.quit()
-        # because QAWindowBlock::~QAWindowBlock() calls
-        # Anatomist::defaultWindowsBlock() without checking if the singleton
-        # is still alive, causing a segfault during Qt's widget destruction
-        # cascade. This is a bug in Anatomist that should be fixed in
-        # QAWindowBlock's destructor.
-        os._exit(0)
+        QApplication.closeAllWindows()
+        QApplication.instance().quit()
+        # # WORKAROUND: os._exit(0) is used instead of QApplication.quit()
+        # # because QAWindowBlock::~QAWindowBlock() calls
+        # # Anatomist::defaultWindowsBlock() without checking if the singleton
+        # # is still alive, causing a segfault during Qt's widget destruction
+        # # cascade. This is a bug in Anatomist that should be fixed in
+        # # QAWindowBlock's destructor.
+        # os._exit(0)
 
     def _my_excepthook(etype, evalue, tback):
         """
