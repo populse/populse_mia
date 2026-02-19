@@ -200,7 +200,6 @@ class MiaViewer(DataViewer):
         save_button.clicked.connect(dialog.accept)
         save_button.setDefault(True)
         button_layout.addWidget(save_button)
-
         cancel_button = Qt.QPushButton("Cancel")
         cancel_button.clicked.connect(dialog.reject)
         button_layout.addWidget(cancel_button)

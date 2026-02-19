@@ -55,7 +55,34 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
 
     The API is intentionally kept simple to provide flexibility for specific
     use cases while ensuring a consistent basic functionality.
+
+    .. Methods:
+        - clear: Remove all currently displayed files.
+        - close: Close the viewer by clearing all displayed files.
+        - display_files: Display the specified document files.
+        - displayed_files: Retrieve the list of currently displayed files.
+        - remove_files: Remove specified files from the display.
+        - set_documents: Set the project context and available documents.
+
     """
+
+    def clear(self):
+        """
+        Remove all currently displayed files.
+
+        This method provides a default implementation that removes
+        all files currently being displayed by calling remove_files().
+        """
+        self.remove_files(self.displayed_files())
+
+    def close(self):
+        """
+        Close the viewer by clearing all displayed files.
+
+        This method provides a standard way to clean up and close the viewer,
+        ensuring all resources are released.
+        """
+        self.clear()
 
     @abstractmethod
     def display_files(self, files):
@@ -73,15 +100,6 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         raise NotImplementedError(
             "Subclasses must implement display_files method"
         )
-
-    def clear(self):
-        """
-        Remove all currently displayed files.
-
-        This method provides a default implementation that removes
-        all files currently being displayed by calling remove_files().
-        """
-        self.remove_files(self.displayed_files())
 
     @abstractmethod
     def displayed_files(self):
@@ -125,12 +143,3 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         raise NotImplementedError(
             "Subclasses must implement set_documents method"
         )
-
-    def close(self):
-        """
-        Close the viewer by clearing all displayed files.
-
-        This method provides a standard way to clean up and close the viewer,
-        ensuring all resources are released.
-        """
-        self.clear()

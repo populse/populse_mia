@@ -54,13 +54,14 @@ class MiaViewer(DataViewer):
     .. Methods:
         - _find_child: Find a child widget by name.
         - _setup_ui: Set up the user interface components for the viewer.
+        - close: Close the viewer and manage Anatomist viewer resources.
         - display_files: Display the given files in the Anatomist viewer.
         - displayed_files: Get the list of currently displayed files.
-        - remove_files: Remove specified files from the viewer.
-        - set_documents: Set the current project and documents for the viewer.
         - filter_documents: Open a dialog to filter and select documents for
                             visualization.
-        - close: Close the viewer and manage Anatomist viewer resources.
+        - remove_files: Remove specified files from the viewer.
+        - set_documents: Set the current project and documents for the viewer.
+
 
     """
 
@@ -77,7 +78,6 @@ class MiaViewer(DataViewer):
         super().__init__()
         # Initialize Anatomist viewer
         self.anaviewer = AnaSimpleViewer(init_global_handlers)
-
         # Count global number of viewers using anatomist, in order to close it
         # nicely
         type(self)._mia_viewers_count += 1
@@ -122,6 +122,15 @@ class MiaViewer(DataViewer):
         )
         layout.addWidget(self.anaviewer.awidget)
 
+    def close(self):
+        """Close the viewer and manage Anatomist viewer resources."""
+        super().close()
+        # Decrement viewer count
+        type(self)._mia_viewers_count -= 1
+        # Close Anatomist if no viewers remain
+        close_ana = type(self)._mia_viewers_count == 0
+        self.anaviewer.closeAll(close_ana)
+
     def display_files(self, files):
         """
         Display the given files in the Anatomist viewer.
@@ -140,29 +149,6 @@ class MiaViewer(DataViewer):
         :return (List): List of displayed file paths.
         """
         return self.displayed
-
-    def remove_files(self, files):
-        """
-        Remove specified files from the viewer.
-
-        :param files (list): List of file paths to remove.
-        """
-        self.anaviewer.deleteObjectsFromFiles(files)
-        self.files = [doc for doc in self.displayed if doc not in files]
-
-    def set_documents(self, project, documents):
-        """
-         Set the current project and documents for the viewer.
-
-        :param project: The project to set.
-        :param documents (List): List of documents in the project.
-        """
-
-        if self.project is not project:
-            self.clear()
-
-        self.project = project
-        self.documents = documents
 
     def filter_documents(self):
         """Open a dialog to filter and select documents for visualization."""
@@ -221,11 +207,25 @@ class MiaViewer(DataViewer):
 
             self.display_files(result_names)
 
-    def close(self):
-        """Close the viewer and manage Anatomist viewer resources."""
-        super().close()
-        # Decrement viewer count
-        type(self)._mia_viewers_count -= 1
-        # Close Anatomist if no viewers remain
-        close_ana = type(self)._mia_viewers_count == 0
-        self.anaviewer.closeAll(close_ana)
+    def remove_files(self, files):
+        """
+        Remove specified files from the viewer.
+
+        :param files (list): List of file paths to remove.
+        """
+        self.anaviewer.deleteObjectsFromFiles(files)
+        self.displayed = [doc for doc in self.displayed if doc not in files]
+
+    def set_documents(self, project, documents):
+        """
+         Set the current project and documents for the viewer.
+
+        :param project: The project to set.
+        :param documents (List): List of documents in the project.
+        """
+
+        if self.project is not project:
+            self.clear()
+
+        self.project = project
+        self.documents = documents
