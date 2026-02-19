@@ -41,12 +41,12 @@ class NewWindowViewer(QtGui.QMainWindow):
 
     .. Methods:
         - changeDisplay: Changes display on user's demand.
+        - close: Close properly objects before exiting Mia.
+        - createNewWindow: Opens a new window in the vertical layout.
         - disableButton: Manages button availability and whether they should be
                          checked or not depending on which view is displayed.
-        - createNewWindow: Opens a new window in the vertical layout.
         - setObject: Store object to display.
         - showPopup: Defines the dimensions of the popup which is a QWidget.
-        - close: Close properly objects before exiting Mia.
     """
 
     def __init__(self):
@@ -105,16 +105,16 @@ class NewWindowViewer(QtGui.QMainWindow):
         self.createNewWindow(new_view)
         a.addObjects(obj, self.new_awindow)
 
-    def disableButton(self, index):
+    def close(self):
         """
-        Manages button availability and checked state depending on the
-        displayed view.
-
-        :param index (int): Index of the view to enable.
+        Properly closes objects before exiting.
         """
-
-        for i, button in enumerate(self.viewButtons):
-            button.setChecked(i == index)
+        self.window.close()
+        self.window = None
+        self.viewNewWindow = []
+        self.newViewLay = None
+        self.new_awindow = None
+        self.object = []
 
     def createNewWindow(self, wintype="Axial"):
         """
@@ -176,6 +176,17 @@ class NewWindowViewer(QtGui.QMainWindow):
             view_size=(500, 600),
         )
 
+    def disableButton(self, index):
+        """
+        Manages button availability and checked state depending on the
+        displayed view.
+
+        :param index (int): Index of the view to enable.
+        """
+
+        for i, button in enumerate(self.viewButtons):
+            button.setChecked(i == index)
+
     def setObject(self, obj):
         """
         Stores the object to be displayed.
@@ -204,14 +215,3 @@ class NewWindowViewer(QtGui.QMainWindow):
         # Add object into view
         a.addObjects(obj, self.new_awindow)
         self.popups[index].show()
-
-    def close(self):
-        """
-        Properly closes objects before exiting.
-        """
-        self.window.close()
-        self.window = None
-        self.viewNewWindow = []
-        self.newViewLay = None
-        self.new_awindow = None
-        self.object = []
