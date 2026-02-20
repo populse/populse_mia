@@ -672,7 +672,7 @@ def remove_document(project, collection, documents):
     if isinstance(documents, str):
         documents = [documents]
 
-    with project.database.data() as database_data:
+    with project.database.data(write=True) as database_data:
 
         for document in documents:
             database_data.remove_document(collection, document)
