@@ -641,11 +641,12 @@ class PopulseUndefinedControlWidget:
             setattr(
                 controller_widget.controller, control_name, new_trait_value
             )
-            logger.info(
-                f"'PopulseUndefinedControlWidget' associated controller "
-                f"trait '{control_name}' has been updated with "
-                f"value '{new_trait_value}'."
-            )
+            # For debugging purposes, log the update action
+            # logger.info(
+            #     f"'PopulseUndefinedControlWidget' associated controller "
+            #     f"trait '{control_name}' has been updated with "
+            #     f"value '{new_trait_value}'."
+            # )
 
         elif reset_invalid_value:
             # Invalid value, reset GUI to the previous value
@@ -673,10 +674,11 @@ class PopulseUndefinedControlWidget:
         # Set the widget text to represent Undefined
         new_controller_value = str(traits.Undefined)
         control_instance.setText(new_controller_value)
-        logger.info(
-            f"'PopulseUndefinedControlWidget' has been updated "
-            f"with value '{new_controller_value}'."
-        )
+        # For debugging purposes, log the update action
+        # logger.info(
+        #     f"'PopulseUndefinedControlWidget' has been updated "
+        #     f"with value '{new_controller_value}'."
+        # )
         # Update the controller to ensure consistency
         PopulseUndefinedControlWidget.update_controller(
             controller_widget, control_name, control_instance, True
