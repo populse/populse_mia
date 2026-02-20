@@ -7927,14 +7927,16 @@ class TestMIANodeController(TestMIACase):
 
             :param new_name: The new name to set for the node.
             """
-            node_controller.line_edit_node_name.setText(new_name)
-            key_event = QtGui.QKeyEvent(
-                QEvent.KeyPress, Qt.Key_Return, Qt.NoModifier
-            )
-            QCoreApplication.postEvent(
-                node_controller.line_edit_node_name, key_event
-            )
-            QTest.qWait(100)
+            # Ensure the line edit has focus
+            node_controller.line_edit_node_name.setFocus()
+            # Clear existing text to simulate user typing
+            node_controller.line_edit_node_name.clear()
+            # Simulate typing the new name character by character
+            QTest.keyClicks(node_controller.line_edit_node_name, new_name)
+            # Press Enter to trigger editingFinished
+            QTest.keyClick(node_controller.line_edit_node_name, Qt.Key_Return)
+            # Give Qt a moment to process events
+            QTest.qWait(50)
 
         pipeline_manager = self.main_window.pipeline_manager
         pipeline_editor_tabs = pipeline_manager.pipelineEditorTabs

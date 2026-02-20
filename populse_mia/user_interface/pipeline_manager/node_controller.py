@@ -659,7 +659,7 @@ class CapsulNodeController(QWidget):
         if self.node_name not in ("inputs", "outputs"):
             self.line_edit_node_name.setText(self.node_name)
             self.line_edit_node_name.setReadOnly(False)
-            self.line_edit_node_name.returnPressed.connect(
+            self.line_edit_node_name.editingFinished.connect(
                 self.update_node_name
             )
 
@@ -910,15 +910,35 @@ class CapsulNodeController(QWidget):
         :param from_undo (bool): True if this action is from an undo operation.
         :param from_redo (bool): True ifthis action is from a redo operation.
         """
-        new_node_name = new_node_name or self.line_edit_node_name.text()
+
+        # Ignore programmatic refresh emissions
+        if not from_undo and not from_redo:
+
+            if (
+                new_node_name is None
+                and not self.line_edit_node_name.isModified()
+            ):
+                return
+
+        # Resolve names
+        new_node_name = (
+            new_node_name or self.line_edit_node_name.text().strip()
+        )
         old_node_name = old_node_name or self.node_name
+
+        if not new_node_name or new_node_name == old_node_name:
+            self.line_edit_node_name.setModified(False)
+            return
 
         # Handle iterated process naming convention
         if isinstance(self.process, ProcessIteration):
 
             if not new_node_name.startswith("iterated_"):
                 new_node_name = f"iterated_{new_node_name}"
+                # update text without re-triggering signals
+                self.line_edit_node_name.blockSignals(True)
                 self.line_edit_node_name.setText(new_node_name)
+                self.line_edit_node_name.blockSignals(False)
 
         # Check for name conflicts
         if new_node_name in self.pipeline.nodes:
@@ -926,6 +946,7 @@ class CapsulNodeController(QWidget):
                 f"Cannot rename node '{old_node_name}' to '{new_node_name}': "
                 f"node '{new_node_name}' already exists"
             )
+            self.line_edit_node_name.setModified(False)
             return
 
         # Perform rename
@@ -964,11 +985,11 @@ class CapsulNodeController(QWidget):
         )
         # fmt: on
         editor.update_history(history_maker, from_undo, from_redo)
-
         # Display status message
         self.main_window.statusBar().showMessage(
             f"Brick name '{old_node_name} changed to '{new_node_name}'."
         )
+        self.line_edit_node_name.setModified(False)
 
     def update_parameters(self, process=None):
         """
@@ -1753,9 +1774,7 @@ class NodeController(QWidget):
         new_node_name = new_node_name or self.line_edit_node_name.text()
 
         # Ensure ProcessIteration nodes have the correct prefix
-        if isinstance(
-            self.pipeline.list_process_in_pipeline[0], ProcessIteration
-        ):
+        if isinstance(self.current_process, ProcessIteration):
 
             if not new_node_name.startswith("iterated_"):
                 new_node_name = f"iterated_{new_node_name}"
@@ -1802,6 +1821,10 @@ class NodeController(QWidget):
         :param parent_node_name (str): The parent node's name to incorporate
                                        into the context naming hierarchy.
         """
+
+        if not isinstance(node, PipelineNode):
+            return
+
         # Get the current context name, falling back to process name if not set
         context_name = getattr(node.process, "context_name", node.process.name)
         context_parts = context_name.split(".")
@@ -1819,13 +1842,10 @@ class NodeController(QWidget):
         else:
             node.process.context_name = parent_node_name
 
-        # Recursively update all subprocesses in pipeline nodes
-        if isinstance(node, PipelineNode):
+        for name, subnode in node.process.nodes.items():
 
-            for name, subnode in node.process.nodes.items():
-
-                if name:  # Skip empty names
-                    self.rename_subprocesses(subnode, parent_node_name)
+            if name:  # Skip empty names
+                self.rename_subprocesses(subnode, parent_node_name)
 
     def update_parameters(self, process=None):
         """
