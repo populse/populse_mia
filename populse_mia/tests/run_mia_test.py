@@ -1928,8 +1928,8 @@ class TestMIADataBrowser(TestMIACase):
 
         # Step 4: Get correct field type and apply update
         with self.main_window.project.database.data() as db:
-            tag_object = db.get_field_attributes(COLLECTION_CURRENT, "FOV")
-            correct_type = tag_object["field_type"]
+            tag_attrib = db.get_field_attributes(COLLECTION_CURRENT, "FOV")
+            correct_type = tag_attrib["field_type"]
 
         mod = ModifyTable(
             self.main_window.project,
