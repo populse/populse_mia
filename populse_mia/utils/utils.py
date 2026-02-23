@@ -17,6 +17,8 @@ Module that contains multiple functions used across Mia.
         - launch_mia
         - message_already_exists
         - remove_document
+        - safe_disconnect
+        - safe_connect
         - set_db_field_value
         - set_filters_directory_as_default
         - set_item_data
@@ -95,7 +97,6 @@ from populse_mia.data_manager.project import Project  # noqa E402
 from populse_mia.data_manager.project_properties import (  # noqa E402
     SavedProjects,
 )
-from populse_mia.user_interface.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 
@@ -487,7 +488,7 @@ def get_value(project, collection, file_name, field):
         return database_data.get_value(collection, file_name, field)
 
 
-def launch_mia(args):
+def launch_mia(MainWindow, args):
     """
     Launch and run the Mia software application.
 
@@ -501,6 +502,7 @@ def launch_mia(args):
 
     All state is local and shared via closures.
 
+    :param MainWindow (class): The main window class to be instantiated.
     :param args (argparse.Namespace): Parsed command-line arguments.
     """
     # Import here to avoid circular dependencies
@@ -676,6 +678,41 @@ def remove_document(project, collection, documents):
 
         for document in documents:
             database_data.remove_document(collection, document)
+
+
+def safe_disconnect(signal, slot):
+    """
+    Disconnect a Qt signal from a slot if connected.
+
+    Attempts to disconnect ``signal`` from ``slot`` and silently ignores
+    the error raised when the connection does not exist. This makes the
+    operation idempotent and safe to call multiple times.
+
+    :param signal: The Qt signal to disconnect from.
+    :param slot: The slot (callable) previously connected to the signal.
+    """
+
+    try:
+        signal.disconnect(slot)
+
+    except TypeError:
+        # Raised by Qt when the signal/slot connection does not exist
+        pass
+
+
+def safe_connect(signal, slot):
+    """
+    Connect a Qt signal to a slot, ensuring a single connection.
+
+    First disconnects ``signal`` from ``slot`` (if connected) to avoid
+    duplicate connections, then connects them. This guarantees that the
+    slot is connected exactly once.
+
+    :param signal: The Qt signal to (re)connect.
+    :param slot: The slot (callable) to connect to the signal.
+    """
+    safe_disconnect(signal, slot)
+    signal.connect(slot)
 
 
 def set_db_field_value(project, document, tag_to_add):
