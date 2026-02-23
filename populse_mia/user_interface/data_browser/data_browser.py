@@ -111,6 +111,7 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSelectFilter,
     PopUpShowHistory,
 )
+from populse_mia.utils import safe_connect, safe_disconnect
 
 logger = logging.getLogger(__name__)
 
@@ -1044,8 +1045,6 @@ class TableDataBrowser(QTableWidget):
     their associated tags.
 
     .. Methods:
-        - _safe_disconnect: Safely disconnect the itemChanged signal
-        - _safe_reconnect: Safely reconnect the itemChanged signal
         - add_column: Add a column to the table
         - add_columns: Add columns to the table
         - add_path: Call a pop-up to add any document to the project
@@ -1180,39 +1179,6 @@ class TableDataBrowser(QTableWidget):
         # Initialize table content
         self.update_table(True)
 
-    def _safe_disconnect(self, signal, slot):
-        """
-        Disconnect a Qt signal from a slot if connected.
-
-        Attempts to disconnect ``signal`` from ``slot`` and silently ignores
-        the error raised when the connection does not exist. This makes the
-        operation idempotent and safe to call multiple times.
-
-        :param signal: The Qt signal to disconnect from.
-        :param slot: The slot (callable) previously connected to the signal.
-        """
-
-        try:
-            signal.disconnect(slot)
-
-        except TypeError:
-            # Raised by Qt when the signal/slot connection does not exist
-            pass
-
-    def _safe_reconnect(self, signal, slot):
-        """
-        Reconnect a Qt signal to a slot, ensuring a single connection.
-
-        First disconnects ``signal`` from ``slot`` (if connected) to avoid
-        duplicate connections, then connects them. This guarantees that the
-        slot is connected exactly once.
-
-        :param signal: The Qt signal to (re)connect.
-        :param slot: The slot (callable) to connect to the signal.
-        """
-        self._safe_disconnect(signal, slot)
-        signal.connect(slot)
-
     def add_column(self, column, tag):
         """
         Add a new column to the table with the specified tag.
@@ -1235,12 +1201,10 @@ class TableDataBrowser(QTableWidget):
         from populse_mia.utils import set_item_data
 
         # Safely disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
             # Insert column and configure header
@@ -1305,11 +1269,9 @@ class TableDataBrowser(QTableWidget):
 
             # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def add_columns(self):
         """
@@ -1338,12 +1300,10 @@ class TableDataBrowser(QTableWidget):
         from populse_mia.utils import set_item_data
 
         # Safely disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
 
@@ -1449,11 +1409,9 @@ class TableDataBrowser(QTableWidget):
 
             # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def add_path(self):
         """
@@ -1489,10 +1447,10 @@ class TableDataBrowser(QTableWidget):
 
         # Temporarily disable sorting and disconnect signals
         with self.batch_update(disable_sorting=True):
-            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+            safe_disconnect(self.itemChanged, self.on_cell_changed)
 
             if self.activate_selection:
-                self._safe_disconnect(
+                safe_disconnect(
                     self.itemSelectionChanged, self.selection_changed
                 )
 
@@ -1637,11 +1595,11 @@ class TableDataBrowser(QTableWidget):
 
                 # Reconnect signals
                 if self.activate_selection:
-                    self._safe_reconnect(
+                    safe_connect(
                         self.itemSelectionChanged, self.selection_changed
                     )
 
-                self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+                safe_connect(self.itemChanged, self.on_cell_changed)
                 # Clean up
                 self.progress.close()
 
@@ -1783,9 +1741,9 @@ class TableDataBrowser(QTableWidget):
             new document. After that, it calls ``add_path()`` to perform the
             actual addition.
             """
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
             self.add_path()
-            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+            safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         # -- Build menu actions ---------------------------------
         confirm_actions = {
@@ -1822,7 +1780,7 @@ class TableDataBrowser(QTableWidget):
             "Tries to read a file": self.display_file,
         }
         # -- Execute --------------------------------------------
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             menu = QMenu(self)
@@ -1846,7 +1804,7 @@ class TableDataBrowser(QTableWidget):
             self.update_colors()
 
         finally:
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def delete_from_brick(self, brick_id):
         """
@@ -2146,7 +2104,7 @@ class TableDataBrowser(QTableWidget):
 
             # Record changes for history
             history_maker = ["modified_values", []]
-            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+            safe_disconnect(self.itemChanged, self.on_cell_changed)
 
             with self.project.database.data() as database_data:
 
@@ -2183,7 +2141,7 @@ class TableDataBrowser(QTableWidget):
             self.project.undos.append(history_maker)
             self.project.redos.clear()
             self.update_colors()
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
         except Exception as e:
             logger.warning(e)
@@ -2243,10 +2201,10 @@ class TableDataBrowser(QTableWidget):
 
         with self.batch_update(disable_sorting=True):
             # Disconnect signals
-            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+            safe_disconnect(self.itemChanged, self.on_cell_changed)
 
             if self.activate_selection:
-                self._safe_disconnect(
+                safe_disconnect(
                     self.itemSelectionChanged, self.selection_changed
                 )
 
@@ -2402,11 +2360,11 @@ class TableDataBrowser(QTableWidget):
 
                 # Reconnect signals
                 if self.activate_selection:
-                    self._safe_reconnect(
+                    safe_connect(
                         self.itemSelectionChanged, self.selection_changed
                     )
 
-                self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+                safe_connect(self.itemChanged, self.on_cell_changed)
 
     def fill_headers(self, take_tags_to_update=False):
         """
@@ -2689,7 +2647,7 @@ class TableDataBrowser(QTableWidget):
             self.setCellWidget(row, column, widget)
             self.setItem(row, column, item)
 
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
 
@@ -2790,7 +2748,7 @@ class TableDataBrowser(QTableWidget):
             self.horizontalHeader().setSortIndicator(-1, 0)
             # self.setSortingEnabled(True)
             self.setSortingEnabled(False)
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
             self.resizeRowsToContents()
             self.resizeColumnsToContents()
 
@@ -2886,12 +2844,10 @@ class TableDataBrowser(QTableWidget):
                 )
 
         # Temporarily disconnect to prevent recursive calls during updates
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
 
@@ -3028,12 +2984,10 @@ class TableDataBrowser(QTableWidget):
 
             # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
             self.update_colors()
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def remove_scan(self):
         """
@@ -3060,7 +3014,7 @@ class TableDataBrowser(QTableWidget):
               modifications
         """
         # Safely disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             selected_points = self.selectedIndexes()
@@ -3177,7 +3131,7 @@ class TableDataBrowser(QTableWidget):
 
         finally:
             # Safely disconnect signals
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def reset_cell(self):
         """
@@ -3536,12 +3490,10 @@ class TableDataBrowser(QTableWidget):
               is True
         """
         # Disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
             # Rebuild scans list from selected items
@@ -3567,11 +3519,9 @@ class TableDataBrowser(QTableWidget):
 
             # Reconnect signals
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def show_brick_history(self, scan):
         """
@@ -3613,7 +3563,7 @@ class TableDataBrowser(QTableWidget):
         if current_item is None:
             return
 
-        self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+        safe_connect(self.itemChanged, self.on_cell_changed)
 
         try:
             self.horizontalHeader().setSortIndicator(
@@ -3621,7 +3571,7 @@ class TableDataBrowser(QTableWidget):
             )
 
         finally:
-            self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+            safe_disconnect(self.itemChanged, self.on_cell_changed)
 
     def sort_updated(self, column, order):
         """
@@ -3643,7 +3593,7 @@ class TableDataBrowser(QTableWidget):
         if column == -1:
             return
 
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         try:
             self.project.setSortOrder(int(order))
@@ -3653,7 +3603,7 @@ class TableDataBrowser(QTableWidget):
             self.resizeRowsToContents()
 
         finally:
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def update_colors(self):
         """
@@ -3861,12 +3811,10 @@ class TableDataBrowser(QTableWidget):
             self.scans = []
 
         # Update table structure with signals temporarily disconnected
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
             self.setRowCount(len(self.scans_to_visualize))
@@ -3883,11 +3831,9 @@ class TableDataBrowser(QTableWidget):
 
             # Ensure signals are reconnected even if an error occurs
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def update_visualized_columns(self, old_tags, showed):
         """
@@ -3904,12 +3850,10 @@ class TableDataBrowser(QTableWidget):
         :param showed (list): Tags to currently display in the table.
         """
         # Disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
             # Convert to sets for efficient difference operations
@@ -3946,11 +3890,9 @@ class TableDataBrowser(QTableWidget):
             # Restore selection handling
             if self.activate_selection:
                 self.update_selection()
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def update_visualized_rows(self, old_scans):
         """
@@ -3964,12 +3906,10 @@ class TableDataBrowser(QTableWidget):
                           determine which rows need to be hidden.
         """
         # Disconnect signals
-        self._safe_disconnect(self.itemChanged, self.on_cell_changed)
+        safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         if self.activate_selection:
-            self._safe_disconnect(
-                self.itemSelectionChanged, self.selection_changed
-            )
+            safe_disconnect(self.itemSelectionChanged, self.selection_changed)
 
         try:
             # Hide rows for scans removed from visualization
@@ -4000,11 +3940,9 @@ class TableDataBrowser(QTableWidget):
 
             # Re-enable selection change signals
             if self.activate_selection:
-                self._safe_reconnect(
-                    self.itemSelectionChanged, self.selection_changed
-                )
+                safe_connect(self.itemSelectionChanged, self.selection_changed)
 
-            self._safe_reconnect(self.itemChanged, self.on_cell_changed)
+            safe_connect(self.itemChanged, self.on_cell_changed)
 
     def visualized_tags_pop_up(self):
         """

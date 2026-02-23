@@ -26,6 +26,8 @@ from .utils import (  # noqa: F401
     launch_mia,
     message_already_exists,
     remove_document,
+    safe_connect,
+    safe_disconnect,
     set_db_field_value,
     set_filters_directory_as_default,
     set_item_data,

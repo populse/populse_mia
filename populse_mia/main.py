@@ -359,6 +359,7 @@ def main(args):
     # Now that populse projects paths have been set in sys.path, if necessary,
     # we can import from these projects:
     # Populse_mia imports
+    from populse_mia.user_interface.main_window import MainWindow
     from populse_mia.utils import (  # noqa E402
         check_python_version,
         launch_mia,
@@ -377,7 +378,7 @@ def main(args):
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(args)
+        launch_mia(MainWindow, args)
         os.chdir(cwd)
 
 
