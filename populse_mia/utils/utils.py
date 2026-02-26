@@ -17,8 +17,8 @@ Module that contains multiple functions used across Mia.
         - launch_mia
         - message_already_exists
         - remove_document
-        - safe_disconnect
         - safe_connect
+        - safe_disconnect
         - set_db_field_value
         - set_filters_directory_as_default
         - set_item_data
@@ -680,6 +680,21 @@ def remove_document(project, collection, documents):
             database_data.remove_document(collection, document)
 
 
+def safe_connect(signal, slot):
+    """
+    Connect a Qt signal to a slot, ensuring a single connection.
+
+    First disconnects ``signal`` from ``slot`` (if connected) to avoid
+    duplicate connections, then connects them. This guarantees that the
+    slot is connected exactly once.
+
+    :param signal: The Qt signal to (re)connect.
+    :param slot: The slot (callable) to connect to the signal.
+    """
+    safe_disconnect(signal, slot)
+    signal.connect(slot)
+
+
 def safe_disconnect(signal, slot):
     """
     Disconnect a Qt signal from a slot if connected.
@@ -698,21 +713,6 @@ def safe_disconnect(signal, slot):
     except TypeError:
         # Raised by Qt when the signal/slot connection does not exist
         pass
-
-
-def safe_connect(signal, slot):
-    """
-    Connect a Qt signal to a slot, ensuring a single connection.
-
-    First disconnects ``signal`` from ``slot`` (if connected) to avoid
-    duplicate connections, then connects them. This guarantees that the
-    slot is connected exactly once.
-
-    :param signal: The Qt signal to (re)connect.
-    :param slot: The slot (callable) to connect to the signal.
-    """
-    safe_disconnect(signal, slot)
-    signal.connect(slot)
 
 
 def set_db_field_value(project, document, tag_to_add):
@@ -1670,7 +1670,7 @@ def verify_setup(
     if pypath is None:
         pypath = []
 
-    def _browse_properties_path(dialog):
+    def _browse_properties_path(dialog, checked=False):
         """
         Let the user define the properties_path parameter.
 
@@ -1679,8 +1679,10 @@ def verify_setup(
         which will use the value of the properties_path parameter,
         defined here.
 
-        :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
-                       main function)
+        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object in the
+                                                 _verify_setup() function
+        :param checked (bool): Not used, but necessary for the connection with
+                        the browse button in the verify_setup()) function
         """
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -1706,12 +1708,14 @@ def verify_setup(
         if existDir.exec():
             dialog.file_line_edit.setText(existDir.selectedFiles()[0])
 
-    def _cancel_clicked(dialog):
+    def _cancel_clicked(dialog, checked=False):
         """
         Cancel the configuration check.
 
-        :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
-                       main function)
+        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object in the
+                                                 _verify_setup() function
+        :param checked: Not used, but necessary for the connection with the
+                        cancel button in the verify_setup()) function
         """
         dialog.close()
         logger.error(
@@ -1820,7 +1824,7 @@ def verify_setup(
                 allow_unicode=True,
             )
 
-    def _verify_miaConfig(dialog=None):
+    def _verify_miaConfig(dialog=None, checked=False):
         """Check the config is not corrupted and try to fix if necessary.
 
         The purpose of this method is twofold. First, it allows to
@@ -1840,8 +1844,10 @@ def verify_setup(
         "Properties path selection" window is not closed and the user is again
         prompted to set the properties_path parameter.
 
-        :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
-                       main function)
+        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object  in the
+                                                  verify_setup() function
+        :param checked (bool): Not used, but necessary for the connection with
+                               the OK button in the verify_setup() function
         """
 
         save_flag = False
