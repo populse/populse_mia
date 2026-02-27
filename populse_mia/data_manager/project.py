@@ -65,6 +65,7 @@ from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
 from populse_mia.software_properties import Config
+from populse_mia.utils import safe_connect, safe_disconnect
 
 logger = logging.getLogger(__name__)
 
@@ -1603,58 +1604,63 @@ class Project:
                 )
 
         elif action == "modified_values":
-            # Not working?
+            # TODO: Not working?
+
             # To modify the values, we need the cells,
             # and the updated values
-
             # The second element is a list of modified values
             # (reset or value changed)
             modified_values = to_redo[1]
-            table.itemChanged.disconnect()
+            safe_disconnect(table.itemChanged, table.on_cell_changed)
 
-            with self.database.data(write=True) as database_data:
+            try:
 
-                for scan, tag, old_value, new_value in modified_values:
-                    # Each modified value is a list of 3 elements:
-                    # scan, tag, old_value and new_value
-                    item = table.item(
-                        table.get_scan_row(scan), table.get_tag_column(tag)
-                    )
+                with self.database.data(write=True) as database_data:
 
-                    if old_value is None:
-                        # Font reput to normal in case it was a not
-                        # defined cell
-                        font = item.font()
-                        font.setItalic(False)
-                        font.setBold(False)
-                        item.setFont(font)
-
-                    database_data.set_value(
-                        collection_name=COLLECTION_CURRENT,
-                        primary_key=scan,
-                        values_dict={tag: new_value},
-                    )
-
-                    if new_value is None:
-                        font = item.font()
-                        font.setItalic(True)
-                        font.setBold(True)
-                        item.setFont(font)
-                        set_item_data(
-                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                    for scan, tag, old_value, new_value in modified_values:
+                        # Each modified value is a list of 3 elements:
+                        # scan, tag, old_value and new_value
+                        item = table.item(
+                            table.get_scan_row(scan), table.get_tag_column(tag)
                         )
 
-                    else:
-                        set_item_data(
-                            item,
-                            new_value,
-                            database_data.get_field_attributes(
-                                COLLECTION_CURRENT, tag
-                            )["field_type"],
+                        if old_value is None:
+                            # Font reput to normal in case it was a not
+                            # defined cell
+                            font = item.font()
+                            font.setItalic(False)
+                            font.setBold(False)
+                            item.setFont(font)
+
+                        database_data.set_value(
+                            collection_name=COLLECTION_CURRENT,
+                            primary_key=scan,
+                            values_dict={tag: new_value},
                         )
 
-            table.update_colors()
-            table.itemChanged.connect(table.on_cell_changed)
+                        if new_value is None:
+                            font = item.font()
+                            font.setItalic(True)
+                            font.setBold(True)
+                            item.setFont(font)
+                            set_item_data(
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                            )
+
+                        else:
+                            set_item_data(
+                                item,
+                                new_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag
+                                )["field_type"],
+                            )
+
+                table.update_colors()
+
+            finally:
+                # Ensure signal is reconnected even if an error occurs
+                safe_connect(table.itemChanged, table.on_cell_changed)
 
         elif action == "modified_visibilities":
             # To revert the modifications of the visualized tags
@@ -1913,9 +1919,14 @@ class Project:
                     table.removeRow(table.get_scan_row(scan))
                     table.scans_to_visualize.remove(scan)
 
-            table.itemChanged.disconnect()
-            table.update_colors()
-            table.itemChanged.connect(table.on_cell_changed)
+            safe_disconnect(table.itemChanged, table.on_cell_changed)
+
+            try:
+                table.update_colors()
+
+            finally:
+                # Ensure signal is reconnected even if an error occurs
+                safe_connect(table.itemChanged, table.on_cell_changed)
 
         elif action == "modified_values":
             # To revert a value changed in the databrowser,
@@ -1924,57 +1935,62 @@ class Project:
             # The second element is a list of modified values (reset,
             # or value changed)
             modified_values = to_undo[1]
-            table.itemChanged.disconnect()
+            safe_disconnect(table.itemChanged, table.on_cell_changed)
 
-            with self.database.data(write=True) as database_data:
+            try:
 
-                for scan, tag, old_value, new_value in modified_values:
-                    item = table.item(
-                        table.get_scan_row(scan), table.get_tag_column(tag)
-                    )
+                with self.database.data(write=True) as database_data:
 
-                    if old_value is None:
-                        # If the cell was not defined before, we reput it
-                        database_data.remove_value(
-                            COLLECTION_CURRENT, scan, tag
-                        )
-                        database_data.remove_value(
-                            COLLECTION_INITIAL, scan, tag
-                        )
-                        set_item_data(
-                            item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
-                        )
-                        font = item.font()
-                        font.setItalic(True)
-                        font.setBold(True)
-                        item.setFont(font)
-
-                    else:
-                        # If the cell was there before,
-                        # we just set it to the old value
-                        database_data.set_value(
-                            collection_name=COLLECTION_CURRENT,
-                            primary_key=scan,
-                            values_dict={tag: old_value},
-                        )
-                        set_item_data(
-                            item,
-                            old_value,
-                            database_data.get_field_attributes(
-                                COLLECTION_CURRENT, tag
-                            )["field_type"],
+                    for scan, tag, old_value, new_value in modified_values:
+                        item = table.item(
+                            table.get_scan_row(scan), table.get_tag_column(tag)
                         )
 
-                        # If the new value is None,
-                        # the not defined font must be removed
-                        if new_value is None:
+                        if old_value is None:
+                            # If the cell was not defined before, we reput it
+                            database_data.remove_value(
+                                COLLECTION_CURRENT, scan, tag
+                            )
+                            database_data.remove_value(
+                                COLLECTION_INITIAL, scan, tag
+                            )
+                            set_item_data(
+                                item, NOT_DEFINED_VALUE, FIELD_TYPE_STRING
+                            )
                             font = item.font()
-                            font.setItalic(False)
-                            font.setBold(False)
+                            font.setItalic(True)
+                            font.setBold(True)
                             item.setFont(font)
 
-            table.update_colors()
-            table.itemChanged.connect(table.on_cell_changed)
+                        else:
+                            # If the cell was there before,
+                            # we just set it to the old value
+                            database_data.set_value(
+                                collection_name=COLLECTION_CURRENT,
+                                primary_key=scan,
+                                values_dict={tag: old_value},
+                            )
+                            set_item_data(
+                                item,
+                                old_value,
+                                database_data.get_field_attributes(
+                                    COLLECTION_CURRENT, tag
+                                )["field_type"],
+                            )
+
+                            # If the new value is None,
+                            # the not defined font must be removed
+                            if new_value is None:
+                                font = item.font()
+                                font.setItalic(False)
+                                font.setBold(False)
+                                item.setFont(font)
+
+                table.update_colors()
+
+            finally:
+                # Ensure signal is reconnected even if an error occurs
+                safe_connect(table.itemChanged, table.on_cell_changed)
 
         elif action == "modified_visibilities":
             # To revert the modifications of the visualized tags

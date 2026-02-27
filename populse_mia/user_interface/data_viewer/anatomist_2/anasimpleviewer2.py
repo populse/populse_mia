@@ -239,7 +239,7 @@ class AnaSimpleViewer2(Qt.QObject):
             self.fileOpen
         )
         awin.findChild(QtCore.QObject, "fileExitAction").triggered.connect(
-            self.closeAll
+            lambda _: self.closeAll(close_ana=True)
         )
         awin.findChild(QtCore.QObject, "editAddAction").triggered.connect(
             self.editAdd
@@ -409,7 +409,7 @@ class AnaSimpleViewer2(Qt.QObject):
         toolBar.insertWidget(actionAutoRunning, label)
         toolBar.insertWidget(actionAutoRunning, self.slider)
 
-    def changeOpacity(self):
+    def changeOpacity(self, *_):
         """
         Changes the opacity of the selected object based on the slider value.
 
@@ -453,10 +453,11 @@ class AnaSimpleViewer2(Qt.QObject):
                     mode="linear_A_if_B_black",
                 )
 
-    def newPalette(self):
+    def newPalette(self, *_):
         """
         Sets the chosen color palette in the toolbar drop-down menu to the
         selected object.
+
         """
         color = self.combobox.currentText()
 
@@ -632,10 +633,14 @@ class AnaSimpleViewer2(Qt.QObject):
         clip.setOffset(pos[:3])
         clip.notifyObservers()
 
-    def automaticRunning(self):
+    def automaticRunning(self, checked=False):
         """
         Enables the automatic running of functional images.
+
         The frame rate can be changed in preferences by the user.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
         a = ana.Anatomist("-b")
         objects = []
@@ -934,7 +939,7 @@ class AnaSimpleViewer2(Qt.QObject):
         for button in self.viewButtons:
             button.setEnabled(nb_views_checked != 1 or not button.isChecked())
 
-    def newDisplay(self):
+    def newDisplay(self, checked=False):
         """
         Performs a new display of windows, objects, and views.
 
@@ -942,6 +947,9 @@ class AnaSimpleViewer2(Qt.QObject):
         windows and displayed objects, initializes new views based on the
         state of the view buttons, and adds existing objects to the new
         display.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
         self.checkviews()
         self.deleteTotalWindow()
@@ -1500,13 +1508,16 @@ class AnaSimpleViewer2(Qt.QObject):
         else:
             a.removeObjects(obj, self.awindows, remove_children=True)
 
-    def fileOpen(self):
+    def fileOpen(self, checked=False):
         """
         Open a file browser dialog and load selected objects.
 
         Displays a QFileDialog allowing the user to select multiple existing
         files. After selection, passes the files to the load_object method
         for processing.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
 
         # Create or reconfigure the file dialog
@@ -1559,13 +1570,16 @@ class AnaSimpleViewer2(Qt.QObject):
         # Return corresponding objects by filtering the full object list
         return [obj for obj in self.aobjects if obj.name in selected_names]
 
-    def editAdd(self):
+    def editAdd(self, checked=False):
         """
         Display all objects currently selected in the list box.
 
         Retrieves the objects selected in the UI and adds each one to the
         display. Updates the background colors in the list to reflect the
         new display state.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
 
         # Get currently selected objects and display each one
@@ -1575,10 +1589,13 @@ class AnaSimpleViewer2(Qt.QObject):
         # Update the list background colors to reflect display state
         self.colorBackgroundList()
 
-    def editRemove(self):
+    def editRemove(self, checked=False):
         """
         Removes the currently selected objects from the scene and updates the
         background color list.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
 
         for obj in self.selectedObjects():
@@ -1586,10 +1603,13 @@ class AnaSimpleViewer2(Qt.QObject):
 
         self.colorBackgroundList()
 
-    def editDelete(self):
+    def editDelete(self, checked=False):
         """
         Deletes the currently selected objects from the scene and updates the
         object list.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
         objects_to_delete = self.selectedObjects()
         self.deleteObjects(objects_to_delete)
@@ -1769,10 +1789,13 @@ class AnaSimpleViewer2(Qt.QObject):
         else:
             self.stopVolumeRendering()
 
-    def open_anatomist_main_window(self):
+    def open_anatomist_main_window(self, checked=False):
         """
         Opens the main Anatomist control window and adds GUI menus
         if available.
+
+        :param checked (bool): Not used, but required to match the
+                               QAction.triggered signal.
         """
         a = ana.Anatomist()
         control_window = a.getControlWindow()
@@ -1897,7 +1920,7 @@ class AnaSimpleViewer2(Qt.QObject):
         # Neither format could be decoded
         event.reject()
 
-    def popup_objects(self):
+    def popup_objects(self, *_):
         """
         Displays a context menu for selected objects in the object list.
         """
@@ -1913,11 +1936,11 @@ class AnaSimpleViewer2(Qt.QObject):
         properties_action.triggered.connect(self.object_properties)
         new_view_action = menu.addAction("Open in new view")
         new_view_action.triggered.connect(
-            lambda: self.addNewView(selected_objects[0])
+            lambda _: self.addNewView(selected_objects[0])
         )
         menu.exec_(Qt.QCursor.pos())
 
-    def object_properties(self):
+    def object_properties(self, checked=False):
         """
         Display the properties of selected objects in an Anatomist browser
         window.
@@ -1925,6 +1948,9 @@ class AnaSimpleViewer2(Qt.QObject):
         If the browser does not exist, is null, or is not visible, a new one
         is created. Otherwise, the existing browser is cleared and updated
         with the current selection.
+
+        :param checked(bool): Not used, but required to connect properly
+                              to the QAction.triggered signal.
         """
         a = ana.Anatomist("-b")
 
