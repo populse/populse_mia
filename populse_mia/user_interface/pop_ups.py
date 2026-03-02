@@ -148,6 +148,12 @@ from populse_mia.data_manager import (
 from populse_mia.data_manager.project import Project
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser import data_browser
+from populse_mia.utils import (
+    check_value_type,
+    message_already_exists,
+    set_projects_directory_as_default,
+    verCmp,
+)
 
 logger = logging.getLogger(__name__)
 ph = argon2.PasswordHasher()
@@ -821,8 +827,6 @@ class PopUpAddTag(QDialog):
         Performs validation on the tag name, type and default value to ensure
         they are valid before adding the tag to the project.
         """
-        # Import check_value_type here to prevent circular import issues
-        from populse_mia.utils import check_value_type
 
         # Get existing tag names
         with self.project.database.data() as database_data:
@@ -2125,10 +2129,6 @@ class PopUpNewProject(QFileDialog):
 
     def __init__(self):
         """Initialize the new project dialog with appropriate settings."""
-
-        # Import here to prevent circular import issues
-        from populse_mia.utils import set_projects_directory_as_default
-
         super().__init__()
         self.setLabelText(QFileDialog.Accept, "Create")
         self.setAcceptMode(QFileDialog.AcceptSave)
@@ -2147,8 +2147,6 @@ class PopUpNewProject(QFileDialog):
             If the file already exists, displays an error message.
             Otherwise, closes the dialog and emits signal_create_project.
         """
-        # Import here to prevent circular import issues
-        from populse_mia.utils import message_already_exists
 
         # Handle the case where file_name_tuple might be empty
         if not file_name_tuple:
@@ -2197,11 +2195,7 @@ class PopUpOpenProject(QFileDialog):
     signal_create_project = QtCore.pyqtSignal()
 
     def __init__(self):
-        # Import here to prevent circular imports
-        from populse_mia.utils import set_projects_directory_as_default
-
         super().__init__()
-
         self.setOption(QFileDialog.DontUseNativeDialog, True)
         self.setFileMode(QFileDialog.Directory)
         # Set the projects directory as default location
@@ -2219,8 +2213,6 @@ class PopUpOpenProject(QFileDialog):
                                         path(s). Typically obtained from
                                         selectedFiles() method.
         """
-        # Import here to prevent circular imports
-        from populse_mia.utils import message_already_exists
 
         if not file_name_tuple:
             return
@@ -3272,10 +3264,6 @@ class PopUpPreferences(QDialog):
 
     def edit_config_file(self):
         """Create a window to view, edit the mia configuration file."""
-
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         config = Config()
         self.editConf = QDialog()
         self.editConf.setWindowTitle(
@@ -5190,10 +5178,6 @@ class PopUpSaveProjectAs(QDialog):
         :return (str): Full path of the new project if successful,
                        None otherwise.
         """
-        # import message_already_exists only here to prevent circular
-        # import issue
-        from populse_mia.utils import message_already_exists
-
         file_name = self.new_project.text().strip()
 
         if not file_name:

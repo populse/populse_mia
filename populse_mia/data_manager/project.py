@@ -26,8 +26,9 @@ import yaml
 from capsul.api import Pipeline
 from capsul.pipeline import pipeline_tools
 from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
+from PyQt5.QtCore import QCoreApplication
+from PyQt5.QtWidgets import QInputDialog, QLineEdit, QMessageBox
 
-# Populse_mia imports
 from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
@@ -65,7 +66,15 @@ from populse_mia.data_manager.filter import Filter
 
 # Populse_MIA imports
 from populse_mia.software_properties import Config
-from populse_mia.utils import safe_connect, safe_disconnect
+from populse_mia.utils import (
+    safe_connect,
+    safe_disconnect,
+    set_item_data,
+    verCmp,
+)
+
+# Populse_mia imports
+from . import data_history_inspect
 
 logger = logging.getLogger(__name__)
 
@@ -948,8 +957,6 @@ class Project:
         :return: history (dict)
         """
 
-        from . import data_history_inspect
-
         return data_history_inspect.get_data_history(path, self)
 
     def getDate(self):
@@ -1044,9 +1051,6 @@ class Project:
                         - `swf_status`: The status information for the job in
                                         Soma-Workflow.
         """
-        # import soma_workflow.client as swclient
-        # from soma_workflow import constants
-
         swm = engine.study_config.modules["SomaWorkflowConfig"]
         swm.connect_resource(engine.connected_to())
         controller = swm.get_workflow_controller()
@@ -1111,8 +1115,6 @@ class Project:
         :return (str): Return the name typed by the user or None if
                        cancelled
         """
-
-        from PyQt5.QtWidgets import QInputDialog, QLineEdit
 
         text, ok_pressed = QInputDialog.getText(
             None, "Save a filter", "Filter name: ", QLineEdit.Normal, ""
@@ -1438,10 +1440,6 @@ class Project:
         :return (dict): A dictionary containing the project properties if
                         successfully loaded, or None if an error occurs.
         """
-
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         properties_path = os.path.join(
             self.folder, "properties", "properties.yml"
         )
@@ -1479,8 +1477,6 @@ class Project:
 
         :raises (ValueError): If an unknown action type is encountered.
         """
-        # To avoid circular imports
-        from populse_mia.utils import set_item_data
 
         if not self.redos:
             return  # No action to redo
@@ -1719,9 +1715,6 @@ class Project:
 
         :param custom_filters: The customized filter
         """
-
-        from PyQt5.QtWidgets import QMessageBox
-
         fields, conditions, values, links, nots = custom_filters
         self.currentFilter.fields = fields
         self.currentFilter.conditions = conditions
@@ -1836,9 +1829,6 @@ class Project:
             - modified_values
             - modified_visibilities
         """
-
-        # To avoid circular imports
-        from populse_mia.utils import set_item_data
 
         # Ensure there is an action to undo
         if not self.undos:
@@ -2021,8 +2011,6 @@ class Project:
         self._unsavedModifications = value
 
         try:
-            from PyQt5.QtCore import QCoreApplication
-
             app = QCoreApplication.instance()
 
             if self._unsavedModifications:

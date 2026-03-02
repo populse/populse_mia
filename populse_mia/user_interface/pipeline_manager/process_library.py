@@ -38,6 +38,7 @@ import tempfile
 from copy import copy, deepcopy
 from datetime import datetime
 from functools import partial
+from importlib import util
 from pathlib import Path
 from zipfile import ZipFile, is_zipfile
 
@@ -83,6 +84,7 @@ from soma.qt_gui.qt_backend.QtWidgets import QGroupBox, QListWidget, QMenu
 
 # Populse_MIA import
 from populse_mia.software_properties import Config
+from populse_mia.utils import verCmp
 
 logger = logging.getLogger(__name__)
 
@@ -568,8 +570,6 @@ class InstallProcesses(QDialog):
         try:
 
             with open(config_path) as stream:
-                # Import here to prevent circular import
-                from populse_mia.utils import verCmp
 
                 if verCmp(yaml.__version__, "5.1", "sup"):
                     process_dic = yaml.load(stream, Loader=yaml.FullLoader)
@@ -1896,8 +1896,6 @@ class PackageLibraryDialog(QDialog):
 
         # Show error dialog if requested and errors exist
         if show_error and error_messages:
-            from PyQt5.QtWidgets import QMessageBox
-
             msg = QMessageBox()
             msg.setText("\n".join(error_messages))
             msg.setIcon(QMessageBox.Warning)
@@ -2515,9 +2513,6 @@ class PackageLibraryDialog(QDialog):
         :return (dict | {}): The configuration dictionary if successfully
                                loaded, otherwise None in case of an error.
         """
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         config = Config()
         config_path = os.path.join(
             config.get_properties_path(), "properties", "process_config.yml"
@@ -3047,9 +3042,6 @@ class ProcessLibraryWidget(QWidget):
         .
         :return: The configuration as a dictionary.
         """
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         config = Config()
         config_path = os.path.join(
             config.get_properties_path(), "properties", "process_config.yml"
@@ -3128,9 +3120,6 @@ def import_file(full_name, path):
     :param path (str): The file path of the module.
     :return: The imported module.
     """
-
-    from importlib import util
-
     spec = util.spec_from_file_location(full_name, path)
     module = util.module_from_spec(spec)
     spec.loader.exec_module(module)

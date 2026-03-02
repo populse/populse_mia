@@ -41,6 +41,7 @@ import tempfile
 import time
 import unittest
 import uuid
+from collections import namedtuple
 from datetime import datetime
 from pathlib import Path
 from unittest.mock import MagicMock, Mock, patch
@@ -151,9 +152,10 @@ add_to_syspath(root_dev_dir / "capsul", name="capsul")
 add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma")
 add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma_workflow")
 
+# Imports after defining the location of packages:
+# soma_workflow import
 import soma_workflow.constants as swconstants  # noqa: E402
 
-# Imports after defining the location of populse packages:
 # Capsul import
 from capsul.api import (  # noqa: E402
     PipelineNode,
@@ -261,6 +263,9 @@ from populse_mia.utils import (  # noqa: E402
     verify_processes,
     verify_setup,
 )
+
+# from soma_workflow.client_types import Workflow
+
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
@@ -3236,8 +3241,6 @@ class TestMIADataBrowser(TestMIACase):
         ORIGINAL_BANDWIDTH = 50000.0
         NEW_BANDWIDTH = 25000.0
         NEW_TYPE_VALUE = "Test"
-
-        from collections import namedtuple
 
         # Helper to get database values
         DatabaseValues = namedtuple("DatabaseValues", ["current", "initial"])
@@ -10345,12 +10348,11 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             mock_status.assert_called_once_with(worker.status, worker.exec_id)
 
-    # For now, we are keeping the following two @mock.patch() comments solely
-    # to keep track of what was needed before tyty commit in order to pass the
+    # For now, we are keeping the following two @patch() comments solely
+    # to keep track of what was needed before the commit in order to pass the
     # following test:
-    # from unittest import mock
-    # @mock.patch('logging.config.dictConfig', lambda cfg: None)
-    # @mock.patch('logging.basicConfig', lambda *a, **kw: None)
+    # @patch('logging.config.dictConfig', lambda cfg: None)
+    # @patch('logging.basicConfig', lambda *a, **kw: None)
     def test_garbage_collect(self):
         """
         Tests 'PipelineManagerTab.garbage_collect' both in integrated and
@@ -10603,7 +10605,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             # Asserts that a workflow has been created
             # self.assertIsNotNone(ppl_manager.workflow)
-            # from soma_workflow.client_types import Workflow
             # self.assertIsInstance(ppl_manager.workflow, Workflow)
             # FIXME: the above code else leads to 'Segmentation Fault'
 

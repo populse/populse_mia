@@ -65,6 +65,8 @@ from populse_mia.data_manager import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
+from populse_mia.user_interface.pipeline_manager import pipeline_manager_tab
+from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 
 logger = logging.getLogger(__name__)
 
@@ -185,14 +187,6 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.fallback_engine.completion_progress_total
         )
         # Handle tag inheritance
-        # Import here to avoid circular imports
-        # isort: off
-        from populse_mia.user_interface.pipeline_manager import (
-            pipeline_manager_tab,
-        )
-
-        # isort: on
-
         PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
         auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
             process
@@ -275,15 +269,6 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         ):
             # The tags_inheritance() function has not been implemented in
             # the brick, so we are using auto-inheritance.
-            # We're only importing PipelineManagerTab now, to avoid a
-            # circular import issue
-            # isort: off
-            from populse_mia.user_interface.pipeline_manager import (
-                pipeline_manager_tab,
-            )
-
-            # isort: on
-
             PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
             auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
                 process
@@ -1215,10 +1200,6 @@ class ProcessMIA(Process):
             f"Ambiguity in tag inheritance for: {node_name} - "
             f"{plug_name} - {out_file}"
         )
-        # We're only importing PopUpInheritanceDict now, to avoid a
-        # circular import issue
-        from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
-
         pop_up = PopUpInheritanceDict(
             in_files,
             node_name,

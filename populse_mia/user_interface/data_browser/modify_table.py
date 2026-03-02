@@ -47,6 +47,7 @@ from populse_mia.data_manager import (
     FIELD_TYPE_LIST_STRING,
     FIELD_TYPE_LIST_TIME,
 )
+from populse_mia.utils import check_value_type
 
 logger = logging.getLogger(__name__)
 
@@ -228,10 +229,6 @@ class ModifyTable(QDialog):
 
         :param test (bool): Flag for testing mode, defaults to False
         """
-
-        # import check_value_type only here to prevent circular import issue
-        from populse_mia.utils import check_value_type
-
         valid = True
 
         # Validate each cell value against allowed types
