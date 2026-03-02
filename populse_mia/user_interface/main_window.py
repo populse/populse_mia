@@ -31,7 +31,7 @@ from os.path import expanduser
 
 import yaml
 from packaging import version
-from PyQt5.QtCore import QCoreApplication, Qt
+from PyQt5.QtCore import QCoreApplication, Qt, QTimer
 
 # PyQt5 imports
 from PyQt5.QtGui import QCursor, QIcon
@@ -46,6 +46,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+from soma.qt_gui import qt_backend
 
 import populse_mia.data_manager.data_loader as data_loader
 from populse_mia.data_manager import (
@@ -834,10 +835,9 @@ class MainWindow(QMainWindow):
         quitting after the window is closed. The cause is not known yet.
         So: force exit the event loop.
         """
-
-        from soma.qt_gui.qt_backend import Qt
-
-        Qt.QTimer.singleShot(10, Qt.qApp.exit)
+        # Defer quit to avoid re-entrancy issues when closing the last window,
+        # especially when IPython/QtConsole has modified the event loop.
+        QTimer.singleShot(10, QCoreApplication.quit)
 
     def open_project_pop_up(self):
         """
@@ -974,9 +974,6 @@ class MainWindow(QMainWindow):
         Open a Qt console shell with an IPython kernel seeing the program
         internals.
         """
-
-        from soma.qt_gui import qt_backend
-
         ipfunc = None
         mode = "qtconsole"
         logger.info("StartShell...")
@@ -996,7 +993,6 @@ class MainWindow(QMainWindow):
             return
 
         if ipfunc:
-            import soma.subprocess
 
             ipConsole = self.run_ipconsole_kernel(mode)
 
@@ -1020,7 +1016,7 @@ class MainWindow(QMainWindow):
                     f"--stdin={ipConsole.stdin_port}",
                     f"--hb={ipConsole.hb_port}",
                 ]
-                sp = soma.subprocess.Popen(cmd)
+                sp = subprocess.Popen(cmd)
                 pd = _ProcDeleter(sp)
 
                 with _ipsubprocs_lock:
@@ -1129,9 +1125,8 @@ class MainWindow(QMainWindow):
         logger.info(f"Run_ipconsole_kernel: {mode}")
         import IPython  # noqa: F401
         from IPython.lib import guisupport
-        from soma.qt_gui.qt_backend import Qt
 
-        qtapp = Qt.QApplication.instance()
+        qtapp = QApplication.instance()
         qtapp._in_event_loop = True
         guisupport.in_event_loop = True
 

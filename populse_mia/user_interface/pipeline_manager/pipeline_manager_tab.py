@@ -38,6 +38,8 @@ import traceback
 import uuid
 from pathlib import Path
 
+import soma_workflow.client as swc
+
 # Soma_workflow import
 import soma_workflow.constants as swconstants
 import traits.api as traits
@@ -78,6 +80,12 @@ from PyQt5.QtWidgets import (
 # Soma_base import
 from soma.controller.trait_utils import is_file_trait
 from soma.qt_gui.qtThread import QtThreadCall
+from soma_workflow import configuration
+from soma_workflow.gui.workflowGui import (
+    ApplicationModel,
+    ConnectionDialog,
+    MainWindow,
+)
 from traits.api import TraitListObject, Undefined
 
 # Populse_mia imports
@@ -495,8 +503,6 @@ class PipelineManagerTab(QWidget):
 
             :raises TypeError: If item type cannot be serialized.
             """
-
-            import soma_workflow.client as swc
 
             # Handle special cases
             if item in (Undefined, [Undefined]):
@@ -1862,9 +1868,6 @@ class PipelineManagerTab(QWidget):
             WorkflowExecutionError: When pipeline execution fails
             RuntimeError: When execution is aborted before running
         """
-
-        from soma_workflow import constants as swconstants
-
         self.stop_pipeline_action.setEnabled(False)
         worker = self.progress.worker
         status = worker.status
@@ -3173,11 +3176,6 @@ class PipelineManagerTab(QWidget):
         The method handles both local and remote execution via soma-workflow,
         displays progress animation, and manages UI state during execution.
         """
-
-        from soma_workflow import configuration
-        from soma_workflow import constants as swconstants
-        from soma_workflow.gui.workflowGui import ConnectionDialog
-
         execution_started = False
         self.run_pipeline_action.setDisabled(True)
 
@@ -4656,11 +4654,6 @@ class StatusWidget(QWidget):
             return
 
         if checked:
-            from soma_workflow.gui.workflowGui import (
-                ApplicationModel,
-                MainWindow,
-            )
-
             model = ApplicationModel()
 
             with protected_logging():

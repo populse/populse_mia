@@ -28,6 +28,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import tomli
+
 try:
     # Running inside the package (installed or `python -m populse_mia.main`)
     from .cli_args import parse_args
@@ -35,6 +37,13 @@ try:
 except ImportError:
     # Running as a top-level script (python main.py)
     from cli_args import parse_args
+
+# QtWebEngineWidgets must be imported before QApplication is created
+try:
+    from soma.qt_gui.qt_backend import QtWebEngineWidgets  # noqa: F401
+
+except ImportError:
+    pass  # QtWebEngineWidgets is not installed
 
 # PyQt5 imports
 from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
@@ -245,8 +254,6 @@ def main(args):
                             )
 
                             with open(pyproject_toml_path, "rb") as f:
-                                import tomli
-
                                 pyproject = tomli.load(f)
 
                                 if pyproject["project"]["name"].replace(
@@ -359,6 +366,8 @@ def main(args):
     # Now that populse projects paths have been set in sys.path, if necessary,
     # we can import from these projects:
     # Populse_mia imports
+    from populse_mia.data_manager.project import Project  # noqa E402
+    from populse_mia.data_manager.project_properties import SavedProjects
     from populse_mia.user_interface.main_window import MainWindow
     from populse_mia.utils import (  # noqa E402
         check_python_version,
@@ -378,7 +387,7 @@ def main(args):
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(MainWindow, args)
+        launch_mia(MainWindow, Project, SavedProjects, args)
         os.chdir(cwd)
 
 

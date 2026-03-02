@@ -33,6 +33,8 @@ from soma.qt_gui.controls.List_File_offscreen import (
 from soma.qt_gui.qt_backend import Qt, QtGui, QtWidgets
 from soma.utils.weak_proxy import weak_proxy
 
+from .node_controller import PlugFilter
+
 logger = logging.getLogger(__name__)
 
 
@@ -150,10 +152,6 @@ class PopulseFileControlWidget(FileControlWidget):
         :param node_name (str): The name of the node.
         :param plug_name (str): The name of the plug.
         """
-        # This import is not at the beginning of the file to avoid a cyclic
-        # import issue.
-        from .node_controller import PlugFilter
-
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
         main_window = widget.user_data.get("main_window")
@@ -263,10 +261,6 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         :param node_name (str): The name of the node.
         :param plug_name (str): The name of the associated plug.
         """
-        # this import is not at the beginning of the file to avoid a cyclic
-        # import issue.
-        from .node_controller import PlugFilter
-
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
         main_window = widget.user_data.get("main_window")
@@ -405,10 +399,6 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         :param node_name (str): The name of the node.
         :param plug_name (str): The name of the plug.
         """
-        # this import is not at the beginning of the file to avoid a cyclic
-        # import issue.
-        from .node_controller import PlugFilter
-
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
         main_window = widget.user_data.get("main_window")

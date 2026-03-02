@@ -111,7 +111,14 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSelectFilter,
     PopUpShowHistory,
 )
-from populse_mia.utils import safe_connect, safe_disconnect
+from populse_mia.utils import (
+    check_value_type,
+    safe_connect,
+    safe_disconnect,
+    set_item_data,
+    table_to_database,
+    type_name,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -245,9 +252,6 @@ class DataBrowser(QWidget):
             - Adds the operation to the undo history
             - Updates the UI table with the new column
         """
-        # Import table_to_database only here to prevent circular import issue
-        from populse_mia.utils import table_to_database
-
         # Prepare field configuration (DRY principle)
         field_config = {
             "field_name": new_tag_name,
@@ -1197,9 +1201,6 @@ class TableDataBrowser(QTableWidget):
             prevent unwanted event triggers, then reconnects them after
             completion.
         """
-        # Import locally to avoid circular dependency
-        from populse_mia.utils import set_item_data
-
         # Safely disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
 
@@ -1296,9 +1297,6 @@ class TableDataBrowser(QTableWidget):
              - System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded
              - Undefined values are displayed in italic bold text
         """
-        # Import locally to prevent circular dependency
-        from populse_mia.utils import set_item_data
-
         # Safely disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
 
@@ -1332,8 +1330,6 @@ class TableDataBrowser(QTableWidget):
                     )
 
                     if tag_attrib:
-                        from populse_mia.utils import type_name
-
                         field_type = tag_attrib["field_type"]
                         tooltip = (
                             f"Description: {tag_attrib['description']}\n"
@@ -1441,9 +1437,6 @@ class TableDataBrowser(QTableWidget):
             - The first column (name) is set as non-editable
             - TAG_BRICKS columns receive custom button widgets for interaction
         """
-
-        # Import set_item_data here to prevent circular import issue
-        from populse_mia.utils import set_item_data
 
         # Temporarily disable sorting and disconnect signals
         with self.batch_update(disable_sorting=True):
@@ -1659,8 +1652,6 @@ class TableDataBrowser(QTableWidget):
             - Appends operation to project.undos
             - Clears project.redos
         """
-        # Import here to prevent circular dependency
-        from populse_mia.utils import set_item_data
 
         # Track modifications for undo/redo functionality
         modified_values = []
@@ -1993,10 +1984,6 @@ class TableDataBrowser(QTableWidget):
             - Disconnects and reconnects the `itemChanged` signal to prevent
               recursive updates.
         """
-
-        # import set_item_data only here to prevent circular import issue
-        from populse_mia.utils import set_item_data
-
         self.setMouseTracking(False)
         self.coordinates = []  # Coordinates of selected cells
         self.old_database_values = []  # Old database values
@@ -2174,9 +2161,6 @@ class TableDataBrowser(QTableWidget):
             - Temporarily hides the table during updates for performance
             - Connects cell change signals after population completes
         """
-        # Lazy import to prevent circular dependency
-        from populse_mia.utils import set_item_data
-
         # Initialize progress dialog
         cells_count = len(self.scans_to_visualize) * len(
             self.horizontalHeader()
@@ -2408,8 +2392,6 @@ class TableDataBrowser(QTableWidget):
 
                 if tag_attrib:
                     # Set tooltip with field metadata
-                    from populse_mia.utils import type_name
-
                     item.setToolTip(
                         f"Description: {tag_attrib['description']}\n"
                         f"Unit: {tag_attrib['unit']}\n"
@@ -2552,8 +2534,6 @@ class TableDataBrowser(QTableWidget):
             triggering update handlers. The sort is stable and preserves the
             relative order of items with equal sort keys.
         """
-        # Import locally to avoid circular dependency
-        from populse_mia.utils import set_item_data
 
         def _clear_cell(row, column, item):
             """
@@ -2794,12 +2774,6 @@ class TableDataBrowser(QTableWidget):
             - Clears redo history
             - Resizes columns to fit content
         """
-        # Import locally to prevent circular dependency
-        from populse_mia.utils import (
-            check_value_type,
-            set_item_data,
-            table_to_database,
-        )
 
         def _show_error_and_revert(
             title, message, selected_items, database_data
@@ -3152,9 +3126,6 @@ class TableDataBrowser(QTableWidget):
             - May display a warning dialog for unreset values
             - Resizes table columns to fit content
         """
-        # Import set_item_data locally to prevent circular import
-        from populse_mia.utils import set_item_data
-
         points = self.selectedIndexes()
 
         if not points:
@@ -3240,9 +3211,6 @@ class TableDataBrowser(QTableWidget):
             - Resizes columns to fit content
             - May display warning dialog for unreset values
         """
-        # Import locally to prevent circular import
-        from populse_mia.utils import set_item_data
-
         modified_values = []
         # To know if some values do not have raw values (user tags)
         has_unreset_values = False
@@ -3327,9 +3295,6 @@ class TableDataBrowser(QTableWidget):
             - Shows warning dialog if any values couldn't be reset
             - Resizes table columns
         """
-        # Import here to prevent circular dependency
-        from populse_mia.utils import set_item_data
-
         # Early return if nothing selected
         selected_indices = self.selectedIndexes()
 

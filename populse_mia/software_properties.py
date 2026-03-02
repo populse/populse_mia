@@ -30,6 +30,9 @@ import yaml
 from capsul.api import capsul_engine
 from cryptography.fernet import Fernet
 
+# Populse_mia import
+from populse_mia.utils import verCmp
+
 ENCRYPTION_KEY = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
 logger = logging.getLogger(__name__)
 
@@ -740,8 +743,6 @@ class Config:
 
         :return (str): The absolute path to the properties folder.
         """
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
 
         if (
             hasattr(self, "properties_path")
@@ -1053,10 +1054,6 @@ class Config:
         :return (dict): Parsed configuration from the YAML file.
                         Returns empty dict if parsing fails.
         """
-
-        # import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         fernet = Fernet(ENCRYPTION_KEY)
         config_path = (
             Path(self.get_properties_path()) / "properties" / "config.yml"

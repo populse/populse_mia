@@ -63,6 +63,7 @@ from populse_mia.user_interface.pipeline_manager.node_controller import (
     FilterWidget,
 )
 from populse_mia.user_interface.pop_ups import PopUpClosePipeline
+from populse_mia.utils import verCmp
 
 logger = logging.getLogger(__name__)
 
@@ -622,9 +623,6 @@ class PipelineEditor(PipelineDeveloperView):
             Modifies self.scene.gnodes, self.scene.glinks, and pipeline.nodes.
             Displays a warning dialog if any links are removed.
         """
-        # Import verCmp only here to prevent circular import issue
-        from populse_mia.utils import verCmp
-
         pipeline = self.scene.pipeline
         config = Config()
         # List to store the removed links
@@ -2083,9 +2081,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                              attribute and '__module__' attribute for package
                              resolution.
         """
-        # Import locally to prevent circular dependencies
-        from populse_mia.utils import verCmp
-
         # Load process configuration
         config = Config()
         config_path = os.path.join(

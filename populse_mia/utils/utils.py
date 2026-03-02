@@ -93,10 +93,7 @@ from populse_mia.data_manager import (  # noqa E402
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
 )
-from populse_mia.data_manager.project import Project  # noqa E402
-from populse_mia.data_manager.project_properties import (  # noqa E402
-    SavedProjects,
-)
+from populse_mia.software_properties import Config
 
 logger = logging.getLogger(__name__)
 
@@ -488,7 +485,7 @@ def get_value(project, collection, file_name, field):
         return database_data.get_value(collection, file_name, field)
 
 
-def launch_mia(MainWindow, args):
+def launch_mia(MainWindow, Project, SavedProjects, args):
     """
     Launch and run the Mia software application.
 
@@ -503,18 +500,11 @@ def launch_mia(MainWindow, args):
     All state is local and shared via closures.
 
     :param MainWindow (class): The main window class to be instantiated.
+    :param Project (class): The project class to be instantiated.
+    :param SavedProjects (class): The class that manages all projects saved in
+                                  Mia.
     :param args (argparse.Namespace): Parsed command-line arguments.
     """
-    # Import here to avoid circular dependencies
-    from populse_mia.software_properties import Config
-
-    # QtWebEngineWidgets must be imported before QApplication is created
-    try:
-        from soma.qt_gui.qt_backend import QtWebEngineWidgets  # noqa: F401
-
-    except ImportError:
-        pass  # QtWebEngineWidgets is not installed
-
     main_window = None  # Explicit lifecycle control
     project_folder = None  # Captured early to avoid Qt destruction issues
     cleaned_up = False  # Guard against multiple cleanups
@@ -902,9 +892,6 @@ def set_projects_directory_as_default(dialog):
 
     :param dialog (QFileDialog): current file dialog.
     """
-    # import Config only here to prevent circular import issue
-    from populse_mia.software_properties import Config
-
     config = Config()
     projects_directory = Path(config.get_projects_save_path())
     projects_directory.mkdir(parents=True, exist_ok=True)
@@ -1069,9 +1056,6 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
             - _deepCompDic: keep the previous config existing before packages
               update
     """
-
-    # import Config only here to prevent circular import issue
-    from populse_mia.software_properties import Config
 
     def _deepCompDic(old_dic, new_dic):
         """
@@ -1663,9 +1647,6 @@ def verify_setup(
             - _save_yml_file: save data in a YAML file
             - _verify_miaConfig: check the config and try to fix if necessary
     """
-
-    # import Config only here to prevent circular import issue
-    from populse_mia.software_properties import Config
 
     if pypath is None:
         pypath = []

@@ -85,6 +85,7 @@ from populse_mia.user_interface.pop_ups import (
     ClickableLabel,
     PopUpSelectTagCountTable,
 )
+from populse_mia.utils import set_item_data, table_to_database
 
 
 class CountTable(QDialog):
@@ -342,8 +343,6 @@ class CountTable(QDialog):
         and fills corresponding table cells. Also adds total counts
         in the bottom row.
         """
-        # import set_item_data only here to prevent circular import issue
-        from populse_mia.utils import set_item_data
 
         with self.project.database.data() as database_data:
             # Initialize with first values for each tag
@@ -406,9 +405,6 @@ class CountTable(QDialog):
         Also adds a "Total" row header.
         """
 
-        # import set_item_data only here to prevent circular import issue
-        from populse_mia.utils import set_item_data
-
         # Set headers for first n-1 tags
         for idx in range(len(self.values_list) - 1):
             header_name = self.push_buttons[idx].text()
@@ -451,9 +447,6 @@ class CountTable(QDialog):
             - Adds scan filenames as tooltip
             - Updates column totals
         """
-        # import table_to_database only here to prevent circular import issue
-        from populse_mia.utils import table_to_database
-
         sources_images_dir = Config().getSourceImageDir()
 
         with self.project.database.data() as database_data:
