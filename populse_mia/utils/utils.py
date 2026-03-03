@@ -93,7 +93,6 @@ from populse_mia.data_manager import (  # noqa E402
     FIELD_TYPE_STRING,
     FIELD_TYPE_TIME,
 )
-from populse_mia.software_properties import Config
 
 logger = logging.getLogger(__name__)
 
@@ -485,7 +484,7 @@ def get_value(project, collection, file_name, field):
         return database_data.get_value(collection, file_name, field)
 
 
-def launch_mia(MainWindow, Project, SavedProjects, args):
+def launch_mia(MainWindow, Project, SavedProjects, Config, args):
     """
     Launch and run the Mia software application.
 
@@ -503,6 +502,8 @@ def launch_mia(MainWindow, Project, SavedProjects, args):
     :param Project (class): The project class to be instantiated.
     :param SavedProjects (class): The class that manages all projects saved in
                                   Mia.
+    :param Config (class): The class that manages Mia's configuration and
+                           properties.
     :param args (argparse.Namespace): Parsed command-line arguments.
     """
     main_window = None  # Explicit lifecycle control
@@ -886,11 +887,12 @@ def set_item_data(item, value, value_type):
         raise ValueError(f"Failed to set item data: {e}")
 
 
-def set_projects_directory_as_default(dialog):
+def set_projects_directory_as_default(dialog, Config):
     """
     Sets the projects directory as default.
 
     :param dialog (QFileDialog): current file dialog.
+    :param Config: The class that manages Mia's configuration and properties.
     """
     config = Config()
     projects_directory = Path(config.get_projects_save_path())
@@ -1022,13 +1024,14 @@ def verCmp(first_ver, sec_ver, comp):
     raise ValueError(f"Invalid comparison type: {comp}")
 
 
-def verify_processes(nipypeVer, miaProcVer, capsulVer):
+def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
     """Install or update to the last version available on the station, for
     nipype, capsul and mia_processes processes libraries.
 
     :param nipypeVer: nipype version currently installed (str).
     :param miaProcVer: mia_processes version currently installed (str).
     :param capsulVer: capsul version currently installed (str).
+    :param Config: The class that manages Mia's configuration and properties.
 
     By default, Mia provides three process libraries in the pipeline library
     (available in Pipeline Manager tab). The nipype, given as it is because
@@ -1625,6 +1628,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer):
 
 
 def verify_setup(
+    Config,
     dev_mode,
     pypath=None,
     dot_mia_config=os.path.join(
@@ -1633,6 +1637,7 @@ def verify_setup(
 ):
     """Check and try to correct the configuration if necessary.
 
+    :param Config: The class that manages Mia's configuration and properties.
     :param dev_mode (bool): the current developer mode.
                             (True: dev, False: user)
     :param pypath (list): List of paths for the capsul config.

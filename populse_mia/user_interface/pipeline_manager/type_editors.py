@@ -33,7 +33,7 @@ from soma.qt_gui.controls.List_File_offscreen import (
 from soma.qt_gui.qt_backend import Qt, QtGui, QtWidgets
 from soma.utils.weak_proxy import weak_proxy
 
-from .node_controller import PlugFilter
+from populse_mia.user_interface.pipeline_manager.plug_filter import PlugFilter
 
 logger = logging.getLogger(__name__)
 

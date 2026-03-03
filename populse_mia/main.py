@@ -365,9 +365,10 @@ def main(args):
 
     # Now that populse projects paths have been set in sys.path, if necessary,
     # we can import from these projects:
-    # Populse_mia imports
+    # Populse_mia imports:
     from populse_mia.data_manager.project import Project  # noqa E402
     from populse_mia.data_manager.project_properties import SavedProjects
+    from populse_mia.software_properties import Config
     from populse_mia.user_interface.main_window import MainWindow
     from populse_mia.utils import (  # noqa E402
         check_python_version,
@@ -376,18 +377,19 @@ def main(args):
         verify_setup,
     )
 
-    verify_setup(dev_mode=DEV_MODE, pypath=list(map(str, pypath)))
+    verify_setup(Config, dev_mode=DEV_MODE, pypath=list(map(str, pypath)))
     verify_processes(
         sys.modules["nipype"].__version__,
         sys.modules["mia_processes"].__version__,
         sys.modules["capsul"].__version__,
+        Config,
     )
     check_python_version()
     cwd = os.getcwd()
 
     with tempfile.TemporaryDirectory() as temp_work_dir:
         os.chdir(temp_work_dir)
-        launch_mia(MainWindow, Project, SavedProjects, args)
+        launch_mia(MainWindow, Project, SavedProjects, Config, args)
         os.chdir(cwd)
 
 

@@ -12251,7 +12251,7 @@ class Test_Z_MIAOthers(TestMIACase):
         dot_mia_config = os.path.join(
             os.path.dirname(self.properties_path), "configuration_path.yml"
         )
-        verify_setup(dev_mode=True, dot_mia_config=dot_mia_config)
+        verify_setup(Config, dev_mode=True, dot_mia_config=dot_mia_config)
         mock_exec.assert_called_once()
 
     @patch(
@@ -12445,7 +12445,7 @@ class Test_Z_MIAOthers(TestMIACase):
             proc_content = yaml.load(stream, Loader=yaml.FullLoader)
 
         self.assertEqual(proc_content, {"Packages": {}, "Paths": []})
-        verify_processes("nipype_ver", "mia_proc_ver", "capsul_ver")
+        verify_processes("nipype_ver", "mia_proc_ver", "capsul_ver", Config)
 
         with open(proc_config) as stream:
             proc_content = yaml.load(stream, Loader=yaml.FullLoader)

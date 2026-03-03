@@ -833,7 +833,11 @@ class DataBrowser(QWidget):
         current_scans = self.table_data.get_current_filter()
         # Displays a popup with the list of scans
         self.show_selection = PopUpDataBrowserCurrentSelection(
-            self.project, self, current_scans, self.main_window
+            self.project,
+            self,
+            current_scans,
+            self.main_window,
+            TableDataBrowser,
         )
         self.show_selection.show()
 
