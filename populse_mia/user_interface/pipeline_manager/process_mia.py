@@ -65,7 +65,6 @@ from populse_mia.data_manager import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.pipeline_manager import pipeline_manager_tab
 from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 
 logger = logging.getLogger(__name__)
@@ -187,7 +186,12 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             self.fallback_engine.completion_progress_total
         )
         # Handle tag inheritance
+        from populse_mia.user_interface.pipeline_manager import (
+            pipeline_manager_tab,
+        )
+
         PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
+
         auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
             process
         )
@@ -269,6 +273,10 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         ):
             # The tags_inheritance() function has not been implemented in
             # the brick, so we are using auto-inheritance.
+            from populse_mia.user_interface.pipeline_manager import (
+                pipeline_manager_tab,
+            )
+
             PipelineManagerTab = pipeline_manager_tab.PipelineManagerTab
             auto_inheritance_dict = PipelineManagerTab.update_auto_inheritance(
                 process

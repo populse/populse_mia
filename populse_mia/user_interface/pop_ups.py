@@ -147,7 +147,6 @@ from populse_mia.data_manager import (
 )
 from populse_mia.data_manager.project import Project
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.data_browser import data_browser
 from populse_mia.utils import (
     check_value_type,
     message_already_exists,
@@ -1305,7 +1304,9 @@ class PopUpDataBrowserCurrentSelection(QDialog):
 
     """
 
-    def __init__(self, project, databrowser, filter, main_window):
+    def __init__(
+        self, project, databrowser, filter, main_window, TableDataBrowser
+    ):
         """
         Initialize the dialog with the current project and selection data.
 
@@ -1314,6 +1315,7 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         :param filter (list): List of the current documents in the data
                               browser
         :param main_window: Main window of the software
+        :param TableDataBrowser: Class for displaying data in a table format
 
         """
         super().__init__()
@@ -1321,7 +1323,7 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         self.databrowser = databrowser
         self.filter = filter
         self.main_window = main_window
-        self._setup_ui()
+        self._setup_ui(TableDataBrowser)
 
     def _set_dialog_size(self):
         """Set the dialog size based on screen resolution."""
@@ -1330,14 +1332,18 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         self.setMinimumWidth(round(0.5 * width))
         self.setMinimumHeight(round(0.8 * height))
 
-    def _setup_ui(self):
-        """Set up the dialog's user interface."""
+    def _setup_ui(self, TableDataBrowser):
+        """
+        Set up the dialog's user interface.
+
+        :param TableDataBrowser: Class for displaying data in a table format
+        """
         self.setWindowTitle("Confirm the selection")
         self.setModal(True)
         # Create layout
         layout = QVBoxLayout()
         # Create and configure data browser table
-        databrowser_table = data_browser.TableDataBrowser(
+        databrowser_table = TableDataBrowser(
             self.project, self.databrowser, [TAG_FILENAME], False, False
         )
         old_scan_list = databrowser_table.scans_to_visualize
@@ -2133,7 +2139,7 @@ class PopUpNewProject(QFileDialog):
         self.setLabelText(QFileDialog.Accept, "Create")
         self.setAcceptMode(QFileDialog.AcceptSave)
         # Set the projects directory as default
-        set_projects_directory_as_default(self)
+        set_projects_directory_as_default(self, Config)
 
     def get_filename(self, file_name_tuple):
         """
@@ -2199,7 +2205,7 @@ class PopUpOpenProject(QFileDialog):
         self.setOption(QFileDialog.DontUseNativeDialog, True)
         self.setFileMode(QFileDialog.Directory)
         # Set the projects directory as default location
-        set_projects_directory_as_default(self)
+        set_projects_directory_as_default(self, Config)
 
     def get_filename(self, file_name_tuple):
         """
