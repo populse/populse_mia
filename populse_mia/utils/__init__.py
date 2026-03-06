@@ -34,6 +34,7 @@ from .utils import (  # noqa: F401
     set_projects_directory_as_default,
     table_to_database,
     type_name,
+    update_auto_inheritance,
     verCmp,
     verify_processes,
     verify_setup,
