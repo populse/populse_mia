@@ -260,6 +260,7 @@ from populse_mia.user_interface.pop_ups import (  # noqa: E402
 from populse_mia.utils import (  # noqa: E402
     check_value_type,
     table_to_database,
+    update_auto_inheritance,
     verify_processes,
     verify_setup,
 )
@@ -11742,7 +11743,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 str(context.exception),
             )
 
-            ppl_manager.update_auto_inheritance(node, job)
+            update_auto_inheritance(node, job)
 
             # Test auto_inheritance_dict exists and is a dictionary
             self.assertIsInstance(job.auto_inheritance_dict, dict)
@@ -11785,7 +11786,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                     InputMultiObject(File(exists=True), desc="out files"),
                 )
                 job.param_dict["_out"] = [out_file_value]
-                ppl_manager.update_auto_inheritance(node, job)
+                update_auto_inheritance(node, job)
 
             # Test auto_inheritance_dict exists and is a dictionary
             self.assertIsInstance(job.auto_inheritance_dict, dict)
@@ -11807,7 +11808,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # --- Case 3: node has no project
         del job.auto_inheritance_dict
 
-        ppl_manager.update_auto_inheritance(node, job)
+        update_auto_inheritance(node, job)
 
         # Verify that auto_inheritance_dict attribute doesn't exist
         with self.assertRaises(AttributeError) as context:
@@ -11821,7 +11822,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # --- Case 4: node is not a Process
         node = {}
 
-        ppl_manager.update_auto_inheritance(node, job)
+        update_auto_inheritance(node, job)
 
         # Verify that auto_inheritance_dict attribute doesn't exist
         with self.assertRaises(AttributeError) as context:

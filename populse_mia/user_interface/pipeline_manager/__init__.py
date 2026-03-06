@@ -19,5 +19,3 @@ Contains:
 # http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 # for details.
 ##########################################################################
-
-from .update_auto_inheritance import update_auto_inheritance  # noqa: F401

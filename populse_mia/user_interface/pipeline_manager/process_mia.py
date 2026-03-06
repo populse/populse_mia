@@ -65,8 +65,8 @@ from populse_mia.data_manager import (
     TAG_TYPE,
 )
 from populse_mia.software_properties import Config
-from populse_mia.user_interface.pipeline_manager import update_auto_inheritance
 from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
+from populse_mia.utils import update_auto_inheritance
 
 logger = logging.getLogger(__name__)
 
