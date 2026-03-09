@@ -33,6 +33,7 @@ class named ``MiaViewer`` which:
 
 from abc import ABC, abstractmethod
 
+# soma import
 from soma.qt_gui.qt_backend import Qt
 
 

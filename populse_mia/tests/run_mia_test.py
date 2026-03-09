@@ -25,6 +25,9 @@
 # for details.
 ##########################################################################
 
+# isort: off
+
+import argon2
 import ast
 import contextlib
 import copy
@@ -34,6 +37,7 @@ import json
 import logging
 import os
 import platform
+import psutil
 import shutil
 import subprocess
 import sys
@@ -41,17 +45,17 @@ import tempfile
 import time
 import unittest
 import uuid
+import yaml
 from collections import namedtuple
 from datetime import datetime
+from packaging import version
 from pathlib import Path
+from traits.api import TraitListObject, Undefined
 from unittest.mock import MagicMock, Mock, patch
 
-# General imports:
-import argon2
-import psutil
-import yaml
+# isort: on
 
-# Nipype import
+# nipype import
 from nipype.interfaces import Rename, Select
 from nipype.interfaces.base.traits_extension import (
     File,
@@ -59,7 +63,6 @@ from nipype.interfaces.base.traits_extension import (
 )
 from nipype.interfaces.cat12 import CAT12Segment
 from nipype.interfaces.spm import Smooth, Threshold
-from packaging import version
 
 # PyQt5 import
 from PyQt5 import QtGui, sip
@@ -86,7 +89,6 @@ from PyQt5.QtWidgets import (
     QTableWidgetItem,
     QWidget,
 )
-from traits.api import TraitListObject, Undefined
 
 ph = argon2.PasswordHasher()
 
@@ -153,7 +155,9 @@ add_to_syspath(root_dev_dir / "soma-base" / "python", name="soma")
 add_to_syspath(root_dev_dir / "soma-workflow" / "python", name="soma_workflow")
 
 # Imports after defining the location of packages:
+
 # soma_workflow import
+# from soma_workflow.client_types import Workflow
 import soma_workflow.constants as swconstants  # noqa: E402
 
 # Capsul import
@@ -174,7 +178,7 @@ from capsul.pipeline.pipeline_workflow import (  # noqa: E402
 from capsul.pipeline.process_iteration import ProcessIteration  # noqa: E402
 from capsul.process.process import NipypeProcess  # noqa: E402
 
-# Mia_processes import
+# mia_processes import
 from mia_processes.bricks.tools import Input_Filter  # noqa: E402
 
 # soma import
@@ -184,7 +188,7 @@ from soma.qt_gui.qt_backend.Qt import (  # noqa: E402
 )
 from soma.qt_gui.qt_backend.QtWidgets import QMenu  # noqa: E402
 
-# Populse_mia import
+# populse_mia import
 from populse_mia.data_manager import (  # noqa: E402
     BRICK_EXEC,
     BRICK_EXEC_TIME,
@@ -264,9 +268,6 @@ from populse_mia.utils import (  # noqa: E402
     verify_processes,
     verify_setup,
 )
-
-# from soma_workflow.client_types import Workflow
-
 
 # Working from the scripts directory
 os.chdir(os.path.dirname(os.path.realpath(__file__)))

@@ -25,16 +25,18 @@ mia_processes, Nipype, and Capsul.
 # for details.
 ##########################################################################
 
-# Other imports
+# isort: off
+
 import logging
 import os
 import uuid
-
 import nibabel as nib
 import numpy as np
 import traits.api as traits
 
-# Capsul imports
+# isort: on
+
+# capsul import
 from capsul.api import Pipeline, Process, capsul_engine
 from capsul.attributes.completion_engine import (
     ProcessCompletionEngine,
@@ -47,14 +49,14 @@ from capsul.pipeline.pipeline_nodes import ProcessNode
 from capsul.pipeline.process_iteration import ProcessIteration
 from capsul.process.process import NipypeProcess
 
-# nipype imports
+# nipype import
 from nipype.interfaces.base import File, InputMultiObject, traits_extension
 
-# Soma-base import
+# soma import
 from soma.controller.trait_utils import relax_exists_constraint
 from soma.utils.weak_proxy import get_ref
 
-# Populse_MIA imports
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,

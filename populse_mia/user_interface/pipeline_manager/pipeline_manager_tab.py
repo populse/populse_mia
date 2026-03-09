@@ -20,7 +20,8 @@ Contains:
 # for details.
 ##########################################################################
 
-# Other imports
+# isort: off
+
 import contextlib
 import copy
 import datetime
@@ -37,14 +38,15 @@ import time
 import traceback
 import uuid
 from pathlib import Path
+from traits.api import List, TraitListObject, Undefined
 
+# isort: on
+
+# soma_workflow import
 import soma_workflow.client as swc
-
-# Soma_workflow import
 import soma_workflow.constants as swconstants
-import traits.api as traits
 
-# Capsul imports
+# capsul import
 from capsul.api import (
     NipypeProcess,
     Pipeline,
@@ -60,7 +62,7 @@ from capsul.pipeline.pipeline_workflow import workflow_from_pipeline
 from capsul.pipeline.process_iteration import ProcessIteration
 from matplotlib.backends.qt_compat import QtWidgets
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5 import Qt, QtCore
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal
 from PyQt5.QtGui import QCursor, QIcon, QMovie
@@ -77,7 +79,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-# Soma_base import
+# soma_import
 from soma.controller.trait_utils import is_file_trait
 from soma.qt_gui.qtThread import QtThreadCall
 from soma_workflow import configuration
@@ -86,9 +88,8 @@ from soma_workflow.gui.workflowGui import (
     ConnectionDialog,
     MainWindow,
 )
-from traits.api import TraitListObject, Undefined
 
-# Populse_mia imports
+# populse_mia import
 from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
@@ -1565,7 +1566,7 @@ class PipelineManagerTab(QWidget):
                 iteration_name = old_node_name
 
             # Add ReduceNode for list-type traits to prevent nested lists
-            if isinstance(trait.trait_type, traits.List):
+            if isinstance(trait.trait_type, List):
                 node_name = f"un_list_{plug}"
                 reduce_node = pipeline.add_custom_node(
                     node_name,

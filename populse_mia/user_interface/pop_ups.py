@@ -45,6 +45,9 @@ Module that defines all the pop-ups used across the Mia software.
 # for details.
 ##########################################################################
 
+# isort: off
+
+import argon2
 import ast
 import glob
 import hashlib
@@ -53,20 +56,20 @@ import os
 import platform
 import shutil
 import subprocess
+import yaml
 from datetime import datetime
 from functools import partial
 from typing import get_origin
 
-import argon2
-import yaml
+# isort: on
 
-# Capsul imports
+# capsul import
 from capsul.api import capsul_engine
 from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.qt_gui.widgets.pipeline_developer_view import PipelineDeveloperView
 from capsul.qt_gui.widgets.settings_editor import SettingsEditor
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import (
     QAbstractItemView,
@@ -101,7 +104,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-# Populse_mia imports
+# populse_mia imports
 from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,

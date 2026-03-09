@@ -17,20 +17,23 @@ pop-up in the config.yml file.
 # for details.
 ##########################################################################
 
+# isort: off
+
 import glob
 import logging
 import os
 import platform
+import yaml
+from cryptography.fernet import Fernet
 from functools import lru_cache
 from pathlib import Path
 
-import yaml
+# isort: on
 
 # Capsul import
 from capsul.api import capsul_engine
-from cryptography.fernet import Fernet
 
-# Populse_mia import
+# populse_mia import
 from populse_mia.utils import verCmp
 
 ENCRYPTION_KEY = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="

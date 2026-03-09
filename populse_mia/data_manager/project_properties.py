@@ -14,12 +14,15 @@ Contains:
 # for details.
 ##########################################################################
 
-import os
+# isort: off
 
+import os
 import yaml
 from packaging import version
 
-# Populse_MIA imports
+# isort: on
+
+# populse_mia import
 from populse_mia.software_properties import Config
 
 

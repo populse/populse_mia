@@ -17,11 +17,11 @@ interacting with the populse_db API.
 
 from contextlib import contextmanager
 
-# Populse_db imports
+# populse_db import
 from populse_db.database import str_to_type, type_to_str
 from populse_db.storage import Storage
 
-# Special attributes for the database
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     FIELD_ATTRIBUTES_COLLECTION,

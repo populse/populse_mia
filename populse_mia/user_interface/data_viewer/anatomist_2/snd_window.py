@@ -16,6 +16,7 @@ Contains:
 import logging
 import os
 
+# soma import
 from soma.qt_gui.qt_backend import Qt, QtCore, QtGui
 from soma.qt_gui.qt_backend.uic import loadUi
 

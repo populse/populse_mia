@@ -15,9 +15,8 @@ rapid and advanced search
 # for details.
 ##########################################################################
 
+# populse_mia import
 from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
-
-# Populse_MIA imports
 from populse_mia.user_interface import data_browser
 
 

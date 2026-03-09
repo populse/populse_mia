@@ -24,19 +24,21 @@ Contains:
 # for details.
 ##########################################################################
 
+# isort: off
+
 import logging
+import nibabel as nib
+import numpy as np
 import os
+import skimage as sk
+from packaging import version
+from skimage.transform import resize
 from functools import partial
 
-import nibabel as nib
-import numpy as np  # a N-dimensional array object
-import skimage as sk
+# isort: on
 
-# Populse_MIA imports
-from packaging import version
+# PyQt5 import
 from PyQt5 import QtCore
-
-# PyQt5 imports
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QImage, QPixmap
 from PyQt5.QtWidgets import (
@@ -52,9 +54,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-# from scipy.ndimage import rotate  # to work with NumPy arrays
-from skimage.transform import resize
-
+# populse_mia import
 from populse_mia.data_manager import COLLECTION_CURRENT, NOT_DEFINED_VALUE
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import ClickableLabel, PopUpSelectTag

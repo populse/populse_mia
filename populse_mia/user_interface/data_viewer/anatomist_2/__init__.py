@@ -10,4 +10,5 @@ This is the anatomist-based viewer developed by the populse team.
 # for details.
 ##########################################################################
 
+# populse_mia import
 from .mia_anatomist import MiaViewer  # noqa: F401

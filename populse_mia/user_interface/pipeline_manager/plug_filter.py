@@ -40,6 +40,7 @@ depending on the selected filter).
 
 import os
 
+# PyQt5 import
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (
@@ -53,6 +54,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+# Populse_mia import
 from populse_mia.data_manager import (
     BRICK_OUTPUTS,
     COLLECTION_BRICK,
@@ -60,8 +62,6 @@ from populse_mia.data_manager import (
     NOT_DEFINED_VALUE,
     TAG_FILENAME,
 )
-
-# Populse_MIA imports
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.advanced_search import (
     AdvancedSearch,

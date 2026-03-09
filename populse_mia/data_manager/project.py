@@ -14,21 +14,29 @@
 # for details.
 ##########################################################################
 
+# isort: off
+
 import glob
 import json
 import logging
 import os
 import tempfile
+import yaml
 from datetime import datetime
 from pathlib import Path
 
-import yaml
+# isort: on
+
+# capsul import
 from capsul.api import Pipeline
 from capsul.pipeline import pipeline_tools
 from capsul.pipeline.pipeline_nodes import PipelineNode, ProcessNode
+
+# PyQt5 import
 from PyQt5.QtCore import QCoreApplication
 from PyQt5.QtWidgets import QInputDialog, QLineEdit, QMessageBox
 
+# populse_mia import
 from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
@@ -63,8 +71,6 @@ from populse_mia.data_manager import (
 )
 from populse_mia.data_manager.database_mia import DatabaseMIA
 from populse_mia.data_manager.filter import Filter
-
-# Populse_MIA imports
 from populse_mia.software_properties import Config
 from populse_mia.utils import (
     safe_connect,
@@ -73,7 +79,6 @@ from populse_mia.utils import (
     verCmp,
 )
 
-# Populse_mia imports
 from . import data_history_inspect
 
 logger = logging.getLogger(__name__)

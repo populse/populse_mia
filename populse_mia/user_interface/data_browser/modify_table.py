@@ -25,7 +25,7 @@ Contains:
 import logging
 from datetime import datetime
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5.QtWidgets import (
     QDialog,
     QHBoxLayout,
@@ -36,7 +36,7 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
-# Populse_MIA imports
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     FIELD_TYPE_LIST_BOOLEAN,

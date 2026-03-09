@@ -24,14 +24,18 @@ Contains:
 # for details.
 ##########################################################################
 
+# isort: off
+
 import logging
 import os
 import sys
-from pathlib import Path
-
 import yaml
+from pathlib import Path
+from traits.api import TraitError
 
-# Capsul imports
+# isort: on
+
+# Capsul import
 from capsul.api import (
     Node,
     PipelineNode,
@@ -48,17 +52,15 @@ from capsul.qt_gui.widgets.pipeline_developer_view import (
     PipelineDeveloperView,
 )
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5 import Qt, QtCore, QtWidgets
 from PyQt5.QtWidgets import QInputDialog, QMessageBox
 
-# soma-base imports
+# soma import
 from soma.utils.weak_proxy import weak_proxy
-from traits.api import TraitError
 
+# populse_mia import
 from populse_mia.software_properties import Config
-
-# Populse_mia imports
 from populse_mia.user_interface.pipeline_manager.node_controller import (
     FilterWidget,
 )

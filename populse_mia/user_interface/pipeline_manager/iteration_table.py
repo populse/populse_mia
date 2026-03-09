@@ -17,7 +17,7 @@
 
 import os
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
@@ -32,10 +32,9 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+# Populse_mia import
 from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
 from populse_mia.software_properties import Config
-
-# MIA imports
 from populse_mia.user_interface.pipeline_manager.process_mia import ProcessMIA
 from populse_mia.user_interface.pop_ups import (
     ClickableLabel,

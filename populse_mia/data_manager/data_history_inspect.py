@@ -43,12 +43,18 @@ This module is dedicated to pipeline history.
 # for details.
 ##########################################################################
 
+# isort: off
+
 import logging
 import os.path as osp
-
 import traits.api as traits
-from capsul.api import Pipeline, Process  # , capsul_engine
 
+# isort: on
+
+# capsul import
+from capsul.api import Pipeline, Process
+
+# populse_mia import
 from populse_mia.data_manager import (
     BRICK_EXEC,
     BRICK_EXEC_TIME,
