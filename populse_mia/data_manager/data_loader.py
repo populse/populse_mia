@@ -33,11 +33,11 @@ from datetime import datetime
 from time import sleep
 from time import time as time_time
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 from PyQt5.QtWidgets import QProgressDialog
 
-# Populse_mia import
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     COLLECTION_INITIAL,

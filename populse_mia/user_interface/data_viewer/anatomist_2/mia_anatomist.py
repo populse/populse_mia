@@ -18,10 +18,14 @@ Contains:
 
 import os
 
+# PyQt5 import
 from PyQt5.QtGui import QIcon, QMessageBox
 from PyQt5.QtWidgets import QHBoxLayout, QToolButton
+
+# soma import
 from soma.qt_gui.qt_backend import Qt, QtCore
 
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     NOT_DEFINED_VALUE,

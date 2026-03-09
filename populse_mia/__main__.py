@@ -18,7 +18,7 @@ This will execute the main entry point of the application.
 
 import logging
 
-# Populse_MIA imports
+# populse_mia import
 from populse_mia.main import main
 
 from .cli_args import parse_args

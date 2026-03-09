@@ -17,6 +17,8 @@ Initialize the software appearance and defines interactions with the user.
 # for details.
 ##########################################################################
 
+# isort: off
+
 import glob
 import logging
 import os
@@ -26,14 +28,15 @@ import sys
 import threading
 import time
 import webbrowser
+import yaml
 from datetime import datetime
 from os.path import expanduser
-
-import yaml
 from packaging import version
-from PyQt5.QtCore import QCoreApplication, Qt, QTimer
+
+# isort: on
 
 # PyQt5 imports
+from PyQt5.QtCore import QCoreApplication, Qt, QTimer
 from PyQt5.QtGui import QCursor, QIcon
 from PyQt5.QtWidgets import (
     QAction,
@@ -46,8 +49,11 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
+
+# soma import
 from soma.qt_gui import qt_backend
 
+# populse_mia import
 import populse_mia.data_manager.data_loader as data_loader
 from populse_mia.data_manager import (
     CLINICAL_TAGS,
@@ -55,8 +61,6 @@ from populse_mia.data_manager import (
     TAG_HISTORY,
 )
 from populse_mia.data_manager.project import Project
-
-# Populse_MIA imports
 from populse_mia.data_manager.project_properties import SavedProjects
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.data_browser import DataBrowser

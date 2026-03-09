@@ -31,7 +31,7 @@ from functools import partial
 from pathlib import Path
 from typing import get_origin
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5.QtCore import Qt, QVariant
 from PyQt5.QtGui import QColor, QIcon, QPixmap
 from PyQt5.QtWidgets import (
@@ -60,6 +60,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+# populse_mia import
 from populse_mia.data_manager import (
     BRICK_INPUTS,
     BRICK_NAME,
@@ -95,8 +96,6 @@ from populse_mia.user_interface.data_browser.advanced_search import (
 from populse_mia.user_interface.data_browser.count_table import CountTable
 from populse_mia.user_interface.data_browser.mini_viewer import MiniViewer
 from populse_mia.user_interface.data_browser.modify_table import ModifyTable
-
-# Populse_MIA imports
 from populse_mia.user_interface.data_browser.rapid_search import RapidSearch
 from populse_mia.user_interface.pop_ups import (
     ClickableLabel,

@@ -20,15 +20,19 @@ import os
 import sys
 import time
 
-import PyQt5
+# PyQt5 import
+from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QColor, QIcon, QLabel, QWidget
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QApplication, QMessageBox
+
+# soma import
 from soma import aims
 from soma.aims import colormaphints
 from soma.qt_gui import qt_backend
 from soma.qt_gui.qt_backend import Qt, QtCore
 from soma.qt_gui.qt_backend.uic import loadUi
 
+# populse_mia import
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_viewer.anatomist_2.snd_window import (
     NewWindowViewer,
@@ -387,7 +391,7 @@ class AnaSimpleViewer2(Qt.QObject):
             icon = QIcon(os.path.join(sources_images_dir, palette))
             self.combobox.setItemIcon(i, icon)
 
-        size = PyQt5.QtCore.QSize(200, 15)
+        size = QSize(200, 15)
         self.combobox.setIconSize(size)
 
     def setSlider(self):
@@ -402,7 +406,7 @@ class AnaSimpleViewer2(Qt.QObject):
         space = QWidget().resize(5, 0)
         label = QLabel("Opacity: ")
         label.setToolTip("Change opacity of selected object")
-        size = PyQt5.QtCore.QSize(120, 15)
+        size = QSize(120, 15)
         self.slider.setMaximumSize(size)
         self.slider.setValue(100)
         toolBar.insertWidget(actionAutoRunning, space)
@@ -689,7 +693,7 @@ class AnaSimpleViewer2(Qt.QObject):
                 window=self.awindows[0],
                 position=pos[:3] + [list_im[i]],
             )
-            PyQt5.QtWidgets.QApplication.processEvents()
+            QApplication.processEvents()
             running_time = time.time() - start_time
 
             # If iteration takes to much time we don't want to

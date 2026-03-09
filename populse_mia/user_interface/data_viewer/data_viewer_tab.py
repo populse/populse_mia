@@ -19,6 +19,7 @@ import importlib
 import logging
 import os
 
+# soma import
 from soma.qt_gui.qt_backend import Qt
 
 logger = logging.getLogger(__name__)

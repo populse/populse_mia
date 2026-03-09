@@ -21,22 +21,21 @@ mia's GUI.
 # for details.
 ###############################################################################
 
+# isort: off
+
 import importlib
 import logging
 import os
 import sys
 import tempfile
+import tomli
 from pathlib import Path
 
-import tomli
+# isort: on
 
-try:
-    # Running inside the package (installed or `python -m populse_mia.main`)
-    from .cli_args import parse_args
-
-except ImportError:
-    # Running as a top-level script (python main.py)
-    from cli_args import parse_args
+# PyQt5 import
+from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 # QtWebEngineWidgets must be imported before QApplication is created
 try:
@@ -45,9 +44,13 @@ try:
 except ImportError:
     pass  # QtWebEngineWidgets is not installed
 
-# PyQt5 imports
-from PyQt5.QtCore import QCoreApplication, Qt, qInstallMessageHandler
-from PyQt5.QtWidgets import QApplication, QMessageBox
+try:
+    # Running inside the package (installed or `python -m populse_mia.main`)
+    from .cli_args import parse_args
+
+except ImportError:
+    # Running as a top-level script (python main.py)
+    from cli_args import parse_args
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -365,12 +368,12 @@ def main(args):
 
     # Now that populse projects paths have been set in sys.path, if necessary,
     # we can import from these projects:
-    # Populse_mia imports:
-    from populse_mia.data_manager.project import Project  # noqa E402
+    # populse_mia imports:
+    from populse_mia.data_manager.project import Project
     from populse_mia.data_manager.project_properties import SavedProjects
     from populse_mia.software_properties import Config
     from populse_mia.user_interface.main_window import MainWindow
-    from populse_mia.utils import (  # noqa E402
+    from populse_mia.utils import (
         check_python_version,
         launch_mia,
         verify_processes,

@@ -4,6 +4,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+# PyQt5 import
 from PyQt5 import QtCore
 
 qt_resource_data = b"\

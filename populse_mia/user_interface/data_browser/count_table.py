@@ -62,7 +62,7 @@ import os
 from functools import reduce
 from typing import Any, Callable
 
-# PyQt5 imports
+# PyQt5 import
 import PyQt5.QtCore as QtCore
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont, QIcon, QPixmap
@@ -77,9 +77,8 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
 )
 
+# populse_mia import
 from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
-
-# Populse_MIA imports
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import (
     ClickableLabel,

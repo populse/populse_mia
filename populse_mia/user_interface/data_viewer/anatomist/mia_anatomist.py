@@ -18,8 +18,10 @@ Contains:
 import logging
 import os
 
+# soma import
 from soma.qt_gui.qt_backend import Qt
 
+# populse_mia import
 from populse_mia.data_manager.project import COLLECTION_CURRENT, TAG_FILENAME
 from populse_mia.user_interface.data_browser.data_browser import (
     TableDataBrowser,

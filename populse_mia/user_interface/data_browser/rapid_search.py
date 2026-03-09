@@ -25,7 +25,7 @@ Contains:
 # PyQt5 import
 from PyQt5.QtWidgets import QLineEdit
 
-# Populse_MIA imports
+# populse_mia import
 from populse_mia.data_manager import TAG_BRICKS, TAG_FILENAME
 
 

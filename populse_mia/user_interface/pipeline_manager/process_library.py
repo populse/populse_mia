@@ -26,7 +26,8 @@ the project.
 # for details.
 ##########################################################################
 
-# Other import
+# isort: off
+
 import glob
 import inspect
 import logging
@@ -35,6 +36,7 @@ import pkgutil
 import shutil
 import sys
 import tempfile
+import yaml
 from copy import copy, deepcopy
 from datetime import datetime
 from functools import partial
@@ -42,7 +44,7 @@ from importlib import util
 from pathlib import Path
 from zipfile import ZipFile, is_zipfile
 
-import yaml
+# isort: on
 
 # capsul import
 from capsul.api import get_process_instance
@@ -53,7 +55,7 @@ from PyQt5 import QtCore
 # QAbstractItemView is not available from soma (see in PackageLibraryDialog)
 from PyQt5.QtWidgets import QAbstractItemView
 
-# PyQt / PySide import, via soma
+# PyQt import, via soma
 from soma.qt_gui import qt_backend
 from soma.qt_gui.qt_backend import QtGui
 from soma.qt_gui.qt_backend.Qt import (
@@ -82,7 +84,7 @@ from soma.qt_gui.qt_backend.QtCore import (
 )
 from soma.qt_gui.qt_backend.QtWidgets import QGroupBox, QListWidget, QMenu
 
-# Populse_MIA import
+# populse_mia import
 from populse_mia.software_properties import Config
 from populse_mia.utils import verCmp
 

@@ -20,11 +20,16 @@ The soma control classes are overloaded for the needs of Mia.
 # for details.
 ###############################################################################
 
+# isort: off
+
 import logging
 import os
+import traits.api as traits
 from functools import partial
 
-import traits.api as traits
+# isort: on
+
+# soma import
 from soma.qt_gui.controls.Directory import DirectoryControlWidget
 from soma.qt_gui.controls.File import FileControlWidget
 from soma.qt_gui.controls.List_File_offscreen import (
@@ -33,6 +38,7 @@ from soma.qt_gui.controls.List_File_offscreen import (
 from soma.qt_gui.qt_backend import Qt, QtGui, QtWidgets
 from soma.utils.weak_proxy import weak_proxy
 
+# populse_mia import
 from populse_mia.user_interface.pipeline_manager.plug_filter import PlugFilter
 
 logger = logging.getLogger(__name__)

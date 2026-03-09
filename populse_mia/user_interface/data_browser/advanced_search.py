@@ -32,6 +32,7 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+# populse_mia import
 from populse_mia.data_manager import (
     ALL_TYPES,
     COLLECTION_CURRENT,
@@ -39,8 +40,6 @@ from populse_mia.data_manager import (
     FIELD_TYPE_STRING,
     TAG_FILENAME,
 )
-
-# Populse_MIA imports
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import ClickableLabel
 

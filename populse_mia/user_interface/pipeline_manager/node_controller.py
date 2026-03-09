@@ -35,14 +35,18 @@ interface for complex pipeline interactions.
 # for details.
 ##########################################################################
 
+# isort: off
+
 import logging
 import os
+import sip
 from functools import partial
 from pathlib import Path
+from traits.api import TraitError, Undefined
 
-import sip
+# isort: on
 
-# capsul imports
+# capsul import
 from capsul.attributes.completion_engine import ProcessCompletionEngine
 from capsul.pipeline.pipeline_nodes import PipelineNode
 from capsul.pipeline.process_iteration import ProcessIteration
@@ -50,7 +54,7 @@ from capsul.qt_gui.widgets.attributed_process_widget import (
     AttributedProcessWidget,
 )
 
-# PyQt5 imports
+# PyQt5 import
 from PyQt5 import Qt
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QIcon
@@ -69,17 +73,15 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
-# soma-base imports
+# soma import
 from soma.controller import trait_ids
-from traits.api import TraitError, Undefined
 
+# populse_mia import
 from populse_mia.data_manager import (
     COLLECTION_CURRENT,
     NOT_DEFINED_VALUE,
     TAG_FILENAME,
 )
-
-# Populse_MIA imports
 from populse_mia.data_manager.filter import Filter
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.data_browser.advanced_search import (
