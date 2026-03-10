@@ -5,7 +5,6 @@ Initialize the software appearance and defines interactions with the user.
 :Contains:
     :Class:
         - MainWindow
-        - _ProcDeleter
 
 """
 
@@ -24,8 +23,6 @@ import logging
 import os
 import shutil
 import subprocess
-import sys
-import threading
 import time
 import webbrowser
 import yaml
@@ -49,9 +46,6 @@ from PyQt5.QtWidgets import (
     QVBoxLayout,
     QWidget,
 )
-
-# soma import
-from soma.qt_gui import qt_backend
 
 # populse_mia import
 import populse_mia.data_manager.data_loader as data_loader
@@ -86,91 +80,7 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSeeAllProjects,
 )
 
-console_shell_running = False
-_ipsubprocs_lock = threading.RLock()
-_ipsubprocs = []
-
 logger = logging.getLogger(__name__)
-
-
-class _ProcDeleter(threading.Thread):
-    """
-    A helper class to manage the lifecycle of a subprocess.
-
-    This class is used internally by `MainWindow.open_shell()` to handle
-    subprocesses in a thread-safe manner. It ensures proper cleanup of the
-    subprocess when it is no longer needed and updates global state
-    variables as required.
-
-    :attr o (subprocess.Popen): The subprocess object to manage.
-    :attr console (bool): Indicates if the subprocess is associated with
-                          a console.
-
-    :methods:
-        __del__(): Ensures the subprocess is terminated and updates global
-                   state variables related to the subprocess.
-        run(): Waits for the subprocess to complete and cleans up global
-               references to it.
-    """
-
-    def __init__(self, o, console=False):
-        """
-        Initializes the _ProcDeleter thread with the given subprocess.
-
-        :param o (subprocess.Popen): The subprocess object to be managed by
-                                     this thread.
-        :param console (bool): Indicates if the subprocess is associated
-                               with a console.
-        """
-        super().__init__()
-        self.o = o
-        self.console = console
-
-    def __del__(self):
-        """
-        Ensures proper cleanup when the _ProcDeleter instance is deleted.
-
-        This method attempts to terminate the managed subprocess (`o`).
-        If the subprocess is associated with a console, it also updates
-        the global `console_shell_running` variable to indicate that the
-        console is no longer active.
-        """
-
-        try:
-            self.o.kill()
-
-        except Exception as e:
-            logger.warning(f"Failed to kill subprocess: {e}")
-
-        if self.console:
-            global console_shell_running
-            console_shell_running = False
-
-    def run(self):
-        """
-        Runs the thread to wait for the subprocess to finish.
-
-        This method waits for the subprocess to terminate by calling
-        `communicate` on the managed subprocess object. It then removes
-        itself from the global list `_ipsubprocs` in a thread-safe manner.
-        """
-
-        try:
-            self.o.communicate()
-
-        except Exception as e:
-            logger.warning(f"Exception in subprocess communication: {e}")
-
-        with _ipsubprocs_lock:
-
-            try:
-                _ipsubprocs.remove(self)
-
-            except ValueError:
-                logger.warning(
-                    "Attempted to remove a non-existent "
-                    "subprocess from _ipsubprocs."
-                )
 
 
 class MainWindow(QMainWindow):
@@ -201,8 +111,6 @@ class MainWindow(QMainWindow):
         - get_controller_version: Returns controller_version_changed attribute
         - import_data: Call the import software (MRI File Manager)
         - install_processes_pop_up: Open the install processes pop-up
-        - last_window_closed: Force exit the event loop after ipython console
-                              is closed
         - open_project_pop_up: Open a pop-up to open a project and updates
                                the recent projects
         - open_recent_project: Open a recent project
@@ -213,8 +121,6 @@ class MainWindow(QMainWindow):
         - redo: Redo the last action made by the user
         - remove_raw_files_useless: Remove the useless raw files of the
                                     current project
-        - run_ipconsole_kernel: Starts and initializes an IPython kernel with
-                                support for a Qt-based GUI.
         - save: Save either the current project or the current pipeline
         - save_as: Save either the current project or the current pipeline
                    under a new name
@@ -975,63 +881,90 @@ class MainWindow(QMainWindow):
 
     def open_shell(self):
         """
-        Open a Qt console shell with an IPython kernel seeing the program
-        internals.
+        Open an in-process Qt console (QtConsole) connected to this
+        application.
+
+        This method creates a QtConsole widget that runs inside the current
+        application process, allowing interactive inspection and
+        manipulation of program internals such as the main window, project,
+        and the QApplication instance. This console does not spawn a
+        subprocess and fully integrates with the existing Qt event loop.
+
+        Features:
+            - Provides access to key objects:
+                - `main_window`: this MainWindow instance
+                - `project`: if available, the current project object
+                - `app`: the current QApplication instance
+            - Interactive Python prompt
+            - Stdout/stderr from the application will appear in the console
+
+        Dependencies:
+            - `qtconsole` for the console widget
+            - `ipykernel` for the in-process IPython kernel
+            - `IPython` for interactive shell support
+
+        If any of these are missing, the console will not open, and a warning
+        is logged.
+
+        :raises (RuntimeError): if QApplication instance does not exist when
+                                calling this method
+
+        :returns (RichJupyterWidget): the created QtConsole widget instance
         """
-        ipfunc = None
-        mode = "qtconsole"
-        logger.info("StartShell...")
 
         try:
-            # to check it is installed
-            import jupyter_core.application  # noqa: F401
-            import qtconsole  # noqa: F401
+            # QtInProcessKernelManager depends on ipykernel
+            import ipykernel  # noqa: F401
 
-            ipfunc = (
-                "from jupyter_core import application; "
-                "app = application.JupyterApp(); app.initialize(); app.start()"
-            )
+            # RichJupyterWidget and QtInProcessKernelManager require IPython
+            import IPython  # noqa: F401
+            from qtconsole.inprocess import QtInProcessKernelManager
+            from qtconsole.rich_jupyter_widget import RichJupyterWidget
 
         except ImportError:
-            logger.warning("Failed to run Qt console...")
+            logger.warning(
+                "Required libraries (qtconsole, ipython, ipykernel) are "
+                "not installed, cannot open console ..."
+            )
             return
 
-        if ipfunc:
+        logger.info("Start a console shell ...")
+        app = QApplication.instance()
 
-            ipConsole = self.run_ipconsole_kernel(mode)
+        if app is None:
+            raise RuntimeError(
+                "QApplication must exist before opening console"
+            )
 
-            if ipConsole:
-                qt_api = qt_backend.get_qt_backend()
-                qt_apis = {
-                    "PyQt4": "pyqt",
-                    "PyQt5": "pyqt5",
-                    "PySide": "pyside",
-                }
-                qt_api_code = qt_apis.get(qt_api, "pyq5t")
-                cmd = [
-                    sys.executable,
-                    "-c",
-                    f'import os; os.environ["QT_API"] = '
-                    f'"{qt_api_code}"; {ipfunc}',
-                    mode,
-                    "--existing",
-                    f"--shell={ipConsole.shell_port}",
-                    f"--iopub={ipConsole.iopub_port}",
-                    f"--stdin={ipConsole.stdin_port}",
-                    f"--hb={ipConsole.hb_port}",
-                ]
-                sp = subprocess.Popen(cmd)
-                pd = _ProcDeleter(sp)
+        # In-process kernel
+        km = QtInProcessKernelManager()
+        km.start_kernel(gui="qt")
+        kc = km.client()
+        kc.start_channels()
+        # Console widget
+        console = RichJupyterWidget()
+        console.kernel_manager = km
+        console.kernel_client = kc
+        # Push objects into kernel namespace
+        ns = {"main_window": self, "app": app}
 
-                with _ipsubprocs_lock:
-                    _ipsubprocs.append(pd)
+        if hasattr(self, "project"):
+            ns["project"] = self.project
+            logger.info(
+                "QtConsole connected to application.\n"
+                "      Available objects: main_window, project, app"
+            )
 
-                pd.start()
-                # hack the lastWindowClosed event because it becomes inactive
-                # otherwise
-                QApplication.instance().lastWindowClosed.connect(
-                    self.last_window_closed
-                )
+        else:
+            logger.info(
+                "QtConsole connected to application.\n"
+                "      Available objects: main_window, app"
+            )
+
+        km.kernel.shell.push(ns)
+        console.show()
+
+        return console
 
     def package_library_pop_up(self):
         """Open the package library pop-up"""
@@ -1097,138 +1030,6 @@ class MainWindow(QMainWindow):
             shutil.rmtree(folder)
 
         self.project = None
-
-    @staticmethod
-    def run_ipconsole_kernel(mode="qtconsole"):
-        """
-        Starts and initializes an IPython kernel with support for
-        a Qt-based GUI.
-
-        This method is designed to set up and run an IPython kernel
-        for interactive computing, with the specified mode (defaulting
-        to `qtconsole`). It handles initialization of the kernel and
-        associated event loops, ensuring proper integration with Qt-based
-        applications.
-
-        :param mode (str): The mode for running the IPython kernel. Default
-                           is "qtconsole". It determines the GUI integration
-                           mode of the kernel.
-
-        :return (IPKernelApp): The instance of the IPython kernel
-                               application.
-
-        Notes:
-            - The method ensures that the kernel is properly initialized if
-              it hasn't been set up already.
-            - To support Qt-based GUIs, the Qt event loop is properly
-              integrated with the IPython kernel.
-            - Special handling for Tornado versions >= 4.5 ensures
-              compatibility with its callback mechanism.
-        """
-
-        logger.info(f"Run_ipconsole_kernel: {mode}")
-        import IPython  # noqa: F401
-        from IPython.lib import guisupport
-
-        qtapp = QApplication.instance()
-        qtapp._in_event_loop = True
-        guisupport.in_event_loop = True
-
-        from ipykernel.kernelapp import IPKernelApp
-
-        app = IPKernelApp.instance()
-
-        if not app.initialized() or not app.kernel:
-            logger.info("Running IP console kernel")
-            # don't know why this is not set automatically
-            app.hb_port = 50042
-            app.initialize(
-                [
-                    mode,
-                    "--gui=qt",  # '--pylab=qt',
-                    "--KernelApp.parent_appname='ipython-{mode}'",
-                ]
-            )
-            # in ipython >= 1.2, app.start() blocks until a ctrl-c is issued
-            # in the terminal. Seems to block in
-            # tornado.ioloop.PollIOLoop.start()
-            # So, don't call app.start because it would begin a zmq/tornado
-            # loop instead we must just initialize its callback.
-            # if app.poller is not None:
-            # app.poller.start()
-            app.kernel.start()
-
-            # IP 2 allows just calling the current callbacks.
-            # For IP 1 it is not sufficient.
-            import tornado
-            from zmq.eventloop import ioloop
-
-            if tornado.version_info >= (4, 5):
-                # tornado 5 is using a decque for _callbacks, not a
-                # list + explicit locking
-
-                def my_start_ioloop_callbacks(self):
-                    """
-                    Executes pending callbacks in the Tornado
-                    IOLoop (Tornado >= 4.5).
-
-                    This method processes the `_callbacks` deque in the
-                    Tornado IOLoop, executing each callback in the order
-                    they were added. The use of `popleft` ensures efficient
-                    removal of executed callbacks.
-
-                    Notes:
-                        - Tornado 4.5 and later versions use a `deque`
-                          for `_callbacks`, allowing lock-free access to
-                          pending callbacks.
-
-                    Raises:
-                        AttributeError: If `_callbacks` is not defined for
-                                        the IOLoop instance.
-                    """
-
-                    if hasattr(self, "_callbacks"):
-                        ncallbacks = len(self._callbacks)
-
-                        for i in range(ncallbacks):
-                            self._run_callback(self._callbacks.popleft())
-
-            else:
-
-                def my_start_ioloop_callbacks(self):
-                    """
-                    Executes pending callbacks in the Tornado IOLoop
-                    (Tornado < 4.5).
-
-                    This method processes the `_callbacks` list in the
-                    Tornado IOLoop, executing each callback in the order
-                    they were added. The method ensures thread safety by
-                    using a lock (`_callback_lock`) to protect access to
-                    the `_callbacks` list during execution.
-
-                    Notes:
-                        - Tornado versions before 4.5 use a list
-                          (`_callbacks`) for pending callbacks, requiring
-                          explicit locking to avoid race conditions.
-                        - After processing all callbacks, the `_callbacks`
-                          list is reset to an empty list.
-
-                    Raises:
-                        AttributeError: If `_callbacks` or `_callback_lock`
-                                        is not defined for the IOLoop
-                                        instance.
-                    """
-
-                    with self._callback_lock:
-                        callbacks = self._callbacks
-                        self._callbacks = []
-
-                    for callback in callbacks:
-                        self._run_callback(callback)
-
-            my_start_ioloop_callbacks(ioloop.IOLoop.instance())
-
-        return app
 
     def save(self):
         """Save either the current project or the current pipeline"""
