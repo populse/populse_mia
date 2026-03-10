@@ -37,7 +37,6 @@ import json
 import logging
 import os
 import platform
-import psutil
 import shutil
 import subprocess
 import sys
@@ -50,6 +49,7 @@ from collections import namedtuple
 from datetime import datetime
 from packaging import version
 from pathlib import Path
+from qtconsole.rich_jupyter_widget import RichJupyterWidget
 from traits.api import TraitListObject, Undefined
 from unittest.mock import MagicMock, Mock, patch
 
@@ -12467,87 +12467,61 @@ class Test_Z_MIAOthers(TestMIACase):
 
     def test_z_open_shell(self):
         """
-        Tests that the `MainWindow.open_shell` action correctly launches and
-        manages a Qt console process.
+        Test that MainWindow.open_shell() correctly opens an in-process
+        QtConsole with an IPython kernel.
 
-        The test verifies:
-            - A new Qt console process (`jupyter-qtconsole` or `qtconsole`)
-              is spawned after triggering the `action_open_shell`.
-            - The process is successfully detected within the timeout period.
-            - The process can be terminated gracefully, or forcefully killed
-              if termination fails.
-
-        :tests (MainWindow.open_shell): Ensures proper shell launching and
-                                        cleanup behavior.
-
-        :raises AssertionError: If the Qt console process is not found or
-            cannot be terminated.
+        This test verifies:
+            - A RichJupyterWidget is returned
+            - The in-process kernel can execute code
+            - Application internals are available in the kernel namespace
+            - Multiple consoles can coexist safely
         """
-        # Capture initial processes before emitting the signal
-        initial_processes = {p.pid for p in psutil.process_iter()}
+        # Open the first in-process console
+        console = self.main_window.open_shell()
+        self.assertIsNotNone(console, "Console was not created")
+        self.assertIsInstance(
+            console,
+            RichJupyterWidget,
+            "Returned object is not a RichJupyterWidget",
+        )
+        km = console.kernel_manager
 
-        self.main_window.action_open_shell.triggered.emit()
-        qt_console_process = None
-        timeout_seconds = 5
-        poll_interval = 1
+        # Test that kernel responds to code execution
+        try:
+            km.kernel.shell.run_cell("x = 42")
 
-        # Try to find the qtconsole process within timeout
-        for _ in range(timeout_seconds):
-            current_process = psutil.Process()
-            children = current_process.children(recursive=True)
+        except Exception as e:
+            self.fail(f"In-process kernel failed to execute code: {e}")
 
-            for child in children:
-
-                try:
-                    name = child.name().lower()
-                    cmdline = (
-                        " ".join(child.cmdline()) if child.cmdline() else ""
-                    )
-
-                except (psutil.NoSuchProcess, psutil.AccessDenied):
-                    continue
-
-                if any(
-                    kw in target
-                    for target in (name, cmdline)
-                    for kw in ("jupyter-qtconsole", "qtconsole")
-                ):
-
-                    # Ensure it's a new process
-                    if child.pid not in initial_processes:
-                        qt_console_process = child
-                        break
-
-            if qt_console_process:
-                break
-
-            time.sleep(poll_interval)
-
-        # Assert that the process was found
-        self.assertIsNotNone(
-            qt_console_process, "Qt console process was not found."
+        # Verify code execution
+        ns = km.kernel.shell.user_ns
+        self.assertEqual(
+            ns.get("x"), 42, "Kernel did not execute code correctly"
         )
 
-        # Terminate the process
+        # Check that pushed objects exist
+        self.assertIn("main_window", ns, "main_window not in kernel namespace")
+        self.assertIn("app", ns, "app not in kernel namespace")
+
+        if hasattr(self.main_window, "project"):
+            self.assertIn("project", ns, "project not in kernel namespace")
+
+        # Open a second console to verify multiple consoles work
+        console2 = self.main_window.open_shell()
+        self.assertIsNot(console, console2, "Two consoles are the same object")
+        km2 = console2.kernel_manager
+
+        # Verify second console kernel executes code independently
         try:
-            qt_console_process.terminate()
-            qt_console_process.wait(timeout=3)
-            self.assertFalse(
-                qt_console_process.is_running(),
-                "Qt console process did not terminate gracefully.",
-            )
+            km2.kernel.shell.run_cell("y = 123")
 
-        except (psutil.NoSuchProcess, psutil.TimeoutExpired):
+        except Exception as e:
+            self.fail(f"Second in-process kernel failed to execute code: {e}")
 
-            try:
-                qt_console_process.kill()
-                self.assertFalse(
-                    qt_console_process.is_running(),
-                    "Qt console process could not be killed.",
-                )
-
-            except Exception as e:
-                self.fail(f"Failed to kill Qt console process: {e}")
+        ns2 = km2.kernel.shell.user_ns
+        self.assertEqual(
+            ns2.get("y"), 123, "Second kernel did not execute code correctly"
+        )
 
 
 if __name__ == "__main__":
