@@ -1736,8 +1736,12 @@ class TableDataBrowser(QTableWidget):
             actual addition.
             """
             safe_connect(self.itemChanged, self.on_cell_changed)
-            self.add_path()
-            safe_disconnect(self.itemChanged, self.on_cell_changed)
+
+            try:
+                self.add_path()
+
+            finally:
+                safe_disconnect(self.itemChanged, self.on_cell_changed)
 
         # -- Build menu actions ---------------------------------
         confirm_actions = {
