@@ -1278,7 +1278,7 @@ class Project:
                 if hist_id is None:
                     continue
 
-                if hist[HISTORY_BRICKS]:
+                if hist[HISTORY_BRICKS] is None:
                     orphan_hist.add(hist_id)
                     continue
 
