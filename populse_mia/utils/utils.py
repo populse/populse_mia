@@ -48,6 +48,7 @@ import os
 import pkgutil
 import re
 import signal
+import subprocess
 import sys
 import traceback
 import types
@@ -73,6 +74,7 @@ from packaging import version
 # PyQt5 imports
 from PyQt5.QtCore import QDate, QDateTime, QDir, QLockFile, Qt, QTime, QVariant
 from PyQt5.QtWidgets import (
+    QAction,
     QApplication,
     QDialog,
     QFileDialog,
@@ -517,6 +519,8 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
                            properties.
     :param args (argparse.Namespace): Parsed command-line arguments.
     """
+    # Register the exception hook early
+    previous_excepthook = sys.excepthook
 
     def _clean_up():
         """
@@ -527,15 +531,14 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         Qt object internals, which may already be destroyed.
         """
         nonlocal cleaned_up
-        config = Config()
 
         if cleaned_up:
             return
 
         cleaned_up = True
+        config = Config()
 
         try:
-
             opened_projects = config.get_opened_projects()
 
             if project_folder and project_folder in opened_projects:
@@ -557,6 +560,9 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         and ensures a graceful shutdown of the application.
         """
 
+        if cleaned_up:
+            return
+
         try:
 
             # Safely remove raw files while main_window/project exists
@@ -572,8 +578,10 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         _clean_up()
         _restore_terminal()
         sys.excepthook = previous_excepthook
-        QApplication.closeAllWindows()
-        QApplication.instance().quit()
+        app = QApplication.instance()
+
+        if app:
+            app.quit()
 
     def _my_excepthook(etype, evalue, tback):
         """
@@ -591,8 +599,7 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
             "Unhandled exception occurred",
             exc_info=(etype, evalue, tback),
         )
-        _clean_up()
-        _restore_terminal()
+        _cleanup_and_quit()
         sys.__excepthook__(etype, evalue, tback)
         sys.exit(1)
 
@@ -608,8 +615,9 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         """
 
         try:
+
             if sys.stdin.isatty():
-                os.system("stty sane")
+                subprocess.run(["stty", "sane"], check=False)
 
         except Exception:
             pass
@@ -618,15 +626,14 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         """
         Handle termination signals to ensure graceful shutdown.
 
-        This handler is triggered when the process receives signals such as
-        SIGINT (e.g., Ctrl+C) or SIGTERM. It performs necessary cleanup of
-        application state and restores the terminal to a sane configuration
-        before exiting the process.
+        This handler is triggered for SIGTERM (e.g., external kill command).
+        It performs necessary cleanup of application state and restores the
+        terminal to a sane configuration before exiting the process.
 
         :param signum (int): The signal number received (unused).
         :param frame (frame): The current stack frame (unused).
         """
-        _clean_up()
+        _cleanup_and_quit()
         _restore_terminal()
         sys.exit(1)
 
@@ -651,15 +658,16 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
 
         return deleted_projects
 
+    sys.excepthook = _my_excepthook
     main_window = None  # Explicit lifecycle control
     project_folder = None  # Captured early to avoid Qt destruction issues
     cleaned_up = False  # Guard against multiple cleanups
-    previous_excepthook = sys.excepthook
     atexit.register(_restore_terminal)
-    signal.signal(signal.SIGINT, _signal_handler)
+    # Ignore problematic terminal signals
+    signal.signal(signal.SIGINT, signal.SIG_IGN)  # Ctrl+C
+    signal.signal(signal.SIGTSTP, signal.SIG_IGN)  # Ctrl+Z
+    signal.signal(signal.SIGQUIT, signal.SIG_IGN)  # Ctrl+\
     signal.signal(signal.SIGTERM, _signal_handler)
-    # Register the exception hook early
-    sys.excepthook = _my_excepthook
     lock_file = QLockFile(
         QDir.temp().absoluteFilePath("lock_file_populse_mia.lock")
     )
@@ -682,9 +690,20 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
     # Ensure cleanup is triggered on window destruction
     main_window.destroyed.connect(_cleanup_and_quit)
     main_window.show()
+    # Add Quit shortcut Ctrl+Q
+    quit_action = QAction("Quit", main_window)
+    quit_action.setShortcut("Ctrl+Q")
+    quit_action.triggered.connect(_cleanup_and_quit)
+    main_window.addAction(quit_action)
     # make sure to instantiate the QtThreadCall singleton from the main thread
     QtThreadCall()
-    QApplication.instance().exec()  # Just start event loop
+    # Just start event loop
+    app = QApplication.instance()
+
+    if app is None:
+        raise RuntimeError("QApplication not initialized")
+
+    app.exec()
 
 
 def message_already_exists():
