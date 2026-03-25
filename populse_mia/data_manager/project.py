@@ -580,9 +580,10 @@ class Project:
                             }
                         )
 
-                        # This step is redundant and could be removed, because
-                        # after creating a field (just above), it seems to me
-                        # that the default value is already None!
+                        # FIXME: This step is redundant and could be removed,
+                        #        because after creating a field (just above),
+                        #        it seems to me that the default value is
+                        #        already None!
                         for scan in database_data.get_document(
                             collection_name=COLLECTION_CURRENT
                         ):

@@ -562,6 +562,7 @@ class PipelineManagerTab(QWidget):
             """
 
             for key in values_dict:
+
                 if key not in job.param_dict:
                     continue
 
