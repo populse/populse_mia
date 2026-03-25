@@ -133,6 +133,7 @@ from populse_mia.data_manager import (
     FIELD_TYPE_TIME,
     HISTORY_BRICKS,
     HISTORY_PIPELINE,
+    TAG_BRICKS,
     TAG_CHECKSUM,
     TAG_FILENAME,
     TAG_HISTORY,
@@ -5599,7 +5600,7 @@ class PopUpTagSelection(QDialog):
         filtered_tags = [
             tag
             for tag in field_names
-            if tag not in [TAG_CHECKSUM, COLLECTION_HISTORY]
+            if tag not in [TAG_CHECKSUM, TAG_BRICKS]
             and (not str_search or str_search.upper() in tag.upper())
         ]
 
@@ -6130,11 +6131,7 @@ class PopUpShowHistory(QDialog):
             brick_row = database_data.get_document(
                 collection_name=COLLECTION_BRICK, primary_keys=brick_uuid
             )
-            full_brick_name = database_data.get_value(
-                collection_name=COLLECTION_BRICK,
-                primary_key=brick_uuid,
-                field=BRICK_NAME,
-            ).split(".")
+            full_brick_name = brick_row[0][BRICK_NAME].split(".")
             history_uuid = database_data.get_value(
                 collection_name=COLLECTION_CURRENT,
                 primary_key=scan,
@@ -6375,8 +6372,8 @@ class PopUpShowHistory(QDialog):
         brick_name = brick_row[0][BRICK_NAME]
         init = brick_row[0][BRICK_INIT]
         init_time = brick_row[0][BRICK_INIT_TIME]
-        exec = brick_row[0][BRICK_INIT]
-        exec_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_EXEC]
+        exec_time = brick_row[0][BRICK_EXEC_TIME]
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
@@ -6455,8 +6452,8 @@ class PopUpShowHistory(QDialog):
         brick_name = brick_row[0][BRICK_NAME]
         init = brick_row[0][BRICK_INIT]
         init_time = brick_row[0][BRICK_INIT_TIME]
-        exec = brick_row[0][BRICK_INIT]
-        exec_time = brick_row[0][BRICK_INIT_TIME]
+        exec = brick_row[0][BRICK_EXEC]
+        exec_time = brick_row[0][BRICK_EXEC_TIME]
         self.update_table(
             inputs, outputs, brick_name, init, init_time, exec, exec_time
         )
