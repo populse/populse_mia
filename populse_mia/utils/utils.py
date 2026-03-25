@@ -40,12 +40,14 @@ Module that contains multiple functions used across Mia.
 ##########################################################################
 
 import ast
+import atexit
 import datetime
 import inspect
 import logging
 import os
 import pkgutil
 import re
+import signal
 import sys
 import traceback
 import types
@@ -515,10 +517,6 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
                            properties.
     :param args (argparse.Namespace): Parsed command-line arguments.
     """
-    main_window = None  # Explicit lifecycle control
-    project_folder = None  # Captured early to avoid Qt destruction issues
-    cleaned_up = False  # Guard against multiple cleanups
-    previous_excepthook = sys.excepthook
 
     def _clean_up():
         """
@@ -572,6 +570,7 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
             )
 
         _clean_up()
+        _restore_terminal()
         sys.excepthook = previous_excepthook
         QApplication.closeAllWindows()
         QApplication.instance().quit()
@@ -593,7 +592,42 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
             exc_info=(etype, evalue, tback),
         )
         _clean_up()
+        _restore_terminal()
         sys.__excepthook__(etype, evalue, tback)
+        sys.exit(1)
+
+    def _restore_terminal():
+        """
+        Restore the terminal to a sane state.
+
+        This function resets the terminal settings to a usable configuration
+        using `stty sane`. It ensures that input echoing, line endings, and
+        other terminal behaviors are restored, which is especially useful if
+        a library or subprocess has left the terminal in a raw or non-echoing
+        mode.
+        """
+
+        try:
+            if sys.stdin.isatty():
+                os.system("stty sane")
+
+        except Exception:
+            pass
+
+    def _signal_handler(signum, frame):
+        """
+        Handle termination signals to ensure graceful shutdown.
+
+        This handler is triggered when the process receives signals such as
+        SIGINT (e.g., Ctrl+C) or SIGTERM. It performs necessary cleanup of
+        application state and restores the terminal to a sane configuration
+        before exiting the process.
+
+        :param signum (int): The signal number received (unused).
+        :param frame (frame): The current stack frame (unused).
+        """
+        _clean_up()
+        _restore_terminal()
         sys.exit(1)
 
     def _verify_saved_projects():
@@ -617,6 +651,13 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
 
         return deleted_projects
 
+    main_window = None  # Explicit lifecycle control
+    project_folder = None  # Captured early to avoid Qt destruction issues
+    cleaned_up = False  # Guard against multiple cleanups
+    previous_excepthook = sys.excepthook
+    atexit.register(_restore_terminal)
+    signal.signal(signal.SIGINT, _signal_handler)
+    signal.signal(signal.SIGTERM, _signal_handler)
     # Register the exception hook early
     sys.excepthook = _my_excepthook
     lock_file = QLockFile(
