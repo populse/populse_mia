@@ -3208,11 +3208,6 @@ class PipelineManagerTab(QWidget):
             self.last_status = swconstants.WORKFLOW_NOT_STARTED
             self.last_run_log = None
             self.last_pipeline_name = pipeline_name
-            # Update UI status
-            self.main_window.statusBar().showMessage(
-                f"'{pipeline_name}' pipeline is getting run. Please wait."
-            )
-            QApplication.processEvents()
             # Configure soma-workflow if enabled
             engine = self.get_capsul_engine()
             swf_config = engine.settings.select_configurations(
@@ -3239,8 +3234,19 @@ class PipelineManagerTab(QWidget):
 
                 # Show dialog and handle user response
                 if dialog.exec_() == 0:  # User cancelled
+                    # Update UI status
+                    self.main_window.statusBar().showMessage(
+                        f"'{pipeline_name}' pipeline calculation was canceled "
+                        f"by the user."
+                    )
+                    QApplication.processEvents()
                     return
 
+                # Update UI status
+                self.main_window.statusBar().showMessage(
+                    f"'{pipeline_name}' pipeline is getting run. Please wait."
+                )
+                QApplication.processEvents()
                 # Reset execution state
                 self.ignore = {}
                 self.ignore_node = False
