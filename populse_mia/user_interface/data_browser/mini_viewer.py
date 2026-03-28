@@ -83,6 +83,8 @@ class MiniViewer(QWidget):
     .. Methods:
         - __init__: initialise the MiniViewer object.
         - _create_layouts: Create the layouts for the MiniViewer
+        - _create_top_bar: Create the top bar with the checkboxes and the
+                           orientation label
         - _initialize_checkboxes: Initialize the checkboxes for the MiniViewer
         - _initialize_components: Initialize the components of the MiniViewer
 
@@ -144,8 +146,17 @@ class MiniViewer(QWidget):
         self.setHidden(True)
         # Setup UI components
         self._initialize_components()
-        self._create_layouts()
         self._initialize_checkboxes()
+        # Main layout
+        self.v_box_final = QVBoxLayout(self)
+        self.setLayout(self.v_box_final)
+        # Top bar (persistent)
+        self._create_top_bar()
+        # Content container (dynamic)
+        self.content_container = QWidget()
+        self.content_layout = QVBoxLayout()
+        self.content_container.setLayout(self.content_layout)
+        self.v_box_final.addWidget(self.content_container)
 
     def _create_layouts(self):
         """
@@ -180,6 +191,36 @@ class MiniViewer(QWidget):
         self.h_box_thumb = QHBoxLayout()
         # Set root layout
         self.setLayout(self.v_box_final)
+
+    def _create_top_bar(self):
+        """
+        Create and configure the top control bar of the MiniViewer.
+
+        This method initializes a persistent horizontal container holding the
+        main interactive controls of the viewer, including:
+            - A checkbox to enable/disable cursor display
+            - An orientation label centered in the layout
+            - A checkbox to switch to "all slices" display mode
+            - Slice configuration controls (label + line edit), hidden by
+              default
+        """
+        self.top_bar_container = QWidget()
+        self.top_bar_layout = QHBoxLayout()
+        self.top_bar_container.setLayout(self.top_bar_layout)
+        self.top_bar_container.setSizePolicy(
+            QSizePolicy.Expanding, QSizePolicy.Fixed
+        )
+        # Layout content (same visual as before)
+        self.top_bar_layout.addWidget(self.check_box_cursors)
+        self.top_bar_layout.addSpacing(10)
+        self.top_bar_layout.addStretch(1)
+        self.top_bar_layout.addWidget(self.label_orientation)
+        self.top_bar_layout.addStretch(1)
+        self.top_bar_layout.addWidget(self.check_box_slices)
+        # Slice controls (added but hidden by default)
+        self.top_bar_layout.addWidget(self.label_nb_slices)
+        self.top_bar_layout.addWidget(self.line_edit_nb_slices)
+        self.v_box_final.addWidget(self.top_bar_container)
 
     def _initialize_checkboxes(self):
         """
@@ -413,14 +454,20 @@ class MiniViewer(QWidget):
 
     def clear_layouts(self):
         """
-        Remove all widgets from the final layout.
+        Remove and safely delete all widgets from the dynamic content layout.
 
-        This prepares the layout for new content by detaching and deleting
-        all existing widgets.
+        This method clears the `self.content_layout` by iteratively removing
+        each item and scheduling any associated QWidget for deletion using
+        `deleteLater()`. This ensures proper memory management and avoids
+        immediate deletion issues within the Qt event loop.
+
+        Only widgets contained in `self.content_layout` are affected.
+        Persistent UI elements (such as the top control bar) must not be part
+        of this layout and are therefore preserved.
         """
 
-        while self.v_box_final.count():
-            item = self.v_box_final.takeAt(0)
+        while self.content_layout.count():
+            item = self.content_layout.takeAt(0)
 
             if widget := item.widget():
                 widget.deleteLater()
@@ -910,9 +957,15 @@ class MiniViewer(QWidget):
         self.max_scans = self.config.get_max_thumbnails()
         self.nb_char_max = 60  # Limiting the legend of the thumbnails
         self.setMinimumHeight(220)
+        # Clear only dynamic UI
         self.clear_layouts()
-        self.frame = QFrame(self)
-        self.frame_final = QFrame(self)
+        # Reset dynamic data
+        self.img.clear()
+        self.im_2D.clear()
+        self.imageLabel.clear()
+        self.label_description.clear()
+        # Root frame for scroll area
+        self.frame = QFrame()
         font = QFont()
         font.setPointSize(9)
 
@@ -1104,33 +1157,21 @@ class MiniViewer(QWidget):
 
             self.frame.setLayout(v_box_scans)
 
-        # Setup scroll area and control checkboxes for the thumbnail viewer
+        # Setup scroll area
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidget(self.frame)
-        h_box_check_box = QHBoxLayout()
+        # Update visibility of controls
+        self.content_layout.addWidget(self.scroll_area)
 
         if self.check_box_slices.isChecked():
-            h_box_check_box.addStretch(1)
-            h_box_check_box.addWidget(self.label_orientation)
-            h_box_check_box.addStretch(1)
             self.label_nb_slices.setHidden(False)
             self.line_edit_nb_slices.setHidden(False)
-            h_box_check_box.addWidget(self.label_nb_slices)
-            h_box_check_box.addWidget(self.line_edit_nb_slices)
             self.check_box_cursors.setHidden(True)
 
         else:
             self.check_box_cursors.setHidden(False)
-            h_box_check_box.addWidget(self.check_box_cursors)
-            h_box_check_box.addStretch(1)
-            h_box_check_box.addWidget(self.label_orientation)
-            h_box_check_box.addStretch(1)
             self.label_nb_slices.setHidden(True)
             self.line_edit_nb_slices.setHidden(True)
-
-        h_box_check_box.addWidget(self.check_box_slices)
-        self.v_box_final.addLayout(h_box_check_box)
-        self.v_box_final.addWidget(self.scroll_area)
 
     def update_nb_slices(self):
         """
