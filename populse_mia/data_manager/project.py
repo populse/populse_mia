@@ -665,6 +665,7 @@ class Project:
         )
         logger.info(f"Orphan histories: {obsolete_histories}")
         logger.info(f"Orphan bricks: {obsolete_bricks}")
+        logger.info(f"Orphan files: {orphan_files}")
 
         with self.database.data(write=True) as database_data:
 
@@ -866,7 +867,7 @@ class Project:
             d1.update(d2)
             return d1
 
-        def _collect_outputs(value, base_path, base_len):
+        def _collect_outputs(value, base_path):
             """
             Recursively collects file paths from output values that are
             within the project directory.
@@ -874,8 +875,6 @@ class Project:
             :param value: Output value to process (can be str, list,
                           set, tuple)
             :param base_path (str): Base project directory path
-            :param base_len (int): Length of base path string for relative
-                                   path calculation
 
             :return (set[str]): A set of collected file paths, relative to
                                 the project directory.
@@ -893,10 +892,11 @@ class Project:
                 if not isinstance(current, str):
                     continue
 
-                path = Path(current).absolute().as_posix()
+                path = Path(current).resolve()
 
-                if path.startswith(base_path):  # and Path(path).exists():
-                    outputs.add(path[base_len:])
+                if path.is_relative_to(base_path):  # and Path(path).exists():
+                    rel_path = path.relative_to(base_path)
+                    outputs.add(rel_path.as_posix())
 
             return outputs
 
@@ -931,8 +931,7 @@ class Project:
             if brick_id in docs
         }
         # Collect all output files
-        project_dir = Path(self.folder).absolute().as_posix() + os.sep
-        dir_len = len(project_dir)
+        project_dir = Path(self.folder).resolve()
         all_outputs = set()
 
         # Process outputs from all bricks
@@ -942,9 +941,7 @@ class Project:
             if out_data:
 
                 for output in out_data.values():
-                    all_outputs.update(
-                        _collect_outputs(output, project_dir, dir_len)
-                    )
+                    all_outputs.update(_collect_outputs(output, project_dir))
 
         return {"bricks": bricks, "outputs": all_outputs}
 
