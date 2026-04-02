@@ -704,10 +704,13 @@ class Project:
                     except KeyError:
                         pass  # malformed database, the file doesn't exist
 
-                full_path = os.path.join(self.folder, file_path)
+                full_path = Path(self.folder) / file_path
 
-                if os.path.exists(full_path):
-                    os.unlink(full_path)
+                try:
+                    full_path.unlink()
+
+                except FileNotFoundError:
+                    pass
 
     def cleanup_orphan_nonexisting_files(self):
         """
@@ -828,7 +831,7 @@ class Project:
         This method:
         1. Gets finished bricks from workflows and optionally a specific
            pipeline
-        2. Filters them based on their presence in the MIA database
+        2. Filters them based on their presence in the Mia database
         3. Updates brick metadata with execution status and outputs
         4. Collects all output files that are within the project directory
 
@@ -1258,17 +1261,13 @@ class Project:
         orphan_bricks = set()
         orphan_weak_files = set()
         used_hist = set()
+        proj_dir = Path(self.folder).resolve()
 
         with self.database.data() as database_data:
             hist_docs = database_data.get_document(
                 collection_name=COLLECTION_HISTORY,
                 fields=[HISTORY_ID, HISTORY_BRICKS],
             )
-
-            proj_dir = os.path.join(
-                os.path.abspath(os.path.normpath(self.folder)), ""
-            )
-            lp = len(proj_dir)
 
             for hist in hist_docs:
                 hist_id = hist[HISTORY_ID]
@@ -1297,10 +1296,12 @@ class Project:
                             todo.extend(value)
 
                         elif isinstance(value, str):
-                            path = os.path.abspath(os.path.normpath(value))
+                            path = Path(value).resolve()
 
-                            if path.startswith(proj_dir):
-                                values.add(path[lp:])
+                            if path.is_relative_to(proj_dir):
+                                values.add(
+                                    path.relative_to(proj_dir).as_posix()
+                                )
 
                 docs = database_data.get_document(
                     collection_name=COLLECTION_CURRENT,
@@ -1314,15 +1315,17 @@ class Project:
 
                     if doc[TAG_HISTORY] and hist_id == doc[TAG_HISTORY]:
 
-                        if doc[TAG_FILENAME].startswith(
-                            "scripts/"
-                        ) or not os.path.exists(
-                            os.path.join(self.folder, doc[TAG_FILENAME])
+                        doc_rel = Path(doc[TAG_FILENAME])
+                        doc_path = (proj_dir / doc_rel).resolve()
+
+                        if (
+                            doc_rel.parts[0] == "scripts"
+                            or not doc_path.exists()
                         ):
                             # script files are "weak" and should not prevent
                             # brick deletion. Non-existing files can be
                             # cleared too.
-                            orphan_files.add(doc[TAG_FILENAME])
+                            orphan_files.add(doc_rel.as_posix())
                             continue
 
                         used = True

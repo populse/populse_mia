@@ -2946,21 +2946,21 @@ class PipelineManagerTab(QWidget):
             # set state of bricks: done + exec date
             for brick_id, brick in bricks_to_update.items():
                 swf_status = brick.get("swf_status")
-                exec_date = (
-                    swf_status[4][2] if swf_status else datetime.datetime.now()
-                )
-                logger.info(
-                    f"Setting execution status for brick {brick_id} "
-                    f"(executed at: {exec_date})"
-                )
-                database_data.set_value(
-                    collection_name=COLLECTION_BRICK,
-                    primary_key=brick_id,
-                    values_dict={
-                        BRICK_EXEC: "Done",
-                        BRICK_EXEC_TIME: exec_date,
-                    },
-                )
+
+                if swf_status:
+                    exec_date = swf_status[4][2]
+                    logger.info(
+                        f"Setting execution status for brick {brick_id} "
+                        f"(executed at: {exec_date})"
+                    )
+                    database_data.set_value(
+                        collection_name=COLLECTION_BRICK,
+                        primary_key=brick_id,
+                        values_dict={
+                            BRICK_EXEC: "Done",
+                            BRICK_EXEC_TIME: exec_date,
+                        },
+                    )
 
         # Clean up orphaned data and refresh the UI
         self.project.cleanup_orphan_nonexisting_files()
