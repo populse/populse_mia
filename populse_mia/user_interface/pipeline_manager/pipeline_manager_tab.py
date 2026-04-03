@@ -2939,6 +2939,7 @@ class PipelineManagerTab(QWidget):
         bricks_to_update = self.project.finished_bricks(
             self.get_capsul_engine(), pipeline=pipeline, include_done=False
         ).get("bricks", {})
+        failed = any(sub.get("failed") for sub in bricks_to_update.values())
 
         # Update brick execution statuses in the database
         with self.project.database.data(write=True) as database_data:
@@ -2963,7 +2964,7 @@ class PipelineManagerTab(QWidget):
                     )
 
         # Clean up orphaned data and refresh the UI
-        self.project.cleanup_orphan_nonexisting_files()
+        self.project.cleanup_orphan_nonexisting_files(failed)
         self.project.cleanup_orphan_history()
         QtThreadCall().push(
             self.main_window.data_browser.table_data.update_table
