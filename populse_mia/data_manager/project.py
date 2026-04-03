@@ -712,19 +712,21 @@ class Project:
                 except FileNotFoundError:
                     pass
 
-    def cleanup_orphan_nonexisting_files(self):
+    def cleanup_orphan_nonexisting_files(self, failed=False):
         """
-        Remove database entries for files that no longer exist in the
-        filesystem.
+        Remove database entries for files that are missing on disk.
 
         This method:
-        1. Identifies files referenced in the database that are missing
-           from disk
-        2. Removes their entries from both current and initial collections
-        3. Ensures any remaining physical files are deleted (defensive
-           cleanup)
+            - Retrieves filenames considered orphaned (see
+              `get_orphan_nonexisting_files`),
+            - Deletes their entries from both current and initial collections,
+            - Attempts a defensive filesystem cleanup if the file still exists.
+
+        :param failed (bool): Passed through to `get_orphan_nonexisting_files`
+                              to control orphan selection.
         """
-        orphan_files = self.get_orphan_nonexisting_files()
+        base_path = Path(self.folder)
+        orphan_files = self.get_orphan_nonexisting_files(failed)
 
         with self.database.data(write=True) as database_data:
 
@@ -737,12 +739,12 @@ class Project:
                         database_data.remove_document(collection, file_path)
 
                     except KeyError:
-                        pass  # malformed database, the file doesn't exist
+                        continue  # malformed database, the file doesn't exist
 
-                full_path = os.path.join(self.folder, file_path)
+                file_path = base_path / file_path
 
-                if os.path.exists(full_path):
-                    os.unlink(full_path)
+                if file_path.exists():
+                    file_path.unlink()
 
     def del_clinical_tags(self):
         """
@@ -897,7 +899,7 @@ class Project:
 
                 path = Path(current).resolve()
 
-                if path.is_relative_to(base_path):  # and Path(path).exists():
+                if path.is_relative_to(base_path):
                     rel_path = path.relative_to(base_path)
                     outputs.add(rel_path.as_posix())
 
@@ -1041,63 +1043,123 @@ class Project:
 
     def get_finished_bricks_in_workflows(self, engine):
         """
-        Retrieves a dictionary of finished bricks (jobs) from Soma-Workflow
-        workflows.
+        Return finished Soma-Workflow jobs indexed by their brick UUID.
 
-        :param engine (object): The engine instance used to interact with the
-                                study configuration and Soma-Workflow module.
+        A job is considered successful if its termination status is
+        ``"finished_regularly"``. Any other termination status is treated
+        as a failure.
+        A workflow is marked as ``failed`` if at least one of its jobs
+        did not finish successfully.
 
-        :return (dict): A dictionary where keys are brick IDs (UUIDs) and
-                        values are dictionaries containing metadata about
-                        each finished job, including:
-                        - `workflow`: The workflow ID in which the job is
-                                      contained.
-                        - `job`: The Soma-Workflow job instance.
-                        - `job_id`: The ID of the job in Soma-Workflow.
-                        - `swf_status`: The status information for the job in
-                                        Soma-Workflow.
+        :param engine: Engine providing access to the Soma-Workflow controller.
+
+        :return (dict): Mapping ``brick_uuid -> job_info`` where ``job_info``
+                        contains:
+                        - ``workflow`` (int): Workflow identifier.
+                        - ``job``: Soma-Workflow job instance.
+                        - ``job_id`` (int): Job identifier.
+                        - ``swf_status`` (tuple): Raw Soma-Workflow status
+                                                  tuple.
+                        - ``failed`` (bool): True if any job in the workflow
+                                             failed.
         """
+
+        def parse_status(job_st):
+            """
+            Parse a Soma-Workflow job status tuple into structured information.
+
+            The input ``job_st`` is a tuple returned by
+            ``workflow_elements_status`` whose structure is partially backend-
+            dependent. This helper extracts the relevant fields and derives
+            consistent success/failure flags.
+
+            :param job_st (tuple): Raw job status tuple as returned by
+                                   Soma-Workflow.
+
+            :returns (tuple):
+                    - job_id (int): Identifier of the job.
+                    - state (str): Execution state (e.g. "done", "failed",
+                      "running").
+                    - termination (str | None): Termination status if available
+                      (e.g. "finished_regularly", "killed", "aborted"), else
+                      None.
+                    - is_success (bool): True if the job completed successfully
+                      (i.e. termination == "finished_regularly").
+                    - is_failure (bool): True if the job did not complete
+                      successfully.
+
+            Notes:
+                - Success is defined solely based on the termination status,
+                  which is more reliable than the execution state across
+                  backends.
+                - Any termination other than "finished_regularly" is treated
+                  as a failure.
+                - The structure of ``job_st`` may vary slightly depending on
+                  the execution backend, so access is kept minimal and
+                  defensive.
+            """
+            job_id = job_st[0]
+            state = job_st[1]
+            termination = job_st[3][0] if job_st[3] else None
+            is_success = termination == "finished_regularly"
+            is_failure = not is_success
+
+            return job_id, state, termination, is_success, is_failure
+
         swm = engine.study_config.modules["SomaWorkflowConfig"]
         swm.connect_resource(engine.connected_to())
         controller = swm.get_workflow_controller()
         jobs = {}
 
         for wf_id in controller.workflows():
-            wf_st = controller.workflow_elements_status(wf_id)
-            finished_jobs = {}
+            job_statuses, *_ = controller.workflow_elements_status(wf_id)
+            parsed = [parse_status(js) for js in job_statuses]
+            # Workflow-level failure: ANY job failed
+            workflow_failed = any(is_failure for *_, is_failure in parsed)
+            # Keep only successful jobs
+            finished = {
+                job_id: js
+                for js, (job_id, _, _, is_success, _) in zip(
+                    job_statuses, parsed
+                )
+                if is_success
+            }
 
-            for job_st in wf_st[0]:
-                job_id = job_st[0]
+            if not finished:
 
-                if job_st[1] != "done" or job_st[3][0] != "finished_regularly":
-                    continue
+                # No successful jobs, but workflow may have failed
+                if workflow_failed:
+                    jobs[f"__workflow__:{wf_id}"] = {
+                        "workflow": wf_id,
+                        "job": None,
+                        "job_id": None,
+                        "swf_status": None,
+                        "failed": True,
+                    }
 
-                finished_jobs[job_id] = job_st
-
-            if not finished_jobs:
                 continue
 
             wf = controller.workflow(wf_id)
 
             for job in wf.jobs:
-                brid = getattr(job, "uuid", None)
+                brick_id = getattr(job, "uuid", None)
 
-                if not brid:
+                if not brick_id:
                     continue
 
-                # get engine job
                 ejob = wf.job_mapping[job]
                 job_id = ejob.job_id
-                status = finished_jobs.get(job_id, None)
+                status = finished.get(job_id)
 
                 if not status:
                     continue
 
-                jobs[brid] = {
+                jobs[brick_id] = {
                     "workflow": wf_id,
                     "job": job,
                     "job_id": job_id,
                     "swf_status": status,
+                    "failed": workflow_failed,
                 }
 
         return jobs
@@ -1339,26 +1401,35 @@ class Project:
 
         return orphan_hist, orphan_bricks, orphan_weak_files
 
-    def get_orphan_nonexisting_files(self):
+    def get_orphan_nonexisting_files(self, failed):
         """
-        Retrieves orphaned files listed in the database that no longer exist
-        on the filesystem.
+        Return filenames that are recorded in the database but missing on disk.
+
+        A file is considered "orphaned" if:
+        - It does not exist on the filesystem, and
+        - It is not associated with any existing bricks,
+        unless `failed` is True (in which case brick association is ignored).
+
+        :param failed (bool): If True, include files even if they are linked to
+                              existing bricks. If False, exclude such files.
 
         :return (set): A set of filenames from the database that are not
                        found on the filesystem and are not associated with
                        existing bricks.
         """
+        base_path = Path(self.folder)
 
         with self.database.data() as database_data:
             docs = database_data.get_document(
                 collection_name=COLLECTION_CURRENT,
                 fields=[TAG_FILENAME, TAG_BRICKS],
             )
-            orphan = set()
+            orphans = set()
 
             for doc in docs:
 
-                if doc[TAG_BRICKS]:
+                # Skip files linked to existing bricks unless failed=True
+                if doc[TAG_BRICKS] and not failed:
                     bricks = database_data.get_document(
                         collection_name=COLLECTION_BRICK,
                         primary_keys=doc[TAG_BRICKS],
@@ -1368,12 +1439,12 @@ class Project:
                     if bricks:
                         continue
 
-                file_path = os.path.join(self.folder, doc[TAG_FILENAME])
+                file_path = base_path / doc[TAG_FILENAME]
 
-                if not os.path.exists(file_path):
-                    orphan.add(doc[TAG_FILENAME])
+                if not file_path.exists():
+                    orphans.add(doc[TAG_FILENAME])
 
-        return orphan
+        return orphans
 
     def getSortedTag(self):
         """Return the sorted tag of the project.
