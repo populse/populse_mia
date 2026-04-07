@@ -1383,10 +1383,17 @@ class Project:
                         if (
                             doc_rel.parts[0] == "scripts"
                             or not doc_path.exists()
+                            or doc_rel.parts[-1] == "CVR_physio_reg.mat"
                         ):
-                            # script files are "weak" and should not prevent
-                            # brick deletion. Non-existing files can be
-                            # cleared too.
+                            # 1. script files are "weak" and should not prevent
+                            # brick deletion.
+                            # 2. currently, we are creating the
+                            # CVR_physio_reg.mat file during the initialisation
+                            # phase... This is a temporary solution until we
+                            # find a better one in the mia_processes section...
+                            # This should not prevent the brick from being
+                            # deleted.
+                            # 3. non-existing files can be cleared too.
                             orphan_files.add(doc_rel.as_posix())
                             continue
 
