@@ -2939,7 +2939,10 @@ class PipelineManagerTab(QWidget):
         bricks_to_update = self.project.finished_bricks(
             self.get_capsul_engine(), pipeline=pipeline, include_done=False
         ).get("bricks", {})
-        failed = any(sub.get("failed") for sub in bricks_to_update.values())
+        running = any(sub.get("running") for sub in bricks_to_update.values())
+        failed = not running and any(
+            sub.get("failed") for sub in bricks_to_update.values()
+        )
 
         # Update brick execution statuses in the database
         with self.project.database.data(write=True) as database_data:

@@ -1060,6 +1060,8 @@ class Project:
                         - ``job_id`` (int): Job identifier.
                         - ``swf_status`` (tuple): Raw Soma-Workflow status
                                                   tuple.
+                        - ``running`` (bool): True of any job in the workflow
+                                              is running
                         - ``failed`` (bool): True if any job in the workflow
                                              failed.
         """
@@ -1085,6 +1087,8 @@ class Project:
                       None.
                     - is_success (bool): True if the job completed successfully
                       (i.e. termination == "finished_regularly").
+                    - is_running (bool): True if the job is currently running
+                      (the job indicates that it is in progress).
                     - is_failure (bool): True if the job did not complete
                       successfully.
 
@@ -1103,8 +1107,16 @@ class Project:
             termination = job_st[3][0] if job_st[3] else None
             is_success = termination == "finished_regularly"
             is_failure = not is_success
+            is_running = state == "running"
 
-            return job_id, state, termination, is_success, is_failure
+            return (
+                job_id,
+                state,
+                termination,
+                is_success,
+                is_running,
+                is_failure,
+            )
 
         swm = engine.study_config.modules["SomaWorkflowConfig"]
         swm.connect_resource(engine.connected_to())
@@ -1116,27 +1128,27 @@ class Project:
             parsed = [parse_status(js) for js in job_statuses]
             # Workflow-level failure: ANY job failed
             workflow_failed = any(is_failure for *_, is_failure in parsed)
+            workflow_running = any(x[-2] for x in parsed)
             # Keep only successful jobs
             finished = {
                 job_id: js
-                for js, (job_id, _, _, is_success, _) in zip(
+                for js, (job_id, _, _, is_success, _, _) in zip(
                     job_statuses, parsed
                 )
                 if is_success
             }
 
             if not finished:
-
-                # No successful jobs, but workflow may have failed
-                if workflow_failed:
-                    jobs[f"__workflow__:{wf_id}"] = {
-                        "workflow": wf_id,
-                        "job": None,
-                        "job_id": None,
-                        "swf_status": None,
-                        "failed": True,
-                    }
-
+                # No successful jobs, but workflow may still be running or
+                # may have failed
+                jobs[f"__workflow__:{wf_id}"] = {
+                    "workflow": wf_id,
+                    "job": None,
+                    "job_id": None,
+                    "swf_status": None,
+                    "running": workflow_running,
+                    "failed": workflow_failed,
+                }
                 continue
 
             wf = controller.workflow(wf_id)
@@ -1159,6 +1171,7 @@ class Project:
                     "job": job,
                     "job_id": job_id,
                     "swf_status": status,
+                    "running": workflow_running,
                     "failed": workflow_failed,
                 }
 
