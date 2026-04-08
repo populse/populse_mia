@@ -1696,7 +1696,7 @@ class PipelineManagerTab(QWidget):
             self.main_window.data_browser.table_data.delete_from_brick(brick)
 
         # Clean up project-level orphaned files
-        self.project.cleanup_orphan_nonexisting_files()
+        self.project.cleanup_orphan_nonexisting_files(True)
         # Clear internal state lists
         self.brick_list.clear()
         self.node_list.clear()
@@ -1948,11 +1948,6 @@ class PipelineManagerTab(QWidget):
         with protected_logging():
             self.postprocess_pipeline_execution()
 
-        # Clean up orphaned project data
-        self.project.cleanup_orphan_nonexisting_files()
-        self.project.cleanup_orphan_history()
-        # Refresh UI components
-        self.main_window.data_browser.table_data.update_table()
         current_editor = self.pipelineEditorTabs.get_current_editor()
 
         if (
