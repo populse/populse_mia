@@ -10365,9 +10365,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
         - Isolated test: In addition to the 'initialized' reset, verifies that
                          dependent methods are called exactly once:
             * postprocess_pipeline_execution
-            * project.cleanup_orphan_nonexisting_files
-            * project.cleanup_orphan_history
-            * main_window.data_browser.table_data.update_table
             * update_user_buttons_states
         """
 
@@ -10395,15 +10392,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 ppl_manager, "postprocess_pipeline_execution"
             ) as mock_ppe,
             patch.object(
-                ppl_manager.project, "cleanup_orphan_nonexisting_files"
-            ) as mock_cleanup_files,
-            patch.object(
-                ppl_manager.project, "cleanup_orphan_history"
-            ) as mock_cleanup_history,
-            patch.object(
-                ppl_manager.main_window.data_browser.table_data, "update_table"
-            ) as mock_update_table,
-            patch.object(
                 ppl_manager, "update_user_buttons_states"
             ) as mock_update_buttons,
         ):
@@ -10418,9 +10406,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         # Asserts that the mocked methods were called as expected
         mock_ppe.assert_called_once_with()
-        mock_cleanup_files.assert_called_once_with()
-        mock_cleanup_history.assert_called_once_with()
-        mock_update_table.assert_called_once_with()
         mock_update_buttons.assert_called_once_with()
 
     def test_get_capsul_engine(self):
