@@ -3896,6 +3896,19 @@ class PipelineManagerTab(QWidget):
                 original_pipeline = pipeline.nodes[
                     iteration_node_name
                 ].process.process
+
+                try:
+                    # Remove the `context_name` attribute if it exists, as it
+                    # was probably defined during the previous iteration but
+                    # does not exist in the original file.
+                    # TODO: This is a bit hacky, What should be done if
+                    #       ‘context_name’ already existed before the previous
+                    #       iteration?
+                    delattr(original_pipeline, "context_name")
+
+                except AttributeError:
+                    pass
+
                 current_editor.set_pipeline(original_pipeline)
                 self.displayNodeParameters("inputs", original_pipeline)
 
