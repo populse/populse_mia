@@ -3347,6 +3347,16 @@ class PipelineManagerTab(QWidget):
             protected and will trigger a "save as" operation regardless of
             other conditions.
         """
+
+        if self.iterationTable.check_box_iterate.isChecked():
+            QMessageBox.warning(
+                self,
+                "Mia - Save pipeline Warning!",
+                "It is not possible to save a pipeline in iteration mode!",
+                QMessageBox.Ok,
+            )
+            return
+
         # Initialize status message
         self.main_window.statusBar().showMessage(
             "The pipeline is getting saved. Please wait."
@@ -3414,6 +3424,16 @@ class PipelineManagerTab(QWidget):
         the success message is capitalized and stripped of its file extension
         for display.
         """
+
+        if self.iterationTable.check_box_iterate.isChecked():
+            QMessageBox.warning(
+                self,
+                "Mia - Save pipeline Warning!",
+                "It is not possible to save a pipeline in iteration mode!",
+                QMessageBox.Ok,
+            )
+            return
+
         status_bar = self.main_window.statusBar()
         # Show progress message
         status_bar.showMessage("The pipeline is getting saved. Please wait.")
