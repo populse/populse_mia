@@ -3877,6 +3877,7 @@ class PipelineManagerTab(QWidget):
                     )
                     return
 
+                new_pipeline.init_non_iterat_pip = pipeline
                 current_editor.set_pipeline(new_pipeline)
                 self.displayNodeParameters("inputs", new_pipeline)
 
@@ -3892,22 +3893,24 @@ class PipelineManagerTab(QWidget):
 
             # Disable iteration mode
             if has_iteration:
-                # Extract the original pipeline from the iteration node
-                original_pipeline = pipeline.nodes[
-                    iteration_node_name
-                ].process.process
+                original_pipeline = pipeline.init_non_iterat_pip
 
-                try:
-                    # Remove the `context_name` attribute if it exists, as it
-                    # was probably defined during the previous iteration but
-                    # does not exist in the original file.
-                    # TODO: This is a bit hacky, What should be done if
-                    #       ‘context_name’ already existed before the previous
-                    #       iteration?
+                # Remove `context_name`` attributes added by
+                # capsul.pipeline.ProcessIteration so the original
+                # non-iterative pipeline is restored.
+                context = getattr(original_pipeline, "context_name", None)
+
+                if context and "iterated" in context:
                     delattr(original_pipeline, "context_name")
 
-                except AttributeError:
-                    pass
+                for key in original_pipeline.nodes.sortedKeys:
+                    process = getattr(
+                        original_pipeline.nodes[key], "process", None
+                    )
+                    context = getattr(process, "context_name", None)
+
+                    if context and "iterated" in context:
+                        delattr(process, "context_name")
 
                 current_editor.set_pipeline(original_pipeline)
                 self.displayNodeParameters("inputs", original_pipeline)
