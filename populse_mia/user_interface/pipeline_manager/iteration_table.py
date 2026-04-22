@@ -231,25 +231,27 @@ class IterationTable(QWidget):
     def filter_values(self):
         """Open a dialog to select specific tag values for iteration."""
         # fmt: off
-        current_editor = (
-            self.main_window.pipeline_manager.pipelineEditorTabs
-            .get_current_editor()
-        )
-        # fmt: on
-        iterated_tag = current_editor.iterated_tag
-        tag_values = current_editor.all_tag_values_list
-        ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
 
-        if ui_iteration.exec_():
-            # Remove ampersands from tag values (used for shortcuts in Qt)
-            tag_values_list = [
-                t.replace("&", "") for t in ui_iteration.final_values
-            ]
-            current_editor.tag_values_list = tag_values_list
-            # Update the combo box with filtered values
-            self.combo_box.clear()
-            self.combo_box.addItems(tag_values_list)
-            self.update_table()
+        if self.check_box_iterate.isChecked():
+            current_editor = (
+                self.main_window.pipeline_manager.pipelineEditorTabs
+                .get_current_editor()
+            )
+            # fmt: on
+            iterated_tag = current_editor.iterated_tag
+            tag_values = current_editor.all_tag_values_list
+            ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
+
+            if ui_iteration.exec_():
+                # Remove ampersands from tag values (used for shortcuts in Qt)
+                tag_values_list = [
+                    t.replace("&", "") for t in ui_iteration.final_values
+                ]
+                current_editor.tag_values_list = tag_values_list
+                # Update the combo box with filtered values
+                self.combo_box.clear()
+                self.combo_box.addItems(tag_values_list)
+                self.update_table()
 
     def format_filter_value(self, value):
         """
@@ -342,31 +344,33 @@ class IterationTable(QWidget):
     def select_iteration_tag(self):
         """Open a dialog to let the user select which tag to iterate over."""
         # fmt: off
-        current_editor = (
-            self.main_window.pipeline_manager
-            .pipelineEditorTabs.get_current_editor()
-        )
-        # fmt: on
 
-        with self.project.database.data() as database_data:
-            available_fields = database_data.get_field_names(
-                COLLECTION_CURRENT
+        if self.check_box_iterate.isChecked():
+            current_editor = (
+                self.main_window.pipeline_manager
+                .pipelineEditorTabs.get_current_editor()
+            )
+            # fmt: on
+
+            with self.project.database.data() as database_data:
+                available_fields = database_data.get_field_names(
+                    COLLECTION_CURRENT
+                )
+
+            ui_select = PopUpSelectTagCountTable(
+                self.project,
+                available_fields,
+                current_editor.iterated_tag,
             )
 
-        ui_select = PopUpSelectTagCountTable(
-            self.project,
-            available_fields,
-            current_editor.iterated_tag,
-        )
+            if ui_select.exec_():
 
-        if ui_select.exec_():
-
-            if not (
-                current_editor.iterated_tag is None
-                and ui_select.selected_tag is None
-            ):
-                current_editor.iterated_tag = ui_select.selected_tag
-                self.update_selected_tag(ui_select.selected_tag)
+                if not (
+                    current_editor.iterated_tag is None
+                    and ui_select.selected_tag is None
+                ):
+                    current_editor.iterated_tag = ui_select.selected_tag
+                    self.update_selected_tag(ui_select.selected_tag)
 
     def select_visualized_tag(self, idx):
         """
