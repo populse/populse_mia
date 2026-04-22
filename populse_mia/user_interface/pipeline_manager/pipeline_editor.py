@@ -1445,7 +1445,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         p_e.iterated_tag = None
         p_e.tag_values_list = []
         p_e.all_tag_values_list = []
-        p_e.all_tag_values_list = []
         p_e.node_parameters = {}
         p_e.node_parameters_tmp = {}
         # Connect signals from a pipeline editor to this widget's handlers.
@@ -2021,6 +2020,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         editor.iterated = False
         editor.iterated_tag = None
         editor.tag_values_list = []
+        editor.all_tag_values_list = []
         editor.node_parameters = {}
         editor.node_parameters_tmp = {}
         # Generate unique tab name
