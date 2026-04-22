@@ -5488,6 +5488,7 @@ class PopUpTagSelection(QDialog):
                         with available tags
         """
         super().__init__()
+        self.setWindowTitle("Select tag")
         self.project = project
         _translate = QtCore.QCoreApplication.translate
         # Create UI components
@@ -5597,11 +5598,13 @@ class PopUpTagSelection(QDialog):
             field_names = database_data.get_field_names(COLLECTION_CURRENT)
 
         # Filter tags based on search term
+        excluded_tags = {TAG_CHECKSUM, TAG_BRICKS}
+        search = str_search.casefold() if str_search else ""
         filtered_tags = [
             tag
             for tag in field_names
-            if tag not in [TAG_CHECKSUM, TAG_BRICKS]
-            and (not str_search or str_search.upper() in tag.upper())
+            if tag not in excluded_tags
+            and (not search or search in tag.casefold())
         ]
 
         # Update visibility of list items
@@ -5717,7 +5720,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
         filterable_tags = [
             tag
             for tag in tags_to_display
-            if tag not in {TAG_CHECKSUM, TAG_HISTORY}
+            if tag not in {TAG_CHECKSUM, TAG_HISTORY, TAG_BRICKS}
         ]
 
         # Populate list widget with checkable items
