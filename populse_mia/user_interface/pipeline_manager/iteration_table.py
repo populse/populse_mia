@@ -15,6 +15,8 @@
 ##########################################################################
 
 
+import ast
+import json
 import os
 
 # PyQt5 import
@@ -53,20 +55,21 @@ class IterationTable(QWidget):
 
     .. Methods:
         - _create_tag_button: Create a new tag button
-        - add_tag: adds a tag to visualize in the iteration table
-        - emit_iteration_table_updated: emits a signal when the iteration
+        - add_tag: Add a tag to visualize in the iteration table
+        - emit_iteration_table_updated: Emit a signal when the iteration
                                         scans have been updated
-        - fill_values: fill values_list depending on the visualized tags
-        - filter_values: select the tag values used for the iteration
-        - refresh_layout: updates the layout of the widget
-        - remove_tag: removes a tag to visualize in the iteration table
-        - select_iteration_tag: opens a pop-up to let the user select on which
+        - fill_values: Fill values_list depending on the visualized tags
+        - filter_values: Select the tag values used for the iteration
+        - format_filter_value: Convert a value into a JSON-formatted string
+        - refresh_layout: Update the layout of the widget
+        - remove_tag: Remove a tag to visualize in the iteration table
+        - select_iteration_tag: Open a pop-up to let the user select on which
                                 tag to iterate
-        - select_visualized_tag: opens a pop-up to let the user select which
+        - select_visualized_tag: Open a pop-up to let the user select which
                                  tag to visualize in the iteration table
-        - update_iterated_tag: updates the widget
-        - update_table: updates the iteration table
-        - update_selected_tag: updates the selected tag for current pipeline
+        - update_iterated_tag: Update the widget
+        - update_table: Update the iteration table
+        - update_selected_tag: Update the selected tag for current pipeline
                                manager tab
 
     .. Signals:
@@ -247,6 +250,30 @@ class IterationTable(QWidget):
             self.combo_box.clear()
             self.combo_box.addItems(tag_values_list)
             self.update_table()
+
+    def format_filter_value(self, value):
+        """
+        Convert a value into a JSON-formatted string.
+
+        If ``value`` is a string, this method first attempts to interpret it as
+        a Python literal (for example a list, dict, number, or boolean) using
+        ``ast.literal_eval()``. If parsing fails, the original string is
+        preserved.
+
+        :param value (Any): The value to serialize.
+
+        :return (str): The JSON representation of the resulting value.
+        """
+
+        if isinstance(value, str):
+
+            try:
+                value = ast.literal_eval(value)
+
+            except (ValueError, SyntaxError):
+                pass
+
+        return json.dumps(value)
 
     def refresh_layout(self):
         """Update the layout of the widget.
@@ -454,7 +481,10 @@ class IterationTable(QWidget):
             # Get current filter value
             current_filter = self.combo_box.currentText().replace("&", "")
             # Create filter query
-            filter_query = f'({{{iterated_tag}}} == "{current_filter}")'
+            filter_query = (
+                f"{{{iterated_tag}}} == "
+                f"{self.format_filter_value(current_filter)}"
+            )
             # Get filtered scans
             filtered_scans = database_data.filter_documents(
                 COLLECTION_CURRENT, filter_query
@@ -485,7 +515,10 @@ class IterationTable(QWidget):
             all_iterations_scans = []
 
             for tag_value in current_editor.tag_values_list:
-                filter_query = f'({{{iterated_tag}}} == "{tag_value}")'
+                filter_query = (
+                    f"{{{iterated_tag}}} == "
+                    f"{self.format_filter_value(tag_value)}"
+                )
                 filtered_scans = database_data.filter_documents(
                     COLLECTION_CURRENT, filter_query
                 )
