@@ -12264,8 +12264,21 @@ class Test_Z_MIAOthers(TestMIACase):
         ppl_manager = self.main_window.pipeline_manager
         ppl_editor = ppl_manager.pipelineEditorTabs.get_current_editor()
 
-        # Allows for the iteration of the pipeline
+        # Try enabling iterative mode
         iter_table.check_box_iterate.setChecked(True)
+        # We can only enable iteration mode if a pipeline is present in the
+        # pipeline editor
+        self.assertFalse(iter_table.check_box_iterate.isChecked())
+
+        # Add a process to the pipeline editor so that we can enable iteration
+        # mode
+        self.main_window.tabs.setCurrentIndex(2)
+        ppl_editor.click_pos = QPoint(450, 500)
+        ppl_editor.add_named_process(Smooth)
+
+        # Try enabling iterative mode again
+        iter_table.check_box_iterate.setChecked(True)
+        self.assertTrue(iter_table.check_box_iterate.isChecked())
 
         # Adds a tag and asserts that a tag button was added
         iter_table.add_tag()
