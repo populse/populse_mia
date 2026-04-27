@@ -3942,9 +3942,13 @@ class PipelineManagerTab(QWidget):
                 current_editor.set_pipeline(original_pipeline)
                 self.displayNodeParameters("inputs", original_pipeline)
 
-            # Reset scan lists to non-iteration mode
+            # Reset scan lists and parameters to non-iteration mode
             self.iteration_table_scans_list = []
             self.pipelineEditorTabs.scan_list = self.scan_list
+            current_editor.iterated = False
+            current_editor.iterated_tag = None
+            current_editor.tag_values_list = []
+            current_editor.all_tag_values_list = []
 
         # Fallback to database scan list if needed
         if not self.pipelineEditorTabs.scan_list:

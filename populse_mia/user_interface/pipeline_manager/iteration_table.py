@@ -18,8 +18,10 @@
 import ast
 import json
 import os
+from functools import partial
 
 # PyQt5 import
+from PyQt5 import Qt
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import (
@@ -56,6 +58,7 @@ class IterationTable(QWidget):
     .. Methods:
         - _create_tag_button: Create a new tag button
         - add_tag: Add a tag to visualize in the iteration table
+        - current_editor: Return the currently active pipeline editor
         - emit_iteration_table_updated: Emit a signal when the iteration
                                         scans have been updated
         - fill_values: Fill values_list depending on the visualized tags
@@ -147,10 +150,67 @@ class IterationTable(QWidget):
         remove_tag_picture = remove_tag_picture.scaledToHeight(20)
         self.remove_tag_label.setPixmap(remove_tag_picture)
         self.remove_tag_label.clicked.connect(self.remove_tag)
-        # Set up layout
-        self.v_layout = QVBoxLayout()
-        self.setLayout(self.v_layout)
-        self.refresh_layout()
+
+        # Create a container for iteration controls
+        self.iteration_controls_container = QWidget()
+        self.iteration_controls_layout = QVBoxLayout(
+            self.iteration_controls_container
+        )
+
+        # First line: self.label_iterate and self.iterated_tag_push_button
+        first_line_layout = QHBoxLayout()
+        first_line_layout.addWidget(self.label_iterate)
+        first_line_layout.addWidget(self.iterated_tag_push_button)
+        self.iteration_controls_layout.addLayout(first_line_layout)
+
+        # Second line: self.iterated_tag_label, self.combo_box, and
+        # self.filter_button
+        second_line_layout = QHBoxLayout()
+        second_line_layout.addWidget(self.iterated_tag_label)
+        second_line_layout.addWidget(self.combo_box)
+        second_line_layout.addWidget(self.filter_button)
+        self.iteration_controls_layout.addLayout(second_line_layout)
+
+        # Create a container for tags to visualize and its buttons
+        self.tags_container = QWidget()
+        self.tags_layout = QHBoxLayout(self.tags_container)
+        self.tags_layout.setSpacing(10)
+        self.tags_layout.addWidget(self.label_tags)
+
+        for tag_button in self.push_buttons:
+            self.tags_layout.addWidget(tag_button)
+
+        self.tags_layout.addWidget(self.add_tag_label)
+        self.tags_layout.addWidget(self.remove_tag_label)
+        self.tags_layout.addStretch(1)
+
+        # Initially hide the iteration controls container and tags container
+        self.iteration_controls_container.setVisible(False)
+        self.tags_container.setVisible(False)
+
+        # --- Main layout: Use QGridLayout ---
+        self.main_layout = Qt.QGridLayout(self)
+
+        # Add the checkbox to the top-left cell (row 0, column 0)
+        self.main_layout.addWidget(self.check_box_iterate, 0, 0, 1, 1)
+
+        # Add the iteration controls container to the top-right
+        # (row 0, column 1)
+        self.main_layout.addWidget(
+            self.iteration_controls_container, 0, 1, 1, 1
+        )
+
+        # Add the table to the second row, spanning both columns
+        # (row 1, column 0 to 1)
+        self.main_layout.addWidget(self.iteration_table, 1, 0, 1, 2)
+
+        # Add the tags container to the third row, spanning both columns
+        # (row 2, column 0 to 1)
+        self.main_layout.addWidget(self.tags_container, 2, 0, 1, 2)
+
+        # Ensure the table and containers expand to fill the available space
+        self.main_layout.setColumnStretch(1, 1)
+        self.main_layout.setRowStretch(1, 1)
 
     def _create_tag_button(self, text, index):
         """Create a new tag button with the given text and index.
@@ -159,9 +219,26 @@ class IterationTable(QWidget):
         :param index (int): Index of the button in the push_buttons list.
         """
         button = QPushButton(text)
-        button.clicked.connect(lambda: self.select_visualized_tag(index))
+        button.clicked.connect(partial(self.select_visualized_tag, index))
         self.push_buttons.insert(index, button)
         return button
+
+    @property
+    def current_editor(self):
+        """
+        Return the currently active pipeline editor.
+
+        This property provides convenient access to the current editor from the
+        pipeline manager without repeating the full attribute chain.
+
+        :return: The active pipeline editor instance.
+        """
+        # fmt: off
+        return (
+            self.main_window.pipeline_manager
+            .pipelineEditorTabs.get_current_editor()
+        )
+        # fmt: on
 
     def add_tag(self):
         """
@@ -177,21 +254,24 @@ class IterationTable(QWidget):
 
     def emit_iteration_table_updated(self):
         """Emit a signal when the iteration scans have been updated."""
+        visible = self.check_box_iterate.isChecked()
+        # Toggle visibility of the iteration controls and tags containers
+        self.iteration_controls_container.setVisible(visible)
+        self.tags_container.setVisible(visible)
 
-        if self.check_box_iterate.checkState():
+        if not visible:
+            # Clear the table completely
+            self.iteration_table.clear()
+            self.iteration_table.setRowCount(0)
+            self.iteration_table.setColumnCount(0)
+            # Reset combo box
+            self.combo_box.clear()
+            # Reset labels if needed
+            self.iterated_tag_label.setText("Select a tag")
+            self.iterated_tag_push_button.setText("Select")
 
-            if hasattr(self, "scans"):
-                self.iteration_table_updated.emit(
-                    self.iteration_scans, self.all_iterations_scans
-                )
-
-            else:
-                self.iteration_table_updated.emit(
-                    self.scan_list, [self.scan_list]
-                )
-
-        else:
-            self.iteration_table_updated.emit(self.scan_list, [self.scan_list])
+        # Emit signal with default scan list
+        self.iteration_table_updated.emit(self.scan_list, [self.scan_list])
 
     def fill_values(self, idx):
         """
@@ -212,32 +292,20 @@ class IterationTable(QWidget):
                     field=tag_name,
                 )
 
-                if current_value is not None:
+                if current_value is not None and current_value not in values:
                     values.append(current_value)
 
         # Ensure values_list has enough slots
         while len(self.values_list) <= idx:
             self.values_list.append([])
 
-        # Reset and fill values for this tag
-        if self.values_list[idx] is not None:
-            self.values_list[idx] = []
-
-        for value in values:
-
-            if value not in self.values_list[idx]:
-                self.values_list[idx].append(value)
+        self.values_list[idx] = values
 
     def filter_values(self):
         """Open a dialog to select specific tag values for iteration."""
-        # fmt: off
 
         if self.check_box_iterate.isChecked():
-            current_editor = (
-                self.main_window.pipeline_manager.pipelineEditorTabs
-                .get_current_editor()
-            )
-            # fmt: on
+            current_editor = self.current_editor
             iterated_tag = current_editor.iterated_tag
             tag_values = current_editor.all_tag_values_list
             ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
@@ -284,44 +352,21 @@ class IterationTable(QWidget):
         is added or removed.
         """
 
-        # Clear existing layout
-        for i in reversed(range(self.v_layout.count())):
-            item = self.v_layout.itemAt(i)
-
+        # Clear and rebuild the tags container layout
+        for i in reversed(range(self.tags_layout.count())):
+            item = self.tags_layout.itemAt(i)
             if item:
-                self.v_layout.removeItem(item)
+                self.tags_layout.removeItem(item)
 
-        # Create top row controls
-        first_v_layout = QVBoxLayout()
-        first_v_layout.addWidget(self.check_box_iterate)
-        second_v_layout = QVBoxLayout()
-        second_v_layout.addWidget(self.label_iterate)
-        second_v_layout.addWidget(self.iterated_tag_label)
-        third_v_layout = QVBoxLayout()
-        third_v_layout.addWidget(self.iterated_tag_push_button)
-        hbox = QHBoxLayout()
-        hbox.addWidget(self.combo_box)
-        hbox.addWidget(self.filter_button)
-        third_v_layout.addLayout(hbox)
-        top_layout = QHBoxLayout()
-        top_layout.addLayout(first_v_layout)
-        top_layout.addLayout(second_v_layout)
-        top_layout.addLayout(third_v_layout)
-        # Add components to main layout
-        self.v_layout.addLayout(top_layout)
-        self.v_layout.addWidget(self.iteration_table)
-        # Create tag visualization controls
-        self.h_box = QHBoxLayout()
-        self.h_box.setSpacing(10)
-        self.h_box.addWidget(self.label_tags)
+        # Rebuild the tags container layout
+        self.tags_layout.addWidget(self.label_tags)
 
         for tag_button in self.push_buttons:
-            self.h_box.addWidget(tag_button)
+            self.tags_layout.addWidget(tag_button)
 
-        self.h_box.addWidget(self.add_tag_label)
-        self.h_box.addWidget(self.remove_tag_label)
-        self.h_box.addStretch(1)
-        self.v_layout.addLayout(self.h_box)
+        self.tags_layout.addWidget(self.add_tag_label)
+        self.tags_layout.addWidget(self.remove_tag_label)
+        self.tags_layout.addStretch(1)
 
     def remove_tag(self):
         """Remove the last tag button from the visualization list."""
@@ -331,7 +376,6 @@ class IterationTable(QWidget):
             button = self.push_buttons.pop()
             button.close()
             button.deleteLater()
-            button = None
 
             # Remove corresponding values
             if len(self.values_list) > 0:
@@ -343,14 +387,8 @@ class IterationTable(QWidget):
 
     def select_iteration_tag(self):
         """Open a dialog to let the user select which tag to iterate over."""
-        # fmt: off
 
         if self.check_box_iterate.isChecked():
-            current_editor = (
-                self.main_window.pipeline_manager
-                .pipelineEditorTabs.get_current_editor()
-            )
-            # fmt: on
 
             with self.project.database.data() as database_data:
                 available_fields = database_data.get_field_names(
@@ -360,16 +398,16 @@ class IterationTable(QWidget):
             ui_select = PopUpSelectTagCountTable(
                 self.project,
                 available_fields,
-                current_editor.iterated_tag,
+                self.current_editor.iterated_tag,
             )
 
             if ui_select.exec_():
 
                 if not (
-                    current_editor.iterated_tag is None
+                    self.current_editor.iterated_tag is None
                     and ui_select.selected_tag is None
                 ):
-                    current_editor.iterated_tag = ui_select.selected_tag
+                    self.current_editor.iterated_tag = ui_select.selected_tag
                     self.update_selected_tag(ui_select.selected_tag)
 
     def select_visualized_tag(self, idx):
@@ -403,6 +441,9 @@ class IterationTable(QWidget):
         :param tag_name (str): Name of the iterated tag.
         """
 
+        if not self.check_box_iterate.isChecked():
+            return
+
         # Update scan list
         if self.main_window.pipeline_manager.scan_list:
             self.scan_list = self.main_window.pipeline_manager.scan_list
@@ -422,28 +463,29 @@ class IterationTable(QWidget):
             self.iterated_tag_push_button.setText("Select")
             self.iterated_tag_label.setText("Select a tag")
             self.iteration_table.clear()
-            self.iteration_table.setColumnCount(len(self.push_buttons))
+            self.iteration_table.setRowCount(0)
+            self.iteration_table.setColumnCount(0)
 
         else:
             # Update tag selection UI
             self.iterated_tag_push_button.setText(tag_name)
             self.iterated_tag_label.setText(f"{tag_name}:")
             # Get tag values from current editor
-            # fmt: off
-            current_editor = (
-                self.main_window.pipeline_manager
-                .pipelineEditorTabs.get_current_editor()
-            )
-            # fmt: on
+            current_editor = self.current_editor
             self.all_tag_values = list(current_editor.all_tag_values_list)
             self.combo_box.addItems(current_editor.tag_values_list)
-            # Update table
-            self.update_table()
 
     def update_table(self):
         """
         Update the iteration table with current data.
         """
+        current_editor = self.current_editor
+
+        if (
+            not self.check_box_iterate.isChecked()
+            or current_editor.iterated_tag is None
+        ):
+            return
 
         with self.project.database.data() as database_data:
 
@@ -454,18 +496,15 @@ class IterationTable(QWidget):
                 )
 
             # Clear and prepare table
-            self.iteration_table.clear()
-            self.iteration_table.setColumnCount(len(self.push_buttons))
-            # fmt: off
-            current_editor = (
-                self.main_window.pipeline_manager
-                .pipelineEditorTabs.get_current_editor()
-            )
-            # fmt: on
             iterated_tag = current_editor.iterated_tag
+            self.iteration_table.clear()
 
             if iterated_tag is None:
+                self.iteration_table.setRowCount(0)
+                self.iteration_table.setColumnCount(0)
                 return
+
+            self.iteration_table.setColumnCount(len(self.push_buttons))
 
             # Set up table headers
             for idx, button in enumerate(self.push_buttons):
@@ -580,12 +619,7 @@ class IterationTable(QWidget):
 
         tag_values_list = sorted(list(tag_values))
         # Get current editor and update its tag value lists
-        # fmt: off
-        current_editor = (
-            self.main_window.pipeline_manager
-            .pipelineEditorTabs.get_current_editor()
-        )
-        # fmt: on
+        current_editor = self.current_editor
         current_editor.tag_values_list = tag_values_list
         current_editor.all_tag_values_list = tag_values_list
         # Update iterated tag
