@@ -303,23 +303,23 @@ class IterationTable(QWidget):
 
     def filter_values(self):
         """Open a dialog to select specific tag values for iteration."""
+        current_editor = self.current_editor
+        ui_iteration = PopUpSelectIteration(
+            current_editor.iterated_tag,
+            current_editor.all_tag_values_list,
+            current_editor.tag_values_list,
+        )
 
-        if self.check_box_iterate.isChecked():
-            current_editor = self.current_editor
-            iterated_tag = current_editor.iterated_tag
-            tag_values = current_editor.all_tag_values_list
-            ui_iteration = PopUpSelectIteration(iterated_tag, tag_values)
-
-            if ui_iteration.exec_():
-                # Remove ampersands from tag values (used for shortcuts in Qt)
-                tag_values_list = [
-                    t.replace("&", "") for t in ui_iteration.final_values
-                ]
-                current_editor.tag_values_list = tag_values_list
-                # Update the combo box with filtered values
-                self.combo_box.clear()
-                self.combo_box.addItems(tag_values_list)
-                self.update_table()
+        if ui_iteration.exec_():
+            # Remove ampersands from tag values (used for shortcuts in Qt)
+            tag_values_list = [
+                t.replace("&", "") for t in ui_iteration.final_values
+            ]
+            current_editor.tag_values_list = tag_values_list
+            # Update the combo box with filtered values
+            self.combo_box.clear()
+            self.combo_box.addItems(tag_values_list)
+            self.update_table()
 
     def format_filter_value(self, value):
         """
