@@ -5393,25 +5393,28 @@ class PopUpSelectFilter(PopUpFilterSelection):
 
 class PopUpSelectIteration(QDialog):
     """
-    Dialog for selecting values to iterate over when running an
-    iterated pipeline.
+    Dialog allowing the user to choose which values of a tag
+    should be used during an iterated pipeline run.
+
 
     .. Methods:
         - ok_clicked: Stores selected values and closes the dialog.
     """
 
-    def __init__(self, iterated_tag, tag_values):
+    def __init__(self, iterated_tag, tag_values, selected_values):
         """
         Initializes the selection popup.
 
-        :param iterated_tag (str): The name of the tag being iterated.
-        :param tag_values (list[str]): The possible values for the
-                                       iterated tag.
+        :param iterated_tag (str): Name of the tag whose values can be
+                                   iterated.
+        :param tag_values (list[str]): Available values for the tag.
+        :selected_values (list[str]): Values initially selected when the
+                                      dialog opens.
         """
         super().__init__()
         self.iterated_tag = iterated_tag
         self.tag_values = tag_values
-        self.final_values = []
+        self.final_values = selected_values
         self.setWindowTitle(
             f"Iterate pipeline run over tag {self.iterated_tag}"
         )
@@ -5421,7 +5424,7 @@ class PopUpSelectIteration(QDialog):
 
         for tag_value in self.tag_values:
             check_box = QCheckBox(tag_value)
-            check_box.setCheckState(QtCore.Qt.Checked)
+            check_box.setChecked(tag_value in self.final_values)
             self.check_boxes.append(check_box)
             self.v_box.addWidget(check_box)
 
@@ -5450,11 +5453,11 @@ class PopUpSelectIteration(QDialog):
 
     def ok_clicked(self):
         """Stores selected values and closes the dialog."""
+        # Values selected by the user after the dialog is accepted
         self.final_values = [
             cb.text() for cb in self.check_boxes if cb.isChecked()
         ]
         self.accept()
-        self.close()
 
 
 class PopUpTagSelection(QDialog):
