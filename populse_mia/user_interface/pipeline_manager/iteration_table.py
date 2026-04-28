@@ -77,7 +77,7 @@ class IterationTable(QWidget):
 
     .. Signals:
         - iteration_table_updated: Emitted when iteration scans have been
-                                   updated.
+                                   updated or if the iteration is toggled off.
     """
 
     iteration_table_updated = pyqtSignal(list, list)
