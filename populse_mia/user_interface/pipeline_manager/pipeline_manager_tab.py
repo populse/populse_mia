@@ -3872,7 +3872,7 @@ class PipelineManagerTab(QWidget):
         current_editor = self.pipelineEditorTabs.get_current_editor()
         pipeline = self.pipelineEditorTabs.get_current_pipeline()
 
-        if len(pipeline.nodes) == 1:
+        if pipeline is None or len(pipeline.nodes) == 1:
             self.iterationTable.check_box_iterate.setCheckState(
                 Qt.Qt.Unchecked
             )
