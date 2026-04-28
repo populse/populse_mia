@@ -12520,6 +12520,9 @@ class Test_Z_MIAOthers(TestMIACase):
         self.assertEqual(
             ns2.get("y"), 123, "Second kernel did not execute code correctly"
         )
+        console.close()
+        console2.close()
+        QApplication.processEvents()
 
 
 if __name__ == "__main__":

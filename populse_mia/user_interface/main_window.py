@@ -928,6 +928,100 @@ class MainWindow(QMainWindow):
             )
             return
 
+        def cleanup_console():
+            """
+            Safely clean up an in-process Jupyter kernel and its communication
+            channels.
+
+            This function ensures that the kernel client channels are stopped
+            and the kernel is properly shut down, preventing asynchronous
+            QtConsole callbacks from attempting to update already destroyed Qt
+            widgets during application teardown or test execution.
+
+            Exceptions are intentionally ignored because cleanup may be called
+            during partial shutdown where kernel or communication objects are
+            already invalid or in an inconsistent state.
+            """
+
+            try:
+                kc.stop_channels()
+
+            except Exception:
+                pass
+
+            try:
+                km.shutdown_kernel()
+
+            except Exception:
+                pass
+
+        class SafeRichJupyterWidget(RichJupyterWidget):
+            """
+            A safer QtConsole widget for in-process IPython shells.
+
+            This subclass ensures that the embedded Jupyter kernel is properly
+            stopped before the Qt widget is destroyed, preventing late kernel
+            callbacks from accessing already deleted Qt objects during
+            application shutdown or unit test teardown.
+
+            It also ignores incoming kernel messages once the widget is in the
+            process of closing, avoiding spurious RuntimeError exceptions
+            caused by delayed asynchronous message dispatch.
+            """
+
+            _closing = False
+
+            def closeEvent(self, event):
+                """
+                Handle widget closure by stopping the kernel cleanly.
+
+                The kernel communication channels are stopped before the widget
+                is destroyed so that no further frontend updates are attempted
+                on deleted Qt objects.
+
+                :param event: the Qt close event.
+                """
+                self._closing = True
+
+                try:
+
+                    if self.kernel_client:
+                        self.kernel_client.stop_channels()
+
+                except Exception:
+                    pass
+
+                try:
+
+                    if self.kernel_manager:
+                        self.kernel_manager.shutdown_kernel()
+
+                except Exception:
+                    pass
+
+                super().closeEvent(event)
+
+            def _dispatch(self, msg):
+                """
+                Safely dispatch incoming Jupyter messages.
+
+                Incoming messages are ignored once the widget has started
+                closing. This prevents asynchronous kernel replies from
+                attempting to update GUI elements that may already have been
+                destroyed.
+
+                :param msg: the Jupyter message received from the kernel.
+                """
+
+                if self._closing:
+                    return
+
+                try:
+                    super()._dispatch(msg)
+
+                except RuntimeError:
+                    pass
+
         logger.info("Start a console shell ...")
         app = QApplication.instance()
 
@@ -942,9 +1036,10 @@ class MainWindow(QMainWindow):
         kc = km.client()
         kc.start_channels()
         # Console widget
-        console = RichJupyterWidget()
+        console = SafeRichJupyterWidget()
         console.kernel_manager = km
         console.kernel_client = kc
+        console.destroyed.connect(cleanup_console)
         # Push objects into kernel namespace
         ns = {"main_window": self, "app": app}
 
