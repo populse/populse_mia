@@ -5414,7 +5414,7 @@ class PopUpSelectIteration(QDialog):
         super().__init__()
         self.iterated_tag = iterated_tag
         self.tag_values = tag_values
-        self.final_values = selected_values
+        self.final_values = []
         self.setWindowTitle(
             f"Iterate pipeline run over tag {self.iterated_tag}"
         )
@@ -5424,7 +5424,7 @@ class PopUpSelectIteration(QDialog):
 
         for tag_value in self.tag_values:
             check_box = QCheckBox(tag_value)
-            check_box.setChecked(tag_value in self.final_values)
+            check_box.setChecked(tag_value in selected_values)
             self.check_boxes.append(check_box)
             self.v_box.addWidget(check_box)
 

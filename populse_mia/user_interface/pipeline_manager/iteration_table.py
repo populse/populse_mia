@@ -246,7 +246,6 @@ class IterationTable(QWidget):
 
         Used only for tests.
         """
-
         idx = len(self.push_buttons)
         button_text = f"Tag n°{idx + 1}"
         self._create_tag_button(button_text, idx)
@@ -388,27 +387,25 @@ class IterationTable(QWidget):
     def select_iteration_tag(self):
         """Open a dialog to let the user select which tag to iterate over."""
 
-        if self.check_box_iterate.isChecked():
-
-            with self.project.database.data() as database_data:
-                available_fields = database_data.get_field_names(
-                    COLLECTION_CURRENT
-                )
-
-            ui_select = PopUpSelectTagCountTable(
-                self.project,
-                available_fields,
-                self.current_editor.iterated_tag,
+        with self.project.database.data() as database_data:
+            available_fields = database_data.get_field_names(
+                COLLECTION_CURRENT
             )
 
-            if ui_select.exec_():
+        ui_select = PopUpSelectTagCountTable(
+            self.project,
+            available_fields,
+            self.current_editor.iterated_tag,
+        )
 
-                if not (
-                    self.current_editor.iterated_tag is None
-                    and ui_select.selected_tag is None
-                ):
-                    self.current_editor.iterated_tag = ui_select.selected_tag
-                    self.update_selected_tag(ui_select.selected_tag)
+        if ui_select.exec_():
+
+            if not (
+                self.current_editor.iterated_tag is None
+                and ui_select.selected_tag is None
+            ):
+                self.current_editor.iterated_tag = ui_select.selected_tag
+                self.update_selected_tag(ui_select.selected_tag)
 
     def select_visualized_tag(self, idx):
         """
