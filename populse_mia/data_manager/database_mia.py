@@ -5,6 +5,8 @@ interacting with the populse_db API.
 :Contains:
    Class:
       - DatabaseMIA
+      - DatabaseMiaSchema
+      - DatabaseMiaData
 """
 
 ##########################################################################

@@ -1,12 +1,8 @@
-"""Module that handle the configuration of the software
+"""
+Module that handle the configuration of the software
 
 Load and save the parameters from the miniviewer and the MIA preferences
-pop-up in the config.yml file.
-
-:Contains:
-    :Class:
-        - Config
-
+pop-up in the ``config.yml`` file.
 """
 
 ##########################################################################
@@ -36,6 +32,8 @@ from capsul.api import capsul_engine
 # populse_mia import
 from populse_mia.utils import verCmp
 
+__all__ = ["Config"]
+
 ENCRYPTION_KEY = b"5YSmesxZ4ge9au2Bxe7XDiQ3U5VCdLeRdqimOOggKyc="
 logger = logging.getLogger(__name__)
 
@@ -44,24 +42,24 @@ class Config:
     """
     Object that handles the configuration of the software
 
-    :Contains:
-        :Methods:
-            - _configure_standalone_spm: Configures standalone SPM and
-                                         MCR.
+    Contains:
+
+        Methods:
+
+            - _configure_standalone_spm: Configures standalone SPM and MCR.
             - _configure_matlab_spm: Configures SPM and MATLAB.
             - _configure_matlab_only: Configures MATLAB without SPM.
             - _configure_mcr_only: Configures MCR without SPM.
-            - _disable_matlab_spm: Disables all MATLAB and SPM
-                                   configurations.
+            - _disable_matlab_spm: Disables all MATLAB and SPM configurations.
             - get_admin_hash: Get the value of the hash of the admin password
             - get_afni_path: Returns the path of AFNI
             - get_ants_path: Returns the path of ANTS
             - getBackgroundColor: Get background color
             - get_capsul_config: Get CAPSUL config dictionary
             - get_capsul_engine: Get a global CapsulEngine object used for all
-                                 operations in MIA application
+              operations in MIA application
             - getChainCursors: Returns if the "chain cursors" checkbox of the
-                               mini-viewer is activated
+              mini-viewer is activated
             - get_freesurfer_setup: Get freesurfer path
             - get_fsl_config: Returns the path of the FSL config file
             - get_mainwindow_maximized: Get the maximized (full-screen) flag
@@ -69,64 +67,63 @@ class Config:
             - get_matlab_command: Returns Matlab command
             - get_matlab_path: Returns the path of Matlab's executable
             - get_matlab_standalone_path: Returns the path of Matlab Compiler
-                                          Runtime
+              Runtime
             - get_max_projects: Returns the maximum number of projects
-                                displayed in the "Saved projects" menu
+              displayed in the "Saved projects" menu
             - get_max_thumbnails: Get max thumbnails number at the data
-                                  browser bottom
+              browser bottom
             - get_properties_path: Returns the software's properties path
             - get_mri_conv_path: Returns the MRIManager.jar path
             - get_mrtrix_path: Returns mrtrix path
             - getNbAllSlicesMax: Returns the maximum number of slices to
-                                 display in the mini viewer
+              display in the mini viewer
             - get_opened_projects: Returns the opened projects
             - get_projects_save_path: Returns the folder where the projects
-                                      are saved
+              are saved
             - get_referential: Returns boolean to indicate DataViewer
-                               referential
+              referential
             - get_resources_path: Get the resources path
             - getShowAllSlices: Returns if the "show all slices" checkbox of
-                                the mini viewer is activated
+              the mini viewer is activated
             - getSourceImageDir: Get the source directory for project images
             - get_spm_path: Returns the path of SPM12 (license version)
             - get_spm_standalone_path: Returns the path of SPM12 (standalone
-                                       version)
+              version)
             - getTextColor: Return the text color
             - getThumbnailTag: Returns the tag that is displayed in the mini
-                               viewer
+              viewer
             - get_use_afni: Returns the value of "use afni" checkbox in the
-                            preferences
+              preferences
             - get_use_ants: Returns the value of "use ants" checkbox in the
-                            preferences
+              preferences
             - get_use_clinical: Returns the value of "clinical mode" checkbox
-                                in the preferences
+              in the preferences
             - get_use_freesurfer: Returns the value of "use freesurfer"
-                                  checkbox in the preferences
+              checkbox in the preferences
             - get_use_fsl: Returns the value of "use fsl" checkbox in the
-                           preferences
+              preferences
             - get_use_matlab: Returns the value of "use matlab" checkbox in
-                              the preferences
+              the preferences
             - get_use_matlab_standalone: Returns the value of "use matlab
-                                         standalone" checkbox in the
-                                         preferences
+              standalone" checkbox in the preferences
             - get_use_mrtrix: Returns the value of "use mrtrix" checkbox in
-                              the preferences
+              the preferences
             - get_user_level: Get the user level in the Capsul config
             - get_user_mode: Returns the value of "user mode" checkbox
-                             in the preferences
+              in the preferences
             - get_use_spm: Returns the value of "use spm" checkbox in the
-                           preferences
+              preferences
             - get_use_spm_standalone: Returns the value of "use spm standalone"
-                                      checkbox in the preferences
+              checkbox in the preferences
             - getViewerConfig: Returns the DataViewer configuration (neuro or
-                               radio), by default neuro
+              radio), by default neuro
             - getViewerFramerate: Returns the DataViewer framerate for
-                                  automatic time running images
+              automatic time running images
             - isAutoSave: Checks if auto-save mode is activated
             - isControlV1: Checks if the selected display of the controller is
-                           of V1 type
+              of V1 type
             - isRadioView: Checks if miniviewer in radiological orientation (if
-                           not, then it is in neurological orientation)
+              not, then it is in neurological orientation)
             - loadConfig: Reads the config in the config.yml file
             - saveConfig: Saves the config to the config.yml file
             - set_admin_hash: Set the password hash
@@ -137,9 +134,9 @@ class Config:
             - setBackgroundColor: Sets the background color
             - set_capsul_config: Set CAPSUL configuration dict into MIA config
             - setChainCursors: Set the "chain cursors" checkbox of the mini
-                               viewer
+              viewer
             - set_clinical_mode: Set the value of "clinical mode" in
-                                 the preferences
+              the preferences
             - setControlV1: Set controller display mode (True if V1)
             - set_freesurfer_setup: Set freesurfer path
             - set_fsl_config: Set the path of the FSL config file
@@ -147,55 +144,54 @@ class Config:
             - set_mainwindow_size: Set main window size
             - set_matlab_path: Set the path of Matlab's executable
             - set_matlab_standalone_path: Set the path of Matlab Compiler
-                                          Runtime
+              Runtime
             - set_max_projects: Set the maximum number of projects displayed in
-                                the "Saved projects" menu
+              the "Saved projects" menu
             - set_max_thumbnails: Set max thumbnails number at the data browser
-                                  bottom
+              bottom
             - set_mri_conv_path: Set the MRIManager.jar path
             - setNbAllSlicesMax: Set the maximum number of slices to display in
-                                 the mini viewer
+              the mini viewer
             - set_opened_projects: Set the opened projects
             - set_projects_save_path: Set the folder where the projects are
-                                      saved
+              saved
             - set_radioView: Set the orientation in miniviewer (True for
-                             radiological, False for neurological orientation)
+              radiological, False for neurological orientation)
             - set_referential: Set the DataViewer referential
             - set_resources_path: Set the resources path
             - setShowAllSlices: Set the "show all slices" checkbox of the mini
-                                viewer
+              viewer
             - setSourceImageDir: Set the source directory for project images
             - set_spm_path: Set the path of SPM12 (license version)
             - set_spm_standalone_path: Set the path of SPM12 (standalone
-                                       version)
+              version)
             - setTextColor: Set the text color
             - setThumbnailTag: Set the tag that is displayed in the mini viewer
             - set_use_afni: Set the value of "use afni" checkbox in the
-                            preferences
+              preferences
             - set_use_ants: Set the value of "use ants" checkbox in the
-                            preferences
+              preferences
             - set_use_freesurfer: Set the value of "use freesurfer" checkbox
-                                  in the preferences
+              in the preferences
             - set_use_fsl: Set the value of "use fsl" checkbox in the
-                           preferences
+              preferences
             - set_use_matlab: Set the value of "use matlab" checkbox in the
-                              preferences
+              preferences
             - set_use_matlab_standalone: Set the value of "use matlab
-                                         standalone" checkbox in the
-                                         preferences
+              standalone" checkbox in the preferences
             - set_use_mrtrix: Set the value of "use mrtrix" checkbox in the
-                              preferences
+              preferences
             - set_user_mode: Set the value of "user mode" checkbox in
-                             the preferences
+              the preferences
             - set_use_spm: Set the value of "use spm" checkbox in the
-                           preferences
+              preferences
             - set_use_spm_standalone: Set the value of "use spm standalone"
-                                      checkbox in the preferences
+              checkbox in the preferences
             - setViewerConfig: Set the Viewer configuration neuro or radio
             - setViewerFramerate: Set the Viewer frame rate for automatic
-                                  running time images
+              running time images
             - update_capsul_config: Update a global CapsulEngine object used
-                                    for all operations in MIA application
+              for all operations in MIA application
     """
 
     capsul_engine = None
@@ -204,13 +200,11 @@ class Config:
         """
         Initialization of the Config class
 
-        :param properties_path (str): If provided, the configuration file
-                                      will be loaded/saved from the given
-                                      directory. Otherwise, the regular
-                                      heuristics will be used to determine the
-                                      config path. This option allows to use
-                                      an alternative config directory (for
-                                      tests for instance).
+        :param properties_path: (str) If provided, the configuration file
+         will be loaded / saved from the given directory. Otherwise, the
+         regular heuristics will be used to determine the config path. This
+         option allows to use an alternative config directory (for tests for
+         instance).
         """
 
         if properties_path is not None:
@@ -230,10 +224,10 @@ class Config:
         Configures standalone SPM to use the specified SPM and MATLAB
         Compiler Runtime (MCR) directories.
 
-        :param spm_dir (str): The directory path of the standalone SPM
-                                installation.
-        :param mcr_dir (str): The directory path of the MATLAB Compiler
-                                Runtime (MCR).
+        :param spm_dir: (str) The directory path of the standalone SPM
+         installation.
+        :param mcr_dir: (str) The directory path of the MATLAB Compiler
+         Runtime (MCR).
         """
         self.set_spm_standalone_path(spm_dir)
         self.set_use_spm_standalone(True)
@@ -247,9 +241,9 @@ class Config:
         Configures SPM to use the specified SPM directory with a MATLAB
         installation.
 
-        :param spm_dir (str): The directory path of the SPM installation.
-        :param matlab_path (str): The directory path of the MATLAB
-                                    installation.
+        :param spm_dir: (str) The directory path of the SPM installation.
+        :param matlab_path: (str) The directory path of the MATLAB
+         installation.
         """
         self.set_spm_path(spm_dir)
         self.set_use_spm(True)
@@ -262,8 +256,8 @@ class Config:
         """
         Configures MATLAB without SPM, ensuring that only MATLAB is used.
 
-        :param matlab_path (str): The directory path of the MATLAB
-                                    installation.
+        :param matlab_path: (str) The directory path of the MATLAB
+         installation.
         """
         self.set_matlab_path(matlab_path)
         self.set_use_matlab(True)
@@ -276,8 +270,8 @@ class Config:
         Configures MATLAB Compiler Runtime (MCR) without SPM, ensuring
         that only MCR is used.
 
-        :param mcr_dir (str): The directory path of the MATLAB Compiler
-                                Runtime (MCR).
+        :param mcr_dir: (str) The directory path of the MATLAB Compiler
+         Runtime (MCR).
 
         """
         self.set_matlab_standalone_path(mcr_dir)
@@ -300,8 +294,8 @@ class Config:
         """
         Retrieves the hashed admin password from the configuration.
 
-        :return: The hashed admin password if found in config, False if not
-                 present in config.
+        :Returns: The hashed admin password if found in config, False if not
+         present in config.
         """
 
         try:
@@ -313,7 +307,7 @@ class Config:
     def get_afni_path(self):
         """Get the AFNI path.
 
-        :return (str): Path to AFNI, or "" if unknown.
+        :Returns: (str) Path to AFNI, or "" if unknown.
         """
 
         return self.config.get("afni", "")
@@ -321,7 +315,7 @@ class Config:
     def get_ants_path(self):
         """Get the ANTS path.
 
-        :return (str): Path to ANTS, or "" if unknown.
+        :Returns: (str) Path to ANTS, or "" if unknown.
         """
 
         return self.config.get("ants", "")
@@ -329,14 +323,14 @@ class Config:
     def get_freesurfer_setup(self):
         """Get the freesurfer path.
 
-        :return (str): Path to freesurfer, or "" if unknown.
+        :Returns: (str) Path to freesurfer, or "" if unknown.
         """
         return self.config.get("freesurfer_setup", "")
 
     def getBackgroundColor(self):
         """Get background color.
 
-        :return (str): Background color, or "" if unknown.
+        :Returns: (str) Background color, or "" if unknown.
         """
 
         return self.config.get("background_color", "")
@@ -355,20 +349,20 @@ class Config:
         If requested, it can synchronize the configuration with the current
         Capsul engine state.
 
-        :param sync_from_engine (bool): If True, synchronizes the
-                                        configuration with the current Capsul
-                                        engine settings after building the
-                                        base configuration.
+        :param sync_from_engine: (bool) If True, synchronizes the configuration
+         with the current Capsul engine settings after building the base
+         configuration.
 
-        :return (dict): A nested dictionary containing the complete Capsul
-                        configuration, structured with the following main
-                        sections:
-                        - engine_modules: List of available processing modules
-                        - engine: Contains global and environment-specific
-                                  settings
-                        - tool-specific configurations (SPM, FSL, etc.)
+        :Returns: (dict) A nested dictionary containing the complete Capsul
+         configuration, structured with the following main sections:
 
-        :Private functions:
+            - ``engine_modules``:
+              List of available processing modules
+            - ``engine``:
+              Contains global and environment-specific settings, as well as
+              configurations specific to certain tools (SPM, FSL, etc.)
+
+        Private functions:
             - _configure_spm: Configure SPM settings.
             - _configure_tool:
         """
@@ -384,15 +378,12 @@ class Config:
             path and standalone settings. If found, it reuses that
             configuration's ID; otherwise, it generates a new one.
 
-            :param spm_configs (dict): Dictionary of existing SPM
-                                       configurations where keys are
-                                       config_ids and values are configuration
-                                       dictionaries.
-            :param path (str): Directory path for the SPM configuration.
-            :param standalone (bool): Flag indicating whether this is a
-                                      standalone configuration.
-                                      Defaults to False
-
+            :param spm_configs: (dict) Dictionary of existing SPM
+             configurations where keys are config_ids and values are
+             configuration dictionaries.
+            :param path: (str) Directory path for the SPM configuration.
+            :param standalone: (bool) Flag indicating whether this is a
+             standalone configuration. Defaults to False
             """
             found_config = {}
 
@@ -433,15 +424,13 @@ class Config:
             neuroimaging tools by managing their paths, configurations, and
             setup parameters.
 
-            :param global_config (dict): Global configuration dictionary where
-                                         tool configurations will be stored.
-                                         The tool's settings will be placed
-                                         under the key
-                                         'capsul.engine.module.{tool_name}'.
-            :param tool_name (str): Name of the neuroimaging tool being
-                                    configured (e.g., 'fsl', 'afni', etc.).
-            :param tool_config (dict): Tool-specific configuration dictionary
-                                       that may contain:
+            :param global_config: (dict) Global configuration dictionary where
+             tool configurations will be stored. The tool's settings will be
+             placed under the key 'capsul.engine.module.{tool_name}'.
+            :param tool_name: (str) Name of the neuroimaging tool being
+             configured (e.g., 'fsl', 'afni', etc.).
+            :param tool_config: (dict) Tool-specific configuration dictionary
+             that may contain:
                                        - 'path': Directory path for the tool
                                                  installation
                                        - 'config': Path to tool's
@@ -615,7 +604,7 @@ class Config:
         The engine is created only once when first needed (lazy
         initialization). Subsequent calls return the same instance.
 
-        :return: CapsulEngine: The global CapsulEngine instance.
+        :Returns:: CapsulEngine: The global CapsulEngine instance.
         """
 
         if Config.capsul_engine is None:
@@ -629,7 +618,7 @@ class Config:
     def getChainCursors(self):
         """Get the value of the checkbox 'chain cursor' in miniviewer.
 
-        :return (bool): Value of the checkbox.
+        :Returns: (bool): Value of the checkbox.
         """
 
         return self.config.get("chain_cursors", False)
@@ -637,7 +626,7 @@ class Config:
     def get_fsl_config(self):
         """Get the FSL config file  path.
 
-        :return (str): Path to the fsl/etc/fslconf/fsl.sh file.
+        :Returns: (str): Path to the fsl/etc/fslconf/fsl.sh file.
         """
 
         return self.config.get("fsl_config", "")
@@ -645,7 +634,7 @@ class Config:
     def get_mainwindow_maximized(self):
         """Get the maximized (fullscreen) flag.
 
-        :return (bool): Maximized (fullscreen) flag.
+        :Returns: (bool): Maximized (fullscreen) flag.
         """
 
         return self.config.get("mainwindow_maximized", True)
@@ -653,7 +642,7 @@ class Config:
     def get_mainwindow_size(self):
         """Get the main window size.
 
-        :return (list): Main window size.
+        :Returns: (list): Main window size.
         """
 
         return self.config.get("mainwindow_size", None)
@@ -662,7 +651,7 @@ class Config:
         """
         Retrieves the appropriate Matlab command based on the configuration.
 
-        :return (str): The Matlab executable path or None if no path is
+        :Returns: (str): The Matlab executable path or None if no path is
                        specified.
         """
 
@@ -694,7 +683,7 @@ class Config:
     def get_matlab_path(self):
         """Get the path to the matlab executable.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
 
         return self.config.get("matlab", None)
@@ -702,7 +691,7 @@ class Config:
     def get_matlab_standalone_path(self):
         """Get the path to matlab compiler runtime.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
 
         return self.config.get("matlab_standalone", "")
@@ -712,7 +701,7 @@ class Config:
         Retrieves the maximum number of projects displayed in the
         "Saved projects" menu.
 
-        :return (int): The maximum number of projects. Defaults to 5 if not
+        :Returns: (int): The maximum number of projects. Defaults to 5 if not
                        specified.
         """
 
@@ -723,7 +712,7 @@ class Config:
         Retrieves the maximum number of thumbnails displayed in the
         mini-viewer at the bottom of the data browser.
 
-        :return (int): The maximum number of thumbnails. Defaults to 5 if
+        :Returns: (int): The maximum number of thumbnails. Defaults to 5 if
                        not specified.
         """
         return int(self.config.get("max_thumbnails", 5))
@@ -744,7 +733,7 @@ class Config:
         If outdated parameters (`mia_path`, `mia_user_path`) are found,
         they are automatically updated in the configuration file.
 
-        :return (str): The absolute path to the properties folder.
+        :Returns: (str): The absolute path to the properties folder.
         """
 
         if (
@@ -823,7 +812,7 @@ class Config:
     def get_mri_conv_path(self):
         """Get the MRIManager.jar path.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
 
         return self.config.get("mri_conv_path", "")
@@ -831,7 +820,7 @@ class Config:
     def get_mrtrix_path(self):
         """Get the  mrtrix path
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
 
         return self.config.get("mrtrix", "")
@@ -840,7 +829,7 @@ class Config:
         """
         Get number the maximum number of slices to display in the miniviewer.
 
-        :return (int): Maximum number of slices to display in miniviewer.
+        :Returns: (int): Maximum number of slices to display in miniviewer.
         """
 
         return int(self.config.get("nb_slices_max", "10"))
@@ -848,14 +837,14 @@ class Config:
     def get_opened_projects(self):
         """Get opened projects.
 
-        :return (list): Opened projects.
+        :Returns: (list): Opened projects.
         """
         return self.config.get("opened_projects", [])
 
     def get_projects_save_path(self):
         """Get the path where projects are saved.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
         return self.config.get("projects_save_path", "")
 
@@ -863,14 +852,14 @@ class Config:
         """
         Retrieves the chosen referential from the anatomist_2 data viewer.
 
-        :return (str): "0" for World Coordinates, "1" for Image ref.
+        :Returns: (str): "0" for World Coordinates, "1" for Image ref.
         """
         return self.config.get("ref", "0")
 
     def get_resources_path(self):
         """Get the resources path.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
         return self.config.get("resources_path", "")
 
@@ -879,84 +868,84 @@ class Config:
         Get whether the show_all_slices parameters was enabled or not in
         the miniviewer.
 
-        :return (bool): True if the show_all_slices parameters was enabled.
+        :Returns: (bool): True if the show_all_slices parameters was enabled.
         """
         return self.config.get("show_all_slices", False)
 
     def getSourceImageDir(self):
         """Get the source directory for project images.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
         return self.config.get("source_image_dir", "")
 
     def get_spm_path(self):
         """Get the path of SPM12.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
         return self.config.get("spm", "")
 
     def get_spm_standalone_path(self):
         """Get the path to the SPM12 standalone version.
 
-        :return (str): A path.
+        :Returns: (str): A path.
         """
         return self.config.get("spm_standalone", "")
 
     def getTextColor(self):
         """Get the text color.
 
-        :return (str): The text color.
+        :Returns: (str): The text color.
         """
         return self.config.get("text_color", "")
 
     def getThumbnailTag(self):
         """Get the tag of the thumbnail displayed in the miniviewer.
 
-        :return (str): The tag of the thumbnail displayed in miniviewer.
+        :Returns: (str): The tag of the thumbnail displayed in miniviewer.
         """
         return self.config.get("thumbnail_tag", "SequenceName")
 
     def get_use_afni(self):
         """Get the value of "use afni" checkbox in the preferences.
 
-        :return (bool): The value of "use afni" checkbox.
+        :Returns: (bool): The value of "use afni" checkbox.
         """
         return self.config.get("use_afni", False)
 
     def get_use_ants(self):
         """Get the value of "use ants" checkbox in the preferences.
 
-        :return (bool): The value of "use ants" checkbox.
+        :Returns: (bool): The value of "use ants" checkbox.
         """
         return self.config.get("use_ants", False)
 
     def get_use_clinical(self):
         """Get the clinical mode in the preferences.
 
-        :return (bool): The clinical mode.
+        :Returns: (bool): The clinical mode.
         """
         return self.config.get("clinical_mode", False)
 
     def get_use_fsl(self):
         """Get the value of "use fsl" checkbox in the preferences.
 
-        :return (bool): The value of "use fsl" checkbox.
+        :Returns: (bool): The value of "use fsl" checkbox.
         """
         return self.config.get("use_fsl", False)
 
     def get_use_freesurfer(self):
         """Get the value of "use freesurfer" checkbox in the preferences.
 
-        :return (bool): The value of "use freesurfer" checkbox.
+        :Returns: (bool): The value of "use freesurfer" checkbox.
         """
         return self.config.get("use_freesurfer", False)
 
     def get_use_matlab(self):
         """Get the value of "use matlab" checkbox in the preferences.
 
-        :return (bool): The value of "use matlab" checkbox.
+        :Returns: (bool): The value of "use matlab" checkbox.
         """
         return self.config.get("use_matlab", False)
 
@@ -964,14 +953,14 @@ class Config:
         """
         Get the value of "use matlab standalone" checkbox in the preferences.
 
-        :return (bool): The value of "use matlab standalone" checkbox.
+        :Returns: (bool): The value of "use matlab standalone" checkbox.
         """
         return self.config.get("use_matlab_standalone", False)
 
     def get_user_level(self):
         """Get the user level in the Capsul config.
 
-        :return (int): The user level in the Capsul config.
+        :Returns: (int): The user level in the Capsul config.
         """
         return (
             self.config.get("capsul_config", {})
@@ -984,49 +973,49 @@ class Config:
     def get_user_mode(self):
         """Get if user mode is disabled or enabled in the preferences.
 
-        :return (bool): If True, the user mode is enabled.
+        :Returns: (bool): If True, the user mode is enabled.
         """
         return self.config.get("user_mode", True)
 
     def get_use_mrtrix(self):
         """Get the value of "use mrtrix" checkbox in the preferences.
 
-        :return (bool): The value of "use mrtrix" checkbox.
+        :Returns: (bool): The value of "use mrtrix" checkbox.
         """
         return self.config.get("use_mrtrix", False)
 
     def get_use_spm(self):
         """Get the value of "use spm" checkbox in the preferences.
 
-        :return (bool): The value of "use spm" checkbox.
+        :Returns: (bool): The value of "use spm" checkbox.
         """
         return self.config.get("use_spm", False)
 
     def get_use_spm_standalone(self):
         """Get the value of "use spm standalone" checkbox in the preferences.
 
-        :return (bool): The value of "use spm standalone" checkbox.
+        :Returns: (bool): The value of "use spm standalone" checkbox.
         """
         return self.config.get("use_spm_standalone", False)
 
     def getViewerConfig(self):
         """Get the viewer config "neuro" or "radio", "neuro" by default.
 
-        :return (str): The viewer config ("neuro" or "radio").
+        :Returns: (str): The viewer config ("neuro" or "radio").
         """
         return self.config.get("config_NeuRad", "neuro")
 
     def getViewerFramerate(self):
         """Get the Viewer framerate.
 
-        :return (str): The Viewer framerat (ex. "5").
+        :Returns: (str): The Viewer framerat (ex. "5").
         """
         return self.config.get("im_sec", "5")
 
     def isAutoSave(self):
         """Get if the auto-save mode is enabled or not.
 
-        :return (bool): If True, auto-save mode is enabled.
+        :Returns: (bool): If True, auto-save mode is enabled.
         """
         return self.config.get("auto_save", False)
 
@@ -1034,7 +1023,7 @@ class Config:
         """
         Gets whether the controller display is of type V1.
 
-        :return (bool): If True, V1 controller display.
+        :Returns: (bool): If True, V1 controller display.
         """
         return self.config.get("control_V1", False)
 
@@ -1042,7 +1031,7 @@ class Config:
         """
         Get if the display in miniviewer is in radiological orientation.
 
-        :return (bool): If True, radiological orientation,
+        :Returns: (bool): If True, radiological orientation,
                         otherwise neurological orientation.
         """
         return self.config.get("radio_view", True)
@@ -1054,7 +1043,7 @@ class Config:
          properties directory, decrypt it using Fernet encryption, and
          parse it as YAML.
 
-        :return (dict): Parsed configuration from the YAML file.
+        :Returns: (dict): Parsed configuration from the YAML file.
                         Returns empty dict if parsing fails.
         """
         fernet = Fernet(ENCRYPTION_KEY)
@@ -1195,7 +1184,7 @@ class Config:
             :param module_name (str): The name of the module to retrieve the
                                       configuration for.
 
-            :return (dict): The configuration dictionary of the specified
+            :Returns: (dict): The configuration dictionary of the specified
                             module, or an empty dictionary if not found.
             """
             module_path = f"capsul.engine.module.{module_name}"
@@ -1658,7 +1647,7 @@ class Config:
         engine modules are loaded and configurations are properly imported
         from the saved settings.
 
-        :return (capsul.engine.CapsulEngine): The updated CapsulEngine
+        :Returns: (capsul.engine.CapsulEngine): The updated CapsulEngine
                                               object, or None if the engine
                                               is not initialized.
         """

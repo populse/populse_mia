@@ -10,95 +10,32 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
+
 import sys
+from pathlib import Path
 
-if os.path.isdir(
-    os.path.join(
-        os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-        ),
-        "populse_mia",
-    )
-):
+# Resolve the root directory (4 levels up from __file__)
+root = Path(__file__).resolve().parents[3]
+
+# Optional sibling packages: (folder_name, relative_subpath_to_add)
+SIBLING_PACKAGES = [
+    ("populse_db", "populse_db/python"),
+    ("mia_processes", "mia_processes"),
+    ("capsul", "capsul"),
+    ("soma-base", "soma-base/python"),
+    ("soma-workflow", "soma-workflow/python"),
+]
+
+if (root / "populse_mia").is_dir():
     print("\nGenerating sphinx documentation in developer mode ...")
-    print(" - Adding {} to the sys.path ...".format(os.path.abspath("../..")))
-    sys.path.insert(0, os.path.abspath("../.."))
+    print(f" - Adding {Path('../..').resolve()} to the sys.path ...")
+    sys.path.insert(0, str(Path("../..").resolve()))
 
-    if os.path.isdir(
-        os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "populse_db",
-        )
-    ):
-        print(
-            " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../populse_db/python")
-            )
-        )
-        sys.path.insert(1, os.path.abspath("../../../populse_db/python"))
-
-    if os.path.isdir(
-        os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "mia_processes",
-        )
-    ):
-        print(
-            " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../mia_processes")
-            )
-        )
-        sys.path.insert(1, os.path.abspath("../../../mia_processes"))
-
-    if os.path.isdir(
-        os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "capsul",
-        )
-    ):
-        print(
-            " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../capsul")
-            )
-        )
-        sys.path.insert(1, os.path.abspath("../../../capsul"))
-
-    if os.path.isdir(
-        os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "soma-base",
-        )
-    ):
-        print(
-            " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../soma-base/python")
-            )
-        )
-        sys.path.insert(1, os.path.abspath("../../../soma-base/python"))
-
-    if os.path.isdir(
-        os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "soma-workflow",
-        )
-    ):
-        print(
-            " - Adding {} to the sys.path ...".format(
-                os.path.abspath("../../../soma-workflow/python")
-            )
-        )
-        sys.path.insert(1, os.path.abspath("../../../soma-workflow/python"))
+    for folder, subpath in SIBLING_PACKAGES:
+        path = Path("../../..") / subpath
+        if (root / folder).is_dir():
+            print(f" - Adding {path.resolve()} to the sys.path ...")
+            sys.path.insert(1, str(path.resolve()))
 
 import populse_mia
 
@@ -125,11 +62,11 @@ release = populse_mia.__version__
 # ones.
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
     "sphinx.ext.viewcode",
-    # "sphinx.ext.autosectionlabel",
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
-    "sphinxcontrib.mermaid",
+    "sphinx.ext.napoleon",
     "myst_parser",
 ]
 
@@ -148,7 +85,9 @@ except ImportError:
         "pip install sphinxcontrib.mermaid\n",
         file=sys.stderr,
     )
-    pass
+
+autosummary_generate = True
+autosummary_imported_members = False
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -174,8 +113,8 @@ language = "en"
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    "populse_mia.#image_viewer.rst",
-    "populse_mia.sources_images.rst",
+    "**.#*",
+    "**/*~",
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -301,7 +240,13 @@ epub_exclude_files = ["search.html"]
 
 
 autodoc_default_options = {
+    "members": True,
+    "private-members": True,
+    "undoc-members": True,
     "special-members": "__init__",
+    "member-order": "bysource",
+    "show-inheritance": True,
+    "imported-members": False,
 }
 
 
