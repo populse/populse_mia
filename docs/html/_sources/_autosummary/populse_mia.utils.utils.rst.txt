@@ -1,0 +1,40 @@
+populse\_mia.utils.utils
+========================
+
+.. automodule:: populse_mia.utils.utils
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      check_python_version
+      check_value_type
+      dict4runtime_update
+      get_db_field_value
+      get_document_names
+      get_field_names
+      get_shown_tags
+      get_value
+      launch_mia
+      message_already_exists
+      remove_document
+      safe_connect
+      safe_disconnect
+      set_db_field_value
+      set_filters_directory_as_default
+      set_item_data
+      set_projects_directory_as_default
+      table_to_database
+      type_name
+      update_auto_inheritance
+      verCmp
+      verify_processes
+      verify_setup
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PackagesInstall
+   

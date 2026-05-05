@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>nipype.interfaces.cat12.preprocess &#8212; populse_mia 3.0.0-dev+1a45e211 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../_static/documentation_options.js?v=d126124d"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
+          <span>populse_mia 3.0.0-dev+1a45e211 documentation</span></a></h1>
+        <h2 class="heading"><span>nipype.interfaces.cat12.preprocess</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for nipype.interfaces.cat12.preprocess</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">InputMultiPath</span><span class="p">,</span>
+    <span class="n">TraitedSpec</span><span class="p">,</span>
+    <span class="n">traits</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">isdefined</span><span class="p">,</span>
+    <span class="n">File</span><span class="p">,</span>
+    <span class="n">Str</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.cat12.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cell</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.spm</span><span class="w"> </span><span class="kn">import</span> <span class="n">SPMCommand</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.spm.base</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SPMCommandInputSpec</span><span class="p">,</span>
+    <span class="n">ImageFileSPM</span><span class="p">,</span>
+    <span class="n">scans_for_fnames</span><span class="p">,</span>
+    <span class="n">scans_for_fname</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.utils.filemanip</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_filename</span><span class="p">,</span> <span class="n">fname_presuffix</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12SegmentInputSpec</span><span class="p">(</span><span class="n">SPMCommandInputSpec</span><span class="p">):</span>
+    <span class="n">in_files</span> <span class="o">=</span> <span class="n">InputMultiPath</span><span class="p">(</span>
+        <span class="n">ImageFileSPM</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;file to segment&quot;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_tpm</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Tissue Probability Map. Select the tissue probability image that includes 6 tissue probability &quot;</span>
+        <span class="s2">&quot;classes for (1) grey matter, (2) white matter, (3) cerebrospinal fluid, (4) bone, (5) non-brain  &quot;</span>
+        <span class="s2">&quot;soft tissue, and (6) the background.  CAT uses the TPM only for the initial SPM segmentation.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">tpm</span> <span class="o">=</span> <span class="n">InputMultiPath</span><span class="p">(</span>
+        <span class="n">ImageFileSPM</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;tpm&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_tpm</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_shoots_tpm</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Shooting Template </span><span class="si">%d</span><span class="s2">.  The Shooting template must be in multi-volume nifti format and should contain GM,&quot;</span>
+        <span class="s2">&quot; WM, and background segmentations and have to be saved with at least 16 bit. &quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">shooting_tpm</span> <span class="o">=</span> <span class="n">ImageFileSPM</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.registration.shooting.shootingtpm&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_shoots_tpm</span> <span class="o">%</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">shooting_tpm_template_1</span> <span class="o">=</span> <span class="n">ImageFileSPM</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_shoots_tpm</span> <span class="o">%</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">shooting_tpm_template_2</span> <span class="o">=</span> <span class="n">ImageFileSPM</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_shoots_tpm</span> <span class="o">%</span> <span class="mi">2</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">shooting_tpm_template_3</span> <span class="o">=</span> <span class="n">ImageFileSPM</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_shoots_tpm</span> <span class="o">%</span> <span class="mi">3</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">shooting_tpm_template_4</span> <span class="o">=</span> <span class="n">ImageFileSPM</span><span class="p">(</span>
+        <span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_shoots_tpm</span> <span class="o">%</span> <span class="mi">4</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+
+    <span class="n">n_jobs</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;nproc&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Number of threads&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_affine_reg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Affine Regularization. The procedure is a local optimisation, so it needs reasonable initial &quot;</span>
+        <span class="s2">&quot;starting estimates. Images should be placed in approximate alignment using the Display &quot;</span>
+        <span class="s2">&quot;function of SPM before beginning.  A Mutual Information affine registration with the tissue &quot;</span>
+        <span class="s2">&quot;probability maps (D&quot;</span>
+        <span class="s2">&quot;Agostino et al, 2004) is used to achieve approximate alignment.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">affine_regularization</span> <span class="o">=</span> <span class="n">Str</span><span class="p">(</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;mni&quot;</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;opts.affreg&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_affine_reg</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_bias_acc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Strength of the SPM inhomogeneity (bias) correction that simultaneously controls the SPM &quot;</span>
+        <span class="s2">&quot;biasreg, biasfwhm, samp (resolution), and tol (iteration) parameter.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">power_spm_inhomogeneity_correction</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;opts.biasacc&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_bias_acc</span>
+    <span class="p">)</span>
+    <span class="c1"># Extended options for CAT12 preprocessing</span>
+    <span class="n">_help_app</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Affine registration and SPM preprocessing can fail in some subjects with deviating anatomy (e.g. &quot;</span>
+        <span class="s2">&quot;other species/neonates) or in images with strong signal inhomogeneities, or untypical intensities &quot;</span>
+        <span class="s2">&quot;(e.g. synthetic images). An initial bias correction can help to reduce such problems (see details &quot;</span>
+        <span class="s1">&#39;below). Recommended are the &quot;default&quot; and &quot;full&quot; option.&#39;</span>
+    <span class="p">)</span>
+    <span class="n">affine_preprocessing</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1070</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.APP&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_app</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_initial_seg</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;In rare cases the Unified Segmentation can fail in highly abnormal brains, where e.g. the &quot;</span>
+        <span class="s2">&quot;cerebrospinal fluid of superlarge ventricles (hydrocephalus) were classified as white &quot;</span>
+        <span class="s2">&quot;matter. However, if the affine registration is correct, the AMAP segmentation with an &quot;</span>
+        <span class="s2">&quot;prior-independent k-means initialization can be used to replace the SPM brain tissue &quot;</span>
+        <span class="s2">&quot;classification. Moreover, if the default Dartel and Shooting registrations will fail then &quot;</span>
+        <span class="s1">&#39;rhe &quot;Optimized Shooting - superlarge ventricles&quot; option for &quot;Spatial registration&quot; is ! &#39;</span>
+        <span class="s2">&quot;required Values: </span><span class="se">\n</span><span class="s2">none: 0;</span><span class="se">\n</span><span class="s2">light: 1;</span><span class="se">\n</span><span class="s2">full: 2;</span><span class="se">\n</span><span class="s2">default: 1070.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">initial_segmentation</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.spm_kamap&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_initial_seg</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_las</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Additionally to WM-inhomogeneities, GM intensity can vary across different regions such as the motor&quot;</span>
+        <span class="s2">&quot; cortex, the basal ganglia, or the occipital lobe. These changes have an anatomical background &quot;</span>
+        <span class="s2">&quot;(e.g. iron content, myelinization), but are dependent on the MR-protocol and often lead to &quot;</span>
+        <span class="s2">&quot;underestimation of GM at higher intensities and overestimation of CSF at lower intensities. &quot;</span>
+        <span class="s2">&quot;Therefore, a local intensity transformation of all tissue classes is used to reduce these effects in&quot;</span>
+        <span class="s2">&quot; the image. This local adaptive segmentation (LAS) is applied before the final AMAP segmentation.&quot;</span>
+        <span class="s2">&quot;Possible Values: </span><span class="se">\n</span><span class="s2">SPM Unified Segmentation: 0 </span><span class="se">\n</span><span class="s2">k-means AMAP: 2&quot;</span>
+    <span class="p">)</span>
+    <span class="n">local_adaptive_seg</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="mf">0.5</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.LASstr&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_las</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_gcutstr</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Method of initial skull-stripping before AMAP segmentation. The SPM approach works quite stable &quot;</span>
+        <span class="s2">&quot;for the majority of data. However, in some rare cases parts of GM (i.e. in frontal lobe) might &quot;</span>
+        <span class="s2">&quot;be cut. If this happens the GCUT approach is a good alternative. GCUT is a graph-cut/region-&quot;</span>
+        <span class="s2">&quot;growing approach starting from the WM area. APRG (adaptive probability region-growing) is a new&quot;</span>
+        <span class="s2">&quot; method that refines the probability maps of the SPM approach by region-growing techniques of &quot;</span>
+        <span class="s2">&quot;the gcut approach with a final surface-based optimization strategy. This is currently the method&quot;</span>
+        <span class="s2">&quot; with the most accurate and reliable results. If you use already skull-stripped data you can &quot;</span>
+        <span class="s2">&quot;turn off skull-stripping although this is automatically detected in most cases. Please note that &quot;</span>
+        <span class="s2">&quot;the choice of the skull-stripping method will also influence the estimation of TIV, because the&quot;</span>
+        <span class="s2">&quot; methods mainly differ in the handling of the outer CSF around the cortical surface. &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Possible Values:</span><span class="se">\n</span><span class="s2"> - none (already skull-stripped): -1;</span><span class="se">\n</span><span class="s2"> - SPM approach: 0; &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> - GCUT approach: 0.50; </span><span class="se">\n</span><span class="s2"> - APRG approach: 2&quot;</span>
+    <span class="p">)</span>
+    <span class="n">skull_strip</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="mi">2</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.gcutstr&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_gcutstr</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_wmhc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;WARNING: Please note that the detection of WM hyperintensies is still under development and does &quot;</span>
+        <span class="s2">&quot;not have the same accuracy as approaches that additionally consider FLAIR images (e.g. Lesion &quot;</span>
+        <span class="s2">&quot;Segmentation Toolbox)! In aging or (neurodegenerative) diseases WM intensity can be reduced &quot;</span>
+        <span class="s2">&quot;locally in T1 or increased in T2/PD images. These so-called WM hyperintensies (WMHs) can lead to &quot;</span>
+        <span class="s2">&quot;preprocessing errors. Large GM areas next to the ventricle can cause normalization problems. &quot;</span>
+        <span class="s2">&quot;Therefore, a temporary correction for normalization is useful if WMHs are expected. CAT allows &quot;</span>
+        <span class="s2">&quot;different ways to handle WMHs: &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">0) No Correction (handled as GM). </span><span class="se">\n</span><span class="s2">1) Temporary (internal) correction as WM for spatial &quot;</span>
+        <span class="s2">&quot;normalization and estimation of cortical thickness. </span><span class="se">\n</span><span class="s2">2) Permanent correction to WM. &quot;</span>
+    <span class="p">)</span>
+    <span class="n">wm_hyper_intensity_correction</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.WMHC&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_wmhc</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">_help_vox</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;The (isotropic) voxel sizes of any spatially normalised written images. A non-finite value will be &quot;</span>
+        <span class="s2">&quot;replaced by the average voxel size of the tissue probability maps used by the segmentation.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.vox&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_vox</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">_help_resampling</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Internal resampling for preprocessing.</span><span class="se">\n</span><span class="s2"> The default fixed image resolution offers a good &quot;</span>
+        <span class="s2">&quot;trade-off between optimal quality and preprocessing time and memory demands. Standard &quot;</span>
+        <span class="s2">&quot;structural data with a voxel resolution around 1mm or even data with high in-plane resolution&quot;</span>
+        <span class="s2">&quot; and large slice thickness (e.g. 0.5x0.5x1.5 mm) will benefit from this setting. If you have&quot;</span>
+        <span class="s1">&#39; higher native resolutions the highres option &quot;Fixed 0.8 mm&quot; will sometimes offer slightly&#39;</span>
+        <span class="s2">&quot; better preprocessing quality with an increase of preprocessing time and memory demands. In&quot;</span>
+        <span class="s2">&quot; case of even higher resolutions and high signal-to-noise ratio (e.g. for 7 T data) the &quot;</span>
+        <span class="s1">&#39;&quot;Best native&quot; option will process the data on the highest native resolution. A resolution&#39;</span>
+        <span class="s2">&quot; of 0.4x0.7x1.0 mm will be interpolated to 0.4x0.4x0.4 mm. A tolerance range of 0.1 mm is &quot;</span>
+        <span class="s2">&quot;used to avoid interpolation artifacts, i.e. a resolution of 0.95x1.01x1.08 mm will not be &quot;</span>
+        <span class="s1">&#39;interpolated in case of the &quot;Fixed 1.0 mm&quot;! This &quot;optimal&quot; option prefers an isotropic voxel &#39;</span>
+        <span class="s2">&quot;size with at least 1.1 mm that is controlled by the median voxel size and a volume term that &quot;</span>
+        <span class="s2">&quot;penalizes highly anisotropic voxels.&quot;</span>
+        <span class="s2">&quot;Values:</span><span class="se">\n</span><span class="s2">Optimal: [1.0 0.1]</span><span class="se">\n</span><span class="s2">Fixed 1.0 mm: [1.0 0.1];</span><span class="se">\n</span><span class="s2">Fixed 0.8 mm:[0.8 0.1]&quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Best native: [0.5 0.1]&quot;</span>
+    <span class="p">)</span>
+    <span class="n">internal_resampling_process</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span><span class="mf">0.1</span><span class="p">),</span>
+        <span class="n">minlen</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">maxlen</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.restypes.optimal&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;help_resampling&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">_errors_help</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Error handling.</span><span class="se">\n</span><span class="s2">Try to catch preprocessing errors and continue with the next data set or ignore &quot;</span>
+        <span class="s2">&quot;all warnings (e.g., bad intensities) and use an experimental pipeline which is still in &quot;</span>
+        <span class="s2">&quot;development. In case of errors, CAT continues with the next subject if this option is enabled. If &quot;</span>
+        <span class="s2">&quot;the experimental option with backup functions is selected and warnings occur, CAT will try to use&quot;</span>
+        <span class="s2">&quot; backup routines and skip some processing steps which require good T1 contrasts (e.g., LAS). If &quot;</span>
+        <span class="s2">&quot;you want to avoid processing of critical data and ensure that only the main pipeline is used then&quot;</span>
+        <span class="s1">&#39; select the option &quot;Ignore errors (continue with the next subject)&quot;. It is strongly recommended &#39;</span>
+        <span class="s2">&quot;to check for preprocessing problems, especially with non-T1 contrasts. &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Values:</span><span class="se">\n</span><span class="s2">none: 0,</span><span class="se">\n</span><span class="s2">default: 1,</span><span class="se">\n</span><span class="s2">details: 2.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">ignore_errors</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;extopts.ignoreErrors&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_errors_help</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Writing options</span>
+    <span class="n">_help_surf</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Surface and thickness estimation. </span><span class="se">\n</span><span class="s2">Use projection-based thickness (PBT) (Dahnke et al. 2012) to&quot;</span>
+        <span class="s2">&quot; estimate cortical thickness and to create the central cortical surface for left and right &quot;</span>
+        <span class="s2">&quot;hemisphere. Surface reconstruction includes topology correction (Yotter et al. 2011), spherical &quot;</span>
+        <span class="s2">&quot;inflation (Yotter et al.) and spherical registration. Additionally you can also estimate surface &quot;</span>
+        <span class="s2">&quot;parameters such as gyrification, cortical complexity or sulcal depth that can be subsequently &quot;</span>
+        <span class="s2">&quot;analyzed at each vertex of the surface. Please note, that surface reconstruction and spherical &quot;</span>
+        <span class="s2">&quot;registration additionally requires about 20-60 min of computation time. A fast (1-3 min) surface &quot;</span>
+        <span class="s2">&quot;pipeline is available for visual preview (e.g., to check preprocessing quality) in the &quot;</span>
+        <span class="s2">&quot;cross-sectional, but not in the longitudinal pipeline.  Only the initial surfaces are created with &quot;</span>
+        <span class="s2">&quot;a lower resolution and without topology correction, spherical mapping and surface registration. &quot;</span>
+        <span class="s2">&quot;Please note that the files with the estimated surface thickness can therefore not be used for &quot;</span>
+        <span class="s1">&#39;further analysis!  For distinction, these files contain &quot;preview&quot; in their filename and they&#39;</span>
+        <span class="s2">&quot; are not available as batch dependencies objects. &quot;</span>
+    <span class="p">)</span>
+    <span class="n">surface_and_thickness_estimation</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;surface&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_surf</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">surface_measures</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="mi">1</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.surf_measures&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract surface measures&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Templates</span>
+    <span class="n">neuromorphometrics</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.ROImenu.atlases.neuromorphometrics&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract brain measures for Neuromorphometrics template&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">lpba40</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.ROImenu.atlases.lpba40&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract brain measures for LPBA40 template&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">cobra</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.ROImenu.atlases.hammers&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract brain measures for COBRA template&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hammers</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.ROImenu.atlases.cobra&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract brain measures for Hammers template&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">own_atlas</span> <span class="o">=</span> <span class="n">InputMultiPath</span><span class="p">(</span>
+        <span class="n">ImageFileSPM</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.ROImenu.atlases.ownatlas&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Extract brain measures for a given template&quot;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Grey matter</span>
+    <span class="n">gm_output_native</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.GM.native&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save modulated grey matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">gm_output_modulated</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.GM.mod&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save native grey matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">gm_output_dartel</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.GM.dartel&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel grey matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># White matter</span>
+    <span class="n">_wm_desc</span> <span class="o">=</span> <span class="s2">&quot;Options to save white matter images.&quot;</span>
+    <span class="n">wm_output_native</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.WM.native&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel white matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">wm_output_modulated</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.WM.mod&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel white matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">wm_output_dartel</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.WM.dartel&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel white matter images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># CSF matter</span>
+    <span class="n">_csf_desc</span> <span class="o">=</span> <span class="s2">&quot;Options to save CSF images.&quot;</span>
+    <span class="n">csf_output_native</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.CSF.native&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel CSF images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">csf_output_modulated</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.CSF.mod&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel CSF images.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">csf_output_dartel</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.CSF.dartel&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save dartel CSF images.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Labels</span>
+    <span class="n">_help_label_desc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;This is the option to save a labeled version of your segmentations in the </span><span class="si">%s</span><span class="s2"> space for fast visual &quot;</span>
+        <span class="s2">&quot;comparison. Labels are saved as Partial Volume Estimation (PVE) values with different mix &quot;</span>
+        <span class="s2">&quot;classes for GM-WM (2.5) and GM-CSF (1.5). BG=0, CSF=1, GM=2, WM=3, WMH=4 (if WMHC=3), &quot;</span>
+        <span class="s2">&quot;SL=1.5 (if SLC)&quot;</span>
+    <span class="p">)</span>
+    <span class="n">label_native</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.label.native&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_label_desc</span> <span class="o">%</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">label_warped</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.label.warped&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_label_desc</span> <span class="o">%</span> <span class="s2">&quot;warped&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">label_dartel</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.label.dartel&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_label_desc</span> <span class="o">%</span> <span class="s2">&quot;dartel&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">output_labelnative</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.labelnative&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_label_desc</span> <span class="o">%</span> <span class="s2">&quot;native&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Bias</span>
+    <span class="n">save_bias_corrected</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.bias.warped&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Save bias corrected image&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># las</span>
+    <span class="n">_las_desc</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;This is the option to save a bias, noise, and local intensity corrected version of the original T1&quot;</span>
+        <span class="s2">&quot; image in the </span><span class="si">%s</span><span class="s2"> space. MR images are usually corrupted by a smooth, spatially varying artifact that modulates the&quot;</span>
+        <span class="s2">&quot; intensity of the image (bias). These artifacts, although not usually a problem for visual &quot;</span>
+        <span class="s2">&quot;inspection, can impede automated processing of the images. The bias corrected version should have &quot;</span>
+        <span class="s2">&quot;more uniform intensities within the different types of tissues and can be saved in native space &quot;</span>
+        <span class="s2">&quot;and/or normalised. Noise is corrected by an adaptive non-local mean (NLM) filter (Manjon 2008, &quot;</span>
+        <span class="s2">&quot;Medical Image Analysis 12).&quot;</span>
+    <span class="p">)</span>
+    <span class="n">las_native</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.las.native&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_las_desc</span> <span class="o">%</span> <span class="s2">&quot;native&quot;</span>
+    <span class="p">)</span>
+    <span class="n">las_warped</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.las.warped&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_las_desc</span> <span class="o">%</span> <span class="s2">&quot;warped&quot;</span>
+    <span class="p">)</span>
+    <span class="n">las_dartel</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">False</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.las.dartel&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_las_desc</span> <span class="o">%</span> <span class="s2">&quot;dartel&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Jacobian Warped</span>
+    <span class="n">_help_jacobian</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;This is the option to save the Jacobian determinant, which expresses local volume changes. This&quot;</span>
+        <span class="s2">&quot; image can be used in a pure deformation based morphometry (DBM) design. Please note that the&quot;</span>
+        <span class="s2">&quot; affine part of the deformation field is ignored. Thus, there is no need for any additional&quot;</span>
+        <span class="s2">&quot; correction for different brain sizes using ICV.&quot;</span>
+    <span class="p">)</span>
+    <span class="n">jacobianwarped</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.jacobianwarped&quot;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="n">_help_jacobian</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Deformation Fields</span>
+    <span class="n">_help_warp</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;Deformation fields can be saved to disk, and used by the Deformations Utility and/or applied to &quot;</span>
+        <span class="s2">&quot;coregistered data from other modalities (e.g. fMRI). For spatially normalising images to MNI space,&quot;</span>
+        <span class="s2">&quot; you will need the forward deformation, whereas for spatially normalising (eg) GIFTI surface files,&quot;</span>
+        <span class="s2">&quot; you&quot;</span>
+        <span class="s2">&quot;ll need the inverse. It is also possible to transform data in MNI space on to the individual&quot;</span>
+        <span class="s2">&quot; subject, which also requires the inverse transform. Deformations are saved as .nii files, which&quot;</span>
+        <span class="s2">&quot; contain three volumes to encode the x, y and z coordinates.&quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Values: No:[0 0];</span><span class="se">\n</span><span class="s2">Image-&gt;Template (forward): [1 0];</span><span class="se">\n</span><span class="s2">Template-&gt;Image (inverse): [0 1]; &quot;</span>
+        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">inverse + forward: [1 1]&quot;</span>
+    <span class="p">)</span>
+    <span class="n">warps</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">(</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+        <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+        <span class="n">minlen</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">maxlen</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;output.warps&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="n">_help_warp</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12SegmentOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="c1">##########################################</span>
+    <span class="c1"># Label XML files</span>
+    <span class="c1">##########################################</span>
+    <span class="n">label_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span>
+        <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Files with the measures extracted for OI ands ROIs&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">label_rois</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Files with thickness values of ROIs.&quot;</span><span class="p">)</span>
+    <span class="n">label_roi</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Files with thickness values of ROI.&quot;</span><span class="p">)</span>
+
+    <span class="c1">##########################################</span>
+    <span class="c1"># MRI .nii files</span>
+    <span class="c1">##########################################</span>
+
+    <span class="n">mri_images</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Different segmented images.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Grey Matter</span>
+    <span class="n">gm_modulated_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Grey matter modulated image.&quot;</span><span class="p">)</span>
+    <span class="n">gm_dartel_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Grey matter dartel image.&quot;</span><span class="p">)</span>
+    <span class="n">gm_native_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Grey matter native space.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># White Matter</span>
+    <span class="n">wm_modulated_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;White matter modulated image.&quot;</span><span class="p">)</span>
+    <span class="n">wm_dartel_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;White matter dartel image.&quot;</span><span class="p">)</span>
+    <span class="n">wm_native_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;White matter in native space.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># CSF</span>
+    <span class="n">csf_modulated_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;CSF modulated image.&quot;</span><span class="p">)</span>
+    <span class="n">csf_dartel_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;CSF dartel image.&quot;</span><span class="p">)</span>
+    <span class="n">csf_native_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;CSF in native space.&quot;</span><span class="p">)</span>
+
+    <span class="n">bias_corrected_image</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Bias corrected image&quot;</span><span class="p">)</span>
+    <span class="c1">##########################################</span>
+    <span class="c1"># Surface files</span>
+    <span class="c1">##########################################</span>
+
+    <span class="n">surface_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Surface files&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Right hemisphere</span>
+    <span class="n">rh_central_surface</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Central right hemisphere files&quot;</span><span class="p">)</span>
+    <span class="n">rh_sphere_surface</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Sphere right hemisphere files&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Left hemisphere</span>
+    <span class="n">lh_central_surface</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Central left hemisphere files&quot;</span><span class="p">)</span>
+    <span class="n">lh_sphere_surface</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Sphere left hemisphere files&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Report files</span>
+    <span class="n">report_files</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Report files.&quot;</span><span class="p">)</span>
+    <span class="n">report</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Report file.&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="CAT12Segment">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.CAT12Segment">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12Segment</span><span class="p">(</span><span class="n">SPMCommand</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    CAT12: Segmentation</span>
+
+<span class="sd">    This toolbox is an extension to the default segmentation in SPM12, but uses a completely different segmentation</span>
+<span class="sd">    approach.</span>
+<span class="sd">    The segmentation approach is based on an Adaptive Maximum A Posterior (MAP) technique without the need for a priori</span>
+<span class="sd">    information about tissue probabilities. That is, the Tissue Probability Maps (TPM) are not used constantly in the</span>
+<span class="sd">    sense of the classical Unified Segmentation approach (Ashburner et. al. 2005), but just for spatial normalization.</span>
+<span class="sd">    The following AMAP estimation is adaptive in the sense that local variations of the parameters (i.e., means and</span>
+<span class="sd">    variance) are modeled as slowly varying spatial functions (Rajapakse et al. 1997). This not only accounts for</span>
+<span class="sd">    intensity inhomogeneities but also for other local variations of intensity.</span>
+<span class="sd">    Additionally, the segmentation approach uses a Partial Volume Estimation (PVE) with a simplified mixed model of at</span>
+<span class="sd">    most two tissue types (Tohka et al. 2004). We start with an initial segmentation into three pure classes: gray</span>
+<span class="sd">    matter (GM), white matter (WM), and cerebrospinal fluid (CSF) based on the above described AMAP estimation. The</span>
+<span class="sd">    initial segmentation is followed by a PVE of two additional mixed classes: GM-WM and GM-CSF. This results in an</span>
+<span class="sd">    estimation of the amount (or fraction) of each pure tissue type present in every voxel (as single voxels - given by</span>
+<span class="sd">    Another important extension to the SPM12 segmentation is the integration of the Dartel or Geodesic Shooting</span>
+<span class="sd">    registration into the toolbox by an already existing Dartel/Shooting template in MNI space. This template was</span>
+<span class="sd">    derived from 555 healthy control subjects of the IXI-database (http://www.brain-development.org) and provides the</span>
+<span class="sd">    several Dartel or Shooting iterations. Thus, for the majority of studies the creation of sample-specific templates</span>
+<span class="sd">    is not necessary anymore and is mainly recommended for children data.&#39;};</span>
+
+<span class="sd">    http://www.neuro.uni-jena.de/cat12/CAT12-Manual.pdf#page=15</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; path_mr = &#39;structural.nii&#39;</span>
+<span class="sd">    &gt;&gt;&gt; cat = CAT12Segment(in_files=path_mr)</span>
+<span class="sd">    &gt;&gt;&gt; cat.run() # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">CAT12SegmentInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">CAT12SegmentOutputSpec</span>
+
+<div class="viewcode-block" id="CAT12Segment.__init__">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.CAT12Segment.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">_local_version</span> <span class="o">=</span> <span class="n">SPMCommand</span><span class="p">()</span><span class="o">.</span><span class="n">version</span>
+        <span class="k">if</span> <span class="n">_local_version</span> <span class="ow">and</span> <span class="s2">&quot;12.&quot;</span> <span class="ow">in</span> <span class="n">_local_version</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_jobtype</span> <span class="o">=</span> <span class="s2">&quot;tools&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_jobname</span> <span class="o">=</span> <span class="s2">&quot;cat.estwrite&quot;</span>
+
+        <span class="n">SPMCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAT12Segment._format_arg">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.CAT12Segment._format_arg">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_format_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert input to appropriate format for spm&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;in_files&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">scans_for_fnames</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">scans_for_fname</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">opt</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;tpm&quot;</span><span class="p">,</span> <span class="s2">&quot;shooting_tpm&quot;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="n">Cell2Str</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_format_arg</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CAT12Segment._list_outputs">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.CAT12Segment._list_outputs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">pth</span><span class="p">,</span> <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">split_filename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;mri_images&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">mri</span><span class="p">)</span> <span class="k">for</span> <span class="n">mri</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;mri/*&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">mri</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">tidx</span><span class="p">,</span> <span class="n">tissue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s2">&quot;gm&quot;</span><span class="p">,</span> <span class="s2">&quot;wm&quot;</span><span class="p">,</span> <span class="s2">&quot;csf&quot;</span><span class="p">]):</span>
+            <span class="k">for</span> <span class="n">image</span><span class="p">,</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">&quot;modulated&quot;</span><span class="p">,</span> <span class="s2">&quot;mw&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;dartel&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;native&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)]:</span>
+                <span class="n">outtype</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s2">_output_</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">isdefined</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outtype</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outtype</span>
+                <span class="p">):</span>
+                    <span class="n">outfield</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tissue</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">image</span><span class="si">}</span><span class="s2">_image&quot;</span>
+                    <span class="n">prefix</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mri&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">p</span><span class="si">{</span><span class="n">tidx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">image</span> <span class="o">!=</span> <span class="s2">&quot;dartel&quot;</span><span class="p">:</span>
+                        <span class="n">outputs</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">outputs</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+                            <span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;_rigid&quot;</span>
+                        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">save_bias_corrected</span><span class="p">:</span>
+            <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;bias_corrected_image&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+                <span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;mri&quot;</span><span class="p">,</span> <span class="s2">&quot;wmi&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;surface_files&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">surf</span><span class="p">)</span> <span class="k">for</span> <span class="n">surf</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;surf/*&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">surf</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;rh&quot;</span><span class="p">,</span> <span class="s2">&quot;lh&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;central&quot;</span><span class="p">,</span> <span class="s2">&quot;sphere&quot;</span><span class="p">]:</span>
+                <span class="n">outfield</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">_surface&quot;</span>
+                <span class="n">outputs</span><span class="p">[</span><span class="n">outfield</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+                    <span class="n">f</span><span class="p">,</span>
+                    <span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;surf&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">),</span>
+                    <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.gii&quot;</span><span class="p">,</span>
+                    <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="p">)</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;report_files&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;report_files&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">report</span><span class="p">)</span> <span class="k">for</span> <span class="n">report</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;report/*&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">report</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;report&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;report&quot;</span><span class="p">,</span> <span class="s2">&quot;cat_&quot;</span><span class="p">),</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.xml&quot;</span><span class="p">,</span> <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;label_files&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">pth</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;label/*&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">label</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span>
+        <span class="p">]</span>
+
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;label_rois&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;catROIs_&quot;</span><span class="p">),</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.xml&quot;</span><span class="p">,</span> <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;label_roi&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+            <span class="n">f</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;label&quot;</span><span class="p">,</span> <span class="s2">&quot;catROI_&quot;</span><span class="p">),</span> <span class="n">suffix</span><span class="o">=</span><span class="s2">&quot;.xml&quot;</span><span class="p">,</span> <span class="n">use_ext</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">outputs</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12SANLMDenoisingInputSpec</span><span class="p">(</span><span class="n">SPMCommandInputSpec</span><span class="p">):</span>
+    <span class="n">in_files</span> <span class="o">=</span> <span class="n">InputMultiPath</span><span class="p">(</span>
+        <span class="n">ImageFileSPM</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;data&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Images for filtering.&quot;</span><span class="p">,</span>
+        <span class="n">mandatory</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">copyfile</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">spm_type</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span>
+        <span class="s2">&quot;float32&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;uint16&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;uint8&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;same&quot;</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;spm_type&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Data type of the output images. &#39;same&#39; matches the input image type.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">intlim</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">(</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;intlim&quot;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;intensity limitation (default = 100)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">filename_prefix</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;prefix&quot;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;sanlm_&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Filename prefix. Specify  the  string  to be prepended to the filenames of the filtered image file(s).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">filename_suffix</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;suffix&quot;</span><span class="p">,</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Filename suffix. Specify  the  string  to  be  appended  to the filenames of the filtered image file(s).&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">addnoise</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Float</span><span class="p">(</span>
+        <span class="n">default_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;addnoise&quot;</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Strength of additional noise in noise-free regions.</span>
+<span class="s2">        Add  minimal  amount  of noise in regions without any noise to avoid image segmentation problems.</span>
+<span class="s2">        This parameter defines the strength of additional noise as percentage of the average signal intensity.&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">rician</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;rician&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Rician noise</span>
+<span class="s2">        MRIs  can  have  Gaussian  or  Rician  distributed  noise with uniform or nonuniform variance across the image.</span>
+<span class="s2">        If SNR is high enough (&gt;3)  noise  can  be  well  approximated by Gaussian noise in the foreground. However, for</span>
+<span class="s2">        SENSE reconstruction or DTI data a Rician distribution is expected. Please note that the Rician noise estimation</span>
+<span class="s2">        is sensitive for large signals in the neighbourhood and can lead to artefacts, e.g. cortex can be affected by</span>
+<span class="s2">        very high values in the scalp or in blood vessels.&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">replace_nan_and_inf</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Bool</span><span class="p">(</span>
+        <span class="kc">True</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;replaceNANandINF&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Replace NAN by 0, -INF by the minimum and INF by the maximum of the image.&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">noisecorr_strength</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Enum</span><span class="p">(</span>
+        <span class="s2">&quot;-Inf&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">,</span>
+        <span class="n">field</span><span class="o">=</span><span class="s2">&quot;nlmfilter.optimized.NCstr&quot;</span><span class="p">,</span>
+        <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;Strength of Noise Corrections</span>
+<span class="s2">        Strength  of  the  (sub-resolution)  spatial  adaptive    non local means (SANLM) noise correction. Please note</span>
+<span class="s2">        that the filter strength is automatically  estimated.  Change this parameter only for specific conditions. The</span>
+<span class="s2">        &quot;light&quot; option applies half of the filter strength of the adaptive  &quot;medium&quot;  cases,  whereas  the  &quot;strong&quot;</span>
+<span class="s2">        option  uses  the  full  filter  strength,  force sub-resolution filtering and applies an additional  iteration.</span>
+<span class="s2">        Sub-resolution  filtering  is  only  used  in  case  of  high image resolution below 0.8 mm or in case of the</span>
+<span class="s2">        &quot;strong&quot; option. light = 2, medium = -Inf, strong = 4&quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12SANLMDenoisingOutputSpec</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+    <span class="n">out_file</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">desc</span><span class="o">=</span><span class="s2">&quot;out file&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CAT12SANLMDenoising</span><span class="p">(</span><span class="n">SPMCommand</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Spatially adaptive non-local means (SANLM) denoising filter</span>
+
+<span class="sd">    This  function  applies  an spatial adaptive (sub-resolution) non-local means denoising filter</span>
+<span class="sd">    to  the  data.  This  filter  will  remove  noise  while  preserving  edges. The filter strength is</span>
+<span class="sd">    automatically estimated based on the standard deviation of the noise.</span>
+
+<span class="sd">    This   filter   is  internally  used  in  the  segmentation  procedure  anyway.  Thus,  it  is  not</span>
+<span class="sd">    necessary (and not recommended) to apply the filter before segmentation.</span>
+<span class="sd">    ______________________________________________________________________</span>
+<span class="sd">    Christian Gaser, Robert Dahnke</span>
+<span class="sd">    Structural Brain Mapping Group (http://www.neuro.uni-jena.de)</span>
+<span class="sd">    Departments of Neurology and Psychiatry</span>
+<span class="sd">    Jena University Hospital</span>
+<span class="sd">    ______________________________________________________________________</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; from nipype.interfaces import cat12</span>
+<span class="sd">    &gt;&gt;&gt; c = cat12.CAT12SANLMDenoising()</span>
+<span class="sd">    &gt;&gt;&gt; c.inputs.in_files = &#39;anatomical.nii&#39;</span>
+<span class="sd">    &gt;&gt;&gt; c.run() # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">input_spec</span> <span class="o">=</span> <span class="n">CAT12SANLMDenoisingInputSpec</span>
+    <span class="n">output_spec</span> <span class="o">=</span> <span class="n">CAT12SANLMDenoisingOutputSpec</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">):</span>
+        <span class="n">_local_version</span> <span class="o">=</span> <span class="n">SPMCommand</span><span class="p">()</span><span class="o">.</span><span class="n">version</span>
+        <span class="k">if</span> <span class="n">_local_version</span> <span class="ow">and</span> <span class="s2">&quot;12.&quot;</span> <span class="ow">in</span> <span class="n">_local_version</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_jobtype</span> <span class="o">=</span> <span class="s2">&quot;tools&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_jobname</span> <span class="o">=</span> <span class="s2">&quot;cat.tools.sanlm&quot;</span>
+
+        <span class="n">SPMCommand</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">inputs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_format_arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opt</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert input to appropriate format for spm&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;in_files&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">scans_for_fnames</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">scans_for_fname</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;spm_type&quot;</span><span class="p">:</span>
+            <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;same&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;uint8&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;uint16&quot;</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span> <span class="s2">&quot;float32&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">}</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">type_map</span><span class="p">[</span><span class="n">val</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_format_arg</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_outputs</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;out_file&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname_presuffix</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">in_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">newpath</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span>
+            <span class="n">prefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">filename_prefix</span><span class="p">,</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="o">.</span><span class="n">filename_suffix</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Cell2Str</span><span class="p">(</span><span class="n">Cell</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert input to appropriate format for cat12&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;{&#39;</span><span class="si">%s</span><span class="s2">&#39;}&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

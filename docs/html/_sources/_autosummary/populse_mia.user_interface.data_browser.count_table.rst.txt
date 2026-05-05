@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.data\_browser.count\_table
+=======================================================
+
+.. automodule:: populse_mia.user_interface.data_browser.count_table
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      CountTable
+   

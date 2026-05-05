@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>populse_mia.data_manager &#8212; populse_mia 3.0.0-dev+1a45e211 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=d126124d"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 3.0.0-dev+1a45e211 documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.data_manager</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.data_manager">
+<span id="populse-mia-data-manager"></span><h1>populse_mia.data_manager<a class="headerlink" href="#module-populse_mia.data_manager" title="Link to this heading">¶</a></h1>
+<p>Module to handle the projects and their database.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Module:</dt><dd><ul class="simple">
+<li><p>data_history_inspect</p></li>
+<li><p>data_loader</p></li>
+<li><p>database_mia</p></li>
+<li><p>filter</p></li>
+<li><p>project</p></li>
+<li><p>project_properties</p></li>
+<li><p>project</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">date</span></span><a class="reference internal" href="../_modules/datetime.html#date"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.date" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>date(year, month, day) –&gt; date object</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.fromtimestamp">
+<span class="sig-name descname"><span class="pre">fromtimestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.fromtimestamp" title="Link to this definition">¶</a></dt>
+<dd><p>Create a date from a POSIX timestamp.</p>
+<p>The timestamp is a number, e.g. created via time.time(), that is interpreted
+as local time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.today">
+<span class="sig-name descname"><span class="pre">today</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.today" title="Link to this definition">¶</a></dt>
+<dd><p>Current date or datetime:  same as self.__class__.fromtimestamp(time.time()).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.fromordinal">
+<span class="sig-name descname"><span class="pre">fromordinal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.fromordinal" title="Link to this definition">¶</a></dt>
+<dd><p>int -&gt; date corresponding to a proleptic Gregorian ordinal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.fromisoformat">
+<span class="sig-name descname"><span class="pre">fromisoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.fromisoformat" title="Link to this definition">¶</a></dt>
+<dd><p>str -&gt; Construct a date from the output of date.isoformat()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.fromisocalendar">
+<span class="sig-name descname"><span class="pre">fromisocalendar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.fromisocalendar" title="Link to this definition">¶</a></dt>
+<dd><p>int, int, int -&gt; Construct a date from the ISO year, week number and weekday.</p>
+<p>This is the inverse of the date.isocalendar() function</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.ctime">
+<span class="sig-name descname"><span class="pre">ctime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.ctime" title="Link to this definition">¶</a></dt>
+<dd><p>Return ctime() style string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.strftime">
+<span class="sig-name descname"><span class="pre">strftime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.strftime" title="Link to this definition">¶</a></dt>
+<dd><p>format -&gt; strftime() style string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.isoformat">
+<span class="sig-name descname"><span class="pre">isoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.isoformat" title="Link to this definition">¶</a></dt>
+<dd><p>Return string in ISO 8601 format, YYYY-MM-DD.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.year">
+<span class="sig-name descname"><span class="pre">year</span></span><a class="headerlink" href="#populse_mia.data_manager.date.year" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.month">
+<span class="sig-name descname"><span class="pre">month</span></span><a class="headerlink" href="#populse_mia.data_manager.date.month" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.day">
+<span class="sig-name descname"><span class="pre">day</span></span><a class="headerlink" href="#populse_mia.data_manager.date.day" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.timetuple">
+<span class="sig-name descname"><span class="pre">timetuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.timetuple" title="Link to this definition">¶</a></dt>
+<dd><p>Return time tuple, compatible with time.localtime().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.toordinal">
+<span class="sig-name descname"><span class="pre">toordinal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.toordinal" title="Link to this definition">¶</a></dt>
+<dd><p>Return proleptic Gregorian ordinal.  January 1 of year 1 is day 1.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.replace" title="Link to this definition">¶</a></dt>
+<dd><p>Return date with new specified fields.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.weekday">
+<span class="sig-name descname"><span class="pre">weekday</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.weekday" title="Link to this definition">¶</a></dt>
+<dd><p>Return the day of the week represented by the date.
+Monday == 0 … Sunday == 6</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.isoweekday">
+<span class="sig-name descname"><span class="pre">isoweekday</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.isoweekday" title="Link to this definition">¶</a></dt>
+<dd><p>Return the day of the week represented by the date.
+Monday == 1 … Sunday == 7</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.isocalendar">
+<span class="sig-name descname"><span class="pre">isocalendar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.date.isocalendar" title="Link to this definition">¶</a></dt>
+<dd><p>Return a named tuple containing ISO year, week number, and weekday.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.date(9999,</span> <span class="pre">12,</span> <span class="pre">31)</span></em><a class="headerlink" href="#populse_mia.data_manager.date.max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.min">
+<span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.date(1,</span> <span class="pre">1,</span> <span class="pre">1)</span></em><a class="headerlink" href="#populse_mia.data_manager.date.min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.date.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.timedelta(days=1)</span></em><a class="headerlink" href="#populse_mia.data_manager.date.resolution" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">month</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">day</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">hour</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">minute</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">second</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">microsecond</span></span></em><span class="optional">[</span>, <em class="sig-param"><span class="n"><span class="pre">tzinfo</span></span></em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/datetime.html#datetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.datetime" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.data_manager.date" title="datetime.date"><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></a></p>
+<p>The year, month and day arguments are required. tzinfo may be None, or an
+instance of a tzinfo subclass. The remaining arguments may be ints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.hour">
+<span class="sig-name descname"><span class="pre">hour</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.hour" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.minute">
+<span class="sig-name descname"><span class="pre">minute</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.minute" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.second">
+<span class="sig-name descname"><span class="pre">second</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.second" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.microsecond">
+<span class="sig-name descname"><span class="pre">microsecond</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.microsecond" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.tzinfo">
+<span class="sig-name descname"><span class="pre">tzinfo</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.tzinfo" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.fold">
+<span class="sig-name descname"><span class="pre">fold</span></span><a class="headerlink" href="#populse_mia.data_manager.datetime.fold" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.fromtimestamp">
+<span class="sig-name descname"><span class="pre">fromtimestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.fromtimestamp" title="Link to this definition">¶</a></dt>
+<dd><p>timestamp[, tz] -&gt; tz’s local time from POSIX timestamp.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.utcfromtimestamp">
+<span class="sig-name descname"><span class="pre">utcfromtimestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.utcfromtimestamp" title="Link to this definition">¶</a></dt>
+<dd><p>Construct a naive UTC datetime from a POSIX timestamp.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.now">
+<span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.now" title="Link to this definition">¶</a></dt>
+<dd><p>Returns new datetime object representing current time local to tz.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>tz</dt><dd><p>Timezone object.</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>If no tz is specified, uses local timezone.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.utcnow">
+<span class="sig-name descname"><span class="pre">utcnow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.utcnow" title="Link to this definition">¶</a></dt>
+<dd><p>Return a new datetime representing UTC day and time.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.combine">
+<span class="sig-name descname"><span class="pre">combine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.combine" title="Link to this definition">¶</a></dt>
+<dd><p>date, time -&gt; datetime with same date and time fields</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.fromisoformat">
+<span class="sig-name descname"><span class="pre">fromisoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.fromisoformat" title="Link to this definition">¶</a></dt>
+<dd><p>string -&gt; datetime from datetime.isoformat() output</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.timetuple">
+<span class="sig-name descname"><span class="pre">timetuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.timetuple" title="Link to this definition">¶</a></dt>
+<dd><p>Return time tuple, compatible with time.localtime().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.timestamp" title="Link to this definition">¶</a></dt>
+<dd><p>Return POSIX timestamp as float.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.utctimetuple">
+<span class="sig-name descname"><span class="pre">utctimetuple</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.utctimetuple" title="Link to this definition">¶</a></dt>
+<dd><p>Return UTC time tuple, compatible with time.localtime().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.date">
+<span class="sig-name descname"><span class="pre">date</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.date" title="Link to this definition">¶</a></dt>
+<dd><p>Return date object with same year, month and day.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.time">
+<span class="sig-name descname"><span class="pre">time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.time" title="Link to this definition">¶</a></dt>
+<dd><p>Return time object with same time but with tzinfo=None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.timetz">
+<span class="sig-name descname"><span class="pre">timetz</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.timetz" title="Link to this definition">¶</a></dt>
+<dd><p>Return time object with same time and tzinfo.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.replace" title="Link to this definition">¶</a></dt>
+<dd><p>Return datetime with new specified fields.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.astimezone">
+<span class="sig-name descname"><span class="pre">astimezone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.astimezone" title="Link to this definition">¶</a></dt>
+<dd><p>tz -&gt; convert to local time in new timezone tz</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.ctime">
+<span class="sig-name descname"><span class="pre">ctime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.ctime" title="Link to this definition">¶</a></dt>
+<dd><p>Return ctime() style string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.isoformat">
+<span class="sig-name descname"><span class="pre">isoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.isoformat" title="Link to this definition">¶</a></dt>
+<dd><p>[sep] -&gt; string in ISO 8601 format, YYYY-MM-DDT[HH[:MM[:SS[.mmm[uuu]]]]][+HH:MM].
+sep is used to separate the year from the time, and defaults to ‘T’.
+The optional argument timespec specifies the number of additional terms
+of the time to include. Valid options are ‘auto’, ‘hours’, ‘minutes’,
+‘seconds’, ‘milliseconds’ and ‘microseconds’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.strptime">
+<span class="sig-name descname"><span class="pre">strptime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.strptime" title="Link to this definition">¶</a></dt>
+<dd><p>string, format -&gt; new datetime parsed from a string (like time.strptime()).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.utcoffset">
+<span class="sig-name descname"><span class="pre">utcoffset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.utcoffset" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.utcoffset(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.tzname">
+<span class="sig-name descname"><span class="pre">tzname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.tzname" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.tzname(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.dst">
+<span class="sig-name descname"><span class="pre">dst</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.datetime.dst" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.dst(self).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.datetime(9999,</span> <span class="pre">12,</span> <span class="pre">31,</span> <span class="pre">23,</span> <span class="pre">59,</span> <span class="pre">59,</span> <span class="pre">999999)</span></em><a class="headerlink" href="#populse_mia.data_manager.datetime.max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.min">
+<span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.datetime(1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">0)</span></em><a class="headerlink" href="#populse_mia.data_manager.datetime.min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.datetime.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.timedelta(microseconds=1)</span></em><a class="headerlink" href="#populse_mia.data_manager.datetime.resolution" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">time</span></span><a class="reference internal" href="../_modules/datetime.html#time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.time" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>time([hour[, minute[, second[, microsecond[, tzinfo]]]]]) –&gt; a time object</p>
+<p>All arguments are optional. tzinfo may be None, or an instance of
+a tzinfo subclass. The remaining arguments may be ints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.hour">
+<span class="sig-name descname"><span class="pre">hour</span></span><a class="headerlink" href="#populse_mia.data_manager.time.hour" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.minute">
+<span class="sig-name descname"><span class="pre">minute</span></span><a class="headerlink" href="#populse_mia.data_manager.time.minute" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.second">
+<span class="sig-name descname"><span class="pre">second</span></span><a class="headerlink" href="#populse_mia.data_manager.time.second" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.microsecond">
+<span class="sig-name descname"><span class="pre">microsecond</span></span><a class="headerlink" href="#populse_mia.data_manager.time.microsecond" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.tzinfo">
+<span class="sig-name descname"><span class="pre">tzinfo</span></span><a class="headerlink" href="#populse_mia.data_manager.time.tzinfo" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.fold">
+<span class="sig-name descname"><span class="pre">fold</span></span><a class="headerlink" href="#populse_mia.data_manager.time.fold" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.isoformat">
+<span class="sig-name descname"><span class="pre">isoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.isoformat" title="Link to this definition">¶</a></dt>
+<dd><p>Return string in ISO 8601 format, [HH[:MM[:SS[.mmm[uuu]]]]][+HH:MM].</p>
+<p>The optional argument timespec specifies the number of additional terms
+of the time to include. Valid options are ‘auto’, ‘hours’, ‘minutes’,
+‘seconds’, ‘milliseconds’ and ‘microseconds’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.fromisoformat">
+<span class="sig-name descname"><span class="pre">fromisoformat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.fromisoformat" title="Link to this definition">¶</a></dt>
+<dd><p>string -&gt; time from time.isoformat() output</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.strftime">
+<span class="sig-name descname"><span class="pre">strftime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.strftime" title="Link to this definition">¶</a></dt>
+<dd><p>format -&gt; strftime() style string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.utcoffset">
+<span class="sig-name descname"><span class="pre">utcoffset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.utcoffset" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.utcoffset(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.tzname">
+<span class="sig-name descname"><span class="pre">tzname</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.tzname" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.tzname(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.dst">
+<span class="sig-name descname"><span class="pre">dst</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.dst" title="Link to this definition">¶</a></dt>
+<dd><p>Return self.tzinfo.dst(self).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.data_manager.time.replace" title="Link to this definition">¶</a></dt>
+<dd><p>Return time with new specified fields.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.max">
+<span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.time(23,</span> <span class="pre">59,</span> <span class="pre">59,</span> <span class="pre">999999)</span></em><a class="headerlink" href="#populse_mia.data_manager.time.max" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.min">
+<span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.time(0,</span> <span class="pre">0)</span></em><a class="headerlink" href="#populse_mia.data_manager.time.min" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.time.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">datetime.timedelta(microseconds=1)</span></em><a class="headerlink" href="#populse_mia.data_manager.time.resolution" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_STRING">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_STRING</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_STRING" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_INTEGER">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_INTEGER</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_INTEGER" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_FLOAT">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_FLOAT</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_FLOAT" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_BOOLEAN">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_BOOLEAN</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_BOOLEAN" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_DATE">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_DATE</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_DATE" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#populse_mia.data_manager.date" title="datetime.date"><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_DATETIME">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_DATETIME</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_DATETIME" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.datetime" title="datetime.datetime"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_TIME">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_TIME</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_TIME" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#populse_mia.data_manager.time" title="datetime.time"><code class="xref py py-class docutils literal notranslate"><span class="pre">time</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_JSON">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_JSON</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_JSON" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_STRING">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_STRING</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_STRING" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_INTEGER">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_INTEGER</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_INTEGER" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_FLOAT">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_FLOAT</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_FLOAT" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_BOOLEAN">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_BOOLEAN</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_BOOLEAN" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_DATE">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_DATE</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_DATE" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#populse_mia.data_manager.date" title="datetime.date"><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_DATETIME">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_DATETIME</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_DATETIME" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.datetime" title="datetime.datetime"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_TIME">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_TIME</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_TIME" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference internal" href="#populse_mia.data_manager.time" title="datetime.time"><code class="xref py py-class docutils literal notranslate"><span class="pre">time</span></code></a>]</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.FIELD_TYPE_LIST_JSON">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_LIST_JSON</span></span><a class="headerlink" href="#populse_mia.data_manager.FIELD_TYPE_LIST_JSON" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</p>
+</dd></dl>
+
+<p class="rubric">Modules</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="populse_mia.data_manager.data_history_inspect.html#module-populse_mia.data_manager.data_history_inspect" title="populse_mia.data_manager.data_history_inspect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_history_inspect</span></code></a></p></td>
+<td><p>This module is dedicated to pipeline history.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="populse_mia.data_manager.data_loader.html#module-populse_mia.data_manager.data_loader" title="populse_mia.data_manager.data_loader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_loader</span></code></a></p></td>
+<td><p>Module to handle the importation from MRIFileManager and its progress.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="populse_mia.data_manager.database_mia.html#module-populse_mia.data_manager.database_mia" title="populse_mia.data_manager.database_mia"><code class="xref py py-obj docutils literal notranslate"><span class="pre">database_mia</span></code></a></p></td>
+<td><p>Module containing a class that provides tools adapted to Mia for interacting with the populse_db API.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="populse_mia.data_manager.filter.html#module-populse_mia.data_manager.filter" title="populse_mia.data_manager.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a></p></td>
+<td><p>Module that handle the filter class which contains the results of both rapid and advanced search</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="populse_mia.data_manager.project.html#module-populse_mia.data_manager.project" title="populse_mia.data_manager.project"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project</span></code></a></p></td>
+<td><p>Module that handle the projects and their database.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="populse_mia.data_manager.project_properties.html#module-populse_mia.data_manager.project_properties" title="populse_mia.data_manager.project_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">project_properties</span></code></a></p></td>
+<td><p>Module that contains the class to handle the projects saved in the software.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

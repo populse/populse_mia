@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.data\_browser.modify\_table
+========================================================
+
+.. automodule:: populse_mia.user_interface.data_browser.modify_table
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ModifyTable
+   

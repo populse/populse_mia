@@ -1,0 +1,17 @@
+populse\_mia.user\_interface
+============================
+
+.. automodule:: populse_mia.user_interface
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   data_browser
+   data_viewer
+   main_window
+   pipeline_manager
+   pop_ups

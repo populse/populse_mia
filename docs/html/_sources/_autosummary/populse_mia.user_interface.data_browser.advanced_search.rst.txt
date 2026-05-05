@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.data\_browser.advanced\_search
+===========================================================
+
+.. automodule:: populse_mia.user_interface.data_browser.advanced_search
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AdvancedSearch
+   

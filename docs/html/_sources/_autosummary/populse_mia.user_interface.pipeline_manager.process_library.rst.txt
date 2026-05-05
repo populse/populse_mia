@@ -1,0 +1,25 @@
+populse\_mia.user\_interface.pipeline\_manager.process\_library
+===============================================================
+
+.. automodule:: populse_mia.user_interface.pipeline_manager.process_library
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      import_file
+      node_structure_from_dict
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DictionaryTreeModel
+      InstallProcesses
+      Node
+      PackageLibrary
+      PackageLibraryDialog
+      ProcessLibrary
+      ProcessLibraryWidget
+   

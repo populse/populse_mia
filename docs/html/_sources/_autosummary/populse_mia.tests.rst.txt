@@ -1,0 +1,13 @@
+populse\_mia.tests
+==================
+
+.. automodule:: populse_mia.tests
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   run_mia_test

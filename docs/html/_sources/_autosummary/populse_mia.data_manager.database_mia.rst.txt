@@ -1,0 +1,14 @@
+populse\_mia.data\_manager.database\_mia
+========================================
+
+.. automodule:: populse_mia.data_manager.database_mia
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DatabaseMIA
+      DatabaseMiaData
+      DatabaseMiaSchema
+   

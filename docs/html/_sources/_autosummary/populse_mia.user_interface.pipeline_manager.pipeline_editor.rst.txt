@@ -1,0 +1,21 @@
+populse\_mia.user\_interface.pipeline\_manager.pipeline\_editor
+===============================================================
+
+.. automodule:: populse_mia.user_interface.pipeline_manager.pipeline_editor
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      find_filename
+      get_path
+      save_pipeline
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PipelineEditor
+      PipelineEditorTabs
+   

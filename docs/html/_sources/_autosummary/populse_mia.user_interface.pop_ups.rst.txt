@@ -1,0 +1,42 @@
+populse\_mia.user\_interface.pop\_ups
+=====================================
+
+.. automodule:: populse_mia.user_interface.pop_ups
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ClickableLabel
+      DefaultValueListCreation
+      DefaultValueQLineEdit
+      PopUpAddPath
+      PopUpAddTag
+      PopUpCloneTag
+      PopUpClosePipeline
+      PopUpDataBrowserCurrentSelection
+      PopUpDeleteProject
+      PopUpDeletedProject
+      PopUpFilterSelection
+      PopUpInformation
+      PopUpInheritanceDict
+      PopUpMultipleSort
+      PopUpNewProject
+      PopUpOpenProject
+      PopUpPreferences
+      PopUpProperties
+      PopUpQuit
+      PopUpRemoveScan
+      PopUpRemoveTag
+      PopUpSaveProjectAs
+      PopUpSeeAllProjects
+      PopUpSelectFilter
+      PopUpSelectIteration
+      PopUpSelectTag
+      PopUpSelectTagCountTable
+      PopUpShowHistory
+      PopUpTagSelection
+      PopUpVisualizedTags
+      QLabel_clickable
+   

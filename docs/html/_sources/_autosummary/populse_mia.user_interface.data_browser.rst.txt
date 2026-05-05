@@ -1,0 +1,18 @@
+populse\_mia.user\_interface.data\_browser
+==========================================
+
+.. automodule:: populse_mia.user_interface.data_browser
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   advanced_search
+   count_table
+   data_browser
+   mini_viewer
+   modify_table
+   rapid_search

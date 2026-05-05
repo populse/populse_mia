@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+1a45e211 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=d126124d"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 3.0.0-dev+1a45e211 documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.data_manager.database_mia">
+<span id="populse-mia-data-manager-database-mia"></span><h1>populse_mia.data_manager.database_mia<a class="headerlink" href="#module-populse_mia.data_manager.database_mia" title="Link to this heading">¶</a></h1>
+<p>Module containing a class that provides tools adapted to Mia for
+interacting with the populse_db API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Contains<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Class:</dt><dd><ul class="simple">
+<li><p>DatabaseMIA</p></li>
+<li><p>DatabaseMiaSchema</p></li>
+<li><p>DatabaseMiaData</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMIA" title="populse_mia.data_manager.database_mia.DatabaseMIA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DatabaseMIA</span></code></a>(database_engine)</p></td>
+<td><p>Class providing tools for interacting with a database, under the supervision of populse_db.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DatabaseMiaData</span></code></a>(storage_data)</p></td>
+<td><p>Managing database interactions within the MIA framework.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema" title="populse_mia.data_manager.database_mia.DatabaseMiaSchema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DatabaseMiaSchema</span></code></a>(storage_schema)</p></td>
+<td><p>Provides tools for managing the schema of a MIA database.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.contextmanager">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">contextmanager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/contextlib.html#contextmanager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.contextmanager" title="Link to this definition">¶</a></dt>
+<dd><p>&#64;contextmanager decorator.</p>
+<p>Typical usage:</p>
+<blockquote>
+<div><p>&#64;contextmanager
+def some_generator(&lt;arguments&gt;):</p>
+<blockquote>
+<div><p>&lt;setup&gt;
+try:</p>
+<blockquote>
+<div><p>yield &lt;value&gt;</p>
+</div></blockquote>
+<dl class="simple">
+<dt>finally:</dt><dd><p>&lt;cleanup&gt;</p>
+</dd>
+</dl>
+</div></blockquote>
+</div></blockquote>
+<p>This makes this:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>with some_generator(&lt;arguments&gt;) as &lt;variable&gt;:</dt><dd><p>&lt;body&gt;</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>equivalent to this:</p>
+<blockquote>
+<div><p>&lt;setup&gt;
+try:</p>
+<blockquote>
+<div><p>&lt;variable&gt; = &lt;value&gt;
+&lt;body&gt;</p>
+</div></blockquote>
+<dl class="simple">
+<dt>finally:</dt><dd><p>&lt;cleanup&gt;</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.str_to_type">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">str_to_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/database.html#str_to_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.str_to_type" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a string to a Python type.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">str_to_type('str')</span> <span class="pre">==</span> <span class="pre">str</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str_to_type('list[str]')</span> <span class="pre">==</span> <span class="pre">list[str]</span></code></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.type_to_str">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">type_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/database.html#type_to_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.type_to_str" title="Link to this definition">¶</a></dt>
+<dd><p>Convert a Python type to a string.</p>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">type_to_str(str)</span> <span class="pre">==</span> <span class="pre">'str'</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">type_to_str(list[str])</span> <span class="pre">==</span> <span class="pre">'list[str]'</span></code></p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">Storage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Path" title="pathlib.Path"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">echo_sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.TextIO" title="(in Python v3.10)"><span class="pre">TextIO</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.default_collection">
+<span class="sig-name descname"><span class="pre">default_collection</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_'</span></em><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.default_collection" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.schema_collection">
+<span class="sig-name descname"><span class="pre">schema_collection</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_schema'</span></em><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.schema_collection" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.default_field">
+<span class="sig-name descname"><span class="pre">default_field</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_'</span></em><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.default_field" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.default_document_id">
+<span class="sig-name descname"><span class="pre">default_document_id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'_'</span></em><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.default_document_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Path" title="pathlib.Path"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">echo_sql</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.TextIO" title="(in Python v3.10)"><span class="pre">TextIO</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.__init__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.access_token">
+<span class="sig-name descname"><span class="pre">access_token</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.access_token"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.access_token" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclusive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.schema">
+<span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.schema" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.start_session">
+<span class="sig-name descname"><span class="pre">start_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exclusive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.start_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.start_session" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.Storage.end_session">
+<span class="sig-name descname"><span class="pre">end_session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rollback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_db/storage.html#Storage.end_session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.Storage.end_session" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.FIELD_TYPE_BOOLEAN">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_BOOLEAN</span></span><a class="headerlink" href="#populse_mia.data_manager.database_mia.FIELD_TYPE_BOOLEAN" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.FIELD_TYPE_STRING">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">FIELD_TYPE_STRING</span></span><a class="headerlink" href="#populse_mia.data_manager.database_mia.FIELD_TYPE_STRING" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">DatabaseMIA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Class providing tools for interacting with a database,
+under the supervision of populse_db.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes a DatabaseMIA instance with the given database file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>database_engine</em>) – Path to the database file (e.g.,
+‘/a/folder/path/file.db’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.close" title="Link to this definition">¶</a></dt>
+<dd><p>Closes any open resources or connections held by the instance.</p>
+<p>This method sets the <cite>storage</cite> attribute to <cite>None</cite>, effectively
+releasing any held references and cleaning up the object’s state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">write</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.data" title="Link to this definition">¶</a></dt>
+<dd><p>Provides a context manager for accessing the database data layer.</p>
+<p>This method allows safe read and write access to the database data,
+ensuring proper resource management.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>create</em>) – If True, enables write mode.</p></li>
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> – If True, allows creating new records.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields (DatabaseMiaData)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The data interface for the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.schema">
+<span class="sig-name descname"><span class="pre">schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.schema" title="Link to this definition">¶</a></dt>
+<dd><p>Provides a context manager for accessing the database schema.</p>
+<p>This method allows safe access to the database schema,
+ensuring proper resource management.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields (DatabaseMiaSchema)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The schema interface for the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">DatabaseMiaSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Provides tools for managing the schema of a MIA database.</p>
+<p>This class allows users to manipulate database collections, fields, and
+field attributes under the supervision of populse_db.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes the DatabaseMiaSchema instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>populse_db.storage.Storage</strong><strong>)</strong> (<em>storage_schema</em>) – The schema storage
+interface for the
+database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_collection">
+<span class="sig-name descname"><span class="pre">add_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.add_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_collection" title="Link to this definition">¶</a></dt>
+<dd><p>Add a new collection to the storage database, if it does not
+already exist.</p>
+<p>This method overrides the default behavior to add a collection with
+additional field attributes, ensuring proper schema updates and
+collection initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>unit</em>) – The name of the new collection.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The primary key column for the collection.</p></li>
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>visibility</em>) – Visibility of the primary key field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Origin of the primary key field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Unit of the primary key field.</p></li>
+<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>default_value</em>) – Default value for the primary key field.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field">
+<span class="sig-name descname"><span class="pre">add_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.add_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field" title="Link to this definition">¶</a></dt>
+<dd><p>Adds one or more fields to the collection.</p>
+<p>Each field should be represented as a dictionary containing
+the following keys:</p>
+<ul class="simple">
+<li><p><cite>collection_name</cite> (str): The collection to which the field belongs.</p></li>
+<li><p><cite>field_name</cite> (str): The name of the field.</p></li>
+<li><p><cite>field_type</cite> (str): The data type of the field.</p></li>
+<li><p><cite>description</cite> (str): A brief description of the field.</p></li>
+<li><p><cite>visibility</cite> (bool): The visibility status of the field.</p></li>
+<li><p><cite>origin</cite> (str): The origin of the field.</p></li>
+<li><p><cite>unit</cite> (str): The unit associated with the field.</p></li>
+<li><p><cite>default_value</cite> (Any): The default value of the field.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>list</strong><strong>[</strong><strong>dict</strong><strong>]</strong><strong>)</strong> (<em>fields</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> |</em>) – A dictionary representing a single
+field’s attributes, or a list of
+dictionaries representing multiple
+fields’ attributes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection">
+<span class="sig-name descname"><span class="pre">add_field_attributes_collection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.add_field_attributes_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection" title="Link to this definition">¶</a></dt>
+<dd><p>Ensures that the <cite>FIELD_ATTRIBUTES_COLLECTION</cite> is available in
+the database.</p>
+<p>If it does not exist, it creates the collection and adds specific
+fields to it such as ‘visibility’, ‘origin’, ‘unit’, and
+‘default_value’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.data">
+<span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.data" title="Link to this definition">¶</a></dt>
+<dd><p>Provides a context manager for accessing the database data.</p>
+<p>This method ensures safe access to the database data layer,
+managing resources properly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yields (DatabaseMiaData)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The data interface for the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field">
+<span class="sig-name descname"><span class="pre">remove_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.remove_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field" title="Link to this definition">¶</a></dt>
+<dd><p>Removes a specified field in the collection_name</p>
+<p>This method updates the schema to remove the specified field from the
+collection and handles associated attributes cleanup.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field_name</em>) – The name of the collection from which
+the field will be removed (must exist).</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field to remove (must exist).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the <cite>collection_name</cite> does not exist or if
+the <cite>field_name</cite> does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes">
+<span class="sig-name descname"><span class="pre">remove_field_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.remove_field_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes" title="Link to this definition">¶</a></dt>
+<dd><p>Remove attributes associated with a specific field in a collection.</p>
+<p>This method deletes the document storing metadata or attributes for
+the specified field in the given collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field_name</em>) – The name of the collection containing
+the field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field whose attributes are
+to be removed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the attributes document does not exist or
+cannot be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.update_field_attributes">
+<span class="sig-name descname"><span class="pre">update_field_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visibility</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.update_field_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.update_field_attributes" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the attributes of a field in the database for a specific
+collection.</p>
+<p>This method constructs an index using the provided collection and
+field_name (‘collection|field_name’), and then updates the field’s
+attributes in the FIELD_ATTRIBUTES_COLLECTION.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>description</em>) – The name of the collection the field
+belongs to.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field to update.</p></li>
+<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>visibility</em>) – The visibility status of the field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The origin or source of the field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The unit of measurement for the field.</p></li>
+<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>field_type</em>) – The default value to assign to the field.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The description of the field.</p></li>
+<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> – The type of the field.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.database_mia.</span></span><span class="sig-name descname"><span class="pre">DatabaseMiaData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Managing database interactions within the MIA framework.</p>
+<p>This class provides methods to handle collections and documents within the
+database, allowing operations such as retrieving, adding, updating, and
+removing records.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initializes a new instance of the DatabaseMiaData class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>populse_db.storage.Storage</strong><strong>)</strong> (<em>storage_data</em>) – The data storage
+interface for the
+database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.add_document">
+<span class="sig-name descname"><span class="pre">add_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">document</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.add_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.add_document" title="Link to this definition">¶</a></dt>
+<dd><p>Adds a document to a specified collection in the storage.</p>
+<p>If the specified collection exists, the document is added to it.
+The method assigns a primary key to the document based on the
+collection’s primary key configuration. The changes are saved
+to the storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>document</em>) – The name of the collection where the
+document should be added.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The document name to be added.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.filter_documents">
+<span class="sig-name descname"><span class="pre">filter_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_query</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.filter_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.filter_documents" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve documents from a specified collection that match a given
+filter.</p>
+<p>This method searches for documents in the specified collection based
+on the provided filter query. It returns the results as a list of
+rows from the collection table.</p>
+<dl class="simple">
+<dt>The <cite>filter_query</cite> can either be:</dt><dd><ul class="simple">
+<li><p>The result of <cite>self.filter_query()</cite>.</p></li>
+<li><p>A string defining a filter.</p></li>
+</ul>
+</dd>
+<dt><strong>Filter Query Format:</strong></dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>A filter condition must follow this syntax:</dt><dd><p><cite>{&lt;field&gt;} &lt;operator&gt; “&lt;value&gt;”</cite>.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Supported operators:</dt><dd><p><cite>==</cite>, <cite>!=</cite>, <cite>&lt;=</cite>, <cite>&gt;=</cite>, <cite>&lt;</cite>, <cite>&gt;</cite>, <cite>IN</cite>, <cite>ILIKE</cite>, <cite>LIKE</cite>.</p>
+</dd>
+</dl>
+</li>
+<li><p>Multiple filter conditions can be combined using <cite>AND</cite> or <cite>OR</cite>.</p></li>
+<li><dl class="simple">
+<dt>Example:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">&quot;((({BandWidth}</span> <span class="pre">==</span> <span class="pre">&quot;50000&quot;))</span> <span class="pre">AND</span> <span class="pre">(({FileName}</span> <span class="pre">LIKE</span> <span class="pre">&quot;%G1%&quot;)))&quot;</span>
+<span class="pre">`</span></code></p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p><strong>Note:</strong>
+Due to potential database access issues such as
+<cite>“database already open.”</cite>, this implementation currently returns a
+list instead of using <cite>yield</cite>. However, using <cite>yield</cite> may be
+reconsidered in the future for better memory management.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>filter_query</em>) – The name of the collection to filter
+(must exist).</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The filter query to apply.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (list)<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of rows matching the filter criteria.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_collection_names">
+<span class="sig-name descname"><span class="pre">get_collection_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_collection_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_collection_names" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves a list of all collection names in the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return (list)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>All collection names in the database.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_document">
+<span class="sig-name descname"><span class="pre">get_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve documents from the specified collection with optional
+filtering.</p>
+<p>This method checks if the specified collection exists. If it does, it
+retrieves documents from the collection, optionally filtering by
+primary keys and selecting specific fields. If the collection does not
+exist, an empty list is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – Name of the document collection. The
+collection must already exist in the
+database.</p></li>
+<li><p><strong>optional</strong><strong>)</strong> (<em>fields</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>,</em>) – A single primary key
+or a list of primary
+keys to filter
+documents. If None,
+no filtering by
+primary keys is
+applied.</p></li>
+<li><p><strong>optional</strong><strong>)</strong> – A single field or a list of
+fields to include in the
+result. If None, all fields
+are included.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (list)<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of documents matching the specified criteria,
+or an empty list if the collection does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_document_names">
+<span class="sig-name descname"><span class="pre">get_document_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_document_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document_names" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all document names in the specified collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – The name of the collection to retrieve
+document names from. The collection must
+already exist.</p>
+</dd>
+<dt class="field-even">Return (list[str])<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of document names if the collection
+exists, otherwise an empty list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_attributes">
+<span class="sig-name descname"><span class="pre">get_field_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_field_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_attributes" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve attributes of a specific field or all fields in a collection
+from the storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – The name of the collection.</p></li>
+<li><p><strong>optional</strong><strong>)</strong> (<em>field_name</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>,</em>) – The name of a specific field within
+the collection. If not provided,
+attributes for all fields in the
+collection will be retrieved.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (dict | list[dict])<span class="colon">:</span></dt>
+<dd class="field-even"><p>Attributes of the specified field as a
+dictionary, or a list of dictionaries
+with attributes for all fields if
+<cite>field_name</cite> is not provided.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_names">
+<span class="sig-name descname"><span class="pre">get_field_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_field_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_names" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the list of all field names in the specified collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – The name of the collection to retrieve
+field names from. The collection must
+exist in the database.</p>
+</dd>
+<dt class="field-even">Return (list | None)<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all field names in the collection
+if it exists, or <cite>None</cite> if the collection has
+no fields or does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_primary_key_name">
+<span class="sig-name descname"><span class="pre">get_primary_key_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_primary_key_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_primary_key_name" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieve the primary key of the specified collection.</p>
+<p>This method returns the first key from the specified collection within
+the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – The name of the collection to retrieve
+the primary key from.</p>
+</dd>
+<dt class="field-even">Return (str)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The first key in the collection, representing the
+primary key.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_shown_tags">
+<span class="sig-name descname"><span class="pre">get_shown_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_shown_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_shown_tags" title="Link to this definition">¶</a></dt>
+<dd><p>Give the list of visible tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return (list)<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of visible tags.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.get_value">
+<span class="sig-name descname"><span class="pre">get_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.get_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.get_value" title="Link to this definition">¶</a></dt>
+<dd><p>Retrieves the current value of a specific field in a document from
+the specified collection.</p>
+<p>This method accesses the underlying storage to fetch the value of a
+given field within a document, identified by its primary key, in the
+specified collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field</em>) – The name of the collection containing
+the document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The unique identifier (primary key) of the
+document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the field within the document to
+retrieve.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (Any)<span class="colon">:</span></dt>
+<dd class="field-even"><p>The current value of the specified field.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection">
+<span class="sig-name descname"><span class="pre">has_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.has_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection" title="Link to this definition">¶</a></dt>
+<dd><blockquote>
+<div><p>Checks if a collection with the specified name exists in the database.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>collection_name</em>) – The name of the collection to check.</p>
+</dd>
+<dt class="field-even">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>True</cite> if the collection exists, otherwise <cite>False</cite>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.has_document">
+<span class="sig-name descname"><span class="pre">has_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.has_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.has_document" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if a document with the specified primary key exists in the
+given collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>primary_key</em>) – The name of the collection.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The primary key of the document to check.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return (bool)<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>True</cite> if the document exists, <cite>False</cite> otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.remove_document">
+<span class="sig-name descname"><span class="pre">remove_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.remove_document"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_document" title="Link to this definition">¶</a></dt>
+<dd><p>Remove a document from a specified collection.</p>
+<p>This method deletes the document identified by <cite>primary_key</cite> from
+the given collection in the storage.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>primary_key</em>) – The name of the collection containing
+the document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The unique identifier of the document to be
+removed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If the collection or the document does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.remove_value">
+<span class="sig-name descname"><span class="pre">remove_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.remove_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_value" title="Link to this definition">¶</a></dt>
+<dd><p>Removes the specified field from a document in the given collection,
+if it exists. Raises a KeyError if the field, collection, or document
+is not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>field</em>) – The name of the collection containing
+the document.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The primary key of the document in the
+collection.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The field to be removed from the document.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If the collection or document cannot be found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.set_shown_tags">
+<span class="sig-name descname"><span class="pre">set_shown_tags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields_shown</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.set_shown_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.set_shown_tags" title="Link to this definition">¶</a></dt>
+<dd><p>Set the list of visible tags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>fields_shown</em>) – A list of visible tags.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.set_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.set_value" title="Link to this definition">¶</a></dt>
+<dd><p>Store or update a record in the specified collection.</p>
+<p>This method either stores a new record or updates an existing record
+in the specified collection, using the provided primary key. The
+fields of the record are set according to the data in the provided
+dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>primary_key</em>) – The name of the collection where the
+record will be stored or updated.</p></li>
+<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The unique key used to identify the record.</p></li>
+<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>values_dict</em>) – A dictionary containing the data to store
+or update in the record. Keys represent
+field names, and values represent the
+corresponding data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

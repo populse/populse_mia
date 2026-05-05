@@ -1,0 +1,18 @@
+populse\_mia.data\_manager
+==========================
+
+.. automodule:: populse_mia.data_manager
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   data_history_inspect
+   data_loader
+   database_mia
+   filter
+   project
+   project_properties

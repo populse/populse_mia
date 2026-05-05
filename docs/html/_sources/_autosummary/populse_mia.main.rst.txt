@@ -1,0 +1,15 @@
+populse\_mia.main
+=================
+
+.. automodule:: populse_mia.main
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      add_to_sys_path
+      check_package
+      main
+      qt_message_handler
+   

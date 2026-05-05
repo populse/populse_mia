@@ -1,0 +1,29 @@
+populse\_mia.data\_manager.data\_history\_inspect
+=================================================
+
+.. automodule:: populse_mia.data_manager.data_history_inspect
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      brick_to_process
+      data_history_pipeline
+      data_in_value
+      find_procs_with_output
+      get_data_history
+      get_data_history_bricks
+      get_data_history_processes
+      get_direct_proc_ancestors
+      get_filenames_in_value
+      get_history_brick_process
+      get_proc_ancestors_via_tmp
+      is_data_entry
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ProtoProcess
+   

@@ -1,0 +1,21 @@
+populse\_mia.data\_manager.data\_loader
+=======================================
+
+.. automodule:: populse_mia.data_manager.data_loader
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      read_log
+      tags_from_file
+      verify_scans
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ImportProgress
+      ImportWorker
+   

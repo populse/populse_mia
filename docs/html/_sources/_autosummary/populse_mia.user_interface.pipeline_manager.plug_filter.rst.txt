@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.pipeline\_manager.plug\_filter
+===========================================================
+
+.. automodule:: populse_mia.user_interface.pipeline_manager.plug_filter
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PlugFilter
+   

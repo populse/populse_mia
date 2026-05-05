@@ -1,0 +1,21 @@
+﻿populse\_mia
+============
+
+.. automodule:: populse_mia
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   cli_args
+   data_manager
+   info
+   main
+   software_properties
+   sources_images
+   tests
+   user_interface
+   utils

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>soma.controller.trait_utils &#8212; populse_mia 3.0.0-dev+1a45e211 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=d126124d"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
+          <span>populse_mia 3.0.0-dev+1a45e211 documentation</span></a></h1>
+        <h2 class="heading"><span>soma.controller.trait_utils</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for soma.controller.trait_utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#</span>
+<span class="c1"># SOMA - Copyright (C) CEA, 2015</span>
+<span class="c1"># Distributed under the terms of the CeCILL-B license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL-B_V1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">#</span>
+
+<span class="c1"># System import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">wrap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">six</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+
+<span class="c1"># Define the logger</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># Trait import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span>
+
+<span class="c1"># Global parameters</span>
+<span class="n">_type_to_trait_id</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nb">int</span><span class="p">:</span> <span class="s2">&quot;Int&quot;</span><span class="p">,</span>
+    <span class="n">six</span><span class="o">.</span><span class="n">text_type</span><span class="p">:</span> <span class="s2">&quot;Unicode&quot;</span><span class="p">,</span>
+    <span class="nb">str</span><span class="p">:</span> <span class="s2">&quot;Str&quot;</span><span class="p">,</span>
+    <span class="nb">bytes</span><span class="p">:</span> <span class="s2">&quot;Bytes&quot;</span><span class="p">,</span>
+    <span class="nb">float</span><span class="p">:</span> <span class="s2">&quot;Float&quot;</span>
+<span class="p">}</span>
+<span class="c1"># In order to convert nipype special traits, we define a dict of</span>
+<span class="c1"># correspondences</span>
+<span class="n">_trait_cvt_table</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;InputMultiPath_TraitCompound&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InputMultiPath&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;InputMultiObject&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MultiPath&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;Dict_Str_Str&quot;</span><span class="p">:</span> <span class="s2">&quot;DictStrStr&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputMultiPath_TraitCompound&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputMultiPath&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputMultiObject&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;OutputList&quot;</span><span class="p">:</span> <span class="s2">&quot;List&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ImageFileSPM&quot;</span><span class="p">:</span> <span class="s2">&quot;File&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_trait_desc</span><span class="p">(</span><span class="n">trait_name</span><span class="p">,</span> <span class="n">trait</span><span class="p">,</span> <span class="n">def_val</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">use_wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate a trait string description of the form:</span>
+
+<span class="sd">    [parameter name: type (default trait value) string help (description)]</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: string (mandatory)</span>
+<span class="sd">        the trait name</span>
+<span class="sd">    trait: a trait instance (mandatory)</span>
+<span class="sd">        a trait instance</span>
+<span class="sd">    def_val: object (optional)</span>
+<span class="sd">        the trait default value</span>
+<span class="sd">        If not in [&#39;&#39;, None] add the default trait value to the trait</span>
+<span class="sd">        string description.</span>
+<span class="sd">    use_wrap: bool (optional)</span>
+<span class="sd">        if True, use text wrapping to 70 columns</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    manhelpstr: str</span>
+<span class="sd">        the trait description.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the trait description</span>
+    <span class="n">desc</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">desc</span>
+
+    <span class="c1"># Get the trait type</span>
+    <span class="n">trait_id</span> <span class="o">=</span> <span class="n">trait_ids</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">trait_type</span><span class="p">,</span>
+                                   <span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">File</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Directory</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">input_filename</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="n">trait_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; (filename: output)&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">trait_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s1">&#39; (filename: input)&#39;</span>
+
+    <span class="c1"># Add the trait name (bold)</span>
+    <span class="n">manhelpstr</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trait_name</span><span class="p">)]</span>
+
+    <span class="c1"># Get the default value string representation</span>
+    <span class="k">if</span> <span class="n">def_val</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+        <span class="n">def_val</span> <span class="o">=</span> <span class="s2">&quot;, default value: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">def_val</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">def_val</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+    <span class="c1"># Get the parameter type (optional or mandatory)</span>
+    <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">optional</span><span class="p">:</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;optional&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;mandatory&quot;</span>
+
+    <span class="c1"># Get the default parameter representation: trait type of default</span>
+    <span class="c1"># value if specified</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+    <span class="c1">#if not trait.output:</span>
+    <span class="n">line</span> <span class="o">+=</span> <span class="s2">&quot; (</span><span class="si">{0}</span><span class="s2"> - </span><span class="si">{1}{2}</span><span class="s2">)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trait_id</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">def_val</span><span class="p">)</span>
+
+    <span class="c1"># Wrap the string properly</span>
+    <span class="k">if</span> <span class="n">use_wrap</span><span class="p">:</span>
+        <span class="n">manhelpstr</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span>
+                          <span class="n">initial_indent</span><span class="o">=</span><span class="n">manhelpstr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span><span class="p">,</span>
+                          <span class="n">subsequent_indent</span><span class="o">=</span><span class="s2">&quot;    &quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">manhelpstr</span> <span class="o">=</span> <span class="p">[</span><span class="n">manhelpstr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;: &quot;</span> <span class="o">+</span> <span class="n">line</span><span class="p">]</span>
+
+    <span class="c1"># Add the trait description if specified</span>
+    <span class="k">if</span> <span class="n">desc</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">desc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="c1"># line = re.sub(&quot;\s+&quot;, &quot; &quot;, line)</span>
+            <span class="k">if</span> <span class="n">use_wrap</span><span class="p">:</span>
+                <span class="n">indent</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">s</span><span class="p">:</span>
+                    <span class="c1"># keep text indentation</span>
+                    <span class="n">indent</span> <span class="o">=</span> <span class="n">line</span><span class="p">[:</span><span class="n">line</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+                <span class="n">wline</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="n">initial_indent</span><span class="o">=</span><span class="s2">&quot;    &quot;</span><span class="p">,</span>
+                            <span class="n">subsequent_indent</span><span class="o">=</span><span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="n">indent</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">wline</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># don&#39;t skip empty lines</span>
+                    <span class="n">wline</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">wline</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;    &#39;</span> <span class="o">+</span> <span class="n">line</span><span class="p">]</span>
+            <span class="n">manhelpstr</span> <span class="o">+=</span> <span class="n">wline</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">manhelpstr</span> <span class="o">+=</span> <span class="n">wrap</span><span class="p">(</span><span class="s2">&quot;No description.&quot;</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span>
+                           <span class="n">initial_indent</span><span class="o">=</span><span class="s2">&quot;    &quot;</span><span class="p">,</span>
+                           <span class="n">subsequent_indent</span><span class="o">=</span><span class="s2">&quot;    &quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">manhelpstr</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_trait_value_defined</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Check if a trait value is valid.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    value: type (mandatory)</span>
+<span class="sd">        a value to test.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: bool</span>
+<span class="sd">        True if the value is valid,</span>
+<span class="sd">        False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Initialize the default value</span>
+    <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1"># Check if the trait value is not valid</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">value</span> <span class="ow">is</span> <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Undefined</span> <span class="ow">or</span>
+       <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">)):</span>
+
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">return</span> <span class="n">is_valid</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_trait_pathname</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Check if the trait is a file or a directory.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trait: CTrait (mandatory)</span>
+<span class="sd">        the trait instance we want to test.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    out: bool</span>
+<span class="sd">        True if trait is a file or a directory,</span>
+<span class="sd">        False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">trait_type</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">File</span><span class="p">)</span> <span class="ow">or</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">trait_type</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Directory</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="trait_ids">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.trait_ids">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">trait_ids</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">modules</span><span class="o">=</span><span class="nb">set</span><span class="p">()):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the type of the trait: File, Enum etc...</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trait: trait instance (mandatory)</span>
+<span class="sd">        a trait instance</span>
+<span class="sd">    modules: set (optional)</span>
+<span class="sd">        modifiable set of modules names that should be imported to instantiate</span>
+<span class="sd">        the trait</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    main_id: list</span>
+<span class="sd">        the string description (type) of the input trait.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the trait class name</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="s1">&#39;handler&#39;</span><span class="p">):</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span> <span class="ow">or</span> <span class="n">trait</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># trait is already a handler</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">trait</span>
+    <span class="n">main_id</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">if</span> <span class="n">main_id</span> <span class="o">==</span> <span class="s2">&quot;TraitCoerceType&quot;</span><span class="p">:</span>
+        <span class="n">real_id</span> <span class="o">=</span> <span class="n">_type_to_trait_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">aType</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">real_id</span><span class="p">:</span>
+            <span class="n">main_id</span> <span class="o">=</span> <span class="n">real_id</span>
+
+    <span class="c1"># Use the conversion table to normalize the trait id</span>
+    <span class="k">if</span> <span class="n">main_id</span> <span class="ow">in</span> <span class="n">_trait_cvt_table</span><span class="p">:</span>
+        <span class="n">main_id</span> <span class="o">=</span> <span class="n">_trait_cvt_table</span><span class="p">[</span><span class="n">main_id</span><span class="p">]</span>
+
+    <span class="c1"># Debug message</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trait with main id </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">main_id</span><span class="p">)</span>
+
+    <span class="c1"># Search for inner traits</span>
+    <span class="n">inner_ids</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Either case</span>
+    <span class="k">if</span> <span class="n">main_id</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Either&quot;</span><span class="p">,</span> <span class="s2">&quot;TraitCompound&quot;</span><span class="p">]:</span>
+
+        <span class="c1"># Debug message</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;A compound trait has been found </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span>
+            <span class="n">handler</span><span class="o">.</span><span class="n">handlers</span><span class="p">))</span>
+
+        <span class="c1"># Build each trait compound description</span>
+        <span class="n">trait_description</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sub_trait</span> <span class="ow">in</span> <span class="n">handler</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_trait</span><span class="p">,</span> <span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">TraitType</span><span class="p">,</span>
+                                          <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">TraitInstance</span><span class="p">,</span>
+                                          <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">TraitCoerceType</span><span class="p">,</span>
+                                          <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">TraitHandler</span><span class="p">)):</span>
+                <span class="n">sub_trait</span> <span class="o">=</span> <span class="n">sub_trait</span><span class="p">()</span>
+            <span class="n">trait_description</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">trait_ids</span><span class="p">(</span><span class="n">sub_trait</span><span class="p">,</span> <span class="n">modules</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">trait_description</span>
+
+    <span class="k">elif</span> <span class="n">main_id</span> <span class="o">==</span> <span class="s2">&quot;Instance&quot;</span><span class="p">:</span>
+        <span class="n">inner_id</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">klass</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">klass</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="k">if</span> <span class="n">mod</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;__builtin__&quot;</span><span class="p">,</span> <span class="s2">&quot;__builtins__&quot;</span><span class="p">):</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="n">inner_id</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">mod</span><span class="p">,</span> <span class="n">inner_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">main_id</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">inner_id</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="n">main_id</span> <span class="o">==</span> <span class="s2">&quot;TraitInstance&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">handler</span><span class="o">.</span><span class="n">aClass</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Undefined</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Undefined&#39;</span><span class="p">]</span>
+        <span class="n">inner_id2</span> <span class="o">=</span> <span class="n">_type_to_trait_id</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">aClass</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">inner_id2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">inner_id2</span><span class="p">]</span>
+        <span class="n">inner_id</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">aClass</span><span class="o">.</span><span class="vm">__name__</span>
+        <span class="n">mod</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">aClass</span><span class="o">.</span><span class="vm">__module__</span>
+        <span class="k">if</span> <span class="n">mod</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;__builtin__&quot;</span><span class="p">,</span> <span class="s2">&quot;__builtins__&quot;</span><span class="p">,</span> <span class="s2">&quot;builtins&quot;</span><span class="p">):</span>
+            <span class="n">modules</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+            <span class="n">inner_id</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">mod</span><span class="p">,</span> <span class="n">inner_id</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">main_id</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">inner_id</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="n">handler</span> <span class="ow">is</span> <span class="nb">type</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">Undefined</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;Undefined&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Default case</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s1">&#39;inner_traits&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">main_id</span><span class="p">]</span>
+
+        <span class="c1"># FIXME may recurse indefinitely if the trait is recursive</span>
+        <span class="n">inner_id</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="n">trait_ids</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">modules</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">handler</span><span class="o">.</span><span class="n">inner_traits</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">inner_id</span><span class="p">:</span>
+            <span class="n">klass</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span> <span class="s1">&#39;klass&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">klass</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">inner_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">klass</span><span class="o">.</span><span class="vm">__mro__</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">inner_ids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inner_ids</span> <span class="o">=</span> <span class="p">[</span><span class="n">inner_id</span><span class="p">]</span>
+
+        <span class="c1"># Format the output string result</span>
+        <span class="k">if</span> <span class="n">inner_ids</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">main_id</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">inner_desc</span> <span class="k">for</span> <span class="n">inner_desc</span> <span class="ow">in</span> <span class="n">inner_ids</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">main_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="is_file_trait">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.user_interface.pipeline_manager.node_controller.is_file_trait">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">,</span> <span class="n">allow_dir</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_dirs</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Tells if the given trait is a File (and/or dict) or may be a file (for a</span>
+<span class="sd">    compound trait)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="n">trait_ids</span><span class="p">(</span><span class="n">trait</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">only_dirs</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;File&#39;</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="n">allow_dir</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;Directory&#39;</span> <span class="ow">in</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">]):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="relax_exists_constraint">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.node_controller.relax_exists_constraint">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">relax_exists_constraint</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Relax the exist constraint of a trait</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    trait: trait</span>
+<span class="sd">        a trait that will be relaxed from the exist constraint</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If we have a single trait, just modify the &#39;exists&#39; constraint</span>
+    <span class="c1"># if specified</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">handler</span><span class="p">,</span> <span class="s2">&quot;exists&quot;</span><span class="p">):</span>
+        <span class="n">trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">exists</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># If we have a selector, call the &#39;relax_exists_constraint&#39; on each</span>
+    <span class="c1"># selector inner components.</span>
+    <span class="n">main_id</span> <span class="o">=</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+    <span class="k">if</span> <span class="n">main_id</span> <span class="o">==</span> <span class="s2">&quot;TraitCompound&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sub_trait</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">handler</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+            <span class="n">sub_c_trait</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">CTrait</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">sub_c_trait</span><span class="o">.</span><span class="n">handler</span> <span class="o">=</span> <span class="n">sub_trait</span>
+            <span class="n">relax_exists_constraint</span><span class="p">(</span><span class="n">sub_c_trait</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">inner_traits</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sub_c_trait</span> <span class="ow">in</span> <span class="n">trait</span><span class="o">.</span><span class="n">inner_traits</span><span class="p">:</span>
+            <span class="n">relax_exists_constraint</span><span class="p">(</span><span class="n">sub_c_trait</span><span class="p">)</span></div>
+
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

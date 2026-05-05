@@ -1,0 +1,20 @@
+populse\_mia.user\_interface.pipeline\_manager
+==============================================
+
+.. automodule:: populse_mia.user_interface.pipeline_manager
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   iteration_table
+   node_controller
+   pipeline_editor
+   pipeline_manager_tab
+   plug_filter
+   process_library
+   process_mia
+   type_editors

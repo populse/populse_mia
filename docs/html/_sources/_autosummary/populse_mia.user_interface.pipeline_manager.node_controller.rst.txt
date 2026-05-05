@@ -1,0 +1,15 @@
+populse\_mia.user\_interface.pipeline\_manager.node\_controller
+===============================================================
+
+.. automodule:: populse_mia.user_interface.pipeline_manager.node_controller
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AttributesFilter
+      CapsulNodeController
+      FilterWidget
+      NodeController
+   
