@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.count_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -527,7 +527,7 @@ window.addEventListener("load", load);</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">reduce</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span>
 
-<span class="c1"># PyQt5 imports</span>
+<span class="c1"># PyQt5 import</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">QtCore</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
@@ -542,18 +542,18 @@ window.addEventListener("load", load);</script>
     <span class="n">QVBoxLayout</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="c1"># populse_mia import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
-
-<span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ClickableLabel</span><span class="p">,</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_item_data</span><span class="p">,</span> <span class="n">table_to_database</span>
 
 
 <div class="viewcode-block" id="CountTable">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CountTable</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A visual tool for verifying medical scan completeness through tag</span>
@@ -627,7 +627,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="CountTable.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the CountTable with the given project.</span>
@@ -652,6 +652,8 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setup_layout</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="CountTable._create_clickable_label">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._create_clickable_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_clickable_label</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">click_handler</span><span class="p">:</span> <span class="n">Callable</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClickableLabel&quot;</span><span class="p">:</span>
@@ -679,8 +681,11 @@ window.addEventListener("load", load);</script>
         <span class="n">pixmap</span> <span class="o">=</span> <span class="n">pixmap</span><span class="o">.</span><span class="n">scaledToHeight</span><span class="p">(</span><span class="n">height</span><span class="p">)</span>
         <span class="n">label</span><span class="o">.</span><span class="n">setPixmap</span><span class="p">(</span><span class="n">pixmap</span><span class="p">)</span>
         <span class="n">label</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">click_handler</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">label</span>
+        <span class="k">return</span> <span class="n">label</span></div>
 
+
+<div class="viewcode-block" id="CountTable._create_push_button">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._create_push_button">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_push_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QPushButton</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure a tag selection button.</span>
@@ -694,8 +699,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_tag</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">button</span>
+        <span class="k">return</span> <span class="n">button</span></div>
 
+
+<div class="viewcode-block" id="CountTable._setup_components">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._setup_components">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_components</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize basic UI components.</span>
@@ -704,8 +712,11 @@ window.addEventListener("load", load);</script>
         <span class="c1"># Each push button will allow the user to add a tag to the count table</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span> <span class="o">=</span> <span class="p">[</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_create_push_button</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tag n°</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-        <span class="p">]</span>
+        <span class="p">]</span></div>
 
+
+<div class="viewcode-block" id="CountTable._setup_labels">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._setup_labels">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize add/remove control labels with icons.</span>
@@ -715,8 +726,11 @@ window.addEventListener("load", load);</script>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_tag_label</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_clickable_label</span><span class="p">(</span>
             <span class="s2">&quot;green_plus.png&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_tag</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="CountTable._setup_layout">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._setup_layout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize main widget layout.</span>
@@ -729,8 +743,11 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">content_stack</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">placeholder</span><span class="p">)</span>  <span class="c1"># index 1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">content_stack</span><span class="o">.</span><span class="n">setCurrentWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">refresh_layout</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_stack</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">v_box_final</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content_stack</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="CountTable._setup_table">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable._setup_table">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize table widget, placeholder label and count button.</span>
@@ -743,10 +760,11 @@ window.addEventListener("load", load);</script>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">placeholder</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_count</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Count Scans&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_count</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_scans</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_count</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count_scans</span><span class="p">)</span></div>
+
 
 <div class="viewcode-block" id="CountTable.add_tag">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.add_tag">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.add_tag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new tag to visualize in the count table.</span>
@@ -758,7 +776,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.count_scans">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.count_scans">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.count_scans">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">count_scans</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate and populate the scan count table.</span>
@@ -811,7 +829,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.fill_first_tags">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_first_tags">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_first_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fill_first_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate table cells for the first (n-1) selected tags.</span>
@@ -820,8 +838,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        and fills corresponding table cells. Also adds total counts</span>
 <span class="sd">        in the bottom row.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
             <span class="c1"># Initialize with first values for each tag</span>
@@ -875,7 +891,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.fill_headers">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_headers">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_headers">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fill_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate table headers with tag names and last tag values.</span>
@@ -886,9 +902,6 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        Also adds a &quot;Total&quot; row header.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># import set_item_data only here to prevent circular import issue</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="c1"># Set headers for first n-1 tags</span>
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
@@ -922,7 +935,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.fill_last_tag">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_last_tag">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_last_tag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fill_last_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate cells for the last selected tag with scan counts or</span>
@@ -935,9 +948,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - Adds scan filenames as tooltip</span>
 <span class="sd">            - Updates column totals</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># import table_to_database only here to prevent circular import issue</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">table_to_database</span>
-
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1015,7 +1025,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.fill_values">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_values">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.fill_values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fill_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate values list for the tag at the specified index.</span>
@@ -1048,7 +1058,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.prepare_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">prepare_filter</span><span class="p">(</span><span class="n">tag_value_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1072,7 +1082,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.refresh_layout">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.refresh_layout">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.refresh_layout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">refresh_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the widget layout after adding/removing tags.</span>
@@ -1107,7 +1117,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.remove_tag">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.remove_tag">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.remove_tag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove the last tag selection button and its data.</span>
@@ -1128,7 +1138,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CountTable.select_tag">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.select_tag">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.count_table.CountTable.select_tag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">select_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open tag selection dialog for the specified button.</span>

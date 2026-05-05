@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -485,11 +485,16 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">###############################################################################</span>
 
+<span class="c1"># isort: off</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
+<span class="c1"># isort: on</span>
+
+<span class="c1"># soma import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.Directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.File</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileControlWidget</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.List_File_offscreen</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -498,11 +503,14 @@ window.addEventListener("load", load);</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.utils.weak_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_proxy</span>
 
+<span class="c1"># populse_mia import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="PopulseFileControlWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for selecting a file.</span>
@@ -519,7 +527,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseFileControlWidget.create_widget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
@@ -612,7 +620,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseFileControlWidget.filter_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.filter_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -622,10 +630,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param node_name (str): The name of the node.</span>
 <span class="sd">        :param plug_name (str): The name of the plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># This import is not at the beginning of the file to avoid a cyclic</span>
-        <span class="c1"># import issue.</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
-
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">main_window</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;main_window&quot;</span><span class="p">)</span>
@@ -651,7 +655,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseFileControlWidget.update_plug_value_from_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.update_plug_value_from_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -688,7 +692,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget for selecting a directory.</span>
@@ -702,7 +706,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.create_widget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
@@ -737,7 +741,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.filter_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.filter_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -747,10 +751,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param node_name (str): The name of the node.</span>
 <span class="sd">        :param plug_name (str): The name of the associated plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
-        <span class="c1"># import issue.</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
-
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">main_window</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;main_window&quot;</span><span class="p">)</span>
@@ -775,7 +775,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.update_plug_value_from_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.update_plug_value_from_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -804,7 +804,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A control widget for entering a list of files.</span>
@@ -818,7 +818,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.create_widget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
@@ -891,7 +891,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.filter_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.filter_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -901,10 +901,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param node_name (str): The name of the node.</span>
 <span class="sd">        :param plug_name (str): The name of the plug.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># this import is not at the beginning of the file to avoid a cyclic</span>
-        <span class="c1"># import issue.</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">.node_controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
-
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">main_window</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;main_window&quot;</span><span class="p">)</span>
@@ -934,7 +930,7 @@ window.addEventListener("load", load);</script>
         <span class="c1"># fmt: on</span>
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -957,7 +953,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for handling Undefined trait values in a Qt interface.</span>
@@ -991,7 +987,7 @@ window.addEventListener("load", load);</script>
     <span class="n">VALID_REPRESENTATIONS</span> <span class="o">=</span> <span class="p">[</span><span class="n">UNDEFINED_TEXT</span><span class="p">,</span> <span class="n">STYLED_UNDEFINED_TEXT</span><span class="p">]</span>
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.check">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.check">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.check">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1007,7 +1003,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.connect">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1027,7 +1023,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.create_widget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.create_widget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
@@ -1080,7 +1076,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.disconnect">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1099,7 +1095,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.is_valid">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1122,7 +1118,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_controller</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span>
@@ -1161,11 +1157,12 @@ window.addEventListener("load", load);</script>
             <span class="nb">setattr</span><span class="p">(</span>
                 <span class="n">controller_widget</span><span class="o">.</span><span class="n">controller</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">new_trait_value</span>
             <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; associated controller &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;trait &#39;</span><span class="si">{</span><span class="n">control_name</span><span class="si">}</span><span class="s2">&#39; has been updated with &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;value &#39;</span><span class="si">{</span><span class="n">new_trait_value</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-            <span class="p">)</span>
+            <span class="c1"># For debugging purposes, log the update action</span>
+            <span class="c1"># logger.info(</span>
+            <span class="c1">#     f&quot;&#39;PopulseUndefinedControlWidget&#39; associated controller &quot;</span>
+            <span class="c1">#     f&quot;trait &#39;{control_name}&#39; has been updated with &quot;</span>
+            <span class="c1">#     f&quot;value &#39;{new_trait_value}&#39;.&quot;</span>
+            <span class="c1"># )</span>
 
         <span class="k">elif</span> <span class="n">reset_invalid_value</span><span class="p">:</span>
             <span class="c1"># Invalid value, reset GUI to the previous value</span>
@@ -1176,7 +1173,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller_widget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_controller_widget</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span>
@@ -1196,10 +1193,11 @@ window.addEventListener("load", load);</script>
         <span class="c1"># Set the widget text to represent Undefined</span>
         <span class="n">new_controller_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span><span class="p">)</span>
         <span class="n">control_instance</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">new_controller_value</span><span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;PopulseUndefinedControlWidget&#39; has been updated &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;with value &#39;</span><span class="si">{</span><span class="n">new_controller_value</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-        <span class="p">)</span>
+        <span class="c1"># For debugging purposes, log the update action</span>
+        <span class="c1"># logger.info(</span>
+        <span class="c1">#     f&quot;&#39;PopulseUndefinedControlWidget&#39; has been updated &quot;</span>
+        <span class="c1">#     f&quot;with value &#39;{new_controller_value}&#39;.&quot;</span>
+        <span class="c1"># )</span>
         <span class="c1"># Update the controller to ensure consistency</span>
         <span class="n">PopulseUndefinedControlWidget</span><span class="o">.</span><span class="n">update_controller</span><span class="p">(</span>
             <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">,</span> <span class="kc">True</span>

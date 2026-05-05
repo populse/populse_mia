@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -479,20 +479,29 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="c1"># isort: off</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="c1"># isort: on</span>
+
+<span class="c1"># capsul import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline_tools</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
 
-<span class="c1"># Populse_mia imports</span>
+<span class="c1"># PyQt5 import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCoreApplication</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
+
+<span class="c1"># populse_mia import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
@@ -527,15 +536,21 @@ window.addEventListener("load", load);</script>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.database_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseMIA</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
-
-<span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">safe_connect</span><span class="p">,</span>
+    <span class="n">safe_disconnect</span><span class="p">,</span>
+    <span class="n">set_item_data</span><span class="p">,</span>
+    <span class="n">verCmp</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_history_inspect</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Project">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Project</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that handles projects and their associated database.</span>
 
@@ -594,7 +609,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Project.__init__">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization of the project class.</span>
 
@@ -989,7 +1004,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.add_clinical_tags">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
 
@@ -1037,9 +1052,10 @@ window.addEventListener("load", load);</script>
                             <span class="p">}</span>
                         <span class="p">)</span>
 
-                        <span class="c1"># This step is redundant and could be removed, because</span>
-                        <span class="c1"># after creating a field (just above), it seems to me</span>
-                        <span class="c1"># that the default value is already None!</span>
+                        <span class="c1"># FIXME: This step is redundant and could be removed,</span>
+                        <span class="c1">#        because after creating a field (just above),</span>
+                        <span class="c1">#        it seems to me that the default value is</span>
+                        <span class="c1">#        already None!</span>
                         <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
                             <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span>
                         <span class="p">):</span>
@@ -1060,7 +1076,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_bricks">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.cleanup_orphan_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan bricks and their associated files from the database.</span>
@@ -1110,7 +1126,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_history">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan histories, their associated bricks, and files from</span>
@@ -1127,6 +1143,7 @@ window.addEventListener("load", load);</script>
         <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orphan histories: </span><span class="si">{</span><span class="n">obsolete_histories</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orphan bricks: </span><span class="si">{</span><span class="n">obsolete_bricks</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Orphan files: </span><span class="si">{</span><span class="n">orphan_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
 
@@ -1165,27 +1182,32 @@ window.addEventListener("load", load);</script>
                     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
                         <span class="k">pass</span>  <span class="c1"># malformed database, the file doesn&#39;t exist</span>
 
-                <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+                <span class="n">full_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span> <span class="o">/</span> <span class="n">file_path</span>
 
-                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span></div>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">full_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+                <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                    <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_nonexisting_files">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.cleanup_orphan_nonexisting_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_nonexisting_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Remove database entries for files that no longer exist in the</span>
-<span class="sd">        filesystem.</span>
+<span class="sd">        Remove database entries for files that are missing on disk.</span>
 
 <span class="sd">        This method:</span>
-<span class="sd">        1. Identifies files referenced in the database that are missing</span>
-<span class="sd">           from disk</span>
-<span class="sd">        2. Removes their entries from both current and initial collections</span>
-<span class="sd">        3. Ensures any remaining physical files are deleted (defensive</span>
-<span class="sd">           cleanup)</span>
+<span class="sd">            - Retrieves filenames considered orphaned (see</span>
+<span class="sd">              `get_orphan_nonexisting_files`),</span>
+<span class="sd">            - Deletes their entries from both current and initial collections,</span>
+<span class="sd">            - Attempts a defensive filesystem cleanup if the file still exists.</span>
+
+<span class="sd">        :param failed (bool): Passed through to `get_orphan_nonexisting_files`</span>
+<span class="sd">                              to control orphan selection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_nonexisting_files</span><span class="p">()</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+        <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_nonexisting_files</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
 
@@ -1198,16 +1220,16 @@ window.addEventListener("load", load);</script>
                         <span class="n">database_data</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
 
                     <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-                        <span class="k">pass</span>  <span class="c1"># malformed database, the file doesn&#39;t exist</span>
+                        <span class="k">continue</span>  <span class="c1"># malformed database, the file doesn&#39;t exist</span>
 
-                <span class="n">full_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+                <span class="n">file_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">file_path</span>
 
-                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">full_path</span><span class="p">):</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">unlink</span><span class="p">(</span><span class="n">full_path</span><span class="p">)</span></div>
+                <span class="k">if</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">file_path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Project.del_clinical_tags">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove clinical tags from the project&#39;s current and initial</span>
@@ -1238,7 +1260,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.files_in_project">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.files_in_project">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.files_in_project">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract file/directory names from input that are within the project</span>
@@ -1293,7 +1315,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.finished_bricks">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finished_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and process finished bricks from workflows and pipelines.</span>
@@ -1301,7 +1323,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method:</span>
 <span class="sd">        1. Gets finished bricks from workflows and optionally a specific</span>
 <span class="sd">           pipeline</span>
-<span class="sd">        2. Filters them based on their presence in the MIA database</span>
+<span class="sd">        2. Filters them based on their presence in the Mia database</span>
 <span class="sd">        3. Updates brick metadata with execution status and outputs</span>
 <span class="sd">        4. Collects all output files that are within the project directory</span>
 
@@ -1340,7 +1362,7 @@ window.addEventListener("load", load);</script>
             <span class="n">d1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">d1</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_collect_outputs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">base_path</span><span class="p">,</span> <span class="n">base_len</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_collect_outputs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">base_path</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Recursively collects file paths from output values that are</span>
 <span class="sd">            within the project directory.</span>
@@ -1348,8 +1370,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">            :param value: Output value to process (can be str, list,</span>
 <span class="sd">                          set, tuple)</span>
 <span class="sd">            :param base_path (str): Base project directory path</span>
-<span class="sd">            :param base_len (int): Length of base path string for relative</span>
-<span class="sd">                                   path calculation</span>
 
 <span class="sd">            :return (set[str]): A set of collected file paths, relative to</span>
 <span class="sd">                                the project directory.</span>
@@ -1367,10 +1387,11 @@ window.addEventListener("load", load);</script>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                     <span class="k">continue</span>
 
-                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
-                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>  <span class="c1"># and Path(path).exists():</span>
-                    <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="n">base_len</span><span class="p">:])</span>
+                <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">base_path</span><span class="p">):</span>
+                    <span class="n">rel_path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+                    <span class="n">outputs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rel_path</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
 
             <span class="k">return</span> <span class="n">outputs</span>
 
@@ -1405,8 +1426,7 @@ window.addEventListener("load", load);</script>
             <span class="k">if</span> <span class="n">brick_id</span> <span class="ow">in</span> <span class="n">docs</span>
         <span class="p">}</span>
         <span class="c1"># Collect all output files</span>
-        <span class="n">project_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">sep</span>
-        <span class="n">dir_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">project_dir</span><span class="p">)</span>
+        <span class="n">project_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="n">all_outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
         <span class="c1"># Process outputs from all bricks</span>
@@ -1416,15 +1436,13 @@ window.addEventListener("load", load);</script>
             <span class="k">if</span> <span class="n">out_data</span><span class="p">:</span>
 
                 <span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">out_data</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                    <span class="n">all_outputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                        <span class="n">_collect_outputs</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">,</span> <span class="n">dir_len</span><span class="p">)</span>
-                    <span class="p">)</span>
+                    <span class="n">all_outputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_collect_outputs</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">project_dir</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;bricks&quot;</span><span class="p">:</span> <span class="n">bricks</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">:</span> <span class="n">all_outputs</span><span class="p">}</span></div>
 
 
 <div class="viewcode-block" id="Project.get_data_history">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the processing history for the given data file.</span>
@@ -1440,13 +1458,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :return: history (dict)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_history_inspect</span>
-
         <span class="k">return</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Project.getDate">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
@@ -1458,7 +1474,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_pipeline">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a dictionary of finished processes (bricks) from a given</span>
@@ -1526,27 +1542,83 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_workflows">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieves a dictionary of finished bricks (jobs) from Soma-Workflow</span>
-<span class="sd">        workflows.</span>
+<span class="sd">        Return finished Soma-Workflow jobs indexed by their brick UUID.</span>
 
-<span class="sd">        :param engine (object): The engine instance used to interact with the</span>
-<span class="sd">                                study configuration and Soma-Workflow module.</span>
+<span class="sd">        A job is considered successful if its termination status is</span>
+<span class="sd">        ``&quot;finished_regularly&quot;``. Any other termination status is treated</span>
+<span class="sd">        as a failure.</span>
+<span class="sd">        A workflow is marked as ``failed`` if at least one of its jobs</span>
+<span class="sd">        did not finish successfully.</span>
 
-<span class="sd">        :return (dict): A dictionary where keys are brick IDs (UUIDs) and</span>
-<span class="sd">                        values are dictionaries containing metadata about</span>
-<span class="sd">                        each finished job, including:</span>
-<span class="sd">                        - `workflow`: The workflow ID in which the job is</span>
-<span class="sd">                                      contained.</span>
-<span class="sd">                        - `job`: The Soma-Workflow job instance.</span>
-<span class="sd">                        - `job_id`: The ID of the job in Soma-Workflow.</span>
-<span class="sd">                        - `swf_status`: The status information for the job in</span>
-<span class="sd">                                        Soma-Workflow.</span>
+<span class="sd">        :param engine: Engine providing access to the Soma-Workflow controller.</span>
+
+<span class="sd">        :return (dict): Mapping ``brick_uuid -&gt; job_info`` where ``job_info``</span>
+<span class="sd">                        contains:</span>
+<span class="sd">                        - ``workflow`` (int): Workflow identifier.</span>
+<span class="sd">                        - ``job``: Soma-Workflow job instance.</span>
+<span class="sd">                        - ``job_id`` (int): Job identifier.</span>
+<span class="sd">                        - ``swf_status`` (tuple): Raw Soma-Workflow status</span>
+<span class="sd">                                                  tuple.</span>
+<span class="sd">                        - ``running`` (bool): True of any job in the workflow</span>
+<span class="sd">                                              is running</span>
+<span class="sd">                        - ``failed`` (bool): True if any job in the workflow</span>
+<span class="sd">                                             failed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># import soma_workflow.client as swclient</span>
-        <span class="c1"># from soma_workflow import constants</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">job_st</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Parse a Soma-Workflow job status tuple into structured information.</span>
+
+<span class="sd">            The input ``job_st`` is a tuple returned by</span>
+<span class="sd">            ``workflow_elements_status`` whose structure is partially backend-</span>
+<span class="sd">            dependent. This helper extracts the relevant fields and derives</span>
+<span class="sd">            consistent success/failure flags.</span>
+
+<span class="sd">            :param job_st (tuple): Raw job status tuple as returned by</span>
+<span class="sd">                                   Soma-Workflow.</span>
+
+<span class="sd">            :returns (tuple):</span>
+<span class="sd">                    - job_id (int): Identifier of the job.</span>
+<span class="sd">                    - state (str): Execution state (e.g. &quot;done&quot;, &quot;failed&quot;,</span>
+<span class="sd">                      &quot;running&quot;).</span>
+<span class="sd">                    - termination (str | None): Termination status if available</span>
+<span class="sd">                      (e.g. &quot;finished_regularly&quot;, &quot;killed&quot;, &quot;aborted&quot;), else</span>
+<span class="sd">                      None.</span>
+<span class="sd">                    - is_success (bool): True if the job completed successfully</span>
+<span class="sd">                      (i.e. termination == &quot;finished_regularly&quot;).</span>
+<span class="sd">                    - is_running (bool): True if the job is currently running</span>
+<span class="sd">                      (the job indicates that it is in progress).</span>
+<span class="sd">                    - is_failure (bool): True if the job did not complete</span>
+<span class="sd">                      successfully.</span>
+
+<span class="sd">            Notes:</span>
+<span class="sd">                - Success is defined solely based on the termination status,</span>
+<span class="sd">                  which is more reliable than the execution state across</span>
+<span class="sd">                  backends.</span>
+<span class="sd">                - Any termination other than &quot;finished_regularly&quot; is treated</span>
+<span class="sd">                  as a failure.</span>
+<span class="sd">                - The structure of ``job_st`` may vary slightly depending on</span>
+<span class="sd">                  the execution backend, so access is kept minimal and</span>
+<span class="sd">                  defensive.</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">job_id</span> <span class="o">=</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">termination</span> <span class="o">=</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="n">is_success</span> <span class="o">=</span> <span class="n">termination</span> <span class="o">==</span> <span class="s2">&quot;finished_regularly&quot;</span>
+            <span class="n">is_failure</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">is_success</span>
+            <span class="n">is_running</span> <span class="o">=</span> <span class="n">state</span> <span class="o">==</span> <span class="s2">&quot;running&quot;</span>
+
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="n">job_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="p">,</span>
+                <span class="n">termination</span><span class="p">,</span>
+                <span class="n">is_success</span><span class="p">,</span>
+                <span class="n">is_running</span><span class="p">,</span>
+                <span class="n">is_failure</span><span class="p">,</span>
+            <span class="p">)</span>
 
         <span class="n">swm</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;SomaWorkflowConfig&quot;</span><span class="p">]</span>
         <span class="n">swm</span><span class="o">.</span><span class="n">connect_resource</span><span class="p">(</span><span class="n">engine</span><span class="o">.</span><span class="n">connected_to</span><span class="p">())</span>
@@ -1554,48 +1626,62 @@ window.addEventListener("load", load);</script>
         <span class="n">jobs</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="k">for</span> <span class="n">wf_id</span> <span class="ow">in</span> <span class="n">controller</span><span class="o">.</span><span class="n">workflows</span><span class="p">():</span>
-            <span class="n">wf_st</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">workflow_elements_status</span><span class="p">(</span><span class="n">wf_id</span><span class="p">)</span>
-            <span class="n">finished_jobs</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">job_statuses</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">workflow_elements_status</span><span class="p">(</span><span class="n">wf_id</span><span class="p">)</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="p">[</span><span class="n">parse_status</span><span class="p">(</span><span class="n">js</span><span class="p">)</span> <span class="k">for</span> <span class="n">js</span> <span class="ow">in</span> <span class="n">job_statuses</span><span class="p">]</span>
+            <span class="c1"># Workflow-level failure: ANY job failed</span>
+            <span class="n">workflow_failed</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_failure</span> <span class="k">for</span> <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">is_failure</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">)</span>
+            <span class="n">workflow_running</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">parsed</span><span class="p">)</span>
+            <span class="c1"># Keep only successful jobs</span>
+            <span class="n">finished</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">job_id</span><span class="p">:</span> <span class="n">js</span>
+                <span class="k">for</span> <span class="n">js</span><span class="p">,</span> <span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">is_success</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+                    <span class="n">job_statuses</span><span class="p">,</span> <span class="n">parsed</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">is_success</span>
+            <span class="p">}</span>
 
-            <span class="k">for</span> <span class="n">job_st</span> <span class="ow">in</span> <span class="n">wf_st</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                <span class="n">job_id</span> <span class="o">=</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-                <span class="k">if</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;done&quot;</span> <span class="ow">or</span> <span class="n">job_st</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;finished_regularly&quot;</span><span class="p">:</span>
-                    <span class="k">continue</span>
-
-                <span class="n">finished_jobs</span><span class="p">[</span><span class="n">job_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">job_st</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">finished_jobs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">finished</span><span class="p">:</span>
+                <span class="c1"># No successful jobs, but workflow may still be running or</span>
+                <span class="c1"># may have failed</span>
+                <span class="n">jobs</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;__workflow__:</span><span class="si">{</span><span class="n">wf_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;workflow&quot;</span><span class="p">:</span> <span class="n">wf_id</span><span class="p">,</span>
+                    <span class="s2">&quot;job&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;swf_status&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="s2">&quot;running&quot;</span><span class="p">:</span> <span class="n">workflow_running</span><span class="p">,</span>
+                    <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">workflow_failed</span><span class="p">,</span>
+                <span class="p">}</span>
                 <span class="k">continue</span>
 
             <span class="n">wf</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">workflow</span><span class="p">(</span><span class="n">wf_id</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">wf</span><span class="o">.</span><span class="n">jobs</span><span class="p">:</span>
-                <span class="n">brid</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">brick_id</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="s2">&quot;uuid&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">brid</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">brick_id</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="c1"># get engine job</span>
                 <span class="n">ejob</span> <span class="o">=</span> <span class="n">wf</span><span class="o">.</span><span class="n">job_mapping</span><span class="p">[</span><span class="n">job</span><span class="p">]</span>
                 <span class="n">job_id</span> <span class="o">=</span> <span class="n">ejob</span><span class="o">.</span><span class="n">job_id</span>
-                <span class="n">status</span> <span class="o">=</span> <span class="n">finished_jobs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">status</span> <span class="o">=</span> <span class="n">finished</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">status</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="n">jobs</span><span class="p">[</span><span class="n">brid</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">jobs</span><span class="p">[</span><span class="n">brick_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;workflow&quot;</span><span class="p">:</span> <span class="n">wf_id</span><span class="p">,</span>
                     <span class="s2">&quot;job&quot;</span><span class="p">:</span> <span class="n">job</span><span class="p">,</span>
                     <span class="s2">&quot;job_id&quot;</span><span class="p">:</span> <span class="n">job_id</span><span class="p">,</span>
                     <span class="s2">&quot;swf_status&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">,</span>
+                    <span class="s2">&quot;running&quot;</span><span class="p">:</span> <span class="n">workflow_running</span><span class="p">,</span>
+                    <span class="s2">&quot;failed&quot;</span><span class="p">:</span> <span class="n">workflow_failed</span><span class="p">,</span>
                 <span class="p">}</span>
 
         <span class="k">return</span> <span class="n">jobs</span></div>
 
 
 <div class="viewcode-block" id="Project.getFilter">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getFilter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getFilter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a Filter object from its name.</span>
 
@@ -1610,7 +1696,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getFilterName">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getFilterName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getFilterName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFilterName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input box to type the name of the filter to save.</span>
@@ -1618,8 +1704,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :return (str): Return the name typed by the user or None if</span>
 <span class="sd">                       cancelled</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span>
 
         <span class="n">text</span><span class="p">,</span> <span class="n">ok_pressed</span> <span class="o">=</span> <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span><span class="p">(</span>
             <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Save a filter&quot;</span><span class="p">,</span> <span class="s2">&quot;Filter name: &quot;</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="o">.</span><span class="n">Normal</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
@@ -1633,7 +1717,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getName">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
@@ -1645,7 +1729,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_orphan_bricks">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphan bricks and their associated weak files.</span>
@@ -1749,7 +1833,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_orphan_history">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphaned history entries, their associated orphan bricks,</span>
@@ -1769,6 +1853,7 @@ window.addEventListener("load", load);</script>
         <span class="n">orphan_bricks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">orphan_weak_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">used_hist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
             <span class="n">hist_docs</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
@@ -1776,18 +1861,13 @@ window.addEventListener("load", load);</script>
                 <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">HISTORY_ID</span><span class="p">,</span> <span class="n">HISTORY_BRICKS</span><span class="p">],</span>
             <span class="p">)</span>
 
-            <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span> <span class="s2">&quot;&quot;</span>
-            <span class="p">)</span>
-            <span class="n">lp</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
-
             <span class="k">for</span> <span class="n">hist</span> <span class="ow">in</span> <span class="n">hist_docs</span><span class="p">:</span>
                 <span class="n">hist_id</span> <span class="o">=</span> <span class="n">hist</span><span class="p">[</span><span class="n">HISTORY_ID</span><span class="p">]</span>
 
                 <span class="k">if</span> <span class="n">hist_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">continue</span>
 
-                <span class="k">if</span> <span class="n">hist</span><span class="p">[</span><span class="n">HISTORY_BRICKS</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">hist</span><span class="p">[</span><span class="n">HISTORY_BRICKS</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">orphan_hist</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">hist_id</span><span class="p">)</span>
                     <span class="k">continue</span>
 
@@ -1808,10 +1888,12 @@ window.addEventListener("load", load);</script>
                             <span class="n">todo</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
                         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+                            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
-                            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
-                                <span class="n">values</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="n">lp</span><span class="p">:])</span>
+                            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
+                                <span class="n">values</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                                    <span class="n">path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span><span class="o">.</span><span class="n">as_posix</span><span class="p">()</span>
+                                <span class="p">)</span>
 
                 <span class="n">docs</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
                     <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
@@ -1825,15 +1907,24 @@ window.addEventListener("load", load);</script>
 
                     <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_HISTORY</span><span class="p">]</span> <span class="ow">and</span> <span class="n">hist_id</span> <span class="o">==</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_HISTORY</span><span class="p">]:</span>
 
-                        <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span>
-                            <span class="s2">&quot;scripts/&quot;</span>
-                        <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
-                            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
+                        <span class="n">doc_rel</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
+                        <span class="n">doc_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">proj_dir</span> <span class="o">/</span> <span class="n">doc_rel</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+                        <span class="k">if</span> <span class="p">(</span>
+                            <span class="n">doc_rel</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;scripts&quot;</span>
+                            <span class="ow">or</span> <span class="ow">not</span> <span class="n">doc_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span>
+                            <span class="ow">or</span> <span class="n">doc_rel</span><span class="o">.</span><span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CVR_physio_reg.mat&quot;</span>
                         <span class="p">):</span>
-                            <span class="c1"># script files are &quot;weak&quot; and should not prevent</span>
-                            <span class="c1"># brick deletion. Non-existing files can be</span>
-                            <span class="c1"># cleared too.</span>
-                            <span class="n">orphan_files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
+                            <span class="c1"># 1. script files are &quot;weak&quot; and should not prevent</span>
+                            <span class="c1"># brick deletion.</span>
+                            <span class="c1"># 2. currently, we are creating the</span>
+                            <span class="c1"># CVR_physio_reg.mat file during the initialisation</span>
+                            <span class="c1"># phase... This is a temporary solution until we</span>
+                            <span class="c1"># find a better one in the mia_processes section...</span>
+                            <span class="c1"># This should not prevent the brick from being</span>
+                            <span class="c1"># deleted.</span>
+                            <span class="c1"># 3. non-existing files can be cleared too.</span>
+                            <span class="n">orphan_files</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc_rel</span><span class="o">.</span><span class="n">as_posix</span><span class="p">())</span>
                             <span class="k">continue</span>
 
                         <span class="n">used</span> <span class="o">=</span> <span class="kc">True</span>
@@ -1849,27 +1940,36 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_orphan_nonexisting_files">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Retrieves orphaned files listed in the database that no longer exist</span>
-<span class="sd">        on the filesystem.</span>
+<span class="sd">        Return filenames that are recorded in the database but missing on disk.</span>
+
+<span class="sd">        A file is considered &quot;orphaned&quot; if:</span>
+<span class="sd">        - It does not exist on the filesystem, and</span>
+<span class="sd">        - It is not associated with any existing bricks,</span>
+<span class="sd">        unless `failed` is True (in which case brick association is ignored).</span>
+
+<span class="sd">        :param failed (bool): If True, include files even if they are linked to</span>
+<span class="sd">                              existing bricks. If False, exclude such files.</span>
 
 <span class="sd">        :return (set): A set of filenames from the database that are not</span>
 <span class="sd">                       found on the filesystem and are not associated with</span>
 <span class="sd">                       existing bricks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
             <span class="n">docs</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
                 <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
                 <span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">,</span> <span class="n">TAG_BRICKS</span><span class="p">],</span>
             <span class="p">)</span>
-            <span class="n">orphan</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">orphans</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 
             <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
 
-                <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_BRICKS</span><span class="p">]:</span>
+                <span class="c1"># Skip files linked to existing bricks unless failed=True</span>
+                <span class="k">if</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_BRICKS</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">failed</span><span class="p">:</span>
                     <span class="n">bricks</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
                         <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span>
                         <span class="n">primary_keys</span><span class="o">=</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_BRICKS</span><span class="p">],</span>
@@ -1879,16 +1979,16 @@ window.addEventListener("load", load);</script>
                     <span class="k">if</span> <span class="n">bricks</span><span class="p">:</span>
                         <span class="k">continue</span>
 
-                <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
+                <span class="n">file_path</span> <span class="o">=</span> <span class="n">base_path</span> <span class="o">/</span> <span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span>
 
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-                    <span class="n">orphan</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                    <span class="n">orphans</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">])</span>
 
-        <span class="k">return</span> <span class="n">orphan</span></div>
+        <span class="k">return</span> <span class="n">orphans</span></div>
 
 
 <div class="viewcode-block" id="Project.getSortedTag">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getSortedTag">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getSortedTag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
@@ -1900,7 +2000,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getSortOrder">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.getSortOrder">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getSortOrder">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
@@ -1912,7 +2012,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.hasUnsavedModifications">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.hasUnsavedModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.hasUnsavedModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
@@ -1924,7 +2024,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.init_filters">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">         Initializes project filters by loading them from stored JSON files.</span>
@@ -1961,7 +2061,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.loadProperties">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.loadProperties">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.loadProperties">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads the project properties from the &#39;properties.yml&#39; file.</span>
@@ -1972,10 +2072,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :return (dict): A dictionary containing the project properties if</span>
 <span class="sd">                        successfully loaded, or None if an error occurs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># import verCmp only here to prevent circular import issue</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">verCmp</span>
-
         <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;properties.yml&quot;</span>
         <span class="p">)</span>
@@ -1999,7 +2095,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.redo">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.redo">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.redo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last action made by the user on the project.</span>
@@ -2016,8 +2112,6 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        :raises (ValueError): If an unknown action type is encountered.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># To avoid circular imports</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="p">:</span>
             <span class="k">return</span>  <span class="c1"># No action to redo</span>
@@ -2141,58 +2235,63 @@ window.addEventListener("load", load);</script>
                 <span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_values&quot;</span><span class="p">:</span>
-            <span class="c1"># Not working?</span>
+            <span class="c1"># TODO: Not working?</span>
+
             <span class="c1"># To modify the values, we need the cells,</span>
             <span class="c1"># and the updated values</span>
-
             <span class="c1"># The second element is a list of modified values</span>
             <span class="c1"># (reset or value changed)</span>
             <span class="n">modified_values</span> <span class="o">=</span> <span class="n">to_redo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="n">safe_disconnect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
 
-                <span class="k">for</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">modified_values</span><span class="p">:</span>
-                    <span class="c1"># Each modified value is a list of 3 elements:</span>
-                    <span class="c1"># scan, tag, old_value and new_value</span>
-                    <span class="n">item</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span>
-                        <span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">),</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-                    <span class="p">)</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
 
-                    <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># Font reput to normal in case it was a not</span>
-                        <span class="c1"># defined cell</span>
-                        <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-                        <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
-
-                    <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
-                        <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                        <span class="n">primary_key</span><span class="o">=</span><span class="n">scan</span><span class="p">,</span>
-                        <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">new_value</span><span class="p">},</span>
-                    <span class="p">)</span>
-
-                    <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                        <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
-                        <span class="n">set_item_data</span><span class="p">(</span>
-                            <span class="n">item</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
+                    <span class="k">for</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">modified_values</span><span class="p">:</span>
+                        <span class="c1"># Each modified value is a list of 3 elements:</span>
+                        <span class="c1"># scan, tag, old_value and new_value</span>
+                        <span class="n">item</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span>
+                            <span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">),</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
                         <span class="p">)</span>
 
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">set_item_data</span><span class="p">(</span>
-                            <span class="n">item</span><span class="p">,</span>
-                            <span class="n">new_value</span><span class="p">,</span>
-                            <span class="n">database_data</span><span class="o">.</span><span class="n">get_field_attributes</span><span class="p">(</span>
-                                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span>
-                            <span class="p">)[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
+                        <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># Font reput to normal in case it was a not</span>
+                            <span class="c1"># defined cell</span>
+                            <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                            <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+                        <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+                            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                            <span class="n">primary_key</span><span class="o">=</span><span class="n">scan</span><span class="p">,</span>
+                            <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">new_value</span><span class="p">},</span>
                         <span class="p">)</span>
 
-            <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                            <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+                            <span class="n">set_item_data</span><span class="p">(</span>
+                                <span class="n">item</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
+                            <span class="p">)</span>
+
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">set_item_data</span><span class="p">(</span>
+                                <span class="n">item</span><span class="p">,</span>
+                                <span class="n">new_value</span><span class="p">,</span>
+                                <span class="n">database_data</span><span class="o">.</span><span class="n">get_field_attributes</span><span class="p">(</span>
+                                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span>
+                                <span class="p">)[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
+                            <span class="p">)</span>
+
+                <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
+
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="c1"># Ensure signal is reconnected even if an error occurs</span>
+                <span class="n">safe_connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_visibilities&quot;</span><span class="p">:</span>
             <span class="c1"># To revert the modifications of the visualized tags</span>
@@ -2210,7 +2309,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.reput_values">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.reput_values">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.reput_values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reput_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-put the value objects in the database.</span>
@@ -2236,7 +2335,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.saveConfig">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.saveConfig">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.saveConfig">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the changes in the properties file.&quot;&quot;&quot;</span>
 
@@ -2254,15 +2353,12 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.save_current_filter">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.save_current_filter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.save_current_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_filters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the current filter.</span>
 
 <span class="sd">        :param custom_filters: The customized filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QMessageBox</span>
-
         <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">nots</span> <span class="o">=</span> <span class="n">custom_filters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="n">conditions</span>
@@ -2315,7 +2411,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.saveModifications">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.saveModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.saveModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the pending operations of the project (actions still not saved).</span>
@@ -2325,7 +2421,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setCurrentFilter">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.setCurrentFilter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setCurrentFilter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setCurrentFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current filter of the project.</span>
 
@@ -2335,7 +2431,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setDate">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.setDate">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setDate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the date of the project.</span>
 
@@ -2345,7 +2441,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setName">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of the project if it&#39;s not Unnamed project, otherwise</span>
@@ -2357,7 +2453,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setSortedTag">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.setSortedTag">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setSortedTag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sorted tag of the project.</span>
 
@@ -2371,7 +2467,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setSortOrder">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.setSortOrder">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setSortOrder">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sort order of the project.</span>
 
@@ -2385,7 +2481,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.undo">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.undo">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.undo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo the last action made by the user on the project.</span>
 
@@ -2398,9 +2494,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - modified_values</span>
 <span class="sd">            - modified_visibilities</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># To avoid circular imports</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">set_item_data</span>
 
         <span class="c1"># Ensure there is an action to undo</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">undos</span><span class="p">:</span>
@@ -2481,9 +2574,14 @@ window.addEventListener("load", load);</script>
                     <span class="n">table</span><span class="o">.</span><span class="n">removeRow</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">))</span>
                     <span class="n">table</span><span class="o">.</span><span class="n">scans_to_visualize</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span>
 
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
+            <span class="n">safe_disconnect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
+
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="c1"># Ensure signal is reconnected even if an error occurs</span>
+                <span class="n">safe_connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_values&quot;</span><span class="p">:</span>
             <span class="c1"># To revert a value changed in the databrowser,</span>
@@ -2492,57 +2590,62 @@ window.addEventListener("load", load);</script>
             <span class="c1"># The second element is a list of modified values (reset,</span>
             <span class="c1"># or value changed)</span>
             <span class="n">modified_values</span> <span class="o">=</span> <span class="n">to_undo</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+            <span class="n">safe_disconnect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
 
-                <span class="k">for</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">modified_values</span><span class="p">:</span>
-                    <span class="n">item</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span>
-                        <span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">),</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
-                    <span class="p">)</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
 
-                    <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="c1"># If the cell was not defined before, we reput it</span>
-                        <span class="n">database_data</span><span class="o">.</span><span class="n">remove_value</span><span class="p">(</span>
-                            <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span>
-                        <span class="p">)</span>
-                        <span class="n">database_data</span><span class="o">.</span><span class="n">remove_value</span><span class="p">(</span>
-                            <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span>
-                        <span class="p">)</span>
-                        <span class="n">set_item_data</span><span class="p">(</span>
-                            <span class="n">item</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
-                        <span class="p">)</span>
-                        <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                        <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-                        <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
-
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="c1"># If the cell was there before,</span>
-                        <span class="c1"># we just set it to the old value</span>
-                        <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
-                            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                            <span class="n">primary_key</span><span class="o">=</span><span class="n">scan</span><span class="p">,</span>
-                            <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">old_value</span><span class="p">},</span>
-                        <span class="p">)</span>
-                        <span class="n">set_item_data</span><span class="p">(</span>
-                            <span class="n">item</span><span class="p">,</span>
-                            <span class="n">old_value</span><span class="p">,</span>
-                            <span class="n">database_data</span><span class="o">.</span><span class="n">get_field_attributes</span><span class="p">(</span>
-                                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span>
-                            <span class="p">)[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
+                    <span class="k">for</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span> <span class="ow">in</span> <span class="n">modified_values</span><span class="p">:</span>
+                        <span class="n">item</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span>
+                            <span class="n">table</span><span class="o">.</span><span class="n">get_scan_row</span><span class="p">(</span><span class="n">scan</span><span class="p">),</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
                         <span class="p">)</span>
 
-                        <span class="c1"># If the new value is None,</span>
-                        <span class="c1"># the not defined font must be removed</span>
-                        <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">old_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="c1"># If the cell was not defined before, we reput it</span>
+                            <span class="n">database_data</span><span class="o">.</span><span class="n">remove_value</span><span class="p">(</span>
+                                <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span>
+                            <span class="p">)</span>
+                            <span class="n">database_data</span><span class="o">.</span><span class="n">remove_value</span><span class="p">(</span>
+                                <span class="n">COLLECTION_INITIAL</span><span class="p">,</span> <span class="n">scan</span><span class="p">,</span> <span class="n">tag</span>
+                            <span class="p">)</span>
+                            <span class="n">set_item_data</span><span class="p">(</span>
+                                <span class="n">item</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span>
+                            <span class="p">)</span>
                             <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
-                            <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-                            <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                            <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                             <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
 
-            <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
-            <span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="c1"># If the cell was there before,</span>
+                            <span class="c1"># we just set it to the old value</span>
+                            <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+                                <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                                <span class="n">primary_key</span><span class="o">=</span><span class="n">scan</span><span class="p">,</span>
+                                <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span><span class="n">tag</span><span class="p">:</span> <span class="n">old_value</span><span class="p">},</span>
+                            <span class="p">)</span>
+                            <span class="n">set_item_data</span><span class="p">(</span>
+                                <span class="n">item</span><span class="p">,</span>
+                                <span class="n">old_value</span><span class="p">,</span>
+                                <span class="n">database_data</span><span class="o">.</span><span class="n">get_field_attributes</span><span class="p">(</span>
+                                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">tag</span>
+                                <span class="p">)[</span><span class="s2">&quot;field_type&quot;</span><span class="p">],</span>
+                            <span class="p">)</span>
+
+                            <span class="c1"># If the new value is None,</span>
+                            <span class="c1"># the not defined font must be removed</span>
+                            <span class="k">if</span> <span class="n">new_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                                <span class="n">font</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">font</span><span class="p">()</span>
+                                <span class="n">font</span><span class="o">.</span><span class="n">setItalic</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                                <span class="n">font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                                <span class="n">item</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+                <span class="n">table</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
+
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="c1"># Ensure signal is reconnected even if an error occurs</span>
+                <span class="n">safe_connect</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="n">table</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
         <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">&quot;modified_visibilities&quot;</span><span class="p">:</span>
             <span class="c1"># To revert the modifications of the visualized tags</span>
@@ -2574,8 +2677,6 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="o">=</span> <span class="n">value</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCoreApplication</span>
-
             <span class="n">app</span> <span class="o">=</span> <span class="n">QCoreApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
 
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span><span class="p">:</span>
@@ -2593,7 +2694,7 @@ window.addEventListener("load", load);</script>
             <span class="k">pass</span>
 
 <div class="viewcode-block" id="Project.unsaveModifications">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.unsaveModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.unsaveModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unsaveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unsave the pending operations of the project.</span>
@@ -2602,7 +2703,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.update_db_for_paths">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_db_for_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update database paths when renaming or loading a project.</span>
 

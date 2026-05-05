@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -482,12 +482,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        - launch_mia</span>
 <span class="sd">        - message_already_exists</span>
 <span class="sd">        - remove_document</span>
+<span class="sd">        - safe_connect</span>
+<span class="sd">        - safe_disconnect</span>
 <span class="sd">        - set_db_field_value</span>
 <span class="sd">        - set_filters_directory_as_default</span>
 <span class="sd">        - set_item_data</span>
 <span class="sd">        - set_projects_directory_as_default</span>
 <span class="sd">        - table_to_database</span>
 <span class="sd">        - type_name</span>
+<span class="sd">        - update_auto_inheritance</span>
 <span class="sd">        - verCmp</span>
 <span class="sd">        - verify_processes</span>
 <span class="sd">        - verify_setup</span>
@@ -502,12 +505,15 @@ window.addEventListener("load", load);</script>
 <span class="c1">##########################################################################</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
@@ -521,12 +527,19 @@ window.addEventListener("load", load);</script>
 <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Node</span><span class="p">,</span> <span class="n">get_process_instance</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+    <span class="n">Node</span><span class="p">,</span>
+    <span class="n">Pipeline</span><span class="p">,</span>
+    <span class="n">Process</span><span class="p">,</span>
+    <span class="n">ProcessNode</span><span class="p">,</span>
+    <span class="n">get_process_instance</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
 
 <span class="c1"># PyQt5 imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QFileDialog</span><span class="p">,</span>
@@ -539,9 +552,11 @@ window.addEventListener("load", load);</script>
     <span class="n">QVBoxLayout</span><span class="p">,</span>
     <span class="n">QWidget</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_file_trait</span>
 
 <span class="c1"># Soma-base imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qtThread</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtThreadCall</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Undefined</span>
 
 <span class="c1"># Populse_mia imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
@@ -556,11 +571,6 @@ window.addEventListener("load", load);</script>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_TIME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>  <span class="c1"># noqa E402</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project_properties</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
-    <span class="n">SavedProjects</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.main_window</span><span class="w"> </span><span class="kn">import</span> <span class="n">MainWindow</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
@@ -569,7 +579,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PackagesInstall">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.PackagesInstall">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PackagesInstall</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helps make a pipeline package available in the Mia pipeline library</span>
@@ -593,7 +603,7 @@ window.addEventListener("load", load);</script>
     <span class="p">}</span>
 
 <div class="viewcode-block" id="PackagesInstall.__init__">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.PackagesInstall.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the package registry.&quot;&quot;&quot;</span>
 
@@ -601,7 +611,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PackagesInstall.add_package">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.PackagesInstall.add_package">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.PackagesInstall.add_package">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively adds a package and its subpackages/modules to the Mia</span>
@@ -730,6 +740,8 @@ window.addEventListener("load", load);</script>
 
 
 
+<div class="viewcode-block" id="_is_valid_date">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project._is_valid_date">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">date_format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if a string matches the given date format.</span>
@@ -744,11 +756,12 @@ window.addEventListener("load", load);</script>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 
 
 <div class="viewcode-block" id="check_python_version">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.check_python_version">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.check_python_version">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_python_version</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the Python version is at least 3.10.</span>
@@ -765,7 +778,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="check_value_type">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.check_value_type">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.check_value_type">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks the type of new value in a table cell (QTableWidget).</span>
@@ -852,7 +865,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="dict4runtime_update">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.dict4runtime_update">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.dict4runtime_update">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">dict4runtime_update</span><span class="p">(</span><span class="n">runtime_dict</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update a dictionary with tag values from the project&#39;s current collection.</span>
@@ -887,7 +900,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="get_db_field_value">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_db_field_value">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.get_db_field_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve the value of a specific field for a document from the project&#39;s</span>
@@ -912,7 +925,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="get_document_names">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_document_names">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.get_document_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_document_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the names of all documents in the specified collection</span>
@@ -930,7 +943,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="get_field_names">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_field_names">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.get_field_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_field_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of field names (i.e., column names) for documents</span>
@@ -948,7 +961,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="get_shown_tags">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_shown_tags">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.get_shown_tags">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_shown_tags</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of tags that are marked as &#39;shown&#39; in the project&#39;s</span>
@@ -965,7 +978,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="get_value">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.get_value">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.get_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the value of a specific field from a document in the given</span>
@@ -986,117 +999,186 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="launch_mia">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.launch_mia">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">launch_mia</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.launch_mia">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">launch_mia</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">SavedProjects</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Launches the Mia software application.</span>
+<span class="sd">    Launch and run the Mia software application.</span>
 
-<span class="sd">    This function:</span>
-<span class="sd">    - Overloads the sys.excepthook handler with the _my_excepthook function</span>
-<span class="sd">      to log uncaught exceptions in non-interactive mode.</span>
-<span class="sd">    - Checks if Mia is already running in another instance, and prevents</span>
-<span class="sd">      multiple instances from opening.</span>
-<span class="sd">    - Verifies if saved projects still exist, updating the list of opened</span>
-<span class="sd">      projects if necessary.</span>
-<span class="sd">    - Instantiates the &#39;project&#39; object and launches Mia&#39;s GUI.</span>
+<span class="sd">     This function is the main entry point. It:</span>
+<span class="sd">        - Installs a custom sys.excepthook to handle uncaught exceptions.</span>
+<span class="sd">        - Prevents multiple instances unless explicitly allowed.</span>
+<span class="sd">        - Verifies saved projects consistency.</span>
+<span class="sd">        - Performs project cleanup safely before destruction.</span>
+<span class="sd">        - Creates and displays the main Qt window.</span>
+<span class="sd">        - Ensures idempotent cleanup on exit or crash.</span>
 
-<span class="sd">    :param args (Namespace): Command line arguments.</span>
+<span class="sd">    All state is local and shared via closures.</span>
 
-<span class="sd">    :Private functions:</span>
-<span class="sd">        - _my_excepthook: Logs uncaught exceptions in non-interactive mode.</span>
-<span class="sd">        - _verify_saved_projects: Checks if saved projects still exist and</span>
-<span class="sd">           updates the list.</span>
+<span class="sd">    :param MainWindow (class): The main window class to be instantiated.</span>
+<span class="sd">    :param Project (class): The project class to be instantiated.</span>
+<span class="sd">    :param SavedProjects (class): The class that manages all projects saved in</span>
+<span class="sd">                                  Mia.</span>
+<span class="sd">    :param Config (class): The class that manages Mia&#39;s configuration and</span>
+<span class="sd">                           properties.</span>
+<span class="sd">    :param args (argparse.Namespace): Parsed command-line arguments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Register the exception hook early</span>
+    <span class="n">previous_excepthook</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span>
 
-    <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform application cleanup tasks.</span>
 
-    <span class="c1"># useful for WebEngine</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># QtWebEngineWidgets need to be imported before QCoreApplication</span>
-        <span class="c1"># instance is created (used later)</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWebEngineWidgets</span>  <span class="c1"># noqa: F401</span>
+<span class="sd">        This function is safe to call multiple times. It updates the list of</span>
+<span class="sd">        opened projects and releases non-GUI resources without relying on</span>
+<span class="sd">        Qt object internals, which may already be destroyed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">nonlocal</span> <span class="n">cleaned_up</span>
 
-    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="k">pass</span>  <span class="c1"># QtWebEngineWidgets is not installed</span>
+        <span class="k">if</span> <span class="n">cleaned_up</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">cleaned_up</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">project_folder</span> <span class="ow">and</span> <span class="n">project_folder</span> <span class="ow">in</span> <span class="n">opened_projects</span><span class="p">:</span>
+                <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">project_folder</span><span class="p">)</span>
+
+            <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Cleanup incomplete; resetting opened projects&quot;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">([])</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clean up before closing Mia completed.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cleanup_and_quit</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clean up application state and terminate the Qt event loop.</span>
+
+<span class="sd">        This function is connected to the main window&#39;s destruction signal</span>
+<span class="sd">        and ensures a graceful shutdown of the application.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">cleaned_up</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="c1"># Safely remove raw files while main_window/project exists</span>
+            <span class="k">if</span> <span class="n">main_window</span> <span class="ow">and</span> <span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="p">:</span>
+                <span class="n">main_window</span><span class="o">.</span><span class="n">remove_raw_files_useless</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to remove useless raw files during shutdown&quot;</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">_clean_up</span><span class="p">()</span>
+        <span class="n">_restore_terminal</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">previous_excepthook</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
+            <span class="n">app</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_my_excepthook</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Log all uncaught exceptions in non-interactive mode and cleans</span>
-<span class="sd">        up before exiting.</span>
+<span class="sd">        Handle uncaught exceptions.</span>
 
-<span class="sd">        All python exceptions are handled by function, stored in</span>
-<span class="sd">        sys.excepthook. By overloading the sys.excepthook handler with</span>
-<span class="sd">        _my_excepthook function, this last function is called whenever</span>
-<span class="sd">        there is an unhandled exception (so one that exits the interpreter).</span>
-<span class="sd">        We take advantage of it to clean up mia software before closing.</span>
+<span class="sd">        This custom exception hook logs the exception, performs cleanup,</span>
+<span class="sd">        delegates to Python&#39;s default exception handler, and exits the</span>
+<span class="sd">        application with a non-zero status code.</span>
 
 <span class="sd">        :param etype (type): exception class</span>
 <span class="sd">        :param evalue (Exception): exception instance</span>
 <span class="sd">        :param tback(traceback): traceback object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s2">&quot;Unhandled exception occurred&quot;</span><span class="p">,</span>
+            <span class="n">exc_info</span><span class="o">=</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">_cleanup_and_quit</span><span class="p">()</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">__excepthook__</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-<span class="sd">        :Contains:</span>
-<span class="sd">            :Private function:</span>
-<span class="sd">                - _clean_up(): cleans up the mia software during &quot;normal&quot;</span>
-<span class="sd">                               closing.</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_restore_terminal</span><span class="p">():</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Restore the terminal to a sane state.</span>
+
+<span class="sd">        This function resets the terminal settings to a usable configuration</span>
+<span class="sd">        using `stty sane`. It ensures that input echoing, line endings, and</span>
+<span class="sd">        other terminal behaviors are restored, which is especially useful if</span>
+<span class="sd">        a library or subprocess has left the terminal in a raw or non-echoing</span>
+<span class="sd">        mode.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">():</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;Cleans up Mia software during &quot;normal&quot; closing.</span>
+        <span class="k">try</span><span class="p">:</span>
 
-<span class="sd">            Make a cleanup of the opened projects just before exiting mia.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-            <span class="n">opened_projects</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get_opened_projects</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="o">.</span><span class="n">isatty</span><span class="p">():</span>
+                <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s2">&quot;stty&quot;</span><span class="p">,</span> <span class="s2">&quot;sane&quot;</span><span class="p">],</span> <span class="n">check</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">opened_projects</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">(</span><span class="n">opened_projects</span><span class="p">)</span>
-                <span class="n">main_window</span><span class="o">.</span><span class="n">remove_raw_files_useless</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
 
-            <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">NameError</span><span class="p">):</span>
-                <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">([])</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_signal_handler</span><span class="p">(</span><span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Handle termination signals to ensure graceful shutdown.</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clean up before closing mia completed.&quot;</span><span class="p">)</span>
+<span class="sd">        This handler is triggered for SIGTERM (e.g., external kill command).</span>
+<span class="sd">        It performs necessary cleanup of application state and restores the</span>
+<span class="sd">        terminal to a sane configuration before exiting the process.</span>
 
-        <span class="c1"># log the exception here</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exception hooking in progress ...&quot;</span><span class="p">)</span>
-        <span class="n">_clean_up</span><span class="p">()</span>
-        <span class="c1"># then call the default handler</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">__excepthook__</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">)</span>
-        <span class="c1"># there was some issue/error/problem, so exiting</span>
+<span class="sd">        :param signum (int): The signal number received (unused).</span>
+<span class="sd">        :param frame (frame): The current stack frame (unused).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_cleanup_and_quit</span><span class="p">()</span>
+        <span class="n">_restore_terminal</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_verify_saved_projects</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Verifies if saved projects still exist and updates the</span>
-<span class="sd">        list accordingly.</span>
+<span class="sd">        Verify the existence of saved projects on disk.</span>
 
-<span class="sd">        :return: List of deleted projects</span>
+<span class="sd">        Projects whose directories no longer exist are removed from the saved</span>
+<span class="sd">        projects list.</span>
+
+<span class="sd">        :return (list[str]): Absolute paths of deleted projects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">saved_projects</span> <span class="o">=</span> <span class="n">SavedProjects</span><span class="p">()</span>
         <span class="n">deleted_projects</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">proj</span> <span class="ow">in</span> <span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">saved_projects</span><span class="o">.</span><span class="n">pathsList</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="p">]</span>
 
-        <span class="k">for</span> <span class="n">proj</span> <span class="ow">in</span> <span class="n">deleted_projects</span><span class="p">:</span>
-            <span class="n">saved_projects</span><span class="o">.</span><span class="n">removeSavedProject</span><span class="p">(</span><span class="n">proj</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">deleted_projects</span><span class="p">:</span>
+            <span class="n">saved_projects</span><span class="o">.</span><span class="n">removeSavedProject</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">deleted_projects</span>
 
-    <span class="k">global</span> <span class="n">main_window</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">_my_excepthook</span>
-    <span class="c1"># working from the scripts directory</span>
-    <span class="c1"># os.chdir(os.path.dirname(os.path.realpath(__file__)))</span>
+    <span class="n">main_window</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Explicit lifecycle control</span>
+    <span class="n">project_folder</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Captured early to avoid Qt destruction issues</span>
+    <span class="n">cleaned_up</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># Guard against multiple cleanups</span>
+    <span class="n">atexit</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">_restore_terminal</span><span class="p">)</span>
+    <span class="c1"># Ignore problematic terminal signals</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGINT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span>  <span class="c1"># Ctrl+C</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGTSTP</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span>  <span class="c1"># Ctrl+Z</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGQUIT</span><span class="p">,</span> <span class="n">signal</span><span class="o">.</span><span class="n">SIG_IGN</span><span class="p">)</span>  <span class="c1"># Ctrl+\</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">signal</span><span class="o">.</span><span class="n">SIGTERM</span><span class="p">,</span> <span class="n">_signal_handler</span><span class="p">)</span>
     <span class="n">lock_file</span> <span class="o">=</span> <span class="n">QLockFile</span><span class="p">(</span>
         <span class="n">QDir</span><span class="o">.</span><span class="n">temp</span><span class="p">()</span><span class="o">.</span><span class="n">absoluteFilePath</span><span class="p">(</span><span class="s2">&quot;lock_file_populse_mia.lock&quot;</span><span class="p">)</span>
     <span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">lock_file</span><span class="o">.</span><span class="n">tryLock</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lock_file</span><span class="o">.</span><span class="n">tryLock</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span><span class="p">:</span>
         <span class="c1"># software already opened in another instance</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Another instance of Mia is already running. Exiting...&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">previous_excepthook</span>
         <span class="k">return</span>
 
     <span class="c1"># no instances of the software is opened, or args.multi_instance</span>
@@ -1105,28 +1187,31 @@ window.addEventListener("load", load);</script>
     <span class="n">config</span><span class="o">.</span><span class="n">set_opened_projects</span><span class="p">([])</span>
     <span class="n">deleted_projects</span> <span class="o">=</span> <span class="n">_verify_saved_projects</span><span class="p">()</span>
     <span class="n">project</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">project_folder</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">folder</span>  <span class="c1"># Capture before GUI destruction</span>
     <span class="n">main_window</span> <span class="o">=</span> <span class="n">MainWindow</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">deleted_projects</span><span class="o">=</span><span class="n">deleted_projects</span><span class="p">)</span>
     <span class="n">main_window</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WA_DeleteOnClose</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_and_quit</span><span class="p">():</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Closes all open application windows and terminates the current</span>
-<span class="sd">        QApplication instance.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">QApplication</span><span class="o">.</span><span class="n">closeAllWindows</span><span class="p">()</span>
-        <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
-
-    <span class="c1"># Connect to the main window&#39;s close event instead</span>
-    <span class="n">main_window</span><span class="o">.</span><span class="n">destroyed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">cleanup_and_quit</span><span class="p">)</span>
+    <span class="c1"># Ensure cleanup is triggered on window destruction</span>
+    <span class="n">main_window</span><span class="o">.</span><span class="n">destroyed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">_cleanup_and_quit</span><span class="p">)</span>
     <span class="n">main_window</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="c1"># Add Quit shortcut Ctrl+Q</span>
+    <span class="n">quit_action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">,</span> <span class="n">main_window</span><span class="p">)</span>
+    <span class="n">quit_action</span><span class="o">.</span><span class="n">setShortcut</span><span class="p">(</span><span class="s2">&quot;Ctrl+Q&quot;</span><span class="p">)</span>
+    <span class="n">quit_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">_cleanup_and_quit</span><span class="p">)</span>
+    <span class="n">main_window</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="n">quit_action</span><span class="p">)</span>
     <span class="c1"># make sure to instantiate the QtThreadCall singleton from the main thread</span>
     <span class="n">QtThreadCall</span><span class="p">()</span>
-    <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>  <span class="c1"># Just start event loop</span></div>
+    <span class="c1"># Just start event loop</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">app</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;QApplication not initialized&quot;</span><span class="p">)</span>
+
+    <span class="n">app</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="message_already_exists">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.message_already_exists">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.message_already_exists">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">message_already_exists</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays a message box to tell that a project name already exists.</span>
@@ -1143,7 +1228,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="remove_document">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.remove_document">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.remove_document">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">remove_document</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes one or multiple documents from the specified collection</span>
@@ -1158,15 +1243,56 @@ window.addEventListener("load", load);</script>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">documents</span> <span class="o">=</span> <span class="p">[</span><span class="n">documents</span><span class="p">]</span>
 
-    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
 
         <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">documents</span><span class="p">:</span>
             <span class="n">database_data</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">document</span><span class="p">)</span></div>
 
 
 
+<div class="viewcode-block" id="safe_connect">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.safe_connect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_connect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Connect a Qt signal to a slot, ensuring a single connection.</span>
+
+<span class="sd">    First disconnects ``signal`` from ``slot`` (if connected) to avoid</span>
+<span class="sd">    duplicate connections, then connects them. This guarantees that the</span>
+<span class="sd">    slot is connected exactly once.</span>
+
+<span class="sd">    :param signal: The Qt signal to (re)connect.</span>
+<span class="sd">    :param slot: The slot (callable) to connect to the signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">safe_disconnect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">)</span>
+    <span class="n">signal</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="safe_disconnect">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.safe_disconnect">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">safe_disconnect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Disconnect a Qt signal from a slot if connected.</span>
+
+<span class="sd">    Attempts to disconnect ``signal`` from ``slot`` and silently ignores</span>
+<span class="sd">    the error raised when the connection does not exist. This makes the</span>
+<span class="sd">    operation idempotent and safe to call multiple times.</span>
+
+<span class="sd">    :param signal: The Qt signal to disconnect from.</span>
+<span class="sd">    :param slot: The slot (callable) previously connected to the signal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">signal</span><span class="o">.</span><span class="n">disconnect</span><span class="p">(</span><span class="n">slot</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+        <span class="c1"># Raised by Qt when the signal/slot connection does not exist</span>
+        <span class="k">pass</span></div>
+
+
+
 <div class="viewcode-block" id="set_db_field_value">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_db_field_value">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.set_db_field_value">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">tag_to_add</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create or update a field and its value for a document in the project&#39;s</span>
@@ -1226,7 +1352,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="set_filters_directory_as_default">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_filters_directory_as_default">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.set_filters_directory_as_default">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_filters_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the filters directory as default (Json files)</span>
@@ -1242,7 +1368,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="set_item_data">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_item_data">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.set_item_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the data for a given item in the data browser based on the</span>
@@ -1356,16 +1482,14 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="set_projects_directory_as_default">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.set_projects_directory_as_default">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.set_projects_directory_as_default">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the projects directory as default.</span>
 
 <span class="sd">    :param dialog (QFileDialog): current file dialog.</span>
+<span class="sd">    :param Config: The class that manages Mia&#39;s configuration and properties.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-
     <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
     <span class="n">projects_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get_projects_save_path</span><span class="p">())</span>
     <span class="n">projects_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1374,7 +1498,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="table_to_database">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.table_to_database">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.table_to_database">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">table_to_database</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepares the value to the database based on its type.</span>
@@ -1439,7 +1563,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="type_name">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.type_name">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.type_name">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">type_name</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the name of a type or a string representation for generic</span>
@@ -1455,8 +1579,251 @@ window.addEventListener("load", load);</script>
 
 
 
+<div class="viewcode-block" id="update_auto_inheritance">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.update_auto_inheritance">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Automatically infer database tags for output parameters from input</span>
+<span class="sd">    parameters.</span>
+
+<span class="sd">    1. **Single input case**: When only one input parameter has a database</span>
+<span class="sd">        value, all outputs inherit from this input.</span>
+<span class="sd">    2. **Multiple inputs with same value**: When multiple inputs exist but</span>
+<span class="sd">        have identical database values, fallback to single input behavior.</span>
+<span class="sd">    3. **Ambiguous case**: When multiple inputs have different database</span>
+<span class="sd">        values, track all possible inheritance sources for user resolution.</span>
+
+<span class="sd">    The process attribute auto_inheritance_dict is filled with these</span>
+<span class="sd">    values. It&#39;s a dict with the shape::</span>
+
+<span class="sd">        {output_filename: &lt;input_spec&gt;}</span>
+
+<span class="sd">    `output_filename` is the relative filename in the database</span>
+
+<span class="sd">    `&lt;input_spec&gt;` can be:</span>
+
+<span class="sd">    * a string: filename</span>
+<span class="sd">    * a dict::</span>
+
+<span class="sd">            {input_param: input_filename}</span>
+
+<span class="sd">    `auto_inheritance_dict` is built automatically, and is used as a</span>
+<span class="sd">    fallback to :class:`ProcessMIA` `inheritance_dict`, built &quot;manually&quot;</span>
+<span class="sd">    (specialized for each process) in the :meth:`ProcessMIA.list_outputs`</span>
+<span class="sd">    when the latter does not exist, or does not specify what an output</span>
+<span class="sd">    inherits from.</span>
+
+<span class="sd">    If ambiguities still subsist, the Mia infrastructure will ask the user</span>
+<span class="sd">    how to solve them, which is not very convenient, and error-prone, thus</span>
+<span class="sd">    should be avoided.</span>
+
+<span class="sd">    :param node: The node (typically a process or process node) whose</span>
+<span class="sd">                    inputs and outputs are analyzed for tag inheritance.</span>
+<span class="sd">    :param job: An optional job object containing parameter values to</span>
+<span class="sd">                override or populate the node&#39;s inputs and outputs.</span>
+<span class="sd">                Defaults to None.</span>
+
+<span class="sd">    :return (dict or None): Auto-inheritance mapping if successful and no</span>
+<span class="sd">                            job provided, None if no inheritance can be</span>
+<span class="sd">                            determined or job is provided (in which case</span>
+<span class="sd">                            the job object is updated in-place).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Extract process from node if needed</span>
+    <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ProcessNode</span><span class="p">)</span> <span class="k">else</span> <span class="n">node</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
+        <span class="c1"># Keep only leaf processes that actually produce outputs</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Clean up any existing auto_inheritance_dict</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;auto_inheritance_dict&quot;</span><span class="p">):</span>
+        <span class="k">del</span> <span class="n">process</span><span class="o">.</span><span class="n">auto_inheritance_dict</span>
+
+    <span class="c1"># Validate study configuration and project</span>
+    <span class="n">study_config</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;get_study_config&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">study_config</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">project</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">study_config</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">project</span><span class="p">:</span>
+        <span class="c1"># No databasing, nothing to be done.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+    <span class="c1"># Extract inputs and outputs</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">()</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
+
+        <span class="c1"># Handle ProcessMIA specific outputs</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;list_outputs&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">):</span>
+            <span class="c1"># Normally same as outputs, but it may contain an additional</span>
+            <span class="c1"># &quot;notInDb&quot; key.</span>
+            <span class="n">outputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">traits</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">user_traits</span><span class="p">()</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">param</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span>
+        <span class="p">}</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">param</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span>
+        <span class="p">}</span>
+
+    <span class="c1"># Apply job parameter overrides if provided</span>
+    <span class="k">if</span> <span class="n">job</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">param_dict</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">]:</span>
+
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">param_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+
+                <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">job</span><span class="o">.</span><span class="n">param_dict</span><span class="p">:</span>
+                    <span class="n">job_value</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">job_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span>
+                    <span class="p">):</span>
+
+                        <span class="c1"># Update list elements</span>
+                        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">job_value</span><span class="p">):</span>
+
+                            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
+                                <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">job_value</span>
+
+                <span class="k">elif</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
+                    <span class="c1"># Remove undefined values</span>
+                    <span class="k">del</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Remove undefined values</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Undefined</span><span class="p">}</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Undefined</span><span class="p">}</span>
+
+    <span class="n">database_inputs</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Handle both single values and lists</span>
+            <span class="n">paths</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">[</span><span class="n">value</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="k">else</span> <span class="p">(</span>
+                    <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)]</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="p">[]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
+                <span class="n">resolved_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
+                    <span class="n">relative_path</span> <span class="o">=</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">database_data</span><span class="o">.</span><span class="n">has_document</span><span class="p">(</span>
+                        <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+                        <span class="n">primary_key</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">relative_path</span><span class="p">),</span>
+                    <span class="p">):</span>
+                        <span class="c1"># inheritance_dict is using full paths.</span>
+                        <span class="n">database_inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
+                        <span class="k">break</span>
+                        <span class="c1"># TODO: What if several path values are valid ?</span>
+                        <span class="c1">#       Currently we keep only the first element of</span>
+                        <span class="c1">#       the plug parameters</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">database_inputs</span><span class="p">:</span>
+        <span class="c1"># Zero inputs are registered in the database: We cannot</span>
+        <span class="c1"># infer outputs tags automatically. OK we leave.</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_inputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># If the process has a single input with a value in the database,</span>
+        <span class="c1"># then we can deduce its output database tags/attributes from it.</span>
+        <span class="n">inheritance_source</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">database_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Several inputs are registered in the database: We cannot</span>
+        <span class="c1"># infer outputs tags automatically too, but we mark the ambiguity</span>
+        <span class="c1"># to ask the user later</span>
+        <span class="n">unique_values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">database_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">inheritance_source</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">unique_values</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="n">database_inputs</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Build auto inheritance dictionary</span>
+    <span class="n">not_in_db</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;notInDb&quot;</span><span class="p">,</span> <span class="p">[]))</span>
+    <span class="n">auto_inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+        <span class="c1"># Skip special parameters and high-level user parameters</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">plug_name</span> <span class="o">==</span> <span class="s2">&quot;notInDb&quot;</span>
+            <span class="ow">or</span> <span class="n">plug_name</span> <span class="ow">in</span> <span class="n">not_in_db</span>
+            <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span><span class="o">.</span><span class="n">userlevel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span><span class="o">.</span><span class="n">userlevel</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">)</span>
+        <span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">trait</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Extract all valid file paths from plug value</span>
+        <span class="c1"># (handles nested lists)</span>
+        <span class="n">valid_paths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">plug_value</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
+            <span class="n">current</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">todo</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="n">resolved_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
+                    <span class="n">valid_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">valid_paths</span><span class="p">:</span>
+            <span class="n">auto_inheritance_dict</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">inheritance_source</span>
+
+    <span class="k">if</span> <span class="n">auto_inheritance_dict</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">job</span><span class="p">:</span>
+            <span class="n">job</span><span class="o">.</span><span class="n">auto_inheritance_dict</span> <span class="o">=</span> <span class="n">auto_inheritance_dict</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">auto_inheritance_dict</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+
 <div class="viewcode-block" id="verCmp">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verCmp">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.verCmp">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Version comparator.</span>
 
@@ -1507,14 +1874,15 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="verify_processes">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verify_processes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.verify_processes">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Install or update to the last version available on the station, for</span>
 <span class="sd">    nipype, capsul and mia_processes processes libraries.</span>
 
 <span class="sd">    :param nipypeVer: nipype version currently installed (str).</span>
 <span class="sd">    :param miaProcVer: mia_processes version currently installed (str).</span>
 <span class="sd">    :param capsulVer: capsul version currently installed (str).</span>
+<span class="sd">    :param Config: The class that manages Mia&#39;s configuration and properties.</span>
 
 <span class="sd">    By default, Mia provides three process libraries in the pipeline library</span>
 <span class="sd">    (available in Pipeline Manager tab). The nipype, given as it is because</span>
@@ -1542,9 +1910,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - _deepCompDic: keep the previous config existing before packages</span>
 <span class="sd">              update</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_deepCompDic</span><span class="p">(</span><span class="n">old_dic</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -2115,8 +2480,9 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="verify_setup">
-<a class="viewcode-back" href="../../../populse_mia.utils.html#populse_mia.utils.utils.verify_setup">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.data_manager.project.verify_setup">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">verify_setup</span><span class="p">(</span>
+    <span class="n">Config</span><span class="p">,</span>
     <span class="n">dev_mode</span><span class="p">,</span>
     <span class="n">pypath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">dot_mia_config</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -2125,6 +2491,7 @@ window.addEventListener("load", load);</script>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check and try to correct the configuration if necessary.</span>
 
+<span class="sd">    :param Config: The class that manages Mia&#39;s configuration and properties.</span>
 <span class="sd">    :param dev_mode (bool): the current developer mode.</span>
 <span class="sd">                            (True: dev, False: user)</span>
 <span class="sd">    :param pypath (list): List of paths for the capsul config.</span>
@@ -2140,13 +2507,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - _verify_miaConfig: check the config and try to fix if necessary</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># import Config only here to prevent circular import issue</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-
     <span class="k">if</span> <span class="n">pypath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pypath</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Let the user define the properties_path parameter.</span>
 
@@ -2155,8 +2519,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        which will use the value of the properties_path parameter,</span>
 <span class="sd">        defined here.</span>
 
-<span class="sd">        :param dialog: PyQt5.QtWidgets.QDialog object (&#39;msg&#39; in the</span>
-<span class="sd">                       main function)</span>
+<span class="sd">        :param dialog (PyQt5.QtWidgets.QDialog): &#39;msg&#39; object in the</span>
+<span class="sd">                                                 _verify_setup() function</span>
+<span class="sd">        :param checked (bool): Not used, but necessary for the connection with</span>
+<span class="sd">                        the browse button in the verify_setup()) function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">options</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">Options</span><span class="p">()</span>
         <span class="n">options</span> <span class="o">|=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">DontUseNativeDialog</span>
@@ -2182,12 +2548,14 @@ window.addEventListener("load", load);</script>
         <span class="k">if</span> <span class="n">existDir</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
             <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">existDir</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cancel the configuration check.</span>
 
-<span class="sd">        :param dialog: PyQt5.QtWidgets.QDialog object (&#39;msg&#39; in the</span>
-<span class="sd">                       main function)</span>
+<span class="sd">        :param dialog (PyQt5.QtWidgets.QDialog): &#39;msg&#39; object in the</span>
+<span class="sd">                                                 _verify_setup() function</span>
+<span class="sd">        :param checked: Not used, but necessary for the connection with the</span>
+<span class="sd">                        cancel button in the verify_setup()) function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dialog</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
@@ -2296,7 +2664,7 @@ window.addEventListener("load", load);</script>
                 <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check the config is not corrupted and try to fix if necessary.</span>
 
 <span class="sd">        The purpose of this method is twofold. First, it allows to</span>
@@ -2316,8 +2684,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        &quot;Properties path selection&quot; window is not closed and the user is again</span>
 <span class="sd">        prompted to set the properties_path parameter.</span>
 
-<span class="sd">        :param dialog: PyQt5.QtWidgets.QDialog object (&#39;msg&#39; in the</span>
-<span class="sd">                       main function)</span>
+<span class="sd">        :param dialog (PyQt5.QtWidgets.QDialog): &#39;msg&#39; object  in the</span>
+<span class="sd">                                                  verify_setup() function</span>
+<span class="sd">        :param checked (bool): Not used, but necessary for the connection with</span>
+<span class="sd">                               the OK button in the verify_setup() function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">save_flag</span> <span class="o">=</span> <span class="kc">False</span>

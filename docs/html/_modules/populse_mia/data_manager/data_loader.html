@@ -4,22 +4,455 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+881d2af6 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../_static/documentation_options.js?v=a73ba755"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=9c4c3897"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = `pre.mermaid {
+    /* Same as .mermaid-container > pre */
+    display: block;
+    width: 100%;
+}
+
+pre.mermaid > svg {
+    /* Same as .mermaid-container > pre > svg */
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}`;
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = `.mermaid-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.mermaid-container > pre {
+    display: block;
+    width: 100%;
+}
+
+.mermaid-container > pre > svg {
+    height: 500px;
+    width: 100%;
+    max-width: 100% !important;
+}
+
+.mermaid-fullscreen-btn {
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+    color: #333;
+}
+
+.mermaid-fullscreen-btn:hover {
+    opacity: 100% !important;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-btn.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-btn.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal {
+    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 95vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.98);
+    z-index: 9999;
+    padding: 20px;
+    overflow: auto;
+}
+
+.mermaid-fullscreen-modal.dark-theme {
+    background: rgba(0, 0, 0, 0.98);
+}
+
+.mermaid-fullscreen-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen {
+    position: relative;
+    width: 95vw;
+    height: 90vh;
+    max-width: 95vw;
+    max-height: 90vh;
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen.dark-theme {
+    background: #1a1a1a;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.mermaid-container-fullscreen pre.mermaid {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mermaid-container-fullscreen .mermaid svg {
+    height: 100% !important;
+    width: 100% !important;
+    cursor: grab;
+}
+
+.mermaid-fullscreen-close {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s;
+    font-size: 24px;
+    line-height: 1;
+    color: #333;
+}
+
+.mermaid-fullscreen-close:hover {
+    background: white;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    transform: scale(1.1);
+}
+
+.mermaid-fullscreen-close.dark-theme {
+    background: rgba(50, 50, 50, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e0e0e0;
+}
+
+.mermaid-fullscreen-close.dark-theme:hover {
+    background: rgba(60, 60, 60, 1);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
+    display: none !important;
+}`;
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        all_mermaids.forEach((el) => {
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+        await mermaid.run();
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
+
+    if ("False" === "True") {
+        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("");
+            if(all_mermaids.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else if(svgs.size() !== mermaids_to_add_zoom) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            } else {
+                svgs.each(function() {
+                    var svg = d3.select(this);
+                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+                    var inner = svg.select("g");
+                    var zoom = d3.zoom().on("zoom", function(event) {
+                        inner.attr("transform", event.transform);
+                    });
+                    svg.call(zoom);
+                });
+            }
+        }
+    } else if(all_mermaids.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if ("True" !== "True") return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = '⛶';
+        fullscreenBtn.style.opacity = '50%';
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scroll, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.sdisplay = 'block';
+
+                if ("False" === "True") {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+const load = async () => {
+    initStyles();
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...JSON.parse(
+                    `{"startOnLoad": false}`
+                ),
+                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...JSON.parse(
+        `{"startOnLoad": false}`
+    ),
+    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
+    }
+);
+
+window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+881d2af6 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_loader</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -55,23 +488,22 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="c1"># import datetime</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">hashlib</span>  <span class="c1"># To generate the md5 of each path</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">time_time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>  <span class="c1"># To generate the md5 of each path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">time_time</span>
 
-<span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QProgressDialog</span>
+<span class="c1"># PyQt5 import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QProgressDialog</span>
 
-<span class="c1"># Populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="c1"># populse_mia import</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
@@ -104,8 +536,8 @@
 
 
 <div class="viewcode-block" id="ImportProgress">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportProgress">[docs]</a>
-<span class="k">class</span> <span class="nc">ImportProgress</span><span class="p">(</span><span class="n">QProgressDialog</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImportProgress</span><span class="p">(</span><span class="n">QProgressDialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays a progress bar for the import process.</span>
 
@@ -117,8 +549,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ImportProgress.__init__">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportProgress.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="s2">&quot;Please wait while the paths are being imported...&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span>
         <span class="p">)</span>
@@ -138,8 +570,8 @@
 
 
 <div class="viewcode-block" id="ImportProgress.onProgress">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportProgress.onProgress">[docs]</a>
-    <span class="k">def</span> <span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress.onProgress">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the progress bar value.</span>
 
@@ -151,8 +583,8 @@
 
 
 <div class="viewcode-block" id="ImportWorker">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker">[docs]</a>
-<span class="k">class</span> <span class="nc">ImportWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ImportWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Worker thread for importing scans into the project database.</span>
 
@@ -192,8 +624,8 @@
     <span class="n">notifyProgress</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
 <div class="viewcode-block" id="ImportWorker.__init__">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">progress</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">progress</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">progress</span>
@@ -205,8 +637,8 @@
 
 
 <div class="viewcode-block" id="ImportWorker.run">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.ImportWorker.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker.run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the import process.</span>
 
@@ -253,13 +685,15 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">scans_added</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">scans_added</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a copy of the scans_added list in a thread-safe manner.&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scans_added</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_add_tag_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">):</span>
+<div class="viewcode-block" id="ImportWorker._add_tag_to_database">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._add_tag_to_database">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_tag_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new tag to the database.</span>
 
@@ -281,9 +715,12 @@
         <span class="n">tags_added</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_definition</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
         <span class="n">tag_definition</span><span class="p">[</span><span class="s2">&quot;collection_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">COLLECTION_INITIAL</span>
         <span class="n">tags_added</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_definition</span><span class="p">)</span>
-        <span class="n">tags_names_added</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+        <span class="n">tags_names_added</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span></div>
 
-    <span class="k">def</span> <span class="nf">_apply_default_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">values_added</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._apply_default_values">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._apply_default_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_default_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">values_added</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply default values for user-defined tags.</span>
 
@@ -323,9 +760,12 @@
                     <span class="p">)</span>
                     <span class="n">documents</span><span class="p">[</span><span class="n">scan</span><span class="p">][</span><span class="n">tag</span><span class="p">[</span><span class="s2">&quot;index&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span>
                         <span class="s2">&quot;default_value&quot;</span>
-                    <span class="p">]</span>
+                    <span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">_convert_datetime_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._convert_datetime_values">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._convert_datetime_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_datetime_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert string values to datetime objects.</span>
 
@@ -353,9 +793,12 @@
                 <span class="c1"># Keep original value if conversion fails</span>
                 <span class="k">pass</span>
 
-        <span class="k">return</span> <span class="n">tag_info</span>
+        <span class="k">return</span> <span class="n">tag_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_ensure_associated_file_tag_exists</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._ensure_associated_file_tag_exists">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._ensure_associated_file_tag_exists">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_associated_file_tag_exists</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">database_data</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -377,9 +820,12 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Associated NIfTI file&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_add_tag_to_database</span><span class="p">(</span><span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_add_tag_to_database</span><span class="p">(</span><span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_extract_tag_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._extract_tag_info">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._extract_tag_info">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_tag_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract tag information from properties.</span>
 
@@ -438,9 +884,12 @@
         <span class="p">):</span>
             <span class="n">tag_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_datetime_values</span><span class="p">(</span><span class="n">tag_info</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">tag_info</span>
+        <span class="k">return</span> <span class="n">tag_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_export_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data_folder</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._get_export_logs">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._get_export_logs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_export_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data_folder</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the export logs from the raw data folder.</span>
 
 <span class="sd">        :param raw_data_folder (str): Path to the raw data folder</span>
@@ -457,9 +906,12 @@
         <span class="n">log_to_read</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">list_logs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getctime</span><span class="p">)</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_to_read</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_associated_file</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_associated_file">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_associated_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_associated_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_database_path</span><span class="p">,</span>
@@ -515,9 +967,12 @@
                     <span class="n">associated_file_path</span><span class="p">,</span>
                     <span class="n">associated_file_path</span><span class="p">,</span>
                 <span class="p">]</span>
-            <span class="p">)</span>
+            <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_associated_files</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_associated_files">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_associated_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_associated_files</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -573,9 +1028,12 @@
                 <span class="n">tag_name</span><span class="p">,</span>
                 <span class="n">documents</span><span class="p">,</span>
                 <span class="n">values_added</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_datetime_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._process_datetime_format">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_datetime_format">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_datetime_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process datetime format strings.</span>
 
@@ -610,9 +1068,12 @@
         <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="n">x</span> <span class="ow">in</span> <span class="n">format_str</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;%H&quot;</span><span class="p">,</span> <span class="s2">&quot;%M&quot;</span><span class="p">,</span> <span class="s2">&quot;%S&quot;</span><span class="p">]):</span>
             <span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">FIELD_TYPE_TIME</span>
 
-        <span class="k">return</span> <span class="n">tag_info</span>
+        <span class="k">return</span> <span class="n">tag_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_file_tags</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_file_tags">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_file_tags">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_file_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -676,9 +1137,12 @@
                     <span class="p">]</span>
                 <span class="p">)</span>
 
-            <span class="n">documents</span><span class="p">[</span><span class="n">file_database_path</span><span class="p">][</span><span class="n">tag_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+            <span class="n">documents</span><span class="p">[</span><span class="n">file_database_path</span><span class="p">][</span><span class="n">tag_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_fsl_format_files</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_fsl_format_files">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_fsl_format_files">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_fsl_format_files</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">bvec_path</span><span class="p">,</span>
@@ -729,9 +1193,12 @@
             <span class="n">tag_name</span><span class="p">,</span>
             <span class="n">documents</span><span class="p">,</span>
             <span class="n">values_added</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_list_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+
+<div class="viewcode-block" id="ImportWorker._process_list_values">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_list_values">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_list_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process list values.</span>
 
@@ -772,9 +1239,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">tag_info</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">tag_info</span>
+        <span class="k">return</span> <span class="n">tag_info</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_log_entries</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_log_entries">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_log_entries">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_log_entries</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">list_dict_log</span><span class="p">,</span>
         <span class="n">raw_data_folder</span><span class="p">,</span>
@@ -815,9 +1285,12 @@
                     <span class="n">tags_added</span><span class="p">,</span>
                     <span class="n">tags_names_added</span><span class="p">,</span>
                     <span class="n">tags_to_exclude</span><span class="p">,</span>
-                <span class="p">)</span>
+                <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_mrtrix_format_file</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_mrtrix_format_file">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_mrtrix_format_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_mrtrix_format_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">bvec_bval_path</span><span class="p">,</span>
@@ -853,9 +1326,12 @@
             <span class="n">tag_name</span><span class="p">,</span>
             <span class="n">documents</span><span class="p">,</span>
             <span class="n">values_added</span><span class="p">,</span>
-        <span class="p">)</span>
+        <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_process_scan_file</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._process_scan_file">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_scan_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_scan_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -938,9 +1414,12 @@
                 <span class="n">values_added</span><span class="p">,</span>
                 <span class="n">tags_added</span><span class="p">,</span>
                 <span class="n">tags_names_added</span><span class="p">,</span>
-            <span class="p">)</span>
+            <span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_update_database</span><span class="p">(</span>
+
+<div class="viewcode-block" id="ImportWorker._update_database">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._update_database">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">values_added</span><span class="p">,</span> <span class="n">historyMaker</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -996,12 +1475,13 @@
         <span class="n">historyMaker</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values_added</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">undos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">historyMaker</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">redos</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="read_log">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.read_log">[docs]</a>
-<span class="k">def</span> <span class="nf">read_log</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.data_manager.data_loader.read_log">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_log</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Display a progress bar for data loading and return loaded file paths.</span>
 
@@ -1028,8 +1508,8 @@
 
 
 <div class="viewcode-block" id="tags_from_file">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.tags_from_file">[docs]</a>
-<span class="k">def</span> <span class="nf">tags_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.tags_from_file">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tags_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a list of [tag, value] pairs from a JSON file.</span>
 
@@ -1061,8 +1541,8 @@
 
 
 <div class="viewcode-block" id="verify_scans">
-<a class="viewcode-back" href="../../../populse_mia.data_manager.html#populse_mia.data_manager.data_loader.verify_scans">[docs]</a>
-<span class="k">def</span> <span class="nf">verify_scans</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.verify_scans">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">verify_scans</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if the project&#39;s scans have been modified.</span>
 
@@ -1110,7 +1590,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../index.html">Contents</a>
@@ -1120,7 +1600,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

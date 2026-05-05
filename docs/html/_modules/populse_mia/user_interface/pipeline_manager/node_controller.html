@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -485,7 +485,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">:Contains:</span>
 
 <span class="sd">    Class:</span>
-<span class="sd">        - PlugFilter (must be declared before AttributesFilter)</span>
 <span class="sd">        - AttributesFilter</span>
 <span class="sd">        - CapsulNodeController</span>
 <span class="sd">        - FilterWidget</span>
@@ -501,13 +500,18 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
+<span class="c1"># isort: off</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
-
 <span class="kn">import</span><span class="w"> </span><span class="nn">sip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
 
-<span class="c1"># capsul imports</span>
+<span class="c1"># isort: on</span>
+
+<span class="c1"># capsul import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineNode</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
@@ -515,7 +519,7 @@ window.addEventListener("load", load);</script>
     <span class="n">AttributedProcessWidget</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># PyQt5 imports</span>
+<span class="c1"># PyQt5 import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
@@ -534,19 +538,15 @@ window.addEventListener("load", load);</script>
     <span class="n">QWidget</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># soma-base imports</span>
+<span class="c1"># soma import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">trait_ids</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
 
+<span class="c1"># populse_mia import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
-    <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="c1"># Populse_MIA imports</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.advanced_search</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -556,6 +556,7 @@ window.addEventListener("load", load);</script>
     <span class="n">TableDataBrowser</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessMIA</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
@@ -567,429 +568,8 @@ window.addEventListener("load", load);</script>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="PlugFilter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlugFilter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A PyQt widget for interactively filtering and selecting database scans to</span>
-<span class="sd">    assign to a pipeline node plug.</span>
-
-<span class="sd">    This widget provides a powerful interface for browsing, searching, and</span>
-<span class="sd">    filtering files from the project database. It features:</span>
-<span class="sd">        - A customizable data browser with tag columns.</span>
-<span class="sd">        - Rapid text search for quick filtering.</span>
-<span class="sd">        - Advanced multi-criteria filtering for precise selection.</span>
-<span class="sd">        - Tag visibility controls to customize the displayed information.</span>
-<span class="sd">        - Automatic exclusion of files that are outputs from existing pipeline</span>
-<span class="sd">          bricks to prevent circular dependencies.</span>
-
-<span class="sd">    The widget is designed to integrate seamlessly with a pipeline editor,</span>
-<span class="sd">    allowing users to select and assign files to a specific node plug. When</span>
-<span class="sd">    the selection is confirmed, the chosen files are emitted as a list via</span>
-<span class="sd">    the `plug_value_changed` signal.</span>
-
-
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - ok_clicked: Applies the selected files to the node plug and closes</span>
-<span class="sd">                      the widget.</span>
-<span class="sd">        - reset_search_bar: Resets the search interface to its initial state,</span>
-<span class="sd">                            clearing all filters.</span>
-<span class="sd">        - search_str: Filters and updates the displayed scans based on the</span>
-<span class="sd">                      provided search string.</span>
-<span class="sd">        - set_plug_value: Extracts the selected or filtered scan values and</span>
-<span class="sd">                          emits them via the `plug_value_changed` signal.</span>
-<span class="sd">        - update_tag_to_filter: Opens a dialog to select a tag for filtering</span>
-<span class="sd">                                and updates the filter button text.</span>
-<span class="sd">        - update_tags: Opens a dialog to update the list of visualized tags</span>
-<span class="sd">                       and refreshes the table view.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># Signal emitted when the user confirms their selection. The signal carries</span>
-    <span class="c1"># a list of selected file paths or attribute values.</span>
-    <span class="n">plug_value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-
-<div class="viewcode-block" id="PlugFilter.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">project</span><span class="p">,</span>
-        <span class="n">scans_list</span><span class="p">,</span>
-        <span class="n">process</span><span class="p">,</span>
-        <span class="n">node_name</span><span class="p">,</span>
-        <span class="n">plug_name</span><span class="p">,</span>
-        <span class="n">node_controller</span><span class="p">,</span>
-        <span class="n">main_window</span><span class="p">,</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Initialize the PlugFilter widget for filtering database scans.</span>
-
-<span class="sd">        Creates a filterable data browser interface with search capabilities,</span>
-<span class="sd">        tag visualization controls, and scan selection. Automatically excludes</span>
-<span class="sd">        scans that are outputs from existing pipeline bricks.</span>
-
-<span class="sd">        :param project: Current project instance containing database and</span>
-<span class="sd">                        folder paths</span>
-<span class="sd">        :param scans_list: Initial list of database file paths to filter. If</span>
-<span class="sd">                           empty, all scans from COLLECTION_CURRENT are</span>
-<span class="sd">                           included</span>
-<span class="sd">        :param process: Process instance associated with the selected pipeline</span>
-<span class="sd">                        node</span>
-<span class="sd">        :param node_name: Display name of the current pipeline node</span>
-<span class="sd">        :param plug_name: Name of the selected node plug/connection point</span>
-<span class="sd">        :param node_controller: Parent controller managing node visibility and</span>
-<span class="sd">                                tags</span>
-<span class="sd">        :param main_window: Main application window containing the pipeline</span>
-<span class="sd">                            manager</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span> <span class="o">=</span> <span class="n">node_controller</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span> <span class="o">=</span> <span class="n">main_window</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">process</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plug_name</span> <span class="o">=</span> <span class="n">plug_name</span>
-        <span class="c1"># Collect all brick output paths to exclude from scan list</span>
-        <span class="n">brick_outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">brick</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">brick_list</span><span class="p">:</span>
-                <span class="n">doc</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document</span><span class="p">(</span>
-                    <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="n">brick</span>
-                <span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">doc</span> <span class="ow">and</span> <span class="n">BRICK_OUTPUTS</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
-                    <span class="c1"># Extract non-empty string outputs as relative paths</span>
-                    <span class="n">outputs</span> <span class="o">=</span> <span class="p">(</span>
-                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
-                        <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span>
-                    <span class="p">)</span>
-                    <span class="n">brick_outputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">outputs</span><span class="p">)</span>
-
-            <span class="c1"># Filter scans or use all current collection documents</span>
-            <span class="k">if</span> <span class="n">scans_list</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">scan</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">/&quot;</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">scans_list</span>
-                    <span class="k">if</span> <span class="n">scan</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">/&quot;</span><span class="p">)</span>
-                    <span class="ow">not</span> <span class="ow">in</span> <span class="n">brick_outputs</span>
-                <span class="p">]</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span>
-                <span class="p">)</span>
-
-        <span class="c1"># Configure window</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter - </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="c1"># Create main table browser</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span> <span class="o">=</span> <span class="n">TableDataBrowser</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span><span class="p">,</span>
-            <span class="kc">False</span><span class="p">,</span>
-            <span class="kc">True</span><span class="p">,</span>
-            <span class="n">link_viewer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="c1"># Reducing the list of scans to selection</span>
-        <span class="n">all_scans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">all_scans</span><span class="p">)</span>
-        <span class="c1"># Create search bar with clear button</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span> <span class="o">=</span> <span class="n">RapidSearch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_str</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span> <span class="o">=</span> <span class="n">QToolButton</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:rgb(255, 255, 255);&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span>
-            <span class="n">QIcon</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">(),</span> <span class="s2">&quot;gray_cross.png&quot;</span><span class="p">))</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_search_bar</span><span class="p">)</span>
-        <span class="n">search_bar_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">search_bar_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="p">)</span>
-        <span class="n">search_bar_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span><span class="p">)</span>
-        <span class="c1"># Create advanced search</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span> <span class="o">=</span> <span class="n">AdvancedSearch</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span><span class="p">,</span>
-            <span class="n">from_pipeline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">show_search</span><span class="p">()</span>
-        <span class="c1"># Create control buttons</span>
-        <span class="n">push_button_tags</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Visualized tags&quot;</span><span class="p">)</span>
-        <span class="n">push_button_tags</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_tags</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TAG_FILENAME</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">update_tag_to_filter</span><span class="p">)</span>
-        <span class="n">push_button_ok</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">)</span>
-        <span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_clicked</span><span class="p">)</span>
-        <span class="n">push_button_cancel</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
-        <span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-        <span class="c1"># Assemble layouts</span>
-        <span class="n">buttons_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">buttons_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">push_button_tags</span><span class="p">)</span>
-        <span class="n">buttons_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="p">)</span>
-        <span class="n">buttons_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">buttons_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">push_button_ok</span><span class="p">)</span>
-        <span class="n">buttons_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">push_button_cancel</span><span class="p">)</span>
-        <span class="n">main_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">search_bar_layout</span><span class="p">)</span>
-        <span class="n">main_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="p">)</span>
-        <span class="n">main_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="p">)</span>
-        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">buttons_layout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">main_layout</span><span class="p">)</span>
-        <span class="c1"># Set window size based on screen resolution</span>
-        <span class="n">screen_resolution</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.6</span> <span class="o">*</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">width</span><span class="p">()))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()))</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.ok_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.ok_clicked">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Handle OK button click by applying changes and closing the dialog.</span>
-
-<span class="sd">        Commits the current widget value to the associated node plug, then</span>
-<span class="sd">        closes the widget dialog.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_plug_value</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.reset_search_bar">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.reset_search_bar">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reset search interface to initial state and restore all scan rows.</span>
-
-<span class="sd">        Clears the rapid search text field, resets advanced search rows,</span>
-<span class="sd">        and restores the full scan list to the table view, updating the</span>
-<span class="sd">        display to reflect all available scans.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Clear search UI components</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">show_search</span><span class="p">()</span>
-        <span class="c1"># Restore full scan list</span>
-        <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans_list</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">old_scan_list</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.search_str">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.search_str">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Filter and update the list of scans displayed in the browser based on</span>
-<span class="sd">        search criteria.</span>
-
-<span class="sd">        This method updates `scans_to_visualize` by applying either a rapid</span>
-<span class="sd">        search filter or showing all available scans when the search is empty.</span>
-<span class="sd">        Special handling is provided for the NOT_DEFINED_VALUE constant to</span>
-<span class="sd">        filter scans with undefined tag values.</span>
-
-<span class="sd">        :parm str_search (str): The search string entered by the user. An</span>
-<span class="sd">                                empty string shows all scans, NOT_DEFINED_VALUE</span>
-<span class="sd">                                filters for scans with undefined tags, and any</span>
-<span class="sd">                                other value performs a rapid search filter.</span>
-
-<span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates self.table_data.scans_to_visualize with filtered scan</span>
-<span class="sd">              list</span>
-<span class="sd">            - Updates self.advanced_search.scans_list with the same filtered</span>
-<span class="sd">              list</span>
-<span class="sd">            - Triggers UI update via self.table_data.update_visualized_rows()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
-
-        <span class="c1"># Return all scans if search is empty</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">str_search</span><span class="p">:</span>
-            <span class="n">filtered_scans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span>
-
-        <span class="k">else</span><span class="p">:</span>
-
-            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
-                <span class="n">shown_tags</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">()</span>
-                <span class="c1"># Determine filter based on search type</span>
-                <span class="n">filter_func</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">prepare_not_defined_filter</span><span class="p">(</span><span class="n">shown_tags</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">str_search</span> <span class="o">==</span> <span class="n">NOT_DEFINED_VALUE</span>
-                    <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">prepare_filter</span><span class="p">(</span>
-                        <span class="n">str_search</span><span class="p">,</span> <span class="n">shown_tags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-                <span class="n">scans</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
-                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">filter_func</span>
-                <span class="p">)</span>
-
-            <span class="c1"># Extract filenames from filtered scans</span>
-            <span class="n">filtered_scans</span> <span class="o">=</span> <span class="p">[</span><span class="n">scan</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">scans</span><span class="p">]</span>
-
-        <span class="c1"># Update state with filtered results</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="n">filtered_scans</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">scans_list</span> <span class="o">=</span> <span class="n">filtered_scans</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">old_scan_list</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.set_plug_value">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.set_plug_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extract selected or filtered scan values and emit to node plug.</span>
-
-<span class="sd">        Retrieves values from the database for the currently filtered tag.</span>
-<span class="sd">        If items are selected in the table, only those values are extracted.</span>
-<span class="sd">        Otherwise, all filtered items are processed. For filename tags,</span>
-<span class="sd">        paths are converted to absolute paths within the project folder.</span>
-
-<span class="sd">        :Emits: plug_value_changed: Signal with list of extracted values.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Retrieve and process a single scan value from the database.</span>
-
-<span class="sd">            :param database_data: Database connection object.</span>
-<span class="sd">            :param scan_name: Primary key identifying the scan.</span>
-<span class="sd">            :param tag_name: Field name to retrieve.</span>
-
-<span class="sd">            :return: The field value, with absolute path conversion for</span>
-<span class="sd">                     filename tags.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">value</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
-                <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                <span class="n">primary_key</span><span class="o">=</span><span class="n">scan_name</span><span class="p">,</span>
-                <span class="n">field</span><span class="o">=</span><span class="n">tag_name</span><span class="p">,</span>
-            <span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">tag_name</span> <span class="o">==</span> <span class="n">TAG_FILENAME</span><span class="p">:</span>
-                <span class="n">value</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-                <span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">value</span>
-
-        <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;&amp;&quot;</span><span class="p">)</span>
-
-        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
-
-            <span class="c1"># Determine which scans to process</span>
-            <span class="k">if</span> <span class="n">selected_points</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">():</span>
-                <span class="n">scan_names</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">(),</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-                    <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">selected_points</span>
-                <span class="p">]</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">scan_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">get_current_filter</span><span class="p">()</span>
-
-            <span class="c1"># Extract values for each scan</span>
-            <span class="n">result_names</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">scan_name</span> <span class="ow">in</span> <span class="n">scan_names</span>
-            <span class="p">]</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">plug_value_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">result_names</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.update_tag_to_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.update_tag_to_filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Open a dialog to select a tag filter and update the button text.</span>
-
-<span class="sd">        Displays a popup dialog allowing the user to select a tag from the</span>
-<span class="sd">        available visible tags. If a tag is selected (dialog accepted), updates</span>
-<span class="sd">        the filter button&#39;s text to reflect the chosen tag.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">popup</span> <span class="o">=</span> <span class="n">PopUpSelectTagCountTable</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="o">.</span><span class="n">text</span><span class="p">(),</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">popup</span><span class="o">.</span><span class="n">exec_</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">push_button_tag_filter</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">popup</span><span class="o">.</span><span class="n">selected_tag</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="PlugFilter.update_tags">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.update_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Open a dialog to update the list of visualized tags.</span>
-
-<span class="sd">        Displays a modal dialog allowing users to select which tags should be</span>
-<span class="sd">        visualized in the table. If accepted, updates the visible columns in</span>
-<span class="sd">        the data table, refreshes the node controller&#39;s visible tags list, and</span>
-<span class="sd">        updates all advanced search field dropdowns with the new tag selection.</span>
-
-<span class="sd">        The &#39;Filename&#39; tag is always included in the visible tags list.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Clean up existing dialog if present</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;dialog&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="c1"># Create and configure dialog</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
-        <span class="c1"># Set up dialog content</span>
-        <span class="n">visualized_tags</span> <span class="o">=</span> <span class="n">PopUpVisualizedTags</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span>
-        <span class="p">)</span>
-        <span class="c1"># Create dialog buttons</span>
-        <span class="n">buttons</span> <span class="o">=</span> <span class="n">QDialogButtonBox</span><span class="p">(</span>
-            <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Ok</span> <span class="o">|</span> <span class="n">QDialogButtonBox</span><span class="o">.</span><span class="n">Cancel</span>
-        <span class="p">)</span>
-        <span class="n">buttons</span><span class="o">.</span><span class="n">accepted</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
-        <span class="n">buttons</span><span class="o">.</span><span class="n">rejected</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">reject</span><span class="p">)</span>
-        <span class="c1"># Build dialog layout</span>
-        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">visualized_tags</span><span class="p">)</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">buttons</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
-        <span class="c1"># Show dialog and process result</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
-            <span class="c1"># Extract selected tags from list widget</span>
-            <span class="n">new_visibilities</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="n">visualized_tags</span><span class="o">.</span><span class="n">list_widget_selected_tags</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span>
-                    <span class="n">visualized_tags</span><span class="o">.</span><span class="n">list_widget_selected_tags</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
-                <span class="p">)</span>
-            <span class="p">]</span>
-            <span class="n">new_visibilities</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TAG_FILENAME</span><span class="p">)</span>
-            <span class="c1"># Update table columns and node controller</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_columns</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span><span class="p">,</span> <span class="n">new_visibilities</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">node_controller</span><span class="o">.</span><span class="n">visibles_tags</span> <span class="o">=</span> <span class="n">new_visibilities</span>
-
-            <span class="c1"># Update all advanced search field dropdowns</span>
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">advanced_search</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
-                <span class="n">fields</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-                <span class="n">fields</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-
-                <span class="k">for</span> <span class="n">visible_tag</span> <span class="ow">in</span> <span class="n">new_visibilities</span><span class="p">:</span>
-                    <span class="n">fields</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">visible_tag</span><span class="p">)</span>
-
-                <span class="n">fields</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">fields</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="s2">&quot;All visualized tags&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Clean up dialog reference</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span><span class="o">.</span><span class="n">deleteLater</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dialog</span> <span class="o">=</span> <span class="kc">None</span></div>
-</div>
-
-
-
 <div class="viewcode-block" id="AttributesFilter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AttributesFilter</span><span class="p">(</span><span class="n">PlugFilter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A specialized widget for filtering database entries and collecting their</span>
@@ -1021,7 +601,7 @@ window.addEventListener("load", load);</script>
     <span class="n">attributes_selected</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AttributesFilter.ok_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Close the widget and emit the collected attributes.</span>
@@ -1066,7 +646,7 @@ window.addEventListener("load", load);</script>
 
 <span class="c1"># Node controller V2 style</span>
 <div class="viewcode-block" id="CapsulNodeController">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CapsulNodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for managing and editing pipeline node parameters using</span>
@@ -1107,7 +687,7 @@ window.addEventListener("load", load);</script>
     <span class="n">value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CapsulNodeController.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the node controller.</span>
@@ -1140,7 +720,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.display_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.display_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.display_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the parameters of the selected node.</span>
@@ -1160,7 +740,7 @@ window.addEventListener("load", load);</script>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">node_name</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setReadOnly</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">returnPressed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">editingFinished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_node_name</span>
             <span class="p">)</span>
 
@@ -1232,7 +812,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.filter_attributes">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">filter_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the attributes filter dialog.</span>
@@ -1256,7 +836,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.release_process">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up process notifications and signals.</span>
@@ -1275,7 +855,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.rename_subprocesses">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.rename_subprocesses">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.rename_subprocesses">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively rename subprocesses within the pipeline, adjusting the</span>
@@ -1326,7 +906,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.static_release">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">static_release</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">param_changed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1340,7 +920,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.parameters_changed">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle parameter value changes and emit signal.</span>
@@ -1364,7 +944,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.update_attributes_from_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_attributes_from_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply selected attributes from the filter widget.</span>
@@ -1408,7 +988,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="CapsulNodeController.update_node_name">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_node_name</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1432,15 +1012,35 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param from_undo (bool): True if this action is from an undo operation.</span>
 <span class="sd">        :param from_redo (bool): True ifthis action is from a redo operation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">new_node_name</span> <span class="o">=</span> <span class="n">new_node_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+        <span class="c1"># Ignore programmatic refresh emissions</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">from_undo</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">from_redo</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">new_node_name</span> <span class="ow">is</span> <span class="kc">None</span>
+                <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">isModified</span><span class="p">()</span>
+            <span class="p">):</span>
+                <span class="k">return</span>
+
+        <span class="c1"># Resolve names</span>
+        <span class="n">new_node_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">new_node_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="n">old_node_name</span> <span class="o">=</span> <span class="n">old_node_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span> <span class="ow">or</span> <span class="n">new_node_name</span> <span class="o">==</span> <span class="n">old_node_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setModified</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">return</span>
 
         <span class="c1"># Handle iterated process naming convention</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="n">ProcessIteration</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;iterated_&quot;</span><span class="p">):</span>
                 <span class="n">new_node_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;iterated_</span><span class="si">{</span><span class="n">new_node_name</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="c1"># update text without re-triggering signals</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">blockSignals</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">new_node_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">blockSignals</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
 
         <span class="c1"># Check for name conflicts</span>
         <span class="k">if</span> <span class="n">new_node_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">:</span>
@@ -1448,6 +1048,7 @@ window.addEventListener("load", load);</script>
                 <span class="sa">f</span><span class="s2">&quot;Cannot rename node &#39;</span><span class="si">{</span><span class="n">old_node_name</span><span class="si">}</span><span class="s2">&#39; to &#39;</span><span class="si">{</span><span class="n">new_node_name</span><span class="si">}</span><span class="s2">&#39;: &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;node &#39;</span><span class="si">{</span><span class="n">new_node_name</span><span class="si">}</span><span class="s2">&#39; already exists&quot;</span>
             <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setModified</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="c1"># Perform rename</span>
@@ -1486,15 +1087,15 @@ window.addEventListener("load", load);</script>
         <span class="p">)</span>
         <span class="c1"># fmt: on</span>
         <span class="n">editor</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">history_maker</span><span class="p">,</span> <span class="n">from_undo</span><span class="p">,</span> <span class="n">from_redo</span><span class="p">)</span>
-
         <span class="c1"># Display status message</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;Brick name &#39;</span><span class="si">{</span><span class="n">old_node_name</span><span class="si">}</span><span class="s2"> changed to &#39;</span><span class="si">{</span><span class="n">new_node_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
-        <span class="p">)</span></div>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setModified</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="CapsulNodeController.update_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update parameter values.</span>
@@ -1510,7 +1111,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FilterWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for filtering and selecting files in a pipeline&#39;s</span>
@@ -1531,6 +1132,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">    .. Methods:</span>
 <span class="sd">        - layout_view: Configures and initializes the main widget layout,</span>
 <span class="sd">                       including search bars, data tables, and action buttons.</span>
+<span class="sd">        - normalize_scan_path: Normalize a scan path to a logical</span>
+<span class="sd">                               project-relative path.</span>
 <span class="sd">        - ok_clicked: Applies the configured filter to the process and closes</span>
 <span class="sd">                      the widget.</span>
 <span class="sd">        - reset_search_bar: Resets the search interface to its default state,</span>
@@ -1544,7 +1147,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FilterWidget.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Filter Widget for pipeline node filtering.</span>
@@ -1566,15 +1169,17 @@ window.addEventListener("load", load);</script>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">visible_tags</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">()</span>
 
-        <span class="c1"># Build scan list from node input</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="p">[</span>
-                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="n">scan</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">input</span>
+        <span class="c1"># Build scan list from node inputs</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">input</span>
+
+        <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="n">Undefined</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">inputs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">normalize_scan_path</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span> <span class="k">for</span> <span class="n">scan</span> <span class="ow">in</span> <span class="n">inputs</span>
             <span class="p">]</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">input</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Undefined</span>
-            <span class="k">else</span> <span class="p">[]</span>
-        <span class="p">)</span>
+
         <span class="c1"># Initialize table data browser with filtered scans</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span> <span class="o">=</span> <span class="n">TableDataBrowser</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">visible_tags</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span>
@@ -1610,7 +1215,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.layout_view">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.layout_view">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.layout_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure and initialize the main widget layout.</span>
@@ -1663,8 +1268,80 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumHeight</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">screen_resolution</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">))</span></div>
 
 
+<div class="viewcode-block" id="FilterWidget.normalize_scan_path">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.normalize_scan_path">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Normalize a scan path to a logical project-relative path.</span>
+
+<span class="sd">        Converts any scan path (absolute, relative, or symlinked) into a</span>
+<span class="sd">        consistent project-relative representation, preferably starting at</span>
+<span class="sd">        the project&#39;s data directory.</span>
+
+<span class="sd">        Resolution strategy (in order of preference):</span>
+<span class="sd">            1. Path relative to project root (if path is under project)</span>
+<span class="sd">            2. Path relative to &#39;data/&#39; directory (semantic anchor fallback)</span>
+<span class="sd">            3. Absolute path string (last resort)</span>
+
+<span class="sd">        :param scan_path: File path to normalize (absolute or relative)</span>
+
+<span class="sd">        :return: Normalized path string, relative to project root when possible</span>
+
+<span class="sd">        Examples:</span>
+<span class="sd">            &gt;&gt;&gt; normalize_scan_path(&#39;/abs/path/project/data/scans/001.tif&#39;)</span>
+<span class="sd">            &#39;data/scans/001.tif&#39;</span>
+<span class="sd">            &gt;&gt;&gt; normalize_scan_path(&#39;../other/data/scans/002.tif&#39;)</span>
+<span class="sd">            &#39;data/scans/002.tif&#39;</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Handles symlinks, mount aliases, and varying working directories</span>
+<span class="sd">            robustly. Does not require paths to exist on disk.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">PROJECT_DATA_DIRNAME</span> <span class="o">=</span> <span class="s2">&quot;data&quot;</span>  <span class="c1"># project-level semantic root</span>
+        <span class="c1"># Normalize project root</span>
+        <span class="n">project_root</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">project_root</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">project_root</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="n">project_root</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">project_root</span> <span class="o">=</span> <span class="n">project_root</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">project_root</span> <span class="o">=</span> <span class="n">project_root</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+        <span class="c1"># Normalize scan path</span>
+        <span class="n">scan</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">scan_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">scan</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">scan</span> <span class="o">=</span> <span class="n">project_root</span> <span class="o">/</span> <span class="n">scan</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">scan</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">resolve</span><span class="p">(</span><span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">scan</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">absolute</span><span class="p">()</span>
+
+        <span class="c1"># Strategy 1: Filesystem-correct relative path</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">scan</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">project_root</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Strategy 2: Semantic anchor on data directory</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">scan</span><span class="o">.</span><span class="n">parts</span>
+
+        <span class="k">if</span> <span class="n">PROJECT_DATA_DIRNAME</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+            <span class="n">data_index</span> <span class="o">=</span> <span class="n">parts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">PROJECT_DATA_DIRNAME</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="o">*</span><span class="n">parts</span><span class="p">[</span><span class="n">data_index</span><span class="p">:]))</span>
+
+        <span class="c1"># Strategy 3: Last resort - return as absolute path</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">scan</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="FilterWidget.ok_clicked">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.ok_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.ok_clicked">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the configured filter to the process and close the dialog.</span>
@@ -1700,7 +1377,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.reset_search_bar">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.reset_search_bar">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.reset_search_bar">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset search interface to default state.</span>
@@ -1727,7 +1404,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.search_str">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.search_str">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.search_str">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter and update the displayed scans based on a search string.</span>
@@ -1783,7 +1460,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.update_tag_to_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tag_to_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tag_to_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a tag selection dialog and update the filter button text.</span>
@@ -1801,7 +1478,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.update_tags">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tags">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the list of visualized tags through a user dialog.</span>
@@ -1878,7 +1555,7 @@ window.addEventListener("load", load);</script>
 
 <span class="c1"># Node controller V1 style</span>
 <div class="viewcode-block" id="NodeController">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">NodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for managing and editing the input/output values and</span>
@@ -1919,7 +1596,7 @@ window.addEventListener("load", load);</script>
     <span class="n">value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="NodeController.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the node controller widget.</span>
@@ -1949,7 +1626,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.clearLayout">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.clearLayout">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.clearLayout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">clearLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and delete all items from a widget&#39;s layout.</span>
@@ -1988,7 +1665,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.display_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">display_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display an interactive filter widget for modifying plug values.</span>
@@ -2027,7 +1704,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.display_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display and configure parameters for the selected pipeline node.</span>
@@ -2198,14 +1875,11 @@ window.addEventListener("load", load);</script>
                 <span class="n">line_edit</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="k">for</span> <span class="n">line_edit</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_output</span>
             <span class="p">],</span>
         <span class="p">}</span>
-        <span class="n">current_editor</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span>
-            <span class="kc">False</span>
-        <span class="p">)</span></div>
+        <span class="n">current_editor</span><span class="o">.</span><span class="n">node_parameters_tmp</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;outputs&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NodeController.get_index_from_plug_name">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.get_index_from_plug_name">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.get_index_from_plug_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_index_from_plug_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of a plug by its name.</span>
@@ -2229,7 +1903,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.update_node_name">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the name of the currently selected node in the pipeline.</span>
@@ -2253,9 +1927,7 @@ window.addEventListener("load", load);</script>
         <span class="n">new_node_name</span> <span class="o">=</span> <span class="n">new_node_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="c1"># Ensure ProcessIteration nodes have the correct prefix</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">list_process_in_pipeline</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ProcessIteration</span>
-        <span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_process</span><span class="p">,</span> <span class="n">ProcessIteration</span><span class="p">):</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">new_node_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;iterated_&quot;</span><span class="p">):</span>
                 <span class="n">new_node_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;iterated_</span><span class="si">{</span><span class="n">new_node_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -2285,7 +1957,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.rename_subprocesses">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively update context names for a node and its subprocesses.</span>
@@ -2305,6 +1977,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param parent_node_name (str): The parent node&#39;s name to incorporate</span>
 <span class="sd">                                       into the context naming hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">):</span>
+            <span class="k">return</span>
+
         <span class="c1"># Get the current context name, falling back to process name if not set</span>
         <span class="n">context_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">context_parts</span> <span class="o">=</span> <span class="n">context_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
@@ -2322,17 +1998,14 @@ window.addEventListener("load", load);</script>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span> <span class="o">=</span> <span class="n">parent_node_name</span>
 
-        <span class="c1"># Recursively update all subprocesses in pipeline nodes</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">subnode</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">subnode</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-                <span class="k">if</span> <span class="n">name</span><span class="p">:</span>  <span class="c1"># Skip empty names</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">rename_subprocesses</span><span class="p">(</span><span class="n">subnode</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">name</span><span class="p">:</span>  <span class="c1"># Skip empty names</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rename_subprocesses</span><span class="p">(</span><span class="n">subnode</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="NodeController.update_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update parameter values in the UI from the process traits.</span>
@@ -2388,7 +2061,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.update_plug_value">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">new_value</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
@@ -2530,7 +2203,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.update_plug_value_from_filter">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value_from_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value_from_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">filter_res_list</span>
     <span class="p">):</span>
@@ -2568,7 +2241,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="NodeController.release_process">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.release_process">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.release_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Release the process from notification tracking.</span>

@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+9d1e1aff documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=4774077a"></script>
+    <script src="../../../../_static/documentation_options.js?v=9c4c3897"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+9d1e1aff documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -485,7 +485,8 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="c1"># Other imports</span>
+<span class="c1"># isort: off</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -502,12 +503,15 @@ window.addEventListener("load", load);</script>
 <span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 
-<span class="c1"># Soma_workflow import</span>
+<span class="c1"># isort: on</span>
+
+<span class="c1"># soma_workflow import</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swc</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.constants</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swconstants</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 
-<span class="c1"># Capsul imports</span>
+<span class="c1"># capsul import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">NipypeProcess</span><span class="p">,</span>
     <span class="n">Pipeline</span><span class="p">,</span>
@@ -523,7 +527,7 @@ window.addEventListener("load", load);</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.backends.qt_compat</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span>
 
-<span class="c1"># PyQt5 imports</span>
+<span class="c1"># PyQt5 import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCursor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMovie</span>
@@ -540,12 +544,17 @@ window.addEventListener("load", load);</script>
     <span class="n">QWidget</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Soma_base import</span>
+<span class="c1"># soma_import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_file_trait</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qtThread</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtThreadCall</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow.gui.workflowGui</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ApplicationModel</span><span class="p">,</span>
+    <span class="n">ConnectionDialog</span><span class="p">,</span>
+    <span class="n">MainWindow</span><span class="p">,</span>
+<span class="p">)</span>
 
-<span class="c1"># Populse_mia imports</span>
+<span class="c1"># populse_mia import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
@@ -586,12 +595,13 @@ window.addEventListener("load", load);</script>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessMIA</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_auto_inheritance</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="protected_logging">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.protected_logging">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.protected_logging">[docs]</a>
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">protected_logging</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -677,7 +687,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PipelineManagerTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget that handles the Pipeline Manager tab.</span>
@@ -735,7 +745,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">                       information.</span>
 <span class="sd">        - stop_execution: Interrupt pipeline execution gracefully</span>
 <span class="sd">        - undo: Undo the last action made on the current pipeline editor</span>
-<span class="sd">        - update_auto_inheritance: Get database tags for output parameters</span>
 <span class="sd">        - update_inheritance: Update the inheritance dictionary for a process</span>
 <span class="sd">                              node in a pipeline execution</span>
 <span class="sd">        - update_node_list: Update the list of nodes in workflow</span>
@@ -754,7 +763,7 @@ window.addEventListener("load", load);</script>
     <span class="n">item_library_clicked</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PipelineManagerTab.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Pipeline Manager tab.</span>
@@ -928,6 +937,8 @@ window.addEventListener("load", load);</script>
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="PipelineManagerTab._register_node_io_in_database">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._register_node_io_in_database">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_register_node_io_in_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">history_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
     <span class="p">):</span>
@@ -968,8 +979,6 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">            :raises TypeError: If item type cannot be serialized.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-
-            <span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.client</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swc</span>
 
             <span class="c1"># Handle special cases</span>
             <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Undefined</span><span class="p">,</span> <span class="p">[</span><span class="n">Undefined</span><span class="p">]):</span>
@@ -1028,6 +1037,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">values_dict</span><span class="p">:</span>
+
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">job</span><span class="o">.</span><span class="n">param_dict</span><span class="p">:</span>
                     <span class="k">continue</span>
 
@@ -1126,8 +1136,11 @@ window.addEventListener("load", load);</script>
                     <span class="n">BRICK_OUTPUTS</span><span class="p">:</span> <span class="n">serialized_outputs</span><span class="p">,</span>
                     <span class="n">BRICK_INIT</span><span class="p">:</span> <span class="s2">&quot;Done&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
-            <span class="p">)</span>
+            <span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="PipelineManagerTab._set_anim_frame">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._set_anim_frame">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the pipeline status action icon with the current animation</span>
@@ -1142,8 +1155,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        to automatically update the icon as the animation progresses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_pixmap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">currentPixmap</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">show_pipeline_status_action</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">current_pixmap</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_pipeline_status_action</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QIcon</span><span class="p">(</span><span class="n">current_pixmap</span><span class="p">))</span></div>
 
+
+<div class="viewcode-block" id="PipelineManagerTab._should_register_plug">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._should_register_plug">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_should_register_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if a plug should be registered in the database.</span>
@@ -1159,10 +1175,11 @@ window.addEventListener("load", load);</script>
 
         <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">trait</span><span class="o">.</span><span class="n">userlevel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">trait</span><span class="o">.</span><span class="n">userlevel</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">trait</span><span class="o">.</span><span class="n">userlevel</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">trait</span><span class="o">.</span><span class="n">userlevel</span> <span class="o">&lt;=</span> <span class="mi">0</span></div>
+
 
 <div class="viewcode-block" id="PipelineManagerTab.add_plug_value_to_database">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.add_plug_value_to_database">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.add_plug_value_to_database">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_plug_value_to_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">p_value</span><span class="p">,</span>
@@ -1623,7 +1640,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.ask_iterated_pipeline_plugs">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.ask_iterated_pipeline_plugs">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.ask_iterated_pipeline_plugs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a configuration dialog for pipeline plug iteration and</span>
@@ -1944,7 +1961,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.build_iterated_pipeline">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.build_iterated_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.build_iterated_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build an iteration pipeline wrapper around the current pipeline.</span>
@@ -2040,7 +2057,7 @@ window.addEventListener("load", load);</script>
                 <span class="n">iteration_name</span> <span class="o">=</span> <span class="n">old_node_name</span>
 
             <span class="c1"># Add ReduceNode for list-type traits to prevent nested lists</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">trait_type</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">List</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">trait</span><span class="o">.</span><span class="n">trait_type</span><span class="p">,</span> <span class="n">List</span><span class="p">):</span>
                 <span class="n">node_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;un_list_</span><span class="si">{</span><span class="n">plug</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">reduce_node</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">add_custom_node</span><span class="p">(</span>
                     <span class="n">node_name</span><span class="p">,</span>
@@ -2121,7 +2138,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.check_requirements">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.check_requirements">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.check_requirements">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check and return the configuration of a pipeline based on its</span>
@@ -2152,7 +2169,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.cleanup_older_init">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.cleanup_older_init">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.cleanup_older_init">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up data browser state and remove orphaned files.</span>
@@ -2175,7 +2192,7 @@ window.addEventListener("load", load);</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">delete_from_brick</span><span class="p">(</span><span class="n">brick</span><span class="p">)</span>
 
         <span class="c1"># Clean up project-level orphaned files</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_nonexisting_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Clear internal state lists</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">brick_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_list</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -2186,7 +2203,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.complete_pipeline_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.complete_pipeline_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.complete_pipeline_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Complete pipeline parameters using Capsul&#39;s completion engine.</span>
@@ -2214,7 +2231,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.controller_value_changed">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.controller_value_changed">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.controller_value_changed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">controller_value_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update history when a node or plug value changes.</span>
@@ -2313,7 +2330,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.displayNodeParameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.displayNodeParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.displayNodeParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">displayNodeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the node controller interface for the specified node.</span>
@@ -2335,7 +2352,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.finish_execution">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.finish_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.finish_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle pipeline execution completion and update UI state.</span>
@@ -2361,9 +2378,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">            WorkflowExecutionError: When pipeline execution fails</span>
 <span class="sd">            RuntimeError: When execution is aborted before running</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">swconstants</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">stop_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">worker</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">worker</span>
         <span class="n">status</span> <span class="o">=</span> <span class="n">worker</span><span class="o">.</span><span class="n">status</span>
@@ -2420,11 +2434,12 @@ window.addEventListener("load", load);</script>
         <span class="c1"># Re-enable pipeline actions for next execution</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">update_parameters</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">garbage_collect_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">garbage_collect_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="o">=</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.garbage_collect">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.garbage_collect">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.garbage_collect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up obsolete data and maintain database consistency.</span>
@@ -2444,11 +2459,6 @@ window.addEventListener("load", load);</script>
         <span class="k">with</span> <span class="n">protected_logging</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">postprocess_pipeline_execution</span><span class="p">()</span>
 
-        <span class="c1"># Clean up orphaned project data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_nonexisting_files</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_history</span><span class="p">()</span>
-        <span class="c1"># Refresh UI components</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_table</span><span class="p">()</span>
         <span class="n">current_editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span>
@@ -2461,7 +2471,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_capsul_engine">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_capsul_engine">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_capsul_engine">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and configure a Capsul engine from the pipeline editor.</span>
@@ -2478,7 +2488,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_pipeline_or_process">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_pipeline_or_process">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_pipeline_or_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the pipeline or its single unconnected process node.</span>
@@ -2519,7 +2529,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_missing_mandatory_parameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.get_missing_mandatory_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_missing_mandatory_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find missing mandatory parameters across all pipeline nodes.</span>
@@ -2583,7 +2593,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.initialize">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.initialize">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.initialize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the pipeline after cleaning up any previous initialization.</span>
@@ -2675,7 +2685,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.init_pipeline">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.init_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.init_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the current pipeline in the pipeline editor.</span>
@@ -3137,7 +3147,7 @@ window.addEventListener("load", load);</script>
                     <span class="k">if</span> <span class="n">node_name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Pipeline.&quot;</span><span class="p">)</span>
                     <span class="k">else</span> <span class="n">node_name</span>
                 <span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
+                <span class="n">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">update_inheritance</span><span class="p">(</span><span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">)</span>
 
                 <span class="c1"># Skip pipeline nodes</span>
@@ -3317,7 +3327,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.layout_view">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.layout_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the layout and toolbar for the pipeline manager tab.</span>
@@ -3389,7 +3399,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.loadParameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.loadParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load pipeline parameters into the current pipeline of the editor.</span>
@@ -3402,7 +3412,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.loadPipeline">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.loadPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.loadPipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a pipeline into the pipeline editor.</span>
@@ -3414,7 +3424,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.postprocess_pipeline_execution">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.postprocess_pipeline_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.postprocess_pipeline_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">postprocess_pipeline_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Operations to be performed after a run has been completed.</span>
@@ -3462,6 +3472,10 @@ window.addEventListener("load", load);</script>
         <span class="n">bricks_to_update</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">finished_bricks</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">(),</span> <span class="n">pipeline</span><span class="o">=</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bricks&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">sub</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;running&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">bricks_to_update</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">failed</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">running</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">sub</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;failed&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">bricks_to_update</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="p">)</span>
 
         <span class="c1"># Update brick execution statuses in the database</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -3469,24 +3483,24 @@ window.addEventListener("load", load);</script>
             <span class="c1"># set state of bricks: done + exec date</span>
             <span class="k">for</span> <span class="n">brick_id</span><span class="p">,</span> <span class="n">brick</span> <span class="ow">in</span> <span class="n">bricks_to_update</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">swf_status</span> <span class="o">=</span> <span class="n">brick</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;swf_status&quot;</span><span class="p">)</span>
-                <span class="n">exec_date</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="n">swf_status</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="n">swf_status</span> <span class="k">else</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-                <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Setting execution status for brick </span><span class="si">{</span><span class="n">brick_id</span><span class="si">}</span><span class="s2"> &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;(executed at: </span><span class="si">{</span><span class="n">exec_date</span><span class="si">}</span><span class="s2">)&quot;</span>
-                <span class="p">)</span>
-                <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
-                    <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span>
-                    <span class="n">primary_key</span><span class="o">=</span><span class="n">brick_id</span><span class="p">,</span>
-                    <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span>
-                        <span class="n">BRICK_EXEC</span><span class="p">:</span> <span class="s2">&quot;Done&quot;</span><span class="p">,</span>
-                        <span class="n">BRICK_EXEC_TIME</span><span class="p">:</span> <span class="n">exec_date</span><span class="p">,</span>
-                    <span class="p">},</span>
-                <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">swf_status</span><span class="p">:</span>
+                    <span class="n">exec_date</span> <span class="o">=</span> <span class="n">swf_status</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Setting execution status for brick </span><span class="si">{</span><span class="n">brick_id</span><span class="si">}</span><span class="s2"> &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;(executed at: </span><span class="si">{</span><span class="n">exec_date</span><span class="si">}</span><span class="s2">)&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">database_data</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span>
+                        <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_BRICK</span><span class="p">,</span>
+                        <span class="n">primary_key</span><span class="o">=</span><span class="n">brick_id</span><span class="p">,</span>
+                        <span class="n">values_dict</span><span class="o">=</span><span class="p">{</span>
+                            <span class="n">BRICK_EXEC</span><span class="p">:</span> <span class="s2">&quot;Done&quot;</span><span class="p">,</span>
+                            <span class="n">BRICK_EXEC_TIME</span><span class="p">:</span> <span class="n">exec_date</span><span class="p">,</span>
+                        <span class="p">},</span>
+                    <span class="p">)</span>
 
         <span class="c1"># Clean up orphaned data and refresh the UI</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_nonexisting_files</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">cleanup_orphan_history</span><span class="p">()</span>
         <span class="n">QtThreadCall</span><span class="p">()</span><span class="o">.</span><span class="n">push</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_table</span>
@@ -3495,7 +3509,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.redo">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.redo">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.redo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last undone action on the current pipeline editor</span>
@@ -3593,7 +3607,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.register_completion_attributes">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.register_completion_attributes">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.register_completion_attributes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register completion attributes for a given pipeline in the</span>
@@ -3668,7 +3682,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.remove_progress">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.remove_progress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.remove_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and clean up the progress widget.</span>
@@ -3698,7 +3712,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.runPipeline">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.runPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.runPipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the current pipeline in the pipeline editor.</span>
@@ -3713,126 +3727,145 @@ window.addEventListener("load", load);</script>
 <span class="sd">        The method handles both local and remote execution via soma-workflow,</span>
 <span class="sd">        displays progress animation, and manages UI state during execution.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">execution_started</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">configuration</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">swconstants</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow.gui.workflowGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConnectionDialog</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Initialize the pipeline</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
 
-        <span class="c1"># Initialize the pipeline</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span><span class="p">:</span>
-            <span class="k">return</span>
-
-        <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_filename</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
-            <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
-            <span class="n">non_empty_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
-            <span class="n">pipeline_name</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">non_empty_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_empty_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
-            <span class="p">)</span>
-
-        <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span>
-        <span class="c1"># Set pipeline execution metadata</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_run_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_or_process</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_status</span> <span class="o">=</span> <span class="n">swconstants</span><span class="o">.</span><span class="n">WORKFLOW_NOT_STARTED</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_run_log</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span>
-        <span class="c1"># Update UI status</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s2">&#39; pipeline is getting run. Please wait.&quot;</span>
-        <span class="p">)</span>
-        <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
-        <span class="c1"># Configure soma-workflow if enabled</span>
-        <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
-        <span class="n">swf_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span>
-            <span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;somaworkflow&quot;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">}</span>
-        <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-            <span class="c1"># Get configuration files and show connection dialog</span>
-            <span class="n">config_file</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">search_config_path</span><span class="p">()</span>
-            <span class="n">resource_list</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_configured_resources</span><span class="p">(</span>
-                    <span class="n">config_file</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="n">login_list</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_logins</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
-            <span class="n">dialog</span> <span class="o">=</span> <span class="n">ConnectionDialog</span><span class="p">(</span><span class="n">login_list</span><span class="p">,</span> <span class="n">resource_list</span><span class="p">)</span>
-            <span class="c1"># Pre-select configured resource if available</span>
-            <span class="n">selected_resource</span> <span class="o">=</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;computing_resource&quot;</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">selected_resource</span> <span class="ow">and</span> <span class="n">selected_resource</span> <span class="ow">in</span> <span class="n">resource_list</span><span class="p">:</span>
-                <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">selected_resource</span><span class="p">)</span>
-
-            <span class="c1"># Show dialog and handle user response</span>
-            <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># User cancelled</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span><span class="p">:</span>
                 <span class="k">return</span>
 
-            <span class="c1"># Reset execution state</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ignore</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ignore_node</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">brick_list</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="c1"># Extract connection details</span>
-            <span class="n">resource</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
-            <span class="n">password</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
-            <span class="n">rsa_key</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_rsa_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_filename</span><span class="p">()</span>
 
-            <span class="c1"># Connect to remote resource if not local</span>
-            <span class="n">local_resources</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
-                <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_local_resource_id</span><span class="p">(),</span>
-            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">resource</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">local_resources</span><span class="p">:</span>
-                <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
+                <span class="n">non_empty_nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span> <span class="k">if</span> <span class="n">name</span><span class="p">]</span>
+                <span class="n">pipeline_name</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">non_empty_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_empty_nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                    <span class="k">else</span> <span class="s2">&quot;Unknown&quot;</span>
+                <span class="p">)</span>
 
-                <span class="k">if</span> <span class="s2">&quot;SomaWorkflowConfig&quot;</span> <span class="ow">in</span> <span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
-                    <span class="c1"># Configure the computing resource</span>
-                    <span class="c1"># TODO: Not sure this is needed...)</span>
-                    <span class="n">study_config</span><span class="o">.</span><span class="n">somaworkflow_computing_resource</span> <span class="o">=</span> <span class="n">resource</span>
-                    <span class="n">swc</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;SomaWorkflowConfig&quot;</span><span class="p">]</span>
-                    <span class="n">swc</span><span class="o">.</span><span class="n">set_computing_resource_password</span><span class="p">(</span>
-                        <span class="n">resource</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">rsa_key</span>
+            <span class="n">pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">)</span>
+            <span class="c1"># Set pipeline execution metadata</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_run_pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pipeline_or_process</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_status</span> <span class="o">=</span> <span class="n">swconstants</span><span class="o">.</span><span class="n">WORKFLOW_NOT_STARTED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_run_log</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_pipeline_name</span> <span class="o">=</span> <span class="n">pipeline_name</span>
+            <span class="c1"># Configure soma-workflow if enabled</span>
+            <span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
+            <span class="n">swf_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">select_configurations</span><span class="p">(</span>
+                <span class="s2">&quot;global&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;somaworkflow&quot;</span><span class="p">:</span> <span class="s1">&#39;config_id==&quot;somaworkflow&quot;&#39;</span><span class="p">}</span>
+            <span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="c1"># Get configuration files and show connection dialog</span>
+                <span class="n">config_file</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">search_config_path</span><span class="p">()</span>
+                <span class="n">resource_list</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_configured_resources</span><span class="p">(</span>
+                        <span class="n">config_file</span>
                     <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">login_list</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_logins</span><span class="p">(</span>
+                    <span class="n">config_file</span>
+                <span class="p">)</span>
+                <span class="n">dialog</span> <span class="o">=</span> <span class="n">ConnectionDialog</span><span class="p">(</span><span class="n">login_list</span><span class="p">,</span> <span class="n">resource_list</span><span class="p">)</span>
+                <span class="c1"># Pre-select configured resource if available</span>
+                <span class="n">selected_resource</span> <span class="o">=</span> <span class="n">swf_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;computing_resource&quot;</span><span class="p">)</span>
 
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to resource: </span><span class="si">{</span><span class="n">resource</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">selected_resource</span> <span class="ow">and</span> <span class="n">selected_resource</span> <span class="ow">in</span> <span class="n">resource_list</span><span class="p">:</span>
+                    <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">setCurrentText</span><span class="p">(</span><span class="n">selected_resource</span><span class="p">)</span>
 
-        <span class="c1"># Setup progress widget and animation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">RunProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span>
-            <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Preferred</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hLayout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">)</span>
-        <span class="c1"># Setup rotating brain animation</span>
-        <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-        <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
-        <span class="n">animation_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">sources_images_dir</span><span class="p">,</span> <span class="s2">&quot;rotatingBrainVISA.gif&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span> <span class="o">=</span> <span class="n">QMovie</span><span class="p">(</span><span class="n">animation_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">frameChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_anim_frame</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-        <span class="c1"># Update UI state for execution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stop_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">garbage_collect_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="c1"># Connect signals and start execution</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finish_execution</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+                <span class="c1"># Show dialog and handle user response</span>
+                <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># User cancelled</span>
+                    <span class="c1"># Update UI status</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s2">&#39; pipeline calculation was canceled &quot;</span>
+                        <span class="sa">f</span><span class="s2">&quot;by the user.&quot;</span>
+                    <span class="p">)</span>
+                    <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
+                    <span class="k">return</span>
+
+                <span class="c1"># Update UI status</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">pipeline_name</span><span class="si">}</span><span class="s2">&#39; pipeline is getting run. Please wait.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
+                <span class="c1"># Reset execution state</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignore_node</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">brick_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_clicked</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="c1"># Extract connection details</span>
+                <span class="n">resource</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">combo_resources</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
+                <span class="n">password</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="n">rsa_key</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ui</span><span class="o">.</span><span class="n">lineEdit_rsa_password</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+
+                <span class="c1"># Connect to remote resource if not local</span>
+                <span class="n">local_resources</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;localhost&quot;</span><span class="p">,</span>
+                    <span class="n">configuration</span><span class="o">.</span><span class="n">Configuration</span><span class="o">.</span><span class="n">get_local_resource_id</span><span class="p">(),</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span> <span class="n">resource</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">local_resources</span><span class="p">:</span>
+                    <span class="n">study_config</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">study_config</span>
+
+                    <span class="k">if</span> <span class="s2">&quot;SomaWorkflowConfig&quot;</span> <span class="ow">in</span> <span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+                        <span class="c1"># Configure the computing resource</span>
+                        <span class="c1"># TODO: Not sure this is needed...)</span>
+                        <span class="n">study_config</span><span class="o">.</span><span class="n">somaworkflow_computing_resource</span> <span class="o">=</span> <span class="n">resource</span>
+                        <span class="n">swc</span> <span class="o">=</span> <span class="n">study_config</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;SomaWorkflowConfig&quot;</span><span class="p">]</span>
+                        <span class="n">swc</span><span class="o">.</span><span class="n">set_computing_resource_password</span><span class="p">(</span>
+                            <span class="n">resource</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span> <span class="n">rsa_key</span>
+                        <span class="p">)</span>
+
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Connecting to resource: </span><span class="si">{</span><span class="n">resource</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">resource</span><span class="p">)</span>
+
+            <span class="c1"># Setup progress widget and animation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">RunProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span>
+                <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Preferred</span><span class="p">,</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Fixed</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hLayout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="p">)</span>
+            <span class="c1"># Setup rotating brain animation</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+            <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
+            <span class="n">animation_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">sources_images_dir</span><span class="p">,</span> <span class="s2">&quot;rotatingBrainVISA.gif&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span> <span class="o">=</span> <span class="n">QMovie</span><span class="p">(</span><span class="n">animation_path</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">frameChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_anim_frame</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mmovie</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+            <span class="c1"># Update UI state for execution</span>
+            <span class="n">execution_started</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stop_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">garbage_collect_action</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="c1"># Connect signals and start execution</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finish_execution</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">progress</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error while starting pipeline execution&quot;</span><span class="p">)</span>
+            <span class="k">raise</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># If execution never really started, restore immediately the</span>
+            <span class="c1"># run_pipeline_action availability</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">execution_started</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.saveParameters">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.saveParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.saveParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the parameters of the currently active pipeline in the pipeline</span>
@@ -3842,7 +3875,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.savePipeline">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.savePipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.savePipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_overwrite_warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline in the pipeline editor.</span>
@@ -3870,6 +3903,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">            protected and will trigger a &quot;save as&quot; operation regardless of</span>
 <span class="sd">            other conditions.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Mia - Save pipeline Warning!&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;It is not possible to save a pipeline in iteration mode!&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="c1"># Initialize status message</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span>
             <span class="s2">&quot;The pipeline is getting saved. Please wait.&quot;</span>
@@ -3930,7 +3973,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.save_pipeline_as">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.save_pipeline_as">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.save_pipeline_as">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline under a new name via &#39;Save As&#39; dialog.</span>
@@ -3940,6 +3983,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">        the success message is capitalized and stripped of its file extension</span>
 <span class="sd">        for display.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="s2">&quot;Mia - Save pipeline Warning!&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;It is not possible to save a pipeline in iteration mode!&quot;</span><span class="p">,</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="n">status_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">statusBar</span><span class="p">()</span>
         <span class="c1"># Show progress message</span>
         <span class="n">status_bar</span><span class="o">.</span><span class="n">showMessage</span><span class="p">(</span><span class="s2">&quot;The pipeline is getting saved. Please wait.&quot;</span><span class="p">)</span>
@@ -3958,7 +4011,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.show_status">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.show_status">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.show_status">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the execution status window with runtime information.</span>
@@ -3974,7 +4027,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.stop_execution">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.stop_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.stop_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interrupt pipeline execution gracefully.</span>
@@ -3989,7 +4042,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.undo">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.undo">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.undo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Undo the last action performed on the current pipeline editor.</span>
@@ -4145,253 +4198,8 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">nodeController</span><span class="o">.</span><span class="n">update_parameters</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="PipelineManagerTab.update_auto_inheritance">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_auto_inheritance">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Automatically infer database tags for output parameters from input</span>
-<span class="sd">        parameters.</span>
-
-<span class="sd">        1. **Single input case**: When only one input parameter has a database</span>
-<span class="sd">           value, all outputs inherit from this input.</span>
-<span class="sd">        2. **Multiple inputs with same value**: When multiple inputs exist but</span>
-<span class="sd">            have identical database values, fallback to single input behavior.</span>
-<span class="sd">        3. **Ambiguous case**: When multiple inputs have different database</span>
-<span class="sd">           values, track all possible inheritance sources for user resolution.</span>
-
-<span class="sd">        The process attribute auto_inheritance_dict is filled with these</span>
-<span class="sd">        values. It&#39;s a dict with the shape::</span>
-
-<span class="sd">            {output_filename: &lt;input_spec&gt;}</span>
-
-<span class="sd">        `output_filename` is the relative filename in the database</span>
-
-<span class="sd">        `&lt;input_spec&gt;` can be:</span>
-
-<span class="sd">        * a string: filename</span>
-<span class="sd">        * a dict::</span>
-
-<span class="sd">                {input_param: input_filename}</span>
-
-<span class="sd">        `auto_inheritance_dict` is built automatically, and is used as a</span>
-<span class="sd">        fallback to :class:`ProcessMIA` `inheritance_dict`, built &quot;manually&quot;</span>
-<span class="sd">        (specialized for each process) in the :meth:`ProcessMIA.list_outputs`</span>
-<span class="sd">        when the latter does not exist, or does not specify what an output</span>
-<span class="sd">        inherits from.</span>
-
-<span class="sd">        If ambiguities still subsist, the Mia infrastructure will ask the user</span>
-<span class="sd">        how to solve them, which is not very convenient, and error-prone, thus</span>
-<span class="sd">        should be avoided.</span>
-
-<span class="sd">        :param node: The node (typically a process or process node) whose</span>
-<span class="sd">                     inputs and outputs are analyzed for tag inheritance.</span>
-<span class="sd">        :param job: An optional job object containing parameter values to</span>
-<span class="sd">                    override or populate the node&#39;s inputs and outputs.</span>
-<span class="sd">                    Defaults to None.</span>
-
-<span class="sd">        :return (dict or None): Auto-inheritance mapping if successful and no</span>
-<span class="sd">                                job provided, None if no inheritance can be</span>
-<span class="sd">                                determined or job is provided (in which case</span>
-<span class="sd">                                the job object is updated in-place).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Extract process from node if needed</span>
-        <span class="n">process</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">process</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">ProcessNode</span><span class="p">)</span> <span class="k">else</span> <span class="n">node</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Pipeline</span><span class="p">):</span>
-            <span class="c1"># Keep only leaf processes that actually produce outputs</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="c1"># Clean up any existing auto_inheritance_dict</span>
-        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;auto_inheritance_dict&quot;</span><span class="p">):</span>
-            <span class="k">del</span> <span class="n">process</span><span class="o">.</span><span class="n">auto_inheritance_dict</span>
-
-        <span class="c1"># Validate study configuration and project</span>
-        <span class="n">study_config</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;get_study_config&quot;</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="kc">None</span><span class="p">)()</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">study_config</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="n">project</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">study_config</span><span class="p">,</span> <span class="s2">&quot;project&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">project</span><span class="p">:</span>
-            <span class="c1"># No databasing, nothing to be done.</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="n">proj_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-
-        <span class="c1"># Extract inputs and outputs</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">Process</span><span class="p">):</span>
-            <span class="n">inputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_inputs</span><span class="p">()</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">get_outputs</span><span class="p">()</span>
-
-            <span class="c1"># Handle ProcessMIA specific outputs</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;list_outputs&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span>
-                <span class="n">process</span><span class="p">,</span> <span class="s2">&quot;outputs&quot;</span>
-            <span class="p">):</span>
-                <span class="c1"># Normally same as outputs, but it may contain an additional</span>
-                <span class="c1"># &quot;notInDb&quot; key.</span>
-                <span class="n">outputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">traits</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">user_traits</span><span class="p">()</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">param</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span>
-            <span class="p">}</span>
-            <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="n">param</span><span class="p">:</span> <span class="n">node</span><span class="o">.</span><span class="n">get_plug_value</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">param</span><span class="p">,</span> <span class="n">trait</span> <span class="ow">in</span> <span class="n">traits</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">trait</span><span class="o">.</span><span class="n">output</span>
-            <span class="p">}</span>
-
-        <span class="c1"># Apply job parameter overrides if provided</span>
-        <span class="k">if</span> <span class="n">job</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">param_dict</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">]:</span>
-
-                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">param_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-
-                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">job</span><span class="o">.</span><span class="n">param_dict</span><span class="p">:</span>
-                        <span class="n">job_value</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">job_value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
-                            <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="nb">list</span>
-                        <span class="p">):</span>
-
-                            <span class="c1"># Update list elements</span>
-                            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">job_value</span><span class="p">):</span>
-
-                                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]):</span>
-                                    <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
-
-                        <span class="k">else</span><span class="p">:</span>
-                            <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">job_value</span>
-
-                    <span class="k">elif</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">is</span> <span class="n">Undefined</span><span class="p">:</span>
-                        <span class="c1"># Remove undefined values</span>
-                        <span class="k">del</span> <span class="n">param_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Remove undefined values</span>
-            <span class="n">inputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Undefined</span><span class="p">}</span>
-            <span class="n">outputs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Undefined</span><span class="p">}</span>
-
-        <span class="n">database_inputs</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
-
-            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
-                    <span class="k">continue</span>
-
-                <span class="c1"># Handle both single values and lists</span>
-                <span class="n">paths</span> <span class="o">=</span> <span class="p">(</span>
-                    <span class="p">[</span><span class="n">value</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
-                    <span class="k">else</span> <span class="p">(</span>
-                        <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)]</span>
-                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span>
-                        <span class="k">else</span> <span class="p">[]</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-
-                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">:</span>
-                    <span class="n">resolved_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-
-                    <span class="k">if</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
-                        <span class="n">relative_path</span> <span class="o">=</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">)</span>
-
-                        <span class="k">if</span> <span class="n">database_data</span><span class="o">.</span><span class="n">has_document</span><span class="p">(</span>
-                            <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
-                            <span class="n">primary_key</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">relative_path</span><span class="p">),</span>
-                        <span class="p">):</span>
-                            <span class="c1"># inheritance_dict is using full paths.</span>
-                            <span class="n">database_inputs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">path</span>
-                            <span class="k">break</span>
-                            <span class="c1"># TODO: What if several path values are valid ?</span>
-                            <span class="c1">#       Currently we keep only the first element of</span>
-                            <span class="c1">#       the plug parameters</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">database_inputs</span><span class="p">:</span>
-            <span class="c1"># Zero inputs are registered in the database: We cannot</span>
-            <span class="c1"># infer outputs tags automatically. OK we leave.</span>
-            <span class="k">return</span> <span class="kc">None</span>
-
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">database_inputs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># If the process has a single input with a value in the database,</span>
-            <span class="c1"># then we can deduce its output database tags/attributes from it.</span>
-            <span class="n">inheritance_source</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">database_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
-
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Several inputs are registered in the database: We cannot</span>
-            <span class="c1"># infer outputs tags automatically too, but we mark the ambiguity</span>
-            <span class="c1"># to ask the user later</span>
-            <span class="n">unique_values</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">database_inputs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-            <span class="n">inheritance_source</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">unique_values</span><span class="p">))</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_values</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-                <span class="k">else</span> <span class="n">database_inputs</span>
-            <span class="p">)</span>
-
-        <span class="c1"># Build auto inheritance dictionary</span>
-        <span class="n">not_in_db</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">outputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;notInDb&quot;</span><span class="p">,</span> <span class="p">[]))</span>
-        <span class="n">auto_inheritance_dict</span> <span class="o">=</span> <span class="p">{}</span>
-
-        <span class="k">for</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">plug_value</span> <span class="ow">in</span> <span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-            <span class="c1"># Skip special parameters and high-level user parameters</span>
-            <span class="k">if</span> <span class="p">(</span>
-                <span class="n">plug_name</span> <span class="o">==</span> <span class="s2">&quot;notInDb&quot;</span>
-                <span class="ow">or</span> <span class="n">plug_name</span> <span class="ow">in</span> <span class="n">not_in_db</span>
-                <span class="ow">or</span> <span class="p">(</span>
-                    <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span><span class="o">.</span><span class="n">userlevel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span><span class="o">.</span><span class="n">userlevel</span> <span class="o">&gt;</span> <span class="mi">0</span>
-                <span class="p">)</span>
-            <span class="p">):</span>
-                <span class="k">continue</span>
-
-            <span class="n">trait</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">trait</span><span class="p">(</span><span class="n">plug_name</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">trait</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">is_file_trait</span><span class="p">(</span><span class="n">trait</span><span class="p">):</span>
-                <span class="k">continue</span>
-
-            <span class="c1"># Extract all valid file paths from plug value</span>
-            <span class="c1"># (handles nested lists)</span>
-            <span class="n">valid_paths</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">todo</span> <span class="o">=</span> <span class="p">[</span><span class="n">plug_value</span><span class="p">]</span>
-
-            <span class="k">while</span> <span class="n">todo</span><span class="p">:</span>
-                <span class="n">current</span> <span class="o">=</span> <span class="n">todo</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                    <span class="n">todo</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-
-                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">current</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                    <span class="n">resolved_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">current</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-
-                    <span class="k">if</span> <span class="n">resolved_path</span><span class="o">.</span><span class="n">is_relative_to</span><span class="p">(</span><span class="n">proj_dir</span><span class="p">):</span>
-                        <span class="n">valid_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">valid_paths</span><span class="p">:</span>
-                <span class="n">auto_inheritance_dict</span><span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="o">=</span> <span class="n">inheritance_source</span>
-
-        <span class="k">if</span> <span class="n">auto_inheritance_dict</span><span class="p">:</span>
-
-            <span class="k">if</span> <span class="n">job</span><span class="p">:</span>
-                <span class="n">job</span><span class="o">.</span><span class="n">auto_inheritance_dict</span> <span class="o">=</span> <span class="n">auto_inheritance_dict</span>
-
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">auto_inheritance_dict</span>
-
-        <span class="k">return</span> <span class="kc">None</span></div>
-
-
 <div class="viewcode-block" id="PipelineManagerTab.update_inheritance">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_inheritance">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_inheritance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the inheritance dictionary for a process node in a pipeline</span>
@@ -4453,7 +4261,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_node_list">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_node_list">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_node_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the node list with unique nodes from workflow jobs.</span>
@@ -4487,7 +4295,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.updateProcessLibrary">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.updateProcessLibrary">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.updateProcessLibrary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">updateProcessLibrary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the library of processes when a pipeline is saved.</span>
@@ -4585,7 +4393,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_project">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_project">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_project">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the project reference across all relevant components.</span>
@@ -4621,7 +4429,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_scans_list">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_scans_list">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_scans_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_scans_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_list</span><span class="p">,</span> <span class="n">all_iterations_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the user-selected list of scans based on iteration settings.</span>
@@ -4646,6 +4454,13 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_user_buttons_states</span><span class="p">()</span>
         <span class="n">current_editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">pipeline</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iterationTable</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span>
+                <span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="c1"># Find iteration node if it exists</span>
         <span class="n">iteration_node_name</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -4672,6 +4487,7 @@ window.addEventListener("load", load);</script>
                     <span class="p">)</span>
                     <span class="k">return</span>
 
+                <span class="n">new_pipeline</span><span class="o">.</span><span class="n">init_non_iterat_pip</span> <span class="o">=</span> <span class="n">pipeline</span>
                 <span class="n">current_editor</span><span class="o">.</span><span class="n">set_pipeline</span><span class="p">(</span><span class="n">new_pipeline</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayNodeParameters</span><span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="n">new_pipeline</span><span class="p">)</span>
 
@@ -4687,16 +4503,35 @@ window.addEventListener("load", load);</script>
 
             <span class="c1"># Disable iteration mode</span>
             <span class="k">if</span> <span class="n">has_iteration</span><span class="p">:</span>
-                <span class="c1"># Extract the original pipeline from the iteration node</span>
-                <span class="n">original_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span>
-                    <span class="n">iteration_node_name</span>
-                <span class="p">]</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">process</span>
+                <span class="n">original_pipeline</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">init_non_iterat_pip</span>
+
+                <span class="c1"># Remove `context_name`` attributes added by</span>
+                <span class="c1"># capsul.pipeline.ProcessIteration so the original</span>
+                <span class="c1"># non-iterative pipeline is restored.</span>
+                <span class="n">context</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">original_pipeline</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">context</span> <span class="ow">and</span> <span class="s2">&quot;iterated&quot;</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+                    <span class="nb">delattr</span><span class="p">(</span><span class="n">original_pipeline</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">original_pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="o">.</span><span class="n">sortedKeys</span><span class="p">:</span>
+                    <span class="n">process</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+                        <span class="n">original_pipeline</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="s2">&quot;process&quot;</span><span class="p">,</span> <span class="kc">None</span>
+                    <span class="p">)</span>
+                    <span class="n">context</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">context</span> <span class="ow">and</span> <span class="s2">&quot;iterated&quot;</span> <span class="ow">in</span> <span class="n">context</span><span class="p">:</span>
+                        <span class="nb">delattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">)</span>
+
                 <span class="n">current_editor</span><span class="o">.</span><span class="n">set_pipeline</span><span class="p">(</span><span class="n">original_pipeline</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">displayNodeParameters</span><span class="p">(</span><span class="s2">&quot;inputs&quot;</span><span class="p">,</span> <span class="n">original_pipeline</span><span class="p">)</span>
 
-            <span class="c1"># Reset scan lists to non-iteration mode</span>
+            <span class="c1"># Reset scan lists and parameters to non-iteration mode</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">iteration_table_scans_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scan_list</span>
+            <span class="n">current_editor</span><span class="o">.</span><span class="n">iterated</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">current_editor</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">current_editor</span><span class="o">.</span><span class="n">tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_editor</span><span class="o">.</span><span class="n">all_tag_values_list</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="c1"># Fallback to database scan list if needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipelineEditorTabs</span><span class="o">.</span><span class="n">scan_list</span><span class="p">:</span>
@@ -4710,7 +4545,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_buttons_states">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_buttons_states">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_user_buttons_states">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_user_buttons_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visibility and state of pipeline-related UI actions.</span>
@@ -4746,11 +4581,13 @@ window.addEventListener("load", load);</script>
         <span class="n">has_processes</span> <span class="o">=</span> <span class="p">(</span>
             <span class="n">pipeline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">pipeline</span><span class="o">.</span><span class="n">list_process_in_pipeline</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="n">has_processes</span><span class="p">)</span></div>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_init</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_pipeline_action</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="n">has_processes</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_mode">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab.update_user_mode">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_user_mode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update widget/action visibility and functionality based on user mode</span>
@@ -4788,7 +4625,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunProgress</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Qt widget for displaying and managing pipeline execution progress.</span>
@@ -4827,7 +4664,7 @@ window.addEventListener("load", load);</script>
     <span class="n">AUTO_CLOSE_DELAY_MS</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># Delay before auto-closing message box</span>
 
 <div class="viewcode-block" id="RunProgress.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the RunProgress widget with a progress bar and worker</span>
@@ -4846,6 +4683,8 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="o">.</span><span class="n">finished</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_progress</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="RunProgress._determine_completion_message">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._determine_completion_message">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_determine_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Analyze execution results and determine appropriate user message.</span>
@@ -4885,8 +4724,11 @@ window.addEventListener("load", load);</script>
                     <span class="s2">&quot;Pipeline execution encountered an error.</span><span class="se">\n</span><span class="s2">&quot;</span>
                     <span class="s2">&quot;Please check the status report for details.&quot;</span>
                 <span class="p">),</span>
-            <span class="p">}</span>
+            <span class="p">}</span></div>
 
+
+<div class="viewcode-block" id="RunProgress._setup_ui">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._setup_ui">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the user interface for the widget.</span>
@@ -4901,8 +4743,11 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span><span class="o">.</span><span class="n">setMinimumWidth</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MIN_PROGRESS_WIDTH</span><span class="p">)</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">progressbar</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="RunProgress._show_completion_message">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._show_completion_message">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_show_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display execution completion message with auto-close timer.</span>
@@ -4915,10 +4760,11 @@ window.addEventListener("load", load);</script>
         <span class="c1"># Auto-close timer</span>
         <span class="n">close_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">()</span>
         <span class="n">close_timer</span><span class="o">.</span><span class="n">singleShot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AUTO_CLOSE_DELAY_MS</span><span class="p">,</span> <span class="n">message_box</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
-        <span class="n">message_box</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        <span class="n">message_box</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="RunProgress.cleanup">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.cleanup">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.cleanup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up resources and prepare for widget destruction.</span>
@@ -4936,7 +4782,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.end_progress">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.end_progress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.end_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle completion of pipeline execution and show results.</span>
@@ -4954,7 +4800,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.start">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.start">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.start">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the worker thread to begin the pipeline execution process.</span>
@@ -4967,7 +4813,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.stop_execution">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunProgress.stop_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.stop_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the execution of the pipeline by signaling the worker to</span>
@@ -4987,7 +4833,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunWorker">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Worker thread for executing a pipeline in the background.</span>
@@ -5004,7 +4850,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RunWorker.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the worker thread for pipeline execution.</span>
@@ -5026,6 +4872,8 @@ window.addEventListener("load", load);</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">exec_id</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="RunWorker._check_interrupt">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker._check_interrupt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether an interrupt has been requested.</span>
@@ -5049,8 +4897,11 @@ window.addEventListener("load", load);</script>
 
                 <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
 
+
+<div class="viewcode-block" id="RunWorker._disable_nipype_copy">
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker._disable_nipype_copy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_disable_nipype_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively check and disable the copy flag for Nipype processes in</span>
@@ -5083,10 +4934,11 @@ window.addEventListener("load", load);</script>
                     <span class="n">child</span><span class="o">.</span><span class="n">activate_copy</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">NipypeProcess</span><span class="p">):</span>
-            <span class="n">proc</span><span class="o">.</span><span class="n">activate_copy</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">proc</span><span class="o">.</span><span class="n">activate_copy</span> <span class="o">=</span> <span class="kc">False</span></div>
+
 
 <div class="viewcode-block" id="RunWorker.run">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.RunWorker.run">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the pipeline in a background thread.</span>
@@ -5176,7 +5028,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="StatusWidget">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StatusWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     A widget that displays the current or last pipeline execution status</span>
@@ -5194,7 +5046,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StatusWidget.__init__">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the execution status window for monitoring pipeline runs.</span>
@@ -5238,7 +5090,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="StatusWidget.toggle_soma_workflow">
-<a class="viewcode-back" href="../../../../populse_mia.user_interface.pipeline_manager.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.StatusWidget.toggle_soma_workflow">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget.toggle_soma_workflow">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">toggle_soma_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Show or hide the Soma-Workflow monitoring widget.</span>
@@ -5254,11 +5106,6 @@ window.addEventListener("load", load);</script>
             <span class="k">return</span>
 
         <span class="k">if</span> <span class="n">checked</span><span class="p">:</span>
-            <span class="kn">from</span><span class="w"> </span><span class="nn">soma_workflow.gui.workflowGui</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-                <span class="n">ApplicationModel</span><span class="p">,</span>
-                <span class="n">MainWindow</span><span class="p">,</span>
-            <span class="p">)</span>
-
             <span class="n">model</span> <span class="o">=</span> <span class="n">ApplicationModel</span><span class="p">()</span>
 
             <span class="k">with</span> <span class="n">protected_logging</span><span class="p">():</span>
