@@ -1,16 +1,9 @@
-"""The first module used at the mia runtime.
+"""
+The first module used at the mia runtime.
 
 Basically, this module is dedicated to the initialisation of the basic
 parameters and the various checks necessary for a successful launch of the
 mia's GUI.
-
-:Contains:
-    :Function:
-        - add_to_sys_path
-        - check_package
-        - main
-        - qt_message_handler
-
 """
 
 ###############################################################################
@@ -52,6 +45,8 @@ except ImportError:
     # Running as a top-level script (python main.py)
     from cli_args import parse_args
 
+__all__ = ["add_to_sys_path", "check_package", "main", "qt_message_handler"]
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
@@ -60,13 +55,14 @@ def add_to_sys_path(path, name, index=0):
     """
     Adds the specified path to the system path if it's a valid directory.
 
-    :param path (pathlib.Path): The directory path to be added to the
-                                system path.
-    :param name (str): The name of the package being added.
-    :param index (int, optional): The index at which to insert the path
-                                  into sys.path. Defaults to 0.
-    :return (bool): True if the path is a valid directory and was added
-                    to sys.path, False otherwise.
+    :param path: (pathlib.Path) The directory path to be added to the system
+     path.
+    :param name: (str) The name of the package being added.
+    :param index: (int) The index at which to insert the pathinto sys.path.
+     Defaults to 0.
+
+    :Returns: (bool) True if the path is a valid directory and was added
+     to sys.path, False otherwise.
     """
 
     if path.is_dir():
@@ -84,10 +80,10 @@ def check_package(name):
     Attempts to import a package by its name, logs the location of the
     package if successful, and logs an error if the package is missing.
 
-    :param name (str): The name of the package to be imported.
+    :param name: (str) The name of the package to be imported.
 
-    :return (bool): True if the package is imported successfully;
-                    False if the package is missing.
+    :Returns: (bool) True if the package is imported successfully; False if
+     the package is missing.
     """
 
     try:
@@ -106,10 +102,11 @@ def check_package(name):
 
 
 def main(args):
-    """Make basic configuration check, then actual launch of Mia.
+    """
+    Make basic configuration check, then actual launch of Mia.
 
-    Checks if Mia is called from the site/dist packages (`user mode`) or from a
-    cloned git repository (`developer mode`).
+    Checks if Mia is called from the site / dist packages (`user mode`) or
+    from a cloned git repository (`developer mode`).
 
     ~/.populse_mia/configuration_path.yml is mandatory, if it doesn't exist
     or is corrupted, try to create one with a valid properties path.
@@ -117,14 +114,13 @@ def main(args):
     - If launched from a cloned git repository (`developer mode`):
         - the properties_path is the "properties_dev_path" parameter in
           ~/.populse_mia/configuration_path.yml
-    - If launched from the site/dist packages (`user mode`):
+    - If launched from the site / dist packages (`user mode`):
         - the properties_path is the "properties_user_path" parameter in
           ~/.populse_mia/configuration_path.yml
 
-    Launches the verify_processes() function, then the launch_mia() function
-    (Mia's real launch).
+    Launches the ``verify_processes()`` function, then the ``launch_mia()``
+    function (Mia's real launch).
     """
-
     pypath = []
     package_not_found = []
     # Disables any etelemetry check.
@@ -401,11 +397,11 @@ def qt_message_handler(msg_type, context, message):
     Custom Qt message handler to filter out specific unwanted messages
     and print the remaining ones to stderr.
 
-    :param msg_type (QtMsgType): The type of Qt message (debug, warning,
-                                 critical, etc.).
-    :param context (QMessageLogContext): Context information about where the
-                                         message originated.
-    :param message (str): The log message string.
+    :param msg_type: (QtMsgType) The type of Qt message (debug, warning,
+     critical, etc. - unused).
+    :param context: (QMessageLogContext) Context information about where the
+     message originated (unused).
+    :param message: (str) The log message string.
     """
 
     for unwanted_message in unwanted_messages:
