@@ -118,6 +118,8 @@ def main(args):
         - the properties_path is the "properties_user_path" parameter in
           ~/.populse_mia/configuration_path.yml
 
+    :param args: (argparse.Namespace) The parsed command-line arguments.
+
     Launches the ``verify_processes()`` function, then the ``launch_mia()``
     function (Mia's real launch).
     """

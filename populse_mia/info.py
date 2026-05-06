@@ -1,9 +1,5 @@
-"""Define software version, description and requirements
-
-:Contains:
-    :Function:
-        - get_populse_mia_gitversion
-
+"""
+Define software version, description and requirements
 """
 
 ###############################################################################
@@ -16,7 +12,6 @@
 
 import os
 import subprocess
-import sys
 
 # Current version
 version_major = 3
@@ -41,7 +36,7 @@ def get_populse_mia_gitversion():
     """
     Mia version as reported by the last commit in git.
 
-    :return: The short commit hash as the version or None if not found.
+    :Returns: The short commit hash as the version or None if not found.
     """
 
     try:
@@ -150,8 +145,3 @@ EXTRA_REQUIRES = {
         "sphinx>=1.0",
     ],
 }
-
-brainvisa_build_model = "pure_python"
-
-# tests to run
-test_commands = [f"{sys.executable} -m populse_mia.test"]

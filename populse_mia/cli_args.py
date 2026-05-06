@@ -3,10 +3,6 @@ This module provides command-line argument parsing for the Mia application.
 
 It centralizes the definition and parsing of CLI arguments to avoid
 duplication and ensure consistency across entry points.
-
-:Contains:
-    :Function:
-        - parse_args()
 """
 
 ##########################################################################
@@ -27,11 +23,10 @@ def parse_args():
     This function configures and parses command-line arguments for
     launching the Mia application.
 
-    :returns (argparse.Namespace): Parsed command-line arguments
-                                   containing:
+    :Returns: (argparse.Namespace) Parsed command-line arguments containing:
+
         - multi_instance (bool): Whether multiple instances of the application
-                                 can be launched simultaneously
-                                 (default: False).
+          can be launched simultaneously (default: False).
     """
     parser = argparse.ArgumentParser(
         description="Populse Mia Application Entry Point."
