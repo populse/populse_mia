@@ -4,6 +4,15 @@ populse\_mia.user\_interface.data\_viewer.data\_viewer
 .. automodule:: populse_mia.user_interface.data_viewer.data_viewer
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
@@ -11,3 +20,11 @@ populse\_mia.user\_interface.data\_viewer.data\_viewer
       DataViewer
       MetaDataViewer
    
+   
+
+   
+   
+   
+
+
+

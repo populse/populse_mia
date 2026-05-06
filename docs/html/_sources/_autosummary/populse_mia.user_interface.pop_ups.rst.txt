@@ -4,6 +4,15 @@ populse\_mia.user\_interface.pop\_ups
 .. automodule:: populse_mia.user_interface.pop_ups
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
@@ -40,3 +49,11 @@ populse\_mia.user\_interface.pop\_ups
       PopUpVisualizedTags
       QLabel_clickable
    
+   
+
+   
+   
+   
+
+
+

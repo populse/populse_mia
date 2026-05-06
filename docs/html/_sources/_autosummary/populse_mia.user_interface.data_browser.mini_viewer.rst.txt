@@ -4,9 +4,26 @@ populse\_mia.user\_interface.data\_browser.mini\_viewer
 .. automodule:: populse_mia.user_interface.data_browser.mini_viewer
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
    
       MiniViewer
    
+   
+
+   
+   
+   
+
+
+
