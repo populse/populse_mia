@@ -17,24 +17,6 @@ intuitive tools that define inputs and outputs at a conceptual level. It
 organizes data based on their roles in an analysis project, such
 as “scan type,” “subject,” or “subject group,” making it easier to structure
 and automate workflows.
-
-Contents:
-
-  - Packages
-
-    - data_manager: Manages projects and their associated databases.
-    - sources_images: Contains a collection of images used in MIA.
-    - tests: Contains the unit tests
-    - user_interface: Handles the graphical user interface of MIA.
-    - utils: Provides various utility functions for MIA operations.
-
-  - Modules
-
-    - info.py: Defines software version, description, and requirements.
-    - main.py: The primary module executed at runtime.
-    - __main__.py: Allows populse_mia to be executed as a module.
-    - software_properties.py: Manages the software’s configuration.
-
 """
 
 ###############################################################################
