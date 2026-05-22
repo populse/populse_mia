@@ -36,6 +36,8 @@ import io
 import json
 import logging
 import os
+
+os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import platform
 import shutil
 import subprocess
