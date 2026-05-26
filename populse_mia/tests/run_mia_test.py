@@ -36,8 +36,6 @@ import io
 import json
 import logging
 import os
-
-os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import platform
 import shutil
 import subprocess
@@ -47,6 +45,10 @@ import time
 import unittest
 import uuid
 import yaml
+
+if sys.platform.startswith("linux"):
+    os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
+
 from collections import namedtuple
 from datetime import datetime
 from packaging import version
