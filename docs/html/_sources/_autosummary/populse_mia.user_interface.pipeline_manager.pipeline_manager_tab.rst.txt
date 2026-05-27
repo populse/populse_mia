@@ -4,20 +4,11 @@ populse\_mia.user\_interface.pipeline\_manager.pipeline\_manager\_tab
 .. automodule:: populse_mia.user_interface.pipeline_manager.pipeline_manager_tab
 
    
-   
-   
-
-   
-   
    .. rubric:: Functions
 
    .. autosummary::
    
       protected_logging
-   
-   
-
-   
    
    .. rubric:: Classes
 
@@ -28,11 +19,3 @@ populse\_mia.user\_interface.pipeline\_manager.pipeline\_manager\_tab
       RunWorker
       StatusWidget
    
-   
-
-   
-   
-   
-
-
-

@@ -5,20 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+85ba6670 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=2272d79d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+85ba6670 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_history_inspect</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -168,11 +168,11 @@ database.</p>
 <p>A Pipeline is normally subclassed, and its <a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.Pipeline.pipeline_definition" title="populse_mia.data_manager.data_history_inspect.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a>
 method is overloaded to define its nodes and links.
 <a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.Pipeline.pipeline_definition" title="populse_mia.data_manager.data_history_inspect.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a> will be called by the pipeline constructor.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
 
-<span class="k">class</span> <span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
 
-  <span class="k">def</span> <span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc1&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process1&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc2&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process2&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_switch</span><span class="p">(</span><span class="s1">&#39;main_switch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;in1&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;out1&#39;</span><span class="p">,</span> <span class="s1">&#39;out2&#39;</span><span class="p">])</span>
@@ -273,7 +273,7 @@ name is ‘’</p>
 <dd><p>a list of ordered nodes that can be executed</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -284,7 +284,7 @@ name is ‘’</p>
 <dd><p>a string representation of the workflow list &lt;node_i&gt;-&gt;&lt;node_i+1&gt;</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -318,7 +318,7 @@ name is ‘’</p>
 <dd><p>Initialize the Pipeline class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>autoexport_nodes_parameters</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True (default) nodes containing pipeline plugs are automatically
+<dd class="field-odd"><p><strong>autoexport_nodes_parameters</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True (default) nodes containing pipeline plugs are automatically
 exported.</p>
 </dd>
 </dl>
@@ -341,7 +341,7 @@ base Pipeline class.</p>
 are listed in the pipeline “do_not_export” variable (list or set).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>include_optional</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – If True (the default), optional plugs are not exported
+<dd class="field-odd"><p><strong>include_optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – If True (the default), optional plugs are not exported
 Exception: optional output plugs of switches are exported
 (otherwise they are useless). It should probably be any single
 output plug of a node.</p>
@@ -356,7 +356,7 @@ output plug of a node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name</p></li>
 <li><p><strong>trait</strong> (<em>trait instance</em><em> (</em><em>mandatory</em><em>)</em>) – the trait we want to add</p></li>
 </ul>
 </dd>
@@ -369,7 +369,7 @@ output plug of a node.</p>
 <dd><p>Remove a trait to the pipeline</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name</p>
 </dd>
 </dl>
 </dd></dl>
@@ -436,14 +436,14 @@ features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name (has to be unique).</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name (has to be unique).</p></li>
 <li><p><strong>process</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.Process" title="populse_mia.data_manager.data_history_inspect.Process"><em>Process</em></a><em> (</em><em>mandatory</em><em>)</em>) – the process we want to add. May be a string (‘module.process’), a
 process instance or a class.</p></li>
-<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
-<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
-<li><p><strong>inputs_to_copy</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of item to copy.</p></li>
-<li><p><strong>inputs_to_clean</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of temporary items.</p></li>
-<li><p><strong>skip_invalid</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True, if the process is failing (cannot be instantiated), don’t
+<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
+<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
+<li><p><strong>inputs_to_copy</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of item to copy.</p></li>
+<li><p><strong>inputs_to_clean</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of temporary items.</p></li>
+<li><p><strong>skip_invalid</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, if the process is failing (cannot be instantiated), don’t
 throw an exception but instead don’t insert the node, and mark
 it as such in order to make add_link() to also silently do nothing.
 This option is useful for optional process nodes which may or may
@@ -467,14 +467,14 @@ switch offering several alternative methods.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name (has to be unique).</p></li>
-<li><p><strong>process</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.Process" title="populse_mia.data_manager.data_history_inspect.Process"><em>Process</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the process we want to add.</p></li>
-<li><p><strong>iterative_plugs</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names on which we want to iterate.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name (has to be unique).</p></li>
+<li><p><strong>process</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.Process" title="populse_mia.data_manager.data_history_inspect.Process"><em>Process</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the process we want to add.</p></li>
+<li><p><strong>iterative_plugs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names on which we want to iterate.
 If None, all plugs of the process will be iterated.</p></li>
-<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
-<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
-<li><p><strong>inputs_to_copy</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of item to copy.</p></li>
-<li><p><strong>inputs_to_clean</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of temporary items.</p></li>
+<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
+<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
+<li><p><strong>inputs_to_copy</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of item to copy.</p></li>
+<li><p><strong>inputs_to_clean</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of temporary items.</p></li>
 </ul>
 </dd>
 </dl>
@@ -488,8 +488,8 @@ with add_process or add_iterative_process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name given to the process node.</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name of the method to call.</p></li>
+<li><p><strong>process_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name given to the process node.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name of the method to call.</p></li>
 </ul>
 </dd>
 </dl>
@@ -502,15 +502,15 @@ with add_process or add_iterative_process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for the switch node (has to be unique)</p></li>
-<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – names for switch inputs.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for the switch node (has to be unique)</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – names for switch inputs.
 Switch activation will select amongst them.
 Inputs names will actually be a combination of input and output,
 in the shape “input_switch_output”.
 This behaviour is needed when there are several outputs, and thus
 several input groups.</p></li>
-<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – names for outputs.</p></li>
-<li><p><strong>export_switch</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – if True, export the switch trigger to the parent pipeline with
+<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – names for outputs.</p></li>
+<li><p><strong>export_switch</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – if True, export the switch trigger to the parent pipeline with
 <code class="docutils literal notranslate"><span class="pre">name</span></code> as parameter name</p></li>
 <li><p><strong>make_optional</strong> (<em>sequence</em><em> (</em><em>optional</em><em>)</em>) – list of optional outputs.
 These outputs will be made optional in the switch output. By
@@ -519,9 +519,9 @@ default they are mandatory.</p></li>
 will specify each switch output parameter type (as a standard
 trait). Input parameters for each input block will also have this
 type.</p></li>
-<li><p><strong>switch_value</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – Initial value of the switch parameter (one of the inputs names).
+<li><p><strong>switch_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – Initial value of the switch parameter (one of the inputs names).
 Defaults to 1st input.</p></li>
-<li><p><strong>opt_nodes</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – tells that switch values are node names, and some of them may be
+<li><p><strong>opt_nodes</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – tells that switch values are node names, and some of them may be
 optional and missing. In such a case, missing nodes are not added
 as inputs. If a list is passed, then it is a list of node names
 which length should match the number of inputs, and which order
@@ -569,12 +569,12 @@ the run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for the switch node (has to be unique)</p></li>
-<li><p><strong>input</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for switch input.
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for the switch node (has to be unique)</p></li>
+<li><p><strong>input</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – name for switch input.
 Switch activation will select between it and a hidden input,
 “_none”. Inputs names will actually be a combination of input and
 output, in the shape “input_switch_output”.</p></li>
-<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – name for output. Default is the switch name</p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – name for output. Default is the switch name</p></li>
 </ul>
 </dd>
 </dl>
@@ -597,17 +597,17 @@ in the pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_type</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>Node subclass</em><em> or </em><em>Node instance</em>) – node type to be built. Either a class (Node subclass) or a Node
+<li><p><strong>node_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>Node subclass</em><em> or </em><em>Node instance</em>) – node type to be built. Either a class (Node subclass) or a Node
 instance (the node will be re-instantiated), or a string
 describing a module and class.</p></li>
-<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> or </em><em>Controller</em><em> or </em><em>None</em>) – configuration dict or Controller defining parameters needed to
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>Controller</em><em> or </em><em>None</em>) – configuration dict or Controller defining parameters needed to
 build the node. The controller should be obtained using the node
 class’s <cite>configure_node()</cite> static method, then filled with the
 desired values.
 If not given the node is supposed to be built with no parameters,
 which will not work for every node type.</p></li>
-<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a>) – parameters names to be made optional</p></li>
-<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
+<li><p><strong>make_optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – parameters names to be made optional</p></li>
+<li><p><strong>do_not_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – a list of plug names that we do not want to export.</p></li>
 <li><p><strong>kwargs</strong> (<em>default values</em><em> of </em><em>node parameters</em>)</p></li>
 </ul>
 </dd>
@@ -621,16 +621,16 @@ which will not work for every node type.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the link description of the form
+<li><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the link description of the form
 ‘node_from.plug_name-&gt;node_to.plug_name’</p></li>
-<li><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True, check that the node and plug exist</p></li>
+<li><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, check that the node and plug exist</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>output</strong> – tuple containing the link description and instances</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -654,15 +654,15 @@ which will not work for every node type.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the description plug we want to load ‘node.plug’</p></li>
-<li><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True, check that the node and plug exist</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the description plug we want to load ‘node.plug’</p></li>
+<li><p><strong>check</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, check that the node and plug exist</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>output</strong> – tuple containing the plug description and instances</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -676,14 +676,14 @@ optional.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>list/tuple</em>) – link description. Its shape should be:
+<li><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>list/tuple</em>) – link description. Its shape should be:
 “node.output-&gt;other_node.input”.
 If no node is specified, the pipeline itself is assumed.
 Alternatively the link can be
 (source_node, source_plug_name, dest_node, dest_plug_name)</p></li>
-<li><p><strong>weak_link</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – this property is used when nodes are optional,
+<li><p><strong>weak_link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – this property is used when nodes are optional,
 the plug information may not be generated.</p></li>
-<li><p><strong>allow_export</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True, if the link links from/to the pipeline node with a plug
+<li><p><strong>allow_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, if the link links from/to the pipeline node with a plug
 name which doesn’t exist, the plug will be created, and the
 function will act exactly like export_parameter. This may be a more
 convenient way of exporting/connecting pipeline plugs to several
@@ -700,7 +700,7 @@ nodes without having to export the first one, then link the others.</p></li>
 <dd><p>Remove a link between pipeline nodes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>list/tuple</em>) – link description. Its shape should be:
+<dd class="field-odd"><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>list/tuple</em>) – link description. Its shape should be:
 “node.output-&gt;other_node.input”.
 If no node is specified, the pipeline itself is assumed.
 Alternatively the link can be
@@ -716,17 +716,17 @@ Alternatively the link can be
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the name of node containing the plug we want to export</p></li>
-<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node plug name we want to export</p></li>
-<li><p><strong>pipeline_parameter</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – the name to access this parameter at the pipeline level.
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the name of node containing the plug we want to export</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node plug name we want to export</p></li>
+<li><p><strong>pipeline_parameter</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – the name to access this parameter at the pipeline level.
 Default None, the plug name is used</p></li>
-<li><p><strong>weak_link</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – this property is used when nodes are weak,
+<li><p><strong>weak_link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – this property is used when nodes are weak,
 <strong>FIXME:</strong> what does it exactly mean ?
 the plug information may not be generated.</p></li>
-<li><p><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – a property to specify that it is not a user-parameter
+<li><p><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – a property to specify that it is not a user-parameter
 automatic generation)</p></li>
-<li><p><strong>is_optional</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – sets the exported parameter to be optional</p></li>
-<li><p><strong>allow_existing_plug</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – the same pipeline plug may be connected to several process plugs</p></li>
+<li><p><strong>is_optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – sets the exported parameter to be optional</p></li>
+<li><p><strong>allow_existing_plug</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – the same pipeline plug may be connected to several process plugs</p></li>
 </ul>
 </dd>
 </dl>
@@ -739,8 +739,8 @@ automatic generation)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name</p></li>
-<li><p><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>mandatory</em><em>)</em>) – the desired property</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the node name</p></li>
+<li><p><strong>is_enabled</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>mandatory</em><em>)</em>) – the desired property</p></li>
 </ul>
 </dd>
 </dl>
@@ -784,7 +784,7 @@ state and the state of its direct neighbouring nodes.</p>
 activated</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -803,7 +803,7 @@ activation state and to the state of its direct neighbouring nodes.</p>
 deactivated</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -878,7 +878,7 @@ _free_temporary_files().</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
-<li><p><strong>temp_files</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – list of temporary files for the pipeline execution. The list will
+<li><p><strong>temp_files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of temporary files for the pipeline execution. The list will
 be modified (completed).</p></li>
 </ul>
 </dd>
@@ -913,7 +913,7 @@ files internally.</p>
 optional</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -929,7 +929,7 @@ links_count, enabled_nodes_count, enabled_procs_count,
 enabled_links_count)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#tuple" title="(in Python v3.12)">tuple</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -962,7 +962,7 @@ recorded state.</p>
 (e.g. ‘node “my_process” is missing’)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -975,7 +975,7 @@ debug links propagation and problems in it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>log_file</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – file-like object to write links propagation in.
+<li><p><strong>log_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – file-like object to write links propagation in.
 If none is specified, a temporary file will be created for it.</p></li>
 <li><p><strong>handler</strong> (<em>function</em><em> (</em><em>optional</em><em>)</em>) – Callback to be processed for debugging. If none is specified, the
 default pipeline debugging function will be used. This default
@@ -984,7 +984,7 @@ log_file.
 The handler function will receive a prefix string, a node,
 and traits parameters, namely the object (process) owning the
 changed value, the trait name and value in this object.</p></li>
-<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – prefix to be prepended to traits names, typically the parent
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – prefix to be prepended to traits names, typically the parent
 pipeline full name</p></li>
 </ul>
 </dd>
@@ -1033,7 +1033,7 @@ or disabled on a runtime basis (when building workflows).</p>
 <p>See also add_pipeline_step()</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> or </em><em>preferably OrderedDict</em><em> or </em><em>SortedDictionary</em><em> (</em><em>mandatory</em><em>)</em>) – The steps dict keys are steps names, the values are lists of nodes
+<dd class="field-odd"><p><strong>steps</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>preferably OrderedDict</em><em> or </em><em>SortedDictionary</em><em> (</em><em>mandatory</em><em>)</em>) – The steps dict keys are steps names, the values are lists of nodes
 names forming the step.</p>
 </dd>
 </dl>
@@ -1054,8 +1054,8 @@ Instead, those steps are not run.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>step_name</strong> (<em>string</em><em> (</em><em>mandatory</em><em>)</em>) – name of the new step</p></li>
-<li><p><strong>nodes</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> or </em><em>sequence</em>) – nodes contained in the step (Node instances)</p></li>
-<li><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – initial state of the step</p></li>
+<li><p><strong>nodes</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> or </em><em>sequence</em>) – nodes contained in the step (Node instances)</p></li>
+<li><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – initial state of the step</p></li>
 </ul>
 </dd>
 </dl>
@@ -1077,7 +1077,7 @@ Instead, those steps are not run.</p>
 a workflow created from this pipeline state.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1115,8 +1115,8 @@ Groups are mutually exclusive.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>selection_parameter</strong> (<em>string</em><em> (</em><em>mandatory</em><em>)</em>) – name of the selector parameter: the parameter is added in the
 pipeline, and its value is the name of the selected group.</p></li>
-<li><p><strong>selection_groups</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> or </em><em>OrderedDict</em>) – nodes groups contained in the selector : {group_name: [Node names]}</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – initial state of the selector (default: 1st group)</p></li>
+<li><p><strong>selection_groups</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>OrderedDict</em>) – nodes groups contained in the selector : {group_name: [Node names]}</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>optional</em><em>)</em>) – initial state of the selector (default: 1st group)</p></li>
 </ul>
 </dd>
 </dl>
@@ -1157,7 +1157,7 @@ been assigned to the process, it should not change.</p>
 connected to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>exclusive</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – if True, a parameter is assigned to a single group, the first step
+<dd class="field-odd"><p><strong>exclusive</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>)</em>) – if True, a parameter is assigned to a single group, the first step
 it is connected to. If False, a parameter is assigned all steps
 groups it is connected to.</p>
 </dd>
@@ -1179,8 +1179,8 @@ groups it is connected to.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>old_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – old node name</p></li>
-<li><p><strong>new_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – new node name</p></li>
+<li><p><strong>old_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – old node name</p></li>
+<li><p><strong>new_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – new node name</p></li>
 </ul>
 </dd>
 </dl>
@@ -1196,7 +1196,7 @@ groups it is connected to.</p>
 <p>A process is typically an object with typed parameters, and an execution
 function. Parameters are described using Enthought
 <a class="reference external" href="http://docs.enthought.com/traits/">traits</a> through Soma-Base
-<a class="reference external" href="https://populse.github.io/soma-base/api.html#soma.controller.controller.Controller">Controller</a>
+<a class="extlink-somabase reference external" href="https://populse.github.io/soma-base/api.html#soma.controller.controller.Controller">Controller</a>
 base class.</p>
 <p>In addition to describing its parameters, a Process must implement its
 execution function, either through a python method, by overloading
@@ -1205,23 +1205,23 @@ execution function, either through a python method, by overloading
 processing machine which has not necessary capsul, nor python, installed.</p>
 <p>Parameters are declared or queried using the traits API, and their values
 are in the process instance variables:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Process</span>
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 
-<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 
     <span class="c1"># a class trait</span>
     <span class="n">param1</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="s1">&#39;def_param1&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MyProcess</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># declare an input param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;param2&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">())</span>
         <span class="c1"># declare an output param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;out_param&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_param</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param1:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param1</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param2:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param2</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
@@ -1260,7 +1260,7 @@ behavior, when not specified.</p>
 <dd><p>the class name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1271,7 +1271,7 @@ behavior, when not specified.</p>
 <dd><p>the string description of the class location (ie., module.class).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1283,7 +1283,7 @@ behavior, when not specified.</p>
 otherwise it will be written in log_file path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a> (default None)</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> (default None)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1363,14 +1363,14 @@ in derived classes.</p>
 information and class attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>exec_info</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> (</em><em>mandatory</em><em>)</em>) – the execution information,
+<dd class="field-odd"><p><strong>exec_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> (</em><em>mandatory</em><em>)</em>) – the execution information,
 the dictionary is supposed to contain a runtime attribute.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>log</strong> – the logging information.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1381,13 +1381,13 @@ the dictionary is supposed to contain a runtime attribute.</p>
 <dd><p>Create a rst formatted table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>lists</em><em> of </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the table line-cell centent.</p>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>lists</em><em> of </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the table line-cell centent.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>rsttable</strong> – the rst formatted table containing the input data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of <a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a> of <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1413,7 +1413,7 @@ file is generated in the process call current working directory.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cls</strong> (<em>process class</em><em> (</em><em>mandatory</em><em>)</em>) – a process class</p></li>
-<li><p><strong>returnhelp</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True return the help string message,
+<li><p><strong>returnhelp</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True return the help string message,
 otherwise display it on the console.</p></li>
 </ul>
 </dd>
@@ -1432,7 +1432,7 @@ instantiating the current process, and calling its
 <dd class="field-odd"><p><strong>commandline</strong> – Arguments are in separate elements of the list.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of strings</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a> of strings</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1484,7 +1484,7 @@ way we can map values correctly, and call a foreign command:</p>
 <dd class="field-odd"><p><strong>commandline</strong> – Arguments are in separate elements of the list.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of strings</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a> of strings</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1529,7 +1529,7 @@ written with a dict containing output parameters values.</p>
 <dd class="field-odd"><p><strong>log</strong> – the content of the log file.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1543,7 +1543,7 @@ written with a dict containing output parameters values.</p>
 <dd class="field-odd"><p><strong>outputs</strong> – a string representation of all the input trait specifications.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1557,7 +1557,7 @@ written with a dict containing output parameters values.</p>
 <dd class="field-odd"><p><strong>outputs</strong> – a string representation of all the output trait specifications.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1571,7 +1571,7 @@ written with a dict containing output parameters values.</p>
 <dd class="field-odd"><p><strong>outputs</strong> – a dictionary with all the input trait names and values.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1585,7 +1585,7 @@ written with a dict containing output parameters values.</p>
 <dd class="field-odd"><p><strong>outputs</strong> – a dictionary with all the output trait names and values.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a></p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1597,9 +1597,9 @@ written with a dict containing output parameters values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>returnhelp</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True return the help string message formatted in rst,
+<li><p><strong>returnhelp</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True return the help string message formatted in rst,
 otherwise display the raw help string message on the console.</p></li>
-<li><p><strong>use_labels</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – if True, input and output sections will get a RestructuredText
+<li><p><strong>use_labels</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – if True, input and output sections will get a RestructuredText
 label to avoid ambiguities.</p></li>
 </ul>
 </dd>
@@ -1612,13 +1612,13 @@ label to avoid ambiguities.</p></li>
 <dd><p>Generate description for process input parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rst_formating</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True generate a rst table with the input descriptions.</p>
+<dd class="field-odd"><p><strong>rst_formating</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True generate a rst table with the input descriptions.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>helpstr</strong> – the class input traits help</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1629,13 +1629,13 @@ label to avoid ambiguities.</p></li>
 <dd><p>Generate description for process output parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rst_formating</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True generate a rst table with the input descriptions.</p>
+<dd class="field-odd"><p><strong>rst_formating</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>optional</em><em>, </em><em>default False</em><em>)</em>) – if True generate a rst table with the input descriptions.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>helpstr</strong> – the trait output help descriptions</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)">str</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1649,9 +1649,9 @@ special Undefined trait value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name we want to modify</p></li>
-<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><em>object</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait value we want to set</p></li>
-<li><p><strong>protected</strong> (<em>None</em><em> or </em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em> (</em><em>tristate</em><em>)</em>) – if True or False, force the “protected” status of the plug. If None,
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name we want to modify</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait value we want to set</p></li>
+<li><p><strong>protected</strong> (<em>None</em><em> or </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> (</em><em>tristate</em><em>)</em>) – if True or False, force the “protected” status of the plug. If None,
 keep it as is.</p></li>
 </ul>
 </dd>
@@ -1664,13 +1664,13 @@ keep it as is.</p></li>
 <dd><p>Method to access the value of a process instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name we want to modify</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the trait name we want to modify</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>value</strong> – the trait value we want to access</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)">object</a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)">object</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1719,9 +1719,9 @@ config value for each required module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>environment</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – config environment id. Normally corresponds to the computing
+<li><p><strong>environment</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – config environment id. Normally corresponds to the computing
 resource name, and defaults to “global”.</p></li>
-<li><p><strong>message_list</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – if not None, this list will be updated with messages for
+<li><p><strong>message_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – if not None, this list will be updated with messages for
 unsatisfied requirements, in order to present the user with an
 understandable error.</p></li>
 </ul>
@@ -1735,7 +1735,7 @@ configuration values, because different nodes may require different
 config values.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#dict" title="(in Python v3.12)">dict</a>, <a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)">list</a>, or None</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>, or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1745,7 +1745,7 @@ config values.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_history_inspect.ProtoProcess">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_history_inspect.</span></span><span class="sig-name descname"><span class="pre">ProtoProcess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brick</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_history_inspect.html#ProtoProcess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.12/library/functions.html#object" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A lightweight convenience class that stores a brick database entry along
 with additional usage information.</p>
 <dl class="field-list simple">
@@ -1832,7 +1832,7 @@ directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dict</strong><strong>)</strong> (<em>value</em><em> (</em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em>, </em><em>or</em>) – <dl class="simple">
+<li><p><strong>dict</strong><strong>)</strong> (<em>value</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>, </em><em>or</em>) – <dl class="simple">
 <dt>The data structure to search.</dt><dd><p>It can be:</p>
 </dd>
 </dl>
@@ -2064,7 +2064,7 @@ list, tuple, dictionary, or a nested combination
 of these types.</p></li>
 <li><p><strong>(</strong><strong>object</strong><strong>)</strong> – The project object providing access to the
 database.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>allow_temp</em><em> (</em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>,</em>) – If <cite>True</cite>, includes the temporary
+<li><p><strong>optional</strong><strong>)</strong> (<em>allow_temp</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>,</em>) – If <cite>True</cite>, includes the temporary
 filename “&lt;temp&gt;” in the results.
 Defaults to <cite>True</cite>.</p></li>
 </ul>
@@ -2179,7 +2179,7 @@ is not found in the database, the function returns <cite>None</cite>.</p>
 checked.</p></li>
 <li><p><strong>(</strong><strong>object</strong><strong>)</strong> (<em>project</em>) – The project object providing access to the
 database and folder structure.</p></li>
-<li><p><strong>optional</strong><strong>)</strong> (<em>allow_temp</em><em> (</em><a class="reference external" href="https://docs.python.org/3.12/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>,</em>) – If <cite>True</cite>, allows the special value
+<li><p><strong>optional</strong><strong>)</strong> (<em>allow_temp</em><em> (</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>,</em>) – If <cite>True</cite>, allows the special value
 “&lt;temp&gt;” to be considered a valid
 entry. Defaults to <cite>True</cite>.</p></li>
 </ul>
@@ -2199,7 +2199,7 @@ filename is a valid database entry.</p></li>
 
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -2209,7 +2209,7 @@ filename is a valid database entry.</p></li>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

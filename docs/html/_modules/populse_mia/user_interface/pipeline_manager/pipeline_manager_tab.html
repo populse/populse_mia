@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+57c3ec34 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=9c4c3897"></script>
+    <script src="../../../../_static/documentation_options.js?v=89cb35f0"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+57c3ec34 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -601,7 +601,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="protected_logging">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.protected_logging">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.protected_logging">[docs]</a>
 <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">protected_logging</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -687,7 +687,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PipelineManagerTab</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget that handles the Pipeline Manager tab.</span>
@@ -763,7 +763,7 @@ window.addEventListener("load", load);</script>
     <span class="n">item_library_clicked</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PipelineManagerTab.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Pipeline Manager tab.</span>
@@ -938,7 +938,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab._register_node_io_in_database">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._register_node_io_in_database">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab._register_node_io_in_database">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_register_node_io_in_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">history_id</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
     <span class="p">):</span>
@@ -1140,7 +1140,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab._set_anim_frame">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._set_anim_frame">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab._set_anim_frame">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the pipeline status action icon with the current animation</span>
@@ -1159,7 +1159,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab._should_register_plug">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab._should_register_plug">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab._should_register_plug">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_should_register_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine if a plug should be registered in the database.</span>
@@ -1179,7 +1179,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.add_plug_value_to_database">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.add_plug_value_to_database">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.add_plug_value_to_database">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_plug_value_to_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">p_value</span><span class="p">,</span>
@@ -1640,7 +1640,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.ask_iterated_pipeline_plugs">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.ask_iterated_pipeline_plugs">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.ask_iterated_pipeline_plugs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a configuration dialog for pipeline plug iteration and</span>
@@ -1961,7 +1961,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.build_iterated_pipeline">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.build_iterated_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.build_iterated_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build an iteration pipeline wrapper around the current pipeline.</span>
@@ -2138,7 +2138,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.check_requirements">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.check_requirements">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.check_requirements">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">environment</span><span class="o">=</span><span class="s2">&quot;global&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check and return the configuration of a pipeline based on its</span>
@@ -2169,7 +2169,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.cleanup_older_init">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.cleanup_older_init">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.cleanup_older_init">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up data browser state and remove orphaned files.</span>
@@ -2203,7 +2203,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.complete_pipeline_parameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.complete_pipeline_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.complete_pipeline_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Complete pipeline parameters using Capsul&#39;s completion engine.</span>
@@ -2231,7 +2231,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.controller_value_changed">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.controller_value_changed">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.controller_value_changed">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">controller_value_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update history when a node or plug value changes.</span>
@@ -2330,7 +2330,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.displayNodeParameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.displayNodeParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.displayNodeParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">displayNodeParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the node controller interface for the specified node.</span>
@@ -2352,7 +2352,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.finish_execution">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.finish_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.finish_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finish_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle pipeline execution completion and update UI state.</span>
@@ -2439,7 +2439,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.garbage_collect">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.garbage_collect">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.garbage_collect">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up obsolete data and maintain database consistency.</span>
@@ -2471,7 +2471,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_capsul_engine">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_capsul_engine">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.get_capsul_engine">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and configure a Capsul engine from the pipeline editor.</span>
@@ -2488,7 +2488,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_pipeline_or_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_pipeline_or_process">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.get_pipeline_or_process">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the pipeline or its single unconnected process node.</span>
@@ -2529,7 +2529,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.get_missing_mandatory_parameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.get_missing_mandatory_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.get_missing_mandatory_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find missing mandatory parameters across all pipeline nodes.</span>
@@ -2593,7 +2593,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.initialize">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.initialize">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.initialize">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the pipeline after cleaning up any previous initialization.</span>
@@ -2685,7 +2685,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.init_pipeline">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.init_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.init_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pipeline_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the current pipeline in the pipeline editor.</span>
@@ -3327,7 +3327,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.layout_view">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.layout_view">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.layout_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the layout and toolbar for the pipeline manager tab.</span>
@@ -3399,7 +3399,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.loadParameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.loadParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.loadParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load pipeline parameters into the current pipeline of the editor.</span>
@@ -3412,7 +3412,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.loadPipeline">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.loadPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.loadPipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load a pipeline into the pipeline editor.</span>
@@ -3424,7 +3424,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.postprocess_pipeline_execution">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.postprocess_pipeline_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.postprocess_pipeline_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">postprocess_pipeline_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Operations to be performed after a run has been completed.</span>
@@ -3509,7 +3509,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.redo">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.redo">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.redo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last undone action on the current pipeline editor</span>
@@ -3607,7 +3607,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.register_completion_attributes">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.register_completion_attributes">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.register_completion_attributes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Register completion attributes for a given pipeline in the</span>
@@ -3682,7 +3682,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.remove_progress">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.remove_progress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.remove_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and clean up the progress widget.</span>
@@ -3712,7 +3712,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.runPipeline">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.runPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.runPipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the current pipeline in the pipeline editor.</span>
@@ -3865,7 +3865,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.saveParameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.saveParameters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.saveParameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveParameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the parameters of the currently active pipeline in the pipeline</span>
@@ -3875,7 +3875,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.savePipeline">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.savePipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.savePipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">skip_overwrite_warning</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline in the pipeline editor.</span>
@@ -3973,7 +3973,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.save_pipeline_as">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.save_pipeline_as">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.save_pipeline_as">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the current pipeline under a new name via &#39;Save As&#39; dialog.</span>
@@ -4011,7 +4011,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.show_status">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.show_status">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.show_status">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the execution status window with runtime information.</span>
@@ -4027,7 +4027,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.stop_execution">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.stop_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.stop_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interrupt pipeline execution gracefully.</span>
@@ -4042,7 +4042,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.undo">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.undo">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.undo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Undo the last action performed on the current pipeline editor.</span>
@@ -4199,7 +4199,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_inheritance">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_inheritance">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_inheritance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">job</span><span class="p">,</span> <span class="n">node</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the inheritance dictionary for a process node in a pipeline</span>
@@ -4261,7 +4261,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_node_list">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_node_list">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_node_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the node list with unique nodes from workflow jobs.</span>
@@ -4295,7 +4295,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.updateProcessLibrary">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.updateProcessLibrary">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.updateProcessLibrary">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">updateProcessLibrary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the library of processes when a pipeline is saved.</span>
@@ -4393,7 +4393,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_project">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_project">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_project">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the project reference across all relevant components.</span>
@@ -4429,7 +4429,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_scans_list">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_scans_list">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_scans_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_scans_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">iteration_list</span><span class="p">,</span> <span class="n">all_iterations_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the user-selected list of scans based on iteration settings.</span>
@@ -4545,7 +4545,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_buttons_states">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_user_buttons_states">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_user_buttons_states">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_user_buttons_states</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the visibility and state of pipeline-related UI actions.</span>
@@ -4587,7 +4587,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PipelineManagerTab.update_user_mode">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.PipelineManagerTab.update_user_mode">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.PipelineManagerTab.update_user_mode">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update widget/action visibility and functionality based on user mode</span>
@@ -4625,7 +4625,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunProgress</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A Qt widget for displaying and managing pipeline execution progress.</span>
@@ -4664,7 +4664,7 @@ window.addEventListener("load", load);</script>
     <span class="n">AUTO_CLOSE_DELAY_MS</span> <span class="o">=</span> <span class="mi">2000</span>  <span class="c1"># Delay before auto-closing message box</span>
 
 <div class="viewcode-block" id="RunProgress.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the RunProgress widget with a progress bar and worker</span>
@@ -4684,7 +4684,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress._determine_completion_message">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._determine_completion_message">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress._determine_completion_message">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_determine_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Analyze execution results and determine appropriate user message.</span>
@@ -4728,7 +4728,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress._setup_ui">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._setup_ui">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress._setup_ui">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the user interface for the widget.</span>
@@ -4747,7 +4747,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress._show_completion_message">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress._show_completion_message">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress._show_completion_message">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_show_completion_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icon</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display execution completion message with auto-close timer.</span>
@@ -4764,7 +4764,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.cleanup">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.cleanup">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress.cleanup">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up resources and prepare for widget destruction.</span>
@@ -4782,7 +4782,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.end_progress">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.end_progress">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress.end_progress">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle completion of pipeline execution and show results.</span>
@@ -4800,7 +4800,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.start">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.start">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress.start">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Starts the worker thread to begin the pipeline execution process.</span>
@@ -4813,7 +4813,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunProgress.stop_execution">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunProgress.stop_execution">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunProgress.stop_execution">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stops the execution of the pipeline by signaling the worker to</span>
@@ -4833,7 +4833,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunWorker">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunWorker">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">RunWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Worker thread for executing a pipeline in the background.</span>
@@ -4850,7 +4850,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="RunWorker.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunWorker.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the worker thread for pipeline execution.</span>
@@ -4873,7 +4873,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunWorker._check_interrupt">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker._check_interrupt">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunWorker._check_interrupt">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_check_interrupt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check whether an interrupt has been requested.</span>
@@ -4901,7 +4901,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunWorker._disable_nipype_copy">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker._disable_nipype_copy">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunWorker._disable_nipype_copy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_disable_nipype_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively check and disable the copy flag for Nipype processes in</span>
@@ -4938,7 +4938,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="RunWorker.run">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.RunWorker.run">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.RunWorker.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the pipeline in a background thread.</span>
@@ -5028,7 +5028,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="StatusWidget">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.StatusWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">StatusWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     A widget that displays the current or last pipeline execution status</span>
@@ -5046,7 +5046,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="StatusWidget.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.StatusWidget.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_manager</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the execution status window for monitoring pipeline runs.</span>
@@ -5090,7 +5090,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="StatusWidget.toggle_soma_workflow">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.tests.run_mia_test.StatusWidget.toggle_soma_workflow">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.main_window.StatusWidget.toggle_soma_workflow">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">toggle_soma_workflow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Show or hide the Soma-Workflow monitoring widget.</span>

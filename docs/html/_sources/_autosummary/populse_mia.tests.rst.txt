@@ -4,28 +4,10 @@ populse\_mia.tests
 .. automodule:: populse_mia.tests
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   populse_mia.tests.run_mia_test
-
+   run_mia_test

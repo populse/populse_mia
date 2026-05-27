@@ -4,15 +4,6 @@ populse\_mia.user\_interface.data\_browser.data\_browser
 .. automodule:: populse_mia.user_interface.data_browser.data_browser
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
@@ -24,11 +15,3 @@ populse\_mia.user\_interface.data\_browser.data\_browser
       TableDataBrowser
       TimeFormatDelegate
    
-   
-
-   
-   
-   
-
-
-

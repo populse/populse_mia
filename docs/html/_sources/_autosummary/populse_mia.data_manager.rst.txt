@@ -4,33 +4,77 @@ populse\_mia.data\_manager
 .. automodule:: populse_mia.data_manager
 
    
-   
-   
+   .. rubric:: Module Attributes
 
+   .. autosummary::
    
+      FIELD_TYPE_STRING
+      FIELD_TYPE_INTEGER
+      FIELD_TYPE_FLOAT
+      FIELD_TYPE_BOOLEAN
+      FIELD_TYPE_DATE
+      FIELD_TYPE_DATETIME
+      FIELD_TYPE_TIME
+      FIELD_TYPE_JSON
+      FIELD_TYPE_LIST_STRING
+      FIELD_TYPE_LIST_INTEGER
+      FIELD_TYPE_LIST_FLOAT
+      FIELD_TYPE_LIST_BOOLEAN
+      FIELD_TYPE_LIST_DATE
+      FIELD_TYPE_LIST_DATETIME
+      FIELD_TYPE_LIST_TIME
+      FIELD_TYPE_LIST_JSON
+      ALL_TYPES
+      FIELD_TYPE_MAPPING
+      TAG_UNIT_MS
+      TAG_UNIT_MM
+      TAG_UNIT_DEGREE
+      TAG_UNIT_HZPIXEL
+      TAG_UNIT_MHZ
+      ALL_UNITS
+      COLLECTION_CURRENT
+      COLLECTION_INITIAL
+      COLLECTION_BRICK
+      COLLECTION_HISTORY
+      FIELD_ATTRIBUTES_COLLECTION
+      TAG_ORIGIN_BUILTIN
+      TAG_ORIGIN_USER
+      TAG_CHECKSUM
+      TAG_TYPE
+      TAG_EXP_TYPE
+      TAG_FILENAME
+      TAG_BRICKS
+      TAG_HISTORY
+      CLINICAL_TAGS
+      BRICK_ID
+      BRICK_NAME
+      BRICK_INPUTS
+      BRICK_OUTPUTS
+      BRICK_INIT
+      BRICK_EXEC
+      BRICK_INIT_TIME
+      BRICK_EXEC_TIME
+      HISTORY_ID
+      HISTORY_PIPELINE
+      HISTORY_BRICKS
+      TYPE_BVEC
+      TYPE_BVAL
+      TYPE_BVEC_BVAL
+      TYPE_NII
+      TYPE_MAT
+      TYPE_TXT
+      TYPE_UNKNOWN
+      NOT_DEFINED_VALUE
    
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   populse_mia.data_manager.data_history_inspect
-   populse_mia.data_manager.data_loader
-   populse_mia.data_manager.database_mia
-   populse_mia.data_manager.filter
-   populse_mia.data_manager.project
-   populse_mia.data_manager.project_properties
-
+   data_history_inspect
+   data_loader
+   database_mia
+   filter
+   project
+   project_properties

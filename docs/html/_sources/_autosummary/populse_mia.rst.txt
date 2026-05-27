@@ -4,36 +4,18 @@
 .. automodule:: populse_mia
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   populse_mia.cli_args
-   populse_mia.data_manager
-   populse_mia.info
-   populse_mia.main
-   populse_mia.software_properties
-   populse_mia.sources_images
-   populse_mia.tests
-   populse_mia.user_interface
-   populse_mia.utils
-
+   cli_args
+   data_manager
+   info
+   main
+   software_properties
+   sources_images
+   tests
+   user_interface
+   utils

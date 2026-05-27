@@ -4,26 +4,9 @@ populse\_mia.user\_interface.pipeline\_manager.iteration\_table
 .. automodule:: populse_mia.user_interface.pipeline_manager.iteration_table
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
    
       IterationTable
    
-   
-
-   
-   
-   
-
-
-
