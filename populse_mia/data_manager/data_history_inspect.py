@@ -1,38 +1,22 @@
 """
-This module is dedicated to pipeline history.
+This module provides utilities for tracking, retrieving, and reconstructing the
+processing history of data files within the Mia framework. It enables users to
+trace the lineage of data products, including the bricks (processing steps)
+and intermediate files involved in their creation.
 
-:Contains:
-    :Class:
-        - ProtoProcess: A lightweight convenience class that stores a brick
-                        database entry along with additional usage information.
+The module supports:
 
-    :Functions:
-        - brick_to_process:  Convert a brick database entry into a
-                             'fake process'.
-        - data_history_pipeline: Retrieves the complete processing history of
-                                 a file in the database.
-        - data_in_value: Determine if the specified filename is present within
-                         the given value.
-        - find_procs_with_output: Identify processes that have the specified
-                                  filename as part of their outputs.
-        - get_data_history: Retrieves the processing history for a given data
-                            file
-        - get_data_history_bricks: Retrieves the complete "useful" history of
-                                   a file in the database.
+- **History Reconstruction**: Build pipelines or graphs representing the
+  processing history of a file, including all upstream dependencies.
 
-        - get_data_history_processes: Retrieves the complete "useful"
-                                      processing history of a file in the
-                                      database.
-        - get_direct_proc_ancestors: Retrieve processing bricks referenced in
-                                     the direct filename history.
-        - get_filenames_in_value: Extract filenames from a nested structure of
-                                  lists, tuples, and dictionaries.
-        - get_history_brick_process: Retrieve a brick from the database and
-                                     return it as `ProtoProcess` instance.
-        - get_proc_ancestors_via_tmp: Retrieve upstream processes connected
-                                      via a temporary value ("<temp>").
-        - is_data_entry: Determine if the given filename is a valid database
-                         entry.
+- **Brick-Process Conversion**: Convert brick database entries into lightweight
+  "fake" processes for pipeline visualization.
+
+- **Ancestor Tracking**: Identify direct and indirect ancestors of a file,
+  including handling of temporary values and ambiguous execution times.
+
+- **Data Entry Validation**: Check if filenames correspond to valid database
+  entries or temporary placeholders.
 """
 
 ##########################################################################
@@ -67,6 +51,22 @@ from populse_mia.data_manager import (
     TAG_BRICKS,
 )
 
+__all__ = [
+    "ProtoProcess",
+    "brick_to_process",
+    "data_history_pipeline",
+    "data_in_value",
+    "find_procs_with_output",
+    "get_data_history",
+    "get_data_history_bricks",
+    "get_data_history_processes",
+    "get_direct_proc_ancestors",
+    "get_filenames_in_value",
+    "get_history_brick_process",
+    "get_proc_ancestors_via_tmp",
+    "is_data_entry",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -75,11 +75,17 @@ class ProtoProcess:
     A lightweight convenience class that stores a brick database entry along
     with additional usage information.
 
-    :param brick: The brick database entry to store. Defaults
-                             to None.
+    This class encapsulates a brick database entry and tracks whether it
+    has been used, providing a simple interface for managing brick-related
+    data.
     """
 
     def __init__(self, brick=None):
+        """
+        Initializes the ProtoProcess instance with a brick database entry.
+
+        :param brick: The brick database entry to store. Defaults to None.
+        """
         self.brick = brick
         self.used = False
 
@@ -94,17 +100,14 @@ def brick_to_process(brick, project):
     actual processing but serves as a representation of the brick's traits and
     values.
 
-    :param brick (dict or str): The brick database entry to convert. If a
-                                string is provided, it is treated as the
-                                brick's unique ID, and the corresponding brick
-                                document is retrieved from the project's
-                                database.
-    :param project (object): The project object providing access to the
-                             database and its documents.
+    :param brick: (dict or str) The brick database entry to convert. If a
+     string is provided, it is treated as the brick's unique ID, and the
+     corresponding brick document is retrieved from the project's database.
+    :param project: (object) The project object providing access to the
+     database and its documents.
 
-    :return (Process or None): A `Process` instance representing the brick's
-                               parameters and values. Returns `None` if the
-                               brick is not found.
+    :Returns: (Process or None) A `Process` instance representing the brick's
+     parameters and values. Returns `None` if the brick is not found.
     """
 
     if isinstance(brick, str):
@@ -152,14 +155,13 @@ def data_history_pipeline(filename, project):
     the relevant processing steps that contributed to the final output.
     Orphaned processing steps from overwritten versions are omitted.
 
-    :param filename (str): The name of the file whose processing history is
-                           being retrieved.
-    :param project (Project): The project object containing the database
-                              and relevant details.
+    :param filename: (str) The name of the file whose processing history is
+     being retrieved.
+    :param project: (Project) The project object containing the database
+     and relevant details.
 
-    :return (Pipeline | None): A `Pipeline` object representing the
-                               processing history, or `None` if no relevant
-                               history is found.
+    :Returns: (Pipeline | None) A `Pipeline` object representing the processing
+     history, or `None` if no relevant history is found.
     """
     procs, links = get_data_history_processes(filename, project)
 
@@ -268,19 +270,25 @@ def data_in_value(value, filename, project):
     filename, which is a relative path within the project's database data
     directory.
 
-    :param value (str, list, tuple, or dict): The data structure to search.
-                                              It can be:
+    :param value:
+        (str, list, tuple, or dict) The data structure to search. It can be:
+
         - A string representing a file path.
         - A list or tuple containing multiple file paths.
         - A dictionary where file paths are stored as values.
-    :param filename (str): The filename to search for. It can be:
+
+    :param filename:
+        (str) The filename to search for. It can be:
+
         - The special placeholder "<temp>" indicating a temporary value.
         - A relative file path to the project database data directory.
-    :param project (object): The project object containing the project's
-                             folder path as an attribute (`project.folder`).
 
-    :return (bool): True if the filename is found in the value,
-                    False otherwise.
+    :param project:
+        (object) The project object containing the project's folder path as an
+        attribute (`project.folder`).
+
+    :Returns:
+        (bool) True if the filename is found in the value, False otherwise.
     """
 
     if isinstance(value, str):
@@ -312,24 +320,24 @@ def data_in_value(value, filename, project):
 
 def find_procs_with_output(procs, filename, project):
     """
-     Identify processes in the given list that have the specified filename as
-     part of their outputs.
+    Identify processes in the given list that have the specified filename as
+    part of their outputs.
 
     This function searches through a list of processes to determine which ones
     have the specified filename in their output values. The results are
     organized by execution time.
 
-    :param procs (iterable of ProtoProcess): A collection of `ProtoProcess`
-                                             instances to search through.
-    :param filename (str): The filename to search for within the processes'
-                           outputs.
-    :param project (Project): An instance of the project, used to access the
-                              database folder.
+    :param procs: (iterable of ProtoProcess) A collection of `ProtoProcess`
+     instances to search through.
+    :param filename: (str) The filename to search for within the processes'
+     outputs.
+    :param project: (Project) An instance of the project, used to access the
+     database folder.
 
-    :return (dict): A dictionary where keys are execution times and values
-                    are lists of tuples. Each tuple contains a process and
-                    the parameter name associated with the filename.
-                    Format: `{exec_time: [(process, param_name), ...]}`.
+    :Returns: (dict) A dictionary where keys are execution times and values
+     are lists of tuples. Each tuple contains a process and the parameter name
+     associated with the filename.
+     Format: `{exec_time: [(process, param_name), ...]}`.
     """
 
     sprocs = {}
@@ -354,20 +362,22 @@ def get_data_history(filename, project):
     The returned dictionary contains:
 
     - `"parent_files"`: A set of filenames representing data (direct or
-                        indirect) used to produce the given file.
+      indirect) used to produce the given file.
     - `"processes"`: A set of UUIDs of processing bricks that contributed
-                     to the file's creation.
+      to the file's creation.
 
-    :param filename (str): The name of the file whose processing history is
-                           being retrieved.
-    :param project (Project): The project object containing the database and
-                              relevant details.
+    :param filename: (str) The name of the file whose processing history is
+     being retrieved.
+    :param project: (Project) The project object containing the database and
+     relevant details.
 
-    :return (dict): A dictionary with the following keys:
-                    - `"processes"` (set): A set of UUIDs representing the
-                                           processing bricks involved.
-                    - `"parent_files"` (set): A set of filenames that were
-                                              used to produce the data.
+    :Returns:
+        (dict) A dictionary with the following keys:
+
+        - `"processes"`: (set) A set of UUIDs representing the processing
+          bricks involved.
+        - `"parent_files"`: (set) A set of filenames that were used to produce
+          the data.
     """
     procs, _ = get_data_history_processes(filename, project)
     # Collect parent files (input dependencies)
@@ -397,14 +407,14 @@ def get_data_history_bricks(filename, project):
     pipeline, it returns only the set of brick elements that were actually
     used in the relevant processing history of the file.
 
-    :param filename (str): The name of the file whose processing history is
-                           being retrieved.
-    :param project (Project): The project object containing the database and
-                              relevant details.
+    :param filename: (str) The name of the file whose processing history is
+     being retrieved.
+    :param project: (Project) The project object containing the database and
+     relevant details.
 
-    :return (set): A set of brick elements representing the "useful"
-                   processing steps that contributed to the final version of
-                   the given data file.
+    :Returns: (set) A set of brick elements representing the "useful"
+     processing steps that contributed to the final version of the given data
+     file.
     """
     procs, _ = get_data_history_processes(filename, project)
     return {proc.brick for proc in procs.values() if proc.used}
@@ -416,6 +426,7 @@ def get_data_history_processes(filename, project):
     database.
 
     This function returns:
+
     - A dictionary of processes (:class:`ProtoProcess` instances), where
       keys are process UUIDs.
     - A set of links between these processes, forming the processing graph.
@@ -430,21 +441,17 @@ def get_data_history_processes(filename, project):
     the data file was overwritten) may either be absent from the history
     or have ``used = False``.
 
-    :param filename (str): The name of the file whose processing history is
-                           being retrieved.
-    :param project (Project): The project object containing the database and
-                              relevant details.
+    :param filename: (str) The name of the file whose processing history is
+     being retrieved.
+    :param project: (Project) The project object containing the database and
+     relevant details.
 
-    :return (tuple):
+    :Returns:
+        (tuple)
+
         - `procs` (dict): `{uuid: ProtoProcess instance}` mapping.
-        - `links` (set): `{
-                            (
-                              src_protoprocess,
-                              src_plug_name,
-                              dst_protoprocess,
-                              dst_plug_name
-                            )
-                          }`.
+        - `links` (set): `{(src_protoprocess, src_plug_name, dst_protoprocess,
+          dst_plug_name)}`.
           External connections are represented with `None` as
           `src_protoprocess` or `dst_protoprocess`.
     """
@@ -573,24 +580,20 @@ def get_direct_proc_ancestors(
     they are all retained to account for ambiguity. The function also allows
     filtering by execution time and excluding a specified originating process.
 
-    :param filename (str): The data filename to inspect.
-    :param project (Project): The project instance used to access the database.
-    :param procs (dict): Dictionary mapping process UUIDs to `ProtoProcess`
-                         instances. This dictionary is updated with newly
-                         retrieved processes.
-    :param before_exec_time (datetime): If specified, only processing bricks
-                                        executed before this time are
-                                        considered.
-    :param only_latest (bool): If True (default), keeps only the latest
-                               processes found in the history. If
-                               `before_exec_time` is specified, retains only
-                               the latest before that time.
-    :param org_proc (ProtoProcess): The originating process, which is excluded
-                                    from execution time filtering but included
-                                    in the ancestor list.
+    :param filename: (str) The data filename to inspect.
+    :param project: (Project) The project instance used to access the database.
+    :param procs: (dict) Dictionary mapping process UUIDs to `ProtoProcess`
+     instances. This dictionary is updated with newly retrieved processes.
+    :param before_exec_time: (datetime) If specified, only processing bricks
+     executed before this time are considered.
+    :param only_latest: (bool) If True (default), keeps only the latest
+     processes found in the history. If `before_exec_time` is specified,
+     retains only the latest before that time.
+    :param org_proc: (ProtoProcess) The originating process, which is excluded
+     from execution time filtering but included in the ancestor list.
 
-    :return (dict): A dictionary mapping brick UUIDs to `ProtoProcess`
-                    instances.
+    :Returns: (dict) A dictionary mapping brick UUIDs to `ProtoProcess`
+     instances.
     """
 
     with project.database.data() as database_data:
@@ -675,17 +678,15 @@ def get_filenames_in_value(value, project, allow_temp=True):
     "<temp>" value (if `allow_temp` is `True`) are retained. Other filenames
     are considered read-only static data and are not included in the results.
 
-    :param value (object): The value to parse. It can be a single string, a
-                           list, tuple, dictionary, or a nested combination
-                           of these types.
-    :param project (object): The project object providing access to the
-                             database.
-    :param allow_temp (bool, optional): If `True`, includes the temporary
-                                        filename "<temp>" in the results.
-                                        Defaults to `True`.
+    :param value: (object) The value to parse. It can be a single string, a
+     list, tuple, dictionary, or a nested combination of these types.
+    :param project: (object) The project object providing access to the
+     database.
+    :param allow_temp: (bool, optional) If `True`, includes the temporary
+     filename "<temp>" in the results. Defaults to `True`.
 
-    :return (set): A set of filenames that are valid database entries or the
-                   temporary filename "<temp>" (if allowed).
+    :Returns: (set) A set of filenames that are valid database entries or the
+     temporary filename "<temp>" (if allowed).
     """
 
     values = [value]
@@ -721,17 +722,15 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
     the brick does not meet these criteria or is not found in the database,
     the function returns `None`.
 
-    :param brick_id (str): The unique identifier (UUID) of the brick to
-                           retrieve.
-    :param project (object): The project object providing access to the
-                             database.
-    :param before_exec_time (str): An execution time filter. If provided,
-                                   bricks executed after this timestamp are
-                                   discarded.
+    :param brick_id: (str) The unique identifier (UUID) of the brick to
+     retrieve.
+    :param project: (object) The project object providing access to the
+     database.
+    :param before_exec_time: (str) An execution time filter. If provided,
+     bricks executed after this timestamp are discarded.
 
-    :return (ProtoProcess or None): A `ProtoProcess` instance representing
-                                    the brick if it meets the criteria;
-                                    otherwise, `None`.
+    :Returns: (ProtoProcess or None) A `ProtoProcess` instance representing
+     the brick if it meets the criteria; otherwise, `None`.
     """
 
     with project.database.data() as database_data:
@@ -775,27 +774,27 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
     of bricks, which may be slower for large databases. Matching is based on
     the temporary filename and processing time, which can be error-prone.
 
-    :param proc (ProtoProcess): The process whose ancestors need to be
-                                determined.
-    :param project (object): The project object providing access to the
-                             session and other necessary functionalities for
-                             processing.
-    :param procs (dict): A dictionary of processes, where keys are process IDs
-                         and values are `ProtoProcess` instances.
+    :param proc: (ProtoProcess) The process whose ancestors need to be
+     determined.
+    :param project: (object) The project object providing access to the
+     session and other necessary functionalities for processing.
+    :param procs: (dict) A dictionary of processes, where keys are process IDs
+     and values are `ProtoProcess` instances.
 
-    :return:
+    :Returns:
+        (tuple)
+
         - new_procs (dict): A dictionary mapping process UUIDs to
-                            `ProtoProcess` instances.
+          `ProtoProcess` instances.
         - links (set):
           A set of tuples representing pipeline links in the format
           `(src_protoprocess, src_plug_name, dst_protoprocess, dst_plug_name)`.
           Links from/to the pipeline main plugs are also included, where
           `src_protoprocess` or `dst_protoprocess` may be `None`.
 
-    :Contains:
-            :Private function:
-                - _get_tmp_param: Identifies a process parameter associated
-                                  with a temporary value.
+    **Private functions**:
+        - _get_tmp_param: Identifies a process parameter associated with a
+          temporary value.
     """
     new_procs = {}
     links = set()
@@ -806,16 +805,16 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
         """
         Identifies a process parameter associated with a temporary value.
 
-        This helper function searches through the input parameters of
-        a process (`proc`) to find one that references a temporary
-        filename (`<temp>`) in its value.
+        This helper function searches through the input parameters of a
+        process (`proc`) to find one that references a temporary filename
+        (`<temp>`) in its value.
 
-        :param proc (ProtoProcess): The process object whose input parameters
-                                    are being inspected.
+        :param proc: (ProtoProcess) The process object whose input parameters
+         are being inspected.
 
-        :return (tuple): `(proc, param)` where `proc` is the process object
-                         and `param` is the name of the parameter referencing
-                         `<temp>`. Returns `(None, None)` if no match is found.
+        :Returns: (tuple) `(proc, param)` where `proc` is the process object
+         and `param` is the name of the parameter referencing `<temp>`.
+         Returns `(None, None)` if no match is found.
         """
 
         for param, value in proc.brick[BRICK_INPUTS].items():
@@ -919,15 +918,16 @@ def is_data_entry(filename, project, allow_temp=True):
     path to the database data directory or "<temp>" (if allowed). If the file
     is not found in the database, the function returns `None`.
 
-    :param filename (str): The full path or special value "<temp>" to be
-                           checked.
-    :param project (object): The project object providing access to the
-                             database and folder structure.
-    :param allow_temp (bool, optional): If `True`, allows the special value
-                                        "<temp>" to be considered a valid
-                                        entry. Defaults to `True`.
+    :param filename: (str) The full path or special value "<temp>" to be
+     checked.
+    :param project: (object) The project object providing access to the
+     database and folder structure.
+    :param allow_temp: (bool, optional) If `True`, allows the special value
+     "<temp>" to be considered a valid entry. Defaults to `True`.
 
-    :return (str or None):
+    :Returns:
+        (str or None)
+
         - The relative path to the project's database data directory if the
           filename is a valid database entry.
         - "<temp>" if the input is "<temp>" and `allow_temp` is `True`.

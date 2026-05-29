@@ -72,8 +72,8 @@ License
 Populse_MIA is released under the `CeCILL <http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html>`_ software license.
 
 
-Indices and tables
-==================
+Developers' Corner (Index and tables)
+=====================================
 
 * :ref:`genindex`
 * :ref:`modindex`
