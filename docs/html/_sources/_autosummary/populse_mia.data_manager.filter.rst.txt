@@ -4,9 +4,26 @@ populse\_mia.data\_manager.filter
 .. automodule:: populse_mia.data_manager.filter
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
    
       Filter
    
+   
+
+   
+   
+   
+
+
+

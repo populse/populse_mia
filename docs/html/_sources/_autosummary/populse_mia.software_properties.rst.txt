@@ -4,9 +4,26 @@ populse\_mia.software\_properties
 .. automodule:: populse_mia.software_properties
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
    
       Config
    
+   
+
+   
+   
+   
+
+
+

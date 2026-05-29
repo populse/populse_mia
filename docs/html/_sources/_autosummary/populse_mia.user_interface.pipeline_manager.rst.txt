@@ -4,17 +4,35 @@ populse\_mia.user\_interface.pipeline\_manager
 .. automodule:: populse_mia.user_interface.pipeline_manager
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   iteration_table
-   node_controller
-   pipeline_editor
-   pipeline_manager_tab
-   plug_filter
-   process_library
-   process_mia
-   type_editors
+   populse_mia.user_interface.pipeline_manager.iteration_table
+   populse_mia.user_interface.pipeline_manager.node_controller
+   populse_mia.user_interface.pipeline_manager.pipeline_editor
+   populse_mia.user_interface.pipeline_manager.pipeline_manager_tab
+   populse_mia.user_interface.pipeline_manager.plug_filter
+   populse_mia.user_interface.pipeline_manager.process_library
+   populse_mia.user_interface.pipeline_manager.process_mia
+   populse_mia.user_interface.pipeline_manager.type_editors
+

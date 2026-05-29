@@ -1,8 +1,9 @@
-populse\_mia.data\_manager
+﻿populse\_mia.data\_manager
 ==========================
 
 .. automodule:: populse_mia.data_manager
 
+   
    
    .. rubric:: Module Attributes
 
@@ -66,15 +67,32 @@ populse\_mia.data\_manager
       TYPE_UNKNOWN
       NOT_DEFINED_VALUE
    
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   data_history_inspect
-   data_loader
-   database_mia
-   filter
-   project
-   project_properties
+   populse_mia.data_manager.data_history_inspect
+   populse_mia.data_manager.data_loader
+   populse_mia.data_manager.database_mia
+   populse_mia.data_manager.filter
+   populse_mia.data_manager.project
+   populse_mia.data_manager.project_properties
+

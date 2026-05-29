@@ -4,6 +4,11 @@ populse\_mia.utils.utils
 .. automodule:: populse_mia.utils.utils
 
    
+   
+   
+
+   
+   
    .. rubric:: Functions
 
    .. autosummary::
@@ -32,9 +37,21 @@ populse\_mia.utils.utils
       verify_processes
       verify_setup
    
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
    
       PackagesInstall
    
+   
+
+   
+   
+   
+
+
+

@@ -4,6 +4,11 @@ populse\_mia.main
 .. automodule:: populse_mia.main
 
    
+   
+   
+
+   
+   
    .. rubric:: Functions
 
    .. autosummary::
@@ -13,3 +18,15 @@ populse\_mia.main
       main
       qt_message_handler
    
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

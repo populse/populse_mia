@@ -4,15 +4,33 @@ populse\_mia.user\_interface.data\_browser
 .. automodule:: populse_mia.user_interface.data_browser
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   advanced_search
-   count_table
-   data_browser
-   mini_viewer
-   modify_table
-   rapid_search
+   populse_mia.user_interface.data_browser.advanced_search
+   populse_mia.user_interface.data_browser.count_table
+   populse_mia.user_interface.data_browser.data_browser
+   populse_mia.user_interface.data_browser.mini_viewer
+   populse_mia.user_interface.data_browser.modify_table
+   populse_mia.user_interface.data_browser.rapid_search
+
