@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+7c59e869 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../../../_static/documentation_options.js?v=673cd2ec"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7c59e869 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -464,14 +464,21 @@ window.addEventListener("load", load);</script>
         
   <h1>Source code for populse_mia.data_manager.database_mia</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module containing a class that provides tools adapted to Mia for</span>
-<span class="sd">interacting with the populse_db API.</span>
+<span class="sd">Mia Database Interaction Module</span>
 
-<span class="sd">:Contains:</span>
-<span class="sd">   Class:</span>
-<span class="sd">      - DatabaseMIA</span>
-<span class="sd">      - DatabaseMiaSchema</span>
-<span class="sd">      - DatabaseMiaData</span>
+<span class="sd">This module provides a Python interface for interacting with the `populse_db`</span>
+<span class="sd">API, specifically tailored for the Mia framework. It enables secure and</span>
+<span class="sd">efficient management of database schemas, collections, fields, and documents,</span>
+<span class="sd">with support for context-managed operations to ensure proper resource handling.</span>
+
+<span class="sd">The module is designed to:</span>
+
+<span class="sd">    - Facilitate schema and data management for Mia-specific databases.</span>
+<span class="sd">    - Provide context managers for safe and automatic resource handling</span>
+<span class="sd">      (e.g., opening/closing connections).</span>
+<span class="sd">    - Support operations such as adding, updating, and removing collections,</span>
+<span class="sd">      fields, and documents.</span>
+<span class="sd">    - Ensure compatibility with the `populse_db` storage backend.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -495,6 +502,13 @@ window.addEventListener("load", load);</script>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;DatabaseMIA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DatabaseMiaSchema&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DatabaseMiaData&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 
 <span class="c1"># Shema (not in use currently)</span>
 <span class="c1"># schemas = [</span>
@@ -582,15 +596,18 @@ window.addEventListener("load", load);</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.database_mia.DatabaseMIA">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DatabaseMIA</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class providing tools for interacting with a database,</span>
-<span class="sd">    under the supervision of populse_db.</span>
+<span class="sd">    Class providing tools for interacting with a database, under the</span>
+<span class="sd">    supervision of populse_db.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        __enter__: Make a database connection and return it.</span>
-<span class="sd">        __exit__: Make sure the database connection gets closed.</span>
-<span class="sd">        - close: Releases database resources.</span>
-<span class="sd">        - data: Context manager for accessing the database data</span>
-<span class="sd">        - schema: Context manager for accessing the database schema.</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - __enter__: Make a database connection and return it.</span>
+<span class="sd">            - __exit__: Make sure the database connection gets closed.</span>
+<span class="sd">            - close: Releases database resources.</span>
+<span class="sd">            - data: Context manager for accessing the database data</span>
+<span class="sd">            - schema: Context manager for accessing the database schema.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DatabaseMIA.__init__">
@@ -603,8 +620,8 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a DatabaseMIA instance with the given database file.</span>
 
-<span class="sd">        :param database_engine (str): Path to the database file (e.g.,</span>
-<span class="sd">                                      &#39;/a/folder/path/file.db&#39;).</span>
+<span class="sd">        :param database_engine: (str) Path to the database file</span>
+<span class="sd">         (e.g. &#39;/a/folder/path/file.db&#39;).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Initialize the storage with the provided database engine</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage</span> <span class="o">=</span> <span class="n">Storage</span><span class="p">(</span><span class="n">database_engine</span><span class="p">)</span></div>
@@ -613,6 +630,8 @@ window.addEventListener("load", load);</script>
         <span class="c1"># with self.storage.schema() as schema:</span>
         <span class="c1">#     schema.add_schema(schema_name)</span>
 
+<div class="viewcode-block" id="DatabaseMIA.__enter__">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.database_mia.DatabaseMIA.__enter__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a database connection and return it.</span>
@@ -620,8 +639,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Enables the use of `with DatabaseMIA(...) as foo:` for automatic</span>
 <span class="sd">        resource management.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
 
+
+<div class="viewcode-block" id="DatabaseMIA.__exit__">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.database_mia.DatabaseMIA.__exit__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make sure the database connection gets closed.</span>
@@ -629,15 +651,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Ensures the database is properly closed when exiting a `with`</span>
 <span class="sd">        statement.</span>
 
-<span class="sd">        :param exc_type (Type[BaseException]): The exception type if an</span>
-<span class="sd">                                               exception occurred, otherwise</span>
-<span class="sd">                                               None.</span>
-<span class="sd">        :param exc_value (BaseException): The exception instance if an</span>
-<span class="sd">                                          exception occurred, otherwise None.</span>
-<span class="sd">        :param traceback (TracebackType: The traceback object if an exception</span>
-<span class="sd">                                         occurred, otherwise None.</span>
+<span class="sd">        :param exc_type: (Type[BaseException]) The exception type if an</span>
+<span class="sd">         exception occurred, otherwise None (unused).</span>
+<span class="sd">        :param exc_value: (BaseException) The exception instance if an</span>
+<span class="sd">         exception occurred, otherwise None (unused).</span>
+<span class="sd">        :param traceback: (TracebackType) The traceback object if an exception</span>
+<span class="sd">         occurred, otherwise None (unused).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="DatabaseMIA.close">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.database_mia.DatabaseMIA.close">[docs]</a>
@@ -660,10 +682,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method allows safe read and write access to the database data,</span>
 <span class="sd">        ensuring proper resource management.</span>
 
-<span class="sd">        :param write (bool): If True, enables write mode.</span>
-<span class="sd">        :param create (bool): If True, allows creating new records.</span>
+<span class="sd">        :param write: (bool) If True, enables write mode.</span>
+<span class="sd">        :param create: (bool) If True, allows creating new records.</span>
 
-<span class="sd">        :yields (DatabaseMiaData): The data interface for the database.</span>
+<span class="sd">        :Yields: (DatabaseMiaData) The data interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="n">write</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="n">create</span><span class="p">)</span> <span class="k">as</span> <span class="n">data</span><span class="p">:</span>
@@ -677,10 +699,10 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provides a context manager for accessing the database schema.</span>
 
-<span class="sd">        This method allows safe access to the database schema,</span>
-<span class="sd">        ensuring proper resource management.</span>
+<span class="sd">        This method allows safe access to the database schema, ensuring proper</span>
+<span class="sd">        resource management.</span>
 
-<span class="sd">        :yields (DatabaseMiaSchema): The schema interface for the database.</span>
+<span class="sd">        :Yields: (DatabaseMiaSchema) The schema interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">schema</span><span class="p">()</span> <span class="k">as</span> <span class="n">schema</span><span class="p">:</span>
@@ -698,21 +720,22 @@ window.addEventListener("load", load);</script>
 <span class="sd">    This class allows users to manipulate database collections, fields, and</span>
 <span class="sd">    field attributes under the supervision of populse_db.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - __init__: Initializes the schema interface.</span>
-<span class="sd">        - add_collection: Adds a new collection to the database.</span>
-<span class="sd">        - add_field: Adds one or more fields to a collection.</span>
-<span class="sd">        - add_field_attributes_collection: Ensures that the</span>
-<span class="sd">                                           `FIELD_ATTRIBUTES_COLLECTION`</span>
-<span class="sd">                                           collection is available in the</span>
-<span class="sd">                                           database (for internal</span>
-<span class="sd">                                           operations).</span>
-<span class="sd">        - data: Provides a context manager for accessing database data.</span>
-<span class="sd">        - remove_field: Removes a field from a collection.</span>
-<span class="sd">        - remove_field_attributes: Removes attributes associated with a</span>
-<span class="sd">                                   specific field in a collection.</span>
-<span class="sd">        - update_field_attributes: Updates the attributes of a field in</span>
-<span class="sd">                                   the database.</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - __init__: Initializes the schema interface.</span>
+<span class="sd">            - add_collection: Adds a new collection to the database.</span>
+<span class="sd">            - add_field: Adds one or more fields to a collection.</span>
+<span class="sd">            - add_field_attributes_collection: Ensures that the</span>
+<span class="sd">              `FIELD_ATTRIBUTES_COLLECTION` collection is available in the</span>
+<span class="sd">              database (for internal operations).</span>
+<span class="sd">            - data: Provides a context manager for accessing database data.</span>
+<span class="sd">            - remove_field: Removes a field from a collection.</span>
+<span class="sd">            - remove_field_attributes: Removes attributes associated with a</span>
+<span class="sd">              specific field in a collection.</span>
+<span class="sd">            - update_field_attributes: Updates the attributes of a field in</span>
+<span class="sd">              the database.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DatabaseMiaSchema.__init__">
@@ -721,9 +744,8 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DatabaseMiaSchema instance.</span>
 
-<span class="sd">        :param storage_schema (populse_db.storage.Storage): The schema storage</span>
-<span class="sd">                                                            interface for the</span>
-<span class="sd">                                                            database.</span>
+<span class="sd">        :param storage_schema: (populse_db.storage.Storage) The schema storage</span>
+<span class="sd">         interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span> <span class="o">=</span> <span class="n">storage_schema</span></div>
 
@@ -746,12 +768,12 @@ window.addEventListener("load", load);</script>
 <span class="sd">        additional field attributes, ensuring proper schema updates and</span>
 <span class="sd">        collection initialization.</span>
 
-<span class="sd">        :param collection_name (str): The name of the new collection.</span>
-<span class="sd">        :param primary_key (str): The primary key column for the collection.</span>
-<span class="sd">        :param visibility (bool): Visibility of the primary key field.</span>
-<span class="sd">        :param origin (str): Origin of the primary key field.</span>
-<span class="sd">        :param unit (str): Unit of the primary key field.</span>
-<span class="sd">        :param default_value (Any): Default value for the primary key field.</span>
+<span class="sd">        :param collection_name: (str) The name of the new collection.</span>
+<span class="sd">        :param primary_key: (str) The primary key column for the collection.</span>
+<span class="sd">        :param visibility: (bool) Visibility of the primary key field.</span>
+<span class="sd">        :param origin: (str) Origin of the primary key field.</span>
+<span class="sd">        :param unit: (str) Unit of the primary key field.</span>
+<span class="sd">        :param default_value: (Any) Default value for the primary key field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_field_attributes_collection</span><span class="p">()</span>
 
@@ -783,19 +805,19 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Each field should be represented as a dictionary containing</span>
 <span class="sd">        the following keys:</span>
 
-<span class="sd">        - `collection_name` (str): The collection to which the field belongs.</span>
-<span class="sd">        - `field_name` (str): The name of the field.</span>
-<span class="sd">        - `field_type` (str): The data type of the field.</span>
-<span class="sd">        - `description` (str): A brief description of the field.</span>
-<span class="sd">        - `visibility` (bool): The visibility status of the field.</span>
-<span class="sd">        - `origin` (str): The origin of the field.</span>
-<span class="sd">        - `unit` (str): The unit associated with the field.</span>
-<span class="sd">        - `default_value` (Any): The default value of the field.</span>
+<span class="sd">            - `collection_name` (str): The collection to which the field</span>
+<span class="sd">              belongs.</span>
+<span class="sd">            - `field_name` (str): The name of the field.</span>
+<span class="sd">            - `field_type` (str): The data type of the field.</span>
+<span class="sd">            - `description` (str): A brief description of the field.</span>
+<span class="sd">            - `visibility` (bool): The visibility status of the field.</span>
+<span class="sd">            - `origin` (str): The origin of the field.</span>
+<span class="sd">            - `unit` (str): The unit associated with the field.</span>
+<span class="sd">            - `default_value` (Any): The default value of the field.</span>
 
-<span class="sd">        :param fields (dict | list[dict]): A dictionary representing a single</span>
-<span class="sd">                                           field&#39;s attributes, or a list of</span>
-<span class="sd">                                           dictionaries representing multiple</span>
-<span class="sd">                                           fields&#39; attributes.</span>
+<span class="sd">        :param fields: (dict | list[dict]) A dictionary representing a single</span>
+<span class="sd">         field&#39;s attributes, or a list of dictionaries representing multiple</span>
+<span class="sd">         field&#39;s attributes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Ensure fields is always a list for consistent processing</span>
@@ -825,13 +847,15 @@ window.addEventListener("load", load);</script>
 <div class="viewcode-block" id="DatabaseMiaSchema.add_field_attributes_collection">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in</span>
-<span class="sd">        the database.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in the</span>
+<span class="sd">        database.</span>
 
 <span class="sd">        If it does not exist, it creates the collection and adds specific</span>
 <span class="sd">        fields to it such as &#39;visibility&#39;, &#39;origin&#39;, &#39;unit&#39;, and</span>
 <span class="sd">        &#39;default_value&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">storage_data</span><span class="p">:</span>
             <span class="n">has_collection</span> <span class="o">=</span> <span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span>
                 <span class="n">FIELD_ATTRIBUTES_COLLECTION</span>
@@ -898,7 +922,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method ensures safe access to the database data layer,</span>
 <span class="sd">        managing resources properly.</span>
 
-<span class="sd">        :yields (DatabaseMiaData): The data interface for the database.</span>
+<span class="sd">        :Yields: (DatabaseMiaData) The data interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_schema</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">storage_data</span><span class="p">:</span>
@@ -914,9 +938,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method updates the schema to remove the specified field from the</span>
 <span class="sd">        collection and handles associated attributes cleanup.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection from which</span>
-<span class="sd">                                      the field will be removed (must exist).</span>
-<span class="sd">        :param field_name (str): The name of the field to remove (must exist).</span>
+<span class="sd">        :param collection_name: (str) The name of the collection from which</span>
+<span class="sd">         the field will be removed (must exist).</span>
+<span class="sd">        :param field_name: (str) The name of the field to remove (must exist).</span>
+
 <span class="sd">        :raises ValueError: If the `collection_name` does not exist or if</span>
 <span class="sd">                            the `field_name` does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -941,12 +966,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method deletes the document storing metadata or attributes for</span>
 <span class="sd">        the specified field in the given collection.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection containing</span>
-<span class="sd">                                      the field.</span>
-<span class="sd">        :param field_name (str): The name of the field whose attributes are</span>
-<span class="sd">                                 to be removed.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection containing</span>
+<span class="sd">         the field.</span>
+<span class="sd">        :param field_name: (str) The name of the field whose attributes are</span>
+<span class="sd">         to be removed.</span>
+
 <span class="sd">        :raises ValueError: If the attributes document does not exist or</span>
-<span class="sd">                            cannot be removed.</span>
+<span class="sd">         cannot be removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -976,22 +1002,23 @@ window.addEventListener("load", load);</script>
         <span class="n">description</span><span class="p">,</span>
         <span class="n">field_type</span><span class="p">,</span>
     <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Updates the attributes of a field in the database for a specific</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the attributes of a field in the database for a specific</span>
 <span class="sd">        collection.</span>
 
 <span class="sd">        This method constructs an index using the provided collection and</span>
 <span class="sd">        field_name (&#39;collection|field_name&#39;), and then updates the field&#39;s</span>
 <span class="sd">        attributes in the FIELD_ATTRIBUTES_COLLECTION.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection the field</span>
-<span class="sd">                                      belongs to.</span>
-<span class="sd">        :param field_name (str): The name of the field to update.</span>
-<span class="sd">        :param visibility (bool): The visibility status of the field.</span>
-<span class="sd">        :param origin (str): The origin or source of the field.</span>
-<span class="sd">        :param unit (str): The unit of measurement for the field.</span>
-<span class="sd">        :param default_value (Any): The default value to assign to the field.</span>
-<span class="sd">        :param description (str): The description of the field.</span>
-<span class="sd">        :param field_type (Any): The type of the field.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection the field</span>
+<span class="sd">         belongs to.</span>
+<span class="sd">        :param field_name: (str) The name of the field to update.</span>
+<span class="sd">        :param visibility: (bool) The visibility status of the field.</span>
+<span class="sd">        :param origin: (str) The origin or source of the field.</span>
+<span class="sd">        :param unit: (str) The unit of measurement for the field.</span>
+<span class="sd">        :param default_value: (Any) The default value to assign to the field.</span>
+<span class="sd">        :param description: (str) The description of the field.</span>
+<span class="sd">        :param field_type: (Any) The type of the field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">index</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
 
@@ -1016,37 +1043,40 @@ window.addEventListener("load", load);</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DatabaseMiaData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Managing database interactions within the MIA framework.</span>
+<span class="sd">    Managing database interactions within the Mia framework.</span>
 
 <span class="sd">    This class provides methods to handle collections and documents within the</span>
 <span class="sd">    database, allowing operations such as retrieving, adding, updating, and</span>
 <span class="sd">    removing records.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - add_document: Adds a document to a collection.</span>
-<span class="sd">        - filter_documents: Retrieves documents from a specified collection</span>
-<span class="sd">                            that match a given filter.</span>
-<span class="sd">        - get_collection_names: Retrieves a list of all collection names in</span>
-<span class="sd">                                the database.</span>
-<span class="sd">        - get_document: Retrieves documents from a specified collection with</span>
-<span class="sd">                        optional filtering.</span>
-<span class="sd">        - get_document_names: Retrieves a list of all document names in the</span>
-<span class="sd">                              specified collection.</span>
-<span class="sd">        - get_field_attributes: Retrieves attributes of a specific field or</span>
-<span class="sd">                                all fields in a collection.</span>
-<span class="sd">        - get_field_names: Retrieves the list of all field names in the</span>
-<span class="sd">                           specified collection.</span>
-<span class="sd">        - get_primary_key_name: Retrieves the primary key of the specified</span>
-<span class="sd">                                collection.</span>
-<span class="sd">        - get_shown_tags: Returns the list of visible tags.</span>
+<span class="sd">    Contains:</span>
 
-<span class="sd">        - get_value: Retrieves the current value of a specific field.</span>
-<span class="sd">        - has_collection: Checks if a collection exists in the database.</span>
-<span class="sd">        - has_document: checks if a document exists in a collection.</span>
-<span class="sd">        - remove_document: Removes a document from a specified collection.</span>
-<span class="sd">        - remove_value: Removes the value for a field.</span>
-<span class="sd">        - set_shown_tags: Sets the list of visible tags.</span>
-<span class="sd">        - set_value: Stores or updates a record in the specified collection.</span>
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - add_document: Adds a document to a collection.</span>
+<span class="sd">            - filter_documents: Retrieves documents from a specified collection</span>
+<span class="sd">              that match a given filter.</span>
+<span class="sd">            - get_collection_names: Retrieves a list of all collection names in</span>
+<span class="sd">              the database.</span>
+<span class="sd">            - get_document: Retrieves documents from a specified collection</span>
+<span class="sd">              with optional filtering.</span>
+<span class="sd">            - get_document_names: Retrieves a list of all document names in the</span>
+<span class="sd">              specified collection.</span>
+<span class="sd">            - get_field_attributes: Retrieves attributes of a specific field or</span>
+<span class="sd">              all fields in a collection.</span>
+<span class="sd">            - get_field_names: Retrieves the list of all field names in the</span>
+<span class="sd">              specified collection.</span>
+<span class="sd">            - get_primary_key_name: Retrieves the primary key of the specified</span>
+<span class="sd">              collection.</span>
+<span class="sd">            - get_shown_tags: Returns the list of visible tags.</span>
+<span class="sd">            - get_value: Retrieves the current value of a specific field.</span>
+<span class="sd">            - has_collection: Checks if a collection exists in the database.</span>
+<span class="sd">            - has_document: checks if a document exists in a collection.</span>
+<span class="sd">            - remove_document: Removes a document from a specified collection.</span>
+<span class="sd">            - remove_value: Removes the value for a field.</span>
+<span class="sd">            - set_shown_tags: Sets the list of visible tags.</span>
+<span class="sd">            - set_value: Stores or updates a record in the specified</span>
+<span class="sd">              collection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DatabaseMiaData.__init__">
@@ -1055,9 +1085,8 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a new instance of the DatabaseMiaData class.</span>
 
-<span class="sd">        :param storage_data (populse_db.storage.Storage): The data storage</span>
-<span class="sd">                                                          interface for the</span>
-<span class="sd">                                                          database.</span>
+<span class="sd">        :param storage_data: (populse_db.storage.Storage) The data storage</span>
+<span class="sd">         interface for the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span> <span class="o">=</span> <span class="n">storage_data</span></div>
 
@@ -1073,9 +1102,9 @@ window.addEventListener("load", load);</script>
 <span class="sd">        collection&#39;s primary key configuration. The changes are saved</span>
 <span class="sd">        to the storage.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection where the</span>
-<span class="sd">                                      document should be added.</span>
-<span class="sd">        :param document (str): The document name to be added.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection where the</span>
+<span class="sd">         document should be added.</span>
+<span class="sd">        :param document: (str) The document name to be added.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
@@ -1097,14 +1126,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">        rows from the collection table.</span>
 
 <span class="sd">        The `filter_query` can either be:</span>
+
 <span class="sd">            - The result of `self.filter_query()`.</span>
 <span class="sd">            - A string defining a filter.</span>
 
 <span class="sd">        **Filter Query Format:**</span>
+
 <span class="sd">            - A filter condition must follow this syntax:</span>
-<span class="sd">                `{&lt;field&gt;} &lt;operator&gt; &quot;&lt;value&gt;&quot;`.</span>
+<span class="sd">              `{&lt;field&gt;} &lt;operator&gt; &quot;&lt;value&gt;&quot;`.</span>
 <span class="sd">            - Supported operators:</span>
-<span class="sd">                `==`, `!=`, `&lt;=`, `&gt;=`, `&lt;`, `&gt;`, `IN`, `ILIKE`, `LIKE`.</span>
+<span class="sd">              `==`, `!=`, `&lt;=`, `&gt;=`, `&lt;`, `&gt;`, `IN`, `ILIKE`, `LIKE`.</span>
 <span class="sd">            - Multiple filter conditions can be combined using `AND` or `OR`.</span>
 <span class="sd">            - Example:</span>
 <span class="sd">                ```</span>
@@ -1112,16 +1143,17 @@ window.addEventListener("load", load);</script>
 <span class="sd">                ```</span>
 
 <span class="sd">        **Note:**</span>
+
 <span class="sd">        Due to potential database access issues such as</span>
 <span class="sd">        `&quot;database already open.&quot;`, this implementation currently returns a</span>
 <span class="sd">        list instead of using `yield`. However, using `yield` may be</span>
 <span class="sd">        reconsidered in the future for better memory management.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection to filter</span>
-<span class="sd">                                      (must exist).</span>
-<span class="sd">        :param filter_query (str): The filter query to apply.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection to filter</span>
+<span class="sd">         (must exist).</span>
+<span class="sd">        :param filter_query: (str) The filter query to apply.</span>
 
-<span class="sd">        :return (list): A list of rows matching the filter criteria.</span>
+<span class="sd">        :Returns: (list) A list of rows matching the filter criteria.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
@@ -1147,7 +1179,7 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a list of all collection names in the database.</span>
 
-<span class="sd">        :return (list): All collection names in the database.</span>
+<span class="sd">        :Returns: (list) All collection names in the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">collection_names</span><span class="p">()</span></div>
 
@@ -1164,22 +1196,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">        primary keys and selecting specific fields. If the collection does not</span>
 <span class="sd">        exist, an empty list is returned.</span>
 
-<span class="sd">        :param collection_name (str): Name of the document collection. The</span>
-<span class="sd">                                      collection must already exist in the</span>
-<span class="sd">                                      database.</span>
-<span class="sd">        :param primary_keys (str | list[str], optional): A single primary key</span>
-<span class="sd">                                                         or a list of primary</span>
-<span class="sd">                                                         keys to filter</span>
-<span class="sd">                                                         documents. If None,</span>
-<span class="sd">                                                         no filtering by</span>
-<span class="sd">                                                         primary keys is</span>
-<span class="sd">                                                         applied.</span>
-<span class="sd">        :param fields (str | list[str], optional): A single field or a list of</span>
-<span class="sd">                                                   fields to include in the</span>
-<span class="sd">                                                   result. If None, all fields</span>
-<span class="sd">                                                   are included.</span>
-<span class="sd">        :return (list): A list of documents matching the specified criteria,</span>
-<span class="sd">                        or an empty list if the collection does not exist.</span>
+<span class="sd">        :param collection_name: (str) Name of the document collection. The</span>
+<span class="sd">         collection must already exist in the database.</span>
+<span class="sd">        :param primary_keys: (str | list[str], optional) A single primary key</span>
+<span class="sd">         or a list of primary keys to filter ocuments. If None, no filtering by</span>
+<span class="sd">         primary keys is applied.</span>
+<span class="sd">        :param fields: (str | list[str], optional) A single field or a list of</span>
+<span class="sd">         fields to include in the result. If None, all fields are included.</span>
+
+<span class="sd">        :Returns: (list) A list of documents matching the specified criteria,</span>
+<span class="sd">         or an empty list if the collection does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
@@ -1218,11 +1244,11 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a list of all document names in the specified collection.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
-<span class="sd">                                      document names from. The collection must</span>
-<span class="sd">                                      already exist.</span>
-<span class="sd">        :return (list[str]): A list of document names if the collection</span>
-<span class="sd">                             exists, otherwise an empty list.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection to retrieve</span>
+<span class="sd">         document names from. The collection must already exist.</span>
+
+<span class="sd">        :Returns: (list[str]) A list of document names if the collection</span>
+<span class="sd">         exists, otherwise an empty list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">):</span>
             <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_primary_key_name</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
@@ -1242,16 +1268,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Retrieve attributes of a specific field or all fields in a collection</span>
 <span class="sd">        from the storage.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection.</span>
-<span class="sd">        :param field_name (str, optional): The name of a specific field within</span>
-<span class="sd">                                           the collection. If not provided,</span>
-<span class="sd">                                           attributes for all fields in the</span>
-<span class="sd">                                           collection will be retrieved.</span>
-<span class="sd">        :return (dict | list[dict]): Attributes of the specified field as a</span>
-<span class="sd">                                     dictionary, or a list of dictionaries</span>
-<span class="sd">                                     with attributes for all fields if</span>
-<span class="sd">                                     `field_name` is not provided.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection.</span>
+<span class="sd">        :param field_name: (str, optional) The name of a specific field within</span>
+<span class="sd">         the collection. If not provided, attributes for all fields in the</span>
+<span class="sd">         collection will be retrieved.</span>
+
+<span class="sd">        :Returns: (dict | list[dict]) Attributes of the specified field as a</span>
+<span class="sd">         dictionary, or a list of dictionaries with attributes for all fields</span>
+<span class="sd">         if `field_name` is not provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">field_name</span><span class="p">:</span>
             <span class="n">attributes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">][</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -1290,12 +1316,12 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the list of all field names in the specified collection.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
-<span class="sd">                                      field names from. The collection must</span>
-<span class="sd">                                      exist in the database.</span>
-<span class="sd">        :return (list | None): A list of all field names in the collection</span>
-<span class="sd">                               if it exists, or `None` if the collection has</span>
-<span class="sd">                               no fields or does not exist.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection to retrieve</span>
+<span class="sd">         field names from. The collection must exist in the database.</span>
+
+<span class="sd">        :Returns: (list | None) A list of all field names in the collection</span>
+<span class="sd">         if it exists, or `None` if the collection has no fields or does not</span>
+<span class="sd">         exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">field_names</span> <span class="k">if</span> <span class="n">field_names</span> <span class="k">else</span> <span class="kc">None</span></div>
@@ -1310,10 +1336,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method returns the first key from the specified collection within</span>
 <span class="sd">        the database.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection to retrieve</span>
-<span class="sd">                                      the primary key from.</span>
-<span class="sd">        :return (str): The first key in the collection, representing the</span>
-<span class="sd">                       primary key.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection to retrieve</span>
+<span class="sd">         the primary key from.</span>
+
+<span class="sd">        :Returns: (str) The first key in the collection, representing the</span>
+<span class="sd">         primary key.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">]</span><span class="o">.</span><span class="n">primary_key</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
 
@@ -1324,7 +1351,7 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Give the list of visible tags.</span>
 
-<span class="sd">        :return (list): The list of visible tags.</span>
+<span class="sd">        :Returns: (list) The list of visible tags.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">visible_names</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">names_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1359,13 +1386,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">        given field within a document, identified by its primary key, in the</span>
 <span class="sd">        specified collection.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection containing</span>
-<span class="sd">                                      the document.</span>
-<span class="sd">        :param primary_key (str): The unique identifier (primary key) of the</span>
-<span class="sd">                                  document.</span>
-<span class="sd">        :param field (str): The name of the field within the document to</span>
-<span class="sd">                            retrieve.</span>
-<span class="sd">        :return (Any): The current value of the specified field.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection containing</span>
+<span class="sd">         the document.</span>
+<span class="sd">        :param primary_key: (str) The unique identifier (primary key) of the</span>
+<span class="sd">         document.</span>
+<span class="sd">        :param field: (str) The name of the field within the document to</span>
+<span class="sd">         retrieve.</span>
+
+<span class="sd">        :Returns: (Any) The current value of the specified field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">][</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
@@ -1376,8 +1404,9 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">         Checks if a collection with the specified name exists in the database.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection to check.</span>
-<span class="sd">        :return (bool): `True` if the collection exists, otherwise `False`.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection to check.</span>
+
+<span class="sd">        :Returns: (bool) `True` if the collection exists, otherwise `False`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span></div>
 
@@ -1389,9 +1418,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Checks if a document with the specified primary key exists in the</span>
 <span class="sd">        given collection.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection.</span>
-<span class="sd">        :param primary_key (str): The primary key of the document to check.</span>
-<span class="sd">        :return (bool): `True` if the document exists, `False` otherwise.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection.</span>
+<span class="sd">        :param primary_key: (str) The primary key of the document to check.</span>
+
+<span class="sd">        :Returns: (bool) `True` if the document exists, `False` otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">primary_key</span> <span class="ow">in</span> <span class="n">documents</span></div>
@@ -1406,12 +1436,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method deletes the document identified by `primary_key` from</span>
 <span class="sd">        the given collection in the storage.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection containing</span>
-<span class="sd">                                      the document.</span>
-<span class="sd">        :param primary_key (str): The unique identifier of the document to be</span>
-<span class="sd">                                  removed.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection containing</span>
+<span class="sd">         the document.</span>
+<span class="sd">        :param primary_key: (str) The unique identifier of the document to be</span>
+<span class="sd">         removed.</span>
+
 <span class="sd">        :raises KeyError: If the collection or the document does not exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">]</span>
 
@@ -1431,11 +1463,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        if it exists. Raises a KeyError if the field, collection, or document</span>
 <span class="sd">        is not found.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection containing</span>
-<span class="sd">                                      the document.</span>
-<span class="sd">        :param primary_key (str): The primary key of the document in the</span>
-<span class="sd">                                  collection.</span>
-<span class="sd">        :param field (str): The field to be removed from the document.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection containing</span>
+<span class="sd">         the document.</span>
+<span class="sd">        :param primary_key: (str) The primary key of the document in the</span>
+<span class="sd">         collection.</span>
+<span class="sd">        :param field: (str) The field to be removed from the document.</span>
 
 <span class="sd">        :raises KeyError: If the collection or document cannot be found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1458,7 +1490,7 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the list of visible tags.</span>
 
-<span class="sd">        :param fields_shown (list): A list of visible tags.</span>
+<span class="sd">        :param fields_shown: (list) A list of visible tags.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">doc_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span><span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">)</span>
 
@@ -1482,13 +1514,12 @@ window.addEventListener("load", load);</script>
 <span class="sd">        fields of the record are set according to the data in the provided</span>
 <span class="sd">        dictionary.</span>
 
-<span class="sd">        :param collection_name (str): The name of the collection where the</span>
-<span class="sd">                                      record will be stored or updated.</span>
-<span class="sd">        :param primary_key (str): The unique key used to identify the record.</span>
-<span class="sd">        :param values_dict (dict): A dictionary containing the data to store</span>
-<span class="sd">                                   or update in the record. Keys represent</span>
-<span class="sd">                                   field names, and values represent the</span>
-<span class="sd">                                   corresponding data.</span>
+<span class="sd">        :param collection_name: (str) The name of the collection where the</span>
+<span class="sd">         record will be stored or updated.</span>
+<span class="sd">        :param primary_key: (str) The unique key used to identify the record.</span>
+<span class="sd">        :param values_dict: (dict) A dictionary containing the data to store</span>
+<span class="sd">         or update in the record. Keys represent field names, and values</span>
+<span class="sd">         represent the corresponding data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">existing_record</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="ow">or</span> <span class="p">{}</span>

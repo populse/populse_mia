@@ -4,11 +4,6 @@ populse\_mia.data\_manager.data\_loader
 .. automodule:: populse_mia.data_manager.data_loader
 
    
-   
-   
-
-   
-   
    .. rubric:: Functions
 
    .. autosummary::
@@ -17,10 +12,6 @@ populse\_mia.data\_manager.data\_loader
       tags_from_file
       verify_scans
    
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
@@ -28,11 +19,3 @@ populse\_mia.data\_manager.data\_loader
       ImportProgress
       ImportWorker
    
-   
-
-   
-   
-   
-
-
-

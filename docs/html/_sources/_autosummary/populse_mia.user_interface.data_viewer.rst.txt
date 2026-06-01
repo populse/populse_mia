@@ -4,31 +4,13 @@ populse\_mia.user\_interface.data\_viewer
 .. automodule:: populse_mia.user_interface.data_viewer
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   populse_mia.user_interface.data_viewer.anatomist
-   populse_mia.user_interface.data_viewer.anatomist_2
-   populse_mia.user_interface.data_viewer.data_viewer
-   populse_mia.user_interface.data_viewer.data_viewer_tab
-
+   anatomist
+   anatomist_2
+   data_viewer
+   data_viewer_tab

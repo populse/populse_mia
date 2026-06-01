@@ -4,26 +4,9 @@ populse\_mia.data\_manager.project\_properties
 .. automodule:: populse_mia.data_manager.project_properties
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
    
       SavedProjects
    
-   
-
-   
-   
-   
-
-
-

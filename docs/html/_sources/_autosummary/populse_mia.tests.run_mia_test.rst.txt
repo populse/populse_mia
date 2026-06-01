@@ -4,21 +4,12 @@ populse\_mia.tests.run\_mia\_test
 .. automodule:: populse_mia.tests.run_mia_test
 
    
-   
-   
-
-   
-   
    .. rubric:: Functions
 
    .. autosummary::
    
       add_to_syspath
       qt_message_handler
-   
-   
-
-   
    
    .. rubric:: Classes
 
@@ -33,11 +24,3 @@ populse\_mia.tests.run\_mia\_test
       TestMIAPipelineManagerTab
       Test_Z_MIAOthers
    
-   
-
-   
-   
-   
-
-
-
