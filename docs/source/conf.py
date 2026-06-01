@@ -244,10 +244,13 @@ autodoc_default_options = {
     "members": True,
     "private-members": True,
     "undoc-members": True,
-    "special-members": "__init__",
+    # Include only selected special methods.
+    # Set to True to include all special members.
+    "special-members": "__init__, __enter__, __exit__",
     "member-order": "bysource",
     "show-inheritance": True,
     "imported-members": False,
+    "exclude-members": "notifyProgress",  # We want to exclude PyQt signals
 }
 
 
