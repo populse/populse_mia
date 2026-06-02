@@ -1,8 +1,18 @@
-"""Module that contains the class to handle the projects saved in the software.
+"""
+Mia Saved Projects Module
 
-Contains:
-    Class:
-    - SavedProjects
+This module provides the `SavedProjects` class, which manages the persistence
+and retrieval of user-saved projects in the Mia software. It handles the
+following operations:
+
+    - Loading saved projects from a YAML configuration file
+      (`saved_projects.yml`).
+    - Adding, removing, and updating project paths in the configuration.
+    - Serializing and saving the project list back to the YAML file.
+
+The module ensures compatibility with multiple YAML parser versions and
+gracefully handles missing or corrupted configuration files by creating a
+default structure.
 
 """
 
@@ -25,36 +35,43 @@ from packaging import version
 # populse_mia import
 from populse_mia.software_properties import Config
 
+__all__ = [
+    "SavedProjects",
+]
+
 
 class SavedProjects:
     """
     Handles all saved projects in the software.
 
-    Methods:
-        - addSavedProject: Adds a new saved project.
-        - loadSavedProjects: Loads saved projects from 'saved_projects.yml'.
-        - removeSavedProject: Removes a project from the config file.
-        - saveSavedProjects: Saves projects to 'saved_projects.yml'.
+    Contains:
+
+        Methods:
+
+            - addSavedProject: Adds a new saved project.
+            - loadSavedProjects: Loads saved projects from
+              'saved_projects.yml'.
+            - removeSavedProject: Removes a project from the config file.
+            - saveSavedProjects: Saves projects to 'saved_projects.yml'.
     """
 
     def __init__(self):
         """
         Initializes the saved projects from 'saved_projects.yml'.
-
-        Attributes:
-            savedProjects (dict): Dictionary containing saved project paths.
-            pathsList (list): List of saved project paths.
         """
+        # Dictionary containing saved project paths
         self.savedProjects = self.loadSavedProjects()
 
         if (isinstance(self.savedProjects, dict)) and (
             "paths" in self.savedProjects
         ):
+            # List of saved project paths
             self.pathsList = self.savedProjects["paths"]
 
             if self.pathsList is None:
                 self.pathsList = []
                 self.savedProjects["paths"] = []
+
         else:
             self.savedProjects = {"paths": []}
             self.pathsList = []
@@ -63,9 +80,9 @@ class SavedProjects:
         """
         Adds a project path or moves it to the front if it exists.
 
-        :param newPath (str): Path of the new project.
+        :param newPath: (str) Path of the new project.
 
-        :return (list): Updated project paths list.
+        :Returns: (list) Updated project paths list.
         """
 
         if newPath in self.pathsList:
@@ -74,6 +91,7 @@ class SavedProjects:
         self.pathsList.insert(0, newPath)
         self.savedProjects["paths"] = self.pathsList
         self.saveSavedProjects()
+
         return self.pathsList
 
     def loadSavedProjects(self):
@@ -81,11 +99,12 @@ class SavedProjects:
         Loads saved projects from 'saved_projects.yml', or creates a default
         file if missing.
 
-        :return (dict): Loaded project paths.
+        :Returns: (dict): Loaded project paths.
         """
         config = Config()
 
         try:
+
             with open(
                 os.path.join(
                     config.get_properties_path(),
@@ -114,7 +133,7 @@ class SavedProjects:
         """
         Removes a project path from pathsList and updates the file.
 
-        :param path (str): Path to remove.
+        :param path: (str) Path to remove.
         """
 
         if path in self.pathsList:

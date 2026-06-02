@@ -1,10 +1,20 @@
-"""Module that handle the filter class which contains the results of both
-rapid and advanced search
+"""
+Mia Filter Module
 
-:Contains:
-    :Class:
-        - Filter
+This module provides the `Filter` class, which encapsulates the logic for
+handling both rapid and advanced search results in the Mia application.
 
+It enables filtering of scans based on user-defined criteria, including:
+    - Rapid search (simple text-based filtering)
+    - Advanced search (complex queries with logical operators, conditions,
+      and negations)
+
+The `Filter` class supports:
+    - Combining multiple query lines with logical operators (AND/OR)
+    - Applying conditions (e.g., ==, !=, >, <, IN, BETWEEN, CONTAINS)
+    - Negating conditions (NOT)
+    - Serializing filter configurations to a dictionary for storage or
+      transmission.
 """
 
 ##########################################################################
@@ -19,33 +29,31 @@ rapid and advanced search
 from populse_mia.data_manager import COLLECTION_CURRENT, TAG_FILENAME
 from populse_mia.user_interface import data_browser
 
+__all__ = [
+    "Filter",
+]
+
 
 class Filter:
     """
     Class that represent a Filter, containing the results of both rapid and
     advanced search.
 
-    .. Methods:
-        - generate_filter: apply the filter to the given list of scans
-        - json_format: returns the filter as a dictionary
+    Contains:
+
+        Methods:
+
+            - generate_filter: apply the filter to the given list of scans
+            - json_format: returns the filter as a dictionary
 
     The advanced search creates a complex query to the database and is a
     combination of several "query lines" which are linked with AND or OR
     and all composed of:
-    - A negation or not
-    - A tag name or all visible tags
-    - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
-    - A value
 
-    :param name: filter's name
-    :param nots: list of negations ("" or NOT)
-    :param values: list of values
-    :param fields: list of list of fields
-    :param links: list of links (AND/OR)
-    :param conditions: list of conditions (==, !=, <, >, <=, >=, IN,
-                       BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
-    :param search_bar: value in the rapid search bar
-
+        - A negation or not
+        - A tag name or all visible tags
+        - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
+        - A value
     """
 
     def __init__(
@@ -72,13 +80,14 @@ class Filter:
         self.search_bar = search_bar
 
     def generate_filter(self, current_project, scans, tags):
-        """Apply the filter to the given list of scans.
+        """
+        Apply the filter to the given list of scans.
 
         :param current_project: Current project.
         :param scans: List of scans to apply the filter into.
         :param tags: List of tags to search in.
 
-        :return (list): The list of scans matching the filter.
+        :Returns: (list) The list of scans matching the filter.
         """
 
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
@@ -105,12 +114,14 @@ class Filter:
             )
 
         final_result = [scan[TAG_FILENAME] for scan in advanced_result]
+
         return final_result
 
     def json_format(self):
-        """Return the filter as a dictionary.
+        """
+        Return the filter as a dictionary.
 
-        :return (dict): The filter as a dictionary.
+        :Returns: (dict) The filter as a dictionary.
         """
         # Filter dictionary
         data = {
