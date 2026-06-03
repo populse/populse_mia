@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.filter &#8212; populse_mia 3.0.0-dev+7c59e869 documentation</title>
+    <title>populse_mia.data_manager.filter &#8212; populse_mia 3.0.0-dev+4cbe6e94 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=673cd2ec"></script>
+    <script src="../_static/documentation_options.js?v=7ba00931"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+7c59e869 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+4cbe6e94 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -30,17 +30,23 @@
         
   <section id="module-populse_mia.data_manager.filter">
 <span id="populse-mia-data-manager-filter"></span><h1>populse_mia.data_manager.filter<a class="headerlink" href="#module-populse_mia.data_manager.filter" title="Link to this heading">¶</a></h1>
-<p>Module that handle the filter class which contains the results of both
-rapid and advanced search</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Class<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>Filter</p></li>
+<p>Mia Filter Module</p>
+<p>This module provides the <cite>Filter</cite> class, which encapsulates the logic for
+handling both rapid and advanced search results in the Mia application.</p>
+<dl class="simple">
+<dt>It enables filtering of scans based on user-defined criteria, including:</dt><dd><ul class="simple">
+<li><p>Rapid search (simple text-based filtering)</p></li>
+<li><p>Advanced search (complex queries with logical operators, conditions,
+and negations)</p></li>
 </ul>
 </dd>
-</dl>
+<dt>The <cite>Filter</cite> class supports:</dt><dd><ul class="simple">
+<li><p>Combining multiple query lines with logical operators (AND/OR)</p></li>
+<li><p>Applying conditions (e.g., ==, !=, &gt;, &lt;, IN, BETWEEN, CONTAINS)</p></li>
+<li><p>Negating conditions (NOT)</p></li>
+<li><p>Serializing filter configurations to a dictionary for storage or
+transmission.</p></li>
+</ul>
 </dd>
 </dl>
 <p class="rubric">Classes</p>
@@ -57,27 +63,27 @@ rapid and advanced search</p>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that represent a Filter, containing the results of both rapid and
 advanced search.</p>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>generate_filter: apply the filter to the given list of scans</p></li>
+<li><p>json_format: returns the filter as a dictionary</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 <p>The advanced search creates a complex query to the database and is a
 combination of several “query lines” which are linked with AND or OR
-and all composed of:
-- A negation or not
-- A tag name or all visible tags
-- A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)
-- A value</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – filter’s name</p></li>
-<li><p><strong>nots</strong> – list of negations (”” or NOT)</p></li>
-<li><p><strong>values</strong> – list of values</p></li>
-<li><p><strong>fields</strong> – list of list of fields</p></li>
-<li><p><strong>links</strong> – list of links (AND/OR)</p></li>
-<li><p><strong>conditions</strong> – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,
-BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
-<li><p><strong>search_bar</strong> – value in the rapid search bar</p></li>
+and all composed of:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A negation or not</p></li>
+<li><p>A tag name or all visible tags</p></li>
+<li><p>A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)</p></li>
+<li><p>A value</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.filter.Filter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">links</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_bar</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/filter.html#Filter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.filter.Filter.__init__" title="Link to this definition">¶</a></dt>
@@ -110,8 +116,8 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
 <li><p><strong>tags</strong> – List of tags to search in.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (list)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The list of scans matching the filter.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) The list of scans matching the filter.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -121,8 +127,8 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
 <span class="sig-name descname"><span class="pre">json_format</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/filter.html#Filter.json_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.filter.Filter.json_format" title="Link to this definition">¶</a></dt>
 <dd><p>Return the filter as a dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return (dict)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The filter as a dictionary.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(dict) The filter as a dictionary.</p>
 </dd>
 </dl>
 </dd></dl>

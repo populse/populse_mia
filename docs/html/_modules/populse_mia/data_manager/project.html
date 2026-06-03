@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+4cbe6e94 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../../../_static/documentation_options.js?v=7ba00931"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
@@ -449,7 +449,7 @@ window.addEventListener("load", load);</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+4cbe6e94 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -463,12 +463,13 @@ window.addEventListener("load", load);</script>
         
         
   <h1>Source code for populse_mia.data_manager.project</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Module that handle the projects and their database.</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mia Project Module</span>
 
-<span class="sd">:Contains:</span>
-<span class="sd">    :Class:</span>
-<span class="sd">        - Project</span>
-
+<span class="sd">This module provides the core functionality for managing projects and their</span>
+<span class="sd">associated databases within the populse_mia framework. It enables the creation,</span>
+<span class="sd">configuration, and manipulation of projects, including their metadata, data</span>
+<span class="sd">collections, processing history, and workflows.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -546,75 +547,112 @@ window.addEventListener("load", load);</script>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_history_inspect</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Project</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that handles projects and their associated database.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for managing Populse_mia projects and their associated databases.</span>
 
-<span class="sd">    :param project_root_folder: project&#39;s path</span>
-<span class="sd">    :param new_project: project&#39;s object</span>
+<span class="sd">    The `Project` class is the central component for handling all aspects of a</span>
+<span class="sd">    project, including its directory structure, database schema, metadata,</span>
+<span class="sd">    and workflows.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - add_clinical_tags: add the clinical tags to the project</span>
-<span class="sd">        - cleanup_orphan_bricks: remove orphan bricks from the database</span>
-<span class="sd">        - cleanup_orphan_history: remove orphan bricks from the database</span>
-<span class="sd">        - cleanup_orphan_nonexisting_files: Remove orphan files which do not</span>
-<span class="sd">                                            exist from the database</span>
-<span class="sd">        - del_clinical_tags: remove clinical tags to the project</span>
-<span class="sd">        - files_in_project: return file / directory names within the</span>
-<span class="sd">                            project folder</span>
-<span class="sd">        - finished_bricks: retrieves a dictionary of finished bricks from</span>
-<span class="sd">                           workflows</span>
-<span class="sd">        - get_data_history: get the processing history for the given data file</span>
-<span class="sd">        - getDate: return the date of creation of the project</span>
-<span class="sd">        - get_finished_bricks_in_pipeline: retrieves a dictionary of finished</span>
-<span class="sd">                                           bricks from a given pipeline</span>
-<span class="sd">        - get_finished_bricks_in_workflows: retrieves a dictionary of finished</span>
-<span class="sd">                                            bricks from a workflow</span>
-<span class="sd">        - getFilter: return a Filter object</span>
-<span class="sd">        - getFilterName: input box to get the name of the filter to save</span>
-<span class="sd">        - getName: return the name of the project</span>
-<span class="sd">        - get_orphan_bricks: identifies orphan bricks and their associated</span>
-<span class="sd">                             weak files</span>
-<span class="sd">        - get_orphan_history: identifies orphan history entries</span>
-<span class="sd">        - get_orphan_nonexisting_files: get orphan files which do not exist</span>
-<span class="sd">                                        from the database</span>
-<span class="sd">        - getSortedTag: return the sorted tag of the project</span>
-<span class="sd">        - getSortOrder: return the sort order of the project</span>
-<span class="sd">        - hasUnsavedModifications: return if the project has unsaved</span>
-<span class="sd">                                   modifications or not</span>
-<span class="sd">        - init_filters: initialize the filters at project opening</span>
-<span class="sd">        - loadProperties: load the properties file</span>
-<span class="sd">        - redo: redo the last action made by the user on the project</span>
-<span class="sd">        - reput_values: re-put the value objects in the database</span>
-<span class="sd">        - saveConfig: save the changes in the properties file</span>
-<span class="sd">        - save_current_filter: save the current filter</span>
-<span class="sd">        - saveModifications: save the pending operations of the project</span>
-<span class="sd">                             (actions still not saved)</span>
-<span class="sd">        - setCurrentFilter: set the current filter of the project</span>
-<span class="sd">        - setDate: set the date of the project</span>
-<span class="sd">        - setName: set the name of the project</span>
-<span class="sd">        - setSortedTag: set the sorted tag of the project</span>
-<span class="sd">        - setSortOrder: set the sort order of the project</span>
-<span class="sd">        - undo: undo the last action made by the user on the project</span>
-<span class="sd">        - unsavedModifications: Modify the window title depending</span>
-<span class="sd">                                of whether the project has unsaved</span>
-<span class="sd">                                modifications or not.</span>
-<span class="sd">        - unsaveModifications: unsaves the pending operations of the project</span>
-<span class="sd">        - update_db_for_paths: update the history and brick tables with a new</span>
-<span class="sd">                               project file</span>
+<span class="sd">    It provides methods to:</span>
+
+<span class="sd">    - **Initialize and configure** project directories, database schemas, and</span>
+<span class="sd">      default properties.</span>
+<span class="sd">    - **Manage project metadata** (name, date, sorting tags, and clinical</span>
+<span class="sd">      tags).</span>
+<span class="sd">    - **Interact with data collections** (current, initial, bricks, and</span>
+<span class="sd">      history) for storing, retrieving, and updating project data.</span>
+<span class="sd">    - **Track and clean up** orphaned bricks, histories, and files to maintain</span>
+<span class="sd">      database integrity.</span>
+<span class="sd">    - **Handle workflows and pipelines** by retrieving finished bricks, their</span>
+<span class="sd">      outputs, and processing history.</span>
+<span class="sd">    - **Support undo/redo functionality** for user modifications to project</span>
+<span class="sd">      data and metadata.</span>
+<span class="sd">    - **Apply and save filters** to customize data visualization and analysis.</span>
+<span class="sd">    - **Update database paths** when projects are renamed or moved.</span>
+
+<span class="sd">    This class integrates with `DatabaseMIA` for database operations, `Filter`</span>
+<span class="sd">    for data filtering, and `capsul` for pipeline and workflow management.</span>
+
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+<span class="sd">            - add_clinical_tags: Add the clinical tags to the .</span>
+<span class="sd">            - cleanup_orphan_bricks: Remove orphan bricks from the database.</span>
+<span class="sd">            - cleanup_orphan_history: Remove orphan bricks from the database.</span>
+<span class="sd">            - cleanup_orphan_nonexisting_files: Remove orphan files which do</span>
+<span class="sd">              not exist from the database.</span>
+<span class="sd">            - del_clinical_tags: Remove clinical tags to the project.</span>
+<span class="sd">            - files_in_project: Return file / directory names within the</span>
+<span class="sd">              project folder.</span>
+<span class="sd">            - finished_bricks: Retrieve a dictionary of finished bricks from</span>
+<span class="sd">              workflows.</span>
+<span class="sd">            - get_data_history: Get the processing history for the given data</span>
+<span class="sd">              file.</span>
+<span class="sd">            - getDate: Return the date of creation of the project.</span>
+<span class="sd">            - get_finished_bricks_in_pipeline: Retrieve a dictionary of</span>
+<span class="sd">              finished bricks from a given pipeline</span>
+<span class="sd">            - get_finished_bricks_in_workflows: Retrieve a dictionary of</span>
+<span class="sd">              finished bricks from a workflow</span>
+<span class="sd">            - getFilter: Return a Filter object.</span>
+<span class="sd">            - getFilterName: Input box to get the name of the filter to save.</span>
+<span class="sd">            - getName: Return the name of the project.</span>
+<span class="sd">            - get_orphan_bricks: Identifies orphan bricks and their associated</span>
+<span class="sd">              weak files</span>
+<span class="sd">            - get_orphan_history: Identifies orphan history entries.</span>
+<span class="sd">            - get_orphan_nonexisting_files: Get orphan files which do not exist</span>
+<span class="sd">              from the database.</span>
+<span class="sd">            - getSortedTag: Return the sorted tag of the project.</span>
+<span class="sd">            - getSortOrder: Return the sort order of the project.</span>
+<span class="sd">            - hasUnsavedModifications: Return if the project has unsaved</span>
+<span class="sd">              modifications or not</span>
+<span class="sd">            - init_filters: Initialize the filters at project opening.</span>
+<span class="sd">            - loadProperties: Load the properties file.</span>
+<span class="sd">            - redo: Redo the last action made by the user on the project.</span>
+<span class="sd">            - reput_values: Re-put the value objects in the database.</span>
+<span class="sd">            - saveConfig: Save the changes in the properties file.</span>
+<span class="sd">            - save_current_filter: Save the current filter.</span>
+<span class="sd">            - saveModifications: Save the pending operations of the project</span>
+<span class="sd">              (actions still not saved).</span>
+<span class="sd">            - setCurrentFilter: Set the current filter of the project.</span>
+<span class="sd">            - setDate: Set the date of the project.</span>
+<span class="sd">            - setName: Set the name of the project.</span>
+<span class="sd">            - setSortedTag: Set the sorted tag of the project.</span>
+<span class="sd">            - setSortOrder: Set the sort order of the project.</span>
+<span class="sd">            - undo: Undo the last action made by the user on the project.</span>
+<span class="sd">            - unsavedModifications: Modify the window title depending of</span>
+<span class="sd">              whether the project has unsaved modifications or not.</span>
+<span class="sd">            - unsaveModifications: Unsaves the pending operations of the</span>
+<span class="sd">              project.</span>
+<span class="sd">            - update_db_for_paths: update the history and brick tables with a</span>
+<span class="sd">              new project file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Project.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialization of the project class.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize a Mia project and its associated database.</span>
 
-<span class="sd">        :param project_root_folder: project&#39;s path</span>
-<span class="sd">        :param new_project: project&#39;s object</span>
+<span class="sd">        This method sets up the project directory structure, initializes the</span>
+<span class="sd">        database, and configures default properties. It also checks if the</span>
+<span class="sd">        project is already opened in another instance to prevent conflicts.</span>
+
+<span class="sd">        :param project_root_folder: Path to the project&#39;s root directory. If</span>
+<span class="sd">         None, a temporary project directory is created.</span>
+<span class="sd">        :param new_project: Boolean indicating whether this is a new project</span>
+<span class="sd">         (True) or an existing one (False). If True, the directory structure</span>
+<span class="sd">         and databaseschema are initialized.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">project_root_folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1008,7 +1046,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
 
-<span class="sd">        :return: list of clinical tags that were added.</span>
+<span class="sd">        :Returns: List of clinical tags that were added.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">return_tags</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1082,13 +1120,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Remove orphan bricks and their associated files from the database.</span>
 
 <span class="sd">        This method performs the following cleanup operations:</span>
-<span class="sd">        1. Removes obsolete brick documents from the brick collection</span>
-<span class="sd">        2. Removes orphaned file documents from both current and initial</span>
-<span class="sd">           collections</span>
-<span class="sd">        3. Deletes the corresponding physical files from the filesystem</span>
+<span class="sd">            - Removes obsolete brick documents from the brick collection</span>
+<span class="sd">            - Removes orphaned file documents from both current and initial</span>
+<span class="sd">              collections</span>
+<span class="sd">            - Deletes the corresponding physical files from the filesystem</span>
 
-<span class="sd">        :param bricks (str): list of brick IDs to check for orphans.</span>
-<span class="sd">                             If None, checks all bricks in the database.</span>
+<span class="sd">        :param bricks: (str) List of brick IDs to check for orphans. If None,</span>
+<span class="sd">         checks all bricks in the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obsolete_bricks</span><span class="p">,</span> <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_bricks</span><span class="p">(</span><span class="n">bricks</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Identified obsolete bricks: </span><span class="si">{</span><span class="n">obsolete_bricks</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1133,10 +1171,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        the database.</span>
 
 <span class="sd">        This method performs three cleanup operations:</span>
-<span class="sd">        1. Removes obsolete history documents from the history collection</span>
-<span class="sd">        2. Removes orphaned brick documents from the brick collection</span>
-<span class="sd">        3. Removes orphaned file documents from both current and initial</span>
-<span class="sd">           collections, along with their corresponding physical files</span>
+<span class="sd">            - Removes obsolete history documents from the history collection</span>
+<span class="sd">            - Removes orphaned brick documents from the brick collection</span>
+<span class="sd">            - Removes orphaned file documents from both current and initial</span>
+<span class="sd">              collections, along with their corresponding physical files</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obsolete_histories</span><span class="p">,</span> <span class="n">obsolete_bricks</span><span class="p">,</span> <span class="n">orphan_files</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_history</span><span class="p">()</span>
@@ -1203,8 +1241,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - Deletes their entries from both current and initial collections,</span>
 <span class="sd">            - Attempts a defensive filesystem cleanup if the file still exists.</span>
 
-<span class="sd">        :param failed (bool): Passed through to `get_orphan_nonexisting_files`</span>
-<span class="sd">                              to control orphan selection.</span>
+<span class="sd">        :param failed: (bool) Passed through to `get_orphan_nonexisting_files`</span>
+<span class="sd">         to control orphan selection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
         <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_nonexisting_files</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
@@ -1238,7 +1276,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Iterates through predefined clinical tags and removes them from both</span>
 <span class="sd">        collections if they exist in the current collection&#39;s field names.</span>
 
-<span class="sd">        :return (list): Clinical tags that were successfully removed.</span>
+<span class="sd">        :Returns: (list) Clinical tags that were successfully removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">removed_tags</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1270,15 +1308,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        nested data structures. Only paths within the project directory are</span>
 <span class="sd">        included.</span>
 
-<span class="sd">        :param files: Input that may contain file paths. Can be:</span>
-<span class="sd">                      - str: A single file path</span>
-<span class="sd">                      - list/tuple/set: Collection of file paths or</span>
-<span class="sd">                        nested structures</span>
-<span class="sd">                      - dict: Only values are processed, keys are ignored</span>
+<span class="sd">        :param files: Input that may contain file paths.</span>
+<span class="sd">         Can be:</span>
+<span class="sd">            - str: A single file path</span>
+<span class="sd">            - list/tuple/set: Collection of file paths or nested structures</span>
+<span class="sd">            - dict: Only values are processed, keys are ignored</span>
 
-<span class="sd">        :return (set): Relative file paths that exist within the project</span>
-<span class="sd">                       folder, with paths normalized and made relative to the</span>
-<span class="sd">                       project directory</span>
+<span class="sd">        :Returns: (set) Relative file paths that exist within the project</span>
+<span class="sd">         folder, with paths normalized and made relative to the project</span>
+<span class="sd">         directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span>
@@ -1321,30 +1359,30 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Retrieve and process finished bricks from workflows and pipelines.</span>
 
 <span class="sd">        This method:</span>
-<span class="sd">        1. Gets finished bricks from workflows and optionally a specific</span>
-<span class="sd">           pipeline</span>
-<span class="sd">        2. Filters them based on their presence in the Mia database</span>
-<span class="sd">        3. Updates brick metadata with execution status and outputs</span>
-<span class="sd">        4. Collects all output files that are within the project directory</span>
+<span class="sd">            - Gets finished bricks from workflows and optionally a specific</span>
+<span class="sd">              pipeline</span>
+<span class="sd">            - Filters them based on their presence in the Mia database</span>
+<span class="sd">            - Updates brick metadata with execution status and outputs</span>
+<span class="sd">            - Collects all output files that are within the project directory</span>
 
-<span class="sd">        :param engine: Engine instance for retrieving finished bricks</span>
-<span class="sd">        :param pipeline: Optional pipeline object to filter specific bricks</span>
-<span class="sd">        :param include_done: If True, includes all bricks regardless of</span>
-<span class="sd">                             execution status. If False, only includes</span>
-<span class="sd">                             &quot;Not Done&quot; bricks.</span>
+<span class="sd">        :param engine: Engine instance for retrieving finished bricks.</span>
+<span class="sd">        :param pipeline: Optional pipeline object to filter specific bricks.</span>
+<span class="sd">        :param include_done: (bool)If True, includes all bricks regardless of</span>
+<span class="sd">         execution status. If False, only includes &quot;Not Done&quot; bricks.</span>
 
-<span class="sd">        :return (dict): Dictionary containing:</span>
-<span class="sd">                  - &#39;bricks&#39;: Dict mapping brick IDs to their metadata</span>
-<span class="sd">                  - &#39;outputs&#39;: Set of output file paths relative to project</span>
-<span class="sd">                               directory</span>
+<span class="sd">        :Returns: (dict)</span>
+<span class="sd">         Dictionary containing:</span>
+<span class="sd">            - &#39;bricks&#39;: Dict mapping brick IDs to their metadata</span>
+<span class="sd">            - &#39;outputs&#39;: Set of output file paths relative to project directory</span>
 
-<span class="sd">        :Contains:</span>
-<span class="sd">            :Private function:</span>
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
 <span class="sd">                - _update_dict: Merge two dictionaries by updating the first</span>
-<span class="sd">                                with the second</span>
+<span class="sd">                  with the second.</span>
 <span class="sd">                - _collect_outputs: Recursively collects file paths from</span>
-<span class="sd">                                    output values that are within the project</span>
-<span class="sd">                                    directory.</span>
+<span class="sd">                  output values that are within the project directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_update_dict</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">):</span>
@@ -1367,12 +1405,12 @@ window.addEventListener("load", load);</script>
 <span class="sd">            Recursively collects file paths from output values that are</span>
 <span class="sd">            within the project directory.</span>
 
-<span class="sd">            :param value: Output value to process (can be str, list,</span>
-<span class="sd">                          set, tuple)</span>
-<span class="sd">            :param base_path (str): Base project directory path</span>
+<span class="sd">            :param value: Output value to process (can be str, list, set,</span>
+<span class="sd">             tuple).</span>
+<span class="sd">            :param base_path: (str) Base project directory path.</span>
 
-<span class="sd">            :return (set[str]): A set of collected file paths, relative to</span>
-<span class="sd">                                the project directory.</span>
+<span class="sd">            :Returns: (set[str]) A set of collected file paths, relative to</span>
+<span class="sd">             the project directory.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
             <span class="n">to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
@@ -1448,14 +1486,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Get the processing history for the given data file.</span>
 
 <span class="sd">        The history dict contains several elements:</span>
-<span class="sd">        - `parent_files`: set of other data used (directly or indirectly) to</span>
-<span class="sd">                          produce the data.</span>
-<span class="sd">        - `processes`: processing bricks set from each ancestor data which</span>
-<span class="sd">                       lead to the given one. Elements are process</span>
-<span class="sd">                       (brick) UUIDs.</span>
+<span class="sd">            - `parent_files`: Set of other data used (directly or indirectly)</span>
+<span class="sd">              to produce the data.</span>
+<span class="sd">            - `processes`: Processing bricks set from each ancestor data which</span>
+<span class="sd">              lead to the given one. Elements are process (brick) UUIDs.</span>
 
-<span class="sd">        :param path: Path to the data file</span>
-<span class="sd">        :return: history (dict)</span>
+<span class="sd">        :param path: Path to the data file.</span>
+
+<span class="sd">        :Returns: (dict) History.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
@@ -1466,8 +1504,8 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
-<span class="sd">        :return (str): The date of creation of the project if it&#39;s not</span>
-<span class="sd">                       Unnamed project, otherwise empty string</span>
+<span class="sd">        :Returns: (str) The date of creation of the project if it&#39;s not</span>
+<span class="sd">         `Unnamed` project, otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span></div>
@@ -1480,15 +1518,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Retrieves a dictionary of finished processes (bricks) from a given</span>
 <span class="sd">        pipeline, including nested pipelines, if any.</span>
 
-<span class="sd">        :param pipeline (Pipeline or Process): The pipeline or single process</span>
-<span class="sd">                                               to analyze. If a single</span>
-<span class="sd">                                               process is provided, it will</span>
-<span class="sd">                                               be treated as a minimal</span>
-<span class="sd">                                               pipeline.</span>
+<span class="sd">        :param pipeline: (Pipeline or Process) The pipeline or single process</span>
+<span class="sd">         to analyze. If a single process is provided, it will be treated as a</span>
+<span class="sd">         minimal pipeline.</span>
 
-<span class="sd">        :return (dict): A dictionary where keys are process UUIDs (brick IDs)</span>
-<span class="sd">                        and values are dictionaries containing the associated</span>
-<span class="sd">                        process instances.</span>
+<span class="sd">        :Returns: (dict) A dictionary where keys are process UUIDs (brick IDs)</span>
+<span class="sd">         and values are dictionaries containing the associated process</span>
+<span class="sd">         instances.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1549,23 +1585,28 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        A job is considered successful if its termination status is</span>
 <span class="sd">        ``&quot;finished_regularly&quot;``. Any other termination status is treated</span>
-<span class="sd">        as a failure.</span>
-<span class="sd">        A workflow is marked as ``failed`` if at least one of its jobs</span>
-<span class="sd">        did not finish successfully.</span>
+<span class="sd">        as a failure. A workflow is marked as ``failed`` if at least one of</span>
+<span class="sd">        its jobs did not finish successfully.</span>
 
 <span class="sd">        :param engine: Engine providing access to the Soma-Workflow controller.</span>
 
-<span class="sd">        :return (dict): Mapping ``brick_uuid -&gt; job_info`` where ``job_info``</span>
-<span class="sd">                        contains:</span>
-<span class="sd">                        - ``workflow`` (int): Workflow identifier.</span>
-<span class="sd">                        - ``job``: Soma-Workflow job instance.</span>
-<span class="sd">                        - ``job_id`` (int): Job identifier.</span>
-<span class="sd">                        - ``swf_status`` (tuple): Raw Soma-Workflow status</span>
-<span class="sd">                                                  tuple.</span>
-<span class="sd">                        - ``running`` (bool): True of any job in the workflow</span>
-<span class="sd">                                              is running</span>
-<span class="sd">                        - ``failed`` (bool): True if any job in the workflow</span>
-<span class="sd">                                             failed.</span>
+<span class="sd">        :Returns: (dict)</span>
+<span class="sd">         Mapping ``brick_uuid -&gt; job_info`` where ``job_info`` contains:</span>
+<span class="sd">            - ``workflow`` (int): Workflow identifier.</span>
+<span class="sd">            - ``job``: Soma-Workflow job instance.</span>
+<span class="sd">            - ``job_id`` (int): Job identifier.</span>
+<span class="sd">            - ``swf_status`` (tuple): Raw Soma-Workflow status tuple.</span>
+<span class="sd">            - ``running`` (bool): True of any job in the workflow is running.</span>
+<span class="sd">            - ``failed`` (bool): True if any job in the workflow failed.</span>
+
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - parse_status: Parse a Soma-Workflow job status tuple into</span>
+<span class="sd">                  structured information.</span>
+
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">job_st</span><span class="p">):</span>
@@ -1685,11 +1726,12 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a Filter object from its name.</span>
 
-<span class="sd">        :param target_filter (str): Filter name</span>
+<span class="sd">        :param target_filter: (str) Filter name.</span>
 
-<span class="sd">        :return (Filter): Filter object corresponding to the given name or</span>
-<span class="sd">                          None if not found</span>
+<span class="sd">        :Returns: (Filter) Filter object corresponding to the given name or</span>
+<span class="sd">         None if not found</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
             <span class="p">(</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">filters</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">target_filter</span><span class="p">),</span> <span class="kc">None</span>
         <span class="p">)</span></div>
@@ -1701,8 +1743,7 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input box to type the name of the filter to save.</span>
 
-<span class="sd">        :return (str): Return the name typed by the user or None if</span>
-<span class="sd">                       cancelled</span>
+<span class="sd">        :Returns: (str) Return the name typed by the user or None if cancelled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">text</span><span class="p">,</span> <span class="n">ok_pressed</span> <span class="o">=</span> <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span><span class="p">(</span>
@@ -1721,8 +1762,8 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
-<span class="sd">        :return (str): The name of the project if it&#39;s not Unnamed</span>
-<span class="sd">                       project, otherwise empty string</span>
+<span class="sd">        :Returns: (str) The name of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">         otherwise empty string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
@@ -1734,18 +1775,17 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphan bricks and their associated weak files.</span>
 
-<span class="sd">        :param bricks (list or set): A list or set of brick IDs to filter the</span>
-<span class="sd">                                     search. If None, all bricks in the</span>
-<span class="sd">                                     database are considered. Defaults to None.</span>
+<span class="sd">        :param bricks: (list or set) A list or set of brick IDs to filter the</span>
+<span class="sd">         search. If None, all bricks in the database are considered. Defaults</span>
+<span class="sd">         to None.</span>
 
-<span class="sd">        :return (tuple): A tuple containing two sets:</span>
-<span class="sd">                    - `orphan` (set): Brick IDs considered orphaned, meaning</span>
-<span class="sd">                                      they have no valid or existing outputs</span>
-<span class="sd">                                      linked to the current database.</span>
-<span class="sd">                    - `orphan_weak_files` (set): Paths to weak files associated</span>
-<span class="sd">                                                 with orphaned bricks, such as</span>
-<span class="sd">                                                 script files or files that no</span>
-<span class="sd">                                                 longer exist.</span>
+<span class="sd">        :Returns: (tuple)</span>
+<span class="sd">         A tuple containing two sets:</span>
+<span class="sd">            - `orphan`: (set) Brick IDs considered orphaned, meaning they have</span>
+<span class="sd">              no valid or existing outputs linked to the current database.</span>
+<span class="sd">            - `orphan_weak_files`: (set) Paths to weak files associated with</span>
+<span class="sd">              orphaned bricks, such as script files or files that no longer</span>
+<span class="sd">              exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">orphan</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">orphan_weak_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1839,15 +1879,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Identifies orphaned history entries, their associated orphan bricks,</span>
 <span class="sd">        and weak files.</span>
 
-<span class="sd">        :return (tuple): A tuple containing three sets:</span>
-<span class="sd">            - `orphan_hist` (set): IDs of history entries that are no longer</span>
-<span class="sd">                                   linked to any current document in the</span>
-<span class="sd">                                   database.</span>
-<span class="sd">            - `orphan_bricks` (set): IDs of bricks associated with orphaned</span>
-<span class="sd">                                     history entries.</span>
-<span class="sd">            - `orphan_weak_files` (set): Paths to weak files (e.g., script</span>
-<span class="sd">                                         files or non-existent files) linked</span>
-<span class="sd">                                         to orphaned history entries.</span>
+<span class="sd">        :Returns: (tuple)</span>
+<span class="sd">         A tuple containing three sets:</span>
+<span class="sd">            - `orphan_hist`: (set) IDs of history entries that are no longer</span>
+<span class="sd">              linked to any current document in the database.</span>
+<span class="sd">            - `orphan_bricks`: (set) IDs of bricks associated with orphaned</span>
+<span class="sd">              history entries.</span>
+<span class="sd">            - `orphan_weak_files`: (set) Paths to weak files (e.g., script</span>
+<span class="sd">              files or non-existent files) linked to orphaned history entries.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">orphan_hist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">orphan_bricks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1946,16 +1985,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Return filenames that are recorded in the database but missing on disk.</span>
 
 <span class="sd">        A file is considered &quot;orphaned&quot; if:</span>
-<span class="sd">        - It does not exist on the filesystem, and</span>
-<span class="sd">        - It is not associated with any existing bricks,</span>
-<span class="sd">        unless `failed` is True (in which case brick association is ignored).</span>
+<span class="sd">            - It does not exist on the filesystem, and</span>
+<span class="sd">            - It is not associated with any existing bricks, unless `failed`</span>
+<span class="sd">              is True (in which case brick association is ignored).</span>
 
-<span class="sd">        :param failed (bool): If True, include files even if they are linked to</span>
-<span class="sd">                              existing bricks. If False, exclude such files.</span>
+<span class="sd">        :param failed: (bool) If True, include files even if they are linked to</span>
+<span class="sd">         existing bricks. If False, exclude such files.</span>
 
-<span class="sd">        :return (set): A set of filenames from the database that are not</span>
-<span class="sd">                       found on the filesystem and are not associated with</span>
-<span class="sd">                       existing bricks.</span>
+<span class="sd">        :Returns: (set) A set of filenames from the database that are not found</span>
+<span class="sd">         on the filesystem and are not associated with existing bricks.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
 
@@ -1992,8 +2030,8 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
-<span class="sd">        :return (str): Sorted tag of the project if it&#39;s not Unnamed</span>
-<span class="sd">                       project, otherwise empty string</span>
+<span class="sd">        :Returns: (str) Sorted tag of the project if it&#39;s not `Unnamed`</span>
+<span class="sd">         project, otherwise empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sorted_tag&quot;</span><span class="p">]</span></div>
@@ -2004,8 +2042,8 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
-<span class="sd">        :return (str): Sort order of the project if it&#39;s not Unnamed</span>
-<span class="sd">                       project, otherwise empty string</span>
+<span class="sd">        :Returns: (str) Sort order of the project if it&#39;s not `Unnamed`</span>
+<span class="sd">         project, otherwise empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sort_order&quot;</span><span class="p">]</span></div>
@@ -2016,8 +2054,8 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
-<span class="sd">        :return (bool): True if the project has pending modifications,</span>
-<span class="sd">                        False otherwise</span>
+<span class="sd">        :Returns: (bool) True if the project has pending modifications, False</span>
+<span class="sd">         otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsavedModifications</span></div>
@@ -2027,7 +2065,7 @@ window.addEventListener("load", load);</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">         Initializes project filters by loading them from stored JSON files.</span>
+<span class="sd">        Initializes project filters by loading them from stored JSON files.</span>
 
 <span class="sd">        This method sets the `currentFilter` to a default empty filter and</span>
 <span class="sd">        populates the `filters` list with `Filter` objects created</span>
@@ -2069,8 +2107,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method reads the project&#39;s YAML properties file and returns</span>
 <span class="sd">        its contents as a Python dictionary.</span>
 
-<span class="sd">        :return (dict): A dictionary containing the project properties if</span>
-<span class="sd">                        successfully loaded, or None if an error occurs.</span>
+<span class="sd">        :Returns: (dict) A dictionary containing the project properties if</span>
+<span class="sd">         successfully loaded, or None if an error occurs.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;properties.yml&quot;</span>
@@ -2100,8 +2138,8 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last action made by the user on the project.</span>
 
-<span class="sd">        :param table (QTableWidget): The table on which to apply the</span>
-<span class="sd">                                     modifications.</span>
+<span class="sd">        :param table: (QTableWidget) The table on which to apply the</span>
+<span class="sd">         modifications.</span>
 
 <span class="sd">        Actions that can be redone:</span>
 <span class="sd">            - add_tag</span>
@@ -2110,7 +2148,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - modified_values</span>
 <span class="sd">            - modified_visibilities</span>
 
-<span class="sd">        :raises (ValueError): If an unknown action type is encountered.</span>
+<span class="sd">        :raises ValueError: If an unknown action type is encountered.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">redos</span><span class="p">:</span>
@@ -2314,7 +2352,7 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-put the value objects in the database.</span>
 
-<span class="sd">        :param values (list): List of Value objects</span>
+<span class="sd">        :param values: (list) List of value objects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -2425,7 +2463,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">setCurrentFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current filter of the project.</span>
 
-<span class="sd">        :param new_filter: New Filter object</span>
+<span class="sd">        :param new_filter: New Filter object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span> <span class="o">=</span> <span class="n">new_filter</span></div>
 
@@ -2435,7 +2473,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">setDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the date of the project.</span>
 
-<span class="sd">        :param date: New date of the project</span>
+<span class="sd">        :param date: New date of the project.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span></div>
 
@@ -2444,10 +2482,10 @@ window.addEventListener("load", load);</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the name of the project if it&#39;s not Unnamed project, otherwise</span>
+<span class="sd">        Set the name of the project if it&#39;s not `Unnamed` project, otherwise</span>
 <span class="sd">        does nothing.</span>
 
-<span class="sd">        :param name (str): New name of the project</span>
+<span class="sd">        :param name: (str) New name of the project.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
@@ -2457,7 +2495,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sorted tag of the project.</span>
 
-<span class="sd">        :param tag: New sorted tag of the project</span>
+<span class="sd">        :param tag: New sorted tag of the project.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sorted_tag&quot;</span><span class="p">]</span>
 
@@ -2471,7 +2509,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sort order of the project.</span>
 
-<span class="sd">        :param order: New sort order of the project (ascending or descending)</span>
+<span class="sd">        :param order: New sort order of the project (ascending or descending).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_order</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sort_order&quot;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sort_order&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">order</span>
@@ -2485,7 +2523,7 @@ window.addEventListener("load", load);</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo the last action made by the user on the project.</span>
 
-<span class="sd">        :param table: Table on which to apply the modifications</span>
+<span class="sd">        :param table: Table on which to apply the modifications.</span>
 
 <span class="sd">        Actions that can be undone:</span>
 <span class="sd">            - add_tag</span>
@@ -2669,10 +2707,12 @@ window.addEventListener("load", load);</script>
 
     <span class="nd">@unsavedModifications</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">unsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Modify the window title depending of whether the project has</span>
-<span class="sd">           unsaved modifications or not.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Modify the window title depending of whether the project has unsaved</span>
+<span class="sd">        modifications or not.</span>
 
-<span class="sd">        :param value: boolean</span>
+<span class="sd">        :param value: (bool) True if the project has pending modifications,</span>
+<span class="sd">         False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -2705,7 +2745,8 @@ window.addEventListener("load", load);</script>
 <div class="viewcode-block" id="Project.update_db_for_paths">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_db_for_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update database paths when renaming or loading a project.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Update database paths when renaming or loading a project.</span>
 
 <span class="sd">        This method updates path references in the database when a project is</span>
 <span class="sd">        renamed or loaded from a different location. It scans the `HISTORY`</span>
@@ -2717,13 +2758,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        &#39;data/derived_data&#39;, the method uses the portion before this segment</span>
 <span class="sd">        as the base path.</span>
 
-<span class="sd">        :param new_path (str): The new project path. If not provided,</span>
-<span class="sd">                               the current project folder path is used.</span>
+<span class="sd">        :param new_path: (str) The new project path. If not provided, the</span>
+<span class="sd">         current project folder path is used.</span>
 
-<span class="sd">        :Contains:</span>
-<span class="sd">            :Private method:</span>
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
 <span class="sd">                - _update_json_data: Helper method to update paths in JSON</span>
-<span class="sd">                                     data structures</span>
+<span class="sd">                  data structures</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_update_json_data</span><span class="p">(</span>
