@@ -355,10 +355,13 @@ class Config:
               Contains global and environment-specific settings, as well as
               configurations specific to certain tools (SPM, FSL, etc.)
 
-        **Private functions**:
-            - _configure_spm: Configure SPM settings.
-            - _configure_tool: Configure various neuroimaging settings
-              (e.g. 'fsl', 'afni', etc.)
+        Contains:
+
+            Inner functions:
+
+                - _configure_spm: Configure SPM settings.
+                - _configure_tool: Configure various neuroimaging settings
+                (e.g. 'fsl', 'afni', etc.)
         """
 
         def _configure_spm(spm_configs, path, standalone=False):
@@ -1162,9 +1165,12 @@ class Config:
                 'engine_modules': [...]
             }
 
-        **Private function:**
-            - _get_module_config: Extracts module configuration from the
-              global Capsul configuration.
+        Contains:
+
+            Inner functions:
+
+                - _get_module_config: Extracts module configuration from the
+                global Capsul configuration.
         """
 
         def _get_module_config(module_name: str) -> dict:

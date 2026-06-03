@@ -1301,10 +1301,12 @@ def verCmp(first_ver, sec_ver, comp):
 
     :return: True if the comparison condition is satisfied, False otherwise.
 
-    :Contains:
-        :Private function:
-            - normalise: transform a version of a package to a corresponding
-              list of integer
+    Contains:
+
+            Inner functions:
+
+                - normalise: transform a version of a package to a
+                  corresponding list of integer
     """
 
     def normalise(v):
@@ -1363,10 +1365,12 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
     remains so and vice versa). However, if a new pipeline is available in
     the new version it is automatically marked as visible in the library.
 
-    :Contains:
-        :Private function:
-            - _deepCompDic: keep the previous config existing before packages
-              update
+    Contains:
+
+            Inner functions:
+
+                - _deepCompDic: keep the previous config existing before
+                  packages update.
     """
 
     def _deepCompDic(old_dic, new_dic):
@@ -1952,14 +1956,17 @@ def verify_setup(
     :param pypath (list): List of paths for the capsul config.
     :param dot_mia_config (str): Path to the configuration_path.yml file.
 
-    :Contains:
-        :Private function:
-            - _browse_properties_path: the user define the properties_path
-                                       parameter
-            - _cancel_clicked: exit form Mia
-            - _make_default_config: make default configuration
-            - _save_yml_file: save data in a YAML file
-            - _verify_miaConfig: check the config and try to fix if necessary
+    Contains:
+
+            Inner functions:
+
+                - _browse_properties_path: the user define the properties_path
+                  parameter.
+                - _cancel_clicked: exit form Mia.
+                - _make_default_config: make default configuration.
+                - _save_yml_file: save data in a YAML file.
+                - _verify_miaConfig: check the config and try to fix if
+                  necessary.
     """
 
     if pypath is None:

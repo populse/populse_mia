@@ -312,7 +312,7 @@ class ImportWorker(QThread):
 
         :param tag_info: (dict) Tag information dictionary.
 
-        :Returns: (dict): Updated tag information dictionary.
+        :Returns: (dict) Updated tag information dictionary.
         """
         value = tag_info["value"]
 
@@ -990,6 +990,7 @@ def read_log(project, main_window):
     :param project: (Project) The current project instance in the software.
     :param main_window: (MainWindow) The software's main window instance used
      to display the progress bar.
+
     :Returns: (list) A list of paths to the data files (scans) that were
      successfully added.
     """
@@ -1010,6 +1011,7 @@ def tags_from_file(file_path, path):
 
     :param file_path: (str) File path of the Json file (without the extension).
     :param path: (str) Project path.
+
     :Returns: (List[List[Union[str, dict]]] A list of the Json tags of the
      file.
     """
@@ -1040,6 +1042,7 @@ def verify_scans(project):
     Check if the project's scans have been modified.
 
     :param project: (Project) Current project in the software.
+
     :Returns: (List[str]) The list of scans that have been modifiedor are
      missing.
     """

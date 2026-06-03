@@ -792,9 +792,12 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
           Links from/to the pipeline main plugs are also included, where
           `src_protoprocess` or `dst_protoprocess` may be `None`.
 
-    **Private functions**:
-        - _get_tmp_param: Identifies a process parameter associated with a
-          temporary value.
+    Contains:
+
+        Inner functions:
+
+            - _get_tmp_param: Identifies a process parameter associated with a
+              temporary value.
     """
     new_procs = {}
     links = set()
