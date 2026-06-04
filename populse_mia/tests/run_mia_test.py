@@ -1,19 +1,10 @@
-"""This module is dedicated to populse_mia unit tests.
+"""
+This module is dedicated to populse_mia unit tests.
 
-:Contains:
-    :Class:
-        - LogCapture
-        - TestMIACase
-        - TestMIADataBrowser
-        - TestMIAMainWindow
-        - TestMIANodeController
-        - TestMIAPipelineEditor
-        - TestMIAPipelineManagerTab
-        - Test_Z_MIAOthers
-    :function:
-        - add_to_syspath
-        - qt_message_handler
-
+It defines the TestMIACase class, which serves as a base class for all unit
+test classes in the populse_mia project. This class provides common setup and
+teardown functionality, as well as utility methods to facilitate testing of
+Mia's features.
 """
 
 # flake8: noqa
@@ -94,6 +85,19 @@ from PyQt5.QtWidgets import (
     QWidget,
 )
 
+__all__ = [
+    "add_to_syspath",
+    "qt_message_handler",
+    "LogCapture",
+    "TestMIACase",
+    "TestMIADataBrowser",
+    "TestMIAMainWindow",
+    "TestMIANodeController",
+    "TestMIAPipelineEditor",
+    "TestMIAPipelineManagerTab",
+    "Test_Z_MIAOthers",
+]
+
 ph = argon2.PasswordHasher()
 
 
@@ -101,10 +105,10 @@ def add_to_syspath(path: Path, position: int = 1, name: str = ""):
     """
     Add a directory to sys.path if it exists and isn't already there.
 
-    :param path (Path): The directory path to be added to sys.path.
-    :param position (int): The index at which to insert the path.
-                           Defaults to 1.
-    :param name (str): The name of the package.
+    :param path: (Path) The directory path to be added to sys.path.
+    :param position: (int) The index at which to insert the path. Defaults
+     to 1.
+    :param name: (str) The name of the package.
     """
 
     if path.is_dir() and str(path) not in sys.path:
@@ -292,8 +296,8 @@ unwanted_messages = [
 
 def qt_message_handler(mode, context, message):
     """
-    Custom Qt message handler that filters out or cleans specific
-    unwanted messages.
+    Custom Qt message handler that filters out or cleans specific unwanted
+    messages.
 
     This function is used to suppress known, irrelevant Qt warnings during
     tests or execution. If a message exactly matches an unwanted message,
@@ -302,7 +306,7 @@ def qt_message_handler(mode, context, message):
 
     :param mode: The Qt message type (ignored here).
     :param context: The context of the message (ignored here).
-    :param message (str): The Qt debug/warning message to filter and display
+    :param message: (str) The Qt debug/warning message to filter and display.
     """
 
     cleaned_message = message.strip()
@@ -325,6 +329,13 @@ class LogCapture(logging.Handler):
 
     This handler stores emitted log records in a list, allowing assertions
     on log content, level, or message during unit tests.
+
+    Contains:
+
+        Methods:
+
+            - emit: Appends a log record to the internal list.
+            - clear: Clears all captured log records.
     """
 
     def __init__(self):
@@ -340,7 +351,7 @@ class LogCapture(logging.Handler):
         """
         Appends a log record to the internal list.
 
-        :param record (logging.LogRecord): The log record to store.
+        :param record: (logging.LogRecord) The log record to store.
         """
         self.records.append(record)
 
@@ -352,32 +363,36 @@ class LogCapture(logging.Handler):
 
 
 class TestMIACase(unittest.TestCase):
-    """Parent class for the test classes of mia.
+    """Parent class for the test classes of Mia.
 
-    :Contains:
-        :Method:
-            - add_visualized_tag: selects a tag to display with the
-              "Visualized tags" pop-up
-            - capture_logs: context manager to temporarily capture log records
-            - clean_uts_packages: deleting the package added during the UTs or
-              old one still existing
-            - create_mock_jar: creates a mocked java (.jar) executable
-            - execute_QDialogAccept: accept (close) a QDialog instance
-            - find_item_by_data: looks for a QModelIndex whose contents
-              correspond to the argument data
-            - get_new_test_project: create a temporary project that can
-              be safely modified
-            - proclibview_nipype_state: give the state of nipype in the process
-            - proclibview_nipype_reset_state: reset nipype to its initial state
-              (before the start of the current test) in the process library
-              view
-            - restart_MIA: restarts MIA within a unit test
-            - setUp: called automatically before each test method
-            - setUpClass: called before tests in the individual class
-            - suppress_all_output: Context manager to suppress all output
-                                   during tests
-            - tearDown: cleans up after each test method
-            - tearDownClass: called after tests in the individual class
+    Contains:
+
+        Methods:
+
+                - add_visualized_tag: selects a tag to display with the
+                  "Visualized tags" pop-up.
+                - capture_logs: context manager to temporarily capture log
+                  records.
+                - clean_uts_packages: deleting the package added during the
+                  UTs or old one still existing.
+                - create_mock_jar: creates a mocked java (.jar) executable.
+                - execute_QDialogAccept: accept (close) a QDialog instance.
+                - find_item_by_data: looks for a QModelIndex whose contents
+                  correspond to the argument data.
+                - get_new_test_project: create a temporary project that can
+                  be safely modified.
+                - proclibview_nipype_state: give the state of nipype in the
+                  process.
+                - proclibview_nipype_reset_state: reset nipype to its initial
+                  state (before the start of the current test) in the process
+                  library view.
+                - restart_Mia: restarts Mia within a unit test.
+                - setUp: called automatically before each test method.
+                - setUpClass: called before tests in the individual class.
+                - suppress_all_output: Context manager to suppress all output
+                  during tests.
+                - tearDown: cleans up after each test method.
+                - tearDownClass: called after tests in the individual class.
     """
 
     def add_visualized_tag(self, widget, tag, timeout=5000):
@@ -389,13 +404,13 @@ class TestMIACase(unittest.TestCase):
         tag list, selects it, and confirms the dialog.
 
         :param widget: The input filter containing the dialog
-                       with visualized tags.
-        :param tag (str): The tag name to select and visualize.
-        :param timeout (int): Maximum time to wait for the dialog to appear,
-                              in milliseconds. Defaults to 5000 ms.
+         with visualized tags.
+        :param tag: (str) The tag name to select and visualize.
+        :param timeout: (int) Maximum time to wait for the dialog to appear,
+         in milliseconds. Defaults to 5000 ms.
 
-        :raises RuntimeError: If the dialog or visualized tags widget is
-                              not found.
+        :raises RuntimeError: If the dialog or visualized tags widget is not
+         found.
         :raises ValueError: If the specified tag is not found in the list.
         """
         start_time = time.time()
@@ -445,23 +460,24 @@ class TestMIACase(unittest.TestCase):
         allowing inspection of emitted log records during the context block.
         Restores the logger's original state after the block is executed.
 
-        Note: Capture a priority levels and all higher priority levels
-              (WARNING, ERROR, CRITICAL), but not lower priority levels.
-              The logging levels have this hierarchy (from lowest to highest
-              priority):
-                  - NOTSET (level 0) - Captures everything
-                  - DEBUG (10) - Lowest priority
-                  - INFO (20)
-                  - WARNING (30)
-                  - ERROR (40)
-                  - CRITICAL (50) - Highest priority
+        Capture a priority levels (default: INFO) and all higher priority
+        levels (default: WARNING, ERROR, CRITICAL), but not lower priority
+        levels. The logging levels have this hierarchy (from lowest to highest
+        priority):
 
-        :param logger_name (str): The name of the logger to capture logs from.
-        :param level (int): The logging level to use during capture
-                            (default: logging.INFO).
+            - NOTSET (level 0) - Captures everything
+            - DEBUG (10) - Lowest priority
+            - INFO (20)
+            - WARNING (30)
+            - ERROR (40)
+            - CRITICAL (50) - Highest priority
 
-        :yields (LogCapture): A custom log handler with a `records` attribute
-                              containing captured LogRecord entries.
+        :param logger_name: (str) The name of the logger to capture logs from.
+        :param level: (int) The logging level to use during capture (default:
+         20; INFO).
+
+        :Yields: (LogCapture) A custom log handler with a `records` attribute
+         containing captured LogRecord entries.
         """
         handler = LogCapture()
         logger = logging.getLogger(logger_name)
@@ -487,6 +503,7 @@ class TestMIACase(unittest.TestCase):
         process library view.
 
         This includes:
+
             - Any package whose name contains 'UTs_processes'
             - The 'Unit_test_pipeline' entry within 'User_processes',
               if present
@@ -495,8 +512,8 @@ class TestMIACase(unittest.TestCase):
         `Delete` key press event to invoke the removal mechanism.
 
         :param proc_lib_view: The process library view containing the package
-                              items. Expected to implement `to_dict()`,
-                              `selectionModel()`, and `keyPressEvent()`.
+         items. Expected to implement `to_dict()`, `selectionModel()`, and
+         `keyPressEvent()`.
         """
         # Identify packages related to unit tests
         packages = proc_lib_view.to_dict()
@@ -530,9 +547,9 @@ class TestMIACase(unittest.TestCase):
         """
         Create a mock Java executable (.jar) for testing.
 
-        :param path (str): Full path to the output .jar file.
+        :param path: (str) Full path to the output .jar file.
 
-        :returns (int): 0 if creation succeeded, 1 otherwise.
+        :Returns: (int) 0 if creation succeeded, 1 otherwise.
         """
 
         folder, name = os.path.split(path)
@@ -601,11 +618,11 @@ class TestMIACase(unittest.TestCase):
         Search for the first QModelIndex in the given QTreeView whose data
         matches the specified value.
 
-        :param q_tree_view (QTreeView): The tree view to search within.
+        :param q_tree_view: (QTreeView) The tree view to search within.
         :param data (str): The target data to match.
 
-        :returns (QModelIndex | None): The matching index if found;
-                                       otherwise, None.
+        :Returns: (QModelIndex | None) The matching index if found; otherwise,
+         None.
         """
 
         if not isinstance(q_tree_view, QTreeView):
@@ -624,12 +641,13 @@ class TestMIACase(unittest.TestCase):
         return None
 
     def get_new_test_project(self, name="test_project", light=False):
-        """Copies a test project where it can be safely modified.
+        """
+        Copies a test project where it can be safely modified.
 
-        - The new project is created in the /tmp (/Temp) folder.
+        The new project is created in the /tmp (/Temp) folder.
 
-        :param name: name of the directory containing the project (str)
-        :param light: True to copy a project with few documents (bool)
+        :param name: (str) Name of the directory containing the project.
+        :param light: (bool) True to copy a project with few documents.
         """
 
         new_test_proj = os.path.join(self.project_path, name)
@@ -658,12 +676,13 @@ class TestMIACase(unittest.TestCase):
 
         :param proc_lib_view: The process library view object.
 
-        :returns (str or None): A string representing the current state:
-            - None: No processes loaded, or Nipype is not present.
+        :Returns: (str or None)
+         A string representing the current state:
             - 'nipype': Nipype is present, but 'interfaces' is not.
             - 'nipype.interfaces': 'interfaces' is present, but 'DataGrabber'
-                                   is not.
+              is not.
             - 'process_enabled': 'nipype.interfaces.DataGrabber' is present.
+            - None: No processes loaded, or Nipype is not present.
         """
         view_dict = proc_lib_view.to_dict()
         nipype = view_dict.get("nipype")
@@ -690,18 +709,19 @@ class TestMIACase(unittest.TestCase):
         Resets the Nipype process library view in the package library popup
         to a specified initial state.
 
-        :param main_window (QMainWindow): The main window containing the
-                                          package library popup.
-        :param ppl_manager (PipelineManager): The pipeline manager handling
-                                              the process library.
-        :param init_state (str or None): The desired reset state of the Nipype
-                                         process view.
+        :param main_window: (QMainWindow) The main window containing the
+         package library popup.
+        :param ppl_manager: (PipelineManager) The pipeline manager handling
+         the process library.
+        :param init_state: (str or None) The desired reset state of the Nipype
+         process view:
+
             - None: The library is either empty or 'nipype' is not loaded.
             - 'nipype': Only 'nipype' is loaded.
-            - 'nipype.interfaces': 'nipype.interfaces' is loaded but
-                                   not 'DataGrabber'.
-            - 'process_enabled': 'nipype.interfaces.DataGrabber' is
-                                 already loaded.
+            - 'nipype.interfaces': 'nipype.interfaces' is loaded but not
+              'DataGrabber'.
+            - 'process_enabled': 'nipype.interfaces.DataGrabber' is already
+              loaded.
         """
         main_window.package_library_pop_up()
         pkg_lib_window = main_window.pop_up_package_library
@@ -732,11 +752,12 @@ class TestMIACase(unittest.TestCase):
 
         pkg_lib_window.ok_clicked()
 
-    def restart_MIA(self):
-        """Restarts MIA within a unit test.
+    def restart_Mia(self):
+        """
+        Restarts Mia within a unit test.
 
-        - Can be used to restart MIA after changing the controller version in
-          Mia preferences.
+        Can be used to restart MIA after changing the controller version in
+        Mia preferences.
         """
 
         # Close current window
@@ -846,8 +867,8 @@ class TestMIACase(unittest.TestCase):
     @contextlib.contextmanager
     def suppress_all_output(self):
         """
-        Cross-platform suppression of all standard output and error,
-        including C-level and OS-level messages.
+        Cross-platform suppression of all standard output and error, including
+        C-level and OS-level messages.
         """
         # Flush Python buffers
         sys.stdout.flush()
@@ -7419,7 +7440,7 @@ class TestMIANodeController(TestMIACase):
         # Ensure we're using the V1 controller
         if not was_control_v1:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -7498,7 +7519,7 @@ class TestMIANodeController(TestMIACase):
         # Switch to V1 node controller GUI, if necessary
         if not controlV1:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
@@ -7658,7 +7679,7 @@ class TestMIANodeController(TestMIACase):
         # Switch to V1 node controller GUI, if necessary
         if not original_v1_mode:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
@@ -7781,7 +7802,7 @@ class TestMIANodeController(TestMIACase):
         # Switch to V1 node controller GUI, if necessary
         if not controlV1_ver:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         # Opens project 8 and switches to it
         project_8_path = self.get_new_test_project()
@@ -8522,7 +8543,7 @@ class TestMIAPipelineEditor(TestMIACase):
         # Ensure NodeController V1 is active
         if not original_v1_setting:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         pipeline_editor_tabs = (
             self.main_window.pipeline_manager.pipelineEditorTabs
@@ -11333,7 +11354,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         # Switch to V1 node controller GUI, if necessary
         if not controlV1_ver:
             config.setControlV1(True)
-            self.restart_MIA()
+            self.restart_Mia()
 
         # Set shortcuts for objects that are often used
         pipeline_manager = self.main_window.pipeline_manager

@@ -1,9 +1,5 @@
 """
-This is the folder containing the unit test codes.
-
-Contains:
-    Modules:
-        - run_mia_test
+Module containing the unit tests carried out as part of continuous integration.
 
 """
 
