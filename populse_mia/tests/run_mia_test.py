@@ -334,8 +334,9 @@ class LogCapture(logging.Handler):
 
         Methods:
 
-            - emit: Appends a log record to the internal list.
             - clear: Clears all captured log records.
+            - emit: Appends a log record to the internal list.
+
     """
 
     def __init__(self):
@@ -347,6 +348,12 @@ class LogCapture(logging.Handler):
         super().__init__()
         self.records = []
 
+    def clear(self):
+        """
+        Clears all captured log records.
+        """
+        self.records.clear()
+
     def emit(self, record):
         """
         Appends a log record to the internal list.
@@ -354,12 +361,6 @@ class LogCapture(logging.Handler):
         :param record: (logging.LogRecord) The log record to store.
         """
         self.records.append(record)
-
-    def clear(self):
-        """
-        Clears all captured log records.
-        """
-        self.records.clear()
 
 
 class TestMIACase(unittest.TestCase):
@@ -619,7 +620,7 @@ class TestMIACase(unittest.TestCase):
         matches the specified value.
 
         :param q_tree_view: (QTreeView) The tree view to search within.
-        :param data (str): The target data to match.
+        :param data: (str) The target data to match.
 
         :Returns: (QModelIndex | None) The matching index if found; otherwise,
          None.
@@ -991,74 +992,83 @@ class TestMIACase(unittest.TestCase):
 class TestMIADataBrowser(TestMIACase):
     """Tests for the data browser tab (DataBrowser).
 
-    :Contains:
-        :Method:
-            - assert_scans_present: Asserts that all expected scan names are
-                                    present in the given list.
-            - get_cell_text: Returns the text of the QLabel inside a cell
-                             widget.
-            - get_db_and_databrowser_value: Returns current, initial DB values
-                                            and UI value for a given tag.
-            - get_visible_scans: Returns the list of scan names currently
-                                 visible in the table.
-            - suppress_item_changed_signal: Temporarily disconnects and
-                                            reconnects the itemChanged signal.
-            - test_add_path: Tests the popup to add a path.
-            - test_add_tag: Tests the pop up adding a tag.
-            - test_advanced_search: Tests the advanced search widget.
-            - test_brick_history: Tests the brick history popup.
-            - test_clear_cell: tests the method clearing cells
-            - test_clone_tag: tests the pop up cloning a tag
-            - test_count_table: tests the count table popup
-            - test_mia_preferences: tests the Mia preferences popup
-            - test_mini_viewer: selects scans and display them in the mini
-              viewer
-            - test_modify_table: tests the modify table module
-            - test_multiple_sort: tests the multiple sort popup
-            - test_multiple_sort_appendix: adds and removes tags in the data
-              browser
-            - test_openTagsPopUp: opens a pop-up to select the legend of the
-              thumbnails
-            - test_open_project: tests project opening
-            - test_project_filter: tests project filter opening
-            - test_project_properties: tests saved projects addition and
-              removal
-            - test_proj_remov_from_cur_proj: tests that the projects are
-              removed from the list of current projects
-            - test_rapid_search: tests the rapid search bar
-            - test_remove_scan: tests scans removal in the DataBrowser
-            - test_remove_tag: tests the popup removing user tags
-            - test_reset_cell: tests the method resetting the selected
-              cells
-            - test_reset_column: tests the method resetting the columns
-              selected
-            - test_reset_row: test row reset
-            - test_save_project: test opening & saving of a project
-            - test_send_doc_to_pipeline_manager: tests the popup sending
-              documents to the pipeline manager
-            - test_set_value: tests the values modifications
-            - test_show_brick_history: opens the history pop-up for
-              scans with history related to a brick
-            - test_sort: tests the sorting in the DataBrowser
-            - test_table_data_add_columns: adds tag columns to the table data
-              window
-            - test_table_data_appendix: opens a project and tests miscellaneous
-              methods of the table data view, in the data browser
-            - test_table_data_context_menu: right clicks a scan to show the
-              context menu table, and choses one option
-            - test_undo_redo_databrowser: tests data browser undo/redo
-            - test_unnamed_proj_soft_open: tests unnamed project
-              creation at software opening
-            - test_update_default_value: updates the values when a list
-              of default values is created
-            - test_utils: test the utils functions
-            - test_visualized_tags: tests the popup modifying the
-              visualized tags
+    Contains:
+
+       Methods:
+
+           - assert_scans_present: Asserts that all expected scan names are
+             present in the given list.
+           - get_cell_text: Returns the text of the QLabel inside a cell
+             widget.
+           - get_db_and_databrowser_value: Returns current, initial DB values
+             and UI value for a given tag.
+           - get_visible_scans: Returns the list of scan names currently
+             visible in the table.
+           - suppress_item_changed_signal: Temporarily disconnects and
+             reconnects the itemChanged signal.
+           - test_add_path: Tests the popup to add a path.
+           - test_add_tag: Tests the pop up adding a tag.
+           - test_advanced_search: Tests the advanced search widget.
+           - test_brick_history: Tests the brick history popup.
+           - test_clear_cell: Tests the method clearing cells.
+           - test_clone_tag: Tests the pop up cloning a tag.
+           - test_count_table: Tests the count table popup.
+           - test_mia_preferences: Tests the Mia preferences popup.
+           - test_mini_viewer: Selects scans and display them in the mini
+             viewer.
+           - test_modify_table: Tests the modify table module.
+           - test_multiple_sort: Tests the multiple sort popup.
+           - test_multiple_sort_appendix: Adds and removes tags in the data
+             browser.
+           - test_openTagsPopUp: Opens a pop-up to select the legend of the
+             thumbnails.
+           - test_open_project: Tests project opening.
+           - test_project_filter: Tests project filter opening.
+           - test_project_properties: Tests saved projects addition and
+             removal.
+           - test_proj_remov_from_cur_proj: Tests that the projects are
+             removed from the list of current projects.
+           - test_rapid_search: Tests the rapid search bar.
+           - test_remove_scan: Tests scans removal in the DataBrowser.
+           - test_remove_tag: Tests the popup removing user tags.
+           - test_reset_cell: Tests the method resetting the selected cells.
+           - test_reset_column: Tests the method resetting the columns
+             selected.
+           - test_reset_row: Tests row reset.
+           - test_save_project: Tests opening & saving of a project.
+           - test_send_doc_to_pipeline_manager: Tests the popup sending
+             documents to the pipeline manager.
+           - test_set_value: Tests the values modifications.
+           - test_show_brick_history: Opens the history pop-up for scans with
+             history related to a brick.
+           - test_sort: Tests the sorting in the DataBrowser.
+           - test_table_data_add_columns: Adds tag columns to the table data
+             window.
+           - test_table_data_appendix: Opens a project and tests miscellaneous
+             methods of the table data view, in the data browser.
+           - test_table_data_context_menu: Right clicks a scan to show the
+             context menu table, and choses one option.
+           - test_undo_redo_databrowser: Tests data browser undo/redo.
+           - test_unnamed_proj_soft_open: Tests unnamed project creation at
+             software opening.
+           - test_update_default_value: Updates the values when a list of
+             default values is created.
+           - test_utils: Tests the utils functions.
+           - test_visualized_tags: Tests the popup modifying the visualized
+             tags.
     """
 
     def assert_scans_present(self, scans, expected_subset):
         """
         Asserts that all expected scan names are present in the given list.
+
+        :param scans: (list) List of scan names to check.
+        :param expected_subset: (list) List of expected scan names that should
+         be present in the scans list.
+
+        :raises AssertionError: If any expected scan name is missing from
+         ``scans``.
+
         """
 
         for expected in expected_subset:
@@ -1066,17 +1076,15 @@ class TestMIADataBrowser(TestMIACase):
 
     def get_cell_text(self, table, row, column, label_index=0):
         """
-        Utility method to retrieve the text of the QLabel inside a cell
-        widget.
+        Utility method to retrieve the text of the QLabel inside a cell widget.
 
-        :param table (QTableWidget): The table containing the cell.
-        :param row (int): The row index.
-        :param column (int): The column index.
-        :param label_index (int): If multiple labels are present, which
-                                    one to return. Default is 0 (first QLabel
-                                    found).
-        :returns (str): The text of the QLabel, or fails the test if not
-                        found.
+        :param table: (QTableWidget) The table containing the cell.
+        :param row: (int) The row index.
+        :param column: (int) The column index.
+        :param label_index: (int) If multiple labels are present, which one to
+         return. Default is 0 (first QLabel found).
+
+        :Returns: (str) The text of the QLabel, or fails the test if not found.
         """
         widget = table.cellWidget(row, column)
         self.assertIsNotNone(widget, f"No widget at cell ({row}, {column})")
@@ -1095,21 +1103,21 @@ class TestMIADataBrowser(TestMIACase):
         database, along with the corresponding value and item from the data
         browser UI.
 
-        :param main_window (QMainWindow): The main application window
-                                          containing the project and data
-                                          browser.
-        :param row_nb (int): The row index in the data browser table.
-        :param tag (str): The name of the tag (column) to retrieve.
+        :param main_window: (QMainWindow) The main application window
+         containing the project and data browser.
+        :param row_nb: (int) The row index in the data browser table.
+        :param tag: (str) The name of the tag (column) to retrieve.
 
-        :returns (tuple): A 4-tuple containing:
+        :Returns: (tuple) A 4-tuple containing:
+
             - value (Any): The current value from the database
-                           (COLLECTION_CURRENT).
+              (COLLECTION_CURRENT).
             - value_initial (Any): The initial value from the database
-                                   (COLLECTION_INITIAL).
+              (COLLECTION_INITIAL).
             - value_ui (str | None): The value displayed in the data browser
-                                     UI, or None if not available.
+              UI, or None if not available.
             - item (QTableWidgetItem | None): The table item corresponding to
-                                              the tag, or None if not found.
+              the tag, or None if not found.
         """
         table = main_window.data_browser.table_data
         col = table.get_tag_column(tag)
@@ -1144,13 +1152,11 @@ class TestMIADataBrowser(TestMIACase):
         Temporarily disables the itemChanged signal to prevent unwanted slot
         execution during programmatic updates to the table data.
 
-        :param table_data (QTableWidget): The data browser's table widget
-                                          whose itemChanged signal is to be
-                                          suppressed.
+        :param table_data: (QTableWidget) The data browser's table widget
+         whose itemChanged signal is to be suppressed.
 
-        :yields: None. The context block is executed with the signal
-                       disconnected, and it is reconnected automatically
-                       afterward.
+        :Yields: (None) The context block is executed with the signal
+         disconnected, and it is reconnected automatically afterward.
         """
         table_data.itemChanged.disconnect()
 
@@ -1232,11 +1238,11 @@ class TestMIADataBrowser(TestMIACase):
         Test the add tag functionality in the data browser.
 
         This test verifies that:
-        - Empty tag names are properly rejected
-        - Duplicate tag names are properly rejected
-        - Invalid default values for the selected type are rejected
-        - Valid string tags are successfully added to the database and UI
-        - List-type tags (Integer List) are properly created and displayed
+            - Empty tag names are properly rejected
+            - Duplicate tag names are properly rejected
+            - Invalid default values for the selected type are rejected
+            - Valid string tags are successfully added to the database and UI
+            - List-type tags (Integer List) are properly created and displayed
 
         """
         # Sets shortcuts for often used objects
@@ -1615,8 +1621,22 @@ class TestMIADataBrowser(TestMIACase):
         # Helper to assert metadata equivalence
         def assert_metadata_equal(tag1, tag2, collection):
             """
-            Asserts that the metadata of two tags are equal in the given
+            Assert that two tags have identical metadata in the specified
             collection.
+
+            The descriptions, units, default values, and field types associated
+            with ``tag1`` and ``tag2`` are compared. In addition, the metadata
+            of ``tag1`` is checked to ensure that it has a user-defined origin
+            and is marked as visible.
+
+            :param tag1: (str) Name of the first tag.
+            :param tag2: (str) Name of the second tag.
+            :param collection: (str) Name of the collection containing the
+             tags.
+
+            :raises AssertionError: If one or more metadata attributes
+             differ, if ``tag1`` does not exist in the collection, or if its
+             origin or visibility do not match the expected values.
             """
 
             with self.main_window.project.database.data() as db:
@@ -1751,18 +1771,43 @@ class TestMIADataBrowser(TestMIACase):
 
     @patch("PyQt5.QtWidgets.QMessageBox.exec_", return_value=QMessageBox.Ok)
     def test_mia_preferences(self, mock_qmsgbox):
-        """Tests the MIA preferences popup with QMessageBox mocked."""
+        """
+        Test the MIA preferences dialog and verify that configuration changes
+        are correctly saved or discarded.
+
+        The test checks that:
+
+        * enabling and disabling Auto Save updates the configuration file,
+        * cancelling the preferences dialog leaves the configuration unchanged,
+        * project-related settings can be read and modified,
+        * default values for external tool settings are correct,
+        * display and behavior settings have the expected defaults, and
+        * the MRI conversion path is initially unset.
+
+        :param mock_qmsgbox: (MagicMock) Mocked ``QMessageBox`` used to prevent
+         modal dialogs from blocking the test.
+        """
 
         def reload_config():
             """
-            Reloads the configuration from the properties path.
+            Reload the application configuration from the test properties
+            directory.
+
+            :Returns: (Config) A newly created configuration object initialized
+             from ``self.properties_path``.
             """
 
             return Config(properties_path=self.properties_path)
 
         def open_preferences():
             """
-            Opens the preferences dialog and returns the properties widget.
+            Open the preferences dialog.
+
+            Triggers the software preferences action and returns the
+            corresponding preferences widget.
+
+            :Returns: (PopUpPreferences) The preferences dialog currently
+             displayed.
             """
             self.main_window.action_software_preferences.trigger()
             return self.main_window.pop_up_preferences
@@ -2083,11 +2128,11 @@ class TestMIADataBrowser(TestMIACase):
             the dialog returning an accepted state (i.e., the user
             clicked "OK").
 
-            :param self (PopUpSelectTagCountTable): The dialog instance being
-                                                    mocked.
+            :param self: (PopUpSelectTagCountTable) The dialog instance being
+             mocked.
 
-            :returns (bool): Always returns True to indicate the dialog was
-                             accepted.
+            :Returns: (bool) Always returns True to indicate the dialog was
+             accepted.
             """
             self.selected_tag = TAG_EXP_TYPE
             return True
@@ -2268,11 +2313,11 @@ class TestMIADataBrowser(TestMIACase):
             Checks if the filter item at the given index in the filter list
             is visible.
 
-            :param index (int): The index of the filter item in the list
-                                widget.
+            :param index: (int) The index of the filter item in the list
+             widget.
 
-            :returns (bool): True if the filter item is visible, False if
-                             it is hidden.
+            :Returns: (bool) True if the filter item is visible, False if
+             it is hidden.
             """
             return not popup.list_widget_filters.item(index).isHidden()
 
@@ -2374,13 +2419,13 @@ class TestMIADataBrowser(TestMIACase):
         Tests the rapid search bar behavior in the DataBrowser.
 
         Steps:
-        - Load a project with 9 scans.
-        - Verify all scans are initially visible.
-        - Filter scans using the search bar (e.g., "G1").
-        - Verify the filtered results.
-        - Clear the filter using the cross button.
-        - Verify all scans are shown again.
-        - Test filtering using NOT_DEFINED_VALUE.
+            - Load a project with 9 scans.
+            - Verify all scans are initially visible.
+            - Filter scans using the search bar (e.g., "G1").
+            - Verify the filtered results.
+            - Clear the filter using the cross button.
+            - Verify all scans are shown again.
+            - Test filtering using NOT_DEFINED_VALUE.
         """
 
         def get_visible_scan_names():
@@ -2392,8 +2437,8 @@ class TestMIADataBrowser(TestMIACase):
             table and collects the scan names from the first column (index 0)
             of rows that are not hidden.
 
-            :returns (List[str]): A list of scan names (as strings) for all
-                                  visible rows in the table.
+            :Returns: (List[str]) A list of scan names (as strings) for all
+             visible rows in the table.
             """
 
             return [
@@ -2547,8 +2592,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, effectively mocking user
             interaction with the dialog’s Cancel button during testing.
 
-            :param popup (PopUpRemoveScan): The popup dialog instance to
-                                            cancel.
+            :param popup: (PopUpRemoveScan) The popup dialog instance to
+             cancel.
             """
             popup.cancel_clicked()
 
@@ -2564,8 +2609,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, emulating a user clicking the
             "No to All" button during testing.
 
-            :param popup (PopUpRemoveScan): The popup dialog instance to act
-                                            upon.
+            :param popup: (PopUpRemoveScan) The popup dialog instance to act
+             upon.
             """
             popup.no_all_clicked()
 
@@ -2589,8 +2634,8 @@ class TestMIADataBrowser(TestMIACase):
             method of the provided popup instance, emulating a user clicking
             the "Yes to All" button during testing.
 
-            :param popup (PopUpRemoveScan): The popup dialog instance to act
-                                            upon.
+            :param popup: (PopUpRemoveScan) The popup dialog instance to act
+             upon.
             """
             popup.yes_all_clicked()
 
@@ -2622,8 +2667,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, emulating a user clicking the
             "Yes" button during testing.
 
-            :param popup (PopUpRemoveScan): The popup dialog instance to act
-                                            upon.
+            :param popup: (PopUpRemoveScan) The popup dialog instance to act
+             upon.
             """
             popup.yes_clicked()
 
@@ -2727,11 +2772,11 @@ class TestMIADataBrowser(TestMIACase):
             Retrieve the table widget item for the specified tag in the first
             row.
 
-            :param tag (str): The tag (column identifier) whose cell item is
-                              to be fetched.
+            :param tag: (str) The tag (column identifier) whose cell item is
+             to be fetched.
 
-            :returns (QTableWidgetItem): The item at row 0 of the column
-                                         corresponding to `tag`.
+            :Returns: (QTableWidgetItem) The item at row 0 of the column
+             corresponding to `tag`.
             """
             col = table.get_tag_column(tag)
 
@@ -2761,12 +2806,12 @@ class TestMIADataBrowser(TestMIACase):
             Patched exec_ method that injects a test value into the dialog
             table and runs the real update logic without showing the dialog.
 
-            :param self (ModifyTable): The dialog instance being tested.
+            :param self: (ModifyTable) The dialog instance being tested.
             :param args: Positional arguments forwarded to exec_, unused here.
             :param kwargs: Keyword arguments forwarded to exec_, unused here.
 
-            :returns (bool): Always returns True to simulate the user
-                             clicking "Ok".
+            :Returns: (bool) Always returns True to simulate the user clicking
+             "Ok".
             """
             # inject the new text into the dialog’s table
             self.table.setItem(0, 0, QTableWidgetItem("25000"))
@@ -3019,8 +3064,8 @@ class TestMIADataBrowser(TestMIACase):
 
     def test_save_project(self):
         """
-        Test creating, saving, switching, and reopening a project,
-        while mocking dialogs and preventing UI blocking.
+        Test creating, saving, switching, and reopening a project, while
+        mocking dialogs and preventing UI blocking.
         """
         config = Config(properties_path=self.properties_path)
         projects_dir = os.path.realpath(
@@ -3064,12 +3109,12 @@ class TestMIADataBrowser(TestMIACase):
                 Create a MagicMock instance simulating a PopUpNewProject
                 dialog.
 
-                :param relative_path (str): The relative path to set as the
-                                            selected file and filename in the
-                                            popup.
+                :param relative_path: (str) The relative path to set as the
+                 selected file and filename in the popup.
 
-                :returns (MagicMock): A mocked PopUpNewProject instance with
-                                      predefined behaviors:
+                :Returns: (MagicMock) A mocked PopUpNewProject instance with
+                 predefined behaviors:
+
                     - `relative_path` attribute set to the given path.
                     - `selectedFiles()` returns a list containing the relative
                       path.
@@ -3141,10 +3186,9 @@ class TestMIADataBrowser(TestMIACase):
             then either confirms the selection by triggering the OK action or
             cancels by closing the popup, depending on the `confirm` parameter.
 
-            :param confirm (bool): If True, simulate clicking the OK button to
-                                   confirm the selection. If False, simulate
-                                   closing/cancelling the popup. Defaults to
-                                   True.
+            :param confirm: (bool) If True, simulate clicking the OK button to
+             confirm the selection. If False, simulate closing/cancelling the
+             popup. Defaults to True.
             """
             popup = self.main_window.data_browser.show_selection
             QTest.qWait(100)
@@ -3273,7 +3317,24 @@ class TestMIADataBrowser(TestMIACase):
         DatabaseValues = namedtuple("DatabaseValues", ["current", "initial"])
 
         def get_db_values(tag_name, convert_to_float=False):
-            """Get current and initial values from database for a tag."""
+            """
+            Retrieve the current and initial values associated with a tag.
+
+            Values are read from the current and initial collections for the
+            selected scan. When ``convert_to_float`` is ``True``, the first
+            element of each value is converted to a ``float`` before being
+            returned.
+
+            :param tag_name: (str) Name of the tag whose values are to be
+             retrieved.
+            :param convert_to_float: (bool) If ``True``, convert the first
+             element of the retrieved values to ``float``. Default is
+             ``False``.
+
+            :Returns: (DatabaseValues) A named tuple containing the values from
+             the current and initial collections, accessible through the
+             ``current`` and ``initial`` attributes.
+            """
 
             with self.main_window.project.database.data() as database_data:
                 current = database_data.get_value(
@@ -3450,10 +3511,11 @@ class TestMIADataBrowser(TestMIACase):
         QT_DESCENDING = 1  # Qt.DescendingOrder
 
         def get_visible_bandwidth_values():
-            """Extract BandWidth values from all visible table rows.
+            """
+            Extract BandWidth values from all visible table rows.
 
-            Return (list): BandWidth values from visible rows in current table
-                           order.
+            :Returns: (list) BandWidth values from visible rows in current
+             table order.
             """
             bandwidth_column = table.get_tag_column("BandWidth")
             bandwidth_values = []
@@ -3466,10 +3528,11 @@ class TestMIADataBrowser(TestMIACase):
             return bandwidth_values
 
         def set_sort_order(sort_order):
-            """Set the table sort order for the BandWidth column.
+            """
+            Set the table sort order for the BandWidth column.
 
-            Args:
-                sort_order: Qt sort order (0 for ascending, 1 for descending)
+            :param sort_order: Qt sort order (0 for ascending, 1 for
+             descending)
             """
             bandwidth_column = table.get_tag_column("BandWidth")
             header = table.horizontalHeader()
@@ -3749,6 +3812,7 @@ class TestMIADataBrowser(TestMIACase):
         methods on the data table.
 
         This covers both:
+
         - Confirm actions (that trigger a QMessageBox before executing)
         - Direct actions (executed immediately)
 
@@ -3807,14 +3871,13 @@ class TestMIADataBrowser(TestMIACase):
             Automatically "click" the OK button of the most recently
             created QMessageBox.
 
-            This function is intended for testing purposes. If there
-            are any captured QMessageBox instances in
-            `msgbox_instances`, it emits a click signal on the OK
-            button of the last instance. It always returns
-            `QMessageBox.Ok`.
+            This function is intended for testing purposes. If there are any
+            captured QMessageBox instances in `msgbox_instances`, it emits a
+            click signal on the OK button of the last instance. It always
+            returns `QMessageBox.Ok`.
 
-            :returns (QMessageBox.StandardButton): The standard OK
-                                                    button value.
+            :Returns: (QMessageBox.StandardButton) The standard OK button
+             value.
             """
 
             if msgbox_instances:
@@ -3842,13 +3905,13 @@ class TestMIADataBrowser(TestMIACase):
                     and verifies that the target method was called with the
                     provided arguments.
 
-                    :param label (str): The label of the QAction to trigger.
-                    :param target (QObject): The object containing the method
-                                             to be called.
-                    :param method_name (str): The name of the method to be
-                                              patched on the target.
-                    :param args (tuple): Arguments expected to be passed to the
-                                         target method.
+                    :param label: (str) The label of the QAction to trigger.
+                    :param target: (QObject) The object containing the method
+                     to be called.
+                    :param method_name: (str) The name of the method to be
+                     patched on the target.
+                    :param args: (tuple) Arguments expected to be passed to the
+                     target method.
                     """
                     created_actions = {}
 
@@ -3862,9 +3925,10 @@ class TestMIADataBrowser(TestMIACase):
                         stores it in the `created_actions` dictionary, and
                         returns the action.
 
-                        :param action_label (str): The label of the QAction to
-                                                   create.
-                        :returns (QAction): The created QAction object.
+                        :param action_label: (str) The label of the QAction to
+                         create.
+
+                        :Returns: (QAction) The created QAction object.
                         """
                         action = QAction(action_label, table_data)
                         created_actions[action_label] = action
@@ -3897,8 +3961,8 @@ class TestMIADataBrowser(TestMIACase):
 
     def test_undo_redo_databrowser(self):
         """
-        Test undo and redo functionality in the DataBrowser across
-        several operations.
+        Test undo and redo functionality in the DataBrowser across several
+        operations.
 
         This test verifies that user actions such as modifying a tag value,
         removing scans, adding/removing/cloning tags are correctly recorded
@@ -3908,13 +3972,13 @@ class TestMIADataBrowser(TestMIACase):
         Tested operations include:
             1. Modifying a tag value ("BandWidth") of a scan and
                undoing/redoing the change.
-            2. Attempting to undo the deletion of a scan (should have
-               no effect).
-            3. Adding a new tag ("Test") and verifying undo/redo toggles
-               it properly.
+            2. Attempting to undo the deletion of a scan (should have no
+               effect).
+            3. Adding a new tag ("Test") and verifying undo/redo toggles it
+               properly.
             4. Removing an existing tag and checking undo/redo consistency.
             5. Cloning an existing tag ("FOV") to create a new one ("Test"),
-            verifying values in both the database and DataBrowser.
+               verifying values in both the database and DataBrowser.
 
         Ensures:
             - Undo/redo stacks (`project.undos` and `project.redos`) are
@@ -4328,10 +4392,9 @@ class TestMIADataBrowser(TestMIACase):
 
         Functions tested:
             - check_value_type: validates if a string value matches a given
-                                field type.
+              field type.
             - table_to_database: converts a string value from the UI into a
-                                 typed value suitable for storage in the
-                                 database.
+              typed value suitable for storage in the database.
         """
         # Boolean tests
         boolean_cases = [
@@ -4497,20 +4560,22 @@ class TestMIADataBrowser(TestMIACase):
 class TestMIAMainWindow(TestMIACase):
     """Tests for the main window class (MainWindow).
 
-    :Contains:
-        :Method:
-            - test_check_database: checks if the database has changed
-              since the scans were first imported
-            - test_create_project_pop_up: tries to create a new project
-              with a project already open.
-            - test_files_in_project: tests whether or not a given file
-              is part of the project.
-            - test_import_data: opens a project and simulates importing
-              a file from the MriConv java executable
-            - test_open_project_pop_up: creates a test project and opens
-              a project, including unsaved modifications.
-            - test_open_recent_project: creates 2 test projects and
-              opens one by the recent projects action.
+    Contains:
+
+        Methods:
+
+            - test_check_database: checks if the database has changed since the
+              scans were first imported
+            - test_create_project_pop_up: tries to create a new project with a
+              project already open.
+            - test_files_in_project: tests whether or not a given file is part
+              of the project.
+            - test_import_data: opens a project and simulates importing a file
+              from the MriConv java executable
+            - test_open_project_pop_up: creates a test project and opens a
+              project, including unsaved modifications.
+            - test_open_recent_project: creates 2 test projects and opens one
+              by the recent projects action.
             - test_package_library_dialog_add_pkg: creates a new project
               folder, opens the processes library and adds a package.
             - test_package_library_dialog_del_pkg: creates a new project
@@ -4519,23 +4584,22 @@ class TestMIAMainWindow(TestMIACase):
               folder, opens the processes library and removes a package.
             - test_package_library_others: Creates a new project folder, opens
               the processes library and adds a package.
-            - test_popUpDeletedProject: adds a deleted projects to the
-              projects list and launches mia.
-            - test_popUpDeleteProject: creates a new project and deletes
-              it.
-            - test_see_all_projects: creates 2 projects and tries to
-              open them through the all projects pop-up.
-            - test_software_preferences_pop_up: opens the preferences
-              pop up and changes parameters.
+            - test_popUpDeletedProject: adds a deleted projects to the projects
+              list and launches mia.
+            - test_popUpDeleteProject: creates a new project and deletes it.
+            - test_see_all_projects: creates 2 projects and tries to open them
+              through the all projects pop-up.
+            - test_software_preferences_pop_up: opens the preferences pop up
+              and changes parameters.
             - test_software_preferences_pop_up_config_file: opens the
               preferences pop up and changes parameters.
-            - test_software_preferences_pop_up_modules_config: changes
-              the configuration of AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
-            - test_software_preferences_pop_up_validate: opens the
-              preferences pop up for AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
+            - test_software_preferences_pop_up_modules_config: changes the
+              configuration of AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
+            - test_software_preferences_pop_up_validate: opens the preferences
+              pop up for AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.
             - test_switch_project: create project and switches to it.
-            - test_tab_changed: switches between data browser, data
-              viewer and pipeline manager.
+            - test_tab_changed: switches between data browser, data viewer and
+              pipeline manager.
     """
 
     def test_check_database(self):
@@ -4571,7 +4635,8 @@ class TestMIAMainWindow(TestMIACase):
             self.assertTrue(mock_exec.called)
 
     def test_create_project_pop_up(self):
-        """Test project creation popup behavior under various conditions.
+        """
+        Test project creation popup behavior under various conditions.
 
         Verifies the MainWindow.create_project_pop_up method handles:
             - Project creation with unsaved modifications (triggers quit popup)
@@ -4910,11 +4975,12 @@ class TestMIAMainWindow(TestMIACase):
         Test adding and installing packages through the PackageLibraryDialog.
 
         This test verifies the following:
-        - Opening the package library dialog and adding a standard package.
-        - Handling invalid or non-existent packages.
-        - Installing a process package from a directory.
-        - Validating error handling for invalid directories and import errors.
-        - Saving and reloading a new pipeline using the installed process.
+            - Opening the package library dialog and adding a standard package.
+            - Handling invalid or non-existent packages.
+            - Installing a process package from a directory.
+            - Validating error handling for invalid directories and import
+              errors.
+            - Saving and reloading a new pipeline using the installed process.
 
         Mocks:
             - QMessageBox.exec and exec_ (to suppress dialogs)
@@ -5143,15 +5209,16 @@ class TestMIAMainWindow(TestMIACase):
         Test the behavior of the PackageLibraryDialog when deleting packages.
 
         This test covers:
-        - Adding and removing a known package
-          (`nipype.interfaces.DataGrabber`)
-        - Ensuring deletion confirmations are handled correctly
-        - Ensuring packages that can't be deleted show proper warnings
-        - Adding and deleting a user-defined process package (`Unit_test_2`)
+            - Adding and removing a known package
+              (`nipype.interfaces.DataGrabber`)
+            - Ensuring deletion confirmations are handled correctly
+            - Ensuring packages that can't be deleted show proper warnings
+            - Adding and deleting a user-defined process package
+              (`Unit_test_2`)
 
         Mocks:
-        - QMessageBox.exec
-        - QMessageBox.question
+            - QMessageBox.exec
+            - QMessageBox.question
         """
         PKG = "nipype.interfaces.DataGrabber"
 
@@ -5544,68 +5611,6 @@ class TestMIAMainWindow(TestMIACase):
         # Close the dialog
         pkg_lib_window.close()
 
-    def test_popUpDeleteProject(self):
-        """
-        Test the project deletion flow, including dialog behavior and config
-        updates.
-
-        This test:
-            - Creates a new test project and switches to it.
-            - Attempts to delete the project without a configured save path
-              (to test error handling).
-            - Sets a valid save path and ensures the project is properly
-              deleted.
-            - Simulates user interaction with confirmation dialogs
-              (e.g., "Yes to All").
-
-        Notes:
-            - Not to be confused with `test_popUpDeletedProject`.
-
-        Targets:
-            - MainWindow.delete_project
-            - PopUpDeleteProject
-        """
-        # Create and switch to a new test project
-        test_proj_path = self.get_new_test_project()
-        self.main_window.switch_project(test_proj_path, "test_project")
-
-        # Instead of executing the pop-up, only shows it. This avoids thread
-        # deadlocking
-        with patch.object(QMessageBox, "exec", lambda self_: self_.show()):
-            # Unset the projects save path to trigger error handling
-            Config(
-                properties_path=self.properties_path
-            ).set_projects_save_path("")
-
-            # Attempt to delete the project (expected to fail due to
-            # missing path)
-            self.main_window.delete_project()
-            self.main_window.msg.accept()
-
-        # Set a valid projects save path
-        config = Config(properties_path=self.properties_path)
-        project_root = os.path.dirname(test_proj_path)
-        config.set_projects_save_path(project_root)
-
-        # Append project to saved/opened lists for increase coverage
-        rel_proj_path = os.path.relpath(test_proj_path)
-        self.main_window.saved_projects.pathsList.append(rel_proj_path)
-        config.set_opened_projects([rel_proj_path])
-
-        with (
-            patch.object(PopUpDeleteProject, "exec", lambda self_: None),
-            patch.object(
-                QMessageBox, "warning", return_value=QMessageBox.YesToAll
-            ),
-        ):
-            # Attempt to delete the project again (should now succeed)
-            self.main_window.delete_project()
-
-            # Simulate user checking the project to delete
-            ex_popup = self.main_window.exPopup
-            ex_popup.check_boxes[0].setChecked(True)
-            ex_popup.ok_clicked()
-
     def test_popUpDeletedProject(self):
         """
         Test that the application handles deleted projects properly.
@@ -5658,6 +5663,67 @@ class TestMIAMainWindow(TestMIACase):
         self.assertNotIn(
             fake_project_path, saved_projects.loadSavedProjects()["paths"]
         )
+
+    def test_popUpDeleteProject(self):
+        """
+        Test the project deletion flow, including dialog behavior and config
+        updates.
+
+        This test:
+            - Creates a new test project and switches to it.
+            - Attempts to delete the project without a configured save path
+              (to test error handling).
+            - Sets a valid save path and ensures the project is properly
+              deleted.
+            - Simulates user interaction with confirmation dialogs
+              (e.g., "Yes to All").
+
+        Targets:
+            - MainWindow.delete_project
+            - PopUpDeleteProject
+
+        **Notes**: Not to be confused with `test_popUpDeletedProject`.
+        """
+        # Create and switch to a new test project
+        test_proj_path = self.get_new_test_project()
+        self.main_window.switch_project(test_proj_path, "test_project")
+
+        # Instead of executing the pop-up, only shows it. This avoids thread
+        # deadlocking
+        with patch.object(QMessageBox, "exec", lambda self_: self_.show()):
+            # Unset the projects save path to trigger error handling
+            Config(
+                properties_path=self.properties_path
+            ).set_projects_save_path("")
+
+            # Attempt to delete the project (expected to fail due to
+            # missing path)
+            self.main_window.delete_project()
+            self.main_window.msg.accept()
+
+        # Set a valid projects save path
+        config = Config(properties_path=self.properties_path)
+        project_root = os.path.dirname(test_proj_path)
+        config.set_projects_save_path(project_root)
+
+        # Append project to saved/opened lists for increase coverage
+        rel_proj_path = os.path.relpath(test_proj_path)
+        self.main_window.saved_projects.pathsList.append(rel_proj_path)
+        config.set_opened_projects([rel_proj_path])
+
+        with (
+            patch.object(PopUpDeleteProject, "exec", lambda self_: None),
+            patch.object(
+                QMessageBox, "warning", return_value=QMessageBox.YesToAll
+            ),
+        ):
+            # Attempt to delete the project again (should now succeed)
+            self.main_window.delete_project()
+
+            # Simulate user checking the project to delete
+            ex_popup = self.main_window.exPopup
+            ex_popup.check_boxes[0].setChecked(True)
+            ex_popup.ok_clicked()
 
     def test_see_all_projects(self):
         """
@@ -6028,10 +6094,10 @@ class TestMIAMainWindow(TestMIACase):
             dialog interaction by modifying the config text.
 
             This mock specifically replaces 'user_mode: false' with
-            'user_mode: true' in the PopUpPreferences config editor,
-            mimicking user input.
+            'user_mode: true' in the PopUpPreferences config editor, mimicking
+            user input.
 
-            :returns (bool): Always returns True to simulate user acceptance.
+            :Returns: (bool) Always returns True to simulate user acceptance.
             """
             editor = main_wnd.pop_up_preferences.editConf
             content = editor.txt.toPlainText()
@@ -6107,11 +6173,9 @@ class TestMIAMainWindow(TestMIACase):
         configuration dialog for AFNI, ANTS, FSL, mrtrix, SPM, and MATLAB
         modules, including handling of valid and invalid executable paths.
 
-        :tests:
-            - PopUpPreferences.validate_and_save
+        tests: PopUpPreferences.validate_and_save
 
-        :mocks:
-            - QMessageBox.show
+        mocks: QMessageBox.show
         """
 
         # Mocks executables to be used for the modules tested
@@ -6125,13 +6189,13 @@ class TestMIAMainWindow(TestMIACase):
             """
             Creates a mocked executable in the specified directory.
 
-            :param directory (str): Path where the mock executable should be
-                                    placed.
-            :param name (str): Name of the executable.
-            :param failing (bool): Whether the mock executable should simulate
-                                   failure.
-            :param output (str): Output message to be printed.
-            :param err_msg (str): Error message to be printed on stderr.
+            :param directory: (str) Path where the mock executable should be
+             placed.
+            :param name: (str) Name of the executable.
+            :param failing: (bool) Whether the mock executable should simulate
+             failure.
+            :param output: (str) Output message to be printed.
+            :param err_msg: (str) Error message to be printed on stderr.
             """
             path = os.path.join(directory, name)
             system = platform.system()
@@ -6268,27 +6332,28 @@ echo {output}
 
                 This test simulates user interaction with the software
                 preferences popup to:
-                - Enable a given module via its checkbox.
-                - Set invalid and valid paths to test input validation logic.
-                - Assert that the configuration is correctly updated or
-                    rejected.
-                - Verify correct behavior of the corresponding `Config` object
-                    methods.
+                    - Enable a given module via its checkbox.
+                    - Set invalid and valid paths to test input validation
+                      logic.
+                    - Assert that the configuration is correctly updated or
+                      rejected.
+                    - Verify correct behavior of the corresponding `Config`
+                      object methods.
 
-                :param module_name (str): The display name of the module
-                                            (used for logging).
-                :param checkbox_attr (str): Name of the checkbox attribute
-                                            in the preferences popup.
-                :param path_attr (str): Name of the line edit widget used to
-                                        specify the module path.
-                :param executable_name (str): Name of the module's expected
-                                                executable (for mocking).
-                :param config_getter (str): Name of the `Config` method to
-                                            check if the module is enabled.
-                :param config_setter (str): Name of the `Config` method to
-                                            disable the module.
-                :param config_path_setter (str): Name of the `Config` method
-                                                    to reset the module path.
+                :param module_name: (str) The display name of the module
+                 (used for logging).
+                :param checkbox_attr: (str) Name of the checkbox attribute
+                 in the preferences popup.
+                :param path_attr: (str) Name of the line edit widget used to
+                 specify the module path.
+                :param executable_name: (str) Name of the module's expected
+                 executable (for mocking).
+                :param config_getter: (str) Name of the `Config` method to
+                 check if the module is enabled.
+                :param config_setter: (str) Name of the `Config` method to
+                 disable the module.
+                :param config_path_setter: (str) Name of the `Config` method
+                 to reset the module path.
                 """
                 print(f"Testing {module_name} configuration...")
 
@@ -6334,28 +6399,28 @@ echo {output}
                 This test simulates user interaction with the software
                 preferences popup to:
                     - Enable FSL and attempt to validate several incorrect
-                        configurations.
+                      configurations.
                     - Provide invalid paths to test error handling and
-                        validation feedback.
+                      validation feedback.
                     - Verify that FSL remains disabled when configuration
-                        is incorrect.
+                      is incorrect.
                     - Provide a valid mocked FSL setup and confirm that the
-                        configuration is accepted.
+                      configuration is accepted.
                     - Finally, disable FSL and reset its configuration path.
 
                 Test flow:
-                1. Opens the preferences dialog.
-                2. Enables the FSL checkbox.
-                3. Attempts to save without providing a path
-                    → expects failure.
-                4. Sets invalid FSL paths (e.g. nested bin, parent folders)
-                    → expects failure.
-                5. Sets a directory that does not contain the required
-                    'flirt' command → expects failure.
-                6. Verifies that FSL remains disabled in the configuration.
-                7. Mocks a valid FSL path with the expected executable and
-                    confirms acceptance.
-                8. Closes the dialog and disables FSL in the configuration.
+                    1. Opens the preferences dialog.
+                    2. Enables the FSL checkbox.
+                    3. Attempts to save without providing a path
+                       → expects failure.
+                    4. Sets invalid FSL paths (e.g. nested bin, parent folders)
+                       → expects failure.
+                    5. Sets a directory that does not contain the required
+                       'flirt' command → expects failure.
+                    6. Verifies that FSL remains disabled in the configuration.
+                    7. Mocks a valid FSL path with the expected executable and
+                       confirms acceptance.
+                    8. Closes the dialog and disables FSL in the configuration.
                 """
                 print("Testing FSL configuration...")
                 main_wnd.software_preferences_pop_up()  # Reopens the window
@@ -6412,28 +6477,29 @@ echo {output}
                 paths.
 
                 Test steps:
-                1. Pre-configures invalid paths for MATLAB and SPM in the
-                    configuration file.
-                2. Opens the software preferences window and enables SPM
-                    support.
-                3. Tests with a non-existent MATLAB path and verifies that an
-                    error dialog is triggered.
-                4. Mocks a failing MATLAB executable and verifies the error
-                    handling.
-                5. Sets a valid (but mocked) SPM directory and closes the
-                    window.
-                6. Verifies that both SPM and MATLAB (non-standalone) are
-                    enabled in the configuration.
-                7. Clears the MATLAB path and verifies that error handling
-                    is triggered again.
-                8. Mocks a working MATLAB executable and verifies successful
-                    configuration.
-                9. Simulates a permission error by removing execute permissions
-                    from the MATLAB binary and verifies subprocess execution
-                    failure is handled gracefully.
-                10. Sets an invalid SPM directory path and closes the window.
-                11. Finally, disables both SPM and MATLAB in the configuration
-                    and clears their paths.
+                    1. Pre-configures invalid paths for MATLAB and SPM in the
+                       configuration file.
+                    2. Opens the software preferences window and enables SPM
+                       support.
+                    3. Tests with a non-existent MATLAB path and verifies that
+                       an error dialog is triggered.
+                    4. Mocks a failing MATLAB executable and verifies the error
+                       handling.
+                    5. Sets a valid (but mocked) SPM directory and closes the
+                       window.
+                    6. Verifies that both SPM and MATLAB (non-standalone) are
+                       enabled in the configuration.
+                    7. Clears the MATLAB path and verifies that error handling
+                       is triggered again.
+                    8. Mocks a working MATLAB executable and verifies
+                       successful configuration.
+                    9. Simulates a permission error by removing execute
+                       permissions from the MATLAB binary and verifies
+                       subprocess execution failure is handled gracefully.
+                    10. Sets an invalid SPM directory path and closes the
+                       window.
+                    11. Finally, disables both SPM and MATLAB in the
+                       configuration and clears their paths.
                 """
                 print("Testing MATLAB / SPM configuration...")
                 config = Config(properties_path=self.properties_path)
@@ -6523,14 +6589,14 @@ echo {output}
                 enabling MATLAB.
 
                 Steps:
-                - Opens preferences and sets up a mock projects folder to allow
-                dialog closing.
-                - Enables MATLAB, sets invalid or failing executable paths, and
-                ensures errors are triggered.
-                - Simulates a subprocess permission error.
-                - Confirms MATLAB remains disabled in the config.
-                - Finally, sets a valid executable and confirms MATLAB is
-                  enabled.
+                    - Opens preferences and sets up a mock projects folder to
+                      allow dialog closing.
+                    - Enables MATLAB, sets invalid or failing executable paths,
+                      and ensures errors are triggered.
+                    - Simulates a subprocess permission error.
+                    - Confirms MATLAB remains disabled in the config.
+                    - Finally, sets a valid executable and confirms MATLAB is
+                      enabled.
                 """
                 print("Testing MATLAB only configuration...")
 
@@ -6920,11 +6986,11 @@ echo {output}
             - UI and behavioral options (auto-save, radio view,
               admin/clinical mode)
 
-        - Tests:
+        Tests:
             - PopUpPreferences.validate_and_save
             - PopUpPreferences.ok_clicked
 
-        - Mocks:
+        Mocks:
             - PopUpPreferences.show
             - PopUpPreferences.wrong_path
             - QMessageBox.show
@@ -7080,7 +7146,7 @@ echo {output}
     def test_switch_project(self):
         """
         Tests switching to various project states using
-        MainWindow.switch_project.
+        `MainWindow.switch_project`.
 
         This test covers:
             - Switching to a valid Mia project
@@ -7140,15 +7206,12 @@ echo {output}
         """
         Tests tab switching behavior in the main window.
 
-        Verifies that switching between:
-            - Data browser
-            - Data viewer
-            - Pipeline manager
-        behaves as expected, including handling unsaved changes via
-        a confirmation dialog.
+        Verifies that switching between  ``Data browser``, ``Data viewer`` and
+        ``Pipeline manager`` tabs, proceeds as expected, including handling
+        unsaved changes via a confirmation dialog.
 
-        - Tests: MainWindow.tab_changed
-        - Mocks: QMessageBox.exec
+        Tests: MainWindow.tab_changed
+        Mocks: QMessageBox.exec
         """
         # Creates a test project
         test_proj_path = self.get_new_test_project(light=True)
@@ -7180,26 +7243,25 @@ echo {output}
 class TestMIANodeController(TestMIACase):
     """Tests for the node controller, part of the pipeline manager tab.
 
-    - Tests: NodeController.
+    Contains:
 
-    :Contains:
-        :Method:
+        Methods:
+
             - create_mock_exec: create a mock function for
-              PopUpSelectTagCountTable.exec_() that simulates user
-              tag selection behavior.
+              PopUpSelectTagCountTable.exec_() that simulates user tag
+              selection behavior.
             - test_attributes_filter: displays an attributes filter and
               modifies it.
             - test_capsul_node_controller: adds, changes and deletes
               processes using the capsul node controller.
-            - test_display_filter: displays node parameters and a plug
-              filter.
-            - test_filter_widget: opens up the "FilterWidget()" to
-              modify its parameters.
-            - test_node_controller: adds, changes and deletes processes
-              to the node controller.
+            - test_display_filter: displays node parameters and a plug filter.
+            - test_filter_widget: opens up the "FilterWidget()" to modify its
+              parameters.
+            - test_node_controller: adds, changes and deletes processes to the
+              node controller.
             - test_plug_filter: displays a plug filter and modifies it
-            - test_update_node_name: displays node parameters and
-              updates its name.
+            - test_update_node_name: displays node parameters and updates its
+              name.
     """
 
     def create_mock_exec(self, tag_name):
@@ -7212,12 +7274,11 @@ class TestMIANodeController(TestMIACase):
         the OK action, simulating the user workflow without requiring
         actual UI interaction.
 
-        :param tag_name (str): The name of the tag to select from the
-                                list. This should match the text of one of
-                                the items in the popup's list widget.
+        :param tag_name: (str) The name of the tag to select from the list.
+         This should match the text of one of the items in the popup's list
+         widget.
 
-        :return: A mock function that can be used to replace exec_()
-                    method.
+        :Returns: A mock function that can be used to replace exec_() method.
         """
 
         def mock_exec(self):
@@ -7225,13 +7286,14 @@ class TestMIANodeController(TestMIACase):
             Mock implementation of exec_() that simulates tag selection.
 
             Searches through the popup's list widget for an item with text
-            matching the specified tag name, checks it, and calls
-            ok_clicked() to simulate the user confirming their selection.
+            matching the specified tag name, checks it, and calls ok_clicked()
+            to simulate the user confirming their selection.
 
-            :param self: The PopUpSelectTagCountTable instance
+            :param self: The PopUpSelectTagCountTable instance.
 
-            :return: True to simulate successful dialog execution
+            :Returns: True to simulate successful dialog execution.
             """
+
             # Find and select the specific tag
             for i in range(self.list_widget_tags.count()):
                 item = self.list_widget_tags.item(i)
@@ -7308,20 +7370,20 @@ class TestMIANodeController(TestMIACase):
 
         This test simulates a realistic sequence of user interactions and
         verifies the following capabilities:
-
-        - Adding two 'Rename' nodes to the pipeline ('rename_1' and
-          'rename_2')
-        - Displaying and interacting with node parameters
-        - Attempting to rename 'rename_2' to an existing name (should fail)
-        - Renaming 'rename_2' to a new unique name ('rename_3') successfully
-        - Deleting an existing node ('rename_3')
-        - Exporting unconnected mandatory input plugs for a node
-        - Setting input plug values using a test document
-        - Executing the pipeline and expecting an error due to unexported
-          output
-        - Opening the attributes filter dialog, selecting a row, and
-          confirming
-        - Releasing and updating the process associated with the controller
+            - Adding two 'Rename' nodes to the pipeline ('rename_1' and
+              'rename_2')
+            - Displaying and interacting with node parameters
+            - Attempting to rename 'rename_2' to an existing name (should fail)
+            - Renaming 'rename_2' to a new unique name ('rename_3')
+              successfully
+            - Deleting an existing node ('rename_3')
+            - Exporting unconnected mandatory input plugs for a node
+            - Setting input plug values using a test document
+            - Executing the pipeline and expecting an error due to unexported
+              output
+            - Opening the attributes filter dialog, selecting a row, and
+              confirming
+            - Releasing and updating the process associated with the controller
 
         Methods tested:
             - CapsulNodeController.update_node_name
@@ -7503,15 +7565,14 @@ class TestMIANodeController(TestMIACase):
             - Feeds in documents from a test project
             - Opens the filter widget for the added node
             - Performs various filtering actions:
-                * Searching for documents by name
-                * Toggling tag visibility
-                * Filtering by a specific tag (mocking user interaction)
+                - Searching for documents by name
+                - Toggling tag visibility
+                - Filtering by a specific tag (mocking user interaction)
 
         The `FilterWidget` is GUI-independent and works in both V1 and V2 node
         controller UIs. Only the V1 GUI is exercised here.
 
-        Mocks:
-            - `PopUpSelectTagCountTable.exec_()`
+        Mocks: `PopUpSelectTagCountTable.exec_()`
         """
         config = Config(properties_path=self.properties_path)
         controlV1 = config.isControlV1()
@@ -7944,9 +8005,9 @@ class TestMIANodeController(TestMIACase):
         update or rejection of name changes based on naming conflicts.
 
         This test ensures:
-        - A node name can be changed via the NodeController interface.
-        - Duplicate names are not accepted.
-        - Node renaming preserves the connections (links) between nodes.
+            - A node name can be changed via the NodeController interface.
+            - Duplicate names are not accepted.
+            - Node renaming preserves the connections (links) between nodes.
         """
 
         def simulate_rename(new_name: str):
@@ -8067,29 +8128,29 @@ class TestMIANodeController(TestMIACase):
 class TestMIAPipelineEditor(TestMIACase):
     """Tests for the pipeline editor, part of the pipeline manager tab.
 
-    Tests PipelineEditor.
+    Contains:
 
-    :Contains:
-        :Method:
-            - test_add_tab: adds tabs to the PipelineEditorTabs
-            - test_close_tab: closes a tab in the PipelineEditorTabs
-            - test_drop_process: adds a Nipype SPM Smooth process to the
-              pipeline editor
-            - test_export_plug: exports plugs and mocks dialog boxes
-            - test_save_pipeline: creates a pipeline and tries to save it
-            - test_update_plug_value: displays node parameters and
-              updates a plug value
-            - test_z_check_modif: opens a pipeline, modifies it and
-              check the modifications
-            - test_z_get_editor: gets the instance of an editor
-            - test_z_get_filename: gets the relative path to a
-              previously saved pipeline file
-            - test_z_get_index: gets the index of an editor
-            - test_z_get_tab_name: gets the tab name of the editor
-            - test_z_load_pipeline: loads a pipeline
-            - test_z_open_sub_pipeline: opens a sub_pipeline
-            - test_z_set_current_editor: sets the current editor
-            - test_zz_del_pack: deletes a brick created during UTs
+        Methods:
+
+            - test_add_tab: Adds tabs to the PipelineEditorTabs.
+            - test_close_tab: Closes a tab in the PipelineEditorTabs.
+            - test_drop_process: Adds a Nipype SPM Smooth process to the
+              pipeline editor.
+            - test_export_plug: Exports plugs and mocks dialog boxes.
+            - test_save_pipeline: Creates a pipeline and tries to save it.
+            - test_update_plug_value: Displays node parameters and updates a
+              plug value.
+            - test_z_check_modif: Opens a pipeline, modifies it and check the
+              modifications.
+            - test_z_get_editor: Gets the instance of an editor.
+            - test_z_get_filename: Gets the relative path to a previously saved
+              pipeline file.
+            - test_z_get_index: Gets the index of an editor.
+            - test_z_get_tab_name: Gets the tab name of the editor.
+            - test_z_load_pipeline: Loads a pipeline.
+            - test_z_open_sub_pipeline: Opens a sub_pipeline.
+            - test_z_set_current_editor: Sets the current editor.
+            - test_zz_del_pack: Deletes a brick created during UTs.
     """
 
     def test_add_tab(self):
@@ -8384,12 +8445,11 @@ class TestMIAPipelineEditor(TestMIACase):
         This test covers:
             - Saving an empty pipeline (should return None).
             - Saving with user cancellation (should return None).
-            - Saving with filenames starting with a digit (should return
-              None).
+            - Saving with filenames starting with a digit (should return None).
             - Saving without an extension ('.py' should be added
               automatically).
-            - Saving with an incorrect extension (should be corrected
-              to '.py').
+            - Saving with an incorrect extension (should be corrected to
+              '.py').
             - Handling restricted user mode where saving is not allowed.
             - Saving using an explicitly provided filename.
 
@@ -8533,8 +8593,7 @@ class TestMIAPipelineEditor(TestMIACase):
             - PipelineEditor.export_node_all_unconnected_inputs
             - ProcessNode.get_plug_value
 
-        Notes:
-            - This test specifically targets NodeController V1 behavior.
+        Notes: This test specifically targets NodeController V1 behavior.
         """
 
         config = Config(properties_path=self.properties_path)
@@ -8838,15 +8897,15 @@ class TestMIAPipelineEditor(TestMIACase):
         """
         Tests retrieval of the filename associated with a pipeline editor tab.
 
-        - Verifies:
+        Verifies:
             - `PipelineEditorTabs.get_filename_by_index` returns the correct
-            absolute path for a loaded pipeline in a given tab index.
+              absolute path for a loaded pipeline in a given tab index.
             - `PipelineEditorTabs.get_filename_by_index` returns `None` for a
               tab without a file.
             - `PipelineEditorTabs.get_current_filename` returns the correct
               absolute path of the currently selected tab's pipeline.
 
-        - Target methods:
+        Target methods:
             - PipelineEditorTabs.get_filename_by_index
             - PipelineEditorTabs.get_current_filename
         """
@@ -8880,7 +8939,7 @@ class TestMIAPipelineEditor(TestMIACase):
         Verifies that editor tab indices can be correctly retrieved by tab
         name, filename, and editor instance.
 
-        - Tests:
+        Tests:
             - PipelineEditorTabs.get_index_by_tab_name
             - PipelineEditorTabs.get_index_by_filename
             - PipelineEditorTabs.get_index_by_editor
@@ -8941,7 +9000,7 @@ class TestMIAPipelineEditor(TestMIACase):
         This test checks both direct index-based retrieval and the currently
         selected tab name.
 
-        - Tests:
+        Tests:
             - PipelineEditorTabs.get_tab_name_by_index
             - PipelineEditorTabs.get_current_tab_name
         """
@@ -8962,11 +9021,11 @@ class TestMIAPipelineEditor(TestMIACase):
         """
         Loads a pipeline file into the editor and verifies its content.
 
-        - Tests:
+        Tests:
             - PipelineEditorTabs.load_pipeline
             - PipelineEditorTabs.get_current_pipeline
 
-        - Verifies:
+        Verifies:
             - The pipeline is loaded correctly.
             - The node 'smooth_1' exists in the loaded pipeline.
         """
@@ -8998,7 +9057,7 @@ class TestMIAPipelineEditor(TestMIACase):
             - Opens the sub-pipeline associated with the inserted process.
             - Verifies that a new editor tab is created and named correctly.
 
-        - Tests:
+        Tests:
             - PipelineEditorTabs.open_sub_pipeline
             - PipelineEditorTabs.get_filename_by_index
         """
@@ -9132,55 +9191,58 @@ class TestMIAPipelineEditor(TestMIACase):
 class TestMIAPipelineManagerTab(TestMIACase):
     """Tests the pipeline manager tab class, part of the homonym tab.
 
-    :Contains:
-        :Method:
-            - test_add_plug_value_to_database_list_type: adds a list type plug
-              value to the database
-            - test_add_plug_value_to_database_non_list_type: adds a non list
-              type plug value to the database
-            - test_add_plug_value_to_database_several_inputs: exports a non
-              list type input plug and with several possible inputs
-            - test_ask_iterated_pipeline_plugs: test the iteration
-              dialog for each plug of a Rename process
-            - test_build_iterated_pipeline: mocks methods and builds an
-              iterated pipeline
-            - test_check_requirements: checks the requirements for a given node
-            - test_cleanup_older_init: tests the cleaning of old
-              initialisations
-            - test_complete_pipeline_parameters: test the pipeline
-              parameters completion
-            - test_delete_processes: deletes a process and makes the undo/redo
-            - test_end_progress: creates a progress object and tries to end it
-            - test_garbage_collect: collects the garbage of a pipeline
-            - test_get_capsul_engine: gets the capsul engine of the pipeline
-            - test_get_missing_mandatory_parameters: tries to initialize
-              the pipeline with missing mandatory parameters
-            - test_get_pipeline_or_process: gets a pipeline and a process from
-              the pipeline_manager
-            - test_initialize: mocks objects and initializes the workflow
-            - test_register_completion_attributes: mocks methods of the
-              pipeline manager and registers completion attributes
-            - test_register_node_io_in_database: sets input and output
-              parameters and registers them in database
-            - test_remove_progress: removes the progress of the pipeline
-            - test_run: creates a pipeline manager progress object and
-                        attempts to execute it in various cases
-            - test_savePipeline: tries to save the pipeline over several
-                                 conditions
-            - test_save_pipeline_as: saves a pipeline under another name
-            - test_set_anim_frame: runs the 'rotatingBrainVISA.gif' animation
-            - test_show_status: shows the status of pipeline execution
-            - test_stop_execution: shows the status window of the pipeline
-              manager
-            - test_undo_redo: tests the undo/redo feature
-            - test_update_auto_inheritance: updates the job's auto inheritance
-              dict
-            - test_update_inheritance: updates the job's inheritance dict
-            - test_update_node_list: initializes a workflow and adds a
-              process to the "pipline_manager.node_list"
-            - test_z_init_pipeline: initializes the pipeline
-            - test_z_runPipeline: adds a processruns a pipeline
-            - test_zz_del_pack: deletion of the brick created during UTs
+    Contains:
+
+        Methods:
+
+            - test_add_plug_value_to_database_list_type: Adds a list type plug
+              value to the database.
+            - test_add_plug_value_to_database_non_list_type: Adds a non list
+              type plug value to the database.
+            - test_add_plug_value_to_database_several_inputs: Exports a non
+              list type input plug and with several possible inputs.
+            - test_ask_iterated_pipeline_plugs: Tests the iteration dialog for
+              each plug of a Rename process.
+            - test_build_iterated_pipeline: Mocks methods and builds an
+              iterated pipeline.
+            - test_check_requirements: Checks the requirements for a given
+              node.
+            - test_cleanup_older_init: Tests the cleaning of old
+              initialisations.
+            - test_complete_pipeline_parameters: Tests the pipeline parameters
+              completion.
+            - test_delete_processes: Deletes a process and makes the undo/redo.
+            - test_end_progress: Creates a progress object and tries to end it.
+            - test_garbage_collect: Collects the garbage of a pipeline.
+            - test_get_capsul_engine: Gets the capsul engine of the pipeline.
+            - test_get_missing_mandatory_parameters: Tries to initialize the
+              pipeline with missing mandatory parameters.
+            - test_get_pipeline_or_process: Gets a pipeline and a process from
+              the pipeline_manager.
+            - test_initialize: Mocks objects and initializes the workflow.
+            - test_register_completion_attributes: Mocks methods of the
+              pipeline manager and registers completion attributes.
+            - test_register_node_io_in_database: Sets input and output
+              parameters and registers them in database.
+            - test_remove_progress: Removes the progress of the pipeline.
+            - test_run: Creates a pipeline manager progress object and attempts
+              to execute it in various cases.
+            - test_savePipeline: Tries to save the pipeline over several
+              conditions.
+            - test_save_pipeline_as: Saves a pipeline under another name.
+            - test_set_anim_frame: Runs the 'rotatingBrainVISA.gif' animation.
+            - test_show_status: Shows the status of pipeline execution.
+            - test_stop_execution: Shows the status window of the pipeline
+              manager.
+            - test_undo_redo: Tests the undo/redo feature.
+            - test_update_auto_inheritance: Updates the job's auto inheritance
+              dict.
+            - test_update_inheritance: Updates the job's inheritance dict.
+            - test_update_node_list: Initializes a workflow and adds a process
+              to the "pipline_manager.node_list".
+            - test_z_init_pipeline: Initializes the pipeline.
+            - test_z_runPipeline: Adds a process and runs a pipeline.
+            - test_zz_del_pack: Deletion of the brick created during UTs.
     """
 
     def test_add_plug_value_to_database_list_type(self):
@@ -9199,7 +9261,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Verifies that both documents and their metadata are stored in
               the database.
 
-            - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
+        Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
         """
         # Open a new test project and switch to the pipeline editor tab
         project_8_path = self.get_new_test_project()
@@ -9320,7 +9382,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               `inheritance_dict`
             - Adding and removing tags based on the inheritance information
 
-        - Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
+        Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
         """
 
         # Open test project and switch to it
@@ -9667,7 +9729,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Also validates `PopUpInheritanceDict` interactive behavior across all
         buttons.
 
-        :tested:
+        tested:
             - PipelineManagerTab.add_plug_value_to_database
             - PopUpInheritanceDict interaction
         """
@@ -9694,16 +9756,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 - "mock_val_1": sets 'Exp Type' to "Exp Type 1"
                 - "mock_val_2": sets 'Exp Type' to "Exp Type 2"
 
-            :param collection_name (str): Name of the database collection
-                                          being queried. This parameter is
-                                          unused but kept for signature
-                                          compatibility.
+            :param collection_name: (str) Name of the database collection being
+             queried. This parameter is unused but kept for signature
+             compatibility.
             :param primary_keys (str): The primary key identifying which mock
-                                       variant to return, affecting the
-                                       'Exp Type' field of the first record.
+             variant to return, affecting the 'Exp Type' field of the first
+             record.
 
-            :returns (list[dict]): A deep copy of the `scan_mock` data with
-                                   the 'Exp Type' field updated if applicable.
+            :Returns: (list[dict]) A deep copy of the `scan_mock` data with
+             the 'Exp Type' field updated if applicable.
             """
             scan_copy = copy.deepcopy(scan_mock)
 
@@ -10028,9 +10089,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Verifies that the resulting pipeline is correctly built and
               mocks are invoked as expected.
 
-        Note:
-            'update_nodes_and_plugs_activation' may not exist on the process,
-            hence 'create=True' is used to safely mock it.
+        Note: 'update_nodes_and_plugs_activation' may not exist on the process,
+        hence 'create=True' is used to safely mock it.
 
         The test allows an expected exception message to be printed during
         execution.
@@ -10094,7 +10154,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               the expected keys.
 
         :raises AssertionError: If the configuration is not a dictionary or
-                                does not contain the expected keys.
+         does not contain the expected keys.
         """
         pipeline_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = pipeline_manager.pipelineEditorTabs
@@ -10122,9 +10182,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         This test verifies that:
             - The brick list is properly processed for cleanup.
-            - The relevant methods for deleting data and cleaning up
-              orphan files
-            are called exactly once.
+            - The relevant methods for deleting data and cleaning up orphan
+              files are called exactly once.
             - The 'brick_list' and 'node_list' are emptied after cleanup.
 
         Steps:
@@ -10161,12 +10220,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
         self.assertFalse(ppl_manager.node_list)
 
     def test_complete_pipeline_parameters(self):
-        """Mocks a method of pipeline manager and completes the pipeline
+        """
+        Mocks a method of pipeline manager and completes the pipeline
         parameters.
 
-        - Tests: PipelineManagerTab.complete_pipeline_parameters
+        Tests: PipelineManagerTab.complete_pipeline_parameters
         """
-
         ppl_manager = self.main_window.pipeline_manager
 
         # Complete pipeline parameter
@@ -10181,8 +10240,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
         functionality.
 
         This test creates a pipeline with three connected 'Smooth' processes
-        (smooth_1 -> smooth_2 -> smooth_3), deletes the middle node,
-        and verifies:
+        (smooth_1 -> smooth_2 -> smooth_3), deletes the middle node, and
+        verifies:
             - The node is properly removed from the pipeline
             - Connected links are cleaned up
             - Undo operation restores the node and its connections
@@ -10193,9 +10252,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
             """
             Assert that connection counts match expected values.
 
-            :param pipeline: The pipeline object to check
+            :param pipeline: The pipeline object to check.
             :param expected_counts: Dict mapping (node_name, plug_name,
-                                    link_type) to expected count
+             link_type) to expected count.
             """
 
             for (
@@ -10222,7 +10281,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             :param pipeline: The pipeline object containing nodes.
             :param node_names: A list of node names (str) to check for
-                               existence.
+             existence.
             """
 
             for node_name in node_names:
@@ -10239,7 +10298,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
             :param pipeline: The pipeline object containing nodes.
             :param node_names: A list of node names (str) expected to be
-                               absent.
+             absent.
             """
 
             for node_name in node_names:
@@ -10385,12 +10444,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Tests 'PipelineManagerTab.garbage_collect' both in integrated and
         isolated contexts.
 
-        - Integrated test: Verifies that invoking 'garbage_collect' sets the
-                           pipeline editor's 'initialized' attribute to False.
-        - Isolated test: In addition to the 'initialized' reset, verifies that
-                         dependent methods are called exactly once:
-            * postprocess_pipeline_execution
-            * update_user_buttons_states
+        Integrated test: Verifies that invoking 'garbage_collect' sets the
+        pipeline editor's 'initialized' attribute to False.
+
+        Isolated test: In addition to the 'initialized' reset, verifies that
+        dependent methods are called exactly once:
+            - postprocess_pipeline_execution
+            - update_user_buttons_states
         """
 
         ppl_manager = self.main_window.pipeline_manager
@@ -10438,11 +10498,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Tests 'PipelineManagerTab.get_capsul_engine' in both integrated
         and isolated contexts.
 
-        - Integrated test: Ensures that calling 'get_capsul_engine' returns
-                           an instance of 'CapsulEngine'.
-        - Isolated test: Mocks 'pipelineEditorTabs.get_capsul_engine' to
-                         verify that it is called exactly once when invoked
-                         via 'PipelineManagerTab.get_capsul_engine'.
+        Integrated test: Ensures that calling 'get_capsul_engine' returns an
+        instance of 'CapsulEngine'.
+
+        Isolated test: Mocks 'pipelineEditorTabs.get_capsul_engine' to verify
+        that it is called exactly once when invoked via
+        'PipelineManagerTab.get_capsul_engine'.
         """
         ppl_manager = self.main_window.pipeline_manager
 
@@ -10468,16 +10529,17 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Tests 'PipelineManagerTab.get_missing_mandatory_parameters'.
 
         This test simulates adding a 'Rename' process to the pipeline,
-        exporting its mandatory input and output plugs, and checking
-        for missing mandatory parameters at different stages.
+        exporting its mandatory input and output plugs, and checking for
+        missing mandatory parameters at different stages.
 
         Steps:
-        1. Add 'Rename' process to the pipeline.
-        2. Export the required input and output plugs.
-        3. Initialize the pipeline and check that two mandatory parameters
-        are initially missing.
-        4. Set a value for one mandatory parameter ('format_string') and
-        verify that only one mandatory parameter remains missing ('in_file').
+            1. Add 'Rename' process to the pipeline.
+            2. Export the required input and output plugs.
+            3. Initialize the pipeline and check that two mandatory parameters
+               are initially missing.
+            4. Set a value for one mandatory parameter ('format_string') and
+               verify that only one mandatory parameter remains missing
+               ('in_file').
         """
 
         ppl_manager = self.main_window.pipeline_manager
@@ -10528,7 +10590,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         - Adding a 'Rename' process node and verifying that the method returns
           the corresponding `NipypeProcess` when a process is selected.
 
-        - Tests: PipelineManagerTab.get_pipeline_or_process
+        Tests: PipelineManagerTab.get_pipeline_or_process
         """
         # Sets shortcuts for often used objects
         ppl_manager = self.main_window.pipeline_manager
@@ -10559,7 +10621,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               dictionaries.
             - Induces an exception path by setting `init_pipeline` to None.
 
-        - Tests: PipelineManagerTab.initialize
+        Tests: PipelineManagerTab.initialize
         """
         # Resolve the test document path
         folder = os.path.join(
@@ -10876,7 +10938,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         manager, invokes `remove_progress`, and ensures the attribute no
         longer exists.
 
-        :tests: PipelineManagerTab.remove_progress
+        tests: PipelineManagerTab.remove_progress
         """
 
         ppl_manager = self.main_window.pipeline_manager
@@ -10908,7 +10970,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
                warning logs.
             3. Interruption: Ensures interruption is logged correctly.
 
-        :tests: RunWorker.run
+        tests: RunWorker.run
         """
         # Setup: Shortcuts and test file
         ppl_manager = self.main_window.pipeline_manager
@@ -10974,7 +11036,23 @@ class TestMIAPipelineManagerTab(TestMIACase):
         ppl_manager.progress = RunProgress(ppl_manager)
 
         def fake_start(pipeline, workflow=None, get_pipeline=True):
-            """Mock engine.start to log a fake call."""
+            """
+            Mock implementation of ``engine.start`` used in tests.
+
+            This function does not execute the pipeline. Instead, it logs a
+            message indicating that ``engine.start`` was invoked and returns a
+            fixed workflow identifier together with the provided pipeline.
+
+            :param pipeline: Pipeline instance passed to ``engine.start``.
+            :param workflow: Optional workflow object. Included for signature
+             compatibility with ``engine.start``.
+            :param get_pipeline: Whether the pipeline should be returned.
+             Included for signature compatibility with ``engine.start``.
+
+            :Returns: A tuple ``(workflow_id, pipeline)``, where
+             ``workflow_id`` is always ``500`` and ``pipeline`` is the input
+             pipeline.
+            """
             logger = logging.getLogger(
                 "populse_mia.user_interface.pipeline_manager."
                 "pipeline_manager_tab"
@@ -11344,9 +11422,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Link creation, deletion, and restoration
             - Document deletion (in-memory only; disk behavior is not tested)
 
-        The test is robust and designed to prevent random crashes.
-        It ensures that all operations are reversible and that the editor’s
-        state remains consistent after each undo/redo cycle.
+        The test is robust and designed to prevent random crashes. It ensures
+        that all operations are reversible and that the editor’s state remains
+        consistent after each undo/redo cycle.
         """
         config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
@@ -11665,8 +11743,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               should not exist).
 
         :raises AssertionError: If expectations about the existence, type,
-                                or contents of `auto_inheritance_dict` are not
-                                met.
+         or contents of `auto_inheritance_dict` are not met.
         """
         project_8_path = self.get_new_test_project()
         raw_data_folder = os.path.join(
@@ -11720,7 +11797,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
             Context manager that yields mock database data for testing
             purposes.
 
-            :yields: The fake database data object used in tests.
+            :Yields: The fake database data object used in tests.
             """
             yield fake_db_data
 
@@ -11849,13 +11926,15 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Verify that `PipelineManagerTab.update_inheritance` correctly updates
         a job's inheritance dictionary based on the associated node.
 
-        :tests: PipelineManagerTab.update_inheritance
+        This test covers multiple scenarios of inheritance updating:
             - Ensures that jobs do not initially have `inheritance_dict`
               attribute
             - Validates update when the node name does not contain "Pipeline".
             - Validates update when the node name contains "Pipeline".
             - Validates update when the node's inheritance history is recorded
               in the project.
+
+        tests: PipelineManagerTab.update_inheritance
         """
 
         # Sets shortcuts for objects that are often used
@@ -12093,7 +12172,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
     def test_z_runPipeline(self):
         """
-         Test running and interrupting a pipeline in PipelineManagerTab.
+        Test running and interrupting a pipeline in PipelineManagerTab.
 
         This test performs the following steps:
             1. Creates a new project folder and adds a sample document.
@@ -12228,21 +12307,24 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
 
 class Test_Z_MIAOthers(TestMIACase):
-    """Tests for other parts of the MIA software that do not relate much
-    with the other classes.
+    """
+    Tests for other parts of the MIA software that do not relate much with the
+    other classes.
 
-    :Contains:
-        :Method:
-            - _mock_mouse_event: mock QMouseEvent for a right-click at
-                                 position (0, 0)
-            - test_check_setup: check that Mia's configuration control is
-                                working correctly
-            - test_iteration_table: plays with the iteration table
-            - test_process_library: install the brick_test and then remove it
+    Contains:
 
-            - test_verify_processes: check that Mia's processes control is
-                                     working correctly (currently commented)
-            - test_z_open_shell: opens Qt console and kill it afterwards.
+        Methods:
+
+            - _mock_mouse_event: Mocks QMouseEvent for a right-click at
+              position (0, 0).
+            - test_check_setup: Checks that Mia's configuration control is
+              working correctly.
+            - test_iteration_table: Plays with the iteration table.
+            - test_process_library: Installs the brick_test and then removes
+              it.
+            - test_verify_processes: Checks that Mia's processes control is
+              working correctly.
+            - test_z_open_shell: Opens Qt console and kill it afterwards.
     """
 
     def _mock_mouse_event(self):
@@ -12258,7 +12340,7 @@ class Test_Z_MIAOthers(TestMIACase):
     def test_check_setup(self, mock_exec):
         """Check that Mia's configuration control is working correctly.
 
-        - Tests: utils.verify_setup()
+        Tests: utils.verify_setup()
         """
         dot_mia_config = os.path.join(
             os.path.dirname(self.properties_path), "configuration_path.yml"
@@ -12273,12 +12355,13 @@ class Test_Z_MIAOthers(TestMIACase):
     )
     @patch("PyQt5.QtWidgets.QDialog.exec_", return_value=QDialog.Accepted)
     def test_iteration_table(self, mock_exec, mock_pop_up):
-        """Opens a new project, initializes the pipeline iteration and changes
-        its parameters.
+        """
+        Opens a new project, initializes the pipeline iteration and changes its
+        parameters.
 
-        - Tests: IterationTable behavior without asynchronous dialogs.
+        Tests: IterationTable behavior without asynchronous dialogs.
 
-        - Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
+        Mocks: the execution of a PopUpSelectTagCountTable and a QDialog
         """
 
         project_8_path = self.get_new_test_project()
@@ -12381,11 +12464,29 @@ class Test_Z_MIAOthers(TestMIACase):
         self, mock_msgbox_exec, mock_msgbox_question, mock_menu_exec
     ):
         """
-        Tests row insert, rename, delete in ProcessLibrary with
-        mocking dialogs.
+        Test editing and context-menu operations in the process library tree.
 
-        The process library is located at the left corner of the pipeline
-        manager tab, where the list of available bricks is shown.
+        This test exercises the process library widget displayed in the left
+        panel of the Pipeline Manager tab, which contains the list of available
+        processes and packages.
+
+        The following behaviors are verified:
+            - insertion of a new package node,
+            - MIME data generation for drag-and-drop,
+            - renaming of a package,
+            - deletion via the Delete key,
+            - context-menu action: remove package,
+            - context-menu action: delete package with confirmation dialog.
+
+        All user interactions involving Qt dialogs or menus are mocked to
+        allow automated execution without GUI blocking.
+
+        :param mock_msgbox_exec: Mock for QMessageBox.exec to prevent actual
+         execution of modal dialogs.
+        :param mock_msgbox_question: Mock for QMessageBox.question used to
+         simulate user confirmation (returns QMessageBox.Yes).
+        :param mock_menu_exec: Mock for QMenu.exec_ to simulate context menu
+         selection without displaying a GUI menu.
         """
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
@@ -12459,7 +12560,7 @@ class Test_Z_MIAOthers(TestMIACase):
     def test_verify_processes(self):
         """Check that Mia's processes control is working correctly
 
-        - Tests: utils.verify_processes()
+        Tests: utils.verify_processes()
         """
         config = Config()
         proc_config = os.path.join(
