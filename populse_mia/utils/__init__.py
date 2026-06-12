@@ -1,9 +1,5 @@
 """
 Utilities and tools used across Mia
-
-Contains:
-    Modules:
-        - utils.py
 """
 
 ###############################################################################
@@ -39,3 +35,5 @@ from .utils import (  # noqa: F401
     verify_processes,
     verify_setup,
 )
+
+__all__ = []
