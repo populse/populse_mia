@@ -4,9 +4,26 @@ populse\_mia.cli\_args
 .. automodule:: populse_mia.cli_args
 
    
+   
+   
+
+   
+   
    .. rubric:: Functions
 
    .. autosummary::
    
       parse_args
    
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

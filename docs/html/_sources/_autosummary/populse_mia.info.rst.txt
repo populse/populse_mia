@@ -4,9 +4,26 @@ populse\_mia.info
 .. automodule:: populse_mia.info
 
    
+   
+   
+
+   
+   
    .. rubric:: Functions
 
    .. autosummary::
    
       get_populse_mia_gitversion
    
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+

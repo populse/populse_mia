@@ -4,6 +4,11 @@ populse\_mia.user\_interface.pipeline\_manager.pipeline\_editor
 .. automodule:: populse_mia.user_interface.pipeline_manager.pipeline_editor
 
    
+   
+   
+
+   
+   
    .. rubric:: Functions
 
    .. autosummary::
@@ -12,6 +17,10 @@ populse\_mia.user\_interface.pipeline\_manager.pipeline\_editor
       get_path
       save_pipeline
    
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
@@ -19,3 +28,11 @@ populse\_mia.user\_interface.pipeline\_manager.pipeline\_editor
       PipelineEditor
       PipelineEditorTabs
    
+   
+
+   
+   
+   
+
+
+

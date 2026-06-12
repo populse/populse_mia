@@ -4,9 +4,26 @@ populse\_mia.user\_interface.main\_window
 .. automodule:: populse_mia.user_interface.main_window
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
    .. rubric:: Classes
 
    .. autosummary::
    
       MainWindow
    
+   
+
+   
+   
+   
+
+
+

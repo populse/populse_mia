@@ -4,10 +4,28 @@ populse\_mia.utils
 .. automodule:: populse_mia.utils
 
    
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   
+
+
+
 .. rubric:: Modules
 
 .. autosummary::
    :toctree:
    :recursive:
 
-   utils
+   populse_mia.utils.utils
+
