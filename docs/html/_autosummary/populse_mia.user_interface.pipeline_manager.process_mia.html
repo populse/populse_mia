@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+8d6436d7 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+d3dfa881 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=bd49a031"></script>
+    <script src="../_static/documentation_options.js?v=eef4b4cc"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+8d6436d7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d3dfa881 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -67,7 +67,7 @@ mia_processes, Nipype, and Capsul.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.Pipeline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">Pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">autoexport_nodes_parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/capsul/pipeline/pipeline.html#Pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.Pipeline" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
 <p>Pipeline containing Process nodes, and links between node parameters.</p>
 <p>A Pipeline is normally subclassed, and its <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition" title="populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a>
 method is overloaded to define its nodes and links.
@@ -100,7 +100,7 @@ are listed in a special “do_not_export” list (passed to
 <p>A pipeline is made of nodes, and links between their parameters. Several
 types of nodes may be part of a pipeline:</p>
 <ul class="simple">
-<li><p>process nodes (<a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.ProcessNode" title="capsul.pipeline.pipeline_nodes.ProcessNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.ProcessNode</span></code></a>) are the leaf nodes
+<li><p>process nodes (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode" title="capsul.pipeline.pipeline_nodes.ProcessNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.ProcessNode</span></code></a>) are the leaf nodes
 which represent actual processing bricks.</p></li>
 <li><p>pipeline nodes (<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PipelineNode" title="capsul.pipeline.pipeline_nodes.PipelineNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.PipelineNode</span></code></a>) are
 sub-pipelines which allow to reuse an existing pipeline within another
@@ -669,7 +669,7 @@ manuyally set values to be overridden by completion.</p>
 <dd class="field-odd"><p><strong>nodes</strong> – Iterates over all nodes</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Node" title="capsul.pipeline.pipeline_nodes.Node">Node</a></p>
+<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node">Node</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -681,7 +681,7 @@ manuyally set values to be overridden by completion.</p>
 state and the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Node" title="capsul.pipeline.pipeline_nodes.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_activated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -700,7 +700,7 @@ activated</p>
 activation state and to the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Node" title="capsul.pipeline.pipeline_nodes.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_deactivated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -781,7 +781,7 @@ _free_temporary_files().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Node" title="capsul.pipeline.pipeline_nodes.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
+<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
 <li><p><strong>temp_files</strong> (<a class="reference external" href="https://docs.python.org/3.12/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – list of temporary files for the pipeline execution. The list will
 be modified (completed).</p></li>
 </ul>
@@ -1968,7 +1968,7 @@ conform to the API.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">ProcessNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/capsul/pipeline/pipeline_nodes.html#ProcessNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Node" title="capsul.pipeline.pipeline_nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="capsul.pipeline.pipeline_nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
 <p>Process node.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode.process">
@@ -2173,7 +2173,7 @@ pipeline).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessIteration">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">ProcessIteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterative_parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">study_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/capsul/pipeline/process_iteration.html#ProcessIteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessIteration" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -4008,7 +4008,7 @@ or None if the engine is not initialized.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">PopUpInheritanceDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.QDialog" title="PyQt5.QtWidgets.QDialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.QDialog" title="PyQt5.QtWidgets.QDialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for selecting tag inheritance between input and output plugs.</p>
 <p>This dialog allows users to select which input plug should pass its tags
 to a specific output plug, or to choose to ignore tag inheritance
@@ -4126,60 +4126,49 @@ pipeline.</p>
 <dd><p>Automatically infer database tags for output parameters from input
 parameters.</p>
 <ol class="arabic simple">
-<li><dl class="simple">
-<dt><strong>Single input case</strong>: When only one input parameter has a database</dt><dd><p>value, all outputs inherit from this input.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Multiple inputs with same value</strong>: When multiple inputs exist but</dt><dd><p>have identical database values, fallback to single input behavior.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt><strong>Ambiguous case</strong>: When multiple inputs have different database</dt><dd><p>values, track all possible inheritance sources for user resolution.</p>
-</dd>
-</dl>
-</li>
+<li><p><strong>Single input case</strong>: When only one input parameter has a database
+value, all outputs inherit from this input.</p></li>
+<li><p><strong>Multiple inputs with same value</strong>: When multiple inputs exist but
+have identical database values, fallback to single input behavior.</p></li>
+<li><p><strong>Ambiguous case</strong>: When multiple inputs have different database
+values, track all possible inheritance sources for user resolution.</p></li>
 </ol>
-<p>The process attribute auto_inheritance_dict is filled with these
-values. It’s a dict with the shape:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">output_filename</span><span class="p">:</span> <span class="o">&lt;</span><span class="n">input_spec</span><span class="o">&gt;</span><span class="p">}</span>
-</pre></div>
-</div>
-<p><cite>output_filename</cite> is the relative filename in the database</p>
-<p><cite>&lt;input_spec&gt;</cite> can be:</p>
-<ul>
+<p>The process attribute auto_inheritance_dict is a dictionary filled with
+these values: <cite>{output_filename: &lt;input_spec&gt;}</cite></p>
+<blockquote>
+<div><ul>
+<li><p><cite>output_filename</cite> is the relative filename in the database</p></li>
+<li><p><cite>&lt;input_spec&gt;</cite> can be:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>a string: filename</p></li>
-<li><p>a dict:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">input_param</span><span class="p">:</span> <span class="n">input_filename</span><span class="p">}</span>
-</pre></div>
-</div>
+<li><p>a dict: <cite>{input_param: input_filename}</cite></p></li>
+</ul>
+</div></blockquote>
 </li>
 </ul>
+</div></blockquote>
 <p><cite>auto_inheritance_dict</cite> is built automatically, and is used as a
 fallback to <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code></a> <cite>inheritance_dict</cite>, built “manually”
 (specialized for each process) in the <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">ProcessMIA.list_outputs()</span></code></a>
 when the latter does not exist, or does not specify what an output
 inherits from.</p>
-<p>If ambiguities still subsist, the Mia infrastructure will ask the user
-how to solve them, which is not very convenient, and error-prone, thus
-should be avoided.</p>
+<p>If ambiguities still subsist, the Mia infrastructure will ask the user how
+to solve them, which is not very convenient, and error-prone, thus should
+be avoided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> – The node (typically a process or process node) whose
-inputs and outputs are analyzed for tag inheritance.</p></li>
-<li><p><strong>job</strong> – An optional job object containing parameter values to
-override or populate the node’s inputs and outputs.
-Defaults to None.</p></li>
+<li><p><strong>node</strong> – The node (typically a process or process node) whose inputs
+and outputs are analyzed for tag inheritance.</p></li>
+<li><p><strong>job</strong> – An optional job object containing parameter values to override
+or populate the node’s inputs and outputs. Defaults to None.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (dict or None)<span class="colon">:</span></dt>
-<dd class="field-even"><p>Auto-inheritance mapping if successful and no
-job provided, None if no inheritance can be
-determined or job is provided (in which case
-the job object is updated in-place).</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(dict or None): Auto-inheritance mapping if successful and no
+job provided, None if no inheritance can be determined or job is provided
+(in which case the job object is updated in-place).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -4519,7 +4508,7 @@ associated with the process.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">ProcessMIA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#ProcessMIA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.utils.utils.html#populse_mia.utils.utils.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Process" title="capsul.process.process.Process"><code class="xref py py-class docutils literal notranslate"><span class="pre">Process</span></code></a></p>
 <p>Extends the Capsul Process class to customize execution for Mia bricks.</p>
 <p>This class provides specialized methods for Mia bricks, including process
 initialization, output handling, and trait management.</p>
