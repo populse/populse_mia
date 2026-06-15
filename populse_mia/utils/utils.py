@@ -1,34 +1,5 @@
 """
 Module that contains multiple functions used across Mia.
-
-:Contains:
-    :Classes:
-        - PackagesInstall
-    :Functions:
-        - _is_valid_date(date_str, date_format)
-        - check_python_version
-        - check_value_type
-        - dict4runtime_update
-        - get_db_field_value
-        - get_document_names
-        - get_field_names
-        - get_shown_tags
-        - get_value
-        - launch_mia
-        - message_already_exists
-        - remove_document
-        - safe_connect
-        - safe_disconnect
-        - set_db_field_value
-        - set_filters_directory_as_default
-        - set_item_data
-        - set_projects_directory_as_default
-        - table_to_database
-        - type_name
-        - update_auto_inheritance
-        - verCmp
-        - verify_processes
-        - verify_setup
 """
 
 ##########################################################################
@@ -107,6 +78,34 @@ from populse_mia.data_manager import (  # noqa E402
     FIELD_TYPE_TIME,
 )
 
+__all__ = [
+    "PackagesInstall",
+    "_is_valid_date",
+    "check_python_version",
+    "check_value_type",
+    "dict4runtime_update",
+    "get_db_field_value",
+    "get_document_names",
+    "get_field_names",
+    "get_shown_tags",
+    "get_value",
+    "launch_mia",
+    "message_already_exists",
+    "remove_document",
+    "safe_connect",
+    "safe_disconnect",
+    "set_db_field_value",
+    "set_filters_directory_as_default",
+    "set_item_data",
+    "set_projects_directory_as_default",
+    "table_to_database",
+    "type_name",
+    "update_auto_inheritance",
+    "verCmp",
+    "verify_processes",
+    "verify_setup",
+]
+
 logger = logging.getLogger(__name__)
 
 default_password = "admin1234"
@@ -118,9 +117,10 @@ class PackagesInstall:
     Helps make a pipeline package available in the Mia pipeline library
     recursively.
 
-    :Contains:
-        :Method:
-            - __init__: constructor
+    Contains:
+
+        Methods:
+
             - add_package: provide recursive representation of a package
     """
 
@@ -137,7 +137,6 @@ class PackagesInstall:
 
     def __init__(self):
         """Initializes the package registry."""
-
         self.packages = {}
 
     def add_package(self, module_name, class_name=None):
@@ -145,14 +144,14 @@ class PackagesInstall:
         Recursively adds a package and its subpackages/modules to the Mia
         pipeline library.
 
-        :param module_name (str): Name of the module to add to the pipeline
-                                  library.
-        :param class_name (str): Specific class to add (optional). Only this
-                                 pipeline will be added to the pipeline
-                                 library.
-        :return: dictionary of dictionaries containing
-                 package/subpackages/pipelines status.
-                 ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
+        :param module_name: (str) Name of the module to add to the pipeline
+         library.
+        :param class_name: (str) Specific class to add (optional). Only this
+         pipeline will be added to the pipeline library.
+
+        :Returns: Dictionary of dictionaries containing
+         package/subpackages/pipelines status.
+         ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
         """
 
         # (filter out test modules)
@@ -270,11 +269,12 @@ def _is_valid_date(date_str, date_format):
     """
     Checks if a string matches the given date format.
 
-    :param date_str (str): The date string to validate.
-    :param date_format (str): The expected date format.
+    :param date_str: (str) The date string to validate.
+    :param date_format: (str) The expected date format.
 
-    :return (bool): True if the string matches the format, False otherwise.
+    :Returns: (bool) True if the string matches the format, False otherwise.
     """
+
     try:
         datetime.datetime.strptime(date_str, date_format)
         return True
@@ -301,12 +301,13 @@ def check_value_type(value, value_type, is_subvalue=False):
     """
     Checks the type of new value in a table cell (QTableWidget).
 
-    :param value (str): Value of the cell (always a str, can be a string
-                        representation of a list)
-    :param value_type (type): Expected type (can be list[str], list[int], etc.)
-    :param is_subvalue (bool): Whether the value is a subvalue of a list.
-    :return: True if the value is valid to replace the old one,
-             False otherwise
+    :param value: (str) Value of the cell (always a str, can be a string
+     representation of a list)
+    :param value_type: (type) Expected type (can be list[str], list[int], etc.)
+    :param is_subvalue: (bool) Whether the value is a subvalue of a list.
+
+    :Returns: True if the value is valid to replace the old one, False
+     otherwise
     """
 
     # Convert string to a list if it appears to be list-like
@@ -390,10 +391,10 @@ def dict4runtime_update(runtime_dict, project, db_filename, *tags):
     a tag is not present or its value is `None`, it is assigned the string
     "Undefined". Date values are converted to ISO-formatted strings.
 
-    :param runtime_dict (dict): Dictionary used to transfer data from
-                                `list_outputs` to `run_process_mia`.
+    :param runtime_dict: (dict) Dictionary used to transfer data from
+     `list_outputs` to `run_process_mia`.
     :param project: The project instance containing the database.
-    :param db_filename (str): The name of the database file to query.
+    :param db_filename: (str) The name of the database file to query.
     :param tags: Variable number of tag names to retrieve from the database.
     """
 
@@ -418,13 +419,13 @@ def get_db_field_value(project, document, field):
     Retrieve the value of a specific field for a document from the project's
     database.
 
-    :param project (Project): The current project instance containing the
-                              database.
-    :param document (str): The absolute path to the document.
-    :param field (str): The name of the field whose value should be retrieved.
+    :param project: (Project) The current project instance containing the
+     database.
+    :param document: (str) The absolute path to the document.
+    :param field: (str) The name of the field whose value should be retrieved.
 
-    :returns: The value of the specified field for the document in the current
-              collection.
+    :Returns: The value of the specified field for the document in the current
+     collection.
     """
     project_name = project.getName()
     start_index = document.find(project_name) + len(project_name) + 1
@@ -441,9 +442,9 @@ def get_document_names(project, collection):
     from the project's database.
 
     :param project: The project instance containing the database.
-    :param collection (str): The name of the collection to query.
+    :param collection: (str) The name of the collection to query.
 
-    :returns (list[str]): A list of document names in the collection.
+    :Returns: (list[str]) A list of document names in the collection.
     """
 
     with project.database.data() as database_data:
@@ -456,9 +457,9 @@ def get_field_names(project, collection):
     in the specified collection of the project's database.
 
     :param project: The project instance containing the database.
-    :param collection (str): The name of the collection to inspect.
+    :param collection: (str) The name of the collection to inspect.
 
-    :returns (list[str]): A list of field names in the collection.
+    :Returns: (list[str]) A list of field names in the collection.
     """
 
     with project.database.data() as database_data:
@@ -472,7 +473,7 @@ def get_shown_tags(project):
 
     :param project: The project instance containing the database.
 
-    :returns (list[str]): A list of tag names marked as shown.
+    :Returns: (list[str]) A list of tag names marked as shown.
     """
 
     with project.database.data() as database_data:
@@ -485,12 +486,12 @@ def get_value(project, collection, file_name, field):
     collection.
 
     :param project: The project instance containing the database.
-    :param collection (str): The name of the collection containing the
-                             document.
-    :param file_name (str): The name of the document (typically the file name).
-    :param field (str): The name of the field whose value is to be retrieved.
+    :param collection: (str) The name of the collection containing the
+     document.
+    :param file_name: (str) The name of the document (typically the file name).
+    :param field: (str) The name of the field whose value is to be retrieved.
 
-    :returns: The value of the specified field, or None if not found.
+    :Returns: The value of the specified field, or None if not found.
     """
 
     with project.database.data() as database_data:
@@ -511,13 +512,13 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
 
     All state is local and shared via closures.
 
-    :param MainWindow (class): The main window class to be instantiated.
-    :param Project (class): The project class to be instantiated.
-    :param SavedProjects (class): The class that manages all projects saved in
-                                  Mia.
-    :param Config (class): The class that manages Mia's configuration and
-                           properties.
-    :param args (argparse.Namespace): Parsed command-line arguments.
+    :param MainWindow: (class): The main window class to be instantiated.
+    :param Project: (class) The project class to be instantiated.
+    :param SavedProjects: (class) The class that manages all projects saved in
+     Mia.
+    :param Config: (class) The class that manages Mia's configuration and
+     properties.
+    :param args: (argparse.Namespace) Parsed command-line arguments.
     """
     # Register the exception hook early
     previous_excepthook = sys.excepthook
@@ -591,9 +592,9 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         delegates to Python's default exception handler, and exits the
         application with a non-zero status code.
 
-        :param etype (type): exception class
-        :param evalue (Exception): exception instance
-        :param tback(traceback): traceback object
+        :param etype: (type) Exception class.
+        :param evalue: (Exception): Exception instance.
+        :param tback: (traceback) Traceback object.
         """
         logger.exception(
             "Unhandled exception occurred",
@@ -630,8 +631,8 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         It performs necessary cleanup of application state and restores the
         terminal to a sane configuration before exiting the process.
 
-        :param signum (int): The signal number received (unused).
-        :param frame (frame): The current stack frame (unused).
+        :param signum: (int) The signal number received (unused).
+        :param frame: (frame) The current stack frame (unused).
         """
         _cleanup_and_quit()
         _restore_terminal()
@@ -644,7 +645,7 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         Projects whose directories no longer exist are removed from the saved
         projects list.
 
-        :return (list[str]): Absolute paths of deleted projects.
+        :Returns: (list[str]) Absolute paths of deleted projects.
         """
         saved_projects = SavedProjects()
         deleted_projects = [
@@ -726,11 +727,12 @@ def remove_document(project, collection, documents):
     in the given project's database.
 
     :param project: The project instance containing the database.
-    :param collection (str): The name of the collection from which documents
-                             will be removed.
-    :param documents (str or list[str]): A single document name or a list of
-                                         document names to remove.
+    :param collection: (str) The name of the collection from which documents
+     will be removed.
+    :param documents: (str or list[str]) A single document name or a list of
+     document names to remove.
     """
+
     if isinstance(documents, str):
         documents = [documents]
 
@@ -745,8 +747,8 @@ def safe_connect(signal, slot):
     Connect a Qt signal to a slot, ensuring a single connection.
 
     First disconnects ``signal`` from ``slot`` (if connected) to avoid
-    duplicate connections, then connects them. This guarantees that the
-    slot is connected exactly once.
+    duplicate connections, then connects them. This guarantees that the slot is
+    connected exactly once.
 
     :param signal: The Qt signal to (re)connect.
     :param slot: The slot (callable) to connect to the signal.
@@ -784,13 +786,12 @@ def set_db_field_value(project, document, tag_to_add):
     collections, it is added to both. The field is then assigned a value for
     the given document.
 
-    :param project (Project): The project instance containing the database
-                              and schema.
-    :param document (str): The absolute path of the document.
-    :param tag_to_add (dict): A dictionary describing the field with keys:
-                              'name', 'value', 'default_value',
-                              'description', 'field_type', 'origin',
-                              'unit', and 'visibility'.
+    :param project: (Project) The project instance containing the database
+     and schema.
+    :param document: (str) The absolute path of the document.
+    :param tag_to_add: (dict) A dictionary describing the field with keys:
+     'name', 'value', 'default_value', 'description', 'field_type', 'origin',
+     'unit', and 'visibility'.
     """
     tag_name = tag_to_add["name"]
     project_name = project.getName()
@@ -834,9 +835,9 @@ def set_db_field_value(project, document, tag_to_add):
 
 def set_filters_directory_as_default(dialog):
     """
-    Sets the filters directory as default (Json files)
+    Sets the filters directory as default (Json files).
 
-    :param dialog (QFileDialog): current file dialog
+    :param dialog: (QFileDialog) Current file dialog.
     """
     filters_dir = os.path.abspath(
         os.path.join(os.curdir, "..", "..", "filters")
@@ -855,15 +856,13 @@ def set_item_data(item, value, value_type):
     It supports both primitive types (e.g., `int`, `str`, `float`) and more
     complex types like `datetime`, `date`, `time`, and lists of these types.
 
-    :param item (QStandardItem): The item to update (expected to
-                                 support `setData` method).
-    :param value (Any): The new value to set for the item.
-    :param value_type (Type): The expected type of the value, which can be a
-                              standard Python type (e.g., `str`, `int`,
-                              `float`, `bool`) or a `typing`-based list
-                              type (e.g., `list[int]`, `list[datetime]`).
+    :param item: (QStandardItem) The item to update (expected to support
+     `setData` method).
+    :param value: (Any) The new value to set for the item.
+    :param value_type: (Type) The expected type of the value, which can be a
+     standard Python type (e.g., `str`, `int`, `float`, `bool`) or a
+     `typing`-based list type (e.g., `list[int]`, `list[datetime]`).
     """
-
     conversion_map = {
         FIELD_TYPE_DATETIME: lambda v: (
             v
@@ -919,11 +918,12 @@ def set_item_data(item, value, value_type):
         """
         Prepares the input value according to its expected type.
 
-        :param value (Any): The value to prepare.
-        :param expected_type (Type): The expected type of the value.
-        :return (Any): The prepared value suitable for use in a PyQt item.
+        :param value: (Any) The value to prepare.
+        :param expected_type: (Type) The expected type of the value.
 
+        :Returns: (Any) The prepared value suitable for use in a PyQt item.
         """
+
         if expected_type in conversion_map:
             converted_value = conversion_map[expected_type](value)
 
@@ -960,7 +960,7 @@ def set_projects_directory_as_default(dialog, Config):
     """
     Sets the projects directory as default.
 
-    :param dialog (QFileDialog): current file dialog.
+    :param dialog: (QFileDialog) Current file dialog.
     :param Config: The class that manages Mia's configuration and properties.
     """
     config = Config()
@@ -973,9 +973,9 @@ def table_to_database(value, value_type):
     """
     Prepares the value to the database based on its type.
 
-    :param value (Any): Value to convert.
-    :param value_type (Type): Value type.
-    :return (Any): The value converted for the database.
+    :param value: (Any) Value to convert.
+    :param value_type: (Type) Value type.
+    :Returns: (Any) The value converted for the database.
     """
 
     if value_type == FIELD_TYPE_FLOAT:
@@ -1036,11 +1036,12 @@ def type_name(t):
     Returns the name of a type or a string representation for generic
     aliases.
 
-    :param t (Any): The type to get the name or representation for.
-                    This can be a regular type (e.g., `str`, `list`) or a
-                    generic alias (e.g., `list[str]`).
-    :return: The name of the type (e.g., 'str') or the string representation
-             of the generic alias (e.g., 'list[str]').
+    :param t: (Any) The type to get the name or representation for. This can be
+     a regular type (e.g., `str`, `list`) or a generic alias
+     (e.g., `list[str]`).
+
+    :Returns: The name of the type (e.g., 'str') or the string representation
+     of the generic alias (e.g., 'list[str]').
     """
     return str(t) if isinstance(t, types.GenericAlias) else t.__name__
 
@@ -1051,25 +1052,21 @@ def update_auto_inheritance(node, job=None):
     parameters.
 
     1. **Single input case**: When only one input parameter has a database
-        value, all outputs inherit from this input.
+       value, all outputs inherit from this input.
     2. **Multiple inputs with same value**: When multiple inputs exist but
-        have identical database values, fallback to single input behavior.
+       have identical database values, fallback to single input behavior.
     3. **Ambiguous case**: When multiple inputs have different database
-        values, track all possible inheritance sources for user resolution.
+       values, track all possible inheritance sources for user resolution.
 
-    The process attribute auto_inheritance_dict is filled with these
-    values. It's a dict with the shape::
+    The process attribute auto_inheritance_dict is a dictionary filled with
+    these values: `{output_filename: <input_spec>}`
 
-        {output_filename: <input_spec>}
+        - `output_filename` is the relative filename in the database
 
-    `output_filename` is the relative filename in the database
+        - `<input_spec>` can be:
 
-    `<input_spec>` can be:
-
-    * a string: filename
-    * a dict::
-
-            {input_param: input_filename}
+            - a string: filename
+            - a dict: `{input_param: input_filename}`
 
     `auto_inheritance_dict` is built automatically, and is used as a
     fallback to :class:`ProcessMIA` `inheritance_dict`, built "manually"
@@ -1077,20 +1074,18 @@ def update_auto_inheritance(node, job=None):
     when the latter does not exist, or does not specify what an output
     inherits from.
 
-    If ambiguities still subsist, the Mia infrastructure will ask the user
-    how to solve them, which is not very convenient, and error-prone, thus
-    should be avoided.
+    If ambiguities still subsist, the Mia infrastructure will ask the user how
+    to solve them, which is not very convenient, and error-prone, thus should
+    be avoided.
 
-    :param node: The node (typically a process or process node) whose
-                    inputs and outputs are analyzed for tag inheritance.
-    :param job: An optional job object containing parameter values to
-                override or populate the node's inputs and outputs.
-                Defaults to None.
+    :param node: The node (typically a process or process node) whose inputs
+     and outputs are analyzed for tag inheritance.
+    :param job: An optional job object containing parameter values to override
+     or populate the node's inputs and outputs. Defaults to None.
 
-    :return (dict or None): Auto-inheritance mapping if successful and no
-                            job provided, None if no inheritance can be
-                            determined or job is provided (in which case
-                            the job object is updated in-place).
+    :Returns: (dict or None): Auto-inheritance mapping if successful and no
+     job provided, None if no inheritance can be determined or job is provided
+     (in which case the job object is updated in-place).
     """
     # Extract process from node if needed
     process = node.process if isinstance(node, ProcessNode) else node
@@ -1288,33 +1283,33 @@ def update_auto_inheritance(node, job=None):
 def verCmp(first_ver, sec_ver, comp):
     """Version comparator.
 
-    Compares two versions according to the specified comparator:
+    Compares two package versions according to the specified comparator:
       - 'eq': Returns True if the first version is equal to the second.
       - 'sup': Returns True if the first version is greater than or equal
-               to the second.
+        to the second.
       - 'inf': Returns True if the first version is less than or equal to
-               the second.
+        the second.
 
-    :param first_ver (str): The first version to compare (e.g., '0.13.0').
-    :param sec_ver (str): The second version to compare (e.g., '0.13.0').
-    :param comp (str): The comparator to use ('sup', 'inf', 'eq').
+    :param first_ver: (str) The first version to compare (e.g., '0.13.0').
+    :param sec_ver: (str) The second version to compare (e.g., '0.13.0').
+    :param comp: (str) The comparator to use ('sup', 'inf', 'eq').
 
-    :return: True if the comparison condition is satisfied, False otherwise.
+    :Returns: True if the comparison condition is satisfied, False otherwise.
 
     Contains:
 
             Inner functions:
 
-                - normalise: transform a version of a package to a
-                  corresponding list of integer
+                - normalise: Transform a version of a package to a
+                  corresponding list of integer.
     """
 
     def normalise(v):
         """Transform a version of a package to a list of integer.
 
-        :param v (str): version of a package (ex. 5.4.1)
+        :param v: (str) Version of a package (ex. 5.4.1).
 
-        :return (list[int]): a list of integer (ex. [0, 13, 0])
+        :Returns: (list[int]) A list of integer (ex. [5, 4, 1]).
         """
 
         v = re.sub(r"[^0-9\.]", "", v)
@@ -1336,12 +1331,13 @@ def verCmp(first_ver, sec_ver, comp):
 
 
 def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
-    """Install or update to the last version available on the station, for
-    nipype, capsul and mia_processes processes libraries.
+    """
+    Install or update to the last version available on the station, for nipype,
+    capsul and mia_processes processes libraries.
 
-    :param nipypeVer: nipype version currently installed (str).
-    :param miaProcVer: mia_processes version currently installed (str).
-    :param capsulVer: capsul version currently installed (str).
+    :param nipypeVer: (str) nipype version currently installed.
+    :param miaProcVer: (str) mia_processes version currently installed.
+    :param capsulVer: (str) capsul version currently installed.
     :param Config: The class that manages Mia's configuration and properties.
 
     By default, Mia provides three process libraries in the pipeline library
@@ -1358,6 +1354,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
     mia_processes libraries in the pipeline library accordingly. Currently, it
     is mandatory to have nipype, capsul and mia_processes installed in the
     station.
+
     All this information, as well as the installed versions and package
     paths are saved in the  properties_path/properties/process_config.yml file.
     When an upgrade or downgrade is performed for a package, the last
@@ -1369,7 +1366,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             Inner functions:
 
-                - _deepCompDic: keep the previous config existing before
+                - _deepCompDic: Keep the previous config existing before
                   packages update.
     """
 
@@ -1378,14 +1375,13 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
         Recursively compares two dictionaries and retains the previous
         configuration where applicable.
 
-
         This function is used to preserve user display preferences in the
         Pipeline Manager Editor, ensuring that configurations not updated
         or changed remain intact.
 
-        :param old_dic (dict): The previous package configuration.
-        :param new_dic (dict): The new package configuration.
-        :return: True if all keys at the current level match, False if not.
+        :param old_dic: (dict) The previous package configuration.
+        :param new_dic: (dict) The new package configuration.
+        :Returns: True if all keys at the current level match, False if not.
         """
 
         if isinstance(old_dic, str):
@@ -1951,21 +1947,21 @@ def verify_setup(
     """Check and try to correct the configuration if necessary.
 
     :param Config: The class that manages Mia's configuration and properties.
-    :param dev_mode (bool): the current developer mode.
-                            (True: dev, False: user)
-    :param pypath (list): List of paths for the capsul config.
-    :param dot_mia_config (str): Path to the configuration_path.yml file.
+    :param dev_mode: (bool) The current developer mode. (True: dev,
+     False: user)
+    :param pypath: (list) List of paths for the capsul config.
+    :param dot_mia_config: (str) Path to the configuration_path.yml file.
 
     Contains:
 
             Inner functions:
 
-                - _browse_properties_path: the user define the properties_path
+                - _browse_properties_path: The user define the properties_path
                   parameter.
-                - _cancel_clicked: exit form Mia.
-                - _make_default_config: make default configuration.
-                - _save_yml_file: save data in a YAML file.
-                - _verify_miaConfig: check the config and try to fix if
+                - _cancel_clicked: Exit form Mia.
+                - _make_default_config: Make default configuration.
+                - _save_yml_file: Save data in a YAML file.
+                - _verify_miaConfig: Check the config and try to fix if
                   necessary.
     """
 
@@ -1981,10 +1977,10 @@ def verify_setup(
         which will use the value of the properties_path parameter,
         defined here.
 
-        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object in the
-                                                 _verify_setup() function
-        :param checked (bool): Not used, but necessary for the connection with
-                        the browse button in the verify_setup()) function
+        :param dialog: (PyQt5.QtWidgets.QDialog) 'msg' object in the
+         _verify_setup() function.
+        :param checked: (bool) Not used, but necessary for the connection with
+         the browse button in the verify_setup()) function.
         """
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
@@ -2014,10 +2010,10 @@ def verify_setup(
         """
         Cancel the configuration check.
 
-        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object in the
-                                                 _verify_setup() function
+        :param dialog: (PyQt5.QtWidgets.QDialog) 'msg' object in the
+         _verify_setup() function.
         :param checked: Not used, but necessary for the connection with the
-                        cancel button in the verify_setup()) function
+         cancel button in the verify_setup()) function.
         """
         dialog.close()
         logger.error(
@@ -2029,16 +2025,16 @@ def verify_setup(
         """
         Create default configuration files and directories.
 
-        Default directories (properties_path/properties,
+        Default directories (properties_path/properties and
         properties_path/processes/User_processes), configuration files
-        (properties_path/properties/saved_projects.yml,
+        (properties_path/properties/saved_projects.yml and
         properties_path/properties/config.yml) and
         properties_path/processes/User_processes__init__.py are created
         only if they do not exist (they are not overwritten if they already
         exist).
 
-        :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the
-                       main function)
+        :param dialog: PyQt5.QtWidgets.QDialog object ('msg' in the main
+         function)
         """
 
         properties_path = dialog.file_line_edit.text().rstrip(os.sep)
@@ -2114,7 +2110,7 @@ def verify_setup(
     def _save_yml_file(content, file_path):
         """Save data in a YAML file.
 
-        :param content (dict): The content of the file_path.
+        :param content: (dict) The content of the file_path.
         :param file_path: A .yml file path.
         """
 
@@ -2127,7 +2123,8 @@ def verify_setup(
             )
 
     def _verify_miaConfig(dialog=None, checked=False):
-        """Check the config is not corrupted and try to fix if necessary.
+        """
+        Check the config is not corrupted and try to fix if necessary.
 
         The purpose of this method is twofold. First, it allows to
         update the obsolete values for some parameters of the
@@ -2146,10 +2143,10 @@ def verify_setup(
         "Properties path selection" window is not closed and the user is again
         prompted to set the properties_path parameter.
 
-        :param dialog (PyQt5.QtWidgets.QDialog): 'msg' object  in the
-                                                  verify_setup() function
-        :param checked (bool): Not used, but necessary for the connection with
-                               the OK button in the verify_setup() function
+        :param dialog: (PyQt5.QtWidgets.QDialog) 'msg' object  in the
+         verify_setup() function.
+        :param checked: (bool) Not used, but necessary for the connection with
+         the OK button in the verify_setup() function.
         """
 
         save_flag = False
