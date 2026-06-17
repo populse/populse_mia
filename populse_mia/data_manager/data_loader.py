@@ -160,10 +160,10 @@ class ImportWorker(QThread):
             - _update_database: update the database with the processed
               documents.
 
-        Signals:
+    Signals:
 
-            - notifyProgress: Signal to update the progress bar. Emits an
-              integer representing the progress percentage.
+        - notifyProgress: Signal to update the progress bar. Emits an integer
+          representing the progress percentage.
     """
 
     # Signal to update the progress bar

@@ -68,56 +68,60 @@ class MiniViewer(QWidget):
     per scan or all images of the greater dimension of the scan.
 
     Displayed images depend on their dimension:
-    - 3D: Display all slices.
-    - 4D: Display the middle slice of the third dimension for each time of the
-          fourth dimension.
-    - 5D: Display the middle slice of the third dimension for the first time
-          of the fourth dimension for each time of the fifth dimension.
+        - 3D: Display all slices.
+        - 4D: Display the middle slice of the third dimension for each time of
+          the fourth dimension.
+        - 5D: Display the middle slice of the third dimension for the first
+          time of the fourth dimension for each time of the fifth dimension.
 
     Note:
         - idx corresponds to the index of the displayed image
         - idx in [0, self.max_scans]
         - most of the class's attributes are lists of 0 to self.max_scans
-           elements
+          elements
 
-    .. Methods:
-        - __init__: initialise the MiniViewer object.
-        - _create_layouts: Create the layouts for the MiniViewer
-        - _create_top_bar: Create the top bar with the checkboxes and the
-                           orientation label
-        - _initialize_checkboxes: Initialize the checkboxes for the MiniViewer
-        - _initialize_components: Initialize the components of the MiniViewer
+    Contains:
 
-        - boxSlider: create sliders, their connections and thumbnail labels
-                     for a selected index
-        - changePosValue: change the value of a cursor for the selected index
-        - check_box_cursors_state_changed: updates the config file
-        - clear: remove the Nibabel images to be able to remove it in the
-                 unit tests
-        - clear_layouts: clear the final layout
-        - createDimensionLabels: create the dimension labels for the
-                                 selected index
-        - createFieldValue: create a field where will be displayed the
-                            position of a cursor
-        - create_slider: create a slider
-        - displayPosValue: display the position of each cursor for the
-                           selected index
-        - enableSliders: enable each slider of the selected index
-        - image2DModifications: apply modifications to the image to
-                                display it correctly
-        - image_to_pixmap: create a 2D pixmap from a N-D Nifti image
-        - indexImage: update the sliders values depending on the size of
-                      the selected image
-        - mem_release: reset all object lists to zero in order to
-                       preserve memory
-        - navigImage: display the 2D image for the selected index
-        - openTagsPopUp: opens a pop-up to select the legend of the thumbnails
-        - setThumbnail: set the thumbnail tag value under the image frame
-        - show_slices: create the thumbnails from the selected file paths
-        - update_nb_slices: update the config file and the thumbnails
-        - update_visualization: update the config file and the thumbnails
-        - verify_slices: verify the number of selected documents
+        Methods:
 
+            - _create_layouts: Create the layouts for the MiniViewer.
+            - _create_top_bar: Create the top bar with the checkboxes and the
+              orientation label.
+            - _initialize_checkboxes: Initialize the checkboxes for the
+              MiniViewer.
+            - _initialize_components: Initialize the components of the
+              MiniViewer.
+            - boxSlider: Create sliders, their connections and thumbnail labels
+              for a selected index.
+            - changePosValue: Change the value of a cursor for the selected
+              index.
+            - check_box_cursors_state_changed: Updates the config file.
+            - clear: Remove the Nibabel images to be able to remove it in the
+              unit tests.
+            - clear_layouts: Clear the final layout.
+            - createDimensionLabels: Create the dimension labels for the
+              selected index.
+            - createFieldValue: Create a field where will be displayed the
+              position of a cursor.
+            - create_slider: Create a slider.
+            - displayPosValue: Display the position of each cursor for the
+              selected index.
+            - enableSliders: Enable each slider of the selected index.
+            - image2DModifications: Apply modifications to the image to display
+              it correctly.
+            - image_to_pixmap: Create a 2D pixmap from a N-D Nifti image.
+            - indexImage: Update the sliders values depending on the size of
+              the selected image.
+            - mem_release: Reset all object lists to zero in order to preserve
+              memory.
+            - navigImage: Display the 2D image for the selected index.
+            - openTagsPopUp: Opens a pop-up to select the legend of the
+              thumbnails.
+            - setThumbnail: Set the thumbnail tag value under the image frame.
+            - show_slices: Create the thumbnails from the selected file paths.
+            - update_nb_slices: Update the config file and the thumbnails.
+            - update_visualization: Update the config file and the thumbnails.
+            - verify_slices: Verify the number of selected documents.
     """
 
     def __init__(self, project):
@@ -283,8 +287,9 @@ class MiniViewer(QWidget):
             - Empty collections for dynamic image display elements (sliders,
               labels, images)
 
-        Note: Image-related collections are initialized as empty lists and
-              populated dynamically based on the loaded data dimensions.
+        Note:
+            Image-related collections are initialized as empty lists and
+            populated dynamically based on the loaded data dimensions.
         """
         # Main container widgets
         self.labels = QWidget()
@@ -322,14 +327,15 @@ class MiniViewer(QWidget):
         """
         Initialize dimensional sliders and value fields for a given index.
 
-        Creates three sliders (3D, 4D, 5D) with their corresponding text
-        fields and connects each slider's valueChanged signal to the
-        appropriate position update handler.
+        Creates three sliders (3D, 4D, 5D) with their corresponding text fields
+        and connects each slider's valueChanged signal to the appropriate
+        position update handler.
 
-        :param idx (int): The index position where sliders should be inserted.
+        :param idx: (int) The index position where sliders should be inserted.
 
-        Note: Each slider is connected to changePosValue with dimension
-              offsets:
+        Note:
+            Each slider is connected to changePosValue with dimension offsets:
+
                 - 3D slider: dimension 1
                 - 4D slider: dimension 2
                 - 5D slider: dimension 3
@@ -523,16 +529,16 @@ class MiniViewer(QWidget):
         :param minimum: The minimum value of the slider. Defaults to 0.
         :param maximum: The maximum value of the slider. Defaults to 0.
         :param position: The initial position/value of the slider.
-                         Defaults to 0.
+         Defaults to 0.
 
-        :return QSlider: A configured horizontal slider widget, initially
-                         disabled.
+        :Returns: (QSlider) A configured horizontal slider widget, initially
+         disabled.
 
         Note:
-        The slider is created with strong focus policy and a tick interval of
-        1. It starts in a disabled state. With default parameters (min=0,
-        max=0), the slider has no range and should be configured before
-        enabling.
+            The slider is created with strong focus policy and a tick interval
+            of 1. It starts in a disabled state. With default parameters
+            (min=0, max=0), the slider has no range and should be configured
+            before enabling.
         """
         slider = QSlider(Qt.Horizontal)
         slider.setFocusPolicy(Qt.StrongFocus)
@@ -582,17 +588,18 @@ class MiniViewer(QWidget):
         Apply display modifications to a 2D image slice.
 
         Processes an image for optimal display by:
-        1. Resizing to standard display dimensions
-        2. Rescaling intensities with percentile-based clipping
-        3. Converting to appropriate display data type
-        4. Applying orientation rotation (radiological/neurological)
+            1. Resizing to standard display dimensions
+            2. Rescaling intensities with percentile-based clipping
+            3. Converting to appropriate display data type
+            4. Applying orientation rotation (radiological/neurological)
 
         :param idx: Index of the image slice in the internal array
         :param im2D: Optional 2D numpy array to modify. If None, uses
-                     self.im_2D[idx]
+         self.im_2D[idx]
 
-        Note: When im2D is not provided, the modified image is stored in
-              self.im_2D[idx]
+        Note:
+            When im2D is not provided, the modified image is stored in
+            self.im_2D[idx]
         """
 
         def _resize_image(image, target_size):
@@ -656,13 +663,13 @@ class MiniViewer(QWidget):
         def _apply_rotation(image):
             """Apply orientation-specific rotation to image.
 
-            :param image: 2D numpy array to rotate
+            :param image: 2D numpy array to rotate.
 
-            :return (numpy.ndarray): Rotated image with contiguous memory
-                                     layout
+            :Returns: (numpy.ndarray) Rotated image with contiguous memory
+             layout.
 
             Note:
-                Copy is made to ensure contiguous memory (Qt compatibility)
+                Copy is made to ensure contiguous memory (Qt compatibility).
             """
 
             if self.config.isRadioView():
@@ -921,13 +928,14 @@ class MiniViewer(QWidget):
         the user.
 
         The viewer supports two display modes:
-        - Cursor mode (default): Shows one slice per image with interactive
-          3D/4D/5D sliders
-        - All slices mode: Displays multiple consecutive slices from each image
+            - Cursor mode (default): Shows one slice per image with interactive
+              3D/4D/5D sliders.
+            - All slices mode: Displays multiple consecutive slices from each
+              image.
 
         :param file_paths: List of paths to neuroimaging files (NIfTI format)
-                           to display. Invalid or non-existent files are
-                           automatically filtered out with warnings.
+         to display. Invalid or non-existent files are automatically filtered
+         out with warnings.
 
         Side effects:
             - Modifies self.file_paths by removing invalid entries
@@ -938,8 +946,8 @@ class MiniViewer(QWidget):
 
         Note:
             Maximum thumbnails displayed is controlled by
-            self.config.get_max_thumbnails() in cursor mode, and by
-            self.line_edit_nb_slices.text() in all slices mode.
+            `self.config.get_max_thumbnails()` in cursor mode, and by
+            `self.line_edit_nb_slices.text()` in all slices mode.
         """
 
         # Show viewer on first call

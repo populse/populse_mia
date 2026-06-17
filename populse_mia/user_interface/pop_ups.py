@@ -1,40 +1,5 @@
 """
 Module that defines all the pop-ups used across the Mia software.
-
-:Contains:
-    :Class:
-        - ClickableLabel
-        - DefaultValueListCreation
-        - DefaultValueQLineEdit
-        - PopUpAddPath
-        - PopUpAddTag
-        - PopUpCloneTag
-        - PopUpClosePipeline
-        - PopUpDataBrowserCurrentSelection
-        - PopUpDeletedProject
-        - PopUpDeleteProject
-        - PopUpFilterSelection
-        - PopUpInformation
-        - PopUpInheritanceDict
-        - PopUpMultipleSort
-        - PopUpNewProject
-        - PopUpOpenProject
-        - PopUpPreferences
-        - PopUpProperties
-        - PopUpQuit
-        - PopUpRemoveScan
-        - PopUpRemoveTag
-        - PopUpSaveProjectAs
-        - PopUpSeeAllProjects
-        - PopUpSelectFilter
-        - PopUpSelectIteration
-        - PopUpTagSelection  (must precede PopUpSelectTag)
-        - PopUpSelectTag
-        - PopUpSelectTagCountTable
-        - PopUpShowHistory
-        - PopUpVisualizedTags
-        - QLabel_clickable
-
 """
 
 ##########################################################################
@@ -158,6 +123,40 @@ from populse_mia.utils import (
     verCmp,
 )
 
+__all__ = [
+    "ClickableLabel",
+    "DefaultValueListCreation",
+    "DefaultValueQLineEdit",
+    "PopUpAddPath",
+    "PopUpAddTag",
+    "PopUpCloneTag",
+    "PopUpClosePipeline",
+    "PopUpDataBrowserCurrentSelection",
+    "PopUpDeletedProject",
+    "PopUpDeleteProject",
+    "PopUpFilterSelection",
+    "PopUpInformation",
+    "PopUpInheritanceDict",
+    "PopUpMultipleSort",
+    "PopUpNewProject",
+    "PopUpOpenProject",
+    "PopUpPreferences",
+    "PopUpProperties",
+    "PopUpQuit",
+    "PopUpRemoveScan",
+    "PopUpRemoveTag",
+    "PopUpSaveProjectAs",
+    "PopUpSeeAllProjects",
+    "PopUpSelectFilter",
+    "PopUpSelectIteration",
+    "PopUpTagSelection",
+    "PopUpSelectTag",
+    "PopUpSelectTagCountTable",
+    "PopUpShowHistory",
+    "PopUpVisualizedTags",
+    "QLabel_clickable",
+]
+
 logger = logging.getLogger(__name__)
 ph = argon2.PasswordHasher()
 
@@ -166,11 +165,15 @@ class ClickableLabel(QLabel):
     """
     A QLabel subclass that emits a signal when clicked.
 
-    .. Methods:
-        - mousePressEvent: overrides the mousePressEvent method by emitting
-          the clicked signal
+    Contains:
 
-    .. Signals:
+        Methods:
+
+            - mousePressEvent: Overrides the mousePressEvent method by emitting
+              the clicked signal.
+
+    Signals:
+
         - clicked: Emitted when the label is clicked.
     """
 
@@ -184,7 +187,8 @@ class ClickableLabel(QLabel):
         """
         Handles the mouse press event by emitting the `clicked` signal.
 
-        :param event (QMouseEvent): The mouse event triggering the signal.
+        :param event: (QMouseEvent) The mouse event triggering the signal
+         (unused)
         """
         self.clicked.emit()
 
@@ -193,17 +197,21 @@ class DefaultValueListCreation(QDialog):
     """
     A dialog for creating or editing a list's default value.
 
-    This widget allows users to input and manage a list of values
-    based on a specified type (e.g., integers, floats, booleans, etc.).
+    This widget allows users to input and manage a list of values based on a
+    specified type (e.g., integers, floats, booleans, etc.).
 
-    .. Methods:
-        - add_element(): Adds one more element to the list.
-        - default_init_table(): Initializes the table with a default value
-                                when no previous value exists.
-        - remove_element(): Removes the last element from the list.
-        - resize_table(): Adjusts the popup size based on the table content.
-        - update_default_value(): Validates user input and updates the
-                                  parent's default value.
+    Contains:
+
+        Methods:
+
+            - add_element(): Adds one more element to the list.
+            - default_init_table(): Initializes the table with a default value
+              when no previous value exists.
+            - remove_element(): Removes the last element from the list.
+            - resize_table(): Adjusts the popup size based on the table
+              content.
+            - update_default_value(): Validates user input and updates the
+              parent's default value.
 
     """
 
@@ -211,9 +219,9 @@ class DefaultValueListCreation(QDialog):
         """
         Initializes the DefaultValueListCreation dialog.
 
-        :param parent (DefaultValueQLineEdit): The parent object.
-        :param type (Type): The type of the list elements (e.g., int,
-                            float, str).
+        :param parent: (DefaultValueQLineEdit) The parent object.
+        :param type: (Type) The type of the list elements (e.g., int, float,
+         str).
 
         """
         super().__init__()
@@ -293,8 +301,8 @@ class DefaultValueListCreation(QDialog):
         """
         Adds a new empty element to the list.
 
-        Increases the number of columns in the table by one and adds
-        an empty `QTableWidgetItem` for user input.
+        Increases the number of columns in the table by one and adds an empty
+        `QTableWidgetItem` for user input.
         """
         self.table.setColumnCount(self.table.columnCount() + 1)
         self.table.setItem(0, self.table.columnCount() - 1, QTableWidgetItem())
@@ -330,8 +338,8 @@ class DefaultValueListCreation(QDialog):
         """
         Adjusts the size of the popup window based on the table content.
 
-        Dynamically resizes the table width and height based on the number
-        of columns and rows, with a maximum width limit of 900 pixels.
+        Dynamically resizes the table width and height based on the number of
+        columns and rows, with a maximum width limit of 900 pixels.
         """
         self.table.resizeColumnsToContents()
         total_width = sum(
@@ -349,12 +357,12 @@ class DefaultValueListCreation(QDialog):
         """
         Validates user input and updates the parent's default value.
 
-        Converts table values to the specified list type, ensuring that
-        each entry is valid. If any value is invalid, a warning message
-        is displayed, and the update is aborted.
+        Converts table values to the specified list type, ensuring that each
+        entry is valid. If any value is invalid, a warning message is
+        displayed, and the update is aborted.
 
-        If all values are valid, they are stored in the parent widget,
-        and the dialog is closed.
+        If all values are valid, they are stored in the parent widget, and the
+        dialog is closed.
         """
         type_parsers = {
             FIELD_TYPE_LIST_INTEGER: int,
@@ -405,8 +413,11 @@ class DefaultValueQLineEdit(QLineEdit):
     This class customizes QLineEdit to handle list-type default values by
     displaying a popup when clicked.
 
-    .. Methods:
-        - mousePressEvent: Mouse pressed on the QLineEdit
+    Contains:
+
+        Methods:
+
+            - mousePressEvent: Mouse pressed on the QLineEdit.
 
     """
 
@@ -423,7 +434,7 @@ class DefaultValueQLineEdit(QLineEdit):
 
         If the parent's type is a list, displays a popup for list creation.
 
-        :param event (QMouseEvent): The mouse press event (unused).
+        :param event: (QMouseEvent) The mouse press event (unused).
 
         """
         if get_origin(self.parent.type) is list:
@@ -440,18 +451,22 @@ class PopUpAddPath(QDialog):
     Dialog for adding a document to the project without using the MRI Files
     Manager (File > Import).
 
-    .. Methods:
-        - file_to_choose: Opens a file dialog to choose a document.
-        - find_type: Determines the document type when the file path changes.
-        - save_path: Adds the file path to the database and updates the UI.
+    Contains:
+
+        Methods:
+
+            - file_to_choose: Opens a file dialog to choose a document.
+            - find_type: Determines the document type when the file path
+              changes.
+            - save_path: Adds the file path to the database and updates the UI.
     """
 
     def __init__(self, project, databrowser):
         """
         Initializes the pop-up for adding a document.
 
-        :param project (Project): The current project instance.
-        :param databrowser (DataBrowser): The application's data browser.
+        :param project: (Project) The current project instance.
+        :param databrowser: (DataBrowser) The application's data browser.
         """
         super().__init__()
         self.project = project
@@ -659,16 +674,20 @@ class PopUpAddTag(QDialog):
     This dialog allows users to create a new tag by specifying its name,
     default value, description, unit, and type.
 
-    Attributes:
-        signal_add_tag: Signal emitted when a new tag is successfully added
+    Contains:
 
-    Methods:
-        - _connect_signals: Connect signals to slots
-        - _setup_layouts: Set up the layout of UI elements
-        - _setup_ui: Set up the dialog UI elements
-        - _show_error: Display an error message box
-        - ok_action: Validates input fields and adds the new tag if valid
-        - on_activated: Updates form fields when tag type is changed
+        Methods:
+
+            - _connect_signals: Connect signals to slots.
+            - _setup_layouts: Set up the layout of UI elements.
+            - _setup_ui: Set up the dialog UI elements.
+            - _show_error: Display an error message box.
+            - ok_action: Validates input fields and adds the new tag if valid.
+            - on_activated: Updates form fields when tag type is changed.
+
+    Signals:
+
+        - signal_add_tag: Signal emitted when a new tag is successfully added.
     """
 
     # Signal emitted when tag is successfully added
@@ -813,8 +832,8 @@ class PopUpAddTag(QDialog):
         """
         Display an error message box.
 
-        :param text: The main error message text
-        :param informative_text: The additional informative text
+        :param text: The main error message text.
+        :param informative_text: The additional informative text.
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
@@ -825,7 +844,8 @@ class PopUpAddTag(QDialog):
         self.msg.exec()
 
     def ok_action(self):
-        """Validate inputs and add the new tag if all fields are correct.
+        """
+        Validate inputs and add the new tag if all fields are correct.
 
         Performs validation on the tag name, type and default value to ensure
         they are valid before adding the tag to the project.
@@ -961,16 +981,22 @@ class PopUpCloneTag(QDialog):
     This dialog allows users to select an existing tag from the project and
     clone it with a new name.
 
-    Attributes:
-        signal_clone_tag: Signal emitted when a tag is successfully cloned
+    Contains:
 
-    Methods:
-        - _connect_signals: Connect signals to slots
-        - _populate_tag_list: Populate the tag list with available tags
-        - _setup_ui: Set up the dialog UI elements
-        - _show_error: Display an error message box
-        - ok_action: Validates the new tag name and clones the selected tag
-        - search_str: Filters the tag list based on a search string
+        Methods:
+
+            - _connect_signals: Connect signals to slots.
+            - _populate_tag_list: Populate the tag list with available tags.
+            - _setup_ui: Set up the dialog UI elements.
+            - _show_error: Display an error message box.
+            - ok_action: Validates the new tag name and clones the selected
+              tag.
+            - search_str: Filters the tag list based on a search string.
+
+    Signals:
+
+        - signal_clone_tag: Signal emitted when a tag is successfully cloned.
+
     """
 
     # Signal emitted when tag is successfully cloned
@@ -996,7 +1022,7 @@ class PopUpCloneTag(QDialog):
     def _connect_signals(self, project):
         """Connect signals to slots.
 
-        :param project: The current project
+        :param project: The current project.
         """
         self.push_button_ok.clicked.connect(lambda: self.ok_action(project))
         self.search_bar.textChanged.connect(partial(self.search_str, project))
@@ -1005,7 +1031,7 @@ class PopUpCloneTag(QDialog):
         """
         Populate the tag list with available tags from the project.
 
-        :param project: The current project
+        :param project: The current project.
         """
         _translate = QtCore.QCoreApplication.translate
 
@@ -1075,8 +1101,8 @@ class PopUpCloneTag(QDialog):
     def _show_error(self, text, informative_text):
         """Display an error message box.
 
-        :param text: The main error message text
-        :param informative_text: The additional informative text
+        :param text: The main error message text.
+        :param informative_text: The additional informative text.
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
@@ -1091,7 +1117,7 @@ class PopUpCloneTag(QDialog):
         """
         Validate new tag name and clone the selected tag if valid.
 
-        :param project: The current project
+        :param project: The current project.
         """
         new_tag_name = self.line_edit_new_tag_name.text()
         selected_items = self.list_widget_tags.selectedItems()
@@ -1134,8 +1160,8 @@ class PopUpCloneTag(QDialog):
     def search_str(self, project, search_text):
         """Filter the tag list based on the search string.
 
-        :param project: The current project
-        :param search_text: The search string to filter by
+        :param project: The current project.
+        :param search_text: The search string to filter by.
         """
         _translate = QtCore.QCoreApplication.translate
 
@@ -1175,25 +1201,25 @@ class PopUpClosePipeline(QDialog):
     closing the pipeline editor. It provides three options: save, don't
     save, or cancel.
 
+    Contains:
+
+        Methods:
+
+            - _connect_signals: Connect button signals to their respective
+              slots.
+            - _setup_ui: Set up the dialog's user interface.
+            - can_exit: Returns the value of bool_exit.
+            - cancel_clicked: Makes the actions to cancel the action.
+            - do_not_save_clicked: Makes the actions not to save the pipeline.
+            - save_as_clicked: Makes the actions to save the pipeline.
+
     Signals:
-        save_as_signal: Emitted when the user chooses to save the pipeline.
-        do_not_save_signal: Emitted when the user chooses not to save
-                            the pipeline.
-        cancel_signal: Emitted when the user cancels the closing action.
 
-    Attributes:
-        bool_save_as (bool): Indicates if the pipeline should be saved
-                             under a new name.
-        bool_exit (bool): Indicates if the editor can be closed.
-        pipeline_name (str): Name of the pipeline being edited.
+        - save_as_signal: Emitted when the user chooses to save the pipeline.
+        - do_not_save_signal: Emitted when the user chooses not to save the
+          pipeline.
+        - cancel_signal: Emitted when the user cancels the closing action.
 
-    .. Methods:
-        - _connect_signals: Connect button signals to their respective slots
-        - _setup_ui: Set up the dialog's user interface
-        - can_exit: returns the value of bool_exit
-        - cancel_clicked: makes the actions to cancel the action
-        - do_not_save_clicked: makes the actions not to save the pipeline
-        - save_as_clicked: makes the actions to save the pipeline
     """
 
     save_as_signal = QtCore.pyqtSignal()
@@ -1204,12 +1230,15 @@ class PopUpClosePipeline(QDialog):
         """
         Initialize the dialog with the pipeline name.
 
-        :param pipeline_name (str):  Name of the pipeline (basename).
+        :param pipeline_name: (str)  Name of the pipeline (basename).
 
         """
         super().__init__()
+        # Name of the pipeline being edited
         self.pipeline_name = pipeline_name
+        # Indicates if the editor can be closed
         self.bool_exit = False
+        # Indicates if the pipeline should be saved under a new name
         self.bool_save_as = False
         self._setup_ui()
         self._connect_signals()
@@ -1251,7 +1280,7 @@ class PopUpClosePipeline(QDialog):
     def can_exit(self):
         """Check if the editor can be closed.
 
-        Return (bool): True if the editor can be closed, False otherwise.
+        :Returns (bool) True if the editor can be closed, False otherwise.
         """
         return self.bool_exit
 
@@ -1267,8 +1296,8 @@ class PopUpClosePipeline(QDialog):
     def do_not_save_clicked(self):
         """Handle the 'Do not save' button click.
 
-        Sets bool_exit to True, emits do_not_save_signal,
-        and closes the dialog.
+        Sets bool_exit to True, emits do_not_save_signal, and closes the
+        dialog.
         """
         self.bool_exit = True
         self.do_not_save_signal.emit()
@@ -1277,8 +1306,8 @@ class PopUpClosePipeline(QDialog):
     def save_as_clicked(self):
         """Handle the 'Save' button click.
 
-        Sets bool_save_as and bool_exit to True, emits save_as_signal,
-        and closes the dialog.
+        Sets bool_save_as and bool_exit to True, emits save_as_signal, and
+        closes the dialog.
         """
         self.bool_save_as = True
         self.bool_exit = True
@@ -1290,21 +1319,18 @@ class PopUpDataBrowserCurrentSelection(QDialog):
     """
     Dialog to display and confirm the current data browser selection.
 
-    This dialog shows a table of the currently selected document
-    from the data browser and allows the user to confirm or cancel the
-    selection. When confirmed, it updates the scan_list attribute of
-    relevant components in the main window.
+    This dialog shows a table of the currently selected document from the data
+    browser and allows the user to confirm or cancel the selection. When
+    confirmed, it updates the scan_list attribute of relevant components in the
+    main window.
 
-    Attributes:
-        project: Current project in the software.
-        databrowser: Data browser instance of the software.
-        filter: List of the current documents in the data browser.
-        main_window: Main window of the software.
+    Contains:
 
-    .. Methods:
-        - _set_dialog_size: Set the dialog size based on screen resolution
-        - _setup_ui: Set up the dialog's user interface
-        - ok_clicked: updates the "scan_list" attribute of several widgets
+        Methods:
+
+            - _set_dialog_size: Set the dialog size based on screen resolution.
+            - _setup_ui: Set up the dialog's user interface.
+            - ok_clicked: Updates the "scan_list" attribute of several widgets.
 
     """
 
@@ -1314,12 +1340,12 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         """
         Initialize the dialog with the current project and selection data.
 
-        :param project: Current project in the software
-        :param databrowser: Data browser instance of the software
+        :param project: Current project in the software.
+        :param databrowser: Data browser instance of the software.
         :param filter (list): List of the current documents in the data
-                              browser
-        :param main_window: Main window of the software
-        :param TableDataBrowser: Class for displaying data in a table format
+         browser.
+        :param main_window: Main window of the software.
+        :param TableDataBrowser: Class for displaying data in a table format.
 
         """
         super().__init__()
@@ -1340,7 +1366,7 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         """
         Set up the dialog's user interface.
 
-        :param TableDataBrowser: Class for displaying data in a table format
+        :param TableDataBrowser: Class for displaying data in a table format.
         """
         self.setWindowTitle("Confirm the selection")
         self.setModal(True)
@@ -1370,9 +1396,9 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         """
         Update the scan_list attribute of components when OK is clicked.
 
-        This method propagates the current filter (selected documents)
-        to various components in the main window's pipeline manager, and
-        marks the data as sent in the data browser before closing the dialog.
+        This method propagates the current filter (selected documents) to
+        various components in the main window's pipeline manager, and marks the
+        data as sent in the data browser before closing the dialog.
         """
         # Update scan_list in all required components
         pipeline_manager = self.main_window.pipeline_manager
@@ -1397,23 +1423,22 @@ class PopUpDeletedProject(QMessageBox):
     This dialog appears when the software starts and detects that previously
     available projects are no longer accessible at their expected locations.
 
-    Attributes:
-        deleted_projects (list): List of project names that are no longer
-                                 accessible.
+    Contains:
 
-    .. Methods:
-        - _connect_signals: Connect button signals to their respective slots
-        - _setup_message_box: Configure the message box appearance and
-                              content
+        Methods:
+
+            - _connect_signals: Connect button signals to their respective
+              slots.
+            - _setup_message_box: Configure the message box appearance and
+              content.
     """
 
     def __init__(self, deleted_projects):
         """
         Initialize the message box with a list of inaccessible projects.
 
-        :param deleted_projects (list): List of project names that are no
-                                        longer accessible (deleted, renamed,
-                                        or moved).
+        :param deleted_projects: (list) List of project names that are no
+         longer accessible (deleted, renamed, or moved).
         """
         super().__init__()
         self.deleted_projects = deleted_projects
@@ -1447,15 +1472,18 @@ class PopUpDeleteProject(QDialog):
     """
     Dialog for deleting selected projects.
 
-    Allows the user to select and delete one or more projects
-    from the projects directory after confirmation.
+    Allows the user to select and delete one or more projects from the projects
+    directory after confirmation.
 
-    .. Methods:
-        - _delete_project: Handles project deletion
-        - _setup_buttons: Creates and configures the dialog buttons
-        - _setup_layout: Configures the main layout of the dialog
-        - _setup_ui: Sets up the user interface components
-        - ok_clicked: delete the selected projects after confirmation
+    Contains:
+
+        Methods:
+
+            - _delete_project: Handles project deletion.
+            - _setup_buttons: Creates and configures the dialog buttons.
+            - _setup_layout: Configures the main layout of the dialog.
+            - _setup_ui: Sets up the user interface components.
+            - ok_clicked: delete the selected projects after confirmation.
 
     """
 
@@ -1463,7 +1491,7 @@ class PopUpDeleteProject(QDialog):
         """
         Initializes the delete project dialog.
 
-        :param main_window (QMainWindow): The main application window
+        :param main_window: (QMainWindow) The main application window.
         """
         super().__init__()
         self.setWindowTitle("Delete project")
@@ -1476,8 +1504,8 @@ class PopUpDeleteProject(QDialog):
         """
         Handles project deletion, updating application state accordingly.
 
-        :param project_path (str): The path of the project to delete
-        :param opened_projects (list): The list of currently opened projects
+        :param project_path: (str) The path of the project to delete.
+        :param opened_projects: (list) The list of currently opened projects.
         """
 
         if os.path.abspath(self.main_window.project.folder) == os.path.abspath(
@@ -1585,17 +1613,20 @@ class PopUpFilterSelection(QDialog):
     """
     Dialog for selecting a previously saved filter.
 
-    :Methods:
-        - cancel_clicked: Closes the pop-up.
-        - ok_clicked: Handles actions when the "OK" button is clicked.
-        - search_str: Filters the list based on the search input.
+    Contains:
+
+        Methods:
+
+            - cancel_clicked: Closes the pop-up.
+            - ok_clicked: Handles actions when the "OK" button is clicked.
+            - search_str: Filters the list based on the search input.
     """
 
     def __init__(self, project):
         """
         Initializes the pop-up dialog.
 
-        :param project (object): The current project containing saved filters
+        :param project: (object) The current project containing saved filters.
         """
         super().__init__()
         self.project = project
@@ -1649,8 +1680,8 @@ class PopUpFilterSelection(QDialog):
         """
         Handles actions when the "OK" button is clicked.
 
-        This method should be overridden in subclasses to implement
-        specific behavior.
+        This method should be overridden in subclasses to implement specific
+        behavior.
         """
         pass
 
@@ -1658,7 +1689,7 @@ class PopUpFilterSelection(QDialog):
         """
         Filters the list of saved filters based on the search input.
 
-        :param search_text (str): The text pattern to search for
+        :param search_text: (str) The text pattern to search for.
 
         """
         search_text = search_text.strip().upper()
@@ -1683,14 +1714,11 @@ class PopUpInformation(QWidget):
     Popup window displaying the current project's information.
     """
 
-    # Signal emitted when project preferences change
-    signal_preferences_change = QtCore.pyqtSignal()
-
     def __init__(self, project):
         """
         Initializes the popup window with project details.
 
-        :param project (Project): The current project instance
+        :param project: (Project) The current project instance.
         """
         super().__init__()
         # UI Elements
@@ -1718,27 +1746,31 @@ class PopUpInheritanceDict(QDialog):
     to a specific output plug, or to choose to ignore tag inheritance
     altogether.
 
-    :Methods:
-        - _setup_buttons: Set up action buttons for the dialog
-        - _setup_radio_buttons: Set up radio buttons for each input option
-        - ok_clicked: Event when ok button is clicked
-        - okall_clicked: Event when Ok all button is clicked
-        - on_clicked: Event when radiobutton is clicked
-        - ignoreall_clicked: Event when ignore all plugs button is clicked
-        - ignore_clicked: Event when ignore button is clicked
-        - ignore_node_clicked: Event when ignore all nodes button is clicked
+    Contains:
+
+        Methods:
+
+            - _setup_buttons: Set up action buttons for the dialog.
+            - _setup_radio_buttons: Set up radio buttons for each input option.
+            - ok_clicked: Event when ok button is clicked.
+            - okall_clicked: Event when Ok all button is clicked.
+            - on_clicked: Event when radiobutton is clicked.
+            - ignoreall_clicked: Event when ignore all plugs button is clicked.
+            - ignore_clicked: Event when ignore button is clicked.
+            - ignore_node_clicked: Event when ignore all nodes button is
+              clicked.
     """
 
     def __init__(self, values, node_name, plug_name, iterate):
         """
         Initialize the inheritance selection dialog.
 
-        :param values (dict): Dict mapping input names (keys) to their
-                              paths (values)
-        :param node_name (str): Name of the current node
-        :param plug_name (str): Name of the current output plug
-        :param iterate (bool): Boolean indicating if the choice applies
-                               to iterations
+        :param values: (dict) Dict mapping input names (keys) to their paths
+         (values).
+        :param node_name: (str) Name of the current node.
+        :param plug_name: (str) Name of the current output plug.
+        :param iterate: (bool) Boolean indicating if the choice applies to
+         iterations.
         """
         super().__init__()
         self.setModal(True)
@@ -1782,9 +1814,9 @@ class PopUpInheritanceDict(QDialog):
     def _setup_buttons(self, node_name, plug_name, layout):
         """Set up action buttons for the dialog.
 
-        :param  node_name: Name of the current node
-        :param  plug_name: Name of the current output plug
-        :param  layout: Layout to add the buttons to
+        :param node_name: Name of the current node.
+        :param plug_name: Name of the current output plug.
+        :param layout: Layout to add the buttons to.
         """
         # OK button
         self.push_button_ok = QPushButton("OK", self)
@@ -1822,8 +1854,8 @@ class PopUpInheritanceDict(QDialog):
     def _setup_radio_buttons(self, values, layout):
         """Set up radio buttons for each input option.
 
-        :param values: Dict mapping input names to their paths
-        :param layout: Layout to add the radio buttons to
+        :param values: Dict mapping input names to their paths.
+        :param layout: Layout to add the radio buttons to.
         """
         first_button = True
 
@@ -1854,8 +1886,7 @@ class PopUpInheritanceDict(QDialog):
         """
         Handle 'OK for all output plugs' button click.
 
-        Accepts the dialog with current selection applied to all output
-        plugs.
+        Accepts the dialog with current selection applied to all output plugs.
         """
         self.all = True
         self.accept()
@@ -1918,25 +1949,29 @@ class PopUpMultipleSort(QDialog):
     table data in either ascending or descending order. Users can dynamically
     add or remove sort criteria.
 
-    .. Methods:
-        - _setup_ui_elements: Create and configure all UI elements
-        - add_tag: Adds a push button
-        - fill_values: Fills the values list when a tag is added or removed
-        - refresh_layout: Updates the layouts (especially when a tag push
-                          button is added or removed)
-        - remove_tag: Removes a push buttons and makes the changes in the
-                      list of values
-        - select_tag: Calls a pop-up to choose a tag
-        - sort_scans: Collects the information and send them to the data
-                      browser
+    Contains:
+
+        Methods:
+
+            - _setup_ui_elements: Create and configure all UI elements.
+            - add_tag: Adds a push button.
+            - fill_values: Fills the values list when a tag is added or
+              removed.
+            - refresh_layout: Updates the layouts (especially when a tag push
+              button is added or removed).
+            - remove_tag: Removes a push buttons and makes the changes in the
+              list of values.
+            - select_tag: Calls a pop-up to choose a tag.
+            - sort_scans: Collects the information and send them to the data
+              browser.
     """
 
     def __init__(self, project, table_data_browser):
         """
         Initialize the multiple sort dialog.
 
-        :param project: Current project in the software
-        :param table_data_browser: Data browser's table to be sorted
+        :param project: Current project in the software.
+        :param table_data_browser: Data browser's table to be sorted.
 
         """
         super().__init__()
@@ -2004,7 +2039,7 @@ class PopUpMultipleSort(QDialog):
         """
         Collect unique values for the selected tag.
 
-        :param idx: Index of the tag button in the push_buttons list
+        :param idx: Index of the tag button in the push_buttons list.
 
         """
         tag_name = self.push_buttons[idx].text()
@@ -2082,7 +2117,7 @@ class PopUpMultipleSort(QDialog):
         """
         Open a pop-up dialog to choose a tag for the specified button.
 
-        :param idx: Index of the button in the push_buttons list
+        :param idx: Index of the button in the push_buttons list.
         """
 
         with self.project.database.data() as database_data:
@@ -2121,17 +2156,20 @@ class PopUpNewProject(QFileDialog):
     """
     Dialog for creating a new project.
 
-    This dialog is displayed when the user wants to create a new project.
-    It manages file selection and handles the creation process.
+    This dialog is displayed when the user wants to create a new project. It
+    manages file selection and handles the creation process.
 
-    .. Method:
-        - get_filename: Sets the widget's attributes depending on the
-          selected file name
+    Contains:
 
-    .. Signals:
-        - signal_create_project: Emitted when a project has been
-                                 successfully created
+        Methods:
 
+            - get_filename: Sets the widget's attributes depending on the
+              selected file name.
+
+    Signals:
+
+        - signal_create_project: Emitted when a project has been successfully
+          created.
     """
 
     # Signal emitted when project creation is successful
@@ -2149,13 +2187,12 @@ class PopUpNewProject(QFileDialog):
         """
         Process the selected filename and set up project attributes.
 
-        :param file_name_tuple (tuple): Tuple containing the selected
-                                        filename(s), obtained from the
-                                        selectedFiles method
+        :param file_name_tuple: (tuple) Tuple containing the selected
+         filename(s), obtained from the selectedFiles method
 
         Note:
-            If the file already exists, displays an error message.
-            Otherwise, closes the dialog and emits signal_create_project.
+            If the file already exists, displays an error message. Otherwise,
+            closes the dialog and emits `signal_create_project`.
         """
 
         # Handle the case where file_name_tuple might be empty
@@ -2192,13 +2229,17 @@ class PopUpOpenProject(QFileDialog):
     the filesystem. It uses the default projects directory as the starting
     location and emits a signal when a valid project is selected.
 
-    .. Method:
-        - get_filename: Sets the widget's attributes depending on the
-                        selected file name
+    Contains:
 
-    .. Signals:
+        Methods:
+
+            - get_filename: Sets the widget's attributes depending on the
+              selected file name.
+
+    .Signals:
+
         - signal_create_project: Signal emitted when a valid project is
-                                 selected
+          selected.
     """
 
     # Signal emitted when a valid project is selected
@@ -4643,8 +4684,11 @@ class PopUpProperties(QDialog):
     Is called when the user wants to change the current project's
     properties (File > properties).
 
-    .. Methods:
-        - ok_clicked: saves the modifications and updates the data browser
+    Contains:
+
+        Methods:
+
+            - ok_clicked: saves the modifications and updates the data browser
 
     .. Signals:
         - signal_settings_change: Qt signal emitted when project settings are
@@ -4757,11 +4801,14 @@ class PopUpQuit(QDialog):
                               without saving.
         - cancel_signal: Signal emitted when user cancels the exit process.
 
-    .. Methods:
-        - can_exit: returns the value of _bool_exit
-        - cancel_clicked: makes the actions to cancel the action
-        - do_not_save_clicked: makes the actions not to save the project
-        - save_as_clicked: makes the actions to save the project
+    Contains:
+
+        Methods:
+
+            - can_exit: returns the value of _bool_exit
+            - cancel_clicked: makes the actions to cancel the action
+            - do_not_save_clicked: makes the actions not to save the project
+            - save_as_clicked: makes the actions to save the project
     """
 
     save_as_signal = QtCore.pyqtSignal()
@@ -4846,11 +4893,14 @@ class PopUpRemoveScan(QDialog):
     Is called when the user wants to remove a scan that was previously sent
     to the pipeline manager.
 
-     .. Methods:
-         - cancel_clicked:
-         - no_all_clicked:
-         - yes_all_clicked:
-         - yes_clicked:
+    Contains:
+
+        Methods:
+
+            - cancel_clicked:
+            - no_all_clicked:
+            - yes_all_clicked:
+            - yes_clicked:
     """
 
     def __init__(self, scan, size):
@@ -4948,11 +4998,14 @@ class PopUpRemoveTag(QDialog):
 
     Allows users to select and remove custom tags from the project's database.
 
-    .. Methods:
-        - ok_action: Verifies the selected tags and send the information to
-                     the data browser.
-        - search_str: Matches the searched pattern with the tags of the
-                      project.
+    Contains:
+
+        Methods:
+
+            - ok_action: Verifies the selected tags and send the information to
+                        the data browser.
+            - search_str: Matches the searched pattern with the tags of the
+                        project.
 
     .. Signals:
         - signal_remove_tag: Qt signal emitted when tags are removed.
@@ -5090,10 +5143,13 @@ class PopUpSaveProjectAs(QDialog):
     with options to browse existing projects and validate the new project
     name.
 
-    .. Method:
-        - fill_input: Fills the input field when a project is clicked on
-        - return_value: Sets the widget's attributes depending on the
-          selected file name
+    Contains:
+
+        Methods:
+
+            - fill_input: Fills the input field when a project is clicked on
+            - return_value: Sets the widget's attributes depending on the
+            selected file name
 
     .. Signals:
         - signal_saved_project: Qt signal emitted when a new project name
@@ -5243,12 +5299,14 @@ class PopUpSeeAllProjects(QDialog):
     This dialog allows users to view a list of saved projects,
     check their existence, and open a selected project.
 
-    .. Methods:
-        - checkState: Checks if the project still exists and returns the
-                      corresponding icon
-        - item_to_path: Returns the path of the first selected item
-        - open_project: Switches to the selected project
+    Contains:
 
+        Methods:
+
+            - checkState: Checks if the project still exists and returns the
+                        corresponding icon
+            - item_to_path: Returns the path of the first selected item
+            - open_project: Switches to the selected project
     """
 
     def __init__(self, saved_projects, main_window):
@@ -5353,8 +5411,11 @@ class PopUpSelectFilter(PopUpFilterSelection):
     """
     Popup window for selecting and opening a previously saved filter.
 
-    .. Methods:
-        - ok_clicked: Saves the modifications and updates the data browser.
+    Contains:
+
+        Methods:
+
+            - ok_clicked: Saves the modifications and updates the data browser.
     """
 
     def __init__(self, project, databrowser):
@@ -5397,8 +5458,11 @@ class PopUpSelectIteration(QDialog):
     should be used during an iterated pipeline run.
 
 
-    .. Methods:
-        - ok_clicked: Stores selected values and closes the dialog.
+    Contains:
+
+        Methods:
+
+            - ok_clicked: Stores selected values and closes the dialog.
     """
 
     def __init__(self, iterated_tag, tag_values, selected_values):
@@ -5472,15 +5536,19 @@ class PopUpTagSelection(QDialog):
     Is called when the user wants to update the tags that are visualized in
        the data browser.
 
-    .. Methods:
-        - _create_button: Create a standard button with text and click handler
-        - _setup_ui: Set up the user interface components
-        - cancel_clicked: closes the pop-up
-        - item_clicked: checks the checkbox of an item when the latter
-                        is clicked
-        - ok_clicked: actions when the "OK" button is clicked
-        - search_str: matches the searched pattern with the tags of the
-                      project
+    Contains:
+
+        Methods:
+
+            - _create_button: Create a standard button with text and click
+              handler
+            - _setup_ui: Set up the user interface components
+            - cancel_clicked: closes the pop-up
+            - item_clicked: checks the checkbox of an item when the latter
+                            is clicked
+            - ok_clicked: actions when the "OK" button is clicked
+            - search_str: matches the searched pattern with the tags of the
+                        project
     """
 
     def __init__(self, project):
@@ -5625,10 +5693,13 @@ class PopUpSelectTag(PopUpTagSelection):
     available tags and allows selecting a single tag to be used as the
     thumbnail.
 
-    .. Methods:
-        - _populate_tag_list: Populate the list widget with tags from
-                              the database.
-        - ok_clicked: saves the modifications and updates the mini viewer
+    Contains:
+
+        Methods:
+
+            - _populate_tag_list: Populate the list widget with tags from
+                                the database.
+            - ok_clicked: saves the modifications and updates the mini viewer
 
     """
 
@@ -5703,8 +5774,11 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
     Allows users to choose a single tag from a list of available tags,
     with an option to pre-select a specific tag.
 
-    .. Methods:
-        - ok_clicked: updates the selected tag and closes the pop-up
+    Contains:
+
+        Methods:
+
+            - ok_clicked: updates the selected tag and closes the pop-up
     """
 
     def __init__(self, project, tags_to_display, tag_name_checked=None):
@@ -5777,34 +5851,39 @@ class PopUpShowHistory(QDialog):
     - Navigate between associated bricks
     - Select and highlight specific files
 
-    .. Methods:
-        - _updateio_table: fill in the input and output sections of the table
-        - adjust_size: Adjust the size of the dialog based on screen
-                       resolution
-        - file_clicked: close the history window and select the file in the
-                        data browser
-        - find_associated_bricks: Find bricks associated with a given node
-                                  name.
-        - find_process_from_plug: Find the process and plug name from a
-                                  given plug.
-        - handle_pipeline_nodes: Handle pipeline nodes and initialize the
-                                 pipeline visualization
-        - highlight_selected_node: Highlight the selected node in the pipeline
-                                   view
-        - initialize_pipeline: Initialize the pipeline view using the given
-                               pipeline XML.
-        - io_value_is_scan: Checks if the I/O value is a scan
-        - load_data: Load data from the project database
-        - load_pipeline_data: Load pipeline data from the database
-        - node_selected: Handle node selection and update the table.
-        - select_node: Select the node in the pipeline view based on the
-                       provided brick UUID
-        - setup_ui: Set up the user interface components
-        - update_table: Update the brick row at the bottom of the table.
-        - update_table_for_single_brick: Update the table for a single brick
-        - update_table_for_subpipeline: Update the table for a subpipeline
-        - update_table_with_brick_data: Update the table with the brick's
-                                        input and output data after processing
+    Contains:
+
+        Methods:
+
+            - _updateio_table: fill in the input and output sections of the
+              table
+            - adjust_size: Adjust the size of the dialog based on screen
+                        resolution
+            - file_clicked: close the history window and select the file in the
+                            data browser
+            - find_associated_bricks: Find bricks associated with a given node
+                                    name.
+            - find_process_from_plug: Find the process and plug name from a
+                                    given plug.
+            - handle_pipeline_nodes: Handle pipeline nodes and initialize the
+                                    pipeline visualization
+            - highlight_selected_node: Highlight the selected node in the
+              pipeline view
+            - initialize_pipeline: Initialize the pipeline view using the given
+                                pipeline XML.
+            - io_value_is_scan: Checks if the I/O value is a scan
+            - load_data: Load data from the project database
+            - load_pipeline_data: Load pipeline data from the database
+            - node_selected: Handle node selection and update the table.
+            - select_node: Select the node in the pipeline view based on the
+                        provided brick UUID
+            - setup_ui: Set up the user interface components
+            - update_table: Update the brick row at the bottom of the table.
+            - update_table_for_single_brick: Update the table for a single
+              brick
+            - update_table_for_subpipeline: Update the table for a subpipeline
+            - update_table_with_brick_data: Update the table with the brick's
+              input and output data after processing
     """
 
     def __init__(self, project, brick_uuid, scan, databrowser, main_window):
@@ -6474,23 +6553,29 @@ class PopUpVisualizedTags(QWidget):
     to be displayed in the project. It allows searching through available tags
     and moving them between available and visualized lists.
 
-    .. Methods:
-        - _create_button: Create a customized QPushButton with specified
-                          properties
-        - _create_button_layout: Create the layout for selection buttons
-        - _create_label: Create a customized QLabel with specified properties
-        - _create_left_layout: Create the layout for available tags
-        - _create_right_layout: Create the layout for visualized tags
-        - _create_search_bar: Create the search bar with placeholder and
-                              connection
-        - _create_tag_list: Create a QListWidget configured for
-                            multi-selection of tags
-        - _populate_tags: Populate the tags list from the project database
-        - _setup_ui: Create and layout the user interface components
-        - search_str: Matches the searched pattern with the tags of the project
-        - click_select_tag: Puts the selected tags in the "selected tag" table
-        - click_unselect_tag: removes the unselected tags from populse_mia
-                              "selected tag" table
+    Contains:
+
+        Methods:
+
+            - _create_button: Create a customized QPushButton with specified
+                            properties
+            - _create_button_layout: Create the layout for selection buttons
+            - _create_label: Create a customized QLabel with specified
+              properties
+            - _create_left_layout: Create the layout for available tags
+            - _create_right_layout: Create the layout for visualized tags
+            - _create_search_bar: Create the search bar with placeholder and
+                                connection
+            - _create_tag_list: Create a QListWidget configured for
+                                multi-selection of tags
+            - _populate_tags: Populate the tags list from the project database
+            - _setup_ui: Create and layout the user interface components
+            - search_str: Matches the searched pattern with the tags of the
+              project
+            - click_select_tag: Puts the selected tags in the "selected tag"
+              table
+            - click_unselect_tag: removes the unselected tags from populse_mia
+                                "selected tag" table
 
     .. Signals:
         - signal_preferences_change (QtCore.pyqtSignal): Emitted when tag

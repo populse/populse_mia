@@ -449,11 +449,11 @@ class AdvancedSearch(QWidget):
         compatibility validation.
 
         :param replace_all_by_fields: If True, replaces "All visualized tags"
-                                      with the actual list of visible fields.
-                                      If False, keeps the literal
-                                      "All visualized tags" text.
+         with the actual list of visible fields. If False, keeps the literal
+         "All visualized tags" text.
 
-        :return (tuple): A 5-tuple containing:
+        :Returns: (tuple) A 5-tuple containing:
+
             - fields (list): Field names to filter on
             - conditions (list): Comparison operators (e.g., '=', 'BETWEEN')
             - values (list): Filter values (strings or lists for BETWEEN/IN)

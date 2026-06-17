@@ -250,7 +250,17 @@ autodoc_default_options = {
     "member-order": "bysource",
     "show-inheritance": True,
     "imported-members": False,
-    "exclude-members": "notifyProgress",  # We want to exclude PyQt signals
+    # We want to exclude PyQt signals
+    "exclude-members": (
+        "notifyProgress, "
+        "clicked, "
+        "signal_add_tag, "
+        "signal_clone_tag, "
+        "save_as_signal, "
+        "do_not_save_signal, "
+        "cancel_signal, "
+        "signal_create_project, "
+    ),
 }
 
 

@@ -10089,8 +10089,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Verifies that the resulting pipeline is correctly built and
               mocks are invoked as expected.
 
-        Note: 'update_nodes_and_plugs_activation' may not exist on the process,
-        hence 'create=True' is used to safely mock it.
+        Note:
+            update_nodes_and_plugs_activation' may not exist on the process,
+            hence 'create=True' is used to safely mock it.
 
         The test allows an expected exception message to be printed during
         execution.

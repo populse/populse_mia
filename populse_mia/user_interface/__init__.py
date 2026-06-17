@@ -1,15 +1,6 @@
 """
-User interface module, encompass the main window and its tabs
-definition, as well as pop ups.
-
-Contains:
-    Modules:
-        - data_browser
-        - data_viewer
-        - main_window
-        - pipeline_manager
-        - pop_ups
-
+User interface module, including the main window, tab definitions, and popup
+dialogs.
 """
 
 ##########################################################################
