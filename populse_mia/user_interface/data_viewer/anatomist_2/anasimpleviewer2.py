@@ -181,17 +181,17 @@ class AnaSimpleViewer2(Qt.QObject):
     Objects loaded are added to all views and can be toggled using the "add"
     and "remove" buttons.
 
-    This class handles methods for menu/actions callbacks and utility
-    functions for loading/viewing objects, as well as for removal and
-    deletion.
+    This class handles methods for menu/actions callbacks and utility functions
+    for loading/viewing objects, as well as for removal and deletion.
 
-    Note: The class inherits from QObject but is not a QWidget. The widget can
-    be accessed through the `awidget` attribute of the instance.
+    Note:
+        The class inherits from QObject but is not a QWidget. The widget can
+        be accessed through the `awidget` attribute of the instance.
 
     Additionally, some global Anatomist config variables may be set within
     AnaSimpleViewer, initiated optionally via the `init_global_handlers`
-    method called by the constructor unless `init_global_handlers` is set
-    to False.
+    method called by the constructor unless `init_global_handlers` is set to
+    False.
     """
 
     _global_handlers_initialized = False

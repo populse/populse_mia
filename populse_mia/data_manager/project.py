@@ -1119,7 +1119,7 @@ class Project:
             :param job_st (tuple): Raw job status tuple as returned by
                                    Soma-Workflow.
 
-            :returns (tuple):
+            :Returns: (tuple)
                     - job_id (int): Identifier of the job.
                     - state (str): Execution state (e.g. "done", "failed",
                       "running").
@@ -1133,7 +1133,7 @@ class Project:
                     - is_failure (bool): True if the job did not complete
                       successfully.
 
-            Notes:
+            Note:
                 - Success is defined solely based on the termination status,
                   which is more reliable than the execution state across
                   backends.

@@ -619,12 +619,11 @@ class DatabaseMiaData:
                 "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
                 ```
 
-        **Note:**
-
-        Due to potential database access issues such as
-        `"database already open."`, this implementation currently returns a
-        list instead of using `yield`. However, using `yield` may be
-        reconsidered in the future for better memory management.
+        Note:
+            Due to potential database access issues such as
+            `"database already open."`, this implementation currently returns a
+            list instead of using `yield`. However, using `yield` may be
+            reconsidered in the future for better memory management.
 
         :param collection_name: (str) The name of the collection to filter
          (must exist).

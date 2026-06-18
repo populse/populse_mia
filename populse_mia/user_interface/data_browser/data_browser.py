@@ -239,12 +239,13 @@ class DataBrowser(QWidget):
         populates it with default values for all existing scans. The operation
         is tracked in the project's undo/redo history.
 
-        :param new_tag_name (str): Name of the new tag to create
+        :param new_tag_name: (str) Name of the new tag to create.
         :param new_default_value: Default value to assign to all existing scans
-        :param tag_type (str): Data type of the tag
-                               (e.g., FIELD_TYPE_STRING, FIELD_TYPE_FLOAT)
-        :param new_tag_description (str): Human-readable description of the tag
-        :param new_tag_unit (str): Unit of measurement for the tag value
+        :param tag_type: (str) Data type of the tag (e.g., FIELD_TYPE_STRING,
+         FIELD_TYPE_FLOAT)
+        :param new_tag_description: (str) Human-readable description of the
+         tag.
+        :param new_tag_unit: (str) Unit of measurement for the tag value.
 
         Note:
             - Marks the project as having unsaved modifications
@@ -341,12 +342,12 @@ class DataBrowser(QWidget):
         to the new tag. The operation is recorded in the project's undo
         history.
 
-        :param tag_to_clone (str): Name of the tag to clone
-        :param new_tag_name (str): Name of the new tag to create
+        :param tag_to_clone: (str) Name of the tag to clone.
+        :param new_tag_name: (str) Name of the new tag to create.
 
-         Notes:
+        Note:
             - The new tag is added to the database schema and data for both
-              COLLECTION_CURRENT amd COLLECTION_INITIAL collections.
+              COLLECTION_CURRENT and COLLECTION_INITIAL collections.
             - The project's unsaved modifications flag is set to True.
             - The operation is recorded in the project's undo history.
         """
@@ -1111,20 +1112,20 @@ class TableDataBrowser(QTableWidget):
         Initialize the data table widget with project data and browser
         context.
 
-        :param project (Project): The current project instance containing data
-                                  and configuration.
-        :param data_browser (DataBrowser): Parent DataBrowser widget that
-                                           contains this table.
-        :param tags_to_display (list[str]): List of metadata tags to show as
-                                            table columns.
-        :param update_values (bool): If True, enables cell editing;
-                                     if False, table is read-only.
-        :param activate_selection (bool): True to enable the selection
-                                          feature, False otherwise.
+        :param project: (Project) The current project instance containing data
+         and configuration.
+        :param data_browser: (DataBrowser) Parent DataBrowser widget that
+         contains this table.
+        :param tags_to_display: (list[str]) List of metadata tags to show as
+         table columns.
+        :param update_values: (bool) If True, enables cell editing; if False,
+         table is read-only.
+        :param activate_selection: (bool) True to enable the selection feature,
+         False otherwise.
         :param link_viewer(bool): If True, links table selection to external
-                                  viewer widget. Defaults to True.
+         viewer widget. Defaults to True.
 
-        Notes:
+        Note:
             - Column sorting and reordering are enabled by default
               (except first column).
             - Extended selection mode is used unless ``activate_selection``
@@ -1194,10 +1195,10 @@ class TableDataBrowser(QTableWidget):
         metadata from the database, sets the appropriate delegate based on
         field type, and populates cells with current values from the database.
 
-        :param column (int): Zero-based index where the column should be
-                             inserted.
-        :param tag (str): Tag name identifying the field to add from the
-                          database.
+        :param column: (int) Zero-based index where the column should be
+         inserted.
+        :param tag: (str) Tag name identifying the field to add from the
+         database.
 
         Note:
             Temporarily disconnects item change signals during insertion to
@@ -1281,24 +1282,23 @@ class TableDataBrowser(QTableWidget):
         """
         Add and update table columns based on database fields.
 
-         This method synchronizes the table's columns with the current database
-         schema by:
-             - Adding columns for new database fields that don't exist in the
-               table
-             - Populating new columns with values from the database
-             - Removing columns that no longer exist in the database
-             - Applying appropriate formatting delegates based on field types
-             - Maintaining column visibility settings
+        This method synchronizes the table's columns with the current database
+        schema by:
+            - Adding columns for new database fields that don't exist in the
+              table
+            - Populating new columns with values from the database
+            - Removing columns that no longer exist in the database
+            - Applying appropriate formatting delegates based on field types
+            - Maintaining column visibility settings
 
-         The method temporarily disconnects item change signals during
-         operation to prevent unwanted events, then reconnects them after
-         completion.
+        The method temporarily disconnects item change signals during operation
+        to prevent unwanted events, then reconnects them after completion.
 
-         Note:
-             - The TAG_FILENAME column is always placed first
-             - Columns are sorted alphabetically (except TAG_FILENAME)
-             - System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded
-             - Undefined values are displayed in italic bold text
+        Note:
+            - The TAG_FILENAME column is always placed first.
+            - Columns are sorted alphabetically (except TAG_FILENAME).
+            - System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded.
+            - Undefined values are displayed in italic bold text.
         """
         # Safely disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -1435,10 +1435,10 @@ class TableDataBrowser(QTableWidget):
 
         Note:
             - Duplicate scans (already present in the table) are automatically
-              skipped
-            - Sorting is temporarily disabled during the insertion process
-            - The first column (name) is set as non-editable
-            - TAG_BRICKS columns receive custom button widgets for interaction
+              skipped.
+            - Sorting is temporarily disabled during the insertion process.
+            - The first column (name) is set as non-editable.
+            - TAG_BRICKS columns receive custom button widgets for interaction.
         """
 
         # Temporarily disable sorting and disconnect signals
@@ -1972,10 +1972,9 @@ class TableDataBrowser(QTableWidget):
         """
         Edit and update selected cell values in the DataBrowser table.
 
-        This method handles the selection of cells, validation of list
-        lengths, and updating of values in both the table and the database.
-        It supports list-type fields and ensures data consistency across
-        selections.
+        This method handles the selection of cells, validation of list lengths,
+        and updating of values in both the table and the database. It supports
+        list-type fields and ensures data consistency across selections.
 
         Steps:
             1. Collects selected cells and their metadata
@@ -2150,23 +2149,23 @@ class TableDataBrowser(QTableWidget):
         Initialize and populate table cells with scan data from the database.
 
         This method performs the following operations:
-            1. Creates a progress dialog to track cell population
+            1. Creates a progress dialog to track cell population.
             2. Retrieves scan documents matching scans_to_visualize from the
-               database
-            3. Populates each cell with appropriate data based on column type
-            4. Handles special cases (name column, bricks column)
-            5. Applies saved sorting preferences
-            6. Resizes rows and columns to fit content
+               database.
+            3. Populates each cell with appropriate data based on column type.
+            4. Handles special cases (name column, bricks column).
+            5. Applies saved sorting preferences.
+            6. Resizes rows and columns to fit content.
 
         Special column handling:
-            - Column 0 (name): Read-only, always displays as string
-            - Bricks column: Displays clickable buttons for brick history
-            - Other columns: Editable, type-specific formatting
+            - Column 0 (name): Read-only, always displays as string.
+            - Bricks column: Displays clickable buttons for brick history.
+            - Other columns: Editable, type-specific formatting.
 
-        Notes:
-            - Displays a modal progress dialog during population
-            - Temporarily hides the table during updates for performance
-            - Connects cell change signals after population completes
+        Note:
+            - Displays a modal progress dialog during population.
+            - Temporarily hides the table during updates for performance.
+            - Connects cell change signals after population completes.
         """
         # Initialize progress dialog
         cells_count = len(self.scans_to_visualize) * len(
@@ -2447,14 +2446,14 @@ class TableDataBrowser(QTableWidget):
         inserting a column header while preserving the existing alphabetical
         sort order.
 
-        :param to_insert (str): The column header text to insert.
+        :param to_insert: (str) The column header text to insert.
 
-        :return (int): The column index where the new column should be
-                       inserted. Returns columnCount() if it should be
-                       appended at the end.
+        :Returns: (int) The column index where the new column should be
+         inserted. Returns columnCount() if it should be appended at the end.
 
-        Note: Assumes that column 0 is reserved (TAG_FILENAME must always be
-              the first tag on the left) and start the search from column 1.
+        Note:
+            Assumes that column 0 is reserved (TAG_FILENAME must always be
+            the first tag on the left) and start the search from column 1.
         """
         # Extract column headers starting from index 1
         headers = [
@@ -2532,9 +2531,9 @@ class TableDataBrowser(QTableWidget):
         reorganizes the table rows to reflect the new order. Handles both
         regular items and special brick widgets during the reordering.
 
-        :param list_tags(list): List of tag names to sort by (primary to
-                                secondary).
-        :param order (str): Sort direction, either "Ascending" or "Descending".
+        :param list_tags: (list) List of tag names to sort by (primary to
+         secondary).
+        :param order: (str) Sort direction, either "Ascending" or "Descending".
 
         Note:
             Temporarily disables item change signals during sorting to prevent
@@ -3522,7 +3521,8 @@ class TableDataBrowser(QTableWidget):
         """
         Sort the currently selected column.
 
-        :param order (Qt.SortOrder or int): Sort order to apply.
+        :param order: (Qt.SortOrder or int) Sort order to apply:
+
             - Qt.AscendingOrder (0): Sort from lowest to highest
             - Qt.DescendingOrder (1): Sort from highest to lowest
 
@@ -3554,7 +3554,7 @@ class TableDataBrowser(QTableWidget):
         elements, and reconnects signals.
 
         :param column: The column index to sort by. Use -1 to indicate no
-                       sorting.
+         sorting.
         :param order: The sort order (Qt.AscendingOrder or Qt.DescendingOrder).
 
         Note:
@@ -3583,13 +3583,14 @@ class TableDataBrowser(QTableWidget):
 
         Colors indicate:
             - White/Grey: Unmodified builtin tags (alternating for visible
-                          rows)
-            - Cyan/Blue: Modified builtin tags (alternating for visible rows)
+              rows).
+            - Cyan/Blue: Modified builtin tags (alternating for visible rows).
             - Pink/Red: User-defined tags or null values (alternating for
-                        visible rows)
+              visible rows).
 
-        Note: This method assumes the itemChanged signal is disconnected.
-        Automatically saves modifications if auto-save is enabled.
+        Note:
+            This method assumes the `itemChanged` signal is disconnected.
+            Automatically saves modifications if auto-save is enabled.
         """
 
         # itemChanged signal is always disconnected when calling this method

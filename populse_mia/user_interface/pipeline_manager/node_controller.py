@@ -761,17 +761,18 @@ class FilterWidget(QWidget):
         Normalize a scan path to a logical project-relative path.
 
         Converts any scan path (absolute, relative, or symlinked) into a
-        consistent project-relative representation, preferably starting at
-        the project's data directory.
+        consistent project-relative representation, preferably starting at the
+        project's data directory.
 
         Resolution strategy (in order of preference):
-            1. Path relative to project root (if path is under project)
-            2. Path relative to 'data/' directory (semantic anchor fallback)
-            3. Absolute path string (last resort)
+            1. Path relative to project root (if path is under project).
+            2. Path relative to 'data/' directory (semantic anchor fallback).
+            3. Absolute path string (last resort).
 
-        :param scan_path: File path to normalize (absolute or relative)
+        :param scan_path: File path to normalize (absolute or relative).
 
-        :return: Normalized path string, relative to project root when possible
+        :Returns: Normalized path string, relative to project root when
+         possible.
 
         Examples:
             >>> normalize_scan_path('/abs/path/project/data/scans/001.tif')
@@ -1137,8 +1138,7 @@ class NodeController(QWidget):
         :param node_name: The name of the pipeline node containing the plug.
         :param plug_name: The name of the plug to filter.
         :param parameters: A tuple containing (plug_index, pipeline_instance,
-                           plug_value_type) that provides context for the plug
-                           being filtered.
+         plug_value_type) that provides context for the plug being filtered.
         :param process: The process instance associated with the node.
 
         Note:
@@ -1363,9 +1363,8 @@ class NodeController(QWidget):
         ProcessIteration, ensures the name is prefixed with 'iterated_'.
 
         :param new_node_name: The new name for the node. If None, retrieves the
-                              name from the UI line edit widget. Is not None
-                              only when this method is called from an
-                              "undo/redo")
+         name from the UI line edit widget. Is not None only when this method
+         is called from an "undo/redo")
 
         :Emits: value_changed: Signal with node rename details for undo/redo
                                tracking.
@@ -1515,23 +1514,22 @@ class NodeController(QWidget):
         evaluated. If the update fails, the previous value is restored in the
         UI and a warning dialog is shown.
 
-        :param in_or_out (str): Direction of the plug - "in" for input plugs,
-                                "out" for output plugs.
-        :param plug_name (str): Name of the plug to update.
+        :param in_or_out: (str) Direction of the plug - "in" for input plugs,
+         "out" for output plugs.
+        :param plug_name: (str) Name of the plug to update.
         :param pipeline: The current pipeline instance.
-        :param value_type (type): Expected type of the plug value.
-        :param new_value (optional): New value for the plug. If None, reads
-                                     from the line edit widget (is None except
-                                     when this method is called from an
-                                     undo/redo)
+        :param value_type: (type) Expected type of the plug value.
+        :param new_value: (optional) New value for the plug. If None, reads
+         from the line edit widget (is None except when this method is called
+         from an "undo/redo").
 
         Side Effects:
-            - Updates the plug value in the pipeline node
-            - Updates the corresponding line edit widget text
-            - Triggers pipeline node and plug activation updates
-            - Emits value_changed signal for undo/redo tracking
-            - Displays status message in the main window
-            - Shows error dialog on TraitError or OSError
+            - Updates the plug value in the pipeline node.
+            - Updates the corresponding line edit widget text.
+            - Triggers pipeline node and plug activation updates.
+            - Emits value_changed signal for undo/redo tracking.
+            - Displays status message in the main window.
+            - Shows error dialog on TraitError or OSError.
 
         Note:
             The method uses eval() to parse string input, which handles
@@ -1652,8 +1650,7 @@ class NodeController(QWidget):
         plug value to the item itself rather than a list containing one item.
 
         :param plug_name: Name of the plug to update.
-        :param parameters: Tuple of (plug_index, pipeline_instance,
-                           value_type).
+        :param parameters: Tuple (plug_index, pipeline_instance, value_type).
         :param filter_res_list: Filtered file list to set as the plug value.
 
         Note:

@@ -1464,41 +1464,37 @@ class ProcessMIA(Process):
         more input files to an output file. It also allows adding new tags,
         modifying existing ones, or deleting unwanted tags in the process.
 
-        Notes:
-        This method performs inheritance in two ways:
-        1. Immediate inheritance during process execution
-        2. Deferred inheritance by storing inheritance information for later
-           use during workflow generation (addresses issue #290, #310)
+        Note:
+            This method performs inheritance in two ways:
+
+                1. Immediate inheritance during process execution.
+                2. Deferred inheritance by storing inheritance information for
+                later use during workflow generation.
 
         In ambiguous cases (multiple input files), the method will either:
-        - Use previously stored inheritance rules
-        - Prompt the user for a decision if no rule exists
-        - Auto-resolve if all inputs have identical tag values
+            - Use previously stored inheritance rules.
+            - Prompt the user for a decision if no rule exists.
+            - Auto-resolve if all inputs have identical tag values.
 
-        :param in_file (str or dict): Source of tag inheritance. Either:
-                                      - A string representing a single input
-                                        file path (unambiguous case)
-                                      - A dictionary mapping plug names to
-                                        corresponding input file paths
-                                        (ambiguous case)
-        :param out_file (str): Path of the output file that will inherit the
-                               tags.
-        :param node_name (str): Name of the processing node in the workflow.
-        :param own_tags (list of dict): Tags to be added or modified. Each
-                                        dictionary must contain:
-                                        - "name": Tag identifier
-                                        - "field_type": Data type of the tag
-                                        - "description": Human-readable
-                                                         description
-                                        - "visibility": Boolean or visibility
-                                                        level
-                                        - "origin": Source of the tag
-                                        - "unit": Unit of measurement
-                                                  (if applicable)
-                                        - "default_value": Default value
-                                        - "value": Current value to set
-        :param tags2del (list of str): Tags to be deleted from the output
-                                       file.
+        :param in_file: (str or dict) Source of tag inheritance.
+         Either:
+            - A string representing a single input file path (unambiguous case)
+            - A dictionary mapping plug names to corresponding input file paths
+              (ambiguous case)
+        :param out_file: (str) Path of the output file that will inherit the
+         tags.
+        :param node_name: (str) Name of the processing node in the workflow.
+        :param own_tags: (list of dict) Tags to be added or modified.
+         Each dictionary must contain:
+            - "name": Tag identifier
+            - "field_type": Data type of the tag
+            - "description": Human-readable description
+            - "visibility": Boolean or visibility level
+            - "origin": Source of the tag
+            - "unit": Unit of measurement (if applicable)
+            - "default_value": Default value
+            - "value": Current value to set
+        :param tags2del: (list of str) Tags to be deleted from the output file.
         """
 
         # 1- We want out_file to inherit all the tags from in_file.

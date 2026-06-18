@@ -477,13 +477,13 @@ class PipelineManagerTab(QWidget):
         recorded correctly.
 
         :param job: Job object containing parameter values and unique
-                    identifier (UUID).
+         identifier (UUID).
         :param node: Node instance (Process, Pipeline, or custom node) to
-                     register.
-        :param pipeline_name (str, optional): Name of the containing pipeline,
-                                              if any.
-        :param history_id (str, optional): Database history entry identifier.
-                                           Defaults to an empty string.
+         register.
+        :param pipeline_name: (str, optional) Name of the containing pipeline,
+         if any.
+        :param history_id: (str, optional) Database history entry identifier.
+         Defaults to an empty string.
 
         Note:
             Pipeline and PipelineNode instances are skipped as only leaf
@@ -673,8 +673,8 @@ class PipelineManagerTab(QWidget):
         icon effect in the UI.
 
         Note:
-        This method is typically connected to QMovie's frameChanged signal
-        to automatically update the icon as the animation progresses.
+            This method is typically connected to QMovie's frameChanged signal
+            to automatically update the icon as the animation progresses.
         """
         current_pixmap = self._mmovie.currentPixmap()
         self.show_pipeline_status_action.setIcon(QIcon(current_pixmap))
@@ -710,44 +710,42 @@ class PipelineManagerTab(QWidget):
         attributes,
     ):
         """
-        Add plug value(s) to the database with proper metadata and
-        inheritance.
+        Add plug value(s) to the database with proper metadata and inheritance.
 
         This method handles adding file-based plug values to a project
-        database, managing inheritance of metadata tags from input files,
-        and resolving ambiguities when multiple parent files exist.
+        database, managing inheritance of metadata tags from input files, and
+        resolving ambiguities when multiple parent files exist.
 
         :param p_value: The plug value - either a single file path (str) or
-                        list of file paths. Can also be special values like
-                        "<undefined>" or Undefined.
-        :param brick_id (str): UUID of the brick in the database.
-        :param history_id (str): UUID of the processing history in the
-                                 database.
-        :param node_name (str): Name of the processing node.
-        :param plug_name (str): Name of the specific plug/parameter.
-        :param full_name (str): Full hierarchical name including parent
-                                bricks. Equals node_name if no parent exists.
-        :param job (Job): Job object containing the plug, may have
-                          inheritance dictionaries.
-        :param trait (Trait): Handler for the plug trait or sub-trait for list
-                              elements. Used to validate value types (file vs
-                              non-file).
-        :param inputs (dict): Input parameter values for the process/node.
-        :param attributes (dict): Completion engine attributes to be applied
-                                  to all outputs.
+         list of file paths. Can also be special values like "<undefined>" or
+         "Undefined".
+        :param brick_id: (str) UUID of the brick in the database.
+        :param history_id: (str) UUID of the processing history in the
+         database.
+        :param node_name: (str) Name of the processing node.
+        :param plug_name: (str) Name of the specific plug/parameter.
+        :param full_name: (str) Full hierarchical name including parent bricks.
+         Equals node_name if no parent exists.
+        :param job: (Job) Job object containing the plug, may have inheritance
+         dictionaries.
+        :param trait: (Trait) Handler for the plug trait or sub-trait for list
+         elements. Used to validate value types (file vs non-file).
+        :param inputs: (dict) Input parameter values for the process/node.
+        :param attributes: (dict) Completion engine attributes to be applied
+         to all outputs.
 
-        Notes:
+        Note:
             - Recursively processes list values by calling itself on each
-              element
-            - Only processes file-type traits within the project folder
+              element.
+            - Only processes file-type traits within the project folder.
             - Handles tag inheritance from parent files using inheritance_dict
-              and auto_inheritance_dict from the job
-            - May prompt user to resolve ambiguous inheritance scenarios
-            - Automatically determines file types based on extensions
-            - Updates both CURRENT and INITIAL database collections
+              and auto_inheritance_dict from the job.
+            - May prompt user to resolve ambiguous inheritance scenarios.
+            - Automatically determines file types based on extensions.
+            - Updates both CURRENT and INITIAL database collections.
 
         :raises: May raise database-related exceptions during document
-                 operations.
+         operations.
         """
 
         # Recursive case: list of values
@@ -1156,33 +1154,32 @@ class PipelineManagerTab(QWidget):
 
     def ask_iterated_pipeline_plugs(self, pipeline):
         """
-        Display a configuration dialog for pipeline plug iteration and
-        database connections.
+        Display a configuration dialog for pipeline plug iteration and database
+        connections.
 
         This method opens an interactive dialog that allows users to
         configure how pipeline plugs (inputs and outputs) should be handled
         during execution. Users can specify:
-
-        - Which plugs should be iterated over during pipeline execution
-        - Which input plugs should be connected to database filters
-        - Interactive dependency management (database connection requires
-          iteration)
+            - Which plugs should be iterated over during pipeline execution.
+            - Which input plugs should be connected to database filters.
+            - Interactive dependency management (database connection requires
+                iteration).
 
         The dialog presents a grid layout with checkboxes for each available
         plug:
-            - Iteration checkbox: Mark plug for iteration during execution
+            - Iteration checkbox: Mark plug for iteration during execution.
             - Database checkbox: Connect input plug to database filter
-              (inputs only)
+                (inputs only).
 
         Behavioral constraints:
-            - Database connection automatically enables iteration
-            - Disabling iteration automatically disables database connection
-            - Only file-compatible plugs can connect to database filters
-            - Certain system plugs are excluded from configuration
+            - Database connection automatically enables iteration.
+            - Disabling iteration automatically disables database connection.
+            - Only file-compatible plugs can connect to database filters.
+            - Certain system plugs are excluded from configuration.
 
-        :param pipeline: Pipeline object containing plugs to be configured
+        :param pipeline: Pipeline object containing plugs to be configured.
 
-        :return:
+        :Returns:
             Optional[Tuple[List[str], List[str]]]: A tuple containing:
                 - iterated_plugs: List of plug names marked for iteration
                 - database_plugs: List of plug names connected to database
@@ -1477,31 +1474,31 @@ class PipelineManagerTab(QWidget):
         Build an iteration pipeline wrapper around the current pipeline.
 
         This method creates a new pipeline that iterates over the current
-        pipeline, allowing batch processing of multiple datasets. The
-        process involves:
+        pipeline, allowing batch processing of multiple datasets. The process
+        involves:
 
-        1. Interactive selection of plugs to iterate over and database
-           connections
-        2. Preprocessing of list-type plugs with ReduceNode to handle
-           nested lists
-        3. Creation of an iterative pipeline using the CAPSUL engine
-        4. Addition of Input_Filter nodes for database-connected plugs
-        5. Proper linking of database_scans parameter across all filters
+            1. Interactive selection of plugs to iterate over and database
+               connections.
+            2. Preprocessing of list-type plugs with ReduceNode to handle
+               nested lists.
+            3. Creation of an iterative pipeline using the CAPSUL engine.
+            4. Addition of Input_Filter nodes for database-connected plugs.
+            5. Proper linking of database_scans parameter across all filters.
 
-        The method handles both single processes and full pipelines,
-        converting single processes into single-node pipelines when necessary.
+        The method handles both single processes and full pipelines, converting
+        single processes into single-node pipelines when necessary.
 
-        :return: Pipeline or None: The new iteration pipeline if successful,
-                 None if aborted
+        :Returns: (Pipeline or None) The new iteration pipeline if successful,
+         None if aborted.
 
         :raises ValueError: If Input_Filter process cannot be found in the
-                            library.
+         library.
 
-        Notes:
-            - Modifies pipeline completion settings for database plugs
+        Note:
+            - Modifies pipeline completion settings for database plugs.
             - Sets the editor's iterated flag to True upon successful
-              completion
-            - Handles context name parsing for proper iteration naming
+              completion.
+            - Handles context name parsing for proper iteration naming.
         """
         pipeline = self.get_pipeline_or_process()
         engine = self.get_capsul_engine()
@@ -1680,14 +1677,14 @@ class PipelineManagerTab(QWidget):
 
         This method performs the following cleanup operations:
             1. Removes non-existent entries from the data browser for
-               each brick
-            2. Cleans up orphaned non-existing files from the project
-            3. Clears the brick and node lists
-            4. Updates the data browser table display
+               each brick.
+            2. Cleans up orphaned non-existing files from the project.
+            3. Clears the brick and node lists.
+            4. Updates the data browser table display.
 
         Note:
-        The table update is performed asynchronously using QtThreadCall
-        to ensure UI responsiveness.
+            The table update is performed asynchronously using QtThreadCall
+            to ensure UI responsiveness.
         """
 
         # Process each brick and remove non-existent entries
@@ -1714,14 +1711,12 @@ class PipelineManagerTab(QWidget):
         These attributes can be retrieved from an associated database. If no
         pipeline is specified, the current pipeline or process is used.
 
-        :param pipeline (Pipeline): The pipeline object to be completed.
-                                    If not provided, the method
-                                    retrieves the current pipeline
-                                    or process.
+        :param pipeline: (Pipeline) The pipeline object to be completed. If
+         not provided, the method retrieves the current pipeline or process.
 
-        Notes:
-        The completion process relies on Capsul's ProcessCompletionEngine
-        to automatically determine appropriate parameter values.
+        Note:
+            The completion process relies on Capsul's ProcessCompletionEngine
+            to automatically determine appropriate parameter values.
         """
         pipeline = pipeline or self.get_pipeline_or_process()
 
@@ -2017,9 +2012,9 @@ class PipelineManagerTab(QWidget):
         Checks each node in the pipeline for missing mandatory parameters,
         accounting for workflow job parameter overrides and temporary values.
 
-        :return (list[str]): Parameter names that are missing, formatted as
-                             either 'parameter_name' for pipeline root or
-                             'node.parameter_name' for other nodes.
+        :Returns: (list[str]) Parameter names that are missing, formatted as
+         either 'parameter_name' for pipeline root or 'node.parameter_name' for
+         other nodes.
 
         Note:
             Parameters with non-null values in the workflow job dictionary
@@ -3326,21 +3321,21 @@ class PipelineManagerTab(QWidget):
 
         This method handles three scenarios:
             1. Save to existing file with overwrite confirmation
-               (unless skipped)
+               (unless skipped).
             2. Save to existing file without confirmation when warning
-               is skipped
+               is skipped.
             3. Save as new file when no filename exists or file is in
-               protected directory
+               protected directory.
 
-        :param skip_overwrite_warning (bool): If True, skip the overwrite
-                                              confirmation dialog when saving
-                                              to an existing file. Defaults to
-                                              False.
+        :param skip_overwrite_warning: (bool) If True, skip the overwrite
+         confirmation dialog when saving to an existing file. Defaults to
+         False.
 
         Side Effects:
-            - Updates the main window status bar with save operation messages
-            - May display a confirmation dialog for file overwriting
-            - Saves the pipeline to disk via pipelineEditorTabs.save_pipeline()
+            - Updates the main window status bar with save operation messages.
+            - May display a confirmation dialog for file overwriting.
+            - Saves the pipeline to disk via
+              `pipelineEditorTabs.save_pipeline()`.
 
         Note:
             Files in "mia_processes/mia_processes" directory are treated as
@@ -3484,14 +3479,14 @@ class PipelineManagerTab(QWidget):
         handles all reversible operations in the pipeline editor interface.
 
         Supported undoable actions:
-            - add_process: Remove the added process node
-            - delete_process: Restore the deleted process node with its links
-            - export_plug/export_plugs: Remove the exported pipeline plug(s)
-            - remove_plug: Restore the removed plug(s) and reconnect links
-            - update_node_name: Revert node name change
-            - update_plug_value: Restore previous plug value
-            - add_link: Remove the added connection
-            - delete_link: Restore the deleted connection
+            - add_process: Remove the added process node.
+            - delete_process: Restore the deleted process node with its links.
+            - export_plug/export_plugs: Remove the exported pipeline plug(s).
+            - remove_plug: Restore the removed plug(s) and reconnect links.
+            - update_node_name: Revert node name change.
+            - update_plug_value: Restore previous plug value.
+            - add_link: Remove the added connection.
+            - delete_link: Restore the deleted connection.
 
         The method automatically updates the pipeline state and node
         parameters after performing the undo operation.
@@ -3646,15 +3641,16 @@ class PipelineManagerTab(QWidget):
                are found)
             2. Process-level inheritance dictionary (fallback)
 
-        :param job: Job execution object containing param_dict
-                    (parameter name->value mapping) and inheritance_dict
-                    (will be updated by this method)
+        :param job: Job execution object containing param_dict (parameter
+         name->value mapping) and inheritance_dict (will be updated by this
+         method).
         :param node: Process node being evaluated (ProcessNode or Process
-                     object). Used to determine inheritance rules via
-                     context_name or name attribute.
+         object). Used to determine inheritance rules via context_name or name
+         attribute.
 
-        Note: For Pipeline nodes, the method strips the "Pipeline." prefix
-              from the context_name to match against inheritance history keys.
+        Note:
+            For Pipeline nodes, the method strips the "Pipeline." prefix from
+            the context_name to match against inheritance history keys.
         """
         # Extract the effective node name, handling Pipeline prefixes
         context_name = getattr(node, "context_name", node.name)
@@ -3697,7 +3693,7 @@ class PipelineManagerTab(QWidget):
         Only jobs with a 'process' attribute are considered.
 
         :param brick: Reserved for future use. Currently unused parameter that
-                      could be used for filtering or extending functionality.
+         could be used for filtering or extending functionality.
 
         Note:
             This method modifies self.node_list in-place by extending it with
@@ -3725,12 +3721,12 @@ class PipelineManagerTab(QWidget):
 
         This method performs the following operations:
             1. Renames the Pipeline class in the saved file to match the
-               filename
-            2. Updates the __init__.py file to include the new import
-            3. Refreshes the module in sys.modules if it already exists
-            4. Adds the module to the process library
+               filename.
+            2. Updates the __init__.py file to include the new import.
+            3. Refreshes the module in sys.modules if it already exists.
+            4. Adds the module to the process library.
 
-        :param filename: Path to the pipeline file that has been saved
+        :param filename: Path to the pipeline file that has been saved.
 
         Note:
             Only processes saved in the User_processes directory are added to
@@ -3824,7 +3820,7 @@ class PipelineManagerTab(QWidget):
         from the project database.
 
         :param project: The current project instance containing application
-                        data and database connections.
+         data and database connections.
 
         Note:
             This method has the side effect of setting ProcessMIA.project as a
@@ -3970,12 +3966,12 @@ class PipelineManagerTab(QWidget):
         current active editor.
 
         Button states updated:
-            - Run Pipeline: Disabled when pipeline is empty or None
+            - Run Pipeline: Disabled when pipeline is empty or None.
             - Save Pipeline & Save As: Enabled only when pipeline is not
-              iterated
+              iterated.
 
-        :param index (int): Index of the specific editor to check. If -1
-                            (default), uses the currently active editor.
+        :param index: (int) Index of the specific editor to check. If -1
+         (default), uses the currently active editor.
 
         Note:
             If the specified editor doesn't exist or has no scene, the
@@ -4044,26 +4040,28 @@ class RunProgress(QWidget):
     The widget integrates with a PipelineManagerTab to control pipeline
     execution, providing real-time feedback and graceful error handling.
 
-    .. Methods:
-        - _determine_completion_message: Analyze execution results and
-                                         determine appropriate user message
-        - _setup_ui: Set up the user interface for the widget
-        - _show_completion_message: Display execution completion message
-        - cleanup: Clean up resources and prepare for widget destruction
-        - end_progress: Handle completion of pipeline execution and show
-                        results
-        - start: Starts the worker thread to begin the pipeline execution
-                 process
-        - stop_execution: Stops the execution of the pipeline by signaling the
-                          worker to interrupt
+    Contains:
 
-    Notes:
-        pipeline_manager (PipelineManagerTab):
-            The pipeline manager instance that handles the pipeline operations.
-        progressbar (QProgressBar):
-            The progress bar widget to show execution progress.
-        worker (RunWorker):
-            The worker thread that runs the pipeline.
+        Methods:
+
+            - _determine_completion_message: Analyze execution results and
+              determine appropriate user message.
+            - _setup_ui: Set up the user interface for the widget.
+            - _show_completion_message: Display execution completion message.
+            - cleanup: Clean up resources and prepare for widget destruction.
+            - end_progress: Handle completion of pipeline execution and show
+              results.
+            - start: Starts the worker thread to begin the pipeline execution
+              process.
+            - stop_execution: Stops the execution of the pipeline by signaling
+              the worker to interrupt.
+
+    Note:
+        - pipeline_manager (PipelineManagerTab): The pipeline manager instance
+          that handles the pipeline operations.
+        - progressbar (QProgressBar): The progress bar widget to show execution
+          progress.
+        - worker (RunWorker): The worker thread that runs the pipeline.
     """
 
     # UI Constants
@@ -4162,8 +4160,8 @@ class RunProgress(QWidget):
         """
         Clean up resources and prepare for widget destruction.
 
-        Ensures the worker thread completes, disconnects signals,
-        and releases resources. Should be called before widget destruction.
+        Ensures the worker thread completes, disconnects signals, and releases
+        resources. Should be called before widget destruction.
 
         Note:
             This method blocks until the worker thread finishes.
