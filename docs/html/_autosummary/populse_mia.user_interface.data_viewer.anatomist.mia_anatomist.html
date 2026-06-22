@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+d3dfa881 documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+7c97275a documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=eef4b4cc"></script>
+    <script src="../_static/documentation_options.js?v=eb9625b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d3dfa881 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7c97275a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -51,7 +51,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">TableDataBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.QTableWidget" title="PyQt5.QtWidgets.QTableWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QTableWidget</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QTableWidget" title="PyQt5.QtWidgets.QTableWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QTableWidget</span></code></a></p>
 <p>Table widget that displays the documents contained in the database and
 their associated tags.</p>
 <dl class="py method">
@@ -62,22 +62,23 @@ context.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>Project</strong><strong>)</strong> (<em>project</em>) – The current project instance containing data
+<li><p><strong>project</strong> – (Project) The current project instance containing data
 and configuration.</p></li>
-<li><p><strong>(</strong><strong>DataBrowser</strong><strong>)</strong> (<em>data_browser</em>) – Parent DataBrowser widget that
+<li><p><strong>data_browser</strong> – (DataBrowser) Parent DataBrowser widget that
 contains this table.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>tags_to_display</em>) – List of metadata tags to show as
+<li><p><strong>tags_to_display</strong> – (list[str]) List of metadata tags to show as
 table columns.</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>activate_selection</em>) – If True, enables cell editing;
-if False, table is read-only.</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> – True to enable the selection
-feature, False otherwise.</p></li>
+<li><p><strong>update_values</strong> – (bool) If True, enables cell editing; if False,
+table is read-only.</p></li>
+<li><p><strong>activate_selection</strong> – (bool) True to enable the selection feature,
+False otherwise.</p></li>
 <li><p><strong>link_viewer</strong><strong>(</strong><strong>bool</strong><strong>)</strong> – If True, links table selection to external
 viewer widget. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>Column sorting and reordering are enabled by default
 (except first column).</p></li>
@@ -86,6 +87,7 @@ is falsy.</p></li>
 <li><p>A custom context menu is available only when both
 <code class="docutils literal notranslate"><span class="pre">activate_selection</span></code> and <code class="docutils literal notranslate"><span class="pre">link_viewer</span></code> are True.</p></li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -98,9 +100,9 @@ field type, and populates cells with current values from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>column</em>) – Zero-based index where the column should be
+<li><p><strong>column</strong> – (int) Zero-based index where the column should be
 inserted.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>tag</em>) – Tag name identifying the field to add from the
+<li><p><strong>tag</strong> – (str) Tag name identifying the field to add from the
 database.</p></li>
 </ul>
 </dd>
@@ -117,8 +119,7 @@ completion.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_columns">
 <span class="sig-name descname"><span class="pre">add_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_columns" title="Link to this definition">¶</a></dt>
 <dd><p>Add and update table columns based on database fields.</p>
-<blockquote>
-<div><p>This method synchronizes the table’s columns with the current database
+<p>This method synchronizes the table’s columns with the current database
 schema by:</p>
 <blockquote>
 <div><ul class="simple">
@@ -130,19 +131,17 @@ table</p></li>
 <li><p>Maintaining column visibility settings</p></li>
 </ul>
 </div></blockquote>
-<p>The method temporarily disconnects item change signals during
-operation to prevent unwanted events, then reconnects them after
-completion.</p>
-<dl class="simple">
-<dt>Note:</dt><dd><ul class="simple">
-<li><p>The TAG_FILENAME column is always placed first</p></li>
-<li><p>Columns are sorted alphabetically (except TAG_FILENAME)</p></li>
-<li><p>System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded</p></li>
-<li><p>Undefined values are displayed in italic bold text</p></li>
+<p>The method temporarily disconnects item change signals during operation
+to prevent unwanted events, then reconnects them after completion.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The TAG_FILENAME column is always placed first.</p></li>
+<li><p>Columns are sorted alphabetically (except TAG_FILENAME).</p></li>
+<li><p>System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded.</p></li>
+<li><p>Undefined values are displayed in italic bold text.</p></li>
 </ul>
-</dd>
-</dl>
-</div></blockquote>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -170,10 +169,10 @@ custom widgets.</p>
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>Duplicate scans (already present in the table) are automatically
-skipped</p></li>
-<li><p>Sorting is temporarily disabled during the insertion process</p></li>
-<li><p>The first column (name) is set as non-editable</p></li>
-<li><p>TAG_BRICKS columns receive custom button widgets for interaction</p></li>
+skipped.</p></li>
+<li><p>Sorting is temporarily disabled during the insertion process.</p></li>
+<li><p>The first column (name) is set as non-editable.</p></li>
+<li><p>TAG_BRICKS columns receive custom button widgets for interaction.</p></li>
 </ul>
 </div>
 </dd></dl>
@@ -274,10 +273,9 @@ button for dismissal.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.edit_table_data_values">
 <span class="sig-name descname"><span class="pre">edit_table_data_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.edit_table_data_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.edit_table_data_values" title="Link to this definition">¶</a></dt>
 <dd><p>Edit and update selected cell values in the DataBrowser table.</p>
-<p>This method handles the selection of cells, validation of list
-lengths, and updating of values in both the table and the database.
-It supports list-type fields and ensures data consistency across
-selections.</p>
+<p>This method handles the selection of cells, validation of list lengths,
+and updating of values in both the table and the database. It supports
+list-type fields and ensures data consistency across selections.</p>
 <dl class="simple">
 <dt>Steps:</dt><dd><ol class="arabic simple">
 <li><p>Collects selected cells and their metadata
@@ -306,28 +304,30 @@ recursive updates.</p></li>
 <dd><p>Initialize and populate table cells with scan data from the database.</p>
 <dl class="simple">
 <dt>This method performs the following operations:</dt><dd><ol class="arabic simple">
-<li><p>Creates a progress dialog to track cell population</p></li>
+<li><p>Creates a progress dialog to track cell population.</p></li>
 <li><p>Retrieves scan documents matching scans_to_visualize from the
-database</p></li>
-<li><p>Populates each cell with appropriate data based on column type</p></li>
-<li><p>Handles special cases (name column, bricks column)</p></li>
-<li><p>Applies saved sorting preferences</p></li>
-<li><p>Resizes rows and columns to fit content</p></li>
+database.</p></li>
+<li><p>Populates each cell with appropriate data based on column type.</p></li>
+<li><p>Handles special cases (name column, bricks column).</p></li>
+<li><p>Applies saved sorting preferences.</p></li>
+<li><p>Resizes rows and columns to fit content.</p></li>
 </ol>
 </dd>
 <dt>Special column handling:</dt><dd><ul class="simple">
-<li><p>Column 0 (name): Read-only, always displays as string</p></li>
-<li><p>Bricks column: Displays clickable buttons for brick history</p></li>
-<li><p>Other columns: Editable, type-specific formatting</p></li>
+<li><p>Column 0 (name): Read-only, always displays as string.</p></li>
+<li><p>Bricks column: Displays clickable buttons for brick history.</p></li>
+<li><p>Other columns: Editable, type-specific formatting.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Displays a modal progress dialog during population</p></li>
-<li><p>Temporarily hides the table during updates for performance</p></li>
-<li><p>Connects cell change signals after population completes</p></li>
+<li><p>Displays a modal progress dialog during population.</p></li>
+<li><p>Temporarily hides the table during updates for performance.</p></li>
+<li><p>Connects cell change signals after population completes.</p></li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -375,18 +375,18 @@ inserting a column header while preserving the existing alphabetical
 sort order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>to_insert</em>) – The column header text to insert.</p>
+<dd class="field-odd"><p><strong>to_insert</strong> – (str) The column header text to insert.</p>
 </dd>
-<dt class="field-even">Return (int)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The column index where the new column should be
-inserted. Returns columnCount() if it should be
-appended at the end.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Note: Assumes that column 0 is reserved (TAG_FILENAME must always be</dt><dd><p>the first tag on the left) and start the search from column 1.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(int) The column index where the new column should be
+inserted. Returns columnCount() if it should be appended at the end.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Assumes that column 0 is reserved (TAG_FILENAME must always be
+the first tag on the left) and start the search from column 1.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -447,9 +447,9 @@ regular items and special brick widgets during the reordering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list_tags</strong><strong>(</strong><strong>list</strong><strong>)</strong> – List of tag names to sort by (primary to
+<li><p><strong>list_tags</strong> – (list) List of tag names to sort by (primary to
 secondary).</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>order</em>) – Sort direction, either “Ascending” or “Descending”.</p></li>
+<li><p><strong>order</strong> – (str) Sort direction, either “Ascending” or “Descending”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -714,9 +714,12 @@ self.bricks to retrieve the corresponding brick UUID.</p>
 <dd><p>Sort the currently selected column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>int</strong><strong>)</strong> (<em>order</em><em> (</em><em>Qt.SortOrder or</em>) – Sort order to apply.
-- Qt.AscendingOrder (0): Sort from lowest to highest
-- Qt.DescendingOrder (1): Sort from highest to lowest</p>
+<dd class="field-odd"><p><strong>order</strong> – <p>(Qt.SortOrder or int) Sort order to apply:</p>
+<ul class="simple">
+<li><p>Qt.AscendingOrder (0): Sort from lowest to highest</p></li>
+<li><p>Qt.DescendingOrder (1): Sort from highest to lowest</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -755,22 +758,19 @@ invalid column indices.</p>
 <dd><p>Update cell background colors based on data state and visibility.</p>
 <dl class="simple">
 <dt>Colors indicate:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>White/Grey: Unmodified builtin tags (alternating for visible</dt><dd><p>rows)</p>
-</dd>
-</dl>
-</li>
-<li><p>Cyan/Blue: Modified builtin tags (alternating for visible rows)</p></li>
-<li><dl class="simple">
-<dt>Pink/Red: User-defined tags or null values (alternating for</dt><dd><p>visible rows)</p>
-</dd>
-</dl>
-</li>
+<li><p>White/Grey: Unmodified builtin tags (alternating for visible
+rows).</p></li>
+<li><p>Cyan/Blue: Modified builtin tags (alternating for visible rows).</p></li>
+<li><p>Pink/Red: User-defined tags or null values (alternating for
+visible rows).</p></li>
 </ul>
 </dd>
 </dl>
-<p>Note: This method assumes the itemChanged signal is disconnected.
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method assumes the <cite>itemChanged</cite> signal is disconnected.
 Automatically saves modifications if auto-save is enabled.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -861,7 +861,7 @@ popup is sized to 50% of screen width and 80% of screen height.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">DataViewer</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.ABC" title="abc.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a>, <a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.QWidget" title="PyQt5.QtWidgets.QWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.ABC" title="abc.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a>, <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.QWidget" title="PyQt5.QtWidgets.QWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>An abstract base class for data viewers with a minimal, extensible API.</p>
 <p>This class defines a standard interface for data viewers, allowing
 subclasses to implement custom visualization strategies. The base methods

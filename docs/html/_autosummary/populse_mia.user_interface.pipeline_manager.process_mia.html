@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+d3dfa881 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+7c97275a documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=eef4b4cc"></script>
+    <script src="../_static/documentation_options.js?v=eb9625b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d3dfa881 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7c97275a documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="top navigation">
@@ -102,7 +102,7 @@ types of nodes may be part of a pipeline:</p>
 <ul class="simple">
 <li><p>process nodes (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode" title="capsul.pipeline.pipeline_nodes.ProcessNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.ProcessNode</span></code></a>) are the leaf nodes
 which represent actual processing bricks.</p></li>
-<li><p>pipeline nodes (<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PipelineNode" title="capsul.pipeline.pipeline_nodes.PipelineNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.PipelineNode</span></code></a>) are
+<li><p>pipeline nodes (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineNode" title="capsul.pipeline.pipeline_nodes.PipelineNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.PipelineNode</span></code></a>) are
 sub-pipelines which allow to reuse an existing pipeline within another
 one</p></li>
 <li><p>switch nodes (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Switch" title="capsul.pipeline.pipeline_nodes.Switch"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.Switch</span></code></a>) allows to select values
@@ -4008,25 +4008,28 @@ or None if the engine is not initialized.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">PopUpInheritanceDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.QDialog" title="PyQt5.QtWidgets.QDialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.QDialog" title="PyQt5.QtWidgets.QDialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for selecting tag inheritance between input and output plugs.</p>
 <p>This dialog allows users to select which input plug should pass its tags
 to a specific output plug, or to choose to ignore tag inheritance
 altogether.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Methods<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>_setup_buttons: Set up action buttons for the dialog</p></li>
-<li><p>_setup_radio_buttons: Set up radio buttons for each input option</p></li>
-<li><p>ok_clicked: Event when ok button is clicked</p></li>
-<li><p>okall_clicked: Event when Ok all button is clicked</p></li>
-<li><p>on_clicked: Event when radiobutton is clicked</p></li>
-<li><p>ignoreall_clicked: Event when ignore all plugs button is clicked</p></li>
-<li><p>ignore_clicked: Event when ignore button is clicked</p></li>
-<li><p>ignore_node_clicked: Event when ignore all nodes button is clicked</p></li>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>_setup_buttons: Set up action buttons for the dialog.</p></li>
+<li><p>_setup_radio_buttons: Set up radio buttons for each input option.</p></li>
+<li><p>ok_clicked: Event when ok button is clicked.</p></li>
+<li><p>okall_clicked: Event when Ok all button is clicked.</p></li>
+<li><p>on_clicked: Event when radiobutton is clicked.</p></li>
+<li><p>ignoreall_clicked: Event when ignore all plugs button is clicked.</p></li>
+<li><p>ignore_clicked: Event when ignore button is clicked.</p></li>
+<li><p>ignore_node_clicked: Event when ignore all nodes button is
+clicked.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict.__init__" title="Link to this definition">¶</a></dt>
@@ -4034,12 +4037,12 @@ altogether.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>values</em>) – Dict mapping input names (keys) to their
-paths (values)</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – Name of the current node</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Name of the current output plug</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>iterate</em>) – Boolean indicating if the choice applies
-to iterations</p></li>
+<li><p><strong>values</strong> – (dict) Dict mapping input names (keys) to their paths
+(values).</p></li>
+<li><p><strong>node_name</strong> – (str) Name of the current node.</p></li>
+<li><p><strong>plug_name</strong> – (str) Name of the current output plug.</p></li>
+<li><p><strong>iterate</strong> – (bool) Boolean indicating if the choice applies to
+iterations.</p></li>
 </ul>
 </dd>
 </dl>
@@ -4052,9 +4055,9 @@ to iterations</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – Name of the current node</p></li>
-<li><p><strong>plug_name</strong> – Name of the current output plug</p></li>
-<li><p><strong>layout</strong> – Layout to add the buttons to</p></li>
+<li><p><strong>node_name</strong> – Name of the current node.</p></li>
+<li><p><strong>plug_name</strong> – Name of the current output plug.</p></li>
+<li><p><strong>layout</strong> – Layout to add the buttons to.</p></li>
 </ul>
 </dd>
 </dl>
@@ -4067,8 +4070,8 @@ to iterations</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> – Dict mapping input names to their paths</p></li>
-<li><p><strong>layout</strong> – Layout to add the radio buttons to</p></li>
+<li><p><strong>values</strong> – Dict mapping input names to their paths.</p></li>
+<li><p><strong>layout</strong> – Layout to add the radio buttons to.</p></li>
 </ul>
 </dd>
 </dl>
@@ -4085,8 +4088,7 @@ to iterations</p></li>
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict.okall_clicked">
 <span class="sig-name descname"><span class="pre">okall_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict.okall_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.PopUpInheritanceDict.okall_clicked" title="Link to this definition">¶</a></dt>
 <dd><p>Handle ‘OK for all output plugs’ button click.</p>
-<p>Accepts the dialog with current selection applied to all output
-plugs.</p>
+<p>Accepts the dialog with current selection applied to all output plugs.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -4840,60 +4842,57 @@ the coordinate system in Matlab.</p></li>
 <p>This method handles the inheritance of metadata tags from one or
 more input files to an output file. It also allows adding new tags,
 modifying existing ones, or deleting unwanted tags in the process.</p>
-<p>Notes:
-This method performs inheritance in two ways:
-1. Immediate inheritance during process execution
-2. Deferred inheritance by storing inheritance information for later</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method performs inheritance in two ways:</p>
 <blockquote>
-<div><p>use during workflow generation (addresses issue #290, #310)</p>
+<div><ol class="arabic simple">
+<li><p>Immediate inheritance during process execution.</p></li>
+</ol>
+<p>2. Deferred inheritance by storing inheritance information for
+later use during workflow generation.</p>
 </div></blockquote>
-<p>In ambiguous cases (multiple input files), the method will either:
-- Use previously stored inheritance rules
-- Prompt the user for a decision if no rule exists
-- Auto-resolve if all inputs have identical tag values</p>
+</div>
+<dl class="simple">
+<dt>In ambiguous cases (multiple input files), the method will either:</dt><dd><ul class="simple">
+<li><p>Use previously stored inheritance rules.</p></li>
+<li><p>Prompt the user for a decision if no rule exists.</p></li>
+<li><p>Auto-resolve if all inputs have identical tag values.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dict</strong><strong>)</strong> (<em>own_tags</em><em> (</em><em>list of</em>) – <p>Source of tag inheritance. Either:
-- A string representing a single input</p>
+<li><p><strong>in_file</strong> – <p>(str or dict) Source of tag inheritance.
+Either:</p>
 <blockquote>
-<div><p>file path (unambiguous case)</p>
-</div></blockquote>
-<ul>
-<li><p>A dictionary mapping plug names to
-corresponding input file paths
+<div><ul>
+<li><p>A string representing a single input file path (unambiguous case)</p></li>
+<li><p>A dictionary mapping plug names to corresponding input file paths
 (ambiguous case)</p></li>
 </ul>
-</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>node_name</em>) – Path of the output file that will inherit the
-tags.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Name of the processing node in the workflow.</p></li>
-<li><p><strong>dict</strong><strong>)</strong> – <p>Tags to be added or modified. Each
-dictionary must contain:
-- “name”: Tag identifier
-- “field_type”: Data type of the tag
-- “description”: Human-readable</p>
-<blockquote>
-<div><p>description</p>
 </div></blockquote>
-<ul>
-<li><dl class="simple">
-<dt>”visibility”: Boolean or visibility</dt><dd><p>level</p>
-</dd>
-</dl>
-</li>
+</p></li>
+<li><p><strong>out_file</strong> – (str) Path of the output file that will inherit the
+tags.</p></li>
+<li><p><strong>node_name</strong> – (str) Name of the processing node in the workflow.</p></li>
+<li><p><strong>own_tags</strong> – <p>(list of dict) Tags to be added or modified.
+Each dictionary must contain:</p>
+<blockquote>
+<div><ul>
+<li><p>”name”: Tag identifier</p></li>
+<li><p>”field_type”: Data type of the tag</p></li>
+<li><p>”description”: Human-readable description</p></li>
+<li><p>”visibility”: Boolean or visibility level</p></li>
 <li><p>”origin”: Source of the tag</p></li>
-<li><dl class="simple">
-<dt>”unit”: Unit of measurement</dt><dd><p>(if applicable)</p>
-</dd>
-</dl>
-</li>
+<li><p>”unit”: Unit of measurement (if applicable)</p></li>
 <li><p>”default_value”: Default value</p></li>
 <li><p>”value”: Current value to set</p></li>
 </ul>
+</div></blockquote>
 </p></li>
-<li><p><strong>str</strong><strong>)</strong> (<em>tags2del</em><em> (</em><em>list of</em>) – Tags to be deleted from the output
-file.</p></li>
+<li><p><strong>tags2del</strong> – (list of str) Tags to be deleted from the output file.</p></li>
 </ul>
 </dd>
 </dl>
