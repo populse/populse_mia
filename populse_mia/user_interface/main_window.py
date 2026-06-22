@@ -1,11 +1,7 @@
-"""Module to define main window appearance, functions and settings.
+"""
+Module to define main window appearance, functions and settings.
 
 Initialize the software appearance and defines interactions with the user.
-
-:Contains:
-    :Class:
-        - MainWindow
-
 """
 
 ##########################################################################
@@ -80,63 +76,68 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSeeAllProjects,
 )
 
+__all__ = ["MainWindow"]
+
 logger = logging.getLogger(__name__)
 
 
 class MainWindow(QMainWindow):
     """Initialize software appearance and define interactions with the user.
 
-    .. Methods:
-        - __init__ : Initialise the object MainWindow
-        - add_clinical_tags: Add the clinical tags to the database and the
-                             data browser
-        - check_database: Check if files in database have been modified or
-                          removed since they have been converted for the
-                          first time
-        - check_unsaved_modifications: Check if there are differences between
-                                       the current project and the database
+    Contains:
 
-        - closeEvent: Override the closing event to check if there are
-                      unsaved modifications
-        - create_project_pop_up: Create a new project
-        - create_view_actions: Create the actions in each menu
-        - create_view_menus: Create the menu-bar
-        - create_view_window: Create the main window view
-        - create_tabs: Create the tabs
-        - credits: Open the credits in a web browser
+        Methods:
+
+        - add_clinical_tags: Add the clinical tags to the database and the data
+          browser.
+        - check_database: Check if files in database have been modified or
+          removed since they have been converted for the first time.
+        - check_unsaved_modifications: Check if there are differences between
+          the current project and the database.
+        - closeEvent: Override the closing event to check if there are unsaved
+          modifications.
+        - create_project_pop_up: Create a new project.
+        - create_view_actions: Create the actions in each menu.
+        - create_view_menus: Create the menu-bar.
+        - create_view_window: Create the main window view.
+        - create_tabs: Create the tabs.
+        - credits: Open the credits in a web browser.
         - del_clinical_tags: Remove the clinical tags to the database and the
-                             data browser
-        - delete_project: Open a project and updates the recent projects list
-        - documentation: Open the documentation in a web browser
-        - get_controller_version: Returns controller_version_changed attribute
-        - import_data: Call the import software (MRI File Manager)
-        - install_processes_pop_up: Open the install processes pop-up
+          data browser.
+        - delete_project: Open a project and updates the recent projects list.
+        - documentation: Open the documentation in a web browser.
+        - get_controller_version: Returns controller_version_changed attribute.
+        - import_data: Call the import software (MRI File Manager).
+        - install_processes_pop_up: Open the install processes pop-up.
+        - last_window_closed: Force exit the event loop after ipython console
+          is closed.
         - open_project_pop_up: Open a pop-up to open a project and updates
-                               the recent projects
-        - open_recent_project: Open a recent project
+          the recent projects.
+        - open_recent_project: Open a recent project.
         - open_shell: Open a Qt console shell with an IPython kernel seeing
-                      the program internals.
-        - package_library_pop_up: Open the package library pop-up
-        - project_properties_pop_up: Open the project properties pop-up
-        - redo: Redo the last action made by the user
+          the program internals.
+        - package_library_pop_up: Open the package library pop-up.
+        - project_properties_pop_up: Open the project properties pop-up.
+        - redo: Redo the last action made by the user.
         - remove_raw_files_useless: Remove the useless raw files of the
-                                    current project
-        - save: Save either the current project or the current pipeline
+          current project.
+        - save: Save either the current project or the current pipeline.
         - save_as: Save either the current project or the current pipeline
-                   under a new name
-        - save_project_as: Open a pop-up to save the current project as
-        - saveChoice: Checks if the project needs to be saved as or just saved
-        - see_all_projects: Open a pop-up to show the recent projects
-        - set_controller_version: Reverses controller_version_changed attribute
-        - setup_menu_actions: Initialize menu actions
-        - setup_window_size: Set the window size and maximize if needed
-        - software_preferences_pop_up: Open the Mia preferences pop-up
-        - switch_project: Switches project if it's possible
-        - tab_changed: Method called when the tab is changed
-        - undo: Undoes the last action made by the user
+          under a new name.
+        - save_project_as: Open a pop-up to save the current project as.
+        - saveChoice: Checks if the project needs to be saved as or just saved.
+        - see_all_projects: Open a pop-up to show the recent projects.
+        - set_controller_version: Reverses controller_version_changed
+          attribute.
+        - setup_menu_actions: Initialize menu actions.
+        - setup_window_size: Set the window size and maximize if needed.
+        - software_preferences_pop_up: Open the Mia preferences pop-up.
+        - switch_project: Switches project if it's possible.
+        - tab_changed: Method called when the tab is changed.
+        - undo: Undoes the last action made by the user.
         - update_project: Update the project once the database has been
-                          updated
-        - update_recent_projects_actions: Update the list of recent projects
+          updated.
+        - update_recent_projects_actions: Update the list of recent projects.
 
     """
 
@@ -147,7 +148,7 @@ class MainWindow(QMainWindow):
 
         :param project: Current project in the software.
         :param test: Boolean indicating if the widget is launched from unit
-                     tests or not.
+         tests or not.
         :param deleted_projects: Projects that have been deleted.
 
         """
@@ -247,9 +248,10 @@ class MainWindow(QMainWindow):
         Check if there are differences between the current project and the
         database.
 
-        :return (bool): True if there are unsaved modifications,
-                        False otherwise
+        :Returns (bool) True if there are unsaved modifications,
+         False otherwise
         """
+
         if self.project is None:
             return True
 
@@ -267,7 +269,7 @@ class MainWindow(QMainWindow):
         Override the QWidget closing event to check if there are unsaved
         modifications.
 
-        :param event: closing event
+        :param event: Closing event.
         """
         if not self.check_unsaved_modifications() or self.test:
             can_exit = True
@@ -396,7 +398,7 @@ class MainWindow(QMainWindow):
                     )  # project updated everywhere
 
     def create_view_actions(self):
-        """Create the actions and their shortcuts in each menu"""
+        """Create the actions and their shortcuts in each menu."""
 
         self.action_create.setShortcut("Ctrl+N")
         self.action_open.setShortcut("Ctrl+O")
@@ -544,7 +546,7 @@ class MainWindow(QMainWindow):
         )
 
     def del_clinical_tags(self):
-        """Remove the clinical tags to the database and the data browser"""
+        """Remove the clinical tags to the database and the data browser."""
 
         removed_tags = self.project.del_clinical_tags()
 
@@ -594,7 +596,7 @@ class MainWindow(QMainWindow):
     def get_controller_version(self):
         """Gives the value of the controller_version_changed attribute.
 
-        :return: Boolean
+        :Returns: A boolean.
         """
         return self.controller_version_changed
 
@@ -604,12 +606,12 @@ class MainWindow(QMainWindow):
         the database.
 
         This method performs the following steps:
-        1. Launches the MRI conversion software to convert MRI files to
-           Nifti/JSON format
-        2. Attempts import with maximum heap size of 4096M, falls back to
-           1024M if needed
-        3. Updates the database with newly imported scans
-        4. Refreshes the data browser UI with new scan information
+            1. Launches the MRI conversion software to convert MRI files to
+               Nifti/JSON format.
+            2. Attempts import with maximum heap size of 4096M, falls back to
+               1024M if needed.
+            3. Updates the database with newly imported scans.
+            4. Refreshes the data browser UI with new scan information.
         """
         # Opens the conversion software to convert the MRI files in Nifti/Json
         config = Config()
@@ -725,7 +727,7 @@ class MainWindow(QMainWindow):
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
 
-        :param folder: boolean, True if installing from a folder
+        :param folder: (boolean) True if installing from a folder.
 
         """
         self.pop_up_install_processes = InstallProcesses(self, folder=folder)
@@ -741,9 +743,10 @@ class MainWindow(QMainWindow):
     def last_window_closed():
         """Force exit the event loop after ipython console is closed.
 
-        If the ipython console has been run, something prevents Qt from
-        quitting after the window is closed. The cause is not known yet.
-        So: force exit the event loop.
+        Note:
+            If the ipython console has been run, something prevents Qt from
+            quitting after the window is closed. The cause is not known yet.
+            So: force exit the event loop.
         """
         # Defer quit to avoid re-entrancy issues when closing the last window,
         # especially when IPython/QtConsole has modified the event loop.
@@ -751,16 +754,16 @@ class MainWindow(QMainWindow):
 
     def open_project_pop_up(self):
         """
-        Open a dialog to select and open a project, updating recent
-        projects list.
+        Open a dialog to select and open a project, updating recent projects
+        list.
 
         This method handles:
-        1. Checking for unsaved modifications in current project
-        2. Opening project selection dialog
-        3. Validating project path
-        4. Switching to new project
-        5. Updating clinical mode based on database fields
-        6. Updating database paths if project is external
+            1. Checking for unsaved modifications in current project.
+            2. Opening project selection dialog.
+            3. Validating project path.
+            4. Switching to new project.
+            5. Updating clinical mode based on database fields.
+            6. Updating database paths if project is external.
         """
 
         # Ui_Dialog() is defined in pop_ups.py
@@ -885,31 +888,44 @@ class MainWindow(QMainWindow):
         application.
 
         This method creates a QtConsole widget that runs inside the current
-        application process, allowing interactive inspection and
-        manipulation of program internals such as the main window, project,
-        and the QApplication instance. This console does not spawn a
-        subprocess and fully integrates with the existing Qt event loop.
+        application process, allowing interactive inspection and manipulation
+        of program internals such as the main window, project, and the
+        QApplication instance. This console does not spawn a subprocess and
+        fully integrates with the existing Qt event loop.
 
         Features:
+
             - Provides access to key objects:
-                - `main_window`: this MainWindow instance
-                - `project`: if available, the current project object
-                - `app`: the current QApplication instance
-            - Interactive Python prompt
-            - Stdout/stderr from the application will appear in the console
+                - `main_window`: this MainWindow instance.
+                - `project`: if available, the current project object.
+                - `app`: the current QApplication instance.
+            - Interactive Python prompt.
+            - Stdout/stderr from the application will appear in the console.
 
         Dependencies:
-            - `qtconsole` for the console widget
-            - `ipykernel` for the in-process IPython kernel
-            - `IPython` for interactive shell support
+            - `qtconsole` for the console widget.
+            - `ipykernel` for the in-process IPython kernel.
+            - `IPython` for interactive shell support.
 
         If any of these are missing, the console will not open, and a warning
         is logged.
 
-        :raises (RuntimeError): if QApplication instance does not exist when
-                                calling this method
+        :raises RuntimeError: If QApplication instance does not exist when
+         calling this method.
 
-        :returns (RichJupyterWidget): the created QtConsole widget instance
+        :Returns: (RichJupyterWidget) the created QtConsole widget instance.
+
+        Contains:
+
+            Inner functions:
+
+                - cleanup_console: Safely clean up an in-process Jupyter
+                  kernel and its communication channels.
+
+            Inner classes:
+
+                - SafeRichJupyterWidget: A safer QtConsole widget for
+                  in-process IPython shells.
         """
 
         try:
@@ -979,7 +995,7 @@ class MainWindow(QMainWindow):
                 is destroyed so that no further frontend updates are attempted
                 on deleted Qt objects.
 
-                :param event: the Qt close event.
+                :param event: The Qt close event.
                 """
                 self._closing = True
 
@@ -1010,7 +1026,7 @@ class MainWindow(QMainWindow):
                 attempting to update GUI elements that may already have been
                 destroyed.
 
-                :param msg: the Jupyter message received from the kernel.
+                :param msg: The Jupyter message received from the kernel.
                 """
 
                 if self._closing:
@@ -1127,7 +1143,7 @@ class MainWindow(QMainWindow):
         self.project = None
 
     def save(self):
-        """Save either the current project or the current pipeline"""
+        """Save either the current project or the current pipeline."""
 
         if (
             self.tabs.tabText(self.tabs.currentIndex()).replace("&", "", 1)
@@ -1144,7 +1160,8 @@ class MainWindow(QMainWindow):
             self.pipeline_manager.savePipeline()
 
     def save_as(self):
-        """Save either the current project or the current pipeline under a new
+        """
+        Save either the current project or the current pipeline under a new
         name.
         """
         if (
@@ -1162,7 +1179,7 @@ class MainWindow(QMainWindow):
             self.pipeline_manager.save_pipeline_as()
 
     def save_project_as(self):
-        """Open a pop-up to save the current project as"""
+        """Open a pop-up to save the current project as."""
 
         try:
             self.exPopup = PopUpSaveProjectAs()
@@ -1389,7 +1406,7 @@ class MainWindow(QMainWindow):
         Initialize menu actions with icons and descriptions.
 
         :param sources_images_dir: Directory containing source images
-                                   for icons.
+         for icons.
         """
         self.action_save_project = self.menu_file.addAction("Save project")
         self.action_save_project_as = self.menu_file.addAction(
@@ -1455,10 +1472,10 @@ class MainWindow(QMainWindow):
         Check if it's possible to open the selected project and quit the
         current one.
 
-        :param file_path: raw file_path
-        :param name: project name
+        :param file_path: Raw file_path.
+        :param name: Project name.
 
-        :return: Boolean
+        :Returns: A boolean.
         """
         # /!\ file_path and path are the same param
 
@@ -1609,13 +1626,12 @@ class MainWindow(QMainWindow):
         Data Viewer, and Pipeline Manager tabs. Handles data synchronization,
         search state preservation, and unsaved changes warnings.
 
-        The method performs the following operations based on the selected
-        tab:
-        - Data Browser: Refreshes table data, preserves search state and
-                        visualization settings
-        - Data Viewer: Loads current viewer and updates document list
-        - Pipeline Manager: Updates scan lists and handles unsaved
-                            modifications
+        The method performs the following operations based on the selected tab:
+            - Data Browser: Refreshes table data, preserves search state and
+              visualization settings.
+            - Data Viewer: Loads current viewer and updates document list.
+            - Pipeline Manager: Updates scan lists and handles unsaved
+              modifications.
         """
 
         current_tab = self.tabs.tabText(self.tabs.currentIndex()).replace(
@@ -1739,8 +1755,8 @@ class MainWindow(QMainWindow):
         This method updates the database, the window title, and the recent
         and saved projects menus.
 
-        :param file_path (str): The file path of the new project.
-        :param call_update_table (bool): Whether to update the table data.
+        :param file_path: (str) The file path of the new project.
+        :param call_update_table: (bool) Whether to update the table data.
                                          Defaults to True.
         """
 
@@ -1770,8 +1786,8 @@ class MainWindow(QMainWindow):
         """
         Updates the list of recent projects in the UI.
 
-        Hides all recent project actions first, then updates and displays
-        the most recent ones based on the configured maximum.
+        Hides all recent project actions first, then updates and displays the
+        most recent ones based on the configured maximum.
         """
         max_projects = self.config.get_max_projects()
 
