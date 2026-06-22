@@ -1381,6 +1381,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
         :param old_dic: (dict) The previous package configuration.
         :param new_dic: (dict) The new package configuration.
+
         :Returns: True if all keys at the current level match, False if not.
         """
 

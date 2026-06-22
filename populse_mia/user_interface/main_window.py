@@ -1756,8 +1756,8 @@ class MainWindow(QMainWindow):
         and saved projects menus.
 
         :param file_path: (str) The file path of the new project.
-        :param call_update_table: (bool) Whether to update the table data.
-                                         Defaults to True.
+        :param call_update_table: (bool) Whether to update the table data,
+         Defaults to True.
         """
 
         self.data_browser.update_database(self.project)

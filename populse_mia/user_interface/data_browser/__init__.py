@@ -1,14 +1,5 @@
-"""Handle the data browser tab. Visualize, modify and search data.
-
-Contains:
-    Module:
-      - advanced_search
-      - count_table
-      - data_browser
-      - mini_viewer
-      - modify_table
-      - rapid_search
-
+"""
+Handle the data browser tab. Visualize, modify and search data.
 """
 
 ##########################################################################

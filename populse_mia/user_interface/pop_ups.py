@@ -5929,7 +5929,7 @@ class PopUpShowHistory(QDialog):
         paths.
 
         :param io_dict: (dict) Dictionary containing input or output data to be
-        displayed. Keys represent column headers, and values can be strings,
+         displayed. Keys represent column headers, and values can be strings,
         lists, or nested lists.
         :param item_idx: (int) The starting column index for populating the
          table.

@@ -1,9 +1,5 @@
 """
 Module to define the advanced search.
-
-Contains:
-    Class:
-        - AdvancedSearch
 """
 
 ##########################################################################
@@ -43,36 +39,43 @@ from populse_mia.data_manager import (
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import ClickableLabel
 
+__all__ = ["AdvancedSearch"]
+
 logger = logging.getLogger(__name__)
 
 
 class AdvancedSearch(QWidget):
-    """Class that manages the widget of the advanced search
+    """
+    Class that manages the widget of the advanced search.
 
     The advanced search creates a complex query to the database and is a
     combination of several "query lines" which are linked with AND or OR and
     all composed of:
-    - A negation or not
-    - A tag name or all visible tags
-    - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN)
-    - A value
+        - A negation or not.
+        - A tag name or all visible tags.
+        - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN).
+        - A value.
 
-    .. Methods:
-        - add_search_bar: create and define the advanced research bar
-        - apply_filter: apply an opened filter to update the table.
-        - displayConditionRules: set the list of condition choices, depending
-                                 on the tag type
-        - displayValueRules: update the placeholder text when the condition
-                             choice is changed
-        - get_filters: get the filters in list form
-        - launch_search: start the search and update the table
-        - prepare_filters: prepare the str representation of the filter
-        - refresh_search: refresh the widget
-        - remove_row: remove a row
-        - rows_borders_added: add the links and the added row to the good rows
-        - rows_borders_removed: link and adds row removed from every row
-        - show_search: reset the rows when the Advanced Search button is
-                       clicked
+    Contains:
+
+        Methods:
+
+            - add_search_bar: Create and define the advanced research bar.
+            - apply_filter: Apply an opened filter to update the table.
+            - displayConditionRules: Set the list of condition choices,
+              depending on the tag type.
+            - displayValueRules: Update the placeholder text when the condition
+              choice is changed.
+            - get_filters: Get the filters in list form.
+            - launch_search: Start the search and update the table.
+            - prepare_filters: Prepare the str representation of the filter.
+            - refresh_search: Refresh the widget.
+            - remove_row: Remove a row.
+            - rows_borders_added: Add the links and the added row to the good
+              rows.
+            - rows_borders_removed: Link and adds row removed from every row.
+            - show_search: Reset the rows when the Advanced Search button is
+              clicked.
     """
 
     def __init__(
@@ -88,13 +91,13 @@ class AdvancedSearch(QWidget):
 
         :param project: The current project instance.
         :param data_browser: The parent DataBrowser widget that contains this
-                             search.
-        :param scans_list:  List of document scans to search within. Defaults
-                            to empty list.
+         search.
+        :param scans_list: List of document scans to search within. Defaults
+         to empty list.
         :param tags_list: List of tags to display in the search interface.
-                          Defaults to empty list.
-        :param from_pipeline (bool): Whether the widget is instantiated from
-                                     the pipeline manager. Defaults to False.
+         Defaults to empty list.
+        :param from_pipeline: (bool) Whether the widget is instantiated from
+         the pipeline manager. Defaults to False.
 
         """
         super().__init__()
@@ -112,26 +115,34 @@ class AdvancedSearch(QWidget):
         Add an advanced search bar row to the search interface.
 
         Creates a complete search row containing:
-            - NOT operator toggle
-            - Field selector (populated with available tags)
-            - Condition operator selector (==, !=, >, <, etc.)
-            - Value input field
-            - Remove button to delete this row
+            - NOT operator toggle.
+            - Field selector (populated with available tags).
+            - Condition operator selector (==, !=, >, <, etc.).
+            - Value input field.
+            - Remove button to delete this row.
 
         The row components are connected with signals to update dynamically
         based on field type and selected condition.
 
+        Contains:
+
+            Inner functions:
+
+                - _create_combo_box: Create and return a QComboBox populated
+                  with the given items.
+                - _get_shown_tags_from_db: Retrieve the tags currently marked
+                  as visible from the project database.
         """
 
         def _create_combo_box(name, items):
             """
             Create and return a QComboBox populated with the given items.
 
-            :param name (str): Object name assigned to the QComboBox.
-            :param items (iterable of str): Items to add to the combo box,
-                                            in order.
+            :param name: (str) Object name assigned to the QComboBox.
+            :param items: (iterable of str) Items to add to the combo box, in
+             order.
 
-            :return (QComboBox): The initialized combo box.
+            :Returns: (QComboBox) The initialized combo box.
             """
             combo = QComboBox()
             combo.setObjectName(name)
@@ -146,8 +157,8 @@ class AdvancedSearch(QWidget):
             Retrieve the tags currently marked as visible from the project
             database.
 
-            :return (list): A list of tags configured to be shown in the
-                            project.
+            :Returns: (list) A list of tags configured to be shown in the
+             project.
             """
 
             with self.project.database.data() as database_data:
@@ -225,20 +236,19 @@ class AdvancedSearch(QWidget):
         showing all scans.
 
         :param filter: Filter object containing the query criteria with
-                       attributes:
-                           - nots (list): Negation flags for each condition
-                           - values (list): Values to match against
-                           - conditions (list): Comparison operators
-                                                (e.g., '==', '>', '<')
-                           - links (list): Logical operators connecting
-                                           conditions ('AND', 'OR')
-                           - fields (list): Database fields to query
+         attributes:
+            - nots (list): Negation flags for each condition.
+            - values (list): Values to match against.
+            - conditions (list): Comparison operators (e.g., '==', '>', '<').
+            - links (list): Logical operators connecting conditions
+              ('AND', 'OR').
+            - fields (list): Database fields to query.
 
-        Side Effects:
-            - Updates self.rows with filter parameters
-            - Modifies self.data_browser.table_data.scans_to_visualize
-            - May display a warning dialog on error
-            - Calls self.data_browser.table_data.update_visualized_rows()
+        Side effects:
+            - Updates self.rows with filter parameters.
+            - Modifies self.data_browser.table_data.scans_to_visualize.
+            - May display a warning dialog on error.
+            - Calls self.data_browser.table_data.update_visualized_rows().
         """
         # Extract filter parameters
         nots = filter.nots
@@ -329,22 +339,28 @@ class AdvancedSearch(QWidget):
         type.
 
         Dynamically adjusts the condition dropdown to show only operators that
-        are
-        valid for the selected field's data type. Numeric fields allow
+        are valid for the selected field's data type. Numeric fields allow
         comparison operators (<, >, <=, >=, BETWEEN), while non-numeric fields
         exclude them. List fields exclude the IN operator, while non-list
         fields include it.
 
         :param field: QComboBox widget containing the selected tag name.
         :param condition: QComboBox widget whose items will be updated based
-                          on the field's type.
+         on the field's type.
 
         Behavior:
-            - Numeric types: Include <, >, <=, >=, BETWEEN operators
-            - String/Boolean/List types: Exclude comparison operators
-            - List types: Exclude IN operator
-            - Non-list types: Include IN operator
-            - Special case "All visualized tags": Treated as non-numeric
+            - Numeric types: Include <, >, <=, >=, BETWEEN operators.
+            - String/Boolean/List types: Exclude comparison operators.
+            - List types: Exclude IN operator.
+            - Non-list types: Include IN operator.
+            - Special case "All visualized tags": Treated as non-numeric.
+
+        Contains:
+
+            Inner functions:
+
+                - _update_operators: Add or remove operators from the condition
+                  widget.
         """
 
         def _update_operators(condition_widget, operators, should_add):
@@ -407,10 +423,10 @@ class AdvancedSearch(QWidget):
         :param value: QLineEdit widget that will be configured.
 
         Behavior:
-            - BETWEEN: Enabled with placeholder "value1; value2"
-            - IN: Enabled with placeholder for semicolon-separated list
-            - HAS VALUE/HAS NO VALUE: Disabled and cleared
-            - Other operators: Enabled with no placeholder
+            - BETWEEN: Enabled with placeholder "value1; value2".
+            - IN: Enabled with placeholder for semicolon-separated list.
+            - HAS VALUE/HAS NO VALUE: Disabled and cleared.
+            - Other operators: Enabled with no placeholder.
         """
         operator = choice.currentText()
         # Configuration map: operator ->
@@ -461,8 +477,8 @@ class AdvancedSearch(QWidget):
             - nots (list): Negation flags for each filter
 
         Note:
-            - BETWEEN and IN conditions have their values split into lists
-            - Fields incompatible with operators are automatically removed
+            - BETWEEN and IN conditions have their values split into lists.
+            - Fields incompatible with operators are automatically removed.
         """
         comparison_operators = {"<", ">", "<=", ">=", "BETWEEN"}
         incompatible_types = {
@@ -548,10 +564,10 @@ class AdvancedSearch(QWidget):
         all available scans.
 
         Side Effects:
-            - Updates self.data_browser.table_data.scans_to_visualize
-            - Updates self.data_browser.table_data.scans_to_search
-            - Updates self.project.currentFilter (if not from_pipeline)
-            - Displays error dialog on search failure
+            - Updates self.data_browser.table_data.scans_to_visualize.
+            - Updates self.data_browser.table_data.scans_to_search.
+            - Updates self.project.currentFilter (if not from_pipeline).
+            - Displays error dialog on search failure.
         """
         # Retrieve filter parameters
         fields, conditions, values, links, nots = self.get_filters(True)
@@ -608,25 +624,32 @@ class AdvancedSearch(QWidget):
         """
         Construct a filter query string from filter components.
 
-        Builds a query by combining multiple filter rows with logical
-        operators (AND/OR), where each row can filter across multiple fields
-        with optional negation.
+        Builds a query by combining multiple filter rows with logical operators
+        (AND/OR), where each row can filter across multiple fields with
+        optional negation.
 
         :param links: Logical operators joining filter rows
-                      (e.g., ['AND', 'OR']). Length should be len(fields) - 1.
+         (e.g. ['AND', 'OR']). Length should be len(fields) - 1.
         :param fields: Nested list where each sublist contains field names to
-                       filter on. Fields within a row are OR-combined.
+         filter on. Fields within a row are OR-combined.
         :param conditions: Filter operators for each row. Supported values:
-                           '==', '!=', '<', '>', '<=', '>=', 'IN', 'BETWEEN',
-                           'CONTAINS', 'HAS VALUE', 'HAS NO VALUE'.
+         '==', '!=', '<', '>', '<=', '>=', 'IN', 'BETWEEN', 'CONTAINS',
+         'HAS VALUE', 'HAS NO VALUE'.
         :param values: Filter values corresponding to each condition. For
-                       'BETWEEN', provide a two-element sequence [min, max].
+         'BETWEEN', provide a two-element sequence [min, max].
         :param nots: Negation flags for each row ('NOT' to negate, empty
-                     string otherwise).
+         string otherwise).
         :param scans: List of scan identifiers to restrict the search scope.
 
-        :return: Complete filter query string with all conditions and scan
-                 restrictions.
+        :Returns: Complete filter query string with all conditions and scan
+         restrictions.
+
+        Contains:
+
+            Inner functions:
+
+                - _format_value: Convert a Python value into a string safe for
+                  use in queries.
         """
 
         def _format_value(value):
@@ -779,7 +802,7 @@ class AdvancedSearch(QWidget):
         linking query conditions.
 
         :param links: List of previously selected link operators ('AND'/'OR')
-                      to restore when rebuilding the UI.
+         to restore when rebuilding the UI.
         """
         # Add plus button to the last row for adding new search bars
         sources_images_dir = Config().getSourceImageDir()
@@ -811,6 +834,13 @@ class AdvancedSearch(QWidget):
 
         This ensures that these widgets are properly removed from the layout
         and scheduled for deletion, preventing memory leaks.
+
+        Contains:
+
+            Inner functions:
+
+                - _remove_widget: Safely removes a QWidget from its parent and
+                  schedules it for deletion.
         """
 
         def _remove_widget(widget_ref):

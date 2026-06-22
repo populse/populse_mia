@@ -1,5 +1,5 @@
 """
-Medical Scan Completeness Verification Tool
+Medical Scan Completeness Verification Tool.
 
 This module provides a sophisticated quality assurance tool for medical
 imaging projects, enabling systematic verification of scan completeness
@@ -13,40 +13,36 @@ time points, etc.) and indicates which combinations have corresponding scan
 data available.
 
 Core Functionality:
-    - Interactive tag selection with expandable interface (2 to n tags)
-    - Real-time database querying and scan counting
-    - Matrix visualization of tag combinations vs. data availability
-    - Visual indicators: ✓ (green checkmark) for present data,
-                         ✗ (red cross) for missing
-    - Detailed tooltips showing specific scan filenames
-    - Statistical summaries with total counts per category
+    - Interactive tag selection with expandable interface (2 to n tags).
+    - Real-time database querying and scan counting.
+    - Matrix visualization of tag combinations vs. data availability.
+    - Visual indicators:
+        - ✓ (green checkmark) for present data,
+        - ✗ (red cross) for missing.
+    - Detailed tooltips showing specific scan filenames.
+    - Statistical summaries with total counts per category.
 
 Use Cases:
-    - Quality assurance before data analysis
-    - Identifying incomplete patient visits or missing sequences
-    - Verifying protocol compliance across studies
-    - Dataset completeness reporting
-    - Pre-processing validation for longitudinal studies
+    - Quality assurance before data analysis.
+    - Identifying incomplete patient visits or missing sequences.
+    - Verifying protocol compliance across studies.
+    - Dataset completeness reporting.
+    - Pre-processing validation for longitudinal studies.
 
 Technical Features:
-    - Efficient database integration with lazy loading
-    - Dynamic UI generation based on selected metadata
-    - Scalable to handle large datasets with multiple tag dimensions
-    - Qt-based interface with responsive table resizing
-    - Memory-efficient combination generation using odometer algorithms
+    - Efficient database integration with lazy loading.
+    - Dynamic UI generation based on selected metadata.
+    - Scalable to handle large datasets with multiple tag dimensions.
+    - Qt-based interface with responsive table resizing.
+    - Memory-efficient combination generation using odometer algorithms.
 
 Example Workflow:
     1. Select relevant metadata tags (e.g., PatientName, TimePoint,
-       SequenceName)
-    2. Generate combination matrix showing all expected data points
-    3. Review visual indicators to identify missing scans
-    4. Use tooltips to examine specific scan files
-    5. Export or act on completeness findings
-
-Contains:
-    Class:
-        - CountTable: Main dialog class providing the scan verification
-                      interface
+       SequenceName).
+    2. Generate combination matrix showing all expected data points.
+    3. Review visual indicators to identify missing scans.
+    4. Use tooltips to examine specific scan files.
+    5. Export or act on completeness findings.
 """
 
 ##########################################################################
@@ -86,6 +82,8 @@ from populse_mia.user_interface.pop_ups import (
 )
 from populse_mia.utils import set_item_data, table_to_database
 
+__all__ = ["CountTable"]
+
 
 class CountTable(QDialog):
     """
@@ -98,73 +96,86 @@ class CountTable(QDialog):
     by showing which combinations of tag values have corresponding data.
 
     The interface consists of:
-    - Dynamic tag selection buttons (expandable from 2 to n tags)
-    - Add/remove controls for tag management
-    - A results table showing all possible combinations
-    - Visual indicators (✓/✗) for data presence/absence
+        - Dynamic tag selection buttons (expandable from 2 to n tags).
+        - Add/remove controls for tag management.
+        - A results table showing all possible combinations.
+        - Visual indicators (✓/✗) for data presence/absence.
 
     Table Structure:
-        - Rows: All combinations of the first (n-1) selected tags
-        - Columns: First (n-1) tag names + values of the last tag
-        - Cells: Count of matching scans or absence indicator
-        - Footer: Total counts per column
+        - Rows: All combinations of the first (n-1) selected tags.
+        - Columns: First (n-1) tag names + values of the last tag.
+        - Cells: Count of matching scans or absence indicator.
+        - Footer: Total counts per column.
 
     Example:
         With tags [PatientName, TimePoint, SequenceName] for 2 patients
-        (P1, P2), 3 timepoints (T1, T2, T3), and sequences
-        (RARE, MDEFT, FLASH):
+        (P1, P2), 3 timepoints (T1, T2, T3), and sequences (RARE, MDEFT,
+        FLASH):
 
         +-------------+-----------+------+-------+-------+
         | PatientName | TimePoint | RARE | MDEFT | FLASH |
         +=============+===========+======+=======+=======+
         | P1          | T1        | ✓(2) | ✓(1)  | ✓(1)  |
-        | P1          | T2        | ✓(1) | ✓(1)  | ✓(1)  |  ← Missing 1 RARE
+        +-------------+-----------+------+-------+-------+
+        | P1          | T2        | ✓(1) | ✓(1)  | ✓(1)  |
+        +-------------+-----------+------+-------+-------+
         | P1          | T3        | ✓(2) | ✓(1)  | ✓(1)  |
+        +-------------+-----------+------+-------+-------+
         | P2          | T1        | ✓(2) | ✓(1)  | ✓(1)  |
+        +-------------+-----------+------+-------+-------+
         | P2          | T2        | ✓(2) | ✓(1)  | ✓(1)  |
-        | P2          | T3        | ✓(2) | ✓(1)  | ✗     |  ← Missing FLASH
+        +-------------+-----------+------+-------+-------+
+        | P2          | T3        | ✓(2) | ✓(1)  | ✗     |
         +-------------+-----------+------+-------+-------+
         | Total       |           | 11   | 6     | 5     |
         +-------------+-----------+------+-------+-------+
 
-    Key Features:
-        - Dynamic tag addition/removal
-        - Real-time scan counting
-        - Visual missing data indicators
-        - Hover tooltips showing specific scan files
-        - Automatic table resizing
+    Note:
+        - P1/T2 is missing one RARE acquisition.
+        - P2/T3 is missing the FLASH acquisition.
 
-    .. Methods:
-        - _create_clickable_label: Create a clickable label with an image
-        - _create_push_button: Create and configure a push button for tag
-                               selection
-        - _setup_components: Initialize basic UI components
-        - _setup_labels: Set up the add/remove tag labels with icons
-        - _setup_layout: Set up the layout of the widget
-        - _setup_table: Set up the table and count button
-        - add_tag: Adds a tag to visualize in the count table
-        - count_scans: Counts the number of scans depending on the selected
-                       tags and displays the result in the table
-        - fill_first_tags: Fills the cells of the table corresponding to the
-                           (n-1) first selected tags
-        - fill_headers: Fills the headers of the table depending on the
-                        selected tags
-        - fill_last_tag: Fills the cells corresponding to the last selected
-                         tag
-        - fill_values: Fill values_list depending on the visualized tags
-        - prepare_filter: Prepares the filter in order to fill the count table
-        - refresh_layout: Updates the layout of the widget
-        - remove_tag: Removes a tag to visualize in the count table
-        - select_tag: Opens a pop-up to select which tag to visualize in
-                      the count table
+    Key Features:
+        - Dynamic tag addition/removal.
+        - Real-time scan counting.
+        - Visual missing data indicators.
+        - Hover tooltips showing specific scan files.
+        - Automatic table resizing.
+
+    Contains:
+
+        Methods:
+
+            - _create_clickable_label: Create a clickable label with an image.
+            - _create_push_button: Create and configure a push button for tag
+              selection.
+            - _setup_components: Initialize basic UI components.
+            - _setup_labels: Set up the add/remove tag labels with icons.
+            - _setup_layout: Set up the layout of the widget.
+            - _setup_table: Set up the table and count button.
+            - add_tag: Adds a tag to visualize in the count table.
+            - count_scans: Counts the number of scans depending on the selected
+              tags and displays the result in the table.
+            - fill_first_tags: Fills the cells of the table corresponding to
+              the (n-1) first selected tags.
+            - fill_headers: Fills the headers of the table depending on the
+              selected tags.
+            - fill_last_tag: Fills the cells corresponding to the last selected
+              tag.
+            - fill_values: Fill values_list depending on the visualized tags.
+            - prepare_filter: Prepares the filter in order to fill the count
+              table.
+            - refresh_layout: Updates the layout of the widget.
+            - remove_tag: Removes a tag to visualize in the count table.
+            - select_tag: Opens a pop-up to select which tag to visualize in
+              the count table.
     """
 
     def __init__(self, project) -> None:
         """
         Initialize the CountTable with the given project.
 
-        :param project: The current medical imaging project containing
-                        scan database
+        :param project: The current medical imaging project, which includes a
+         scan database
         """
         super().__init__()
         self.project = project
@@ -186,16 +197,15 @@ class CountTable(QDialog):
         self, image_name: str, click_handler: Callable
     ) -> "ClickableLabel":
         """
-         Create a clickable label with an image.
+        Create a clickable label with an image.
 
-        :param image_name (str): The filename of the image to display on the
-                                 label.
-        :param click_handler (Callable): The function to be called when the
-                                         label is clicked.
+        :param image_name: (str) The filename of the image to display on the
+         label.
+        :param click_handler: (Callable) The function to be called when the
+         label is clicked.
 
-        :return (ClickableLabel): A label displaying the specified image,
-                                  which triggers the click handler when
-                                  clicked.
+        :Returns: (ClickableLabel) A label displaying the specified image,
+         which triggers the click handler when clicked.
         """
         sources_images_dir = Config().getSourceImageDir()
         label = ClickableLabel()
@@ -215,12 +225,12 @@ class CountTable(QDialog):
         """
         Create and configure a tag selection button.
 
-        :param text (str): The text to display on the button.
-        :param idx (int): The index associated with the button for tag
-                          selection.
+        :param text: (str) The text to display on the button.
+        :param idx: (int) The index associated with the button for tag
+         selection.
 
-        :return (QPushButton): A configured QPushButton that triggers the
-                               tag selection when clicked.
+        :Returns: (QPushButton) A configured QPushButton that triggers the tag
+         selection when clicked.
         """
         button = QPushButton(text)
         button.clicked.connect(lambda: self.select_tag(idx))
@@ -288,9 +298,9 @@ class CountTable(QDialog):
         """
         Generate and populate the scan count table.
 
-        Creates a matrix showing all combinations of selected tag values,
-        with counts or indicators for each combination's scan availability.
-        Early returns if no tags are selected or if database access fails.
+        Creates a matrix showing all combinations of selected tag values, with
+        counts or indicators for each combination's scan availability. Early
+        returns if no tags are selected or if database access fails.
         """
 
         # Validate that all tags have values
@@ -338,9 +348,9 @@ class CountTable(QDialog):
         """
         Populate table cells for the first (n-1) selected tags.
 
-        Generates all possible combinations of the first n-1 tag values
-        and fills corresponding table cells. Also adds total counts
-        in the bottom row.
+        Generates all possible combinations of the first n-1 tag values and
+        fills corresponding table cells. Also adds total counts in the bottom
+        row.
         """
 
         with self.project.database.data() as database_data:
@@ -398,8 +408,8 @@ class CountTable(QDialog):
         Populate table headers with tag names and last tag values.
 
         Sets horizontal headers for:
-            - First n-1 columns: tag names
-            - Remaining columns: values of the last selected tag
+            - First n-1 columns: tag names.
+            - Remaining columns: values of the last selected tag.
 
         Also adds a "Total" row header.
         """
@@ -440,11 +450,11 @@ class CountTable(QDialog):
         indicators.
 
         For each combination of first n-1 tags and each value of the last tag:
-            - Queries database for matching scans
-            - Shows count with checkmark if scans exist
-            - Shows red X if no scans found
-            - Adds scan filenames as tooltip
-            - Updates column totals
+            - Queries database for matching scans.
+            - Shows count with checkmark if scans exist.
+            - Shows red X if no scans found.
+            - Adds scan filenames as tooltip.
+            - Updates column totals.
         """
         sources_images_dir = Config().getSourceImageDir()
 
@@ -525,10 +535,10 @@ class CountTable(QDialog):
         """
         Populate values list for the tag at the specified index.
 
-        Extracts all unique values for the selected tag from the database
-        and stores them for table generation.
+        Extracts all unique values for the selected tag from the database and
+        stores them for table generation.
 
-        :param idx (Int): Index of the select tag
+        :param idx: (Int) Index of the select tag.
         """
 
         tag_name = self.push_buttons[idx].text()
@@ -556,9 +566,9 @@ class CountTable(QDialog):
         """
         Build database query string from tag-value pairs.
 
-        :param tag_value_pairs: List of (tag_name, value) tuples
+        :param tag_value_pairs: List of (tag_name, value) tuples.
 
-        :return: Query string for database filtering
+        :Returns: Query string for database filtering.
         """
         conditions = []
 
@@ -626,7 +636,7 @@ class CountTable(QDialog):
         """
         Open tag selection dialog for the specified button.
 
-        :param idx (Int): The index of the button/tag to configure
+        :param idx: (Int) The index of the button/tag to configure.
         """
 
         with self.project.database.data() as database_data:
