@@ -4,455 +4,22 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=89cb35f0"></script>
-    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+6733b3df documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
+    <script src="../../../../_static/documentation_options.js?v=cfb36fc2"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+6733b3df documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.advanced_search</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="Top">
+      <div class="topnav" role="navigation" aria-label="top navigation">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -465,10 +32,6 @@ window.addEventListener("load", load);</script>
   <h1>Source code for populse_mia.user_interface.data_browser.advanced_search</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Module to define the advanced search.</span>
-
-<span class="sd">Contains:</span>
-<span class="sd">    Class:</span>
-<span class="sd">        - AdvancedSearch</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -479,14 +42,14 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_origin</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_origin</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QObjectCleanupHandler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPixmap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QObjectCleanupHandler</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QComboBox</span><span class="p">,</span>
     <span class="n">QGridLayout</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -498,53 +61,60 @@ window.addEventListener("load", load);</script>
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ALL_TYPES</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClickableLabel</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">ClickableLabel</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AdvancedSearch&quot;</span><span class="p">]</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="AdvancedSearch">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">AdvancedSearch</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that manages the widget of the advanced search</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch">[docs]</a>
+<span class="k">class</span> <span class="nc">AdvancedSearch</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class that manages the widget of the advanced search.</span>
 
 <span class="sd">    The advanced search creates a complex query to the database and is a</span>
 <span class="sd">    combination of several &quot;query lines&quot; which are linked with AND or OR and</span>
 <span class="sd">    all composed of:</span>
-<span class="sd">    - A negation or not</span>
-<span class="sd">    - A tag name or all visible tags</span>
-<span class="sd">    - A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN)</span>
-<span class="sd">    - A value</span>
+<span class="sd">        - A negation or not.</span>
+<span class="sd">        - A tag name or all visible tags.</span>
+<span class="sd">        - A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN).</span>
+<span class="sd">        - A value.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - add_search_bar: create and define the advanced research bar</span>
-<span class="sd">        - apply_filter: apply an opened filter to update the table.</span>
-<span class="sd">        - displayConditionRules: set the list of condition choices, depending</span>
-<span class="sd">                                 on the tag type</span>
-<span class="sd">        - displayValueRules: update the placeholder text when the condition</span>
-<span class="sd">                             choice is changed</span>
-<span class="sd">        - get_filters: get the filters in list form</span>
-<span class="sd">        - launch_search: start the search and update the table</span>
-<span class="sd">        - prepare_filters: prepare the str representation of the filter</span>
-<span class="sd">        - refresh_search: refresh the widget</span>
-<span class="sd">        - remove_row: remove a row</span>
-<span class="sd">        - rows_borders_added: add the links and the added row to the good rows</span>
-<span class="sd">        - rows_borders_removed: link and adds row removed from every row</span>
-<span class="sd">        - show_search: reset the rows when the Advanced Search button is</span>
-<span class="sd">                       clicked</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - add_search_bar: Create and define the advanced research bar.</span>
+<span class="sd">            - apply_filter: Apply an opened filter to update the table.</span>
+<span class="sd">            - displayConditionRules: Set the list of condition choices,</span>
+<span class="sd">              depending on the tag type.</span>
+<span class="sd">            - displayValueRules: Update the placeholder text when the condition</span>
+<span class="sd">              choice is changed.</span>
+<span class="sd">            - get_filters: Get the filters in list form.</span>
+<span class="sd">            - launch_search: Start the search and update the table.</span>
+<span class="sd">            - prepare_filters: Prepare the str representation of the filter.</span>
+<span class="sd">            - refresh_search: Refresh the widget.</span>
+<span class="sd">            - remove_row: Remove a row.</span>
+<span class="sd">            - rows_borders_added: Add the links and the added row to the good</span>
+<span class="sd">              rows.</span>
+<span class="sd">            - rows_borders_removed: Link and adds row removed from every row.</span>
+<span class="sd">            - show_search: Reset the rows when the Advanced Search button is</span>
+<span class="sd">              clicked.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AdvancedSearch.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">project</span><span class="p">,</span>
         <span class="n">data_browser</span><span class="p">,</span>
@@ -557,13 +127,13 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        :param project: The current project instance.</span>
 <span class="sd">        :param data_browser: The parent DataBrowser widget that contains this</span>
-<span class="sd">                             search.</span>
-<span class="sd">        :param scans_list:  List of document scans to search within. Defaults</span>
-<span class="sd">                            to empty list.</span>
+<span class="sd">         search.</span>
+<span class="sd">        :param scans_list: List of document scans to search within. Defaults</span>
+<span class="sd">         to empty list.</span>
 <span class="sd">        :param tags_list: List of tags to display in the search interface.</span>
-<span class="sd">                          Defaults to empty list.</span>
-<span class="sd">        :param from_pipeline (bool): Whether the widget is instantiated from</span>
-<span class="sd">                                     the pipeline manager. Defaults to False.</span>
+<span class="sd">         Defaults to empty list.</span>
+<span class="sd">        :param from_pipeline: (bool) Whether the widget is instantiated from</span>
+<span class="sd">         the pipeline manager. Defaults to False.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -578,32 +148,40 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.add_search_bar">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.add_search_bar">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.add_search_bar">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add an advanced search bar row to the search interface.</span>
 
 <span class="sd">        Creates a complete search row containing:</span>
-<span class="sd">            - NOT operator toggle</span>
-<span class="sd">            - Field selector (populated with available tags)</span>
-<span class="sd">            - Condition operator selector (==, !=, &gt;, &lt;, etc.)</span>
-<span class="sd">            - Value input field</span>
-<span class="sd">            - Remove button to delete this row</span>
+<span class="sd">            - NOT operator toggle.</span>
+<span class="sd">            - Field selector (populated with available tags).</span>
+<span class="sd">            - Condition operator selector (==, !=, &gt;, &lt;, etc.).</span>
+<span class="sd">            - Value input field.</span>
+<span class="sd">            - Remove button to delete this row.</span>
 
 <span class="sd">        The row components are connected with signals to update dynamically</span>
 <span class="sd">        based on field type and selected condition.</span>
 
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - _create_combo_box: Create and return a QComboBox populated</span>
+<span class="sd">                  with the given items.</span>
+<span class="sd">                - _get_shown_tags_from_db: Retrieve the tags currently marked</span>
+<span class="sd">                  as visible from the project database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_create_combo_box</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_create_combo_box</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Create and return a QComboBox populated with the given items.</span>
 
-<span class="sd">            :param name (str): Object name assigned to the QComboBox.</span>
-<span class="sd">            :param items (iterable of str): Items to add to the combo box,</span>
-<span class="sd">                                            in order.</span>
+<span class="sd">            :param name: (str) Object name assigned to the QComboBox.</span>
+<span class="sd">            :param items: (iterable of str) Items to add to the combo box, in</span>
+<span class="sd">             order.</span>
 
-<span class="sd">            :return (QComboBox): The initialized combo box.</span>
+<span class="sd">            :Returns: (QComboBox) The initialized combo box.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">combo</span> <span class="o">=</span> <span class="n">QComboBox</span><span class="p">()</span>
             <span class="n">combo</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -613,13 +191,13 @@ window.addEventListener("load", load);</script>
 
             <span class="k">return</span> <span class="n">combo</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_get_shown_tags_from_db</span><span class="p">():</span>
+        <span class="k">def</span> <span class="nf">_get_shown_tags_from_db</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve the tags currently marked as visible from the project</span>
 <span class="sd">            database.</span>
 
-<span class="sd">            :return (list): A list of tags configured to be shown in the</span>
-<span class="sd">                            project.</span>
+<span class="sd">            :Returns: (list) A list of tags configured to be shown in the</span>
+<span class="sd">             project.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -689,8 +267,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.apply_filter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.apply_filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">apply_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.apply_filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">apply_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply a filter to update the displayed scans in the data browser.</span>
 
@@ -700,20 +278,19 @@ window.addEventListener("load", load);</script>
 <span class="sd">        showing all scans.</span>
 
 <span class="sd">        :param filter: Filter object containing the query criteria with</span>
-<span class="sd">                       attributes:</span>
-<span class="sd">                           - nots (list): Negation flags for each condition</span>
-<span class="sd">                           - values (list): Values to match against</span>
-<span class="sd">                           - conditions (list): Comparison operators</span>
-<span class="sd">                                                (e.g., &#39;==&#39;, &#39;&gt;&#39;, &#39;&lt;&#39;)</span>
-<span class="sd">                           - links (list): Logical operators connecting</span>
-<span class="sd">                                           conditions (&#39;AND&#39;, &#39;OR&#39;)</span>
-<span class="sd">                           - fields (list): Database fields to query</span>
+<span class="sd">         attributes:</span>
+<span class="sd">            - nots (list): Negation flags for each condition.</span>
+<span class="sd">            - values (list): Values to match against.</span>
+<span class="sd">            - conditions (list): Comparison operators (e.g., &#39;==&#39;, &#39;&gt;&#39;, &#39;&lt;&#39;).</span>
+<span class="sd">            - links (list): Logical operators connecting conditions</span>
+<span class="sd">              (&#39;AND&#39;, &#39;OR&#39;).</span>
+<span class="sd">            - fields (list): Database fields to query.</span>
 
-<span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates self.rows with filter parameters</span>
-<span class="sd">            - Modifies self.data_browser.table_data.scans_to_visualize</span>
-<span class="sd">            - May display a warning dialog on error</span>
-<span class="sd">            - Calls self.data_browser.table_data.update_visualized_rows()</span>
+<span class="sd">        Side effects:</span>
+<span class="sd">            - Updates self.rows with filter parameters.</span>
+<span class="sd">            - Modifies self.data_browser.table_data.scans_to_visualize.</span>
+<span class="sd">            - May display a warning dialog on error.</span>
+<span class="sd">            - Calls self.data_browser.table_data.update_visualized_rows().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Extract filter parameters</span>
         <span class="n">nots</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">nots</span>
@@ -800,32 +377,38 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.displayConditionRules">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayConditionRules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">displayConditionRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.displayConditionRules">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayConditionRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update available condition operators based on the selected field&#39;s</span>
 <span class="sd">        type.</span>
 
 <span class="sd">        Dynamically adjusts the condition dropdown to show only operators that</span>
-<span class="sd">        are</span>
-<span class="sd">        valid for the selected field&#39;s data type. Numeric fields allow</span>
+<span class="sd">        are valid for the selected field&#39;s data type. Numeric fields allow</span>
 <span class="sd">        comparison operators (&lt;, &gt;, &lt;=, &gt;=, BETWEEN), while non-numeric fields</span>
 <span class="sd">        exclude them. List fields exclude the IN operator, while non-list</span>
 <span class="sd">        fields include it.</span>
 
 <span class="sd">        :param field: QComboBox widget containing the selected tag name.</span>
 <span class="sd">        :param condition: QComboBox widget whose items will be updated based</span>
-<span class="sd">                          on the field&#39;s type.</span>
+<span class="sd">         on the field&#39;s type.</span>
 
 <span class="sd">        Behavior:</span>
-<span class="sd">            - Numeric types: Include &lt;, &gt;, &lt;=, &gt;=, BETWEEN operators</span>
-<span class="sd">            - String/Boolean/List types: Exclude comparison operators</span>
-<span class="sd">            - List types: Exclude IN operator</span>
-<span class="sd">            - Non-list types: Include IN operator</span>
-<span class="sd">            - Special case &quot;All visualized tags&quot;: Treated as non-numeric</span>
+<span class="sd">            - Numeric types: Include &lt;, &gt;, &lt;=, &gt;=, BETWEEN operators.</span>
+<span class="sd">            - String/Boolean/List types: Exclude comparison operators.</span>
+<span class="sd">            - List types: Exclude IN operator.</span>
+<span class="sd">            - Non-list types: Include IN operator.</span>
+<span class="sd">            - Special case &quot;All visualized tags&quot;: Treated as non-numeric.</span>
+
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - _update_operators: Add or remove operators from the condition</span>
+<span class="sd">                  widget.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_update_operators</span><span class="p">(</span><span class="n">condition_widget</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">should_add</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_update_operators</span><span class="p">(</span><span class="n">condition_widget</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">should_add</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Add or remove operators from the condition widget.</span>
 
@@ -875,8 +458,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.displayValueRules">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayValueRules">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">displayValueRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.displayValueRules">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayValueRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure the value input widget based on the selected condition</span>
 <span class="sd">        operator.</span>
@@ -888,10 +471,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param value: QLineEdit widget that will be configured.</span>
 
 <span class="sd">        Behavior:</span>
-<span class="sd">            - BETWEEN: Enabled with placeholder &quot;value1; value2&quot;</span>
-<span class="sd">            - IN: Enabled with placeholder for semicolon-separated list</span>
-<span class="sd">            - HAS VALUE/HAS NO VALUE: Disabled and cleared</span>
-<span class="sd">            - Other operators: Enabled with no placeholder</span>
+<span class="sd">            - BETWEEN: Enabled with placeholder &quot;value1; value2&quot;.</span>
+<span class="sd">            - IN: Enabled with placeholder for semicolon-separated list.</span>
+<span class="sd">            - HAS VALUE/HAS NO VALUE: Disabled and cleared.</span>
+<span class="sd">            - Other operators: Enabled with no placeholder.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">operator</span> <span class="o">=</span> <span class="n">choice</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span>
         <span class="c1"># Configuration map: operator -&gt;</span>
@@ -922,8 +505,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.get_filters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.get_filters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace_all_by_fields</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.get_filters">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace_all_by_fields</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract filter criteria from UI widgets.</span>
 
@@ -933,11 +516,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        compatibility validation.</span>
 
 <span class="sd">        :param replace_all_by_fields: If True, replaces &quot;All visualized tags&quot;</span>
-<span class="sd">                                      with the actual list of visible fields.</span>
-<span class="sd">                                      If False, keeps the literal</span>
-<span class="sd">                                      &quot;All visualized tags&quot; text.</span>
+<span class="sd">         with the actual list of visible fields. If False, keeps the literal</span>
+<span class="sd">         &quot;All visualized tags&quot; text.</span>
 
-<span class="sd">        :return (tuple): A 5-tuple containing:</span>
+<span class="sd">        :Returns: (tuple) A 5-tuple containing:</span>
+
 <span class="sd">            - fields (list): Field names to filter on</span>
 <span class="sd">            - conditions (list): Comparison operators (e.g., &#39;=&#39;, &#39;BETWEEN&#39;)</span>
 <span class="sd">            - values (list): Filter values (strings or lists for BETWEEN/IN)</span>
@@ -945,8 +528,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - nots (list): Negation flags for each filter</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            - BETWEEN and IN conditions have their values split into lists</span>
-<span class="sd">            - Fields incompatible with operators are automatically removed</span>
+<span class="sd">            - BETWEEN and IN conditions have their values split into lists.</span>
+<span class="sd">            - Fields incompatible with operators are automatically removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">comparison_operators</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;BETWEEN&quot;</span><span class="p">}</span>
         <span class="n">incompatible_types</span> <span class="o">=</span> <span class="p">{</span>
@@ -1024,8 +607,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.launch_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.launch_search">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">launch_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.launch_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">launch_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute search query and update the data browser table.</span>
 
@@ -1035,10 +618,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        all available scans.</span>
 
 <span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates self.data_browser.table_data.scans_to_visualize</span>
-<span class="sd">            - Updates self.data_browser.table_data.scans_to_search</span>
-<span class="sd">            - Updates self.project.currentFilter (if not from_pipeline)</span>
-<span class="sd">            - Displays error dialog on search failure</span>
+<span class="sd">            - Updates self.data_browser.table_data.scans_to_visualize.</span>
+<span class="sd">            - Updates self.data_browser.table_data.scans_to_search.</span>
+<span class="sd">            - Updates self.project.currentFilter (if not from_pipeline).</span>
+<span class="sd">            - Displays error dialog on search failure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Retrieve filter parameters</span>
         <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">nots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filters</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1092,34 +675,41 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.prepare_filters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.prepare_filters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.prepare_filters">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_filters</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">nots</span><span class="p">,</span> <span class="n">scans</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">prepare_filters</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">nots</span><span class="p">,</span> <span class="n">scans</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a filter query string from filter components.</span>
 
-<span class="sd">        Builds a query by combining multiple filter rows with logical</span>
-<span class="sd">        operators (AND/OR), where each row can filter across multiple fields</span>
-<span class="sd">        with optional negation.</span>
+<span class="sd">        Builds a query by combining multiple filter rows with logical operators</span>
+<span class="sd">        (AND/OR), where each row can filter across multiple fields with</span>
+<span class="sd">        optional negation.</span>
 
 <span class="sd">        :param links: Logical operators joining filter rows</span>
-<span class="sd">                      (e.g., [&#39;AND&#39;, &#39;OR&#39;]). Length should be len(fields) - 1.</span>
+<span class="sd">         (e.g. [&#39;AND&#39;, &#39;OR&#39;]). Length should be len(fields) - 1.</span>
 <span class="sd">        :param fields: Nested list where each sublist contains field names to</span>
-<span class="sd">                       filter on. Fields within a row are OR-combined.</span>
+<span class="sd">         filter on. Fields within a row are OR-combined.</span>
 <span class="sd">        :param conditions: Filter operators for each row. Supported values:</span>
-<span class="sd">                           &#39;==&#39;, &#39;!=&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;&lt;=&#39;, &#39;&gt;=&#39;, &#39;IN&#39;, &#39;BETWEEN&#39;,</span>
-<span class="sd">                           &#39;CONTAINS&#39;, &#39;HAS VALUE&#39;, &#39;HAS NO VALUE&#39;.</span>
+<span class="sd">         &#39;==&#39;, &#39;!=&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;&lt;=&#39;, &#39;&gt;=&#39;, &#39;IN&#39;, &#39;BETWEEN&#39;, &#39;CONTAINS&#39;,</span>
+<span class="sd">         &#39;HAS VALUE&#39;, &#39;HAS NO VALUE&#39;.</span>
 <span class="sd">        :param values: Filter values corresponding to each condition. For</span>
-<span class="sd">                       &#39;BETWEEN&#39;, provide a two-element sequence [min, max].</span>
+<span class="sd">         &#39;BETWEEN&#39;, provide a two-element sequence [min, max].</span>
 <span class="sd">        :param nots: Negation flags for each row (&#39;NOT&#39; to negate, empty</span>
-<span class="sd">                     string otherwise).</span>
+<span class="sd">         string otherwise).</span>
 <span class="sd">        :param scans: List of scan identifiers to restrict the search scope.</span>
 
-<span class="sd">        :return: Complete filter query string with all conditions and scan</span>
-<span class="sd">                 restrictions.</span>
+<span class="sd">        :Returns: Complete filter query string with all conditions and scan</span>
+<span class="sd">         restrictions.</span>
+
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - _format_value: Convert a Python value into a string safe for</span>
+<span class="sd">                  use in queries.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_format_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_format_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Convert a Python value into a string safe for use in queries.</span>
 
@@ -1185,8 +775,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.refresh_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.refresh_search">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.refresh_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">refresh_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Refresh the search widget by rebuilding its layout with the current</span>
 <span class="sd">        filters.</span>
@@ -1231,8 +821,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.remove_row">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.remove_row">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_layout</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.remove_row">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_layout</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a specified row from the layout while ensuring at least one row</span>
 <span class="sd">        remains.</span>
@@ -1268,8 +858,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.rows_borders_added">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_added">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rows_borders_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.rows_borders_added">[docs]</a>
+    <span class="k">def</span> <span class="nf">rows_borders_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add UI controls (links and add button) to search query rows.</span>
 
@@ -1278,7 +868,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        linking query conditions.</span>
 
 <span class="sd">        :param links: List of previously selected link operators (&#39;AND&#39;/&#39;OR&#39;)</span>
-<span class="sd">                      to restore when rebuilding the UI.</span>
+<span class="sd">         to restore when rebuilding the UI.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Add plus button to the last row for adding new search bars</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
@@ -1306,16 +896,23 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.rows_borders_removed">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_removed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">rows_borders_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.rows_borders_removed">[docs]</a>
+    <span class="k">def</span> <span class="nf">rows_borders_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove the link widget and the &quot;add row&quot; widget from every row.</span>
 
 <span class="sd">        This ensures that these widgets are properly removed from the layout</span>
 <span class="sd">        and scheduled for deletion, preventing memory leaks.</span>
+
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - _remove_widget: Safely removes a QWidget from its parent and</span>
+<span class="sd">                  schedules it for deletion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_remove_widget</span><span class="p">(</span><span class="n">widget_ref</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_remove_widget</span><span class="p">(</span><span class="n">widget_ref</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Safely removes a QWidget from its parent and schedules it for</span>
 <span class="sd">            deletion.</span>
@@ -1344,8 +941,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="AdvancedSearch.show_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.show_search">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">show_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.show_search">[docs]</a>
+    <span class="k">def</span> <span class="nf">show_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the search rows and display the search bar.</span>
 
@@ -1362,7 +959,7 @@ window.addEventListener("load", load);</script>
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -1372,7 +969,7 @@ window.addEventListener("load", load);</script>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     </div>
   </body>
 </html>
