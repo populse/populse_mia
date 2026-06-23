@@ -1,15 +1,5 @@
 """
 Module to define data browser tab appearance, settings and methods.
-
-Contains:
-    Class:
-        - DataBrowser
-        - DateFormatDelegate
-        - DateTimeFormatDelegate
-        - NumberFormatDelegate
-        - TableDataBrowser
-        - TimeFormatDelegate
-
 """
 
 ##########################################################################
@@ -119,6 +109,15 @@ from populse_mia.utils import (
     type_name,
 )
 
+__all__ = [
+    "DataBrowser",
+    "DateFormatDelegate",
+    "DateTimeFormatDelegate",
+    "NumberFormatDelegate",
+    "TableDataBrowser",
+    "TimeFormatDelegate",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -130,40 +129,43 @@ class DataBrowser(QWidget):
     and sending documents to the pipeline manager. It integrates tools for
     advanced search, tag management, and visual inspection of loaded data.
 
-    .. Methods:
-        - add_tag_infos: Add the tag after add tag pop-up
-        - add_tag_pop_up: Display the add tag pop-up
-        - clone_tag_infos: Clone the tag after the clone tag pop-up
-        - connect_actions: Connect actions method to views
-        - connect_mini_viewer: Display the selected documents in the viewer
-        - connect_toolbar: Connect toolbar views to methods
-        - count_table_pop_up: Open the count table
-        - create_layout: Create the layout of the data browser
-        - create_toolbar_view: Create the toolbar views
-        - move_splitter: Check if the viewer's splitter is at its lowest
-                         position
-        - open_filter: Open a project filter that has already been saved
-        - open_filter_infos: Apply the current filter
-        - remove_tag_infos: Remove user tags after the pop-up
-        - remove_tag_pop_up: Display the pop-up to remove user tags
-        - reset_search_bar: Reset the rapid search bar
-        - search_str: Search a string in the table and updates the
-                      visualized documents
-        - send_documents_to_pipeline: Send the current list of scans to the
-                                      Pipeline Manager
-        - show_clone_tag_popup: Display the clone tag pop-up
-        - toggle_advanced_search: Toggle the visibility of the advanced search
-                                  interface
-        - update_database: Update the database in the software
+    Contains:
 
+        Methods:
+
+            - add_tag_infos: Add the tag after add tag pop-up.
+            - add_tag_pop_up: Display the add tag pop-up.
+            - clone_tag_infos: Clone the tag after the clone tag pop-up.
+            - connect_actions: Connect actions method to views.
+            - connect_mini_viewer: Display the selected documents in the
+              viewer.
+            - connect_toolbar: Connect toolbar views to methods.
+            - count_table_pop_up: Open the count table.
+            - create_layout: Create the layout of the data browser.
+            - create_toolbar_view: Create the toolbar views.
+            - move_splitter: Check if the viewer's splitter is at its lowest
+              position.
+            - open_filter: Open a project filter that has already been saved.
+            - open_filter_infos: Apply the current filter.
+            - remove_tag_infos: Remove user tags after the pop-up.
+            - remove_tag_pop_up: Display the pop-up to remove user tags.
+            - reset_search_bar: Reset the rapid search bar.
+            - search_str: Search a string in the table and updates the
+              visualized documents.
+            - send_documents_to_pipeline: Send the current list of scans to
+              the Pipeline Manager.
+            - show_clone_tag_popup: Display the clone tag pop-up.
+            - toggle_advanced_search: Toggle the visibility of the advanced
+              search interface.
+            - update_database: Update the database in the software.
     """
 
     def __init__(self, project, main_window):
         """
         Initialization of the data_browser class.
 
-        :param project: Current project in the software
-        :param main_window: Main window of the software
+        :param project: Current project in the software.
+        :param main_window: Main window of the software.
         """
         super().__init__()
         # Store references
@@ -240,9 +242,10 @@ class DataBrowser(QWidget):
         is tracked in the project's undo/redo history.
 
         :param new_tag_name: (str) Name of the new tag to create.
-        :param new_default_value: Default value to assign to all existing scans
+        :param new_default_value: Default value to assign to all existing
+         scans.
         :param tag_type: (str) Data type of the tag (e.g., FIELD_TYPE_STRING,
-         FIELD_TYPE_FLOAT)
+         FIELD_TYPE_FLOAT).
         :param new_tag_description: (str) Human-readable description of the
          tag.
         :param new_tag_unit: (str) Unit of measurement for the tag value.
@@ -555,7 +558,7 @@ class DataBrowser(QWidget):
         self.setLayout(vbox_splitter)
 
     def create_toolbar_view(self):
-        """Create the toolbar menu at the top of the tab"""
+        """Create the toolbar menu at the top of the tab."""
         tags_tool_button = QToolButton()
         tags_tool_button.setText("Tags")
         tags_tool_button.setPopupMode(QToolButton.MenuButtonPopup)
@@ -634,10 +637,10 @@ class DataBrowser(QWidget):
         visualized scans to match the filtered document collection.
 
         The method:
-            - Retrieves documents from the current collection
-            - Updates scans_to_visualize and scans_to_search
-            - Applies the filter's search bar text
-            - Shows advanced search interface if exclusion filters exist
+            - Retrieves documents from the current collection.
+            - Updates scans_to_visualize and scans_to_search.
+            - Applies the filter's search bar text.
+            - Shows advanced search interface if exclusion filters exist.
         """
 
         filter_to_apply = self.project.currentFilter
@@ -673,14 +676,14 @@ class DataBrowser(QWidget):
         The table display is updated to reflect the changes.
 
         :param tag_names_to_remove: Iterable of tag names (str) to remove from
-                                    the database and table display.
+         the database and table display.
 
         Side Effects:
-            - Marks project as having unsaved modifications
-            - Adds removal operation to undo history
-            - Clears redo history
-            - Removes columns from table display
-            - Temporarily disconnects and reconnects table selection signal
+            - Marks project as having unsaved modifications.
+            - Adds removal operation to undo history.
+            - Clears redo history.
+            - Removes columns from table display.
+            - Temporarily disconnects and reconnects table selection signal.
         """
         # Temporarily disable selection change signals during update
         self.table_data.itemSelectionChanged.disconnect()
@@ -764,8 +767,8 @@ class DataBrowser(QWidget):
         """
         Clear the search bar input field.
 
-        This method resets the search bar to an empty state by clearing
-        any existing text content.
+        This method resets the search bar to an empty state by clearing any
+        existing text content.
         """
         self.search_bar.setText("")
 
@@ -778,8 +781,8 @@ class DataBrowser(QWidget):
         NOT_DEFINED_VALUE filters for documents with undefined field values.
 
         :param str_search: The search string to filter documents. Empty string
-                           returns all searchable scans. NOT_DEFINED_VALUE
-                           returns scans with undefined values.
+         returns all searchable scans. NOT_DEFINED_VALUE returns scans with
+         undefined values.
         """
         old_scan_list = self.table_data.scans_to_visualize
 
@@ -823,12 +826,10 @@ class DataBrowser(QWidget):
         Display a popup dialog for sending filtered scans to the Pipeline
         Manager.
 
-        Retrieves the currently filtered scans from the table data and
-        presents them in a selection popup, allowing the user to confirm
-        which scans to send to the pipeline.
-
-        The popup is shown modally and references the main window as its
-        parent.
+        Retrieves the currently filtered scans from the table data and presents
+        them in a selection popup, allowing the user to confirm which scans to
+        send to the pipeline. The popup is shown modally and references the
+        main window as its parent.
         """
         current_scans = self.table_data.get_current_filter()
         # Displays a popup with the list of scans
@@ -847,7 +848,6 @@ class DataBrowser(QWidget):
 
         This method initializes and shows a popup dialog (`PopUpCloneTag`)
         to allow the user to clone a tag within the current project context.
-
         The popup is stored as an instance variable for later reference if
         needed.
         """
@@ -859,10 +859,9 @@ class DataBrowser(QWidget):
         Toggle the visibility of the advanced search interface.
 
         If the advanced search is hidden, it resets and displays the search
-        interface, updating the scans list to the current visualized scans.
-        If the advanced search is visible, it hides the interface, resets the
+        interface, updating the scans list to the current visualized scans. If
+        the advanced search is visible, it hides the interface, resets the
         search state, and restores the original scans list to the data browser.
-
         This method ensures the UI and data state are synchronized with the
         visibility of the advanced search.
         """
@@ -907,7 +906,7 @@ class DataBrowser(QWidget):
         during project lifecycle events (new, open, save as).
 
         :param database: The new Database instance to use across the
-                         application.
+         application.
         """
 
         # Propagate database to all dependent components
@@ -932,8 +931,12 @@ class DateFormatDelegate(QItemDelegate):
     editor with a calendar-based date picker for improved user experience and
     data validation.
 
-    .. Methods:
-        - createEditor: Create and return a QDateEdit widget for editing dates
+    Contains:
+
+        Methods:
+
+            - createEditor: Create and return a QDateEdit widget for editing
+              dates.
     """
 
     def __init__(self, parent=None):
@@ -948,14 +951,14 @@ class DateFormatDelegate(QItemDelegate):
         """
         Create and return a QDateEdit widget for editing dates.
 
-        This method is called by the view when a cell needs to be edited.
-        It creates a date editor with DD/MM/YYYY format.
+        This method is called by the view when a cell needs to be edited. It
+        creates a date editor with DD/MM/YYYY format.
 
         :param parent: The parent widget for the editor.
         :param option: Style options for rendering the item.
         :param index: The model index of the item being edited.
 
-        :return (QDateEdit): A configured date editor widget.
+        :Returns: (QDateEdit) A configured date editor widget.
         """
         editor = QDateEdit(parent)
         editor.setDisplayFormat("dd/MM/yyyy")
@@ -972,9 +975,12 @@ class DateTimeFormatDelegate(QItemDelegate):
     This delegate provides a QDateTimeEdit widget for editing datetime cells,
     formatted as DD/MM/YYYY HH:MM:SS.mmm (day/month/year with milliseconds).
 
-    .. Methods:
-        - createEditor: Create and return a QDateTimeEdit widget for editing
-                        datetimes
+    Contains:
+
+        Methods:
+
+            - createEditor: Create and return a QDateTimeEdit widget for
+              editing datetimes.
     """
 
     DATETIME_FORMAT = "dd/MM/yyyy hh:mm:ss.zzz"
@@ -989,13 +995,13 @@ class DateTimeFormatDelegate(QItemDelegate):
 
     def createEditor(self, parent, option, index):
         """
-         Create and configure a datetime editor widget.
+        Create and configure a datetime editor widget.
 
         :param parent: Parent widget for the editor.
         :param option: Style options for the item.
         :param index: Model index of the item being edited.
 
-        :return (QDateTimeEdit): Configured datetime editor widget.
+        :Returns: (QDateTimeEdit) Configured datetime editor widget.
         """
         editor = QDateTimeEdit(parent)
         editor.setDisplayFormat(self.DATETIME_FORMAT)
@@ -1006,19 +1012,22 @@ class NumberFormatDelegate(QItemDelegate):
     """
     Delegate for handling numeric input in table cells.
 
-    The number of decimal places is automatically inferred from the
-    existing cell value, ensuring consistent formatting of numeric inputs.
+    The number of decimal places is automatically inferred from the existing
+    cell value, ensuring consistent formatting of numeric inputs.
 
-    .. Methods:
-        - createEditor: Create and return a QDoubleSpinBox widget for editing
-                        numbers
+    Contains:
+
+        Methods:
+
+            - createEditor: Create and return a QDoubleSpinBox widget for
+              editing numbers.
     """
 
     def __init__(self, parent=None):
         """
         Initialize the NumberFormatDelegate.
 
-        :param parent (QWidget): The parent widget. Defaults to None.
+        :param parent: (QWidget) The parent widget. Defaults to None.
         """
         super().__init__(parent)
 
@@ -1033,8 +1042,8 @@ class NumberFormatDelegate(QItemDelegate):
         :param option: Style options for the item.
         :paramindex: Model index of the item being edited.
 
-        :return (QDoubleSpinBox): A spin box editor configured with the
-                                  appropriate decimal precision.
+        :Returns: (QDoubleSpinBox) A spin box editor configured with the
+         appropriate decimal precision.
         """
 
         editor = QDoubleSpinBox(parent)
@@ -1049,54 +1058,62 @@ class NumberFormatDelegate(QItemDelegate):
 
 
 class TableDataBrowser(QTableWidget):
-    """Table widget that displays the documents contained in the database and
+    """
+    Table widget that displays the documents contained in the database and
     their associated tags.
 
-    .. Methods:
-        - add_column: Add a column to the table
-        - add_columns: Add columns to the table
-        - add_path: Call a pop-up to add any document to the project
-        - add_rows: Insert rows if they are not already in the table
-        - batch_update: Context manager for efficient batch updates
-        - clear_cell: Clear the selected cells
-        - context_menu_table: Create the context menu of the table
-        - delete_from_brick: Delete a document from its brick id
-        - display_file: Tries to display a file in the user's preferred
-                        application
-        - display_unreset_values: Display an error message when trying to
-                                  reset user tags
-        - edit_table_data_values: Change values in DataBrowser
-        - fill_cells_update_table: Initialize and fills the cells of the table
-        - fill_headers: Initialize and fill the headers of the table
-        - get_current_filter: Get the current data browser selection
-        - get_index_insertion: Get index insertion of a new column
-        - get_scan_row: Return the row index of the scan
-        - get_tag_column: Return the column index of the tag
-        - mouseReleaseEvent: Called when clicking released on cells
-        - multiple_sort_infos: Sort the table according to the tags specify
-                               in list_tags
-        - multiple_sort_pop_up: Display the multiple sort pop-up
-        - on_cell_changed: Changes the background color and the value of
-                           cells when edited by the user
-        - remove_scan: Remove documents from table and project
-        - reset_cell: Reset the selected cells to their original values
-        - reset_column: Reset the selected columns to their original values
-        - reset_row: Reset the selected rows to their original values
-        - section_moved: Called when the columns of the data_browser are moved
-        - select_all_column: Called when single clicking on the column header
-                             to select the whole column
-        - select_all_columns: Called from context menu to select the columns
-        - selection_changed: Called when the selection is changed
-        - show_brick_history: Show brick history pop-up
-        - sort_column: Sort the current column
-        - sort_updated: Called when the button advanced search is called
-        - update_colors: Update the background of all the cells
-        - update_selection: Called after searches to update the selection
-        - update_table: Fill the table with the project's data
-        - update_visualized_columns: Update the visualized tags
-        - update_visualized_rows: Update the list of documents (scans) in
-                                  the table
-        - visualized_tags_pop_up: Display the visualized tags pop-up
+    Contains:
+
+        Methods:
+
+            - add_column: Add a column to the table.
+            - add_columns: Add columns to the table.
+            - add_path: Call a pop-up to add any document to the project.
+            - add_rows: Insert rows if they are not already in the table.
+            - batch_update: Context manager for efficient batch updates.
+            - clear_cell: Clear the selected cells.
+            - context_menu_table: Create the context menu of the table.
+            - delete_from_brick: Delete a document from its brick id.
+            - display_file: Tries to display a file in the user's preferred
+              application.
+            - display_unreset_values: Display an error message when trying to
+              reset user tags.
+            - edit_table_data_values: Change values in DataBrowser.
+            - fill_cells_update_table: Initialize and fills the cells of the
+              table.
+            - fill_headers: Initialize and fill the headers of the table.
+            - get_current_filter: Get the current data browser selection.
+            - get_index_insertion: Get index insertion of a new column.
+            - get_scan_row: Return the row index of the scan.
+            - get_tag_column: Return the column index of the tag.
+            - mouseReleaseEvent: Called when clicking released on cells.
+            - multiple_sort_infos: Sort the table according to the tags specify
+              in list_tags.
+            - multiple_sort_pop_up: Display the multiple sort pop-up.
+            - on_cell_changed: Changes the background color and the value of
+              cells when edited by the user.
+            - remove_scan: Remove documents from table and project.
+            - reset_cell: Reset the selected cells to their original values.
+            - reset_column: Reset the selected columns to their original
+              values.
+            - reset_row: Reset the selected rows to their original values.
+            - section_moved: Called when the columns of the data_browser are
+              moved.
+            - select_all_column: Called when single clicking on the column
+              header to select the whole column.
+            - select_all_columns: Called from context menu to select the
+              columns.
+            - selection_changed: Called when the selection is changed.
+            - show_brick_history: Show brick history pop-up.
+            - sort_column: Sort the current column.
+            - sort_updated: Called when the button advanced search is called.
+            - update_colors: Update the background of all the cells.
+            - update_selection: Called after searches to update the selection.
+            - update_table: Fill the table with the project's data.
+            - update_visualized_columns: Update the visualized tags.
+            - update_visualized_rows: Update the list of documents (scans) in
+              the table.
+            - visualized_tags_pop_up: Display the visualized tags pop-up.
     """
 
     def __init__(
@@ -1109,8 +1126,7 @@ class TableDataBrowser(QTableWidget):
         link_viewer=True,
     ):
         """
-        Initialize the data table widget with project data and browser
-        context.
+        Initialize the data table widget with project data and browser context.
 
         :param project: (Project) The current project instance containing data
          and configuration.
@@ -1285,11 +1301,11 @@ class TableDataBrowser(QTableWidget):
         This method synchronizes the table's columns with the current database
         schema by:
             - Adding columns for new database fields that don't exist in the
-              table
-            - Populating new columns with values from the database
-            - Removing columns that no longer exist in the database
-            - Applying appropriate formatting delegates based on field types
-            - Maintaining column visibility settings
+              table.
+            - Populating new columns with values from the database.
+            - Removing columns that no longer exist in the database.
+            - Applying appropriate formatting delegates based on field types.
+            - Maintaining column visibility settings.
 
         The method temporarily disconnects item change signals during operation
         to prevent unwanted events, then reconnects them after completion.
@@ -1609,9 +1625,8 @@ class TableDataBrowser(QTableWidget):
         without triggering unnecessary redraws or signal handling. All previous
         widget states are restored upon exit, even if an exception occurs.
 
-        :param disable_sorting (bool): If True (default), temporarily disables
-                                       sorting during the batch update to
-                                       prevent rearrangements.
+        :param disable_sorting: (bool) If True (default), temporarily disables
+         sorting during the batch update to prevent rearrangements.
         """
         prev_sorting = self.isSortingEnabled()
 
@@ -1639,21 +1654,20 @@ class TableDataBrowser(QTableWidget):
         Clear values from selected cells in the table.
 
         This method removes data from the currently selected cells in the
-        database and updates the UI to reflect the cleared state. The
-        operation is recorded in the project's undo history for potential
-        reversal.
+        database and updates the UI to reflect the cleared state. The operation
+        is recorded in the project's undo history for potential reversal.
 
         The method performs the following actions for each selected cell:
-            - Retrieves the current value from the database
-            - Removes the value from the database
-            - Updates the cell's visual appearance (italic + bold)
-            - Records the change for undo/redo functionality
+            - Retrieves the current value from the database.
+            - Removes the value from the database.
+            - Updates the cell's visual appearance (italic + bold).
+            - Records the change for undo/redo functionality.
 
         Side Effects:
-            - Modifies database values in COLLECTION_CURRENT
-            - Updates table cell formatting
-            - Appends operation to project.undos
-            - Clears project.redos
+            - Modifies database values in COLLECTION_CURRENT.
+            - Updates table cell formatting.
+            - Appends operation to project.undos.
+            - Clears project.redos.
         """
 
         # Track modifications for undo/redo functionality
@@ -1698,8 +1712,17 @@ class TableDataBrowser(QTableWidget):
         Create and display the context menu for the table, and perform
         the corresponding action based on the user's selection.
 
-        :param position (QPoint): The mouse cursor position relative to the
-                                  widget.
+        :param position: (QPoint) The mouse cursor position relative to the
+         widget.
+
+        Contains:
+
+            Inner functions:
+
+                - _confirm_action: Display a warning message box with an
+                  OK/Cancel choice and connect the OK button to a callback
+                  function.
+                - _do_add_document: Safely add a new document to the table.
         """
 
         def _confirm_action(text: str, callback: callable) -> None:
@@ -1814,8 +1837,16 @@ class TableDataBrowser(QTableWidget):
         and any orphaned output documents that are not used as inputs
         elsewhere.
 
-        :param brick_id (str): The unique identifier of the brick to be
-                               deleted.
+        :param brick_id: (str) The unique identifier of the brick to be
+         deleted.
+
+        Contains:
+
+            Inner functions:
+
+                - extract_document_ids: Extracts all string values from a
+                  nested dictionary structure.
+
         """
 
         with self.project.database.data(write=True) as database_data:
@@ -1833,18 +1864,18 @@ class TableDataBrowser(QTableWidget):
                 Extracts all string values from a nested dictionary structure.
 
                 This function traverses the values of the input dictionary.
+
                 If a value is:
-                    - a string: it is added to the resulting set of
-                                document IDs.
-                    - a list: its elements are recursively traversed and
-                              processed. Non-string, non-list values are
-                              ignored.
+                    - a string: It is added to the resulting set of document
+                      IDs.
+                    - a list: Its elements are recursively traversed and
+                      processed. Non-string, non-list values are ignored.
 
-                :param data (dict): Dictionary that may contain nested strings
-                                    or lists as values.
+                :param data: (dict) Dictionary that may contain nested strings
+                 or lists as values.
 
-                :returns (set[str]): A set containing all unique string values
-                                     found within the dictionary.
+                :Returns: (set[str]) A set containing all unique string values
+                 found within the dictionary.
                 """
                 document_ids = set()
                 stack = list(data.values())
@@ -1977,8 +2008,8 @@ class TableDataBrowser(QTableWidget):
         list-type fields and ensures data consistency across selections.
 
         Steps:
-            1. Collects selected cells and their metadata
-               (coordinates, types, lengths, etc.).
+            1. Collects selected cells and their metadata (coordinates, types,
+               lengths, etc.).
             2. Validates list lengths for compatibility.
             3. Opens a dialog for value modification if valid.
             4. Updates the table and database, and records changes for
@@ -2361,13 +2392,13 @@ class TableDataBrowser(QTableWidget):
         Initialize and populate table headers with field metadata.
 
         Sets up table columns based on database fields, configuring each with:
-            - Appropriate tooltips showing description, unit, and type
-            - Specialized delegates for numeric and temporal data types
-            - Visibility based on display settings or field attributes
+            - Appropriate tooltips showing description, unit, and type.
+            - Specialized delegates for numeric and temporal data types.
+            - Visibility based on display settings or field attributes.
 
         :param take_tags_to_update: If True, use tags_to_display for
-                                    visibility. If False, use field visibility
-                                    attributes. Defaults to False.
+         visibility. If False, use field visibility attributes. Defaults to
+         False.
         """
 
         # Get field names and prepare sorted list with FileName first
@@ -2428,8 +2459,8 @@ class TableDataBrowser(QTableWidget):
         Returns the list of selected scan paths if a selection is active,
         otherwise returns all visible scan paths in the data browser.
 
-        :return (list): List of scan paths from either the current selection
-                        or all visible scans in the data browser.
+        :Returns: (list) List of scan paths from either the current selection
+         or all visible scans in the data browser.
         """
 
         if self.activate_selection and self.scans:
@@ -2472,8 +2503,8 @@ class TableDataBrowser(QTableWidget):
 
         :param scan: The scan filename to search for.
 
-        :return(int): The zero-based row index if the scan is found, None
-                      otherwise.
+        :Returns: (int) The zero-based row index if the scan is found, None
+         otherwise.
 
         """
 
@@ -2493,10 +2524,10 @@ class TableDataBrowser(QTableWidget):
         Searches through the table's horizontal headers to locate the column
         corresponding to the specified tag.
 
-        :param tag (str): The name of the tag to search for.
+        :param tag: (str) The name of the tag to search for.
 
-        :return (int): The zero-based column index if the tag is found,
-                       None otherwise.
+        :Returns: (int) The zero-based column index if the tag is found, None
+         otherwise.
         """
 
         for column in range(self.columnCount()):
@@ -2516,9 +2547,8 @@ class TableDataBrowser(QTableWidget):
         It delegates to the parent class handler and then updates the table
         data values.
 
-        :param event (QMouseEvent): The mouse event containing information
-                                    about the button released, position, and
-                                    modifiers.
+        :param event: (QMouseEvent) The mouse event containing information
+         about the button released, position, and modifiers.
         """
         super().mouseReleaseEvent(event)
         self.edit_table_data_values()
@@ -2539,16 +2569,24 @@ class TableDataBrowser(QTableWidget):
             Temporarily disables item change signals during sorting to prevent
             triggering update handlers. The sort is stable and preserves the
             relative order of items with equal sort keys.
+
+        Contains:
+
+            Inner functions:
+
+                - _clear_cell: clears the specified cell.
+                - _create_brick_widget: Create and set a brick widget for the
+                  specified table cell.
         """
 
         def _clear_cell(row, column, item):
             """
             Clears the specified cell and sets an optional non-editable item.
 
-            :param row (int): The row index of the cell to clear.
-            :param column (int): The column index of the cell to clear.
-            :param item (QTableWidgetItem) The item to set in the cleared cell.
-                                           If None, the cell remains empty.
+            :param row: (int) The row index of the cell to clear.
+            :param column: (int) The column index of the cell to clear.
+            :param item: (QTableWidgetItem) The item to set in the cleared
+             cell. If None, the cell remains empty.
             """
             self.setCellWidget(row, column, None)
 
@@ -2573,16 +2611,15 @@ class TableDataBrowser(QTableWidget):
             clickable button. Clicking the button shows the brick's history.
             Existing brick references are updated if necessary.
 
-            :param row (int): Row index of the cell to fill.
-            :param column (int): Column index of the cell to fill.
-            :param scan (str): Primary key of the scan linked to the brick.
-            :param db (Database): Active database connection.
-            :param old_widget (QWidget): Existing widget previously in the
-                                         same cell (if any).
-            :param item (QTableWidgetItem): The table item for this cell.
-            :param clicked_scan (str): The scan ID to use when connecting the
-                                       brick button’s clicked signal. If None,
-                                       defaults to `scan`.
+            :param row :(int) Row index of the cell to fill.
+            :param column: (int) Column index of the cell to fill.
+            :param scan: (str) Primary key of the scan linked to the brick.
+            :param db: (Database) Active database connection.
+            :param old_widget: (QWidget) Existing widget previously in the
+             same cell (if any).
+            :param item: (QTableWidgetItem) The table item for this cell.
+            :param clicked_scan: (str) The scan ID to use when connecting the
+             brick button’s clicked signal. If None, defaults to `scan`.
             """
             app_thread = QApplication.instance().thread()
             widget = QWidget()
@@ -2757,28 +2794,29 @@ class TableDataBrowser(QTableWidget):
 
         This method handles both single and multi-cell selection, validating
         type compatibility across all selected cells before applying changes.
+
         It performs the following operations:
-            1. Validates that all selected cells have compatible types
-            2. Verifies the new value matches the expected type(s)
-            3. Updates the database with validated values
-            4. Maintains undo/redo history for all modifications
-            5. Refreshes cell colors and formatting
+            1. Validates that all selected cells have compatible types.
+            2. Verifies the new value matches the expected type(s).
+            3. Updates the database with validated values.
+            4. Maintains undo/redo history for all modifications.
+            5. Refreshes cell colors and formatting.
 
         Special handling:
-        - PatientName: Removes spaces (used for subfolder naming in
-                       calculations)
-        - TAG_BRICKS/TAG_FILENAME: Read-only fields, changes are rejected
-        - List types: Prevents mixed type selections but allows homogeneous
-                      lists
+            - PatientName: Removes spaces (used for subfolder naming in
+              calculations).
+            - TAG_BRICKS/TAG_FILENAME: Read-only fields, changes are rejected.
+            - List types: Prevents mixed type selections but allows homogeneous
+              lists.
 
-        :param item_origin: QTableWidgetItem from which the edit originated
+        :param item_origin: QTableWidgetItem from which the edit originated.
 
         Side effects:
-            - Modifies database values for selected cells
-            - Updates cell appearance (colors, fonts)
-            - Adds entry to project undo history
-            - Clears redo history
-            - Resizes columns to fit content
+            - Modifies database values for selected cells.
+            - Updates cell appearance (colors, fonts).
+            - Adds entry to project undo history.
+            - Clears redo history.
+            - Resizes columns to fit content.
         """
 
         def _show_error_and_revert(
@@ -2788,11 +2826,11 @@ class TableDataBrowser(QTableWidget):
             Display error dialog and revert selected cells to their original
             values.
 
-            :param title: Dialog title text
-            :param message: Dialog message text
-            :param selected_items: List of QTableWidgetItem objects to revert
+            :param title: Dialog title text.
+            :param message: Dialog message text.
+            :param selected_items: List of QTableWidgetItem objects to revert.
             :param database_data: Database context for retrieving original
-                                  values
+             values.
             """
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
@@ -2977,10 +3015,10 @@ class TableDataBrowser(QTableWidget):
         current and initial collections in the project database. It performs
         the following:
             - Prompts user for confirmation if scans are in the active scan
-              list
-            - Preserves modification history for removed scan values
-            - Deletes associated files (.nii and .json) from the file system
-            - Updates the UI table to reflect removals
+              list.
+            - Preserves modification history for removed scan values.
+            - Deletes associated files (.nii and .json) from the file system.
+            - Updates the UI table to reflect removals.
 
         The removal process can be cancelled by the user when prompted. If
         multiple scans are selected, the user can choose to apply their
@@ -2988,10 +3026,10 @@ class TableDataBrowser(QTableWidget):
 
         Side effects:
             - Modifies database by removing documents from COLLECTION_CURRENT
-              and COLLECTION_INITIAL
-            - Deletes scan files from the project folder
+              and COLLECTION_INITIAL.
+            - Deletes scan files from the project folder.
             - Updates UI table rows and marks project as having unsaved
-              modifications
+              modifications.
         """
         # Safely disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -3120,17 +3158,17 @@ class TableDataBrowser(QTableWidget):
 
         This method restores the values of all selected cells to their
         original state by retrieving values from COLLECTION_INITIAL and
-        updating COLLECTION_CURRENT. If any cells lack initial values
-        (e.g., user-created tags), a warning is displayed. The operation is
-        recorded in the project history for undo/redo functionality.
+        updating COLLECTION_CURRENT. If any cells lack initial values (e.g.,
+        user-created tags), a warning is displayed. The operation is recorded
+        in the project history for undo/redo functionality.
 
         Side effects:
-            - Updates database values in COLLECTION_CURRENT
-            - Updates table cell display values
-            - Appends operation to project.undos
-            - Clears project.redos
-            - May display a warning dialog for unreset values
-            - Resizes table columns to fit content
+            - Updates database values in COLLECTION_CURRENT.
+            - Updates table cell display values.
+            - Appends operation to project.undos.
+            - Clears project.redos.
+            - May display a warning dialog for unreset values.
+            - Resizes table columns to fit content.
         """
         points = self.selectedIndexes()
 
@@ -3205,17 +3243,16 @@ class TableDataBrowser(QTableWidget):
         Restores values in selected cells to their initial state from the
         database. If a cell's initial value doesn't exist (e.g., user-added
         tags), it cannot be reset and a warning will be displayed.
-
         The operation is recorded in the project's undo history. Any existing
         redo history is cleared after this operation.
 
         Side effects:
-            - Updates database values in COLLECTION_CURRENT
-            - Updates table cell displays
-            - Appends to project.undos
-            - Clears project.redos
-            - Resizes columns to fit content
-            - May display warning dialog for unreset values
+            - Updates database values in COLLECTION_CURRENT.
+            - Updates table cell displays.
+            - Appends to project.undos.
+            - Clears project.redos.
+            - Resizes columns to fit content.
+            - May display warning dialog for unreset values.
         """
         modified_values = []
         # To know if some values do not have raw values (user tags)
@@ -3294,12 +3331,12 @@ class TableDataBrowser(QTableWidget):
         automatically resized to fit their contents.
 
         Side Effects:
-            - Updates database values in COLLECTION_CURRENT
-            - Updates table cell display values
-            - Appends operation to project.undos
-            - Clears project.redos
-            - Shows warning dialog if any values couldn't be reset
-            - Resizes table columns
+            - Updates database values in COLLECTION_CURRENT.
+            - Updates table cell display values.
+            - Appends operation to project.undos.
+            - Clears project.redos.
+            - Shows warning dialog if any values couldn't be reset.
+            - Resizes table columns.
         """
         # Early return if nothing selected
         selected_indices = self.selectedIndexes()
@@ -3418,7 +3455,7 @@ class TableDataBrowser(QTableWidget):
         This method clears any existing selection before selecting the entire
         column, ensuring only the specified column is highlighted.
 
-        :param col (int): The zero-based index of the column to select.
+        :param col: (int) The zero-based index of the column to select.
         """
         self.clearSelection()
         self.selectColumn(col)
@@ -3456,9 +3493,9 @@ class TableDataBrowser(QTableWidget):
 
         Side effects:
             - Clears and repopulates self.scans with [scan_name, [tag_names]]
-              pairs
-            - Calls data_browser.connect_mini_viewer() if self.link_viewer
-              is True
+              pairs.
+            - Calls data_browser.connect_mini_viewer() if self.link_viewer is
+              True.
         """
         # Disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -3523,8 +3560,8 @@ class TableDataBrowser(QTableWidget):
 
         :param order: (Qt.SortOrder or int) Sort order to apply:
 
-            - Qt.AscendingOrder (0): Sort from lowest to highest
-            - Qt.DescendingOrder (1): Sort from highest to lowest
+            - Qt.AscendingOrder (0): Sort from lowest to highest.
+            - Qt.DescendingOrder (1): Sort from highest to lowest.
 
         Note:
             Temporarily disconnects signals during sorting to prevent
@@ -3759,14 +3796,14 @@ class TableDataBrowser(QTableWidget):
         the visual appearance.
 
         :param take_tags_to_update: If True, updates tags during the header
-                                    fill operation. Defaults to False.
+         fill operation. Defaults to False.
 
         Side Effects:
-            - Clears current table selection
-            - Resets scans_to_visualize and scans_to_search attributes
-            - Clears selected scans list if selection is active
-            - Disconnects and reconnects table signals
-            - Modifies table dimensions and visual styling
+            - Clears current table selection.
+            - Resets scans_to_visualize and scans_to_search attributes.
+            - Clears selected scans list if selection is active.
+            - Disconnects and reconnects table signals.
+            - Modifies table dimensions and visual styling.
         """
         self.setSortingEnabled(False)
         self.clearSelection()  # Selection cleared when switching project
@@ -3812,15 +3849,14 @@ class TableDataBrowser(QTableWidget):
         """
         Update column visibility based on tag selection changes.
 
-        Synchronizes the table's visible columns with the provided tag list
-        by:
-            - Hiding columns for tags that are no longer displayed
-            - Showing columns for newly displayed tags
-            - Updating advanced search dropdowns if the search panel is open
-            - Refreshing column sizing and colors
+        Synchronizes the table's visible columns with the provided tag list by:
+            - Hiding columns for tags that are no longer displayed.
+            - Showing columns for newly displayed tags.
+            - Updating advanced search dropdowns if the search panel is open.
+            - Refreshing column sizing and colors.
 
-        :param old_tags (list): Previously visualized tags.
-        :param showed (list): Tags to currently display in the table.
+        :param old_tags: (list) Previously visualized tags.
+        :param showed: (list) Tags to currently display in the table.
         """
         # Disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -3876,7 +3912,7 @@ class TableDataBrowser(QTableWidget):
         scans, and updates the table appearance.
 
         :param old_scans: Collection of scans from the previous state, used to
-                          determine which rows need to be hidden.
+         determine which rows need to be hidden.
         """
         # Disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -3949,8 +3985,12 @@ class TimeFormatDelegate(QItemDelegate):
     This delegate creates a QTimeEdit widget with millisecond precision
     (hh:mm:ss.zzz format) for editing time values in a TableDataBrowser.
 
-    .. Methods:
-        - createEditor: Create and return a QDateEdit widget for editing times
+    Contains:
+
+        Methods:
+
+            - createEditor: Create and return a QDateEdit widget for editing
+              times.
     """
 
     def __init__(self, parent=None):
@@ -3966,13 +4006,12 @@ class TimeFormatDelegate(QItemDelegate):
         Create and configure the editor widget for time values.
 
         :param parent: Parent widget for the editor.
-        :param option: Style options for the item (unused, required
-                       by Qt API).
+        :param option: Style options for the item (unused, required by Qt API).
         :param index: Model index of the item being edited (unused, required
-                      by Qt API).
+         by Qt API).
 
-        :return (QTimeEdit): Configured time editor widget with
-                             hh:mm:ss.zzz format.
+        :Returns: (QTimeEdit) Configured time editor widget with
+         hh:mm:ss.zzz format.
         """
         editor = QTimeEdit(parent)
         editor.setDisplayFormat("hh:mm:ss.zzz")

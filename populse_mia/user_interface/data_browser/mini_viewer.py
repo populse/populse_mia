@@ -5,15 +5,13 @@ users to view and interact with 3D, 4D, and 5D NIfTI images, providing tools
 to navigate through slices and time points.
 
 Key Features:
-- Visualize single images per scan with cursors to move in multiple dimensions.
-- Display all images of the greater dimension of the scan.
-- Support for 3D, 4D, and 5D NIfTI images.
-- Configurable display settings, including orientation and slice navigation.
-- Integration with project-specific configurations and preferences.
-
-Contains:
-    Class:
-        - MiniViewer
+    - Visualize single images per scan with cursors to move in multiple
+      dimensions.
+    - Display all images of the greater dimension of the scan.
+    - Support for 3D, 4D, and 5D NIfTI images.
+    - Configurable display settings, including orientation and slice
+      navigation.
+    - Integration with project-specific configurations and preferences.
 """
 
 ##########################################################################
@@ -59,6 +57,8 @@ from populse_mia.data_manager import COLLECTION_CURRENT, NOT_DEFINED_VALUE
 from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import ClickableLabel, PopUpSelectTag
 
+__all__ = ["MiniViewer"]
+
 logger = logging.getLogger(__name__)
 
 
@@ -75,10 +75,10 @@ class MiniViewer(QWidget):
           time of the fourth dimension for each time of the fifth dimension.
 
     Note:
-        - idx corresponds to the index of the displayed image
-        - idx in [0, self.max_scans]
+        - idx corresponds to the index of the displayed image.
+        - idx in [0, self.max_scans].
         - most of the class's attributes are lists of 0 to self.max_scans
-          elements
+          elements.
 
     Contains:
 
@@ -132,7 +132,7 @@ class MiniViewer(QWidget):
         initially hidden to maximize space for the data browser.
 
         :param project: The current project instance containing scan data and
-                        project-specific configuration.
+         project-specific configuration.
         """
         super().__init__()
         self.project = project
@@ -168,10 +168,10 @@ class MiniViewer(QWidget):
 
         Creates a hierarchical layout structure with:
             - Horizontal layouts for images, sliders (3D/4D/5D), checkboxes,
-              and thumbnails
+              and thumbnails.
             - Vertical layouts for main content organization and slider
-              grouping
-            - Sets the final vertical layout as the widget's root layout
+              grouping.
+            - Sets the final vertical layout as the widget's root layout.
 
         All layouts are stored as instance attributes for later population
         with widgets.
@@ -202,11 +202,11 @@ class MiniViewer(QWidget):
 
         This method initializes a persistent horizontal container holding the
         main interactive controls of the viewer, including:
-            - A checkbox to enable/disable cursor display
-            - An orientation label centered in the layout
-            - A checkbox to switch to "all slices" display mode
+            - A checkbox to enable/disable cursor display.
+            - An orientation label centered in the layout.
+            - A checkbox to switch to "all slices" display mode.
             - Slice configuration controls (label + line edit), hidden by
-              default
+              default.
         """
         self.top_bar_container = QWidget()
         self.top_bar_layout = QHBoxLayout()
@@ -232,11 +232,18 @@ class MiniViewer(QWidget):
 
         Creates two checkboxes:
             - 'Show all slices': Toggles between displaying all slices or
-                                 using cursors
-            - 'Chain cursors': Links cursors across multiple selected documents
+              using cursors.
+            - 'Chain cursors': Links cursors across multiple selected
+              documents.
 
         Both checkboxes are initialized with their states from the current
         config and connected to their respective event handlers.
+
+        Contains:
+
+            Inner functions:
+
+                - _create_checkbox: Create a configured checkbox.
         """
 
         def _create_checkbox(text, checked, callback, tooltip=None):
@@ -248,7 +255,7 @@ class MiniViewer(QWidget):
             :param callback: Function to call when state changes.
             :param tooltip: Optional tooltip text.
 
-            :return: Configured QCheckBox instance.
+            :Returns: Configured QCheckBox instance.
             """
             checkbox = QCheckBox(text)
             checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
@@ -281,11 +288,11 @@ class MiniViewer(QWidget):
         Initialize UI components for the MiniViewer.
 
         Creates and configures the main UI elements including:
-            - Frame containers and scroll area for layout management
-            - Slice count control with label and editable line input
-            - Orientation label (radiological vs neurological view)
+            - Frame containers and scroll area for layout management.
+            - Slice count control with label and editable line input.
+            - Orientation label (radiological vs neurological view).
             - Empty collections for dynamic image display elements (sliders,
-              labels, images)
+              labels, images).
 
         Note:
             Image-related collections are initialized as empty lists and
@@ -336,9 +343,9 @@ class MiniViewer(QWidget):
         Note:
             Each slider is connected to changePosValue with dimension offsets:
 
-                - 3D slider: dimension 1
-                - 4D slider: dimension 2
-                - 5D slider: dimension 3
+                - 3D slider: dimension 1.
+                - 4D slider: dimension 2.
+                - 5D slider: dimension 3.
         """
         # Define slider configurations: (slider_list, dimension_offset)
         slider_configs = [
@@ -372,8 +379,8 @@ class MiniViewer(QWidget):
         scaling the value proportionally to account for different cursor
         ranges.
 
-        :param idx (int): Index of the viewer whose cursor was changed.
-        :param cursor_to_change (int): Cursor identifier (1=3D, 2=4D, 3=5D).
+        :param idx: (int) Index of the viewer whose cursor was changed.
+        :param cursor_to_change: (int) Cursor identifier (1=3D, 2=4D, 3=5D).
 
         Notes:
             - If chain mode is disabled, only updates the image for the given
@@ -465,11 +472,10 @@ class MiniViewer(QWidget):
         This method clears the `self.content_layout` by iteratively removing
         each item and scheduling any associated QWidget for deletion using
         `deleteLater()`. This ensures proper memory management and avoids
-        immediate deletion issues within the Qt event loop.
-
-        Only widgets contained in `self.content_layout` are affected.
-        Persistent UI elements (such as the top control bar) must not be part
-        of this layout and are therefore preserved.
+        immediate deletion issues within the Qt event loop. Only widgets
+        contained in `self.content_layout` are affected. Persistent UI elements
+        (such as the top control bar) must not be part of this layout and are
+        therefore preserved.
         """
 
         while self.content_layout.count():
@@ -508,9 +514,8 @@ class MiniViewer(QWidget):
         """
         Create a read-only field for displaying cursor position.
 
-        :return (QLineEdit): A disabled, center-aligned text field with fixed
-                             width (65px) and font size (9pt) for displaying
-                             coordinate values.
+        :Returns: (QLineEdit) A disabled, center-aligned text field with fixed
+         width (65px) and font size (9pt) for displaying coordinate values.
         """
         field_value = QLineEdit()
         field_value.setEnabled(False)
@@ -528,8 +533,8 @@ class MiniViewer(QWidget):
 
         :param minimum: The minimum value of the slider. Defaults to 0.
         :param maximum: The maximum value of the slider. Defaults to 0.
-        :param position: The initial position/value of the slider.
-         Defaults to 0.
+        :param position: The initial position/value of the slider. Defaults to
+         0.
 
         :Returns: (QSlider) A configured horizontal slider widget, initially
          disabled.
@@ -572,8 +577,8 @@ class MiniViewer(QWidget):
         """
         Enable sliders at the specified index across all dimensions.
 
-        :param idx: Index of the sliders to enable across 3D, 4D, and 5D
-                    slider collections.
+        :param idx: Index of the sliders to enable across 3D, 4D, and 5D slider
+         collections.
         """
 
         for slider_collection in (
@@ -588,27 +593,37 @@ class MiniViewer(QWidget):
         Apply display modifications to a 2D image slice.
 
         Processes an image for optimal display by:
-            1. Resizing to standard display dimensions
-            2. Rescaling intensities with percentile-based clipping
-            3. Converting to appropriate display data type
-            4. Applying orientation rotation (radiological/neurological)
+            1. Resizing to standard display dimensions.
+            2. Rescaling intensities with percentile-based clipping.
+            3. Converting to appropriate display data type.
+            4. Applying orientation rotation (radiological/neurological).
 
-        :param idx: Index of the image slice in the internal array
+        :param idx: Index of the image slice in the internal array.
         :param im2D: Optional 2D numpy array to modify. If None, uses
-         self.im_2D[idx]
+         self.im_2D[idx].
 
         Note:
             When im2D is not provided, the modified image is stored in
-            self.im_2D[idx]
+            self.im_2D[idx].
+
+        Contains:
+
+            Inner functions:
+
+                - _resize_image: Resize image with anti-aliasing handling.
+                - _rescale_intensities: Rescale image intensities using
+                  percentile-based normalization.
+                - _apply_rotation: Apply orientation-specific rotation to
+                  image.
         """
 
         def _resize_image(image, target_size):
             """Resize image with version-aware anti-aliasing handling.
 
-            :param image: 2D numpy array to resize
-            :param target_size: Tuple of (height, width) for output dimensions
+            :param image: 2D numpy array to resize.
+            :param target_size: Tuple of (height, width) for output dimensions.
 
-            :return (numpy.ndarray): Resized image
+            :Returns: (numpy.ndarray) Resized image.
             """
             resize_kwargs = {"output_shape": target_size, "mode": "constant"}
 
@@ -630,13 +645,13 @@ class MiniViewer(QWidget):
             Handles NaN and infinite values gracefully by masking them out
             during percentile calculations.
 
-            :param image: 2D numpy array to rescale (modified in-place)
-            :param min_val: Minimum value for output range
-            :param max_val: Maximum value for output range
-            :param pctl: Percentile for clipping at both ends
+            :param image: 2D numpy array to rescale (modified in-place).
+            :param min_val: Minimum value for output range.
+            :param max_val: Maximum value for output range.
+            :param pctl: Percentile for clipping at both ends.
 
-            :returns (numpy.ndarray): Rescaled image with values in [min_val,
-                                      max_val]
+            :Returns: (numpy.ndarray) Rescaled image with values in [min_val,
+             max_val]
             """
             finite_mask = np.isfinite(image)
 
@@ -725,17 +740,18 @@ class MiniViewer(QWidget):
         converts it to a Qt pixmap for display. The extraction strategy
         depends on dimensionality:
 
-        - 3D images: Extract slice at index i along the z-axis
-        - 4D images: Extract middle z-slice from the 3D volume at time index i
-        - 5D images: Extract middle z-slice from the 3D volume at time index 1
-                     of the 4D volume at the 5th dimension index i
+            - 3D images: Extract slice at index i along the z-axis.
+            - 4D images: Extract middle z-slice from the 3D volume at time
+              index i.
+            - 5D images: Extract middle z-slice from the 3D volume at time
+              index 1 of the 4D volume at the 5th dimension index i.
 
-        :param im: NIfTI image object with a dataobj attribute
+        :param im: NIfTI image object with a dataobj attribute.
         :param i: Index for slice/volume selection along the outermost
-                  variable dimension
+         variable dimension.
 
-        :return (QPixmap): Qt pixmap ready for display, or pixmap from empty
-                           array if dimensionality is unsupported
+        :Returns: (QPixmap) Qt pixmap ready for display, or pixmap from empty
+         array if dimensionality is unsupported.
         """
         ndim = len(im.shape)
 
@@ -777,7 +793,7 @@ class MiniViewer(QWidget):
         the corresponding slice from the image data. Sliders that exceed the
         image dimensionality are reset to a maximum value of 0.
 
-        :param idx: Index of the selected image
+        :param idx: Index of the selected image.
         """
         # Reading the image data
         img = self.img[idx]
@@ -815,9 +831,9 @@ class MiniViewer(QWidget):
         Release memory by clearing all internal lists holding images, sliders,
         labels, and related UI elements.
 
-        This method empties the existing lists in place (without
-        reassigning them) to ensure that all references are removed
-        and memory can be reclaimed.
+        This method empties the existing lists in place (without reassigning
+        them) to ensure that all references are removed and memory can be
+        reclaimed.
         """
 
         for attr in (
@@ -845,7 +861,7 @@ class MiniViewer(QWidget):
         modifications, converts the image to a Qt pixmap, and displays it in
         the associated label.
 
-        :param idx (int): Index of the image to display
+        :param idx: (int) Index of the image to display.
         """
         # Update navigation and position
         self.indexImage(idx)
@@ -870,9 +886,9 @@ class MiniViewer(QWidget):
         If the dialog is accepted, slice verification is triggered for the
         current file paths.
 
-        Notes:
-        The dialog instance is stored on ``self.popUp`` to allow access from
-        unit tests.
+        Note:
+            The dialog instance is stored on ``self.popUp`` to allow access
+            from unit tests.
         """
         self.popUp = PopUpSelectTag(self.project)
         self.popUp.setWindowTitle("Select the image viewer tag")
@@ -888,9 +904,9 @@ class MiniViewer(QWidget):
         and displays it under the image frame. If the value is not defined,
         a default placeholder is used. The tooltip shows the tag name.
 
-        :param file_path_db (str): Path of selected image in database
-                                   format (ex. data/raw_data/mymri.nii')
-        :param idx (int): Index of the image in the UI.
+        :param file_path_db: (str) Path of selected image in database format
+         (ex. data/raw_data/mymri.nii').
+        :param idx: (int) Index of the image in the UI.
         """
 
         with self.project.database.data() as database_data:
@@ -938,11 +954,11 @@ class MiniViewer(QWidget):
          out with warnings.
 
         Side effects:
-            - Modifies self.file_paths by removing invalid entries
-            - Updates self.img list with loaded image objects
+            - Modifies self.file_paths by removing invalid entries.
+            - Updates self.img list with loaded image objects.
             - Creates and configures numerous Qt widgets for the thumbnail
-              display
-            - Logs warnings for files that cannot be loaded or displayed
+              display.
+            - Logs warnings for files that cannot be loaded or displayed.
 
         Note:
             Maximum thumbnails displayed is controlled by
@@ -1189,9 +1205,9 @@ class MiniViewer(QWidget):
         Updates the configuration with the new slice count and re-validates
         the current file paths to regenerate thumbnails accordingly.
 
-        Notes:
-        The slice count is retrieved from the UI line edit widget and applied
-        to all loaded files.
+        Note:
+            The slice count is retrieved from the UI line edit widget and
+            applied to all loaded files.
         """
         nb_slices = self.line_edit_nb_slices.text()
         self.config.setNbAllSlicesMax(nb_slices)
@@ -1203,9 +1219,7 @@ class MiniViewer(QWidget):
 
         Synchronizes the slice visualization preference (show all slices
         vs. single slice) based on the checkbox state, updates the
-        configuration, and regenerates thumbnails
-        for the current file paths.
-
+        configuration, and regenerates thumbnails for the current file paths.
         This method is triggered when the user toggles the "show all slices"
         checkbox.
         """

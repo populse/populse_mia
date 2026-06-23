@@ -1,17 +1,13 @@
 """
 Database cell editor module for list-type values.
 
-This module provides dialog interfaces for editing complex data types
-in the Mia data browser. It specifically handles the editing of list-type
-values such as arrays of numbers, strings, or dates.
+This module provides dialog interfaces for editing complex data type in the
+Mia data browser. It specifically handles the editing of list-type values such
+as arrays of numbers, strings, or dates.
 
 The ModifyTable dialog creates an interactive table representation of lists,
-allowing users to add, edit, or remove items while ensuring type safety
-and database consistency.
-
-Contains:
-    Class:
-        - ModifyTable
+allowing users to add, edit, or remove items while ensuring type safety and
+database consistency.
 """
 
 ##########################################################################
@@ -49,35 +45,40 @@ from populse_mia.data_manager import (
 )
 from populse_mia.utils import check_value_type
 
+__all__ = ["ModifyTable"]
+
 logger = logging.getLogger(__name__)
 
 
 class ModifyTable(QDialog):
     """
-    Dialog to modify cell contents containing lists in the data browser tab.
+     Dialog to modify cell contents containing lists in the data browser tab.
 
-    This dialog provides a user interface to edit cells that contain list
-    values. It displays the list elements in a table and allows users to add
-    or remove elements.
+     This dialog provides a user interface to edit cells that contain list
+     values. It displays the list elements in a table and allows users to add
+     or remove elements.
 
-    .. Methods:
-        - _convert_value: Convert a text value to the appropriate type
-        - _show_error_message: Display an error message
-        - add_item: Add one more element to self.value
-        - fill_table: Fill the table
-        - rem_last_item: Remove last element of self.value
-        - update_table_values: Update the table in the database
+    Contains:
+
+         Methods:
+
+             - _convert_value: Convert a text value to the appropriate type.
+             - _show_error_message: Display an error message.
+             - add_item: Add one more element to self.value.
+             - fill_table: Fill the table.
+             - rem_last_item: Remove last element of self.value.
+             - update_table_values: Update the table in the database.
     """
 
     def __init__(self, project, value, types, scans, tags):
         """
         Initialize the ModifyTable dialog.
 
-        :param project: Instance of the current project
-        :param value: List of values in the cell to be modified
-        :param types: Allowed value types for validation
-        :param scans: Scan identifiers corresponding to rows
-        :param tags: Tag identifiers corresponding to columns
+        :param project: Instance of the current project.
+        :param value: List of values in the cell to be modified.
+        :param types: Allowed value types for validation.
+        :param scans: Scan identifiers corresponding to rows.
+        :param tags: Tag identifiers corresponding to columns.
         """
         super().__init__()
         self.setModal(True)
@@ -118,10 +119,10 @@ class ModifyTable(QDialog):
         """
         Convert a text value to the appropriate type based on field_type.
 
-        :param text: String value to convert
-        :param field_type: Database field type constant
+        :param text: String value to convert.
+        :param field_type: Database field type constant.
 
-        :return: The converted value in the appropriate type
+        :Returns: The converted value in the appropriate type.
         """
 
         if field_type == FIELD_TYPE_LIST_INTEGER:
@@ -149,8 +150,8 @@ class ModifyTable(QDialog):
         """
         Display an error message for invalid values.
 
-        :param value: The invalid value
-        :param type_problem: The specific type that failed validation
+        :param value: The invalid value.
+        :param type_problem: The specific type that failed validation.
         """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
@@ -175,8 +176,8 @@ class ModifyTable(QDialog):
         """
         Populate the table with the current list elements.
 
-        Configures the table dimensions, populates cells with values,
-        and adjusts table size to fit content within reasonable bounds.
+        Configures the table dimensions, populates cells with values, and
+        adjusts table size to fit content within reasonable bounds.
         """
         # Set table dimensions
         self.table.setColumnCount(len(self.value))
@@ -227,7 +228,7 @@ class ModifyTable(QDialog):
         Validates each value against specified types and updates the database
         only if all values are valid.
 
-        :param test (bool): Flag for testing mode, defaults to False
+        :param test: (bool) Flag for testing mode, defaults to False.
         """
         valid = True
 
