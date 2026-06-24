@@ -288,6 +288,12 @@ class PipelineManagerTab(QWidget):
         - update_user_mode: Update the visibility of widgets / actions
                             depending of the chosen mode
 
+    Signals:
+
+        - item_library_clicked: Emitted when an item is selected in the process
+          library. The signal carries the identifier or name of the selected
+          library item as a string.
+
     """
 
     item_library_clicked = pyqtSignal(str)

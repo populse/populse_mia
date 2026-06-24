@@ -109,6 +109,11 @@ class PlugFilter(QWidget):
                                 and updates the filter button text.
         - update_tags: Opens a dialog to update the list of visualized tags
                        and refreshes the table view.
+
+    Signals:
+
+        - plug_value_changed: Signal emitted when the user confirms their
+          selection
     """
 
     # Signal emitted when the user confirms their selection. The signal carries

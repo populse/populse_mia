@@ -95,12 +95,17 @@ class PipelineEditor(PipelineDeveloperView):
         - update_history: Updates the history for undos and redos/
         - update_node_name: Updates a node name.
         - update_plug_value: Updates a plug value.
+
+    Signals:
+
+        - pipeline_modified: Signal emitted when the pipeline is modified.
+        - pipeline_saved: Signal emitted when the pipeline is saved.
     """
 
-    # The signal emitted when the pipeline is saved
-    pipeline_saved = QtCore.pyqtSignal(str)
     # The signal emitted when the pipeline is modified
     pipeline_modified = QtCore.pyqtSignal(PipelineDeveloperView)
+    # The signal emitted when the pipeline is saved
+    pipeline_saved = QtCore.pyqtSignal(str)
 
     def __init__(self, project, main_window):
         """
@@ -1343,13 +1348,6 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
     managing multiple pipeline configurations. Each tab contains a
     PipelineEditor instance with its own undo/redo history.
 
-    .. Signals:
-        pipeline_saved (str): Emitted when a pipeline is saved, passes
-                              filename.
-        node_clicked (str, Node): Emitted when a node is clicked in any editor.
-        process_clicked (str, Process): Emitted when a process is clicked.
-        switch_clicked (str, Switch): Emitted when a switch is clicked.
-
     .. Methods:
         - check_modifications: Check if the nodes of the current pipeline have
                                been modified.
@@ -1406,10 +1404,17 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         - update_pipeline_editors: Update the pipeline editors after changes
                                    to the specified editor.
         - update_scans_list: Update the list of database scans in every editor.
+
+    Signals:
+
+        - node_clicked: Signal emitted when a node is clicked in any editor.
+        - pipeline_saved: Signal emitted when a pipeline is saved.
+        - process_clicked: Signal emitted when a process is clicked.
+        - switch_clicked: Signal emitted when a switch is clicked.
     """
 
-    pipeline_saved = QtCore.pyqtSignal(str)
     node_clicked = QtCore.pyqtSignal(str, Node)
+    pipeline_saved = QtCore.pyqtSignal(str)
     process_clicked = QtCore.pyqtSignal(str, Process)
     switch_clicked = QtCore.pyqtSignal(str, Switch)
 

@@ -126,6 +126,11 @@ class AttributesFilter(PlugFilter):
                       rows are selected, only those rows' attributes are
                       collected; otherwise, attributes are collected from all
                       entries matching the current filter.
+
+    Signals:
+
+        - attributes_selected: Signal emitted when the user validates the
+          selection.
     """
 
     # Signal emitted when the user validates the selection. The signal carries
@@ -207,6 +212,11 @@ class CapsulNodeController(QWidget):
         - update_node_name: Renames the selected node and updates the pipeline.
         - update_parameters: Placeholder for backward compatibility (no
                              operation).
+
+    Signals:
+
+        - value_changed: Signal emitted when a node or parameter value is
+          changed.
     """
 
     # Signal emitted when a node or parameter value is changed. Used for
@@ -1058,6 +1068,11 @@ class NodeController(QWidget):
                                          results.
         - release_process: Placeholder for process release logic (to be
                            overridden by subclasses).
+
+    Signals:
+
+        - value_changed: Signal emitted when a node or parameter value is
+          changed.
 
     """
 

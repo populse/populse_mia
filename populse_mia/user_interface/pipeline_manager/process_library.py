@@ -377,8 +377,10 @@ class InstallProcesses(QDialog):
                         install.
         - install: Installs the selected file/folder on Populse_mia.
 
-    .. Signals:
-        - process_installed: Emitted when a process is successfully installed
+    Signals:
+
+        - process_installed: Signal emitted when a process is successfully
+          installed.
     """
 
     process_installed = Signal()
@@ -1524,7 +1526,8 @@ class PackageLibraryDialog(QDialog):
                        (commented).
         - update_config: Update package configuration and library attributes.
 
-    .. Signals:
+    Signals:
+
         - signal_save: Signal emitted when configuration is saved.
 
     """
@@ -2849,9 +2852,10 @@ class ProcessLibrary(QTreeView):
         - mousePressEvent: Event when the mouse is pressed.
         - to_dict: Returns a dictionary from the current tree.
 
-    .. Signals:
+    Signals:
+
         - item_library_clicked: Signal emitted when an item in the library is
-                                clicked.
+          clicked.
     """
 
     item_library_clicked = QtCore.pyqtSignal(str)

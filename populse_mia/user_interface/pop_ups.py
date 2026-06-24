@@ -6849,7 +6849,7 @@ class QLabel_clickable(QLabel):
             - mousePressEvent: Override the default mouse press event to emit
               the clicked signal.
 
-     Signals:
+    Signals:
 
         - clicked: (pyqtSignal) Signal emitted when the label is clicked.
     """

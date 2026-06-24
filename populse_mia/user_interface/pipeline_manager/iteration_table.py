@@ -75,9 +75,10 @@ class IterationTable(QWidget):
         - update_selected_tag: Update the selected tag for current pipeline
                                manager tab
 
-    .. Signals:
-        - iteration_table_updated: Emitted when iteration scans have been
-                                   updated or if the iteration is toggled off.
+    Signals:
+
+        - iteration_table_updated: Signal emitted when iteration scans have
+          been updated or if the iteration is toggled off.
     """
 
     iteration_table_updated = pyqtSignal(list, list)

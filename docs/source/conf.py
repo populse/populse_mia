@@ -252,14 +252,32 @@ autodoc_default_options = {
     "imported-members": False,
     # We want to exclude PyQt signals
     "exclude-members": (
-        "notifyProgress, "
+        "attributes_selected, "
+        "cancel_signal, "
         "clicked, "
+        "do_not_save_signal, "
+        "item_library_clicked, "
+        "iteration_table_updated, "
+        "node_clicked, "
+        "notifyProgress, "
+        "not_use_clinical_mode_signal, "
+        "pipeline_modified, "
+        "pipeline_saved, "
+        "plug_value_changed, "
+        "process_clicked, "
+        "process_installed, "
+        "save_as_signal, "
         "signal_add_tag, "
         "signal_clone_tag, "
-        "save_as_signal, "
-        "do_not_save_signal, "
-        "cancel_signal, "
         "signal_create_project, "
+        "signal_preferences_change, "
+        "signal_remove_tag, "
+        "signal_save, "
+        "signal_saved_project, "
+        "signal_settings_change, "
+        "switch_clicked, "
+        "use_clinical_mode_signal, "
+        "value_changed, "
     ),
 }
 
