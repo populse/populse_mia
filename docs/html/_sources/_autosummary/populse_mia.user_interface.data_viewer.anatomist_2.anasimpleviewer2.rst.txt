@@ -1,0 +1,14 @@
+populse\_mia.user\_interface.data\_viewer.anatomist\_2.anasimpleviewer2
+=======================================================================
+
+.. automodule:: populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      AnaSimpleViewer2
+      LeftSimple3DControl
+      VolRenderControl
+   

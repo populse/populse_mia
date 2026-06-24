@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist &#8212; populse_mia 3.0.0-dev+7d6f26e7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../../_static/documentation_options.js?v=29b3f3bb"></script>
+    <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
+          <span>populse_mia 3.0.0-dev+7d6f26e7 documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Mia data viewer implementation based on</span>
+<span class="sd">`Anatomist &lt;http://brainvisa.info/anatomist/user_doc/index.html&gt;`_</span>
+
+<span class="sd">Contains:</span>
+<span class="sd">    Class:</span>
+<span class="sd">        - MiaViewer</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">##########################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">##########################################################################</span>
+
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="c1"># PyQt5 import</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QToolButton</span>
+
+<span class="c1"># soma import</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
+
+<span class="c1"># populse_mia import</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
+    <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
+    <span class="n">TAG_FILENAME</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TableDataBrowser</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.anatomist_2</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
+    <span class="n">resources</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+    <span class="n">AnaSimpleViewer2</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">..data_viewer</span> <span class="kn">import</span> <span class="n">DataViewer</span>
+
+
+<div class="viewcode-block" id="MiaViewer">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer">[docs]</a>
+<span class="k">class</span> <span class="nc">MiaViewer</span><span class="p">(</span><span class="n">DataViewer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A PyQt-based viewer using PyAnatomist.</span>
+
+<span class="sd">    This class implements a DataViewer interface and provides functionality</span>
+<span class="sd">    to visualize and interact with medical imaging data through the PyAnatomist</span>
+<span class="sd">    visualization library.</span>
+
+<span class="sd">    :class:`MIA data viewer</span>
+<span class="sd">           &lt;populse_mia.user_interface.data_viewer.data_viewer.DataViewer&gt;`</span>
+<span class="sd">           implementation based on</span>
+<span class="sd">           `PyAnatomist &lt;http://brainvisa.info/pyanatomist/sphinx/index.html&gt;`_</span>
+
+<span class="sd">    .. Methods:</span>
+<span class="sd">        - _add_dialog_buttons: Add action buttons to the filter dialog.</span>
+<span class="sd">        - _apply_preferences: Apply the settings from the preferences dialog.</span>
+<span class="sd">        - _create_preferences_dialog: Create the preferences dialog.</span>
+<span class="sd">        - _process_selected_documents: Process user&#39;s document selection.</span>
+<span class="sd">        - _setup_search_interface: Set up the search bar and related UI</span>
+<span class="sd">                                   elements.</span>
+<span class="sd">        - _setup_ui: Set up the user interface components and connect signals.</span>
+<span class="sd">        - close: Exit</span>
+<span class="sd">        - display_files: Load objects in files and display.</span>
+<span class="sd">        - displayed_files: Get the list of displayed files.</span>
+<span class="sd">        - filter_documents: Filter documents already loaded in the Databrowser.</span>
+<span class="sd">        - preferences: Preferences for the dataviewer.</span>
+<span class="sd">        - remove_files: Delete the given objects given by their file names.</span>
+<span class="sd">        - reset_search_bar: Reset the rapid search bar.</span>
+<span class="sd">        - screenshot: The screenshot of mia_anatomist_2.</span>
+<span class="sd">        - search_str: Update the *Not Defined*&quot; values in visualised documents.</span>
+<span class="sd">        - set_documents: Initialise current documents in the viewer.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Class-level tracker for Anatomist viewers</span>
+    <span class="n">_mia_viewers_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="MiaViewer.__init__">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the Mia viewer widget.</span>
+
+<span class="sd">        :param init_global_handlers: Handlers to initialize the PyAnatomist</span>
+<span class="sd">                                     viewer</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span> <span class="o">=</span> <span class="n">AnaSimpleViewer2</span><span class="p">(</span><span class="n">init_global_handlers</span><span class="p">)</span>
+        <span class="c1"># Track the total number of active viewers to manage PyAnatomist&#39;s</span>
+        <span class="c1"># lifecycle</span>
+        <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_mia_viewers_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="c1"># Set up UI and connect actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_ui</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._add_dialog_buttons">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._add_dialog_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">_add_dialog_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add action buttons to the filter dialog.</span>
+
+<span class="sd">        :param dialog: Parent dialog.</span>
+<span class="sd">        :param layout: Layout to add buttons to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hlay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hlay</span><span class="p">)</span>
+        <span class="c1"># Import button</span>
+        <span class="n">ok</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Import&quot;</span><span class="p">)</span>
+        <span class="n">ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        <span class="n">ok</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">ok</span><span class="p">)</span>
+        <span class="c1"># Cancel button</span>
+        <span class="n">cancel</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+        <span class="n">cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">reject</span><span class="p">)</span>
+        <span class="n">hlay</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel</span><span class="p">)</span>
+        <span class="n">hlay</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._apply_preferences">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._apply_preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">_apply_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the settings from the preferences dialog.</span>
+
+<span class="sd">        :param dialog: Preferences dialog containing the user selections.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get new values</span>
+        <span class="n">new_config</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">config_box</span><span class="o">.</span><span class="n">currentText</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">new_ref</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ref_box</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">()</span>
+        <span class="n">new_framerate</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">slider</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+        <span class="c1"># Get current values for comparison</span>
+        <span class="n">current_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getViewerConfig</span><span class="p">()</span>
+        <span class="n">current_ref</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_referential</span><span class="p">()</span>
+        <span class="c1"># Save new values</span>
+        <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">setViewerFramerate</span><span class="p">(</span><span class="n">new_framerate</span><span class="p">)</span>
+        <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">setViewerConfig</span><span class="p">(</span><span class="n">new_config</span><span class="p">)</span>
+        <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">set_referential</span><span class="p">(</span><span class="n">new_ref</span><span class="p">)</span>
+
+        <span class="c1"># Apply changes that require viewer update</span>
+        <span class="k">if</span> <span class="n">new_config</span> <span class="o">!=</span> <span class="n">current_config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">changeConfig</span><span class="p">(</span><span class="n">new_config</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">new_ref</span> <span class="o">!=</span> <span class="n">current_ref</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">changeRef</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._create_preferences_dialog">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._create_preferences_dialog">[docs]</a>
+    <span class="k">def</span> <span class="nf">_create_preferences_dialog</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">current_framerate</span><span class="p">,</span> <span class="n">current_config</span><span class="p">,</span> <span class="n">current_ref</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create the preferences dialog with all settings controls.</span>
+
+<span class="sd">        :param current_framerate: Current animation frame rate.</span>
+<span class="sd">        :param current_config: Current display configuration (neuro/radio).</span>
+<span class="sd">        :param current_ref: Current referential setting.</span>
+
+<span class="sd">        :return (QDialog): Configured preferences dialog.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="p">()</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Preferences&quot;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">600</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="c1"># Configuration selection (Neuro/Radio)</span>
+        <span class="n">config_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">config_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Configuration: &quot;</span><span class="p">))</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">config_box</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">config_box</span><span class="o">.</span><span class="n">addItems</span><span class="p">([</span><span class="s2">&quot;Neuro&quot;</span><span class="p">,</span> <span class="s2">&quot;Radio&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">current_config</span> <span class="o">==</span> <span class="s2">&quot;radio&quot;</span><span class="p">:</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">config_box</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">config_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">config_box</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">config_layout</span><span class="p">)</span>
+        <span class="c1"># Frame rate slider</span>
+        <span class="n">frame_rate_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">frame_rate_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Automatic time image display:&quot;</span><span class="p">))</span>
+        <span class="n">frame_rate_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;slow&quot;</span><span class="p">))</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">slider</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QSlider</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">Horizontal</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">slider</span><span class="o">.</span><span class="n">setRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">slider</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">current_framerate</span><span class="p">))</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">slider</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QSize</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+        <span class="n">frame_rate_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">slider</span><span class="p">)</span>
+        <span class="n">frame_rate_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;fast&quot;</span><span class="p">))</span>
+        <span class="n">frame_rate_layout</span><span class="o">.</span><span class="n">insertSpacing</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">frame_rate_layout</span><span class="p">)</span>
+        <span class="c1"># Referential selection</span>
+        <span class="n">ref_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">ref_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Referential: &quot;</span><span class="p">))</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">ref_box</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">ref_box</span><span class="o">.</span><span class="n">addItems</span><span class="p">([</span><span class="s2">&quot;World Coordinates&quot;</span><span class="p">,</span> <span class="s2">&quot;Image referential&quot;</span><span class="p">])</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">ref_box</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">current_ref</span><span class="p">))</span>
+        <span class="n">ref_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">ref_box</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">ref_layout</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Buttons</span>
+        <span class="n">button_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">save_button</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Save&quot;</span><span class="p">)</span>
+        <span class="n">save_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        <span class="n">save_button</span><span class="o">.</span><span class="n">setDefault</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">save_button</span><span class="p">)</span>
+        <span class="n">cancel_button</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+        <span class="n">cancel_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">reject</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">cancel_button</span><span class="p">)</span>
+        <span class="n">button_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">button_layout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dialog</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._process_selected_documents">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._process_selected_documents">[docs]</a>
+    <span class="k">def</span> <span class="nf">_process_selected_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process user&#39;s document selection and display the selected files.&quot;&quot;&quot;</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">()</span>
+        <span class="n">selected_files</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">row</span><span class="p">()</span>
+                <span class="c1"># Get the filename of the scan from the first column</span>
+                <span class="n">scan_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
+                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+                <span class="p">)</span>
+                <span class="c1"># Convert to absolute path</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">selected_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">selected_files</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">display_files</span><span class="p">(</span><span class="n">selected_files</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._setup_search_interface">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._setup_search_interface">[docs]</a>
+    <span class="k">def</span> <span class="nf">_setup_search_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up the search bar and related UI elements.</span>
+
+<span class="sd">        :param dialog: Parent dialog for the search interface.</span>
+<span class="sd">        :param layout: Layout to add search components to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Title label</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Search by FileName: &quot;</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="c1"># Search bar with clear button</span>
+        <span class="n">search_bar_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="c1"># Search text field</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span> <span class="o">=</span> <span class="n">RapidSearch</span><span class="p">(</span><span class="n">dialog</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_str</span><span class="p">)</span>
+        <span class="n">search_bar_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="p">)</span>
+        <span class="n">search_bar_layout</span><span class="o">.</span><span class="n">addSpacing</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="c1"># Clear button</span>
+        <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
+        <span class="n">button_cross</span> <span class="o">=</span> <span class="n">QToolButton</span><span class="p">()</span>
+        <span class="n">button_cross</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color:rgb(255, 255, 255);&quot;</span><span class="p">)</span>
+        <span class="n">button_cross</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span>
+            <span class="n">QIcon</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sources_images_dir</span><span class="p">,</span> <span class="s2">&quot;gray_cross.png&quot;</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="n">button_cross</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_search_bar</span><span class="p">)</span>
+        <span class="n">search_bar_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button_cross</span><span class="p">)</span>
+        <span class="c1"># Add to main layout</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">search_bar_layout</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addSpacing</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer._setup_ui">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer._setup_ui">[docs]</a>
+    <span class="k">def</span> <span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up the user interface components and connect signals.&quot;&quot;&quot;</span>
+        <span class="c1"># Get references to PyAnatomist widget actions</span>
+        <span class="n">awidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span>
+        <span class="n">filter_action</span> <span class="o">=</span> <span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;filterAction&quot;</span><span class="p">)</span>
+        <span class="n">preferences_action</span> <span class="o">=</span> <span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span>
+            <span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;actionPreferences&quot;</span>
+        <span class="p">)</span>
+        <span class="n">screenshot_action</span> <span class="o">=</span> <span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span>
+            <span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;actionprint_view&quot;</span>
+        <span class="p">)</span>
+        <span class="c1"># Connect actions to methods</span>
+        <span class="n">filter_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">)</span>
+        <span class="n">preferences_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preferences</span><span class="p">)</span>
+        <span class="n">screenshot_action</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">screenshot</span><span class="p">)</span>
+        <span class="c1"># Layout setup</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="c1"># Make PyAnatomist widget expand to fill available space</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">setSizePolicy</span><span class="p">(</span>
+            <span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QSizePolicy</span><span class="o">.</span><span class="n">Expanding</span>
+        <span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.close">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.close">[docs]</a>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Close the viewer and properly clean up PyAnatomist resources.</span>
+
+<span class="sd">        If this is the last MIA viewer instance, closes PyAnatomist entirely.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="c1"># Decrement viewer count</span>
+        <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_mia_viewers_count</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="c1"># Close Anatomist if no viewers remain</span>
+        <span class="n">close_ana</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">_mia_viewers_count</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">closeAll</span><span class="p">(</span><span class="n">close_ana</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.display_files">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.display_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Load and display the specified files in the viewer.</span>
+
+<span class="sd">        :param files (list): List of file paths to display.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">loadObject</span><span class="p">(</span><span class="n">files</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.displayed_files">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.displayed_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the list of currently displayed files.</span>
+
+<span class="sd">        :return (list): File paths currently displayed in the viewer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.filter_documents">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.filter_documents">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Open a dialog to filter and select documents to display.</span>
+
+<span class="sd">        Allows searching and filtering documents loaded in the Databrowser</span>
+<span class="sd">        and importing selected ones into the viewer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="p">()</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Filter documents&quot;</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="mi">1150</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="c1"># Set up search interface</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_search_interface</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+            <span class="c1"># Create data browser table</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span> <span class="o">=</span> <span class="n">TableDataBrowser</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">,</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="n">database_data</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">(),</span>
+                <span class="kc">False</span><span class="p">,</span>
+                <span class="kc">True</span><span class="p">,</span>
+                <span class="n">link_viewer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="p">)</span>
+        <span class="c1"># Add action buttons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_dialog_buttons</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">)</span>
+        <span class="c1"># Reducing the list of scans to selection</span>
+        <span class="n">all_scans</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">documents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">documents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">all_scans</span><span class="p">)</span>
+
+        <span class="c1"># Show dialog and process results</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_process_selected_documents</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.preferences">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.preferences">[docs]</a>
+    <span class="k">def</span> <span class="nf">preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Open the preferences dialog to configure viewer settings.</span>
+
+<span class="sd">        Allows configuring display mode (Neuro/Radio), animation speed,</span>
+<span class="sd">        and coordinate system referential.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get initial config:</span>
+        <span class="n">current_framerate</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getViewerFramerate</span><span class="p">()</span>
+        <span class="n">current_config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getViewerConfig</span><span class="p">()</span>
+        <span class="n">current_ref</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_referential</span><span class="p">()</span>
+        <span class="c1"># Create dialog</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_preferences_dialog</span><span class="p">(</span>
+            <span class="n">current_framerate</span><span class="p">,</span> <span class="n">current_config</span><span class="p">,</span> <span class="n">current_ref</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Show dialog and process results</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec_</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_preferences</span><span class="p">(</span><span class="n">dialog</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.remove_files">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.remove_files">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">         Remove specified files from the viewer.</span>
+
+<span class="sd">        :param files (list): List of file paths to remove from display.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">deleteObjectsFromFiles</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="k">if</span> <span class="n">doc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.reset_search_bar">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.reset_search_bar">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the search bar text.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.screenshot">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.screenshot">[docs]</a>
+    <span class="k">def</span> <span class="nf">screenshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Take a screenshot of the current viewer state.</span>
+
+<span class="sd">        Currently displays a &quot;Not yet implemented&quot; message.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Information</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Not yet implemented!&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Information&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setStandardButtons</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.search_str">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.search_str">[docs]</a>
+    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_term</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Search for documents matching the given term and update the view.</span>
+
+<span class="sd">        Handles special case for NOT_DEFINED_VALUE as well as normal text</span>
+<span class="sd">        search. Updates the table to show only matching documents.</span>
+
+<span class="sd">        :param search_term (str): Text to search for in documents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
+        <span class="n">matching_documents</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">search_term</span><span class="p">:</span>
+            <span class="c1"># Show all documents when search is empty</span>
+            <span class="n">matching_documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
+
+                <span class="c1"># Create appropriate filter based on search term</span>
+                <span class="k">if</span> <span class="n">search_term</span> <span class="o">==</span> <span class="n">NOT_DEFINED_VALUE</span><span class="p">:</span>
+                    <span class="c1"># Special case for undefined values</span>
+                    <span class="n">filter_query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">prepare_not_defined_filter</span><span class="p">(</span>
+                        <span class="n">database_data</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">()</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Scans matching the search</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">filter_query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">prepare_filter</span><span class="p">(</span>
+                        <span class="n">search_term</span><span class="p">,</span>
+                        <span class="n">database_data</span><span class="o">.</span><span class="n">get_shown_tags</span><span class="p">(),</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_search</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                <span class="c1"># Get matching documents from database</span>
+                <span class="n">matching_docs</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">filter_documents</span><span class="p">(</span>
+                    <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">filter_query</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Creating the list of scans</span>
+            <span class="n">matching_documents</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span><span class="p">[</span><span class="n">TAG_FILENAME</span><span class="p">]</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">matching_docs</span><span class="p">]</span>
+
+        <span class="c1"># Update table with matching documents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span> <span class="o">=</span> <span class="n">matching_documents</span>
+        <span class="c1"># Rows updated</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">update_visualized_rows</span><span class="p">(</span><span class="n">old_scan_list</span><span class="p">)</span>
+        <span class="c1"># Save current search in project</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">search_bar</span> <span class="o">=</span> <span class="n">search_term</span></div>
+
+
+<div class="viewcode-block" id="MiaViewer.set_documents">
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.MiaViewer.set_documents">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the viewer with a set of documents from a project.</span>
+
+<span class="sd">        :param project: Project containing the documents.</span>
+<span class="sd">        :param documents (list): List of document filenames to make available.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">project</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">documents</span> <span class="o">=</span> <span class="n">documents</span></div>
+</div>
+
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../../../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

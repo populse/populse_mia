@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.data\_viewer.anatomist\_2.mia\_anatomist
+=====================================================================
+
+.. automodule:: populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MiaViewer
+   

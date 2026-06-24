@@ -1,0 +1,17 @@
+populse\_mia.user\_interface.data\_viewer.anatomist\_2
+======================================================
+
+.. automodule:: populse_mia.user_interface.data_viewer.anatomist_2
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   anasimpleviewer2
+   mia_anatomist
+   resources
+   resources_snd_window
+   snd_window

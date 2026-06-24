@@ -1,0 +1,13 @@
+populse\_mia.user\_interface.data\_viewer.anatomist\_2.resources
+================================================================
+
+.. automodule:: populse_mia.user_interface.data_viewer.anatomist_2.resources
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      qCleanupResources
+      qInitResources
+   

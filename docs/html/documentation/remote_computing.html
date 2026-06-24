@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Remote computing with Popluse-MIA &#8212; populse_mia 3.0.0-dev+00270a5e documentation</title>
+    <title>Remote computing with Popluse-MIA &#8212; populse_mia 3.0.0-dev+7d6f26e7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=77510892"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=29b3f3bb"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
@@ -17,10 +17,10 @@
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+00270a5e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7d6f26e7 documentation</span></a></h1>
         <h2 class="heading"><span>Remote computing with Popluse-MIA</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -32,7 +32,7 @@
         
   <section id="remote-computing-with-popluse-mia">
 <h1>Remote computing with Popluse-MIA<a class="headerlink" href="#remote-computing-with-popluse-mia" title="Link to this heading">¶</a></h1>
-<p>Remote computing is performed using <a class="reference external" href="https://populse.github.io/soma-workflow/index.html">Soma-Workflow</a>.</p>
+<p>Remote computing is performed using <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/index.html">Soma-Workflow</a>.</p>
 <p>It needs several install steps before being able to process:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#install-soma-workflow-on-the-computing-server"><span class="std std-ref">Install Soma-Workflow on the computing server</span></a></p></li>
@@ -100,7 +100,7 @@
         </div><p>The first point, client running natively or in a container, is normally not a problem and should make no difference. So the discussion will mainly focus on the two last points.</p>
 <section id="install-soma-workflow-on-the-computing-server">
 <span id="id1"></span><h2>Install Soma-Workflow on the computing server<a class="headerlink" href="#install-soma-workflow-on-the-computing-server" title="Link to this heading">¶</a></h2>
-<p>read <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#remote-execution">Soma-Workflow remote execution</a></p>
+<p>read <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#remote-execution">Soma-Workflow remote execution</a></p>
 <section id="native-installation">
 <h3>Native installation<a class="headerlink" href="#native-installation" title="Link to this heading">¶</a></h3>
 <p>If the computing resource is a cluster with a jobs resource manager (DRMS) like PBS, Grid Engine, Slurm or another one, then this manager needs to be operated by Soma-Workflow, and thus cannot run inside a container: in this situation, Soma-Workflow should be installed natively on the cluster front-end machine.</p>
@@ -121,14 +121,14 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/popul
 </section>
 <section id="container-installation">
 <h3>Container installation<a class="headerlink" href="#container-installation" title="Link to this heading">¶</a></h3>
-<p>The client just needs to know how to run it: the client config should specify the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a>. See the <a class="reference internal" href="#configure-soma-workflow-on-the-client-machine"><span class="std std-ref">client configuration</span></a> below.</p>
+<p>The client just needs to know how to run it: the client config should specify the <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a>. See the <a class="reference internal" href="#configure-soma-workflow-on-the-client-machine"><span class="std std-ref">client configuration</span></a> below.</p>
 </section>
 </section>
 <section id="configure-soma-workflow-on-the-computing-resource">
 <span id="id2"></span><h2>Configure Soma-Workflow on the computing resource<a class="headerlink" href="#configure-soma-workflow-on-the-computing-resource" title="Link to this heading">¶</a></h2>
-<p>See <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-server">Soma-Workflow documentation</a>.</p>
+<p>See <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-server">Soma-Workflow documentation</a>.</p>
 <p>The configuration file <code class="docutils literal notranslate"><span class="pre">$HOME/.soma-workflow.cfg</span></code> has to be created or edited on the computing resource side, on the user account. It needs to declare the computing resource, with an identifier.</p>
-<p>If the computing server will run jobs inside a container, then each command has to be prefixed with the container run command, such as <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">/home/myself/container.sif</span></code>, or <code class="docutils literal notranslate"><span class="pre">/home/myself/brainvisa/bin/bv</span></code> for a <a class="reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a> like a <a class="reference external" href="https://brainvisa.info">BrainVisa distribution</a>. This is done using the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#container-command">CONTAINER_COMMAND option</a>, as explained <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">in this documentation</a>.</p>
+<p>If the computing server will run jobs inside a container, then each command has to be prefixed with the container run command, such as <code class="docutils literal notranslate"><span class="pre">singularity</span> <span class="pre">run</span> <span class="pre">/home/myself/container.sif</span></code>, or <code class="docutils literal notranslate"><span class="pre">/home/myself/brainvisa/bin/bv</span></code> for a <a class="extlink-casadistro reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a> like a <a class="reference external" href="https://brainvisa.info">BrainVisa distribution</a>. This is done using the <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#container-command">CONTAINER_COMMAND option</a>, as explained <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">in this documentation</a>.</p>
 <p>Ex - <strong>On the remote computing login node</strong>:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[dr144257@alambic-py3]</span>
 <span class="na">SERVER_NAME</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="s">dr144257@alambic-py3</span>
@@ -143,10 +143,10 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/popul
 </section>
 <section id="configure-soma-workflow-on-the-client-machine">
 <span id="id3"></span><h2>Configure Soma-Workflow on the client machine<a class="headerlink" href="#configure-soma-workflow-on-the-client-machine" title="Link to this heading">¶</a></h2>
-<p>See <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-client">Soma-Workflow documentation</a>.</p>
+<p>See <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#client-server-application-client">Soma-Workflow documentation</a>.</p>
 <p>The configuration file <code class="docutils literal notranslate"><span class="pre">$HOME/.soma-workflow.cfg</span></code> has to be created or edited on the client system machine side, on the user account. It needs to declare the remote computing resource, with the same identifier it has been declared on the server side.</p>
-<p>If the client runs inside a container (such as a <a class="reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a>) using a separate user home directory, then the config file must be located (or symlinked, or mounted) in the container home directory.</p>
-<p>If the Soma-Workflow server on the remote computing side should run inside a container, then the client needs to know how to run the container. This is done by specifying the <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a> as explained in <a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">the remote execution doc</a>. Typically we will use something like:</p>
+<p>If the client runs inside a container (such as a <a class="extlink-casadistro reference external" href="https://brainvisa.github.io/casa-distro/index.html">Casa-Distro container</a>) using a separate user home directory, then the config file must be located (or symlinked, or mounted) in the container home directory.</p>
+<p>If the Soma-Workflow server on the remote computing side should run inside a container, then the client needs to know how to run the container. This is done by specifying the <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#python-command-option">PYTHON_COMMAND option</a> as explained in <a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#running-servers-and-jobs-in-a-container">the remote execution doc</a>. Typically we will use something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">PYTHON_COMMAND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>bv<span class="w"> </span>python
 </pre></div>
 </div>
@@ -243,8 +243,8 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/popul
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="#disconnection-is-partly-supported-in-mia"><span class="std std-ref">Disconnection is partly supported in MIA</span></a></p></li>
 <li><p><a class="reference internal" href="#file-transfers-limitations"><span class="std std-ref">File transfers limitations</span></a></p></li>
-<li><p><a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#cluster-admins-may-not-like-servers-running-on-the-login-node">Cluster admins may not like servers running on the login node</a></p></li>
-<li><p><a class="reference external" href="https://populse.github.io/soma-workflow/install_config.html#why-it-s-difficult-and-often-impossible-to-run-the-soma-workflow-server-inside-a-container">Why it’s difficult and often impossible to run the Soma-Workflow server inside a container</a></p></li>
+<li><p><a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#cluster-admins-may-not-like-servers-running-on-the-login-node">Cluster admins may not like servers running on the login node</a></p></li>
+<li><p><a class="extlink-somaworkflow reference external" href="https://populse.github.io/soma-workflow/install_config.html#why-it-s-difficult-and-often-impossible-to-run-the-soma-workflow-server-inside-a-container">Why it’s difficult and often impossible to run the Soma-Workflow server inside a container</a></p></li>
 </ol>
 <section id="disconnection-is-partly-supported-in-mia">
 <span id="id7"></span><h3>Disconnection is partly supported in MIA<a class="headerlink" href="#disconnection-is-partly-supported-in-mia" title="Link to this heading">¶</a></h3>
@@ -263,7 +263,7 @@ It will be done partly when clicking the “cleanup” button.</p>
 
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -273,7 +273,7 @@ It will be done partly when clicking the “cleanup” button.</p>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

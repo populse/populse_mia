@@ -4,26 +4,9 @@ populse\_mia.data\_manager.project
 .. automodule:: populse_mia.data_manager.project
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
    
       Project
    
-   
-
-   
-   
-   
-
-
-

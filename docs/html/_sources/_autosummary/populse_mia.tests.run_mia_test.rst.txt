@@ -1,13 +1,8 @@
-populse\_mia.tests.run\_mia\_test
+﻿populse\_mia.tests.run\_mia\_test
 =================================
 
 .. automodule:: populse_mia.tests.run_mia_test
 
-   
-   
-   
-
-   
    
    .. rubric:: Functions
 
@@ -15,10 +10,6 @@ populse\_mia.tests.run\_mia\_test
    
       add_to_syspath
       qt_message_handler
-   
-   
-
-   
    
    .. rubric:: Classes
 
@@ -33,11 +24,3 @@ populse\_mia.tests.run\_mia\_test
       TestMIAPipelineManagerTab
       Test_Z_MIAOthers
    
-   
-
-   
-   
-   
-
-
-

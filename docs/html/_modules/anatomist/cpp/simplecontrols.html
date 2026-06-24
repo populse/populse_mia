@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>anatomist.cpp.simplecontrols &#8212; populse_mia 3.0.0-dev+7d6f26e7 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=29b3f3bb"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
+          <span>populse_mia 3.0.0-dev+7d6f26e7 documentation</span></a></h1>
+        <h2 class="heading"><span>anatomist.cpp.simplecontrols</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for anatomist.cpp.simplecontrols</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1">#  This software and supporting documentation are distributed by</span>
+<span class="c1">#      Institut Federatif de Recherche 49</span>
+<span class="c1">#      CEA/NeuroSpin, Batiment 145,</span>
+<span class="c1">#      91191 Gif-sur-Yvette cedex</span>
+<span class="c1">#      France</span>
+<span class="c1">#</span>
+<span class="c1"># This software is governed by the CeCILL license version 2 under</span>
+<span class="c1"># French law and abiding by the rules of distribution of free software.</span>
+<span class="c1"># You can  use, modify and/or redistribute the software under the</span>
+<span class="c1"># terms of the CeCILL license version 2 as circulated by CEA, CNRS</span>
+<span class="c1"># and INRIA at the following URL &quot;http://www.cecill.info&quot;.</span>
+<span class="c1">#</span>
+<span class="c1"># As a counterpart to the access to the source code and  rights to copy,</span>
+<span class="c1"># modify and redistribute granted by the license, users are provided only</span>
+<span class="c1"># with a limited warranty  and the software&#39;s author,  the holder of the</span>
+<span class="c1"># economic rights,  and the successive licensors  have only  limited</span>
+<span class="c1"># liability.</span>
+<span class="c1">#</span>
+<span class="c1"># In this respect, the user&#39;s attention is drawn to the risks associated</span>
+<span class="c1"># with loading,  using,  modifying and/or developing or reproducing the</span>
+<span class="c1"># software by the user in light of its specific status of free software,</span>
+<span class="c1"># that may mean  that it is complicated to manipulate,  and  that  also</span>
+<span class="c1"># therefore means  that it is reserved for developers  and  experienced</span>
+<span class="c1"># professionals having in-depth computer knowledge. Users are therefore</span>
+<span class="c1"># encouraged to load and test the software&#39;s suitability as regards their</span>
+<span class="c1"># requirements in conditions enabling the security of their systems and/or</span>
+<span class="c1"># data to be ensured and,  more generally, to use and operate it in the</span>
+<span class="c1"># same conditions as regards security.</span>
+<span class="c1">#</span>
+<span class="c1"># The fact that you are presently reading this means that you have had</span>
+<span class="c1"># knowledge of the CeCILL license version 2 and that you accept its terms.</span>
+
+<span class="sd">&#39;&#39;&#39;Simplified controls useful to avoid complex interactions.</span>
+
+<span class="sd">When you need them in a custom application, you need to register them first in</span>
+<span class="sd">the :class:`ControlManager`. They are already registered in the action/control</span>
+<span class="sd">dictionaries.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="kn">import</span> <span class="nn">anatomist.cpp</span> <span class="k">as</span> <span class="nn">anatomist</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+
+<span class="k">class</span> <span class="nc">ResetFOVAction</span><span class="p">(</span><span class="n">anatomist</span><span class="o">.</span><span class="n">Action</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;ResetFOVAction&#39;</span>
+
+    <span class="k">def</span> <span class="nf">resetFOV</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">()</span><span class="o">.</span><span class="n">aWindow</span><span class="p">()</span><span class="o">.</span><span class="n">focusView</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="Simple2DControl">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.Simple2DControl">[docs]</a>
+<span class="k">class</span> <span class="nc">Simple2DControl</span><span class="p">(</span><span class="n">anatomist</span><span class="o">.</span><span class="n">Control</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Simplified control for 2D views&#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="Simple2DControl.__init__">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.Simple2DControl.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Simple2DControl&#39;</span><span class="p">):</span>
+        <span class="n">anatomist</span><span class="o">.</span><span class="n">Control</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Simple2DControl.eventAutoSubscription">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.Simple2DControl.eventAutoSubscription">[docs]</a>
+    <span class="k">def</span> <span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span>
+        <span class="n">NoModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">NoModifier</span>
+        <span class="n">ShiftModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">ShiftModifier</span>
+        <span class="n">ControlModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">ControlModifier</span>
+        <span class="n">AltModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">AltModifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouseLongEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;LinkAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execLink</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;LinkAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">execLink</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;LinkAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">endLink</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouseLongEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">MidButton</span><span class="p">,</span> <span class="n">ShiftModifier</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Zoom3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">beginZoom</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Zoom3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">moveZoom</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Zoom3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">endZoom</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wheelEventSubscribe</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Zoom3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">zoomWheel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_C</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Trackball&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setCenter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_C</span><span class="p">,</span> <span class="n">AltModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Trackball&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">showRotationCenter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouseLongEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">MidButton</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+                                         <span class="s2">&quot;Translate3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">beginTranslate</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+                                         <span class="s2">&quot;Translate3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">moveTranslate</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;Translate3DAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">endTranslate</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_PageUp</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;SliceAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">previousSlice</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_PageDown</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;SliceAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nextSlice</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_PageUp</span><span class="p">,</span> <span class="n">ShiftModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;SliceAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">previousTime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_PageDown</span><span class="p">,</span> <span class="n">ShiftModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;SliceAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nextTime</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_L</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;SliceAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">toggleLinkedOnSlider</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Space</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startOrStop</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_S</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sliceOn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_T</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timeOn</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_M</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">nextMode</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Plus</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">increaseSpeed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Plus</span><span class="p">,</span> <span class="n">ShiftModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">increaseSpeed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Minus</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">decreaseSpeed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">myActions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">:</span> <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;MovieAction&quot;</span><span class="p">),</span>
+                          <span class="s2">&quot;ContinuousTrackball&quot;</span><span class="p">:</span> <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;ContinuousTrackball&quot;</span><span class="p">)}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouseLongEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">RightButton</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+                                         <span class="s1">&#39;PaletteContrastAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">startContrast</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span>
+                                         <span class="s1">&#39;PaletteContrastAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">moveContrast</span><span class="p">,</span>
+                                     <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;PaletteContrastAction&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">stopContrast</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_C</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;PaletteContrastAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resetPalette</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Home</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;ResetFOVAction&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resetFOV</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Simple2DControl.doAlsoOnDeselect">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.Simple2DControl.doAlsoOnDeselect">[docs]</a>
+    <span class="k">def</span> <span class="nf">doAlsoOnDeselect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">ac</span> <span class="ow">in</span> <span class="n">six</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">myActions</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">MovieAction</span><span class="p">)</span> <span class="ow">and</span> <span class="n">a</span><span class="o">.</span><span class="n">isRunning</span><span class="p">():</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">startOrStop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">ContinuousTrackball</span><span class="p">):</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+</div>
+
+
+
+<span class="k">class</span> <span class="nc">Simple3DControl</span><span class="p">(</span><span class="n">Simple2DControl</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;Simplified control for 3D views: still allow rotation using mouse mid button</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">26</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Simple3DControl&#39;</span><span class="p">):</span>
+        <span class="n">Simple2DControl</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span>
+        <span class="n">NoModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">NoModifier</span>
+        <span class="n">ShiftModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">ShiftModifier</span>
+        <span class="n">ControlModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">ControlModifier</span>
+        <span class="n">Simple2DControl</span><span class="o">.</span><span class="n">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mouseLongEventSubscribe</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">.</span><span class="n">MidButton</span><span class="p">,</span> <span class="n">NoModifier</span><span class="p">,</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;ContinuousTrackball&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">beginTrackball</span><span class="p">,</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;ContinuousTrackball&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">moveTrackball</span><span class="p">,</span>
+            <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s1">&#39;ContinuousTrackball&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">endTrackball</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">keyPressEventSubscribe</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">Key_Space</span><span class="p">,</span> <span class="n">ControlModifier</span><span class="p">,</span>
+                                    <span class="n">pool</span><span class="o">.</span><span class="n">action</span><span class="p">(</span><span class="s2">&quot;ContinuousTrackball&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">startOrStop</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="registerSimpleControls">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.registerSimpleControls">[docs]</a>
+<span class="k">def</span> <span class="nf">registerSimpleControls</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39; register actions and controls&#39;&#39;&#39;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">)</span>
+    <span class="n">iconpath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">anatomistSharedPath</span><span class="p">()),</span> <span class="s1">&#39;icons&#39;</span><span class="p">)</span>
+    <span class="n">pix</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QPixmap</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iconpath</span><span class="p">,</span> <span class="s1">&#39;simple2Dcontrol.png&#39;</span><span class="p">))</span>
+    <span class="n">anatomist</span><span class="o">.</span><span class="n">IconDictionary</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addIcon</span><span class="p">(</span><span class="s1">&#39;Simple2DControl&#39;</span><span class="p">,</span> <span class="n">pix</span><span class="p">)</span>
+    <span class="n">pix</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QPixmap</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">iconpath</span><span class="p">,</span> <span class="s1">&#39;simple3Dcontrol.png&#39;</span><span class="p">))</span>
+    <span class="n">anatomist</span><span class="o">.</span><span class="n">IconDictionary</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">addIcon</span><span class="p">(</span><span class="s1">&#39;Simple3DControl&#39;</span><span class="p">,</span> <span class="n">pix</span><span class="p">)</span>
+
+    <span class="k">del</span> <span class="n">pix</span><span class="p">,</span> <span class="n">iconpath</span><span class="p">,</span> <span class="n">a</span>  <span class="c1"># , os, QtGui</span>
+
+    <span class="n">ad</span> <span class="o">=</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">ActionDictionary</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+    <span class="n">ad</span><span class="o">.</span><span class="n">addAction</span><span class="p">(</span><span class="s1">&#39;ResetFOVAction&#39;</span><span class="p">,</span> <span class="n">ResetFOVAction</span><span class="p">)</span>
+    <span class="n">cd</span> <span class="o">=</span> <span class="n">anatomist</span><span class="o">.</span><span class="n">ControlDictionary</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span>
+    <span class="n">cd</span><span class="o">.</span><span class="n">addControl</span><span class="p">(</span><span class="s1">&#39;Simple2DControl&#39;</span><span class="p">,</span> <span class="n">Simple2DControl</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="n">cd</span><span class="o">.</span><span class="n">addControl</span><span class="p">(</span><span class="s1">&#39;Simple3DControl&#39;</span><span class="p">,</span> <span class="n">Simple3DControl</span><span class="p">,</span> <span class="mi">26</span><span class="p">)</span>
+    <span class="c1">#cm = anatomist.ControlManager.instance()</span>
+    <span class="c1">#cm.addControl( &#39;QAGLWidget3D&#39;, &#39;&#39;, &#39;Simple2DControl&#39; )</span>
+    <span class="c1">#cm.addControl( &#39;QAGLWidget3D&#39;, &#39;&#39;, &#39;Simple3DControl&#39; )</span>
+
+    <span class="k">del</span> <span class="n">cd</span><span class="p">,</span> <span class="n">ad</span></div>
+
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

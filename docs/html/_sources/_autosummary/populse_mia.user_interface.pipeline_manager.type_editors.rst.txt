@@ -4,15 +4,6 @@ populse\_mia.user\_interface.pipeline\_manager.type\_editors
 .. automodule:: populse_mia.user_interface.pipeline_manager.type_editors
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
@@ -22,11 +13,3 @@ populse\_mia.user\_interface.pipeline\_manager.type\_editors
       PopulseOffscreenListFileControlWidget
       PopulseUndefinedControlWidget
    
-   
-
-   
-   
-   
-
-
-

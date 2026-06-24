@@ -5,20 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+00270a5e documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+7d6f26e7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=77510892"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=29b3f3bb"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+00270a5e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7d6f26e7 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -31,15 +31,6 @@
   <section id="module-populse_mia.user_interface.data_viewer.anatomist.mia_anatomist">
 <span id="populse-mia-user-interface-data-viewer-anatomist-mia-anatomist"></span><h1>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.anatomist.mia_anatomist" title="Link to this heading">¶</a></h1>
 <p>Mia data viewer implementation based on <a class="reference external" href="http://brainvisa.info/anatomist/user_doc/index.html">Anatomist</a></p>
-<dl class="simple">
-<dt>Contains:</dt><dd><dl class="simple">
-<dt>Class:</dt><dd><ul class="simple">
-<li><p>MiaViewer</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -49,999 +40,34 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">TableDataBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QTableWidget" title="PyQt5.QtWidgets.QTableWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QTableWidget</span></code></a></p>
-<p>Table widget that displays the documents contained in the database and
-their associated tags.</p>
+<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">MiaViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a></p>
+<p>A data viewer for Mia (Multiparametric Image Analysis) using PyAnatomist.</p>
+<p><a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mia</span> <span class="pre">data</span> <span class="pre">viewer</span></code></a>
+implementation based on
+<a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a></p>
+<p>This class provides a specialized viewer for displaying and managing
+medical imaging files with additional filtering and visualization
+capabilities.</p>
 <p>Contains:</p>
 <blockquote>
 <div><p>Methods:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>add_column: Add a column to the table.</p></li>
-<li><p>add_columns: Add columns to the table.</p></li>
-<li><p>add_path: Call a pop-up to add any document to the project.</p></li>
-<li><p>add_rows: Insert rows if they are not already in the table.</p></li>
-<li><p>batch_update: Context manager for efficient batch updates.</p></li>
-<li><p>clear_cell: Clear the selected cells.</p></li>
-<li><p>context_menu_table: Create the context menu of the table.</p></li>
-<li><p>delete_from_brick: Delete a document from its brick id.</p></li>
-<li><p>display_file: Tries to display a file in the user’s preferred
-application.</p></li>
-<li><p>display_unreset_values: Display an error message when trying to
-reset user tags.</p></li>
-<li><p>edit_table_data_values: Change values in DataBrowser.</p></li>
-<li><p>fill_cells_update_table: Initialize and fills the cells of the
-table.</p></li>
-<li><p>fill_headers: Initialize and fill the headers of the table.</p></li>
-<li><p>get_current_filter: Get the current data browser selection.</p></li>
-<li><p>get_index_insertion: Get index insertion of a new column.</p></li>
-<li><p>get_scan_row: Return the row index of the scan.</p></li>
-<li><p>get_tag_column: Return the column index of the tag.</p></li>
-<li><p>mouseReleaseEvent: Called when clicking released on cells.</p></li>
-<li><p>multiple_sort_infos: Sort the table according to the tags specify
-in list_tags.</p></li>
-<li><p>multiple_sort_pop_up: Display the multiple sort pop-up.</p></li>
-<li><p>on_cell_changed: Changes the background color and the value of
-cells when edited by the user.</p></li>
-<li><p>remove_scan: Remove documents from table and project.</p></li>
-<li><p>reset_cell: Reset the selected cells to their original values.</p></li>
-<li><p>reset_column: Reset the selected columns to their original
-values.</p></li>
-<li><p>reset_row: Reset the selected rows to their original values.</p></li>
-<li><p>section_moved: Called when the columns of the data_browser are
-moved.</p></li>
-<li><p>select_all_column: Called when single clicking on the column
-header to select the whole column.</p></li>
-<li><p>select_all_columns: Called from context menu to select the
-columns.</p></li>
-<li><p>selection_changed: Called when the selection is changed.</p></li>
-<li><p>show_brick_history: Show brick history pop-up.</p></li>
-<li><p>sort_column: Sort the current column.</p></li>
-<li><p>sort_updated: Called when the button advanced search is called.</p></li>
-<li><p>update_colors: Update the background of all the cells.</p></li>
-<li><p>update_selection: Called after searches to update the selection.</p></li>
-<li><p>update_table: Fill the table with the project’s data.</p></li>
-<li><p>update_visualized_columns: Update the visualized tags.</p></li>
-<li><p>update_visualized_rows: Update the list of documents (scans) in
-the table.</p></li>
-<li><p>visualized_tags_pop_up: Display the visualized tags pop-up.</p></li>
+<li><p>_find_child: Find a child widget by name.</p></li>
+<li><p>_setup_ui: Set up the user interface components for the viewer.</p></li>
+<li><p>close: Close the viewer and manage Anatomist viewer resources.</p></li>
+<li><p>display_files: Display the given files in the Anatomist viewer.</p></li>
+<li><p>displayed_files: Get the list of currently displayed files.</p></li>
+<li><p>filter_documents: Open a dialog to filter and select documents
+for visualization.</p></li>
+<li><p>remove_files: Remove specified files from the viewer.</p></li>
+<li><p>set_documents: Set the current project and documents for the
+viewer.</p></li>
 </ul>
 </div></blockquote>
 </div></blockquote>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize the data table widget with project data and browser context.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance containing data
-and configuration.</p></li>
-<li><p><strong>data_browser</strong> – (DataBrowser) Parent DataBrowser widget that
-contains this table.</p></li>
-<li><p><strong>tags_to_display</strong> – (list[str]) List of metadata tags to show as
-table columns.</p></li>
-<li><p><strong>update_values</strong> – (bool) If True, enables cell editing; if False,
-table is read-only.</p></li>
-<li><p><strong>activate_selection</strong> – (bool) True to enable the selection feature,
-False otherwise.</p></li>
-<li><p><strong>link_viewer</strong><strong>(</strong><strong>bool</strong><strong>)</strong> – If True, links table selection to external
-viewer widget. Defaults to True.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Column sorting and reordering are enabled by default
-(except first column).</p></li>
-<li><p>Extended selection mode is used unless <code class="docutils literal notranslate"><span class="pre">activate_selection</span></code>
-is falsy.</p></li>
-<li><p>A custom context menu is available only when both
-<code class="docutils literal notranslate"><span class="pre">activate_selection</span></code> and <code class="docutils literal notranslate"><span class="pre">link_viewer</span></code> are True.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_column">
-<span class="sig-name descname"><span class="pre">add_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_column" title="Link to this definition">¶</a></dt>
-<dd><p>Add a new column to the table with the specified tag.</p>
-<p>Inserts a column at the given index, configures its header with
-metadata from the database, sets the appropriate delegate based on
-field type, and populates cells with current values from the database.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – (int) Zero-based index where the column should be
-inserted.</p></li>
-<li><p><strong>tag</strong> – (str) Tag name identifying the field to add from the
-database.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Temporarily disconnects item change signals during insertion to
-prevent unwanted event triggers, then reconnects them after
-completion.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_columns">
-<span class="sig-name descname"><span class="pre">add_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_columns" title="Link to this definition">¶</a></dt>
-<dd><p>Add and update table columns based on database fields.</p>
-<p>This method synchronizes the table’s columns with the current database
-schema by:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Adding columns for new database fields that don’t exist in the
-table.</p></li>
-<li><p>Populating new columns with values from the database.</p></li>
-<li><p>Removing columns that no longer exist in the database.</p></li>
-<li><p>Applying appropriate formatting delegates based on field types.</p></li>
-<li><p>Maintaining column visibility settings.</p></li>
-</ul>
-</div></blockquote>
-<p>The method temporarily disconnects item change signals during operation
-to prevent unwanted events, then reconnects them after completion.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>The TAG_FILENAME column is always placed first.</p></li>
-<li><p>Columns are sorted alphabetically (except TAG_FILENAME).</p></li>
-<li><p>System tags (TAG_CHECKSUM, TAG_HISTORY) are excluded.</p></li>
-<li><p>Undefined values are displayed in italic bold text.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_path">
-<span class="sig-name descname"><span class="pre">add_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_path" title="Link to this definition">¶</a></dt>
-<dd><p>Open a dialog to add documents to the current project.</p>
-<p>Creates and displays a PopUpAddPath dialog that allows users to select
-and add document paths to the project’s data browser.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_rows">
-<span class="sig-name descname"><span class="pre">add_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.add_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.add_rows" title="Link to this definition">¶</a></dt>
-<dd><p>Insert rows into the table if they don’t already exist.</p>
-<p>This method adds new scans to the table, populating each column with
-data from the database. It displays a progress dialog during the
-operation and handles special cases like the TAG_BRICKS column with
-custom widgets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rows</strong> – An iterable of scan identifiers to be added to the table.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Duplicate scans (already present in the table) are automatically
-skipped.</p></li>
-<li><p>Sorting is temporarily disabled during the insertion process.</p></li>
-<li><p>The first column (name) is set as non-editable.</p></li>
-<li><p>TAG_BRICKS columns receive custom button widgets for interaction.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.batch_update">
-<span class="sig-name descname"><span class="pre">batch_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disable_sorting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.batch_update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.batch_update" title="Link to this definition">¶</a></dt>
-<dd><p>Context manager for efficient batch updates.</p>
-<p>This manager temporarily disables repainting, signal emission, and
-optionally sorting, allowing multiple modifications to the table
-without triggering unnecessary redraws or signal handling. All previous
-widget states are restored upon exit, even if an exception occurs.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>disable_sorting</strong> – (bool) If True (default), temporarily disables
-sorting during the batch update to prevent rearrangements.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.clear_cell">
-<span class="sig-name descname"><span class="pre">clear_cell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.clear_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.clear_cell" title="Link to this definition">¶</a></dt>
-<dd><p>Clear values from selected cells in the table.</p>
-<p>This method removes data from the currently selected cells in the
-database and updates the UI to reflect the cleared state. The operation
-is recorded in the project’s undo history for potential reversal.</p>
-<dl class="simple">
-<dt>The method performs the following actions for each selected cell:</dt><dd><ul class="simple">
-<li><p>Retrieves the current value from the database.</p></li>
-<li><p>Removes the value from the database.</p></li>
-<li><p>Updates the cell’s visual appearance (italic + bold).</p></li>
-<li><p>Records the change for undo/redo functionality.</p></li>
-</ul>
-</dd>
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Modifies database values in COLLECTION_CURRENT.</p></li>
-<li><p>Updates table cell formatting.</p></li>
-<li><p>Appends operation to project.undos.</p></li>
-<li><p>Clears project.redos.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.context_menu_table">
-<span class="sig-name descname"><span class="pre">context_menu_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.context_menu_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.context_menu_table" title="Link to this definition">¶</a></dt>
-<dd><p>Create and display the context menu for the table, and perform
-the corresponding action based on the user’s selection.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>position</strong> – (QPoint) The mouse cursor position relative to the
-widget.</p>
-</dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>_confirm_action: Display a warning message box with an
-OK/Cancel choice and connect the OK button to a callback
-function.</p></li>
-<li><p>_do_add_document: Safely add a new document to the table.</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.delete_from_brick">
-<span class="sig-name descname"><span class="pre">delete_from_brick</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">brick_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.delete_from_brick"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.delete_from_brick" title="Link to this definition">¶</a></dt>
-<dd><p>Delete a brick and its associated documents from the database.</p>
-<p>This method cleans up the database when a pipeline (composed of
-multiple bricks) is initialized but not executed before another
-pipeline is started or the software is closed. It removes the brick
-and any orphaned output documents that are not used as inputs
-elsewhere.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>brick_id</strong> – (str) The unique identifier of the brick to be
-deleted.</p>
-</dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>extract_document_ids: Extracts all string values from a
-nested dictionary structure.</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.display_file">
-<span class="sig-name descname"><span class="pre">display_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.display_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.display_file" title="Link to this definition">¶</a></dt>
-<dd><p>Open the selected file(s) in the user’s default application.</p>
-<p>Iterates over all selected items in the view, resolves their absolute
-paths, and opens each file using the platform’s default application.</p>
-<p>Supported platforms: Linux, macOS, and Windows.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.display_unreset_values">
-<span class="sig-name descname"><span class="pre">display_unreset_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.display_unreset_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.display_unreset_values" title="Link to this definition">¶</a></dt>
-<dd><p>Displays a warning dialog listing values that cannot be reset.</p>
-<p>This method shows a QMessageBox warning when certain values (such as
-user tags, FileName, or undefined cells) cannot be reset because they
-lack a raw value. The dialog includes a descriptive message and an OK
-button for dismissal.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.edit_table_data_values">
-<span class="sig-name descname"><span class="pre">edit_table_data_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.edit_table_data_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.edit_table_data_values" title="Link to this definition">¶</a></dt>
-<dd><p>Edit and update selected cell values in the DataBrowser table.</p>
-<p>This method handles the selection of cells, validation of list lengths,
-and updating of values in both the table and the database. It supports
-list-type fields and ensures data consistency across selections.</p>
-<dl class="simple">
-<dt>Steps:</dt><dd><ol class="arabic simple">
-<li><p>Collects selected cells and their metadata (coordinates, types,
-lengths, etc.).</p></li>
-<li><p>Validates list lengths for compatibility.</p></li>
-<li><p>Opens a dialog for value modification if valid.</p></li>
-<li><p>Updates the table and database, and records changes for
-undo/redo history.</p></li>
-</ol>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Exits early if the selected tag is ‘TAG_BRICKS’ or if the field
-type is not a list.</p></li>
-<li><p>Disconnects and reconnects the <cite>itemChanged</cite> signal to prevent
-recursive updates.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.fill_cells_update_table">
-<span class="sig-name descname"><span class="pre">fill_cells_update_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.fill_cells_update_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.fill_cells_update_table" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize and populate table cells with scan data from the database.</p>
-<dl class="simple">
-<dt>This method performs the following operations:</dt><dd><ol class="arabic simple">
-<li><p>Creates a progress dialog to track cell population.</p></li>
-<li><p>Retrieves scan documents matching scans_to_visualize from the
-database.</p></li>
-<li><p>Populates each cell with appropriate data based on column type.</p></li>
-<li><p>Handles special cases (name column, bricks column).</p></li>
-<li><p>Applies saved sorting preferences.</p></li>
-<li><p>Resizes rows and columns to fit content.</p></li>
-</ol>
-</dd>
-<dt>Special column handling:</dt><dd><ul class="simple">
-<li><p>Column 0 (name): Read-only, always displays as string.</p></li>
-<li><p>Bricks column: Displays clickable buttons for brick history.</p></li>
-<li><p>Other columns: Editable, type-specific formatting.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Displays a modal progress dialog during population.</p></li>
-<li><p>Temporarily hides the table during updates for performance.</p></li>
-<li><p>Connects cell change signals after population completes.</p></li>
-</ul>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.fill_headers">
-<span class="sig-name descname"><span class="pre">fill_headers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">take_tags_to_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.fill_headers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.fill_headers" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize and populate table headers with field metadata.</p>
-<dl class="simple">
-<dt>Sets up table columns based on database fields, configuring each with:</dt><dd><ul class="simple">
-<li><p>Appropriate tooltips showing description, unit, and type.</p></li>
-<li><p>Specialized delegates for numeric and temporal data types.</p></li>
-<li><p>Visibility based on display settings or field attributes.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>take_tags_to_update</strong> – If True, use tags_to_display for
-visibility. If False, use field visibility attributes. Defaults to
-False.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_current_filter">
-<span class="sig-name descname"><span class="pre">get_current_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_current_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_current_filter" title="Link to this definition">¶</a></dt>
-<dd><p>Get the current data browser selection.</p>
-<p>Returns the list of selected scan paths if a selection is active,
-otherwise returns all visible scan paths in the data browser.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) List of scan paths from either the current selection
-or all visible scans in the data browser.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_index_insertion">
-<span class="sig-name descname"><span class="pre">get_index_insertion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_insert</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_index_insertion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_index_insertion" title="Link to this definition">¶</a></dt>
-<dd><p>Find the insertion index for a new column to maintain alphabetical
-order.</p>
-<p>Uses binary search to efficiently locate the correct position for
-inserting a column header while preserving the existing alphabetical
-sort order.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>to_insert</strong> – (str) The column header text to insert.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The column index where the new column should be
-inserted. Returns columnCount() if it should be appended at the end.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Assumes that column 0 is reserved (TAG_FILENAME must always be
-the first tag on the left) and start the search from column 1.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_scan_row">
-<span class="sig-name descname"><span class="pre">get_scan_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_scan_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_scan_row" title="Link to this definition">¶</a></dt>
-<dd><p>Find the row index for a given scan filename.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scan</strong> – The scan filename to search for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based row index if the scan is found, None
-otherwise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_tag_column">
-<span class="sig-name descname"><span class="pre">get_tag_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.get_tag_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.get_tag_column" title="Link to this definition">¶</a></dt>
-<dd><p>Find the column index for a given tag name.</p>
-<p>Searches through the table’s horizontal headers to locate the column
-corresponding to the specified tag.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag</strong> – (str) The name of the tag to search for.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based column index if the tag is found, None
-otherwise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.mouseReleaseEvent">
-<span class="sig-name descname"><span class="pre">mouseReleaseEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.mouseReleaseEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.mouseReleaseEvent" title="Link to this definition">¶</a></dt>
-<dd><p>Handle mouse release event and update table data.</p>
-<p>This method is called when a mouse button is released over the widget.
-It delegates to the parent class handler and then updates the table
-data values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) The mouse event containing information
-about the button released, position, and modifiers.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.multiple_sort_infos">
-<span class="sig-name descname"><span class="pre">multiple_sort_infos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.multiple_sort_infos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.multiple_sort_infos" title="Link to this definition">¶</a></dt>
-<dd><p>Sort table rows by multiple tag values.</p>
-<p>Sorts the visualized scans based on the values of specified tags, then
-reorganizes the table rows to reflect the new order. Handles both
-regular items and special brick widgets during the reordering.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>list_tags</strong> – (list) List of tag names to sort by (primary to
-secondary).</p></li>
-<li><p><strong>order</strong> – (str) Sort direction, either “Ascending” or “Descending”.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Temporarily disables item change signals during sorting to prevent
-triggering update handlers. The sort is stable and preserves the
-relative order of items with equal sort keys.</p>
-</div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>_clear_cell: clears the specified cell.</p></li>
-<li><p>_create_brick_widget: Create and set a brick widget for the
-specified table cell.</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.multiple_sort_pop_up">
-<span class="sig-name descname"><span class="pre">multiple_sort_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.multiple_sort_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.multiple_sort_pop_up" title="Link to this definition">¶</a></dt>
-<dd><p>Display the multiple sort configuration dialog.</p>
-<p>Creates and shows a modal dialog that allows users to configure
-multiple sorting criteria for the current project data.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The dialog instance is stored in <cite>self.pop_up</cite>.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.on_cell_changed">
-<span class="sig-name descname"><span class="pre">on_cell_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item_origin</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.on_cell_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.on_cell_changed" title="Link to this definition">¶</a></dt>
-<dd><p>Update cell values and appearance when edited by the user.</p>
-<p>This method handles both single and multi-cell selection, validating
-type compatibility across all selected cells before applying changes.</p>
-<dl class="simple">
-<dt>It performs the following operations:</dt><dd><ol class="arabic simple">
-<li><p>Validates that all selected cells have compatible types.</p></li>
-<li><p>Verifies the new value matches the expected type(s).</p></li>
-<li><p>Updates the database with validated values.</p></li>
-<li><p>Maintains undo/redo history for all modifications.</p></li>
-<li><p>Refreshes cell colors and formatting.</p></li>
-</ol>
-</dd>
-<dt>Special handling:</dt><dd><ul class="simple">
-<li><p>PatientName: Removes spaces (used for subfolder naming in
-calculations).</p></li>
-<li><p>TAG_BRICKS/TAG_FILENAME: Read-only fields, changes are rejected.</p></li>
-<li><p>List types: Prevents mixed type selections but allows homogeneous
-lists.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item_origin</strong> – QTableWidgetItem from which the edit originated.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Modifies database values for selected cells.</p></li>
-<li><p>Updates cell appearance (colors, fonts).</p></li>
-<li><p>Adds entry to project undo history.</p></li>
-<li><p>Clears redo history.</p></li>
-<li><p>Resizes columns to fit content.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.remove_scan">
-<span class="sig-name descname"><span class="pre">remove_scan</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.remove_scan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.remove_scan" title="Link to this definition">¶</a></dt>
-<dd><p>Remove selected scans from the database and file system.</p>
-<p>This method handles the removal of scan documents from both the
-current and initial collections in the project database. It performs
-the following:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Prompts user for confirmation if scans are in the active scan
-list.</p></li>
-<li><p>Preserves modification history for removed scan values.</p></li>
-<li><p>Deletes associated files (.nii and .json) from the file system.</p></li>
-<li><p>Updates the UI table to reflect removals.</p></li>
-</ul>
-</div></blockquote>
-<p>The removal process can be cancelled by the user when prompted. If
-multiple scans are selected, the user can choose to apply their
-decision to all remaining scans.</p>
-<dl class="simple">
-<dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Modifies database by removing documents from COLLECTION_CURRENT
-and COLLECTION_INITIAL.</p></li>
-<li><p>Deletes scan files from the project folder.</p></li>
-<li><p>Updates UI table rows and marks project as having unsaved
-modifications.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_cell">
-<span class="sig-name descname"><span class="pre">reset_cell</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_cell" title="Link to this definition">¶</a></dt>
-<dd><p>Reset selected cells to their original values from the initial
-collection.</p>
-<p>This method restores the values of all selected cells to their
-original state by retrieving values from COLLECTION_INITIAL and
-updating COLLECTION_CURRENT. If any cells lack initial values (e.g.,
-user-created tags), a warning is displayed. The operation is recorded
-in the project history for undo/redo functionality.</p>
-<dl class="simple">
-<dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Updates database values in COLLECTION_CURRENT.</p></li>
-<li><p>Updates table cell display values.</p></li>
-<li><p>Appends operation to project.undos.</p></li>
-<li><p>Clears project.redos.</p></li>
-<li><p>May display a warning dialog for unreset values.</p></li>
-<li><p>Resizes table columns to fit content.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_column">
-<span class="sig-name descname"><span class="pre">reset_column</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_column" title="Link to this definition">¶</a></dt>
-<dd><p>Reset selected columns to their original values.</p>
-<p>Restores values in selected cells to their initial state from the
-database. If a cell’s initial value doesn’t exist (e.g., user-added
-tags), it cannot be reset and a warning will be displayed.
-The operation is recorded in the project’s undo history. Any existing
-redo history is cleared after this operation.</p>
-<dl class="simple">
-<dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Updates database values in COLLECTION_CURRENT.</p></li>
-<li><p>Updates table cell displays.</p></li>
-<li><p>Appends to project.undos.</p></li>
-<li><p>Clears project.redos.</p></li>
-<li><p>Resizes columns to fit content.</p></li>
-<li><p>May display warning dialog for unreset values.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_row">
-<span class="sig-name descname"><span class="pre">reset_row</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.reset_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.reset_row" title="Link to this definition">¶</a></dt>
-<dd><p>Reset selected cells to their original values from the initial
-collection.</p>
-<p>Restores the values of all cells in selected rows to their initial
-state by copying values from COLLECTION_INITIAL to COLLECTION_CURRENT.
-Only cells with available initial values are reset. User-defined tags
-without initial values are skipped and trigger a warning dialog.</p>
-<p>The operation is recorded in the project’s undo/redo history, allowing
-users to revert the reset if needed. After resetting, columns are
-automatically resized to fit their contents.</p>
-<dl class="simple">
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Updates database values in COLLECTION_CURRENT.</p></li>
-<li><p>Updates table cell display values.</p></li>
-<li><p>Appends operation to project.undos.</p></li>
-<li><p>Clears project.redos.</p></li>
-<li><p>Shows warning dialog if any values couldn’t be reset.</p></li>
-<li><p>Resizes table columns.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.section_moved">
-<span class="sig-name descname"><span class="pre">section_moved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logical_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.section_moved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.section_moved" title="Link to this definition">¶</a></dt>
-<dd><p>Handle section movement to keep the FileName column fixed at
-position 0.</p>
-<p>This slot is triggered when a user attempts to reorder table columns.
-It ensures the FileName column (logical index 0) always remains at the
-leftmost visual position, regardless of user drag-and-drop actions.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logical_index</strong> – The logical index of the moved column (unused).</p></li>
-<li><p><strong>old_index</strong> – The previous visual position of the column (unused).</p></li>
-<li><p><strong>new_index</strong> – The new visual position of the column (unused).</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Parameters are required by the Qt signal signature but not used in
-the implementation. Uses a guard flag to prevent recursive calls
-when programmatically repositioning the FileName column.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.select_all_column">
-<span class="sig-name descname"><span class="pre">select_all_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.select_all_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.select_all_column" title="Link to this definition">¶</a></dt>
-<dd><p>Select all cells in a column when its header is double-clicked.</p>
-<p>This method clears any existing selection before selecting the entire
-column, ensuring only the specified column is highlighted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>col</strong> – (int) The zero-based index of the column to select.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.select_all_columns">
-<span class="sig-name descname"><span class="pre">select_all_columns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.select_all_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.select_all_columns" title="Link to this definition">¶</a></dt>
-<dd><p>Select all columns containing currently selected cells.</p>
-<p>Expands the current cell selection to include entire columns. If cells
-from multiple columns are selected, all corresponding columns will be
-selected. This method is typically invoked from the context menu.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Temporarily switches selection mode to MultiSelection during
-operation, then restores ExtendedSelection mode.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.selection_changed">
-<span class="sig-name descname"><span class="pre">selection_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.selection_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.selection_changed" title="Link to this definition">¶</a></dt>
-<dd><p>Update the tab view when the table selection changes.</p>
-<p>Rebuilds the internal scans list based on currently selected items,
-grouping tag names by scan name. If link_viewer is enabled, updates
-the connected mini viewer display.</p>
-<dl class="simple">
-<dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Clears and repopulates self.scans with [scan_name, [tag_names]]
-pairs.</p></li>
-<li><p>Calls data_browser.connect_mini_viewer() if self.link_viewer is
-True.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.show_brick_history">
-<span class="sig-name descname"><span class="pre">show_brick_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.show_brick_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.show_brick_history" title="Link to this definition">¶</a></dt>
-<dd><p>Display a popup window showing the history of a brick.</p>
-<p>This method retrieves the brick UUID associated with the triggering
-sender, creates a history popup dialog, and displays it to the user.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scan</strong> – The scan data to display in the history popup.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The sender (typically a UI widget) must be registered in
-self.bricks to retrieve the corresponding brick UUID.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.sort_column">
-<span class="sig-name descname"><span class="pre">sort_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.sort_column"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.sort_column" title="Link to this definition">¶</a></dt>
-<dd><p>Sort the currently selected column.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>order</strong> – <p>(Qt.SortOrder or int) Sort order to apply:</p>
-<ul class="simple">
-<li><p>Qt.AscendingOrder (0): Sort from lowest to highest.</p></li>
-<li><p>Qt.DescendingOrder (1): Sort from highest to lowest.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Temporarily disconnects signals during sorting to prevent
-unwanted side effects, then reconnects them afterward.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.sort_updated">
-<span class="sig-name descname"><span class="pre">sort_updated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.sort_updated"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.sort_updated" title="Link to this definition">¶</a></dt>
-<dd><p>Update project state and apply sorting to the table.</p>
-<p>Temporarily disconnects signals, updates the project’s sort
-configuration, applies the sort to table items, refreshes visual
-elements, and reconnects signals.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – The column index to sort by. Use -1 to indicate no
-sorting.</p></li>
-<li><p><strong>order</strong> – The sort order (Qt.AscendingOrder or Qt.DescendingOrder).</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method is a no-op when column is -1, allowing safe calls with
-invalid column indices.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_colors">
-<span class="sig-name descname"><span class="pre">update_colors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_colors" title="Link to this definition">¶</a></dt>
-<dd><p>Update cell background colors based on data state and visibility.</p>
-<dl class="simple">
-<dt>Colors indicate:</dt><dd><ul class="simple">
-<li><p>White/Grey: Unmodified builtin tags (alternating for visible
-rows).</p></li>
-<li><p>Cyan/Blue: Modified builtin tags (alternating for visible rows).</p></li>
-<li><p>Pink/Red: User-defined tags or null values (alternating for
-visible rows).</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This method assumes the <cite>itemChanged</cite> signal is disconnected.
-Automatically saves modifications if auto-save is enabled.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_selection">
-<span class="sig-name descname"><span class="pre">update_selection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_selection" title="Link to this definition">¶</a></dt>
-<dd><p>Update table selection based on current scan results.</p>
-<p>Clears existing selection and selects cells corresponding to tags
-found in the current scan results. For each scan, selects the cells at
-the intersection of the scan’s row and its associated tag columns.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_table">
-<span class="sig-name descname"><span class="pre">update_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">take_tags_to_update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_table" title="Link to this definition">¶</a></dt>
-<dd><p>Refresh the table with current project data.</p>
-<p>Completely resets and repopulates the table when switching projects.
-This involves clearing selections, fetching current scan documents,
-refilling headers and cells, resizing columns/rows, and updating
-the visual appearance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>take_tags_to_update</strong> – If True, updates tags during the header
-fill operation. Defaults to False.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Clears current table selection.</p></li>
-<li><p>Resets scans_to_visualize and scans_to_search attributes.</p></li>
-<li><p>Clears selected scans list if selection is active.</p></li>
-<li><p>Disconnects and reconnects table signals.</p></li>
-<li><p>Modifies table dimensions and visual styling.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_visualized_columns">
-<span class="sig-name descname"><span class="pre">update_visualized_columns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_tags</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_visualized_columns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_visualized_columns" title="Link to this definition">¶</a></dt>
-<dd><p>Update column visibility based on tag selection changes.</p>
-<dl class="simple">
-<dt>Synchronizes the table’s visible columns with the provided tag list by:</dt><dd><ul class="simple">
-<li><p>Hiding columns for tags that are no longer displayed.</p></li>
-<li><p>Showing columns for newly displayed tags.</p></li>
-<li><p>Updating advanced search dropdowns if the search panel is open.</p></li>
-<li><p>Refreshing column sizing and colors.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>old_tags</strong> – (list) Previously visualized tags.</p></li>
-<li><p><strong>showed</strong> – (list) Tags to currently display in the table.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_visualized_rows">
-<span class="sig-name descname"><span class="pre">update_visualized_rows</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">old_scans</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.update_visualized_rows"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.update_visualized_rows" title="Link to this definition">¶</a></dt>
-<dd><p>Update table row visibility based on current scan visualization state.</p>
-<p>Temporarily disconnects selection signals, hides rows for scans no
-longer in the visualization list, shows rows for newly visualized
-scans, and updates the table appearance.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>old_scans</strong> – Collection of scans from the previous state, used to
-determine which rows need to be hidden.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.visualized_tags_pop_up">
-<span class="sig-name descname"><span class="pre">visualized_tags_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.visualized_tags_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.TableDataBrowser.visualized_tags_pop_up" title="Link to this definition">¶</a></dt>
-<dd><p>Display a modal dialog for configuring visualized tag columns.</p>
-<p>Opens a properties popup showing currently visible tags and allowing
-the user to modify which tags are displayed in the data browser. The
-popup is sized to 50% of screen width and 80% of screen height.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">DataViewer</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.ABC" title="abc.ABC"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a>, <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.QWidget" title="PyQt5.QtWidgets.QWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
-<p>An abstract base class for data viewers with a minimal, extensible API.</p>
-<p>This class defines a standard interface for data viewers, allowing
-subclasses to implement custom visualization strategies. The base methods
-provide a simple contract for managing and displaying documents across
-different viewer implementations.</p>
-<p>The API is intentionally kept simple to provide flexibility for specific
-use cases while ensuring a consistent basic functionality.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.clear">
-<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.clear" title="Link to this definition">¶</a></dt>
-<dd><p>Remove all currently displayed files.</p>
-<p>This method provides a default implementation that removes
-all files currently being displayed by calling remove_files().</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.close" title="Link to this definition">¶</a></dt>
-<dd><p>Close the viewer by clearing all displayed files.</p>
-<p>This method provides a standard way to clean up and close the viewer,
-ensuring all resources are released.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.display_files">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">display_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.display_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.display_files" title="Link to this definition">¶</a></dt>
-<dd><p>Display the specified document files.</p>
-<p>This method must be implemented by subclasses to define how
-files are visually presented or loaded.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>List</strong><strong>)</strong> (<em>files</em>) – A list of files to be displayed.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/exceptions.html#NotImplementedError" title="(in Python v3.12)"><strong>NotImplementedError</strong></a> – If not overridden by a subclass.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.displayed_files">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">displayed_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.displayed_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.displayed_files" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieve the list of currently displayed files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return (list)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of files currently being displayed.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/exceptions.html#NotImplementedError" title="(in Python v3.12)"><strong>NotImplementedError</strong></a> – If not overridden by a subclass.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.remove_files">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.remove_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.remove_files" title="Link to this definition">¶</a></dt>
-<dd><p>Remove specified files from the display.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>files</em>) – A list of files to be removed from display.</p>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/exceptions.html#NotImplementedError" title="(in Python v3.12)"><strong>NotImplementedError</strong></a> – If not overridden by a subclass.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.set_documents">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer.html#DataViewer.set_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer.set_documents" title="Link to this definition">¶</a></dt>
-<dd><p>Set the project context and available documents.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The project associated with the documents.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>documents</em>) – The list of available documents.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.12/library/exceptions.html#NotImplementedError" title="(in Python v3.12)"><strong>NotImplementedError</strong></a> – If not overridden by a subclass.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.DataViewer._abc_impl" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.</span></span><span class="sig-name descname"><span class="pre">MiaViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init_global_handlers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a></p>
-<p>A data viewer for Mia (Multiparametric Image Analysis) using PyAnatomist.</p>
-<p>This class provides a specialized viewer for displaying and managing
-medical imaging files with additional filtering and visualization
-capabilities.</p>
-<p><a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mia</span> <span class="pre">data</span> <span class="pre">viewer</span></code></a> # noqa: E501
-implementation based on <a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a>  # noqa: E501</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer._mia_viewers_count">
 <span class="sig-name descname"><span class="pre">_mia_viewers_count</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer._mia_viewers_count" title="Link to this definition">¶</a></dt>
@@ -1066,12 +92,12 @@ viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>Qt.QObject</strong><strong>)</strong> (<em>parent</em>) – Parent widget to search in.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>name</em>) – Name of the child widget to find.</p></li>
+<li><p><strong>parent</strong> – (Qt.QObject) Parent widget to search in.</p></li>
+<li><p><strong>name</strong> – (str) Name of the child widget to find.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (Qt.QObject)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The found child widget.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Qt.QObject) The found child widget.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1094,7 +120,7 @@ viewer.</p>
 <dd><p>Display the given files in the Anatomist viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>files</em>) – List of file paths to display.</p>
+<dd class="field-odd"><p><strong>files</strong> – (list) List of file paths to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1104,8 +130,8 @@ viewer.</p>
 <span class="sig-name descname"><span class="pre">displayed_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.displayed_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.displayed_files" title="Link to this definition">¶</a></dt>
 <dd><p>Get the list of currently displayed files.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return (List)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of displayed file paths.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(List) List of displayed file paths.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1122,7 +148,7 @@ viewer.</p>
 <dd><p>Remove specified files from the viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>files</em>) – List of file paths to remove.</p>
+<dd class="field-odd"><p><strong>files</strong> – (list) List of file paths to remove.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1130,23 +156,16 @@ viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents">
 <span class="sig-name descname"><span class="pre">set_documents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">documents</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist/mia_anatomist.html#MiaViewer.set_documents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer.set_documents" title="Link to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Set the current project and documents for the viewer.</p>
-</div></blockquote>
+<dd><p>Set the current project and documents for the viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>project</strong> – The project to set.</p></li>
-<li><p><strong>(</strong><strong>List</strong><strong>)</strong> (<em>documents</em>) – List of documents in the project.</p></li>
+<li><p><strong>documents</strong> – (List) List of documents in the project.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist.mia_anatomist.MiaViewer._abc_impl" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -1154,7 +173,7 @@ viewer.</p>
 
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -1164,7 +183,7 @@ viewer.</p>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

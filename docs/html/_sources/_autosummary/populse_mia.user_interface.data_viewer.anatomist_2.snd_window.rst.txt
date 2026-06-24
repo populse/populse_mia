@@ -1,0 +1,12 @@
+populse\_mia.user\_interface.data\_viewer.anatomist\_2.snd\_window
+==================================================================
+
+.. automodule:: populse_mia.user_interface.data_viewer.anatomist_2.snd_window
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      NewWindowViewer
+   

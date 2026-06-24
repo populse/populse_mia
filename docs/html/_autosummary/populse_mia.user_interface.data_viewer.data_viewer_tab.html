@@ -5,20 +5,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+00270a5e documentation</title>
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+7d6f26e7 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=dfa0e015" />
-    <script src="../_static/documentation_options.js?v=77510892"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=29b3f3bb"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+00270a5e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+7d6f26e7 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -31,15 +31,6 @@
   <section id="module-populse_mia.user_interface.data_viewer.data_viewer_tab">
 <span id="populse-mia-user-interface-data-viewer-data-viewer-tab"></span><h1>populse_mia.user_interface.data_viewer.data_viewer_tab<a class="headerlink" href="#module-populse_mia.user_interface.data_viewer.data_viewer_tab" title="Link to this heading">¶</a></h1>
 <p>Populse_mia data viewer GUI interface (in the “Data Viewer” tab).</p>
-<dl class="simple">
-<dt>Contains:</dt><dd><dl class="simple">
-<dt>Class:</dt><dd><ul class="simple">
-<li><p>DataViewerTab</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -55,20 +46,40 @@
 <p>A flexible and extensible widget for managing data viewers in a GUI
 application.</p>
 <p>This widget provides a dynamic interface for loading and switching between
-different data viewers. Key features include:
-- Automatic discovery of viewers in the data_viewer directory
-- Graceful handling of viewer import failures
-- Ability to dynamically add new viewers
-- Centralized document and project management across viewers</p>
+different data viewers. Key features include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Automatic discovery of viewers in the data_viewer directory</p></li>
+<li><p>Graceful handling of viewer import failures</p></li>
+<li><p>Ability to dynamically add new viewers</p></li>
+<li><p>Centralized document and project management across viewers</p></li>
+</ul>
+</div></blockquote>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>activate_viewer: Activates viewer which was selected
+in the combobox.</p></li>
+<li><p>change_viewer: Switches to viewer selected in the combobox.</p></li>
+<li><p>clear: Clears all loaded viewers before closing Mia.</p></li>
+<li><p>closeEvent: Clears and closes all events before closing Mia.</p></li>
+<li><p>current_viewer: Return current viewer (selected viewer in
+combobox).</p></li>
+<li><p>load_viewer: Load a viewer.</p></li>
+<li><p>set_documents: Shares project with documents to all viewers.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the DataViewerTab with a reference to the main window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>Qt.QMainWindow</strong><strong>)</strong> (<em>main_window</em>) – The main application window
-providing context and potential
-shared resources.</p>
+<dd class="field-odd"><p><strong>main_window</strong> – (Qt.QMainWindow) The main application window
+providing context and potential shared resources.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -79,7 +90,7 @@ shared resources.</p>
 <dd><p>Activate a specific viewer by name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>viewer_name</em>) – Name of the viewer to activate.</p>
+<dd class="field-odd"><p><strong>viewer_name</strong> – (str) Name of the viewer to activate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -88,16 +99,16 @@ shared resources.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">
 <span class="sig-name descname"><span class="pre">change_viewer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.change_viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer" title="Link to this definition">¶</a></dt>
 <dd><p>Handle viewer change event triggered by the combobox.</p>
-<p>Retrieves the selected viewer, activates it, and ensures
-that the current project and documents are set.</p>
+<p>Retrieves the selected viewer, activates it, and ensures that the
+current project and documents are set.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear">
 <span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear" title="Link to this definition">¶</a></dt>
 <dd><p>Clean up and close all loaded viewers.</p>
-<p>Called before closing the application to ensure
-proper resource management.</p>
+<p>Called before closing the application to ensure proper resource
+management.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -106,7 +117,7 @@ proper resource management.</p>
 <dd><p>Override close event to ensure proper cleanup.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>QCloseEvent</strong><strong>)</strong> (<em>event</em>) – Close event triggered by the window system.</p>
+<dd class="field-odd"><p><strong>event</strong> – (QCloseEvent) Close event triggered by the window system.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -116,8 +127,8 @@ proper resource management.</p>
 <span class="sig-name descname"><span class="pre">current_viewer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.current_viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieve the name of the currently active viewer.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return (str)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Name of the current viewer, either from the current
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(str) Name of the current viewer, either from the current
 viewer tracking or the combobox selection.</p>
 </dd>
 </dl>
@@ -127,11 +138,11 @@ viewer tracking or the combobox selection.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer">
 <span class="sig-name descname"><span class="pre">load_viewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">viewer_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/data_viewer_tab.html#DataViewerTab.load_viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer" title="Link to this definition">¶</a></dt>
 <dd><p>Dynamically load viewers from the data_viewer directory.</p>
-<p>Attempts to import and initialize viewers, handling
-import failures gracefully.</p>
+<p>Attempts to import and initialize viewers, handling import failures
+gracefully.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>viewer_name</em>) – Specific viewer to load. If None, discovers
+<dd class="field-odd"><p><strong>viewer_name</strong> – (str) Specific viewer to load. If None, discovers
 all viewers.</p>
 </dd>
 </dl>
@@ -145,7 +156,7 @@ all viewers.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>project</strong> – The entire project context.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>documents</em>) – List of document/image objects in the project.</p></li>
+<li><p><strong>documents</strong> – (list) List of document/image objects in the project.</p></li>
 </ul>
 </dd>
 </dl>
@@ -157,7 +168,7 @@ all viewers.</p>
 
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../index.html">Contents</a>
@@ -167,7 +178,7 @@ all viewers.</p>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

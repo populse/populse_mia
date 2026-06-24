@@ -4,26 +4,9 @@ populse\_mia.user\_interface.data\_viewer.data\_viewer\_tab
 .. automodule:: populse_mia.user_interface.data_viewer.data_viewer_tab
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
    .. rubric:: Classes
 
    .. autosummary::
    
       DataViewerTab
    
-   
-
-   
-   
-   
-
-
-

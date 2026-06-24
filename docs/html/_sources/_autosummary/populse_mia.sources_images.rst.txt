@@ -4,20 +4,3 @@ populse\_mia.sources\_images
 .. automodule:: populse_mia.sources_images
 
    
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
