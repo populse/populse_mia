@@ -1,13 +1,6 @@
 """
 Handle the data viewer tab, for advanced visualisation (in 2D and 3D modes,
 overlay, etc.) of volumetric medical data.
-
-Contains:
-    Module:
-      - anatomist
-      - anatomist_2
-      - data_viewer
-      - data_viewer_tab
 """
 
 ##########################################################################

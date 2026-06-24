@@ -250,8 +250,9 @@ autodoc_default_options = {
     "member-order": "bysource",
     "show-inheritance": True,
     "imported-members": False,
-    # We want to exclude PyQt signals
+    # We want to exclude PyQt signals (and _abc_impl)
     "exclude-members": (
+        "_abc_impl, "
         "attributes_selected, "
         "cancel_signal, "
         "clicked, "

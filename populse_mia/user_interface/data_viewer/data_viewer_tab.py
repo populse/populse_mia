@@ -1,10 +1,5 @@
 """
 Populse_mia data viewer GUI interface (in the "Data Viewer" tab).
-
-Contains:
-    Class:
-        - DataViewerTab
-
 """
 
 ##########################################################################
@@ -22,6 +17,10 @@ import os
 # soma import
 from soma.qt_gui.qt_backend import Qt
 
+__all__ = [
+    "DataViewerTab",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -32,29 +31,32 @@ class DataViewerTab(Qt.QWidget):
 
     This widget provides a dynamic interface for loading and switching between
     different data viewers. Key features include:
-    - Automatic discovery of viewers in the data_viewer directory
-    - Graceful handling of viewer import failures
-    - Ability to dynamically add new viewers
-    - Centralized document and project management across viewers
+        - Automatic discovery of viewers in the data_viewer directory
+        - Graceful handling of viewer import failures
+        - Ability to dynamically add new viewers
+        - Centralized document and project management across viewers
 
-    .. Methods:
-        - activate_viewer: Activates viewer which was selected
-                           in the combobox.
-        - change_viewer: Switches to viewer selected in the combobox.
-        - clear: Clears all loaded viewers before closing Mia.
-        - closeEvent: Clears and closes all events before closing Mia.
-        - current_viewer: Return current viewer (selected viewer in combobox).
-        - load_viewer: Load a viewer.
-        - set_documents: Shares project with documents to all viewers.
+    Contains:
+
+        Methods:
+
+            - activate_viewer: Activates viewer which was selected
+              in the combobox.
+            - change_viewer: Switches to viewer selected in the combobox.
+            - clear: Clears all loaded viewers before closing Mia.
+            - closeEvent: Clears and closes all events before closing Mia.
+            - current_viewer: Return current viewer (selected viewer in
+              combobox).
+            - load_viewer: Load a viewer.
+            - set_documents: Shares project with documents to all viewers.
     """
 
     def __init__(self, main_window):
         """
         Initialize the DataViewerTab with a reference to the main window.
 
-        :param main_window (Qt.QMainWindow): The main application window
-                                             providing context and potential
-                                             shared resources.
+        :param main_window: (Qt.QMainWindow) The main application window
+         providing context and potential shared resources.
         """
         super().__init__()
         # Initialize state tracking attributes
@@ -82,7 +84,7 @@ class DataViewerTab(Qt.QWidget):
         """
         Activate a specific viewer by name.
 
-        :param viewer_name (str): Name of the viewer to activate.
+        :param viewer_name: (str) Name of the viewer to activate.
         """
 
         if self.viewer_current and list(self.viewer_current)[0] == viewer_name:
@@ -100,8 +102,8 @@ class DataViewerTab(Qt.QWidget):
         """
         Handle viewer change event triggered by the combobox.
 
-        Retrieves the selected viewer, activates it, and ensures
-        that the current project and documents are set.
+        Retrieves the selected viewer, activates it, and ensures that the
+        current project and documents are set.
         """
         viewer_name = self.viewers_combo.currentText().lower()
         self.activate_viewer(viewer_name)
@@ -111,8 +113,8 @@ class DataViewerTab(Qt.QWidget):
         """
         Clean up and close all loaded viewers.
 
-        Called before closing the application to ensure
-        proper resource management.
+        Called before closing the application to ensure proper resource
+        management.
         """
 
         for viewer in self.viewers_loaded.values():
@@ -124,7 +126,7 @@ class DataViewerTab(Qt.QWidget):
         """
         Override close event to ensure proper cleanup.
 
-        :param event (QCloseEvent): Close event triggered by the window system.
+        :param event: (QCloseEvent) Close event triggered by the window system.
         """
         self.clear()
         super().closeEvent(event)
@@ -133,8 +135,8 @@ class DataViewerTab(Qt.QWidget):
         """
         Retrieve the name of the currently active viewer.
 
-        :return (str): Name of the current viewer, either from the current
-                       viewer tracking or the combobox selection.
+        :Returns: (str) Name of the current viewer, either from the current
+         viewer tracking or the combobox selection.
         """
         return (
             list(self.viewer_current)[0]
@@ -146,11 +148,11 @@ class DataViewerTab(Qt.QWidget):
         """
         Dynamically load viewers from the data_viewer directory.
 
-        Attempts to import and initialize viewers, handling
-        import failures gracefully.
+        Attempts to import and initialize viewers, handling import failures
+        gracefully.
 
-        :param viewer_name (str): Specific viewer to load. If None, discovers
-                                  all viewers.
+        :param viewer_name: (str) Specific viewer to load. If None, discovers
+         all viewers.
         """
         # Determine viewers to load
         script_dir = os.path.dirname(__file__)
@@ -203,7 +205,7 @@ class DataViewerTab(Qt.QWidget):
         Distribute project and document information to the current viewer.
 
         :param project: The entire project context.
-        :param documents (list): List of document/image objects in the project.
+        :param documents: (list) List of document/image objects in the project.
         """
         if self.viewer_current:
             current_viewer_name = list(self.viewer_current)[0]

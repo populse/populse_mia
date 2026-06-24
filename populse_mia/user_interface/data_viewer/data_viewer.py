@@ -12,14 +12,14 @@ Coding a data viewer
 A data viewer is identified after its module name, and is currently searched
 for as a submodule of :mod:`populse_mia.user_interface.data_viewer`. The
 data viewer module may be implemented as a "regular" module (.py file) or a
-package (directory) and should contain at least a
-class named ``MiaViewer`` which:
+package (directory) and should contain at least a class named ``MiaViewer``
+which:
 
   - is a Qt ``QWidget`` (inherits ``QWidget`` as 1st inheritance as is required
-    by Qt)
+    by Qt).
   - implements the :class:`DataViewer` API (normally by inheriting it as second
     inheritance after ``QWidget`` but this is not technically required if the
-    API is implemented)
+    API is implemented).
 
 """
 
@@ -35,6 +35,8 @@ from abc import ABC, abstractmethod
 
 # soma import
 from soma.qt_gui.qt_backend import Qt
+
+__all__ = ["MetaDataViewer", "DataViewer"]
 
 
 class MetaDataViewer(type(Qt.QWidget), type(ABC)):
@@ -57,13 +59,16 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
     The API is intentionally kept simple to provide flexibility for specific
     use cases while ensuring a consistent basic functionality.
 
-    .. Methods:
-        - clear: Remove all currently displayed files.
-        - close: Close the viewer by clearing all displayed files.
-        - display_files: Display the specified document files.
-        - displayed_files: Retrieve the list of currently displayed files.
-        - remove_files: Remove specified files from the display.
-        - set_documents: Set the project context and available documents.
+    Contains:
+
+        Methods:
+
+            - clear: Remove all currently displayed files.
+            - close: Close the viewer by clearing all displayed files.
+            - display_files: Display the specified document files.
+            - displayed_files: Retrieve the list of currently displayed files.
+            - remove_files: Remove specified files from the display.
+            - set_documents: Set the project context and available documents.
 
     """
 
@@ -71,8 +76,8 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Remove all currently displayed files.
 
-        This method provides a default implementation that removes
-        all files currently being displayed by calling remove_files().
+        This method provides a default implementation that removes all files
+        currently being displayed by calling remove_files().
         """
         self.remove_files(self.displayed_files())
 
@@ -90,14 +95,14 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Display the specified document files.
 
-        This method must be implemented by subclasses to define how
-        files are visually presented or loaded.
+        This method must be implemented by subclasses to define how files are
+        visually presented or loaded.
 
-        :param files (List): A list of files to be displayed.
+        :param files: (List) A list of files to be displayed.
 
-        Raises:
-            NotImplementedError: If not overridden by a subclass.
+        :raises NotImplementedError: If not overridden by a subclass.
         """
+
         raise NotImplementedError(
             "Subclasses must implement display_files method"
         )
@@ -107,11 +112,11 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Retrieve the list of currently displayed files.
 
-        :return (list): A list of files currently being displayed.
+        :Returns: (list) A list of files currently being displayed.
 
-        Raises:
-            NotImplementedError: If not overridden by a subclass.
+        :raises NotImplementedError: If not overridden by a subclass.
         """
+
         raise NotImplementedError(
             "Subclasses must implement displayed_files method"
         )
@@ -121,11 +126,11 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Remove specified files from the display.
 
-        :param files (list): A list of files to be removed from display.
+        :param files: (list) A list of files to be removed from display.
 
-        Raises:
-            NotImplementedError: If not overridden by a subclass.
+        :raises NotImplementedError: If not overridden by a subclass.
         """
+
         raise NotImplementedError(
             "Subclasses must implement remove_files method"
         )
@@ -136,11 +141,11 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         Set the project context and available documents.
 
         :param project: The project associated with the documents.
-        :param documents (list): The list of available documents.
+        :param documents: (list) The list of available documents.
 
-        Raises:
-            NotImplementedError: If not overridden by a subclass.
+        :raises NotImplementedError: If not overridden by a subclass.
         """
+
         raise NotImplementedError(
             "Subclasses must implement set_documents method"
         )
