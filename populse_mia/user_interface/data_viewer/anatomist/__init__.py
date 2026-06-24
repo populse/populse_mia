@@ -13,3 +13,5 @@ This is the original viewer based on Anatomist
 
 # populse_mia import
 from .mia_anatomist import MiaViewer  # noqa: F401
+
+__all__ = []

@@ -1,10 +1,6 @@
 """
 Mia data viewer implementation based on `Anatomist
 <http://brainvisa.info/anatomist/user_doc/index.html>`_
-
-Contains:
-    Class:
-        - MiaViewer
 """
 
 #############################################################################
@@ -41,30 +37,38 @@ except ImportError:
         "and anatomist_2 will not work..."
     )
 
+__all__ = [
+    "MiaViewer",
+]
+
 
 class MiaViewer(DataViewer):
     """
     A data viewer for Mia (Multiparametric Image Analysis) using PyAnatomist.
 
+    :class:`Mia data viewer
+    <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>`
+    implementation based on
+    `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
+
     This class provides a specialized viewer for displaying and managing
     medical imaging files with additional filtering and visualization
     capabilities.
 
-    :class:`Mia data viewer <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>` # noqa: E501
-    implementation based on `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_  # noqa: E501
+    Contains:
 
-    .. Methods:
-        - _find_child: Find a child widget by name.
-        - _setup_ui: Set up the user interface components for the viewer.
-        - close: Close the viewer and manage Anatomist viewer resources.
-        - display_files: Display the given files in the Anatomist viewer.
-        - displayed_files: Get the list of currently displayed files.
-        - filter_documents: Open a dialog to filter and select documents for
-                            visualization.
-        - remove_files: Remove specified files from the viewer.
-        - set_documents: Set the current project and documents for the viewer.
+        Methods:
 
-
+            - _find_child: Find a child widget by name.
+            - _setup_ui: Set up the user interface components for the viewer.
+            - close: Close the viewer and manage Anatomist viewer resources.
+            - display_files: Display the given files in the Anatomist viewer.
+            - displayed_files: Get the list of currently displayed files.
+            - filter_documents: Open a dialog to filter and select documents
+              for visualization.
+            - remove_files: Remove specified files from the viewer.
+            - set_documents: Set the current project and documents for the
+              viewer.
     """
 
     # Class-level tracker for Anatomist viewers
@@ -75,7 +79,7 @@ class MiaViewer(DataViewer):
         Initialize the MiaViewer.
 
         :param init_global_handlers: Initial global handlers for Anatomist
-                                     viewer.
+         viewer.
         """
         super().__init__()
         # Initialize Anatomist viewer
@@ -96,10 +100,10 @@ class MiaViewer(DataViewer):
         """
         Find a child widget by name.
 
-        :param parent (Qt.QObject): Parent widget to search in.
-        :param name (str): Name of the child widget to find.
+        :param parent: (Qt.QObject) Parent widget to search in.
+        :param name: (str) Name of the child widget to find.
 
-        :return (Qt.QObject): The found child widget.
+        :Returns: (Qt.QObject) The found child widget.
         """
         return parent.findChild(Qt.QObject, name)
 
@@ -137,7 +141,7 @@ class MiaViewer(DataViewer):
         """
         Display the given files in the Anatomist viewer.
 
-        :param files (list): List of file paths to display.
+        :param files: (list) List of file paths to display.
         """
         self.displayed.extend(files)
 
@@ -148,7 +152,7 @@ class MiaViewer(DataViewer):
         """
         Get the list of currently displayed files.
 
-        :return (List): List of displayed file paths.
+        :Returns: (List) List of displayed file paths.
         """
         return self.displayed
 
@@ -213,17 +217,17 @@ class MiaViewer(DataViewer):
         """
         Remove specified files from the viewer.
 
-        :param files (list): List of file paths to remove.
+        :param files: (list) List of file paths to remove.
         """
         self.anaviewer.deleteObjectsFromFiles(files)
         self.displayed = [doc for doc in self.displayed if doc not in files]
 
     def set_documents(self, project, documents):
         """
-         Set the current project and documents for the viewer.
+        Set the current project and documents for the viewer.
 
         :param project: The project to set.
-        :param documents (List): List of documents in the project.
+        :param documents: (List) List of documents in the project.
         """
 
         if self.project is not project:
