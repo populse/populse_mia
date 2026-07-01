@@ -291,6 +291,7 @@ if "NIPYPE_NO_ET" not in os.environ:
 unwanted_messages = [
     "QPixmap::scaleHeight: Pixmap is a null pixmap",
     "QObject::disconnect: No such signal QLineEdit::userModification()",
+    "This plugin does not support propagateSizeHints()",
 ]
 
 
