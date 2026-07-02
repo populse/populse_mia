@@ -66,37 +66,47 @@ except ImportError:
             "and anatomist_2 will not work..."
         )
 
-# Determine whether we are using Qt4 or Qt5, and hack a little bit accordingly
-# the boolean qt4 global variable will tell it for later usage
+# Select a Qt backend compatible with the Qt 5 API.
 qt_backend.set_qt_backend(compatible_qt5=True)
+
+__all__ = [
+    "LeftSimple3DControl",
+    "VolRenderControl",
+    "AnaSimpleViewer2",
+]
 
 
 class LeftSimple3DControl(Simple2DControl):
     """
     Control for 3D navigation using the left mouse button.
 
-    This control is particularly useful for touch devices where
-    rotation can be achieved by pressing and holding the left mouse button.
+    This control is particularly useful for touch devices where rotation can
+    be achieved by pressing and holding the left mouse button.
+
+    Contains:
+
+        Methods:
+
+            - eventAutoSubscription: Auto-subscribes to mouse and keyboard
+              events relevant for 3D controls.
     """
 
     def __init__(self, prio=25, name="LeftSimple3DControl"):
         """
         Initializes the LeftSimple3DControl instance.
 
-        :param prio (int): The priority level for the control
-                           (default is 25).
-        :param name (str): The name of the control
-                           (default is "LeftSimple3DControl").
+        :param prio: (int) The priority level for the control (default is 25).
+        :param name: (str) The name of the control (default is
+         "LeftSimple3DControl").
         """
         super().__init__(prio, name)
 
     def eventAutoSubscription(self, pool):
         """
-        Auto-subscribes to mouse and keyboard events relevant for 3D
-        controls.
+        Auto-subscribes to mouse and keyboard events relevant for 3D controls.
 
-        This method sets up event subscriptions for mouse button actions
-        and keyboard shortcuts to control the trackball actions.
+        This method sets up event subscriptions for mouse button actions and
+        keyboard shortcuts to control the trackball actions.
 
         :param pool: The event pool to which the subscriptions will be made.
         """
@@ -131,18 +141,24 @@ class VolRenderControl(LeftSimple3DControl):
     """
     Control for volume rendering navigation using the middle mouse button.
 
-    This control allows users to rotate the cut slice of the volume
-    rendering by holding down the middle mouse button.
+    This control allows users to rotate the cut slice of the volume rendering
+    by holding down the middle mouse button.
+
+    Contains:
+
+        Methods:
+
+            - eventAutoSubscription: Auto-subscribes to mouse events for cut
+              slice rotation.
     """
 
     def __init__(self, prio=25, name="VolRenderControl"):
         """
         Initializes the VolRenderControl instance.
 
-        :param prio (int): The priority level for the control
-                           (default is 25).
-        :param name (str): The name of the control
-                           (default is "VolRenderControl").
+        :param prio: (int) The priority level for the control (default is 25).
+        :param name: (str) The name of the control (default is
+         "VolRenderControl").
         """
         super().__init__(prio, name)
 
@@ -150,9 +166,9 @@ class VolRenderControl(LeftSimple3DControl):
         """
         Auto-subscribes to mouse events for cut slice rotation.
 
-        This method overrides the base class behavior to subscribe to
-        events triggered by the middle mouse button for controlling the
-        track cut action.
+        This method overrides the base class behavior to subscribe to events
+        triggered by the middle mouse button for controlling the track cut
+        action.
 
         :param pool: The event pool to which the subscriptions will be made.
         """
@@ -192,17 +208,114 @@ class AnaSimpleViewer2(Qt.QObject):
     AnaSimpleViewer, initiated optionally via the `init_global_handlers`
     method called by the constructor unless `init_global_handlers` is set to
     False.
+
+    Contains:
+
+        Methods:
+
+            - _displayVolume: Displays a volume or Fusion2D object in all
+              available windows.
+            - addMesh: Adds a 2D mesh representation of a volume object to the
+              viewer.
+            - addNewView: Open a popup window displaying the given object.
+            - addObject: Displays an object in all Anatomist windows based on
+              its type.
+            - addVolume: Displays a volume in all windows.
+            - automaticRunning: Enables the automatic running of functional
+              images.
+            - changeConfig: Changes the configuration based on user settings.
+            - changeIcon: Updates the icon of a list item to indicate its
+              display status.
+            - changeOpacity: Changes the opacity of the selected object based
+              on the slider value.
+            - changeRef: Changes the referential and reloads objects.
+            - checkviews: Prevents closing the last opened view.
+            - clickHandler:  Callback for linked cursor.
+            - closeAll: Closes all open Anatomist windows and cleans up
+              resources.
+            - colorBackgroundList: Colors the background of items in the
+              'objectslist' widget.
+            - coordsChanged: Sets the cursor position in the 3D view based on
+              the coordinates entered in the GUI fields.
+            - createWindow: Opens a new window in the windows grid layout.
+            - createTotalWindow: Creates windows that will contain the
+              specified views.
+            - deleteObjects: Deletes the specified objects from the scene.
+            - deleteObjectsFromFiles: Deletes objects from the scene based on
+              their filenames.
+            - deleteTotalWindow: Clears all existing windows and fusions to
+              prepare for a new display.
+            - disableButtons: Disables the add and remove buttons based on the
+              selected object's display status.
+            - dragEnterEvent: Handles the drag enter event to determine if the
+              dragged data can be decoded.
+            - dropEvent: Handles the drop event to load or register Anatomist
+              objects.
+            - editAdd: Display all objects currently selected in the list box.
+            - editDelete: Deletes the currently selected objects from the scene
+              and updates the object list.
+            - editRemove: Removes the currently selected objects from the scene
+              and updates the background color list.
+            - enableVolumeRendering: Enables or disables volume rendering in
+              3D views.
+            - fileOpen: Open a file browser dialog and load selected objects.
+            - get_new_mesh2d_color: Retrieves a new color for a 2D mesh that
+              has not been used yet.
+            - getViewsToDisplay: Determines which views need to be displayed
+              based on the state of the view buttons.
+            - init_global_handlers: Set some global controls/settings in
+              Anatomist application object.
+            - initialize_components: Initializes the component attributes and
+              user interface.
+            - loadObject: Loads objects from the specified files and prepares
+              them for display.
+            - newDisplay: Performs a new display of windows, objects, and
+              views.
+            - newPalette: Sets the chosen color palette in the toolbar
+              drop-down menu to the selected object.
+            - objectLoaded: Handles the event when an object is loaded.
+            - object_properties: Display the properties of selected objects in
+              an Anatomist browser window.
+            - open_anatomist_main_window: Opens the main Anatomist control
+              window and adds GUI menus if available.
+            - popup_objects: Displays a context menu for selected objects in
+              the object list.
+            - registerObject: Registers an object in the AnaSimpleViewer's
+              object list and displays it.
+            - removeMesh: Removes the specified mesh and its associated object
+              from the viewer.
+            - removeObject: Remove an object from all views.
+            - removeVolume: Hides a volume from the views.
+            - selectedObjects: Retrieve objects currently selected in the list
+              box.
+            - setColorPalette: Checks color palette of a selected object.
+            - setComboBox: Inserts a drop-down menu in the toolbar containing
+              available color palettes.
+            - setSlider: Inserts an opacity slider in the toolbar.
+            - setup_anatomist: Registers the Anatomist controls and options.
+            - setup_color_palette_and_slider: Sets up the color palette
+              dropdown and opacity slider in the toolbar.
+            - setup_gui_connections: Connects GUI actions to their respective
+              callbacks.
+            - startVolumeRendering: Enables volume rendering in 3D views.
+            - stopVolumeRendering: Disables volume rendering and displays a
+              slice instead.
+            - updateRendering: Updates volume rendering based on the current
+              cursor position.
+            - updateVolumeValues: Updates the volume values displayed based on
+              the cursor position.
+            - viewReferential: Centers the view on the specified object and
+              sets the referential.
     """
 
     _global_handlers_initialized = False
 
     def __init__(self, init_global_handlers=None):
         """
-         Initializes the AnaSimpleViewer2 instance.
+        Initializes the AnaSimpleViewer2 instance.
 
-        :param init_global_handlers (bool): Determines if global handlers
-                                            should be initialized (default
-                                            is True).
+        :param init_global_handlers: (bool) Determines if global handlers
+         should be initialized (default is True).
         """
         super().__init__()
         a = ana.Anatomist("-b")
@@ -232,8 +345,7 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Connects GUI actions to their respective callbacks.
 
-        :param awin (Qt.QWidget): The main window widget to connect
-                                  actions to.
+        :param awin: (Qt.QWidget) The main window widget to connect actions to.
         """
         # Connect actions to their slots
         awin.findChild(QtCore.QObject, "actionTimeRunning").triggered.connect(
@@ -371,7 +483,9 @@ class AnaSimpleViewer2(Qt.QObject):
     def setComboBox(self):
         """
         Inserts a drop-down menu in the toolbar containing available color
-        palettes. The default color palettes are in self.available_palettes.
+        palettes.
+
+        The default color palettes are in self.available_palettes.
         """
         toolBar = self.awidget.findChild(QtCore.QObject, "toolBar")
         actionAutoRunning = self.awidget.findChild(
@@ -397,6 +511,7 @@ class AnaSimpleViewer2(Qt.QObject):
     def setSlider(self):
         """
         Inserts an opacity slider in the toolbar.
+
         Minimum value is 0 and maximum value is 100.
         """
         toolBar = self.awidget.findChild(QtCore.QObject, "toolBar")
@@ -461,7 +576,6 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Sets the chosen color palette in the toolbar drop-down menu to the
         selected object.
-
         """
         color = self.combobox.currentText()
 
@@ -474,8 +588,8 @@ class AnaSimpleViewer2(Qt.QObject):
         drop-down menu and adds it if it isn't already stored in
         self.available_palettes.
 
-        If corresponding palette image exists it is added, otherwise only
-        the name of the palette appears.
+        If corresponding palette image exists it is added, otherwise only the
+        name of the palette appears.
         """
         color = self.combobox.currentText()
 
@@ -506,7 +620,7 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Changes the configuration based on user settings.
 
-        :param config (str): "neuro" or "radio".
+        :param config: (str) "neuro" or "radio".
         """
         a = ana.Anatomist("-b")
         a.config()["axialConvention"] = config
@@ -516,21 +630,23 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Changes the referential and reloads objects.
 
-        ref : Boolean
-        0 : World coordinates
-        1 : Image referential
+        - ref : Boolean
+        - 0 : World coordinates
+        - 1 : Image referential
         """
         self.deleteObjects(self.aobjects)
         self.loadObject(self.files, config_changed=True)
 
     def clickHandler(self, eventName, params):
         """
-        Callback for linked cursor. In volume rendering mode, it syncs the
-        VR slice to the linked cursor and updates the volume values view.
+        Callback for linked cursor.
 
-        :param eventName (str): The name of the event (unused)
-        :param params (dict): Parameters related to the event,
-                              including position and window.
+        In volume rendering mode, it syncs the VR slice to the linked cursor
+        and updates the volume values view.
+
+        :param eventName: (str) The name of the event (unused).
+        :param params: (dict) Parameters related to the event, including
+         position and window.
         """
         a = ana.Anatomist("-b")
         pos = params["position"]
@@ -643,8 +759,8 @@ class AnaSimpleViewer2(Qt.QObject):
 
         The frame rate can be changed in preferences by the user.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
         a = ana.Anatomist("-b")
         objects = []
@@ -710,11 +826,11 @@ class AnaSimpleViewer2(Qt.QObject):
         Opens a new window in the windows grid layout.
 
         The new window will be set in MNI referential (except 3D for the
-        moment, due to a problem with rendering volumes in direct
-        reference) and assigned the custom control without menus/toolbars.
+        moment, due to a problem with rendering volumes in direct reference)
+        and assigned the custom control without menus/toolbars.
 
-        :param wintype (str): The type of window to create
-                              ("Axial", "Sagittal", "Coronal" or "3D").
+        :param wintype: (str) The type of window to create ("Axial",
+         "Sagittal", "Coronal" or "3D").
         """
         a = ana.Anatomist("-b")
         w = a.createWindow(wintype, no_decoration=True, options={"hidden": 1})
@@ -780,12 +896,12 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Creates windows that will contain the specified views.
 
-        This method sets a predefined camera angle for the 3D view and
-        checks the appropriate view buttons upon creation.
+        This method sets a predefined camera angle for the 3D view and checks
+        the appropriate view buttons upon creation.
 
-        :param views (list[str]): A list of strings specifying the view types
-                                  to create. Acceptable values include
-                                  "axial", "sagittal", "coronal", and "3D".
+        :param views: (list[str]) A list of strings specifying the view types
+         to create. Acceptable values include "axial", "sagittal", "coronal",
+         and "3D".
         """
 
         for view in views:
@@ -811,9 +927,9 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Clears all existing windows and fusions to prepare for a new display.
 
-        This method removes all windows from the grid layout and clears
-        the 2D fusion objects. It ensures that no residual elements
-        affect the new display setup.
+        This method removes all windows from the grid layout and clears the 2D
+        fusion objects. It ensures that no residual elements affect the new
+        display setup.
         """
         self.awindows.clear()
         self.fusion2d.clear()
@@ -830,8 +946,8 @@ class AnaSimpleViewer2(Qt.QObject):
         Determines which views need to be displayed based on the state of the
         view buttons.
 
-        :return (list[str]): The views to be displayed. Possible values are
-                             "Axial", "Sagittal", "Coronal", and "3D".
+        :Returns: (list[str]) The views to be displayed. Possible values are
+         "Axial", "Sagittal", "Coronal", and "3D".
         """
         view_labels = ["Axial", "Sagittal", "Coronal", "3D"]
         views = [
@@ -847,7 +963,7 @@ class AnaSimpleViewer2(Qt.QObject):
         Centers the view on the specified object and sets the referential.
 
         :param obj: The object to visualize. The object's bounding box is used
-                    to determine the center position for visualization.
+         to determine the center position for visualization.
         """
         a = ana.Anatomist("-b")
         bb = obj.boundingbox()
@@ -930,9 +1046,9 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Prevents closing the last opened view.
 
-        This method checks how many view buttons are enabled. If only one
-        view button is checked, it disables that button to prevent closing
-        the last view. Otherwise, all buttons remain enabled.
+        This method checks how many view buttons are enabled. If only one view
+        button is checked, it disables that button to prevent closing the last
+        view. Otherwise, all buttons remain enabled.
         """
         nb_views_checked = sum(
             button.isChecked() for button in self.viewButtons
@@ -948,12 +1064,11 @@ class AnaSimpleViewer2(Qt.QObject):
         Performs a new display of windows, objects, and views.
 
         This method checks the state of view buttons, deletes any existing
-        windows and displayed objects, initializes new views based on the
-        state of the view buttons, and adds existing objects to the new
-        display.
+        windows and displayed objects, initializes new views based on the state
+        of the view buttons, and adds existing objects to the new display.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
         self.checkviews()
         self.deleteTotalWindow()
@@ -974,11 +1089,10 @@ class AnaSimpleViewer2(Qt.QObject):
         are added to the object list but not displayed. If an object has
         already been imported, a warning message is shown.
 
-        :param files (list[str]): A list of file names to load objects from.
-        :param config_changed (bool): Indicates whether the configuration has
-                                      changed. If True, the method will return
-                                      early if an object has already been
-                                      imported.
+        :param files: (list[str]) A list of file names to load objects from.
+        :param config_changed: (bool) Indicates whether the configuration has
+         changed. If True, the method will return early if an object has
+         already been imported.
         """
         a = ana.Anatomist("-b")
         a.config()["setAutomaticReferential"] = Config().get_referential()
@@ -1045,9 +1159,9 @@ class AnaSimpleViewer2(Qt.QObject):
         This method registers the loaded object with the Anatomist application
         and manages processing execution state.
 
-        :param obj (AObject): The loaded object to be registered.
-        :param filename (str): The name of the file from which the object
-                               was loaded (unused).
+        :param obj: (AObject) The loaded object to be registered.
+        :param filename: (str) The name of the file from which the object was
+         loaded (unused).
         """
         a = ana.Anatomist("-b")
 
@@ -1071,12 +1185,12 @@ class AnaSimpleViewer2(Qt.QObject):
 
     def registerObject(self, obj, views=None):
         """
-        Registers an object in the AnaSimpleViewer's object list and
-        displays it.
+        Registers an object in the AnaSimpleViewer's object list and displays
+        it.
 
         :param obj: The object to register and display.
-        :param views (list[str]): A list of view types to create if windows do
-                                  not already exist.
+        :param views: (list[str]) A list of view types to create if windows do
+         not already exist.
         """
         ojectlist = self.awidget.findChild(QtCore.QObject, "objectslist")
         ojectlist.addItem(obj.name)
@@ -1113,11 +1227,11 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Displays a volume or Fusion2D object in all available windows.
 
-        If volume rendering is enabled, 3D views will display a clipped
-        volume rendering of the object.
+        If volume rendering is enabled, 3D views will display a clipped volume
+        rendering of the object.
 
-        :param obj (AObject): The volume or Fusion2D object to display.
-        :param opts (dict): Additional options for rendering.
+        :param obj: (AObject) The volume or Fusion2D object to display.
+        :param opts: (dict) Additional options for rendering.
         """
 
         if opts is None:
@@ -1152,13 +1266,13 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Displays a volume in all windows.
 
-        If multiple volumes are displayed, a Fusion2D will be created to
-        wrap them all. If volume rendering is enabled, 3D views will display
-        a clipped volume rendering of either the single volume (if only one
-        is present) or the 2D fusion.
+        If multiple volumes are displayed, a Fusion2D will be created to wrap
+        them all. If volume rendering is enabled, 3D views will display a
+        clipped volume rendering of either the single volume (if only one is
+        present) or the 2D fusion.
 
         :param obj: The volume object to be displayed.
-        :param opts (dict): Additional options for rendering.
+        :param opts: (dict) Additional options for rendering.
         """
 
         if opts is None:
@@ -1225,13 +1339,13 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Hides a volume from the views.
 
-        This method removes the specified volume object from the display.
-        If multiple volumes are associated with the Fusion2D, it updates
-        the Fusion2D object accordingly. If volume rendering is enabled,
-        it also handles the cleanup of the rendered objects.
+        This method removes the specified volume object from the display. If
+        multiple volumes are associated with the Fusion2D, it updates the
+        Fusion2D object accordingly. If volume rendering is enabled, it also
+        handles the cleanup of the rendered objects.
 
         :param obj: The volume object to be removed.
-        :param opts (dict): Additional options for rendering.
+        :param opts: (dict) Additional options for rendering.
         """
 
         if opts is None:
@@ -1291,7 +1405,7 @@ class AnaSimpleViewer2(Qt.QObject):
         colors have been used, it returns a color based on the total count
         of existing 2D meshes.
 
-        :return tuple[float, float, float, float]: The RGBA color.
+        :Returns: (tuple[float, float, float, float]) The RGBA color.
         """
         colors = [
             (1.0, 0.3, 0.3, 1.0),
@@ -1362,8 +1476,8 @@ class AnaSimpleViewer2(Qt.QObject):
         Removes the specified mesh and its associated object from the viewer.
 
         This method locates the mesh associated with the provided object,
-        removes both the object and its mesh from the displayed windows,
-        and updates the internal structures accordingly.
+        removes both the object and its mesh from the displayed windows, and
+        updates the internal structures accordingly.
 
         :param obj: The volume object whose mesh is to be removed.
         """
@@ -1383,9 +1497,8 @@ class AnaSimpleViewer2(Qt.QObject):
 
         This method checks the currently displayed objects and the selected
         item in the objects list. It disables the add button if an item is
-        selected and currently displayed, and enables the remove button.
-        If no object is urrently displayed or selected, it enables the
-        add button.
+        selected and currently displayed, and enables the remove button. If no
+        object is urrently displayed or selected, it enables the add button.
         """
         self.setColorPalette()
         displayed_ob_names = [obj.name for obj in self.displayedObjects]
@@ -1411,8 +1524,9 @@ class AnaSimpleViewer2(Qt.QObject):
     def colorBackgroundList(self):
         """
         Colors the background of items in the 'objectslist' widget based on
-        whether their corresponding objects are currently displayed. Also
-        updates their icons using `changeIcon`.
+        whether their corresponding objects are currently displayed.
+
+        Also updates their icons using `changeIcon`.
 
         - If an object's name is in `displayedObjects`, the background is set
           to green and the icon is updated to 'check'.
@@ -1440,12 +1554,11 @@ class AnaSimpleViewer2(Qt.QObject):
         item at the same row, using either a check icon (if displayed) or a
         blank icon.
 
-        :param item (QListWidgetItem): The item to update in the list widget.
-        :param index (int): Index of the object in self.aobjects to retrieve
-                            its name.
-        :param icon_type (str): Type of icon to use. Set to "check" for a
-                                checkmark; any other value results in a blank
-                                icon.
+        :param item: (QListWidgetItem) The item to update in the list widget.
+        :param index: (int) Index of the object in self.aobjects to retrieve
+         its name.
+        :param icon_type: (str) Type of icon to use. Set to "check" for a
+         checkmark; any other value results in a blank icon.
         """
         object_list = self.awidget.findChild(QtCore.QObject, "objectslist")
         row = object_list.row(item)
@@ -1460,8 +1573,8 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Displays an object in all Anatomist windows based on its type.
 
-        :param obj: The object to be displayed. Its `objectType` must be
-                    one of 'VOLUME', 'SURFACE', or 'GRAPH'.
+        :param obj: The object to be displayed. Its `objectType` must be one of
+         'VOLUME', 'SURFACE', or 'GRAPH'.
         """
         a = ana.Anatomist("-b")
 
@@ -1520,8 +1633,8 @@ class AnaSimpleViewer2(Qt.QObject):
         files. After selection, passes the files to the load_object method
         for processing.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
 
         # Create or reconfigure the file dialog
@@ -1556,11 +1669,11 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Retrieve objects currently selected in the list box.
 
-        Finds selected items in the UI list box on the upper left panel
-        and returns the corresponding anatomical objects.
+        Finds selected items in the UI list box on the upper left panel and
+        returns the corresponding anatomical objects.
 
-        :return (list): List of anatomical objects that are currently selected
-                        in the UI. Empty list if no objects are selected.
+        :Returns: (list) List of anatomical objects that are currently selected
+         in the UI. Empty list if no objects are selected.
         """
         # Find the object list widget in the UI
         object_list_widget = self.awidget.findChild(
@@ -1579,11 +1692,11 @@ class AnaSimpleViewer2(Qt.QObject):
         Display all objects currently selected in the list box.
 
         Retrieves the objects selected in the UI and adds each one to the
-        display. Updates the background colors in the list to reflect the
-        new display state.
+        display. Updates the background colors in the list to reflect the new
+        display state.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
 
         # Get currently selected objects and display each one
@@ -1598,8 +1711,8 @@ class AnaSimpleViewer2(Qt.QObject):
         Removes the currently selected objects from the scene and updates the
         background color list.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
 
         for obj in self.selectedObjects():
@@ -1612,8 +1725,8 @@ class AnaSimpleViewer2(Qt.QObject):
         Deletes the currently selected objects from the scene and updates the
         object list.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
         objects_to_delete = self.selectedObjects()
         self.deleteObjects(objects_to_delete)
@@ -1623,7 +1736,7 @@ class AnaSimpleViewer2(Qt.QObject):
         Deletes the specified objects from the scene, the object list widget,
         and the internal object list.
 
-        :param objects_to_delete (list): A list of objects to be deleted.
+        :param objects_to_delete: (list) A list of objects to be deleted.
         """
 
         if not objects_to_delete:
@@ -1659,8 +1772,8 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Deletes objects from the scene based on their filenames.
 
-        :param files (list): Filenames corresponding to the objects to be
-                             deleted.
+        :param files: (list) Filenames corresponding to the objects to be
+         deleted.
         """
         a = ana.Anatomist("-b")
         objects_to_delete = [
@@ -1672,8 +1785,8 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Closes all open Anatomist windows and cleans up resources.
 
-        :param close_ana (bool): If True, closes the Anatomist instance.
-                                 Defaults to True.
+        :param close_ana: (bool) If True, closes the Anatomist instance.
+         Defaults to True.
         """
         logger.info("Exiting Ana2 viewer.")
         self.newWindow.close()
@@ -1783,7 +1896,7 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Enables or disables volume rendering in 3D views.
 
-        :param on (bool): True to enable volume rendering, False to disable.
+        :param on: (bool) True to enable volume rendering, False to disable.
         """
         self._vrenabled = on
 
@@ -1798,8 +1911,8 @@ class AnaSimpleViewer2(Qt.QObject):
         Opens the main Anatomist control window and adds GUI menus
         if available.
 
-        :param checked (bool): Not used, but required to match the
-                               QAction.triggered signal.
+        :param checked: (bool) Not used, but required to match the
+         QAction.triggered signal.
         """
         a = ana.Anatomist()
         control_window = a.getControlWindow()
@@ -1858,10 +1971,10 @@ class AnaSimpleViewer2(Qt.QObject):
         Handles the drag enter event to determine if the dragged data can be
         decoded.
 
-        Accepts the event if it contains a decodable object or URI;
-        otherwise, rejects it.
+        Accepts the event if it contains a decodable object or URI; otherwise,
+        rejects it.
 
-        :param event (QDragEnterEvent): The drag enter event instance.
+        :param event: (QDragEnterEvent) The drag enter event instance.
         """
 
         if ana.cpp.QAObjectDrag.canDecode(
@@ -1881,8 +1994,8 @@ class AnaSimpleViewer2(Qt.QObject):
         is already present, it is re-added. Otherwise, it is loaded or
         registered accordingly.
 
-        :param event (QDropEvent): The drop event containing the data
-                                   to handle.
+        :param event: (QDropEvent) The drop event containing the data
+         to handle.
         """
         a = ana.Anatomist("-b")
         objects = ana.cpp.set_AObjectPtr()
@@ -1950,11 +2063,11 @@ class AnaSimpleViewer2(Qt.QObject):
         window.
 
         If the browser does not exist, is null, or is not visible, a new one
-        is created. Otherwise, the existing browser is cleared and updated
-        with the current selection.
+        is created. Otherwise, the existing browser is cleared and updated with
+        the current selection.
 
-        :param checked(bool): Not used, but required to connect properly
-                              to the QAction.triggered signal.
+        :param checked: (bool) Not used, but required to connect properly to
+         the QAction.triggered signal.
         """
         a = ana.Anatomist("-b")
 
@@ -1974,7 +2087,7 @@ class AnaSimpleViewer2(Qt.QObject):
         """
         Open a popup window displaying the given object.
 
-        :param obj: The object to display. The default view is axial but may
-                    be changed by the user.
+        :param obj: The object to display. The default view is axial but may be
+         changed by the user.
         """
         self.newWindow.showPopup(obj)
