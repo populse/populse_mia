@@ -1,8 +1,5 @@
-"""Open a new window for a selected object with only one view possible.
-
-Contains:
-    Class:
-        - NewWindowViewer
+"""
+Open a new window for a selected object with only one view possible.
 """
 
 ###############################################################################
@@ -31,6 +28,8 @@ except ImportError:
         "and anatomist_2 will not work..."
     )
 
+__all__ = ["NewWindowViewer"]
+
 
 class NewWindowViewer(QtGui.QMainWindow):
     """
@@ -40,14 +39,18 @@ class NewWindowViewer(QtGui.QMainWindow):
     allows the user to choose between different anatomical views (axial,
     sagittal, coronal, or 3D) for visualizing the selected object.
 
-    .. Methods:
-        - changeDisplay: Changes display on user's demand.
-        - close: Close properly objects before exiting Mia.
-        - createNewWindow: Opens a new window in the vertical layout.
-        - disableButton: Manages button availability and whether they should be
-                         checked or not depending on which view is displayed.
-        - setObject: Store object to display.
-        - showPopup: Defines the dimensions of the popup which is a QWidget.
+    Contains:
+
+        Methods:
+
+            - changeDisplay: Changes display on user's demand.
+            - close: Close properly objects before exiting Mia.
+            - createNewWindow: Opens a new window in the vertical layout.
+            - disableButton: Manages button availability and whether they
+              should be checked or not depending on which view is displayed.
+            - setObject: Store object to display.
+            - showPopup: Defines the dimensions of the popup which is a
+              QWidget.
     """
 
     def __init__(self):
@@ -95,8 +98,8 @@ class NewWindowViewer(QtGui.QMainWindow):
         """
          Changes the display based on user's selection.
 
-        :param index (int): Index of the view to display
-                            (0: Axial, 1: Sagittal, 2: Coronal, 3: 3D).
+        :param index: (int) Index of the view to display (0: Axial,
+         1: Sagittal, 2: Coronal, 3: 3D).
         :param obj: The object to display.
         """
         a = ana.Anatomist("-b")
@@ -121,7 +124,7 @@ class NewWindowViewer(QtGui.QMainWindow):
         """
         Opens a new window in the vertical layout.
 
-        :param intype (str): Type of the view to create (default is 'Axial').
+        :param wintype: (str) Type of the view to create (default is 'Axial').
         """
         a = ana.Anatomist("-b")
         w = a.createWindow(wintype, no_decoration=True, options={"hidden": 1})
@@ -182,7 +185,7 @@ class NewWindowViewer(QtGui.QMainWindow):
         Manages button availability and checked state depending on the
         displayed view.
 
-        :param index (int): Index of the view to enable.
+        :param index: (int) Index of the view to enable.
         """
 
         for i, button in enumerate(self.viewButtons):

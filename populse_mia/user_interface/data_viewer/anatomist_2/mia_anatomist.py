@@ -1,10 +1,6 @@
 """
 Mia data viewer implementation based on
 `Anatomist <http://brainvisa.info/anatomist/user_doc/index.html>`_
-
-Contains:
-    Class:
-        - MiaViewer
 """
 
 ##########################################################################
@@ -45,6 +41,8 @@ from populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 import 
 
 from ..data_viewer import DataViewer
 
+__all__ = ["MiaViewer"]
+
 
 class MiaViewer(DataViewer):
     """
@@ -59,25 +57,31 @@ class MiaViewer(DataViewer):
            implementation based on
            `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
 
-    .. Methods:
-        - _add_dialog_buttons: Add action buttons to the filter dialog.
-        - _apply_preferences: Apply the settings from the preferences dialog.
-        - _create_preferences_dialog: Create the preferences dialog.
-        - _process_selected_documents: Process user's document selection.
-        - _setup_search_interface: Set up the search bar and related UI
-                                   elements.
-        - _setup_ui: Set up the user interface components and connect signals.
-        - close: Exit
-        - display_files: Load objects in files and display.
-        - displayed_files: Get the list of displayed files.
-        - filter_documents: Filter documents already loaded in the Databrowser.
-        - preferences: Preferences for the dataviewer.
-        - remove_files: Delete the given objects given by their file names.
-        - reset_search_bar: Reset the rapid search bar.
-        - screenshot: The screenshot of mia_anatomist_2.
-        - search_str: Update the *Not Defined*" values in visualised documents.
-        - set_documents: Initialise current documents in the viewer.
+    Contains:
 
+        Methods:
+
+            - _add_dialog_buttons: Add action buttons to the filter dialog.
+            - _apply_preferences: Apply the settings from the preferences
+              dialog.
+            - _create_preferences_dialog: Create the preferences dialog.
+            - _process_selected_documents: Process user's document selection.
+            - _setup_search_interface: Set up the search bar and related UI
+              elements.
+            - _setup_ui: Set up the user interface components and connect
+              signals.
+            - close: Exit
+            - display_files: Load objects in files and display.
+            - displayed_files: Get the list of displayed files.
+            - filter_documents: Filter documents already loaded in the
+              Databrowser.
+            - preferences: Preferences for the dataviewer.
+            - remove_files: Delete the given objects given by their file names.
+            - reset_search_bar: Reset the rapid search bar.
+            - screenshot: The screenshot of mia_anatomist_2.
+            - search_str: Update the *Not Defined*" values in visualised
+              documents.
+            - set_documents: Initialise current documents in the viewer.
     """
 
     # Class-level tracker for Anatomist viewers
@@ -88,7 +92,7 @@ class MiaViewer(DataViewer):
         Initialize the Mia viewer widget.
 
         :param init_global_handlers: Handlers to initialize the PyAnatomist
-                                     viewer
+         viewer.
         """
         super().__init__()
         self.anaviewer = AnaSimpleViewer2(init_global_handlers)
@@ -157,7 +161,7 @@ class MiaViewer(DataViewer):
         :param current_config: Current display configuration (neuro/radio).
         :param current_ref: Current referential setting.
 
-        :return (QDialog): Configured preferences dialog.
+        :Returns: (QDialog) Configured preferences dialog.
         """
         dialog = Qt.QDialog()
         dialog.setWindowTitle("Preferences")
@@ -292,7 +296,7 @@ class MiaViewer(DataViewer):
         """
         Close the viewer and properly clean up PyAnatomist resources.
 
-        If this is the last MIA viewer instance, closes PyAnatomist entirely.
+        If this is the last Mia viewer instance, closes PyAnatomist entirely.
         """
         super().close()
         # Decrement viewer count
@@ -305,7 +309,7 @@ class MiaViewer(DataViewer):
         """
         Load and display the specified files in the viewer.
 
-        :param files (list): List of file paths to display.
+        :param files: (list) List of file paths to display.
         """
         self.displayed.extend(files)
         self.anaviewer.loadObject(files)
@@ -314,7 +318,7 @@ class MiaViewer(DataViewer):
         """
         Get the list of currently displayed files.
 
-        :return (list): File paths currently displayed in the viewer.
+        :Returns (list) File paths currently displayed in the viewer.
         """
         return self.displayed
 
@@ -322,8 +326,8 @@ class MiaViewer(DataViewer):
         """
         Open a dialog to filter and select documents to display.
 
-        Allows searching and filtering documents loaded in the Databrowser
-        and importing selected ones into the viewer.
+        Allows searching and filtering documents loaded in the Databrowser and
+        importing selected ones into the viewer.
         """
         dialog = Qt.QDialog()
         dialog.setWindowTitle("Filter documents")
@@ -361,8 +365,8 @@ class MiaViewer(DataViewer):
         """
         Open the preferences dialog to configure viewer settings.
 
-        Allows configuring display mode (Neuro/Radio), animation speed,
-        and coordinate system referential.
+        Allows configuring display mode (Neuro/Radio), animation speed, and
+        coordinate system referential.
         """
         # Get initial config:
         current_framerate = Config().getViewerFramerate()
@@ -379,9 +383,9 @@ class MiaViewer(DataViewer):
 
     def remove_files(self, files):
         """
-         Remove specified files from the viewer.
+        Remove specified files from the viewer.
 
-        :param files (list): List of file paths to remove from display.
+        :param files: (list) List of file paths to remove from display.
         """
         self.anaviewer.deleteObjectsFromFiles(files)
         self.displayed = [doc for doc in self.displayed if doc not in files]
@@ -411,9 +415,8 @@ class MiaViewer(DataViewer):
         Handles special case for NOT_DEFINED_VALUE as well as normal text
         search. Updates the table to show only matching documents.
 
-        :param search_term (str): Text to search for in documents
+        :param search_term: (str) Text to search for in documents.
         """
-
         old_scan_list = self.table_data.scans_to_visualize
         matching_documents = []
 
@@ -460,7 +463,7 @@ class MiaViewer(DataViewer):
         Initialize the viewer with a set of documents from a project.
 
         :param project: Project containing the documents.
-        :param documents (list): List of document filenames to make available.
+        :param documents: (list) List of document filenames to make available.
         """
 
         if self.project is not project:

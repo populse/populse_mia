@@ -37812,16 +37812,29 @@ else:
 
 
 def qInitResources():
-    """Blabla"""
+    """
+    Initializes and registers the embedded Qt resources with the application.
 
+    This function must be called before any resource files (e.g., images,
+    icons) are accessed in the application. It loads the binary resource data,
+    structural metadata, and resource names into Qt's resource system,
+    allowing them to be referenced using the ':/' prefix
+    (e.g., ':/sag-01.png').
+    """
     QtCore.qRegisterResourceData(
         rcc_version, qt_resource_struct, qt_resource_name, qt_resource_data
     )
 
 
 def qCleanupResources():
-    """Blabla"""
+    """
+    Unregisters and cleans up the embedded Qt resources.
 
+    This function removes the resource data from Qt's resource system, freeing
+    associated memory. It is typically called during application shutdown,
+    though in most cases, Python's garbage collection will handle this
+    automatically.
+    """
     QtCore.qUnregisterResourceData(
         rcc_version, qt_resource_struct, qt_resource_name, qt_resource_data
     )

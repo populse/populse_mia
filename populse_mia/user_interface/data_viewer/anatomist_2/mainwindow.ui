@@ -407,7 +407,8 @@
   <action name="filterAction">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/database.png</normaloff>:/database.png</iconset>
+     <normaloff>:/database.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Filter from DataBrowser</string>
@@ -434,7 +435,8 @@
   <action name="fileOpenAction">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/folder.png</normaloff>:/folder.png</iconset>
+     <normaloff>:/folder.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Open</string>
@@ -453,7 +455,8 @@
   <action name="editAddAction">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/plus.png</normaloff>:/plus.png</iconset>
+     <normaloff>:/plus.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Add</string>
@@ -468,7 +471,8 @@
   <action name="editRemoveAction">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/signe-moins.png</normaloff>:/signe-moins.png</iconset>
+     <normaloff>:/signe-moins.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Remove</string>
@@ -483,7 +487,8 @@
   <action name="editDeleteAction">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
+     <normaloff>:/delete.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Delete</string>
@@ -503,7 +508,8 @@
   <action name="actionprint_view">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/camera.png</normaloff>:/camera.png</iconset>
+     <normaloff>:/camera.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>print view</string>
@@ -518,7 +524,8 @@
    </property>
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/RE_ Icons/ax-01.png</normaloff>:/RE_ Icons/ax-01.png</iconset>
+     <normaloff>:/RE_ Icons/ax-01.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Axial</string>
@@ -533,7 +540,8 @@
    </property>
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/RE_ Icons/sag-01.png</normaloff>:/RE_ Icons/sag-01.png</iconset>
+     <normaloff>:/RE_ Icons/sag-01.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Sagittal</string>
@@ -548,7 +556,8 @@
    </property>
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/RE_ Icons/coro-01.png</normaloff>:/RE_ Icons/coro-01.png</iconset>
+     <normaloff>:/RE_ Icons/coro-01.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Coronal</string>
@@ -563,7 +572,8 @@
    </property>
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/RE_ Icons/dimension-01.png</normaloff>:/RE_ Icons/dimension-01.png</iconset>
+     <normaloff>:/RE_ Icons/dimension-01.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>3D</string>
@@ -575,7 +585,8 @@
   <action name="actionPreferences">
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
+     <normaloff>:/settings.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>Preferences</string>
@@ -587,7 +598,8 @@
    </property>
    <property name="icon">
     <iconset resource="IconResources.qrc">
-     <normaloff>:/play.png</normaloff>:/play.png</iconset>
+     <normaloff>:/play.png</normaloff>
+    </iconset>
    </property>
    <property name="text">
     <string>TimeRunning</string>
