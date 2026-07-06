@@ -17,6 +17,9 @@ import os
 from soma.qt_gui.qt_backend import Qt, QtCore, QtGui
 from soma.qt_gui.qt_backend.uic import loadUi
 
+# Register Qt resources (icons embedded in resources_snd_window.py)
+from . import resources_snd_window  # noqa: F401
+
 logger = logging.getLogger(__name__)
 
 try:
