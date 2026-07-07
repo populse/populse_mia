@@ -157,9 +157,29 @@ install:
   - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_PROCESSES_BRANCH https://github.com/populse/mia_processes.git /Users/appveyor/projects/mia_processes; fi
 
   # Download data for unit tests
-  - cmd: git clone --depth=50 --branch=%MIA_UT_DATA_BRANCH% https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git C:\\projects\\populse-mia\\mia_ut_data
-  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /home/appveyor/projects/populse-mia/mia_ut_data; fi
-  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH https://gricad-gitlab.univ-grenoble-alpes.fr/mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
+  #    SSH Configuration for mia_ut_data
+  - cmd: |
+      if not exist "%USERPROFILE%\.ssh" mkdir %USERPROFILE%\.ssh
+      echo %SSH_PRIVATE_KEY_BASE64% > appveyor_ssh_key.b64
+      certutil -decode appveyor_ssh_key.b64 %USERPROFILE%\.ssh\id_ed25519
+      del appveyor_ssh_key.b64
+      echo gricad-gitlab.univ-grenoble-alpes.fr ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBHGrfT9cSUo2/TtTqVpvxKDqf6zYu+t1BRYNUIgA9a332HGBzrgVlmxwR0gTgYDli7taVumF0AZvIOg/8Ns9vK4= >> %USERPROFILE%\.ssh\known_hosts
+      echo gricad-gitlab.univ-grenoble-alpes.fr ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+/NJohaBIPg0Wdi/8/07b7exhhgaKrDrA/NU9Uh8sNfa+VEHOydxGCjCnhsoW0DtmICH8KbUEBSH2twomtn1IaeVFmeaP1SqaQrzgPlFStRwlgMevW3dWA6a+Mkd0oYr3xy0AGOjdQ2smu4xtLnH7Th/bBYrfekhF7fuI93onraZGZnChrzFu/ft0mxgS7q5IKTUFDQools9DJzjMOLyT6RNz6TsNVqK+pCPmkt2SkvW6KbLQ5Y26qCommn0atDc7YFuAAJvAgrOwBzshOB54RcSHX2TAQSGX9xLK/5lqY9hOeBGg+Y2n90dddAZLRuDMRn2UmgF0RLnkxNX8pSqZ >> %USERPROFILE%\.ssh\known_hosts
+      echo gricad-gitlab.univ-grenoble-alpes.fr ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGgDTnbW92hd//UPwmvd99y3sTrD+kJVqj3YWfN4/XhW >> %USERPROFILE%\.ssh\known_hosts
+      icacls %USERPROFILE%\.ssh\id_ed25519 /inheritance:r /grant:r "%USERNAME%":F
+      icacls %USERPROFILE%\.ssh\known_hosts /inheritance:r /grant:r "%USERNAME%":F
+
+  - sh: |
+      mkdir -p ~/.ssh
+      echo $SSH_PRIVATE_KEY_BASE64 | base64 --decode > ~/.ssh/id_ed25519
+      chmod 600 ~/.ssh/id_ed25519
+      ssh-keyscan gricad-gitlab.univ-grenoble-alpes.fr >> ~/.ssh/known_hosts
+      chmod 644 ~/.ssh/known_hosts
+
+  #     Cloning mia_ut_data via SSH
+  - cmd: git clone --depth=50 --branch=%MIA_UT_DATA_BRANCH% git@gricad-gitlab.univ-grenoble-alpes.fr:mia/mia_ut_data.git C:\projects\populse-mia\mia_ut_data
+  - sh: if [[ $(uname -s) == Linux ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH git@gricad-gitlab.univ-grenoble-alpes.fr:mia/mia_ut_data.git /home/appveyor/projects/populse-mia/mia_ut_data; fi
+  - sh: if [[ $(uname -s) == Darwin ]]; then git clone --depth=50 --branch=$MIA_UT_DATA_BRANCH git@gricad-gitlab.univ-grenoble-alpes.fr:mia/mia_ut_data.git /Users/appveyor/projects/populse-mia/mia_ut_data; fi
 
   - cd populse-mia
 
