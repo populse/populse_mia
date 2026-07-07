@@ -16,15 +16,6 @@ pipeline editor, enabling users to:
 The module is built on top of Qt and Capsul, leveraging custom widgets like
 `AttributedProcessWidget` and `TableDataBrowser` to provide a user-friendly
 interface for complex pipeline interactions.
-
-:Contains:
-
-    Class:
-        - AttributesFilter
-        - CapsulNodeController
-        - FilterWidget
-        - NodeController
-
 """
 
 ##########################################################################
@@ -100,6 +91,13 @@ from populse_mia.user_interface.pop_ups import (
 
 from . import type_editors
 
+__all__ = [
+    "AttributesFilter",
+    "CapsulNodeController",
+    "FilterWidget",
+    "NodeController",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -121,11 +119,14 @@ class AttributesFilter(PlugFilter):
     represents an attribute name, and the corresponding value is a list of all
     values for that attribute across the selected or filtered entries.
 
-    .. Methods:
-        - ok_clicked: Closes the widget and emits the collected attributes. If
-                      rows are selected, only those rows' attributes are
-                      collected; otherwise, attributes are collected from all
-                      entries matching the current filter.
+    Contains:
+
+        Methods:
+
+            - ok_clicked: Closes the widget and emits the collected attributes.
+              If rows are selected, only those rows' attributes are collected;
+              otherwise, attributes are collected from all entries matching the
+              current filter.
 
     Signals:
 
@@ -133,9 +134,8 @@ class AttributesFilter(PlugFilter):
           selection.
     """
 
-    # Signal emitted when the user validates the selection. The signal carries
-    # a dictionary mapping attribute names to lists of values extracted from
-    # the database.
+    # The signal carries a dictionary mapping attribute names to lists of
+    # values extracted from the database.
     attributes_selected = pyqtSignal(dict)
 
     def ok_clicked(self):
@@ -197,21 +197,26 @@ class CapsulNodeController(QWidget):
     real-time updates and synchronization between the UI and the underlying
     pipeline state.
 
-    .. Methods:
-        - display_parameters: Displays the parameters of the selected node and
-                              configures the UI.
-        - filter_attributes: Opens a dialog for filtering node attributes.
-        - release_process: Cleans up process notifications and signals.
-        - rename_subprocesses: Recursively renames subprocesses and updates
-                               context names.
-        - static_release: Removes trait change notifications from a process.
-        - parameters_changed: Handles parameter value changes and emits a
-                              signal.
-        - update_attributes_from_filter: Applies selected attributes from the
-                                         filter widget.
-        - update_node_name: Renames the selected node and updates the pipeline.
-        - update_parameters: Placeholder for backward compatibility (no
-                             operation).
+    Contains:
+
+        Methods:
+
+            - display_parameters: Displays the parameters of the selected node
+              and configures the UI.
+            - filter_attributes: Opens a dialog for filtering node attributes.
+            - release_process: Cleans up process notifications and signals.
+            - rename_subprocesses: Recursively renames subprocesses and updates
+              context names.
+            - static_release: Removes trait change notifications from a
+              process.
+            - parameters_changed: Handles parameter value changes and emits a
+              signal.
+            - update_attributes_from_filter: Applies selected attributes from
+              the filter widget.
+            - update_node_name: Renames the selected node and updates the
+              pipeline.
+            - update_parameters: Placeholder for backward compatibility (no
+              operation).
 
     Signals:
 
@@ -219,8 +224,7 @@ class CapsulNodeController(QWidget):
           changed.
     """
 
-    # Signal emitted when a node or parameter value is changed. Used for
-    # undo/redo functionality.
+    # Used for undo/redo functionality.
     value_changed = pyqtSignal(list)
 
     def __init__(self, project, scan_list, pipeline_manager_tab, main_window):
@@ -230,7 +234,7 @@ class CapsulNodeController(QWidget):
         :param project: Current project instance.
         :param scan_list: List of available scans.
         :param pipeline_manager_tab: Parent pipeline manager tab.
-        :parammain_window: Main application window.
+        :param main_window: Main application window.
         """
         super().__init__()
         self.project = project
@@ -261,7 +265,7 @@ class CapsulNodeController(QWidget):
         edits, labels, and control buttons. Handles special cases for pipeline
         inputs/outputs nodes.
 
-        :param node_name (str): Name of the node to display.
+        :param node_name: (str) Name of the node to display.
         :param process: Process instance associated with the node.
         :param pipeline: Current pipeline containing the node.
         """
@@ -392,8 +396,8 @@ class CapsulNodeController(QWidget):
         each subprocess.
 
         :param node: The current node being processed.
-        :param parent_node_name (str): The name of the parent node to be
-                                       included in the context name.
+        :param parent_node_name: (str) The name of the parent node to be
+         included in the context name.
         """
         # Get the context name or process name and split by "."
         context_name = getattr(
@@ -443,7 +447,7 @@ class CapsulNodeController(QWidget):
         Handle parameter value changes and emit signal.
 
         :param _: Unused parameter (object instance).
-        :param plug_name (str): Name of the changed parameter.
+        :param plug_name: (str) Name of the changed parameter.
         :param old_value: Previous parameter value.
         :param new_value: New parameter value.
         """
@@ -467,8 +471,8 @@ class CapsulNodeController(QWidget):
         selection from the filter dialog. Shows a warning if no matching
         attributes are found.
 
-        :param attributes (dict): Dictionary of attribute names and values to
-                                  apply.
+        :param attributes: (dict) Dictionary of attribute names and values to
+         apply.
         """
         compl = self.process.completion_engine
         atts = compl.get_attribute_values()
@@ -514,14 +518,13 @@ class CapsulNodeController(QWidget):
         links. For iterated processes, ensures the name starts
         with "iterated_".
 
-        :param new_node_name (str): New name for the node. If None (when this
-                                    method is not called from an undo/redo),
-                                    reads from the line edit widget.
-        :param old_node_name (str): Current node name. If None (when this
-                                    method is not called from an undo/redo),
-                                    uses self.node_name.
-        :param from_undo (bool): True if this action is from an undo operation.
-        :param from_redo (bool): True ifthis action is from a redo operation.
+        :param new_node_name: (str) New name for the node. If None (when this
+         method is not called from an undo/redo), reads from the line edit
+         widget.
+        :param old_node_name: (str) Current node name. If None (when this
+         method is not called from an undo/redo), uses self.node_name.
+        :param from_undo: (bool) True if this action is from an undo operation.
+        :param from_redo: (bool) True ifthis action is from a redo operation.
         """
 
         # Ignore programmatic refresh emissions
@@ -633,21 +636,24 @@ class FilterWidget(QWidget):
     The widget is designed to integrate seamlessly with the pipeline editor,
     providing real-time feedback and updates as filters are applied.
 
-    .. Methods:
+    Contains:
+
+        Methods:
+
         - layout_view: Configures and initializes the main widget layout,
-                       including search bars, data tables, and action buttons.
+          including search bars, data tables, and action buttons.
         - normalize_scan_path: Normalize a scan path to a logical
-                               project-relative path.
+          project-relative path.
         - ok_clicked: Applies the configured filter to the process and closes
-                      the widget.
+          the widget.
         - reset_search_bar: Resets the search interface to its default state,
-                            clearing all filters.
+          clearing all filters.
         - search_str: Filters and updates the displayed scans based on the
-                      provided search string.
+          provided search string.
         - update_tag_to_filter: Opens a dialog for selecting tags to filter and
-                                updates the filter button text.
+          updates the filter button text.
         - update_tags: Updates the list of visualized tags through a user
-                       dialog and refreshes the table view.
+          dialog and refreshes the table view.
     """
 
     def __init__(self, project, node_name, node, main_window):
@@ -655,7 +661,7 @@ class FilterWidget(QWidget):
         Initialize the Filter Widget for pipeline node filtering.
 
         :param project: Current project instance containing database and
-                        configuration.
+         configuration.
         :param node_name: Display name of the filter node.
         :param node: Input_Filter node instance containing the filter process.
         :param main_window: Parent main window for UI hierarchy.
@@ -878,10 +884,10 @@ class FilterWidget(QWidget):
         updated efficiently by tracking the previous visualization state.
 
         Side effects:
-            - Clears rapid_search text field
-            - Resets advanced_search rows to empty list
-            - Updates advanced_search display
-            - Restores table_data to show all scans from scan_list
+            - Clears rapid_search text field.
+            - Resets advanced_search rows to empty list.
+            - Updates advanced_search display.
+            - Restores table_data to show all scans from scan_list.
         """
         # Clear search inputs
         self.rapid_search.setText("")
@@ -902,14 +908,14 @@ class FilterWidget(QWidget):
         provided for undefined values and custom search filters.
 
         :param str_search: Search query string. Use empty string to show all
-                           scans, or NOT_DEFINED_VALUE constant to filter scans
-                           with undefined fields.
+         scans, or NOT_DEFINED_VALUE constant to filter scans with undefined
+         fields.
 
         Side Effects:
-            - Updates self.table_data.scans_to_visualize with filtered results
-            - Updates self.advanced_search.scans_list with filtered results
+            - Updates self.table_data.scans_to_visualize with filtered results.
+            - Updates self.advanced_search.scans_list with filtered results.
             - Triggers table row update via
-              self.table_data.update_visualized_rows()
+              self.table_data.update_visualized_rows().
         """
 
         old_scan_list = self.table_data.scans_to_visualize
@@ -1041,39 +1047,41 @@ class NodeController(QWidget):
 
     This controller provides a user interface to interact with pipeline nodes,
     allowing users to:
-        - View and edit node names and parameters
-        - Filter and update plug values
-        - Handle undo/redo operations for parameter changes
-        - Manage subprocesses and context names
+        - View and edit node names and parameters.
+        - Filter and update plug values.
+        - Handle undo/redo operations for parameter changes.
+        - Manage subprocesses and context names.
 
     The widget is designed to integrate with a pipeline editor, providing
     real-time updates and synchronization between the UI and the underlying
     pipeline state.
 
-    .. Methods:
+    Contains:
+
+        Methods:
+
         - clearLayout: Clears and deletes all items from a widget's layout,
-                       including nested layouts.
+          including nested layouts.
         - display_filter: Displays a filter dialog for a plug.
         - display_parameters: Renders the parameters UI for a selected node.
         - get_index_from_plug_name: Returns the index of a plug label in the
-                                    UI.
+          UI.
         - update_node_name: Updates the name of the selected node in the
-                            pipeline.
+          pipeline.
         - rename_subprocesses: Recursively updates context names for
-                               subprocesses.
+          subprocesses.
         - update_parameters: Synchronizes UI parameter values with the process
-                             traits.
+          traits.
         - update_plug_value: Updates a plug value.
         - update_plug_value_from_filter: Updates a plug value from filter
-                                         results.
+          results.
         - release_process: Placeholder for process release logic (to be
-                           overridden by subclasses).
+          overridden by subclasses).
 
     Signals:
 
         - value_changed: Signal emitted when a node or parameter value is
           changed.
-
     """
 
     value_changed = pyqtSignal(list)
@@ -1087,7 +1095,7 @@ class NodeController(QWidget):
         interface.
 
         :param project: The current project instance.
-        :param scan_list: lThe list of selected database files (scans).
+        :param scan_list: The list of selected database files (scans).
         :param pipeline_manager_tab: The parent pipeline manager tab widget.
         :param main_window: The main application window.
         """
@@ -1114,8 +1122,8 @@ class NodeController(QWidget):
             - Nested layouts are emptied and scheduled for deletion.
             - The layout itself is deleted once cleared.
 
-        :param widget (QtWidgets.QWidget): The widget whose layout should be
-                                           cleared.
+        :param widget: (QtWidgets.QWidget) The widget whose layout should be
+         cleared.
         """
         layout = widget.layout()
 
@@ -1152,8 +1160,9 @@ class NodeController(QWidget):
 
         :param node_name: The name of the pipeline node containing the plug.
         :param plug_name: The name of the plug to filter.
-        :param parameters: A tuple containing (plug_index, pipeline_instance,
-         plug_value_type) that provides context for the plug being filtered.
+        :param parameters: A three-element tuple (plug_index,
+         pipeline_instance, plug_value_type) that provides the context of the
+         plug currently being filtered.
         :param process: The process instance associated with the node.
 
         Note:
@@ -1187,19 +1196,19 @@ class NodeController(QWidget):
 
         Special handling:
             - 'inputs'/'outputs' nodes: Name field is read-only, displays
-                                        "Pipeline inputs/outputs"
-            - Other nodes: Name field is editable and updates on Enter
-            - Parameters with userlevel > 0 are hidden from the interface
+              "Pipeline inputs/outputs".
+            - Other nodes: Name field is editable and updates on Enter.
+            - Parameters with userlevel > 0 are hidden from the interface.
 
-        :param node_name: Identifier for the node being displayed
+        :param node_name: Identifier for the node being displayed.
         :param process: Node's process object containing traits and their
-                        values
-        :param pipeline: Parent pipeline instance containing this node
+         values.
+        :param pipeline: Parent pipeline instance containing this node.
 
         Side effects:
-            - Clears and rebuilds the widget layout
-            - Updates node_parameters_tmp in the current pipeline editor
-            - Enables the run_pipeline_action
+            - Clears and rebuilds the widget layout.
+            - Updates node_parameters_tmp in the current pipeline editor.
+            - Enables the run_pipeline_action.
         """
         self.node_name = node_name
         self.current_process = process
@@ -1352,11 +1361,11 @@ class NodeController(QWidget):
         """
         Get the index of a plug by its name.
 
-        :param plug_name (str): The name of the plug to find.
-        :param in_or_out (str): Direction of the plug ; "in" for input,
-                                "out" for output.
+        :param plug_name: (str) The name of the plug to find.
+        :param in_or_out: (str) Direction of the plug ; "in" for input,
+         "out" for output.
 
-        :return: The zero-based index of the plug if found, None otherwise.
+        :Returns: The zero-based index of the plug if found, None otherwise.
         """
         labels = self.labels_input if in_or_out == "in" else self.labels_output
 
@@ -1381,8 +1390,8 @@ class NodeController(QWidget):
          name from the UI line edit widget. Is not None only when this method
          is called from an "undo/redo")
 
-        :Emits: value_changed: Signal with node rename details for undo/redo
-                               tracking.
+        :Emits value_changed: Signal with node rename details for undo/redo
+         tracking.
 
         Note:
             Does nothing if the new name already exists in the pipeline.
@@ -1429,14 +1438,15 @@ class NodeController(QWidget):
         incorporating the parent node name.
 
         The context name follows these rules:
-        - Pipeline processes:"Pipeline.{parent_node_name}.{additional_parts}"
-        - Non-pipeline processes: "{parent_node_name}"
-        - Nested subprocesses are updated recursively
+            - Pipeline processes:
+              "Pipeline.{parent_node_name}.{additional_parts}".
+            - Non-pipeline processes: "{parent_node_name}".
+            - Nested subprocesses are updated recursively.
 
-        :param node (Node): The node whose context name will be updated, along
-                            with all its subprocesses.
-        :param parent_node_name (str): The parent node's name to incorporate
-                                       into the context naming hierarchy.
+        :param node: (Node) The node whose context name will be updated, along
+         with all its subprocesses.
+        :param parent_node_name: (str) The parent node's name to incorporate
+         into the context naming hierarchy.
         """
 
         if not isinstance(node, PipelineNode):
@@ -1474,7 +1484,7 @@ class NodeController(QWidget):
         Undefined trait values are handled gracefully.
 
         :param process: Optional process node whose parameters should be
-                        displayed. If None, uses self.current_process.
+         displayed. If None, uses self.current_process.
         """
 
         # Resolve process

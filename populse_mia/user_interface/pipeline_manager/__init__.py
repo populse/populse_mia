@@ -1,15 +1,5 @@
-"""Handle the pipeline manager tab. Allow to create and run pipelines.
-
-Contains:
-    Module:
-        - iteration_table
-        - node_controller
-        - pipeline_editor
-        - pipeline_manager_tab
-        - process_library
-        - process_mia
-        - type_editors
-
+"""
+Handle the pipeline manager tab. Allow to create and run pipelines.
 """
 
 ##########################################################################

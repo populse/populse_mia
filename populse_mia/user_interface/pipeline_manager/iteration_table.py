@@ -1,9 +1,5 @@
-"""Module that handles pipeline iteration.
-
-:Contains:
-    :Class:
-        - IterationTable
-
+"""
+Module that handles pipeline iteration.
 """
 
 ##########################################################################
@@ -13,7 +9,6 @@
 # http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html
 # for details.
 ##########################################################################
-
 
 import ast
 import json
@@ -46,6 +41,8 @@ from populse_mia.user_interface.pop_ups import (
     PopUpSelectTagCountTable,
 )
 
+__all__ = ["IterationTable"]
+
 
 class IterationTable(QWidget):
     """
@@ -55,25 +52,29 @@ class IterationTable(QWidget):
     filter values, and manage the iteration process for pipeline execution.
 
 
-    .. Methods:
-        - _create_tag_button: Create a new tag button
-        - add_tag: Add a tag to visualize in the iteration table
-        - current_editor: Return the currently active pipeline editor
-        - emit_iteration_table_updated: Emit a signal when the iteration
-                                        scans have been updated
-        - fill_values: Fill values_list depending on the visualized tags
-        - filter_values: Select the tag values used for the iteration
-        - format_filter_value: Convert a value into a JSON-formatted string
-        - refresh_layout: Update the layout of the widget
-        - remove_tag: Remove a tag to visualize in the iteration table
-        - select_iteration_tag: Open a pop-up to let the user select on which
-                                tag to iterate
-        - select_visualized_tag: Open a pop-up to let the user select which
-                                 tag to visualize in the iteration table
-        - update_iterated_tag: Update the widget
-        - update_table: Update the iteration table
-        - update_selected_tag: Update the selected tag for current pipeline
-                               manager tab
+    Contains:
+
+        Methods:
+
+            - _create_tag_button: Create a new tag button.
+            - add_tag: Add a tag to visualize in the iteration table.
+            - current_editor: Return the currently active pipeline editor
+            - emit_iteration_table_updated: Emit a signal when the iteration
+              scans have been updated.
+            - fill_values: Fill values_list depending on the visualized tags.
+            - filter_values: Select the tag values used for the iteration.
+            - format_filter_value: Convert a value into a JSON-formatted
+              string.
+            - refresh_layout: Update the layout of the widget.
+            - remove_tag: Remove a tag to visualize in the iteration table.
+            - select_iteration_tag: Open a pop-up to let the user select on
+              which tag to iterate.
+            - select_visualized_tag: Open a pop-up to let the user select
+              which tag to visualize in the iteration table.
+            - update_iterated_tag: Update the widget.
+            - update_table: Update the iteration table.
+            - update_selected_tag: Update the selected tag for current pipeline
+              manager tab.
 
     Signals:
 
@@ -89,7 +90,7 @@ class IterationTable(QWidget):
 
         :param project: Current project in the software.
         :param scan_list: List of the selected database files. If None, all
-                          documents from the current collection will be used.
+         documents from the current collection will be used.
         :param main_window: Software's main window reference.
         """
         super().__init__()
@@ -151,19 +152,16 @@ class IterationTable(QWidget):
         remove_tag_picture = remove_tag_picture.scaledToHeight(20)
         self.remove_tag_label.setPixmap(remove_tag_picture)
         self.remove_tag_label.clicked.connect(self.remove_tag)
-
         # Create a container for iteration controls
         self.iteration_controls_container = QWidget()
         self.iteration_controls_layout = QVBoxLayout(
             self.iteration_controls_container
         )
-
         # First line: self.label_iterate and self.iterated_tag_push_button
         first_line_layout = QHBoxLayout()
         first_line_layout.addWidget(self.label_iterate)
         first_line_layout.addWidget(self.iterated_tag_push_button)
         self.iteration_controls_layout.addLayout(first_line_layout)
-
         # Second line: self.iterated_tag_label, self.combo_box, and
         # self.filter_button
         second_line_layout = QHBoxLayout()
@@ -171,7 +169,6 @@ class IterationTable(QWidget):
         second_line_layout.addWidget(self.combo_box)
         second_line_layout.addWidget(self.filter_button)
         self.iteration_controls_layout.addLayout(second_line_layout)
-
         # Create a container for tags to visualize and its buttons
         self.tags_container = QWidget()
         self.tags_layout = QHBoxLayout(self.tags_container)
@@ -184,31 +181,24 @@ class IterationTable(QWidget):
         self.tags_layout.addWidget(self.add_tag_label)
         self.tags_layout.addWidget(self.remove_tag_label)
         self.tags_layout.addStretch(1)
-
         # Initially hide the iteration controls container and tags container
         self.iteration_controls_container.setVisible(False)
         self.tags_container.setVisible(False)
-
         # --- Main layout: Use QGridLayout ---
         self.main_layout = Qt.QGridLayout(self)
-
         # Add the checkbox to the top-left cell (row 0, column 0)
         self.main_layout.addWidget(self.check_box_iterate, 0, 0, 1, 1)
-
         # Add the iteration controls container to the top-right
         # (row 0, column 1)
         self.main_layout.addWidget(
             self.iteration_controls_container, 0, 1, 1, 1
         )
-
         # Add the table to the second row, spanning both columns
         # (row 1, column 0 to 1)
         self.main_layout.addWidget(self.iteration_table, 1, 0, 1, 2)
-
         # Add the tags container to the third row, spanning both columns
         # (row 2, column 0 to 1)
         self.main_layout.addWidget(self.tags_container, 2, 0, 1, 2)
-
         # Ensure the table and containers expand to fill the available space
         self.main_layout.setColumnStretch(1, 1)
         self.main_layout.setRowStretch(1, 1)
@@ -216,8 +206,8 @@ class IterationTable(QWidget):
     def _create_tag_button(self, text, index):
         """Create a new tag button with the given text and index.
 
-        :param text (str): Text to display on the button.
-        :param index (int): Index of the button in the push_buttons list.
+        :param text: (str) Text to display on the button.
+        :param index: (int) Index of the button in the push_buttons list.
         """
         button = QPushButton(text)
         button.clicked.connect(partial(self.select_visualized_tag, index))
@@ -232,7 +222,7 @@ class IterationTable(QWidget):
         This property provides convenient access to the current editor from the
         pipeline manager without repeating the full attribute chain.
 
-        :return: The active pipeline editor instance.
+        :Returns: The active pipeline editor instance.
         """
         # fmt: off
         return (
@@ -277,7 +267,7 @@ class IterationTable(QWidget):
         """
         Fill values_list with unique tag values for the specified tag.
 
-        :param idx (int): Index of the tag in push_buttons list.
+        :param idx: (int) Index of the tag in push_buttons list.
         """
         tag_name = self.push_buttons[idx].text()
         values = []
@@ -330,9 +320,9 @@ class IterationTable(QWidget):
         ``ast.literal_eval()``. If parsing fails, the original string is
         preserved.
 
-        :param value (Any): The value to serialize.
+        :param value: (Any) The value to serialize.
 
-        :return (str): The JSON representation of the resulting value.
+        :Returns: (str) The JSON representation of the resulting value.
         """
 
         if isinstance(value, str):
@@ -348,8 +338,8 @@ class IterationTable(QWidget):
     def refresh_layout(self):
         """Update the layout of the widget.
 
-        Called in widget's initialization and when a tag push button
-        is added or removed.
+        Called in widget's initialization and when a tag push button is added
+        or removed.
         """
 
         # Clear and rebuild the tags container layout
@@ -412,7 +402,7 @@ class IterationTable(QWidget):
         """
         Open a dialog to select which tag to visualize in the iteration table.
 
-        :param idx (int): Index of the clicked push button.
+        :param idx: (int) Index of the clicked push button.
         """
 
         with self.project.database.data() as database_data:
@@ -436,7 +426,7 @@ class IterationTable(QWidget):
         """
         Update the widget when the iterated tag is modified.
 
-        :param tag_name (str): Name of the iterated tag.
+        :param tag_name: (str) Name of the iterated tag.
         """
 
         if not self.check_box_iterate.isChecked():
@@ -582,11 +572,11 @@ class IterationTable(QWidget):
         Update the lists of values corresponding to the selected tag.
 
         Retrieves all unique values of the selected tag from scans in the
-        current collection that also exist in the scan list. Then updates
-        the tag value lists in the current pipeline editor.
+        current collection that also exist in the scan list. Then updates the
+        tag value lists in the current pipeline editor.
 
-        :param selected_tag (str): The tag whose values should be
-                                   retrieved and updated.
+        :param selected_tag: (str) The tag whose values should be retrieved
+         and updated.
         """
 
         with self.project.database.data() as database_data:
