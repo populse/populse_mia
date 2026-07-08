@@ -1,15 +1,5 @@
 """
 Module to define pipeline manager tab appearance, settings and methods.
-
-Contains:
-    Class:
-        - PipelineManagerTab
-        - RunProgress
-        - RunWorker
-        - StatusWidget
-    Function:
-        - protected_logging
-
 """
 
 ##########################################################################
@@ -132,6 +122,14 @@ from populse_mia.user_interface.pipeline_manager.process_mia import ProcessMIA
 from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 from populse_mia.utils import update_auto_inheritance
 
+__all__ = [
+    "protected_logging",
+    "PipelineManagerTab",
+    "RunProgress",
+    "RunWorker",
+    "StatusWidget",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -141,10 +139,10 @@ def protected_logging():
     Context manager that preserves logging configuration across soma-workflow
     interference.
 
-    This context manager creates a snapshot of all logger configurations
-    before execution and intelligently restores them afterwards. It preserves
-    any new handlers or filters that were added during execution while
-    ensuring original configurations are restored.
+    This context manager creates a snapshot of all logger configurations before
+    execution and intelligently restores them afterwards. It preserves any new
+    handlers or filters that were added during execution while ensuring
+    original configurations are restored.
 
     The protection covers:
         - All named loggers in the logger hierarchy
@@ -152,11 +150,11 @@ def protected_logging():
         - Handler and filter lists (with intelligent merging)
         - Logger levels, disabled state, and propagation settings
 
-    Usage:
-        with protected_logging():
-            # Code that might interfere with logging
-            some_workflow_operation()
-            # Any new handlers/filters added here are preserved
+    Examples:
+        >>> with protected_logging():
+        >>>    # Code that might interfere with logging
+        >>>    some_workflow_operation()
+        >>>    # Any new handlers/filters added here are preserved
     """
     # Create a comprehensive backup of the logging state
     loggers_backup = {}
@@ -222,71 +220,74 @@ class PipelineManagerTab(QWidget):
     """
     Widget that handles the Pipeline Manager tab.
 
-    .. Methods:
-        - _register_node_io_in_database: Register node input and output values
-                                         in the database
-        - _set_anim_frame: Callback that updates the pipeline status action
-                           icon
-        - _should_register_plug: Determine if a plug should be registered
-        - add_plug_value_to_database: Add the plug value to the database
-        - ask_iterated_pipeline_plugs: Display a config dialog for pipeline
-                                       plug iteration and database connections
-        - build_iterated_pipeline: Build a new pipeline with an iteration node
-        - check_requirements: Return the configuration of a pipeline as
-                              required
-        - cleanup_older_init: Remove non-existent entries from the databrowser
-        - complete_pipeline_parameters: Complete pipeline parameters
-        - controller_value_changed: Update history when a pipeline node is
-                                    changed
-        - displayNodeParameters: Display the node controller when a node is
-                                 clicked
-        - finish_execution: Handle pipeline execution completion and update UI
-                            state
-        - garbage_collect: Clean up obsolete data and maintain database
-                           consistency
-        - get_capsul_engine: Retrieve and configure a Capsul engine from the
-                             pipeline editor
-        - get_pipeline_or_process: Get the pipeline or its single unconnected
-                                   process node
-        - get_missing_mandatory_parameters: Check on missing parameters for
-                                            each job
-        - initialize: Clean previous initialization then initialize the current
-                      pipeline
-        - init_pipeline: Initialize the current pipeline of the pipeline
-                         editor
-        - layout_view : Initialize layout for the pipeline manager
-        - loadParameters: Load pipeline parameters to the current pipeline of
-                          the pipeline editor
-        - loadPipeline: Load a pipeline to the pipeline editor
-        - postprocess_pipeline_execution: Operations to be performed after a
-                                          run has been completed
-        - redo: Redo the last undone action on the current pipeline editor
-        - register_completion_attributes: Register completion attributes for a
-                                          given pipeline in the project
-                                          database
-        - remove_progress: Remove and clean up the progress widget
-        - runPipeline: Run the current pipeline of the pipeline editor
-        - saveParameters: Save the pipeline parameters of the the current
-                          pipeline of the pipeline editor
-        - savePipeline: Save the current pipeline of the pipeline editor
-        - save_pipeline_as: Save the current pipeline of the pipeline editor
-                            under another name
-        - show_status: Display the execution status window with runtime
-                       information.
-        - stop_execution: Interrupt pipeline execution gracefully
-        - undo: Undo the last action made on the current pipeline editor
-        - update_inheritance: Update the inheritance dictionary for a process
-                              node in a pipeline execution
-        - update_node_list: Update the list of nodes in workflow
-        - updateProcessLibrary: Update the library of processes when a
-                                pipeline is saved
-        - update_project: Update the project attribute of several objects
-        - update_scans_list: Update the user-selected list of scans
-        - update_user_buttons_states: Update the visibility of
-                                      initialize / run / save actions
-                                      according to the pipeline state
-        - update_user_mode: Update the visibility of widgets / actions
-                            depending of the chosen mode
+    Contains:
+
+        Methods:
+
+            - _register_node_io_in_database: Register node input and output
+              values in the database.
+            - _set_anim_frame: Callback that updates the pipeline status action
+              icon.
+            - _should_register_plug: Determine if a plug should be registered.
+            - add_plug_value_to_database: Add the plug value to the database.
+            - ask_iterated_pipeline_plugs: Display a config dialog for pipeline
+              plug iteration and database connections.
+            - build_iterated_pipeline: Build a new pipeline with an iteration
+              node.
+            - check_requirements: Return the configuration of a pipeline as
+              required.
+            - cleanup_older_init: Remove non-existent entries from the
+              databrowser.
+            - complete_pipeline_parameters: Complete pipeline parameters.
+            - controller_value_changed: Update history when a pipeline node is
+              changed.
+            - displayNodeParameters: Display the node controller when a node is
+              clicked.
+            - finish_execution: Handle pipeline execution completion and update
+              UI state.
+            - garbage_collect: Clean up obsolete data and maintain database
+              consistency.
+            - get_capsul_engine: Retrieve and configure a Capsul engine from
+              the pipeline editor.
+            - get_pipeline_or_process: Get the pipeline or its single
+              unconnected process node.
+            - get_missing_mandatory_parameters: Check on missing parameters for
+              each job.
+            - initialize: Clean previous initialization then initialize the
+              current pipeline.
+            - init_pipeline: Initialize the current pipeline of the pipeline
+              editor.
+            - layout_view : Initialize layout for the pipeline manager.
+            - loadParameters: Load pipeline parameters to the current pipeline
+              of the pipeline editor.
+            - loadPipeline: Load a pipeline to the pipeline editor.
+            - postprocess_pipeline_execution: Operations to be performed after
+              a run has been completed.
+            - redo: Redo the last undone action on the current pipeline editor.
+            - register_completion_attributes: Register completion attributes
+              for a given pipeline in the project database.
+            - remove_progress: Remove and clean up the progress widget.
+            - runPipeline: Run the current pipeline of the pipeline editor.
+            - saveParameters: Save the pipeline parameters of the the current
+              pipeline of the pipeline editor.
+            - savePipeline: Save the current pipeline of the pipeline editor.
+            - save_pipeline_as: Save the current pipeline of the pipeline
+              editor under another name.
+            - show_status: Display the execution status window with runtime
+              information.
+            - stop_execution: Interrupt pipeline execution gracefully.
+            - undo: Undo the last action made on the current pipeline editor.
+            - update_inheritance: Update the inheritance dictionary for a
+              process node in a pipeline execution.
+            - update_node_list: Update the list of nodes in workflow.
+            - updateProcessLibrary: Update the library of processes when a
+              pipeline is saved.
+            - update_project: Update the project attribute of several objects.
+            - update_scans_list: Update the user-selected list of scans.
+            - update_user_buttons_states: Update the visibility of
+              initialize / run / save actions according to the pipeline state.
+            - update_user_mode: Update the visibility of widgets / actions
+              depending of the chosen mode.
 
     Signals:
 
@@ -308,11 +309,11 @@ class PipelineManagerTab(QWidget):
         tables to manage complex data analysis workflows.
 
         :param project: The current project instance containing database and
-                        configuration
+         configuration
         :param scan_list: List of selected database files to process. If None
-                          or empty, defaults to all documents in the current
-                          collection
-        :param main_window: Main application window instance for UI integration
+         or empty, defaults to all documents in the current collection
+        :param main_window: Main application window instance for UI
+         integration.
         """
         super().__init__()
         # Initialize core attributes
@@ -495,6 +496,16 @@ class PipelineManagerTab(QWidget):
             Pipeline and PipelineNode instances are skipped as only leaf
             processes produce meaningful output data.
 
+        Contains:
+
+            Inner functions:
+
+                - _serialize_for_json: Serialize objects to JSON-compatible
+                  format.
+                - _update_values_from_job: Update values dictionary with job
+                  parameters.
+                - _serialize_dict_values: Serialize all values in a dictionary
+                  for JSON compatibility.
         """
 
         def _serialize_for_json(item):
@@ -506,7 +517,7 @@ class PipelineManagerTab(QWidget):
 
             :param item: The object to be serialized.
 
-            :return: JSON-serializable representation of the item.
+            :Returns: JSON-serializable representation of the item.
 
             :raises TypeError: If item type cannot be serialized.
             """
@@ -563,8 +574,7 @@ class PipelineManagerTab(QWidget):
             """
             Update values dictionary with job parameters.
 
-            :param values_dict: Dictionary of input or output values to
-                                update.
+            :param values_dict: Dictionary of input or output values to update.
             """
 
             for key in values_dict:
@@ -689,10 +699,10 @@ class PipelineManagerTab(QWidget):
         """
         Determine if a plug should be registered in the database.
 
-        :param process: Process instance
-        :param plug_name (str): Name of the plug to check
+        :param process: Process instance.
+        :param plug_name: (str) Name of the plug to check.
 
-        :return: True if plug should be registered, False otherwise
+        :Returns: True if plug should be registered, False otherwise.
         """
 
         if plug_name not in process.traits():
@@ -1169,13 +1179,13 @@ class PipelineManagerTab(QWidget):
             - Which plugs should be iterated over during pipeline execution.
             - Which input plugs should be connected to database filters.
             - Interactive dependency management (database connection requires
-                iteration).
+              iteration).
 
         The dialog presents a grid layout with checkboxes for each available
         plug:
             - Iteration checkbox: Mark plug for iteration during execution.
             - Database checkbox: Connect input plug to database filter
-                (inputs only).
+              (inputs only).
 
         Behavioral constraints:
             - Database connection automatically enables iteration.
@@ -1190,6 +1200,22 @@ class PipelineManagerTab(QWidget):
                 - iterated_plugs: List of plug names marked for iteration
                 - database_plugs: List of plug names connected to database
             None if the user cancels the dialog.
+
+        Contains:
+
+            Inner functions:
+
+                - is_database_compatible: Check if a plug can connect to a
+                  database filter.
+                - on_iteration_toggled: Handle iteration checkbox toggle
+                  events.
+                - on_database_toggled: Handle database checkbox toggle events.
+                - create_dialog_layout: Build the main dialog window and
+                  layout.
+                - add_parameter_controls: Add iteration and optional database
+                  controls for plugs into the grid layout.
+                - extract_results: Extract the final plug configuration from
+                  the dialog.
         """
 
         # System plugs that should not be configurable
@@ -1204,14 +1230,14 @@ class PipelineManagerTab(QWidget):
             """
             Check if a pipeline plug is compatible with a database filter.
 
-            This helper function verifies whether a plug can be connected to
-            a database filter based on its trait type.
+            This helper function verifies whether a plug can be connected to a
+            database filter based on its trait type.
 
             :param process: The process or pipeline containing the plug.
-            :param plug (str): The name of the plug to check.
+            :param plug: (str) The name of the plug to check.
 
-            :return (bool): True if the plug is compatible with a database
-                            filter, False otherwise.
+            :Returns (bool) True if the plug is compatible with a database
+             filter, False otherwise.
             """
 
             try:
@@ -1229,11 +1255,10 @@ class PipelineManagerTab(QWidget):
             When iteration is disabled, automatically disable database
             connection since database connection requires iteration.
 
-            :param param_buttons (list): List of parameter button
-                                         configurations.
-            :param param_idx (int): Index of the plug in the parameter list.
-            :param checked (bool): The current state of the iteration
-                                   checkbox.
+            :param param_buttons: (list) List of parameter button
+             configurations.
+            :param param_idx: (int) Index of the plug in the parameter list.
+            :param checked: (bool) The current state of the iteration checkbox.
             """
 
             db_checkbox = param_buttons[param_idx][2]
@@ -1247,13 +1272,13 @@ class PipelineManagerTab(QWidget):
             """
             Handle database checkbox toggle events.
 
-            When database connection is enabled, automatically enable
-            iteration since database connection requires iteration.
+            When database connection is enabled, automatically enable iteration
+            since database connection requires iteration.
 
-            Args:
-                param_buttons (list): List of parameter button configurations.
-                param_idx (int): Index of the plug in the parameter list.
-                checked (bool): The current state of the database checkbox.
+            :param param_buttons: (list) List of parameter button
+             configurations.
+            :param param_idx: (int) Index of the plug in the parameter list.
+            :param checked: (bool) The current state of the database checkbox.
             """
 
             if checked:
@@ -1272,16 +1297,14 @@ class PipelineManagerTab(QWidget):
                 - A grid layout for parameter input/output controls.
                 - Standard OK/Cancel dialog buttons.
 
-            :return (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]]):
+            :Returns: (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]])
                 A tuple containing:
                     - dialog (Qt.QDialog): The configured pipeline
-                                           configuration dialog.
+                      configuration dialog.
                     - param_grid (Qt.QGridLayout): The grid layout used to
-                                                   arrange parameter widgets.
+                      arrange parameter widgets.
                     - param_buttons (List[List]): Two lists (inputs and
-                                                  outputs) for storing
-                                                  parameter-related button
-                                                  widgets.
+                      outputs) for storing parameter-related button widgets.
             """
             dialog = Qt.QDialog()
             dialog.setWindowTitle("Pipeline Iteration Configuration")
@@ -1345,19 +1368,17 @@ class PipelineManagerTab(QWidget):
             positions them in the provided grid layout, and stores references
             to the controls in `param_buttons` for later retrieval.
 
-            :param grid (Qt.QGridLayout): The layout where parameter controls
-                                          are added.
-            :param plugs (list[str]): The list of plug names to create
-                                      controls for.
-            :param param_type (int): Indicator for the plug type:
-                                     - 0: inputs
-                                     - 1: outputs
-            :param param_buttons (list[list]): A nested list that stores
-                                               references to the created
-                                               controls, organized by plug
-                                               type.
-            :param has_database_option (bool): Whether to include a database
-                                               checkbox next to each plug.
+            :param grid: (Qt.QGridLayout) The layout where parameter controls
+             are added.
+            :param plugs: (list[str]) The list of plug names to create controls
+             for.
+            :param param_type: (int) Indicator for the plug type:
+                - 0: inputs
+                - 1: outputs
+            :param param_buttons: (list[list]) A nested list that stores
+             references to the created controls, organized by plug type.
+            :param has_database_option: (bool) Whether to include a database
+             checkbox next to each plug.
             """
             filtered_plugs = [
                 plug for plug in plugs if plug not in FORBIDDEN_PLUGS
@@ -1417,17 +1438,16 @@ class PipelineManagerTab(QWidget):
             determine which plugs are selected for iteration and which are
             linked to the database option.
 
-            :param param_buttons (list[list]): A nested list of plug
-                                               configurations, where each
-                                               entry is of the form:
+            :param param_buttons: (list[list]) A nested list of plug
+             configurations, where each entry is of the form:
                 [plug_name (str), iter_checkbox (Qt.QCheckBox),
                 db_checkbox (Optional[Qt.QCheckBox])].
 
-            :return (tuple[list[str], list[str]]): A tuple containing:
+            :Returns: (tuple[list[str], list[str]]): A tuple containing:
                 - iterated_plugs (list[str]): Names of plugs selected for
-                                              iteration.
+                  iteration.
                 - database_plugs (list[str]): Names of plugs with the database
-                                              option enabled.
+                  option enabled.
             """
             all_controls = param_buttons[0] + param_buttons[1]
 
@@ -1660,11 +1680,11 @@ class PipelineManagerTab(QWidget):
         configuration engine to select configurations that match the
         requirements.
 
-        :param environment (str): The target environment for checking
-                                  configurations. Defaults to "global".
+        :param environment: (str) The target environment for checking
+         configurations. Defaults to "global".
 
-        :return (dict): A dictionary mapping each pipeline node to its
-                        selected configuration.
+        :Returns: (dict) A dictionary mapping each pipeline node to its
+         selected configuration.
         """
 
         return {
@@ -1739,21 +1759,18 @@ class PipelineManagerTab(QWidget):
         maintains an undo history for user actions. It handles two types
         of changes:
             - Node name updates: Updates the node name and refreshes the
-                                 pipeline view while preserving the current
-                                 view state.
+              pipeline view while preserving the current view state.
             - Plug value updates: Records parameter changes while filtering
-                                  out protected parameters, empty values, and
-                                  system-generated changes to avoid cluttering
-                                  the undo history.
+              out protected parameters, empty values, and system-generated
+              changes to avoid cluttering the undo history.
 
         :param signal_list: A list containing change information with the
-                            first element being the change type ("node_name"
-                            or "plug_value"), followed by context-specific
-                            data:
+         first element being the change type ("node_name" or "plug_value"),
+         followed by context-specific data:
             - For "node_name": ["node_name", ProcessNode_object,
-                                new_node_name, old_node_name]
+              new_node_name, old_node_name]
             - For "plug_value": ["plug_value", node_name, old_value,
-                                 plug_name, plug_type, new_value]]
+              plug_name, plug_type, new_value]]
         """
 
         if not signal_list:
@@ -1837,8 +1854,7 @@ class PipelineManagerTab(QWidget):
         context.
 
         :param node_name: The name/identifier of the selected node.
-        :param process: The process instance associated with the selected
-                        node.
+        :param process: The process instance associated with the selected node.
         """
         current_pipeline = self.pipelineEditorTabs.get_current_pipeline()
         self.nodeController.display_parameters(
@@ -1854,22 +1870,22 @@ class PipelineManagerTab(QWidget):
         whether successfully or with errors. The method performs comprehensive
         cleanup and user feedback operations:
 
-        - Disables pipeline control actions during cleanup
-        - Disconnects progress worker signals to prevent memory leaks
-        - Checks execution status and handles
-          WorkflowExecutionError/RuntimeError
-        - Updates status bar with clear success/failure messages
-        - Sets appropriate visual status icon (green checkmark or red cross)
-        - Cleans up progress indicators and re-enables pipeline actions
-        - Updates node controller parameters for next execution
+            - Disables pipeline control actions during cleanup.
+            - Disconnects progress worker signals to prevent memory leaks.
+            - Checks execution status and handles
+              WorkflowExecutionError/RuntimeError.
+            - Updates status bar with clear success/failure messages.
+            - Sets appropriate visual status icon (green checkmark or red
+              cross).
+            - Cleans up progress indicators and re-enables pipeline actions.
+            - Updates node controller parameters for next execution.
 
         The method ensures proper cleanup regardless of execution outcome and
         provides comprehensive user feedback through status messages and
         visual indicators.
 
-        :raises:
-            WorkflowExecutionError: When pipeline execution fails
-            RuntimeError: When execution is aborted before running
+        :raises WorkflowExecutionError: When pipeline execution fails.
+        :raises RuntimeError: When execution is aborted before running.
         """
         self.stop_pipeline_action.setEnabled(False)
         worker = self.progress.worker
@@ -1935,11 +1951,11 @@ class PipelineManagerTab(QWidget):
         Clean up obsolete data and maintain database consistency.
 
         This method performs comprehensive cleanup operations including:
-            - Processing finished pipeline executions with error protection
-            - Removing orphaned files and historical data entries
-            - Refreshing the data browser table display
-            - Resetting pipeline editor initialization state if applicable
-            - Updating UI button states to reflect current system status
+            - Processing finished pipeline executions with error protection.
+            - Removing orphaned files and historical data entries.
+            - Refreshing the data browser table display.
+            - Resetting pipeline editor initialization state if applicable.
+            - Updating UI button states to reflect current system status.
 
         The cleanup operations ensure the application remains performant
         and maintains data integrity across user sessions.
@@ -1967,9 +1983,8 @@ class PipelineManagerTab(QWidget):
         pipeline editor tabs and configures it using the Mia configuration
         settings.
 
-        :return (CapsulEngine): A configured Capsul engine instance ready for
-                                pipeline execution, with settings applied from
-                                the Mia config object.
+        :Returns: (CapsulEngine) A configured Capsul engine instance ready for
+         pipeline execution, with settings applied from the Mia config object.
         """
         return self.pipelineEditorTabs.get_capsul_engine()
 

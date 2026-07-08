@@ -2455,8 +2455,8 @@ def get_path(name, dictionary, prev_paths=None, pckg=None):
      dictionary. If None, a new path list is created.
     :param pckg: (str) If provided, navigation starts inside that package name.
 
-    :Returns (list[str]) A list of keys representing the path to the module, or
-     None if the module is not found.
+    :Returns: (list[str]) A list of keys representing the path to the module,
+     or None if the module is not found.
     """
 
     # Initialize accumulated path
