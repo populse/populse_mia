@@ -1,19 +1,6 @@
 """
 Module that executes the actions in the pipeline manager menu and allows
 to graphically modify a pipeline.
-
-
-Contains:
-
-    Class:
-        - PipelineEditor
-        - PipelineEditorTabs
-
-    Function:
-        - find_filename
-        - get_path
-        - save_pipeline
-
 """
 
 ##########################################################################
@@ -67,6 +54,14 @@ from populse_mia.user_interface.pipeline_manager.node_controller import (
 from populse_mia.user_interface.pop_ups import PopUpClosePipeline
 from populse_mia.utils import verCmp
 
+__all__ = [
+    "PipelineEditor",
+    "PipelineEditorTabs",
+    "find_filename",
+    "get_path",
+    "save_pipeline",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -78,23 +73,26 @@ class PipelineEditor(PipelineDeveloperView):
     nodes and plugs, edit node properties, and track modifications. It also
     handles persistence (save/export) and undo/redo history management.
 
-    .. Methods:
-        - _del_link: Deletes a link.
-        - _export_plug: Export a plug to a pipeline global input or output.
-        - _release_grab_link: Method called when a link is released.
-        - _remove_plug: Removes a plug.
-        - add_link: Add a link between two nodes.
-        - add_named_process: Adds a process to the pipeline.
-        - check_modifications: Checks if the nodes of the pipeline have been
-                               modified.
-        - del_node: Deletes a node.
-        - export_node_plugs: Exports all the plugs of a node.
-        - get_current_filename: Returns the relative path the pipeline was
-                                last saved to. Empty if never saved.
-        - save_pipeline: Saves the pipeline.
-        - update_history: Updates the history for undos and redos/
-        - update_node_name: Updates a node name.
-        - update_plug_value: Updates a plug value.
+    Contains:
+
+        Methods:
+
+            - _del_link: Deletes a link.
+            - _export_plug: Export a plug to a pipeline global input or output.
+            - _release_grab_link: Method called when a link is released.
+            - _remove_plug: Removes a plug.
+            - add_link: Add a link between two nodes.
+            - add_named_process: Adds a process to the pipeline.
+            - check_modifications: Checks if the nodes of the pipeline have
+              been modified.
+            - del_node: Deletes a node.
+            - export_node_plugs: Exports all the plugs of a node.
+            - get_current_filename: Returns the relative path the pipeline was
+              last saved to. Empty if never saved.
+            - save_pipeline: Saves the pipeline.
+            - update_history: Updates the history for undos and redos.
+            - update_node_name: Updates a node name.
+            - update_plug_value: Updates a plug value.
 
     Signals:
 
@@ -102,9 +100,7 @@ class PipelineEditor(PipelineDeveloperView):
         - pipeline_saved: Signal emitted when the pipeline is saved.
     """
 
-    # The signal emitted when the pipeline is modified
     pipeline_modified = QtCore.pyqtSignal(PipelineDeveloperView)
-    # The signal emitted when the pipeline is saved
     pipeline_saved = QtCore.pyqtSignal(str)
 
     def __init__(self, project, main_window):
@@ -115,9 +111,9 @@ class PipelineEditor(PipelineDeveloperView):
         undo/redo functionality.
 
         :param project: The current project instance containing pipeline data
-                        and configuration.
-        :parm main_window: The main application window instance for UI
-                           integration.
+         and configuration.
+        :param main_window: The main application window instance for UI
+         integration.
         """
         super().__init__(
             pipeline=None,
@@ -143,18 +139,18 @@ class PipelineEditor(PipelineDeveloperView):
         records the action in history.
 
         :param link: Link specification string in the format
-                     "source_node.output_plug->dest_node.input_plug".If None,
-                     uses the current link stored in self._current_link.
+         "source_node.output_plug->dest_node.input_plug". If None, uses the
+         current link stored in self._current_link.
         :param from_undo: Whether this deletion is being performed as part of
-                          an undo operation. Affects history recording.
+         an undo operation. Affects history recording.
         :param from_redo: Whether this deletion is being performed as part of
-                          a redo operation. Affects history recording.
+         a redo operation. Affects history recording.
 
         Side Effects:
-            - Updates self._current_link to the deleted link
-            - Modifies self._current_link_def with link component references
-            - Calls parent class's _del_link() to perform actual deletion
-            - Records action in history unless from undo/redo
+            - Updates self._current_link to the deleted link.
+            - Modifies self._current_link_def with link component references.
+            - Calls parent class's _del_link() to perform actual deletion.
+            - Records action in history unless from undo/redo.
         """
         # Use provided link or fall back to current link
         link = link or self._current_link
@@ -223,43 +219,38 @@ class PipelineEditor(PipelineDeveloperView):
         appropriate links, and maintains operation history for undo/redo
         functionality.
 
-        :param pipeline_parameter (str): Name for the exported pipeline
-                                         parameter. If None, prompts user for
-                                         a name via dialog. Defaults to None.
-        :param optional (bool): Whether the exported plug is optional. If
-                                None, derived from dialog checkbox or plug
-                                configuration. Defaults to None.
-        :param weak_link (bool): Whether to create a weak link (doesn't
-                                 enforce execution order). If None, derived
-                                 from dialog or defaults to False.
-        :param from_undo (bool): True when called during an undo operation.
-                                 Used to prevent circular history updates.
-                                 Defaults to False.
-        :param from_redo (bool): True when called during a redo operation.
-                                 Used to prevent circular history updates.
-                                 Defaults to False.
-        :param temp_plug_name (tuple): A (node_name, plug_name) tuple
-                                       specifying the plug to export. If None,
-                                       uses self._temp_plug_name. Defaults to
-                                       None.
-        :param multi_export (bool): True when exporting multiple plugs
-                                    simultaneously. Changes return behavior
-                                    and error handling. Defaults to False.
+        :param pipeline_parameter: (str) Name for the exported pipeline
+         parameter. If None, prompts user for a name via dialog. Defaults to
+         None.
+        :param optional: (bool) Whether the exported plug is optional. If None,
+         derived from dialog checkbox or plug configuration. Defaults to None.
+        :param weak_link: (bool) Whether to create a weak link (doesn't enforce
+         execution order). If None, derived from dialog or defaults to False.
+        :param from_undo: (bool) True when called during an undo operation.
+         Used to prevent circular history updates. Defaults to False.
+        :param from_redo: (bool) True when called during a redo operation. Used
+         to prevent circular history updates. Defaults to False.
+        :param temp_plug_name: (tuple) A (node_name, plug_name) tuple
+         specifying the plug to export. If None, uses self._temp_plug_name.
+         Defaults to None.
+        :param multi_export: (bool) True when exporting multiple plugs
+         simultaneously. Changes return behavior and error handling. Defaults
+         to False.
 
-        :return (str): When multi_export is True, returns the plug name on
-                       success or None on failure. When multi_export is False,
-                       returns None after updating the UI and history.
+        :Returns: (str) When multi_export is True, returns the plug name on
+         success or None on failure. When multi_export is False, returns None
+         after updating the UI and history.
 
-        :raises TraitError: Logged as warning when plug export fails due to
-                            trait issues.
+        :raises ~traits.trait_errors.TraitError: Logged as warning when plug
+         export fails due to trait issues.
         :raises ValueError: Logged as warning when export fails due to invalid
-                            values.
+         values.
 
         Side Effects:
-            - May display dialog boxes for user input
-            - Updates pipeline structure and UI
-            - Adds entry to operation history (unless from_undo/from_redo)
-            - Shows status message in main window
+            - May display dialog boxes for user input.
+            - Updates pipeline structure and UI.
+            - Adds entry to operation history (unless from_undo/from_redo).
+            - Shows status message in main window.
         """
         temp_plug_name = temp_plug_name or self._temp_plug_name
 
@@ -403,22 +394,22 @@ class PipelineEditor(PipelineDeveloperView):
         Remove one or more plugs from the pipeline.
 
         This method removes plugs from the pipeline, tracks their connections
-        for potential undo/redo operations, and updates the application
-        history unless called from an export operation.
+        for potential undo/redo operations, and updates the application history
+        unless called from an export operation.
 
         :param plug_names: A tuple (node_name, plug_name) or list of such
-                           tuples specifying the plug(s) to remove. If None,
-                           uses self._temp_plug_name.
+         tuples specifying the plug(s) to remove. If None, uses
+         self._temp_plug_name.
         :param from_undo: Whether this method is being called from an undo
-                          operation.
+         operation.
         :param from_redo: Whether this method is being called from a redo
-                          operation.
+         operation.
         :param from_export_plugs: Whether this method is being called from an
-                                  export plugs undo/redo operation. When True,
-                                  history is not updated.
+         export plugs undo/redo operation. When True, history is not updated.
 
-        :note: For each removed plug, stores [plug_info, connected_plugs,
-               optional_flag] in the history for potential restoration.
+        Note:
+            For each removed plug, stores [plug_info, connected_plugs,
+            optional_flag] in the history for potential restoration.
         """
         # Use provided plug names or fall back to instance variable
         plug_names = plug_names or self._temp_plug_name
@@ -495,24 +486,24 @@ class PipelineEditor(PipelineDeveloperView):
         "node.plug->node.plug" format and added to the pipeline scene.
 
         :param source: A tuple of (node_name, plug_name) for the source
-                       connection.
+         connection.
         :param dest: A tuple of (node_name, plug_name) for the destination
-                     connection.
+         connection.
         :param active: Whether the link is currently active/enabled.
         :param weak: Whether the link is a weak reference that doesn't enforce
-                     strict execution dependencies.
+         strict execution dependencies.
         :param from_undo: Whether this action originates from an undo
-                          operation. Defaults to False.
-        :param from_redo: Whether this action originates from a redo
-                          operation. Defaults to False.
+         operation. Defaults to False.
+        :param from_redo: Whether this action originates from a redo operation.
+         Defaults to False.
         :param allow_export: Whether to allow this link in exported pipelines.
-                             Defaults to False.
+         Defaults to False.
 
         Side Effects:
-            - Adds the link to the pipeline scene
-            - Updates the pipeline visualization
-            - Records the action in history (unless from undo/redo)
-            - Displays a status message in the main window
+            - Adds the link to the pipeline scene.
+            - Updates the pipeline visualization.
+            - Records the action in history (unless from undo/redo).
+            - Displays a status message in the main window.
         """
         # Create link representation in "node.plug->node.plug" format
         link = f"{'.'.join(source)}->{'.'.join(dest)}"
@@ -541,25 +532,25 @@ class PipelineEditor(PipelineDeveloperView):
         according to project settings. It also handles link restoration when
         the action is part of an undo/redo operation.
 
-        :param class_process (str): The name of the process class to
-                                    instantiate.
-        :param node_name (str): Custom name for the node. If None, the name is
-                                derived from the process's context_name or
-                                name attribute. Defaults to None.
-        :param from_undo (bool): Whether this action is part of an undo
-                                 operation. Defaults to False.
-        :param from_redo (bool): Whether this action is part of a redo
-                                 operation. Defaults to False.
-        :param links (list): List of link tuples to restore, where each tuple
-                             contains (source, dest, active, weak). Used
-                             during undo/redo operations. Defaults to None.
+        :param class_process: (str) The name of the process class to
+         instantiate.
+        :param node_name: (str) Custom name for the node. If None, the name is
+         derived from the process's context_name or name attribute. Defaults to
+         None.
+        :param from_undo: (bool) Whether this action is part of an undo
+         operation. Defaults to False.
+        :param from_redo: (bool) Whether this action is part of a redo
+         operation. Defaults to False.
+        :param links: (list) List of link tuples to restore, where each tuple
+         contains (source, dest, active, weak). Used during undo/redo
+         operations. Defaults to None.
 
         Side Effects:
-            - Adds process to the pipeline
-            - Configures project settings if applicable
-            - Restores links if provided
-            - Updates history for undo/redo
-            - Updates UI status bar and buttons
+            - Adds process to the pipeline.
+            - Configures project settings if applicable.
+            - Restores links if provided.
+            - Updates history for undo/redo.
+            - Updates UI status bar and buttons.
         """
 
         if links is None:
@@ -621,10 +612,10 @@ class PipelineEditor(PipelineDeveloperView):
         inputs/outputs).
 
         When changes are detected, it:
-            - Recreates the node with the updated process definition
-            - Preserves the node's position in the scene
-            - Attempts to restore compatible links
-            - Removes incompatible links and notifies the user
+            - Recreates the node with the updated process definition.
+            - Preserves the node's position in the scene.
+            - Attempts to restore compatible links.
+            - Removes incompatible links and notifies the user.
 
         Side Effects:
             Modifies self.scene.gnodes, self.scene.glinks, and pipeline.nodes.
@@ -784,12 +775,12 @@ class PipelineEditor(PipelineDeveloperView):
         Deletes a node from the pipeline and updates the GUI and history
         accordingly.
 
-        :param node_name (str): The name of the node to delete. If not
-                                provided, the currently selected node is used.
-        :param from_undo (bool): True if the deletion was triggered by an undo
-                                 operation.
-        :param from_redo (bool): True if the deletion was triggered by a redo
-                                 operation.
+        :param node_name: (str) The name of the node to delete. If not
+         provided, the currently selected node is used.
+        :param from_undo: (bool) True if the deletion was triggered by an undo
+         operation.
+        :param from_redo: (bool) True if the deletion was triggered by a redo
+         operation.
         """
         pipeline = self.scene.pipeline
         node_name = node_name or self.current_node_name
@@ -895,18 +886,18 @@ class PipelineEditor(PipelineDeveloperView):
         :param inputs: Whether to export input plugs. Defaults to True.
         :param outputs: Whether to export output plugs. Defaults to True.
         :param optional: Whether to include optional plugs in the export.
-                         Defaults to False.
+         Defaults to False.
         :param from_undo: Whether this call originates from an undo operation.
-                          Defaults to False.
+         Defaults to False.
         :param from_redo: Whether this call originates from a redo operation.
-                          Defaults to False.
+         Defaults to False.
 
-        :note:
+        Note:
             - Only unlinked plugs are exported (outputs without links_to,
-              inputs without links_from)
+              inputs without links_from).
             - Certain system plugs are automatically excluded
-              (nodes_activation, selection_changed, etc.)
-            - The operation is recorded in the history for undo/redo support
+              (nodes_activation, selection_changed, etc.).
+            - The operation is recorded in the history for undo/redo support.
         """
         # System plugs that should never be exported
         EXCLUDED_PLUGS = frozenset(
@@ -978,8 +969,8 @@ class PipelineEditor(PipelineDeveloperView):
         file where this pipeline was most recently saved. If the pipeline has
         never been saved, returns an empty string.
 
-        :return (str): Relative path to the pipeline file, or empty string if
-                       never saved.
+        :Returns: (str) Relative path to the pipeline file, or empty string if
+         never saved.
         """
         filename = getattr(self, "_pipeline_filename", None)
 
@@ -994,30 +985,35 @@ class PipelineEditor(PipelineDeveloperView):
         method performs validation to ensure the filename is valid (doesn't
         start with a digit, has .py extension) and checks user permissions.
 
-        :param filename (str): Path where the pipeline should be saved. If
-                               None, a file dialog will be shown. Defaults to
-                               None.
+        :param filename: (str) Path where the pipeline should be saved. If
+         None, a file dialog will be shown. Defaults to None.
 
-        :return (str): The absolute path of the saved pipeline file,
-                       or None if:
-                - The pipeline is empty (fewer than 2 nodes)
-                - The user cancelled the save dialog
-                - The filename is invalid
-                - The user lacks permission to overwrite an existing file
+        :Returns: (str) The absolute path of the saved pipeline file, or None
+         if:
+            - The pipeline is empty (fewer than 2 nodes).
+            - The user cancelled the save dialog.
+            - The filename is invalid.
+            - The user lacks permission to overwrite an existing file.
 
-        :note:
+        Note:
             - pipeline_saved: Signal emitted with the filename when save is
-                              successful.
+              successful.
+
+        Contains:
+
+            Inner functions:
+
+                _show_warning: Display a warning message box to the user.
         """
 
         def _show_warning(title, message):
             """
             Display a warning message box to the user.
 
-            :param title (str): The title displayed in the warning dialog
-                                window.
-            :param message (str): The message text shown inside the warning
-                                  dialog box.
+            :param title: (str) The title displayed in the warning dialog
+             window.
+            :param message: (str) The message text shown inside the warning
+             dialog box.
             """
             msg = QtWidgets.QMessageBox()
             msg.setIcon(QtWidgets.QMessageBox.Warning)
@@ -1127,19 +1123,18 @@ class PipelineEditor(PipelineDeveloperView):
         complementary redo entries are cleaned up to maintain consistency.
 
         :param history_maker: A list describing the action, where
-                              history_maker[0] is the action type
-                              (e.g., 'add_process', 'delete_process',
-                              'update_node_name') and history_maker[1] is
-                              typically the affected node identifier.
-        :param from_undo (bool): Whether this update stems from an undo
-                                 operation. Defaults to False.
-        :param from_redo (bool): Whether this update stems from a redo
-                                 operation. Defaults to False.
+         history_maker[0] is the action type (e.g., 'add_process',
+         'delete_process', 'update_node_name') and history_maker[1] is
+         typically the affected node identifier.
+        :param from_undo: (bool) Whether this update stems from an undo
+         operation. Defaults to False.
+        :param from_redo: (bool) Whether this update stems from a redo
+         operation. Defaults to False.
 
-        :note:
-            - 'update_node_name' actions are not added to the undo stack
+        Note:
+            - 'update_node_name' actions are not added to the undo stack.
             - Complementary actions (add/delete for the same process) are
-              removed from the redo stack when a new action occurs
+              removed from the redo stack when a new action occurs.
             - pipeline_modified: Signal emitted indicating the pipeline has
               been modified.
         """
@@ -1186,25 +1181,25 @@ class PipelineEditor(PipelineDeveloperView):
         Update a node's name in the pipeline, preserving all connections.
 
         This method renames a node by:
-        1. Temporarily removing all links connected to the node
-        2. Renaming the node in the pipeline
-        3. Restoring all links with the updated node name
-        4. Recording the action in the history for undo/redo support
+            1. Temporarily removing all links connected to the node.
+            2. Renaming the node in the pipeline.
+            3. Restoring all links with the updated node name.
+            4. Recording the action in the history for undo/redo support.
 
         :param old_node: The node object to rename.
         :param old_node_name: The current name of the node.
         :param new_node_name: The desired new name for the node.
         :param from_undo: Whether this action is being performed as part of an
-                          undo operation. Defaults to False.
+         undo operation. Defaults to False.
         :param from_redo: Whether this action is being performed as part of a
-                          redo operation. Defaults to False.
+         redo operation. Defaults to False.
 
         Side Effects:
-            - Updates the pipeline's node registry
-            - Removes and recreates all links connected to the node
-            - Updates pipeline activation states
-            - Records action in history
-            - Displays status message to user
+            - Updates the pipeline's node registry.
+            - Removes and recreates all links connected to the node.
+            - Updates pipeline activation states.
+            - Records action in history.
+            - Displays status message to user.
         """
         pipeline = self.scene.pipeline
         # Collect all links connected to this node before removal
@@ -1296,21 +1291,20 @@ class PipelineEditor(PipelineDeveloperView):
 
         :param node_name: The name of the node containing the plug.
         :param  new_value: The new value to assign to the plug. Will be cast
-                           to value_type unless from_undo or from_redo is True.
+         to value_type unless from_undo or from_redo is True.
         :param plug_name: The name of the plug to update.
         :param value_type: The type constructor to apply to new_value
-                           (e.g., int, float, str). Ignored when from_undo or
-                           from_redo is True.
+         (e.g., int, float, str). Ignored when from_undo or from_redo is True.
         :param from_undo: If True, indicates this update is from an undo
-                          operation. Defaults to False.
+         operation. Defaults to False.
         :param from_redo: If True, indicates this update is from a redo
-                          operation. Defaults to False.
+         operation. Defaults to False.
 
         Side Effects:
-            - Updates the plug value in the pipeline
-            - Records the change in history (unless from undo/redo)
-            - Displays a status message in the main window
-            - Pops from the undo stack if from undo/redo
+            - Updates the plug value in the pipeline.
+            - Records the change in history (unless from undo/redo).
+            - Displays a status message in the main window.
+            - Pops from the undo stack if from undo/redo.
         """
         node = self.scene.pipeline.nodes[node_name]
         old_value = node.get_plug_value(plug_name)
@@ -1348,62 +1342,70 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
     managing multiple pipeline configurations. Each tab contains a
     PipelineEditor instance with its own undo/redo history.
 
-    .. Methods:
-        - check_modifications: Check if the nodes of the current pipeline have
-                               been modified.
-        - close_tab: Close the selected tab and editor.
-        - emit_node_clicked: Emit a signal when a node is clicked.
-        - emit_pipeline_saved: Emit a signal when a pipeline is saved.
-        - emit_switch_clicked: Emit a signal when a switch is clicked.
-        - export_to_db_scans: Export the input of a filter to 'database_scans'.
-        - get_capsul_engine: Configure and return a CapsulEngine for the
-                             current pipeline.
-        - get_current_editor: Return the instance of the current editor.
-        - get_current_filename: Return the file name of the current pipeline.
-        - get_current_pipeline: Return the instance of the current pipeline.
-        - get_current_tab_name: Return the tab title of the current editor.
-        - get_editor_by_file_name: Return the editor associated with the given
-                                   pipeline filename.
-        - get_editor_by_index: Retrieve an editor widget by its tab index.
-        - get_editor_by_tab_name: Retrieve the editor instance associated with
-                                  a specific tab name.
-        - get_filename_by_index: get the pipeline filename from its index in
-                                 the editors.
-        - get_index_by_editor: Find the tab index for a given editor widget.
-        - get_index_by_filename: Get the index of the editor corresponding to
-                                 the given pipeline filename.
-        - get_index_by_tab_name: Get the index of the editor corresponding to
-                                 the given tab name.
-        - get_tab_name_by_index: Get the tab title from its index in the
-                                 editors.
-        - has_pipeline_nodes: Check if any of the pipelines in the editor tabs
-                              have pipeline nodes.
-        - load_pipeline: Load a new pipeline.
-        - load_pipeline_parameters: Load parameters to the pipeline of the
-                                    current editor.
-        - new_tab: Create a new tab and a new editor.
-        - open_filter: Open a filter widget.
-        - open_sub_pipeline: Open a sub-pipeline in a new tab.
-        - reset_pipeline: Reset the pipeline of the current editor.
-        - save_pipeline: Save the pipeline of the current editor.
-        - save_pipeline_parameters: Save the pipeline parameters of the
-                                    current editor.
-        - set_current_editor_by_editor: Set the specified editor as the
-                                        currently active editor.
-        - set_current_editor_by_file_name: Activate the editor tab containing
-                                           the specified file.
-        - set_current_editor_by_tab_name: Activate the editor tab with the
-                                          specified name.
-        - set_tab_index: Activate the tab at the specified index and update
-                         the current node.
-        - update_iteration_checkbox: Update the iteration checkbox state based
-                                     on pipeline node names.
-        - update_current_node: Update the node parameters display for the
-                               current pipeline.
-        - update_history: Update undo/redo history of an editor.
-        - update_pipeline_editors: Update the pipeline editors after changes
-                                   to the specified editor.
-        - update_scans_list: Update the list of database scans in every editor.
+    Contains:
+
+        Methods:
+
+            - check_modifications: Check if the nodes of the current pipeline
+              have been modified.
+            - close_tab: Close the selected tab and editor.
+            - emit_node_clicked: Emit a signal when a node is clicked.
+            - emit_pipeline_saved: Emit a signal when a pipeline is saved.
+            - emit_switch_clicked: Emit a signal when a switch is clicked.
+            - export_to_db_scans: Export the input of a filter to
+              'database_scans'.
+            - get_capsul_engine: Configure and return a CapsulEngine for the
+              current pipeline.
+            - get_current_editor: Return the instance of the current editor.
+            - get_current_filename: Return the file name of the current
+              pipeline.
+            - get_current_pipeline: Return the instance of the current
+              pipeline.
+            - get_current_tab_name: Return the tab title of the current editor.
+            - get_editor_by_file_name: Return the editor associated with the
+              given pipeline filename.
+            - get_editor_by_index: Retrieve an editor widget by its tab index.
+            - get_editor_by_tab_name: Retrieve the editor instance associated
+              with a specific tab name.
+            - get_filename_by_index: get the pipeline filename from its index
+              in the editors.
+            - get_index_by_editor: Find the tab index for a given editor
+              widget.
+            - get_index_by_filename: Get the index of the editor corresponding
+              to the given pipeline filename.
+            - get_index_by_tab_name: Get the index of the editor corresponding
+              to the given tab name.
+            - get_tab_name_by_index: Get the tab title from its index in the
+              editors.
+            - has_pipeline_nodes: Check if any of the pipelines in the editor
+              tabs have pipeline nodes.
+            - load_pipeline: Load a new pipeline.
+            - load_pipeline_parameters: Load parameters to the pipeline of the
+              current editor.
+            - new_tab: Create a new tab and a new editor.
+            - open_filter: Open a filter widget.
+            - open_sub_pipeline: Open a sub-pipeline in a new tab.
+            - reset_pipeline: Reset the pipeline of the current editor.
+            - save_pipeline: Save the pipeline of the current editor.
+            - save_pipeline_parameters: Save the pipeline parameters of the
+              current editor.
+            - set_current_editor_by_editor: Set the specified editor as the
+              currently active editor.
+            - set_current_editor_by_file_name: Activate the editor tab
+              containing the specified file.
+            - set_current_editor_by_tab_name: Activate the editor tab with the
+              specified name.
+            - set_tab_index: Activate the tab at the specified index and update
+              the current node.
+            - update_iteration_checkbox: Update the iteration checkbox state
+              based on pipeline node names.
+            - update_current_node: Update the node parameters display for the
+              current pipeline.
+            - update_history: Update undo/redo history of an editor.
+            - update_pipeline_editors: Update the pipeline editors after
+              changes to the specified editor.
+            - update_scans_list: Update the list of database scans in every
+              editor.
 
     Signals:
 
@@ -1489,8 +1491,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param current_index: The index of the tab being switched to.
 
-        :note: The last tab ('+' button) may not have a widget, which is
-               handled gracefully by catching AttributeError.
+        Note:
+            The last tab ('+' button) may not have a widget, which is handled
+            gracefully by catching AttributeError.
         """
 
         if current_index == self.previousIndex:
@@ -1514,7 +1517,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         user to save before closing. If all tabs are closed, creates a new
         default pipeline.
 
-        :param idx: index of the tab to close
+        :param idx: index of the tab to close.
         """
         filename = os.path.basename(self.get_filename_by_index(idx))
         editor = self.get_editor_by_index(idx)
@@ -1586,8 +1589,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param node_name: The name of the clicked node.
         :param process: The process associated with the node. If this is a
-                        Process instance, emits `process_clicked`; otherwise
-                        emits `node_clicked`.
+         Process instance, emits `process_clicked`; otherwise emits
+         `node_clicked`.
         """
         signal = (
             self.process_clicked
@@ -1610,7 +1613,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         Emit a signal when a switch is toggled.
 
         :param node_name: The name of the node whose switch was clicked.
-        :param switch:  The Switch associated with the node.
+        :param switch: The Switch associated with the node.
 
         :Emits: switch_clicked: Signal containing the node name and the Switch.
         """
@@ -1626,8 +1629,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param node_name: Name of the node whose input should be exported.
 
-        :note: This method automatically updates the editor scene after
-               modification.
+        Note:
+            This method automatically updates the editor scene after
+            modification.
         """
         pipeline = self.get_current_pipeline()
 
@@ -1650,13 +1654,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         current pipeline has completion attributes, they are preserved during
         the engine setup process.
 
-        :returns (CapsulEngine): Configured engine instance with study
-                                 directories set to the project's raw_data
-                                 and derived_data folders.
+        :Returns: (CapsulEngine) Configured engine instance with study
+         directories set to the project's raw_data and derived_data folders.
 
-        :note: This method temporarily saves and restores completion engine
-               attributes to prevent loss of configuration when switching
-               between pipelines.
+        Note:
+            This method temporarily saves and restores completion engine
+            attributes to prevent loss of configuration when switching
+            between pipelines.
         """
         # save completion attributes for the current pipeline (other pipelines
         # will lose their values)
@@ -1689,7 +1693,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Return the editor corresponding to the currently selected tab.
 
-        :return: Editor instance for the active tab.
+        :Returns: Editor instance for the active tab.
         """
         return self.get_editor_by_index(self.currentIndex())
 
@@ -1700,7 +1704,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         If the pipeline has never been saved, the current tab title is
         returned.
 
-        :return: The filename for the current editor.
+        :Returns: The filename for the current editor.
         """
         return self.get_filename_by_index(self.currentIndex())
 
@@ -1710,7 +1714,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Returns None if no editor or scene is available.
 
-        :return: The pipeline for the current editor
+        :Returns: The pipeline for the current editor
         """
         editor = self.get_current_editor()
         return editor.scene.pipeline if editor and editor.scene else None
@@ -1721,7 +1725,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Trailing "*" and "&" characters are stripped.
 
-        :return: The current tab name.
+        :Returns: The current tab name.
         """
         return self.get_tab_name_by_index(self.currentIndex())
 
@@ -1733,7 +1737,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param file_name: Name of the file the pipeline was last saved to.
 
-        :return: The editor corresponding to the file name.
+        :Returns: The editor corresponding to the file name.
         """
         return self.get_editor_by_index(self.get_index_by_filename(file_name))
 
@@ -1743,12 +1747,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param idx: Zero-based index of the editor tab, or None if not found.
 
-        :return: The editor widget at the specified index, or None if idx is
-                 None or if the index corresponds to the "add tab" button
-                 (last tab) or if index out of range.
+        :Returns: The editor widget at the specified index, or None if idx is
+         None or if the index corresponds to the "add tab" button (last tab) or
+         if index out of range.
 
-        :note: The last tab position is reserved for the "add tab" button and
-               does not contain an editor widget.
+        Note:
+            The last tab position is reserved for the "add tab" button and
+            does not contain an editor widget.
         """
 
         if idx is not None and 0 <= idx < self.count() - 1:
@@ -1760,14 +1765,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Retrieve the editor instance associated with a specific tab name.
 
-        :param tab_name (str): The name of the tab to search for.
+        :param tab_name: (str) The name of the tab to search for.
 
-        :return: The editor instance corresponding to the specified tab name,
-                 or None if the tab is not found.
+        :Returns: The editor instance corresponding to the specified tab name,
+         or None if the tab is not found.
 
-        :raises:
-            - ValueError: If tab_name is empty or None.
-            - KeyError: If no tab exists with the given name.
+        :raises ValueError: If tab_name is empty or None.
+        :raises KeyError: If no tab exists with the given name.
         """
         tab_index = self.get_index_by_tab_name(tab_name)
 
@@ -1783,8 +1787,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param idx: The zero-based index of the editor tab.
 
-        :return: str or None. The filename or tab title if the editor exists,
-                 None if no editor exists at the given index.
+        :Returns: (str or None) The filename or tab title if the editor exists,
+         None if no editor exists at the given index.
         """
         editor = self.get_editor_by_index(idx)
 
@@ -1796,10 +1800,11 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param editor: The pipeline editor widget to locate.
 
-        :return: The zero-based index of the editor's tab, or None if not
-                 found.
+        :Returns: The zero-based index of the editor's tab, or None if not
+         found.
 
-        :note: Searches all tabs except the last one (count() - 1).
+        Note:
+            Searches all tabs except the last one (count() - 1).
         """
 
         return next(
@@ -1815,16 +1820,15 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Get the index of the first tab with the specified filename.
 
-        :param filename (str): The pipeline filename to search for. Can be an
-                               absolute or relative path; will be normalized
-                               to relative.
+        :param filename: (str) The pipeline filename to search for. Can be an
+         absolute or relative path; will be normalized to relative.
 
-        :return (int): The zero-based index of the matching tab, or None
-                       if no match is found.
+        :Returns: (int) The zero-based index of the matching tab, or None if
+         no match is found.
 
-        :note: Filenames are internally stored as relative paths for
-               consistency. Only searches up to count() - 1 to exclude special
-               tabs if any.
+        Note:
+            Filenames are internally stored as relative paths for consistency.
+            Only searches up to count() - 1 to exclude special tabs if any.
         """
 
         if not filename:
@@ -1849,10 +1853,10 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         Searches through all tabs (excluding the last one) to find a tab
         matching the given name.
 
-        :param tab_name (str): The name of the tab to locate.
+        :param tab_name: (str) The name of the tab to locate.
 
-        :return (int): The zero-based index of the matching tab, or None if no
-                       match is found.
+        :Returns: (int) The zero-based index of the matching tab, or None if no
+         match is found.
         """
 
         return next(
@@ -1870,13 +1874,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Retrieves the tab text at the given index and removes formatting
         characters:
-            - Qt keyboard shortcut indicators (ampersands)
-            - Unsaved file indicators (trailing " *")
+            - Qt keyboard shortcut indicators (ampersands).
+            - Unsaved file indicators (trailing " *").
 
         :param idx: Zero-based index of the tab.
 
-        :return (str): The cleaned tab name, or None if the index is invalid
-                       or corresponds to the "add tab" button (last position).
+        :Returns: (str) The cleaned tab name, or None if the index is invalid
+         or corresponds to the "add tab" button (last position).
         """
 
         # Last tab position is reserved for the "add tab" button
@@ -1897,8 +1901,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         contains nodes by examining the presence of plugs in the pipeline's
         root node.
 
-        :return (bool): True if at least one pipeline contains nodes,
-                        False otherwise.
+        :Returns: (bool) True if at least one pipeline contains nodes, False
+         otherwise.
         """
 
         return any(
@@ -1915,16 +1919,15 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         already open, switches to that tab. If the current tab is not empty,
         creates a new tab for the pipeline.
 
-        :param filename (str): Path to the pipeline file to load. If None,
-                               prompts the user to select a file. Defaults to
-                               None.
+        :param filename: (str) Path to the pipeline file to load. If None,
+         prompts the user to select a file. Defaults to None.
 
-        :return (None): Returns early on success, or cleans up and returns on
-                        failure.
+        :Returns: (None) Returns early on success, or cleans up and returns on
+         failure.
 
-        :note: This method is also called from `open_sub_pipeline` with a
-               filename.
-
+        Note:
+            This method is also called from `open_sub_pipeline` with a
+            filename.
         """
         current_editor = self.get_current_editor()
         current_tab_not_empty = len(current_editor.scene.pipeline.nodes) > 1
@@ -2078,15 +2081,14 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         Open a sub-pipeline in a new tab.
 
         This method locates and loads a sub-pipeline by:
-            1. Reading the process configuration to find package paths
+            1. Reading the process configuration to find package paths.
             2. Determining the pipeline's source package (mia_processes or
-               custom)
-            3. Resolving the full filesystem path to the pipeline file
-            4. Loading the pipeline in a new tab
+               custom).
+            3. Resolving the full filesystem path to the pipeline file.
+            4. Loading the pipeline in a new tab.
 
         :param sub_pipeline: The pipeline object to open. Must have a 'name'
-                             attribute and '__module__' attribute for package
-                             resolution.
+         attribute and '__module__' attribute for package resolution.
         """
         # Load process configuration
         config = Config()
@@ -2141,13 +2143,13 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         short delay (20ms). The update strategy depends on the editor's view
         mode:
             - Logical view: Displays logical representations of nodes, plugs,
-                            and links
+              and links
             - Normal view: Displays standard representations of nodes, plugs,
-                           and links
+              and links
 
-        :note: The update is performed asynchronously via a single-shot timer
-               to allow the UI thread to remain responsive.
-
+        Note:
+            The update is performed asynchronously via a single-shot timer
+            to allow the UI thread to remain responsive.
         """
         self.get_current_editor()._reset_pipeline()
 
@@ -2159,17 +2161,16 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         a filename is provided. Updates the tab text and emits a signal upon
         successful save.
 
-        :param new_file_name (str): Target filename for the pipeline. If None,
-                                    triggers a "Save As" dialog. Defaults to
-                                    None.
+        :param new_file_name: (str) Target filename for the pipeline. If None,
+         triggers a "Save As" dialog. Defaults to None.
 
-        :return (str or None): The basename of the saved file if successful,
-                               None otherwise.
+        :Returns: (str or None) The basename of the saved file if successful,
+         None otherwise.
 
         Side Effects:
-            - Updates the current tab text with the new filename
-            - Emits pipeline_saved signal (only for explicit saves)
-            - Modifies the editor's _pipeline_filename attribute
+            - Updates the current tab text with the new filename.
+            - Emits pipeline_saved signal (only for explicit saves).
+            - Modifies the editor's _pipeline_filename attribute.
         """
         editor = self.get_current_editor()
 
@@ -2238,7 +2239,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         index.
 
         :param editor: The editor instance to make active. Must be an editor
-                       that exists within one of the managed tabs.
+         that exists within one of the managed tabs.
         """
         self.set_tab_index(self.get_index_by_editor(editor))
 
@@ -2250,7 +2251,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         name, typically used when reopening a previously saved pipeline.
 
         :parame file_name: The name of the file whose editor tab should be
-                           activated.
+         activated.
         """
         self.set_tab_index(self.get_index_by_filename(file_name))
 
@@ -2345,7 +2346,8 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param editor: The editor instance whose history should be saved.
 
-        :note: This method assumes the editor is in the currently active tab.
+        Note:
+            This method assumes the editor is in the currently active tab.
         """
         self.undos[editor] = editor.undos
         self.redos[editor] = editor.redos
@@ -2375,9 +2377,9 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         each pipeline that supports it. Also refreshes the iteration checkbox
         state after updating.
 
-        :note: Silently continues if updating a pipeline fails, logging the
-               error without interrupting the update process for remaining
-               pipelines.
+        Note:
+            Silently continues if updating a pipeline fails, logging the error
+            without interrupting the update process for remaining pipelines.
         """
 
         for i in range(self.count() - 1):
@@ -2407,11 +2409,11 @@ def find_filename(paths_list, packages_list, file_name):
     traversing through base paths combined with package subdirectories.
     Performs case-insensitive matching to handle filesystem sensitivity issues.
 
-    :param paths_list: Base directory paths from process_config.yml
-    :param packages_list: Ordered list of package subdirectories to traverse
-    :param file_name: Base name of the sub-pipeline file (without extension)
+    :param paths_list: Base directory paths from process_config.yml.
+    :param packages_list: Ordered list of package subdirectories to traverse.
+    :param file_name: Base name of the sub-pipeline file (without extension).
 
-    :return: Absolute path to the matched file, or None if not found
+    :Returns: Absolute path to the matched file, or None if not found.
     """
     extensions = (".py", ".xml")
 
@@ -2446,16 +2448,15 @@ def get_path(name, dictionary, prev_paths=None, pckg=None):
         - Intermediate nodes are dictionaries (packages),
         - Leaf nodes are strings (module names).
 
-    :param name (str): Name of the module to locate in the tree.
-    :param dictionary (dict): The nested dictionary representing the tree
-                              structure.
-    :param prev_paths (list[str]): The accumulated path leading to the current
-                                   dictionary. If None, a new path list is
-                                   created.
-    :param pckg (str): If provided, navigation starts inside that package name.
+    :param name: (str) Name of the module to locate in the tree.
+    :param dictionary: (dict) The nested dictionary representing the tree
+     structure.
+    :param prev_paths: (list[str]) The accumulated path leading to the current
+     dictionary. If None, a new path list is created.
+    :param pckg: (str) If provided, navigation starts inside that package name.
 
-    :return (list[str]): A list of keys representing the path to the module, or
-                         None if the module is not found.
+    :Returns (list[str]) A list of keys representing the path to the module, or
+     None if the module is not found.
     """
 
     # Initialize accumulated path
@@ -2498,14 +2499,15 @@ def save_pipeline(pipeline, filename):
     Save a pipeline to a file in the appropriate format.
 
     Automatically detects the output format based on the file extension.
-    Supported formats are Python source (.py) and XML (.xml). If no
-    recognized extension is provided, defaults to Python format.
+    Supported formats are Python source (.py) and XML (.xml). If no recognized
+    extension is provided, defaults to Python format.
 
     :param pipeline: The pipeline object to serialize and save.
     :param filename: Path to the output file. The extension determines
-                     the output format (.py or .xml).
+     the output format (.py or .xml).
 
-    :note: Unrecognized extensions will default to Python source format (.py)
+    Note:
+        Unrecognized extensions will default to Python source format (.py)
 
     Examples:
         >>> save_pipeline(my_pipeline, "model.py")
