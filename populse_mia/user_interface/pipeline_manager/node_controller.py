@@ -30,7 +30,6 @@ interface for complex pipeline interactions.
 
 import logging
 import os
-import sip
 from functools import partial
 from pathlib import Path
 from traits.api import TraitError, Undefined
@@ -46,7 +45,7 @@ from capsul.qt_gui.widgets.attributed_process_widget import (
 )
 
 # PyQt5 import
-from PyQt5 import Qt
+from PyQt5 import Qt, sip
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import (

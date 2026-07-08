@@ -1,5 +1,5 @@
 """
-This module provides an abstract base class for data viewer implemenataions in
+This module provides an abstract base class for data viewer implementations in
 populse_mia.
 
 Data viewers are supposed to inherit :class:`DataViewer` and implement (at
