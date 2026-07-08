@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window &#8212; populse_mia 3.0.0-dev+63bbe3c7 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window &#8212; populse_mia 3.0.0-dev+e05f3e3c documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=ff1dfa91"></script>
+    <script src="../_static/documentation_options.js?v=079bfa8c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+63bbe3c7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e05f3e3c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -35,23 +35,32 @@
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources" title="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qCleanupResources</span></code></a>()</p></td>
-<td><p>Blabla</p></td>
+<td><p>Unregisters and cleans up the embedded Qt resources.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources" title="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources"><code class="xref py py-obj docutils literal notranslate"><span class="pre">qInitResources</span></code></a>()</p></td>
-<td><p>Blabla</p></td>
+<td><p>Initializes and registers the embedded Qt resources with the application.</p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.</span></span><span class="sig-name descname"><span class="pre">qInitResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources_snd_window.html#qInitResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qInitResources" title="Link to this definition">¶</a></dt>
-<dd><p>Blabla</p>
+<dd><p>Initializes and registers the embedded Qt resources with the application.</p>
+<p>This function must be called before any resource files (e.g., images,
+icons) are accessed in the application. It loads the binary resource data,
+structural metadata, and resource names into Qt’s resource system,
+allowing them to be referenced using the ‘:/’ prefix
+(e.g., ‘:/sag-01.png’).</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.</span></span><span class="sig-name descname"><span class="pre">qCleanupResources</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/resources_snd_window.html#qCleanupResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.resources_snd_window.qCleanupResources" title="Link to this definition">¶</a></dt>
-<dd><p>Blabla</p>
+<dd><p>Unregisters and cleans up the embedded Qt resources.</p>
+<p>This function removes the resource data from Qt’s resource system, freeing
+associated memory. It is typically called during application shutdown,
+though in most cases, Python’s garbage collection will handle this
+automatically.</p>
 </dd></dl>
 
 </section>

@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+63bbe3c7 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+e05f3e3c documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=ff1dfa91"></script>
+    <script src="../_static/documentation_options.js?v=079bfa8c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+63bbe3c7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e05f3e3c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -384,7 +384,7 @@ to regular files).</p>
 </div>
 <p>Note that this trait type creates copies of values on assignment, rather
 than assigning the exact instance. For example, consider:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">HasTraits</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">x</span> <span class="o">=</span> <span class="n">List</span><span class="p">()</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
@@ -692,7 +692,7 @@ last item of the list is removed.</p>
 <dd class="field-odd"><p><strong>new_length</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – New length of the list.</p>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.TraitError" title="traits.trait_errors.TraitError"><strong>TraitError</strong></a> – If the proposed new length would violate the length constraints
+<dd class="field-even"><p><strong>TraitError</strong> – If the proposed new length would violate the length constraints
     of the list.</p>
 </dd>
 </dl>
@@ -755,7 +755,7 @@ it may be called twice if no precaution is taken to avoid it (a
 <cite>__np_init_done__</cite> instance attribute is set once init is done the
 first time).</p>
 <p>Ex:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Smooth</span><span class="p">(</span><span class="n">NipypeProcess</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Smooth</span><span class="p">(</span><span class="n">NipypeProcess</span><span class="p">):</span>
     <span class="n">_nipype_class_type</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">Smooth</span>
     <span class="n">_nipype_trait_mapping</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;smoothed_files&#39;</span><span class="p">:</span> <span class="s1">&#39;smoothed_files&#39;</span><span class="p">,</span>
@@ -908,11 +908,11 @@ otherwise display it on the console.</p></li>
 <p>A Pipeline is normally subclassed, and its <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.Pipeline.pipeline_definition" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a>
 method is overloaded to define its nodes and links.
 <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.Pipeline.pipeline_definition" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a> will be called by the pipeline constructor.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
 
-<span class="k">class</span> <span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
 
-  <span class="k">def</span> <span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc1&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process1&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc2&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process2&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_switch</span><span class="p">(</span><span class="s1">&#39;main_switch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;in1&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;out1&#39;</span><span class="p">,</span> <span class="s1">&#39;out2&#39;</span><span class="p">])</span>
@@ -941,7 +941,7 @@ which represent actual processing bricks.</p></li>
 <li><p>pipeline nodes (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineNode" title="capsul.pipeline.pipeline_nodes.PipelineNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.PipelineNode</span></code></a>) are
 sub-pipelines which allow to reuse an existing pipeline within another
 one</p></li>
-<li><p>switch nodes (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Switch" title="capsul.pipeline.pipeline_nodes.Switch"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.Switch</span></code></a>) allows to select values
+<li><p>switch nodes (<code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.Switch</span></code>) allows to select values
 between several possible inputs. The switch mechanism also allows to
 select between several alternative processes or processing branches.</p></li>
 <li><p>iterative process (:py:class:process_iteration.ProcessIteration`)
@@ -1281,7 +1281,7 @@ inputs: “in1_switch_out1”, “in2_switch_out1”, “in1_switch_out2”,
 outputs: “out1”, “out2”</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Switch" title="capsul.pipeline.pipeline_nodes.Switch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capsul.pipeline.pipeline_nodes.Switch</span></code></a></p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">capsul.pipeline.pipeline_nodes.Switch</span></code></p>
 </div>
 </dd></dl>
 
@@ -1505,7 +1505,7 @@ manuyally set values to be overridden by completion.</p>
 <dd class="field-odd"><p><strong>nodes</strong> – Iterates over all nodes</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node">Node</a></p>
+<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">Node</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1517,7 +1517,7 @@ manuyally set values to be overridden by completion.</p>
 state and the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_activated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -1536,7 +1536,7 @@ activated</p>
 activation state and to the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_deactivated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -1617,7 +1617,7 @@ _free_temporary_files().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
+<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
 <li><p><strong>temp_files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of temporary files for the pipeline execution. The list will
 be modified (completed).</p></li>
 </ul>
@@ -1981,23 +1981,23 @@ execution function, either through a python method, by overloading
 processing machine which has not necessary capsul, nor python, installed.</p>
 <p>Parameters are declared or queried using the traits API, and their values
 are in the process instance variables:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Process</span>
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 
-<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 
     <span class="c1"># a class trait</span>
     <span class="n">param1</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="s1">&#39;def_param1&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MyProcess</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># declare an input param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;param2&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">())</span>
         <span class="c1"># declare an output param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;out_param&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_param</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param1:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param1</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param2:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param2</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
@@ -2521,7 +2521,7 @@ config values.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.ProcessNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.</span></span><span class="sig-name descname"><span class="pre">ProcessNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/capsul/pipeline/pipeline_nodes.html#ProcessNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.ProcessNode" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="capsul.pipeline.pipeline_nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></p>
 <p>Process node.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.ProcessNode.process">
@@ -3588,7 +3588,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QCursor.pixmap">
-<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QCursor.pixmap" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QCursor.pixmap" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -3784,13 +3784,13 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.pixmap">
-<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.pixmap" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.pixmap" title="Link to this definition">¶</a></dt>
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode:</span> <span class="pre">QIcon.Mode</span> <span class="pre">=</span> <span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state:</span> <span class="pre">QIcon.State</span> <span class="pre">=</span> <span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span></dt>
+<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode:</span> <span class="pre">QIcon.Mode</span> <span class="pre">=</span> <span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state:</span> <span class="pre">QIcon.State</span> <span class="pre">=</span> <span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span></dt>
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span></dt>
+<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span></dt>
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span></dt>
+<span class="sig-name descname"><span class="pre">pixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QSize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.Mode"><span class="pre">QIcon.Mode</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Normal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QIcon.State"><span class="pre">QIcon.State</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QIcon.Off</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -3927,7 +3927,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMovie.currentPixmap">
-<span class="sig-name descname"><span class="pre">currentPixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMovie.currentPixmap" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">currentPixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMovie.currentPixmap" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5152,6 +5152,14 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMenu.addAction">
 <span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QAction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMenu.addAction" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QIcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PYQT_SLOT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QKeySequence</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">QKeySequence.StandardKey</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QIcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PYQT_SLOT</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QKeySequence</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">QKeySequence.StandardKey</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -5963,7 +5971,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.checkBox">
-<span class="sig-name descname"><span class="pre">checkBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QCheckBox" title="populse_mia.user_interface.pipeline_manager.iteration_table.QCheckBox"><span class="pre">QCheckBox</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.checkBox" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">checkBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QCheckBox</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.checkBox" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -6008,7 +6016,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.iconPixmap">
-<span class="sig-name descname"><span class="pre">iconPixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.iconPixmap" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">iconPixmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.iconPixmap" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -6134,7 +6142,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.standardIcon">
-<span class="sig-name descname"><span class="pre">standardIcon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">QMessageBox.Icon</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.standardIcon" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">standardIcon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">QMessageBox.Icon</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QMessageBox.standardIcon" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -6495,6 +6503,14 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QToolBar.addAction">
 <span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QAction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QToolBar.addAction" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QIcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PYQT_SLOT</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">addAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">QIcon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PYQT_SLOT</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QAction"><span class="pre">QAction</span></a></span></span></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -7140,7 +7156,7 @@ arguments is the optional sequence of the names of the signal’s arguments.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QWidget.grab">
-<span class="sig-name descname"><span class="pre">grab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rectangle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QRect</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QRect(QPoint(0,</span> <span class="pre">0),</span> <span class="pre">QSize(-1,</span> <span class="pre">-1))</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap" title="populse_mia.user_interface.pipeline_manager.iteration_table.QPixmap"><span class="pre">QPixmap</span></a></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QWidget.grab" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">grab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rectangle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QRect</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">QRect(QPoint(0,</span> <span class="pre">0),</span> <span class="pre">QSize(-1,</span> <span class="pre">-1))</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPixmap</span></span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.QWidget.grab" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -10094,6 +10110,33 @@ or None if the engine is not initialized.</p>
 <p>Widget that handles pipeline iteration.</p>
 <p>This widget allows users to select tags for iteration and visualization,
 filter values, and manage the iteration process for pipeline execution.</p>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>_create_tag_button: Create a new tag button.</p></li>
+<li><p>add_tag: Add a tag to visualize in the iteration table.</p></li>
+<li><p>current_editor: Return the currently active pipeline editor</p></li>
+<li><p>emit_iteration_table_updated: Emit a signal when the iteration
+scans have been updated.</p></li>
+<li><p>fill_values: Fill values_list depending on the visualized tags.</p></li>
+<li><p>filter_values: Select the tag values used for the iteration.</p></li>
+<li><p>format_filter_value: Convert a value into a JSON-formatted
+string.</p></li>
+<li><p>refresh_layout: Update the layout of the widget.</p></li>
+<li><p>remove_tag: Remove a tag to visualize in the iteration table.</p></li>
+<li><p>select_iteration_tag: Open a pop-up to let the user select on
+which tag to iterate.</p></li>
+<li><p>select_visualized_tag: Open a pop-up to let the user select
+which tag to visualize in the iteration table.</p></li>
+<li><p>update_iterated_tag: Update the widget.</p></li>
+<li><p>update_table: Update the iteration table.</p></li>
+<li><p>update_selected_tag: Update the selected tag for current pipeline
+manager tab.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 <p>Signals:</p>
 <blockquote>
 <div><ul class="simple">
@@ -10124,8 +10167,8 @@ documents from the current collection will be used.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>text</em>) – Text to display on the button.</p></li>
-<li><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>index</em>) – Index of the button in the push_buttons list.</p></li>
+<li><p><strong>text</strong> – (str) Text to display on the button.</p></li>
+<li><p><strong>index</strong> – (int) Index of the button in the push_buttons list.</p></li>
 </ul>
 </dd>
 </dl>
@@ -10163,7 +10206,7 @@ pipeline manager without repeating the full attribute chain.</p>
 <dd><p>Fill values_list with unique tag values for the specified tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>idx</em>) – Index of the tag in push_buttons list.</p>
+<dd class="field-odd"><p><strong>idx</strong> – (int) Index of the tag in push_buttons list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10184,10 +10227,10 @@ a Python literal (for example a list, dict, number, or boolean) using
 preserved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>value</em>) – The value to serialize.</p>
+<dd class="field-odd"><p><strong>value</strong> – (Any) The value to serialize.</p>
 </dd>
-<dt class="field-even">Return (str)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The JSON representation of the resulting value.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(str) The JSON representation of the resulting value.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10196,8 +10239,8 @@ preserved.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.IterationTable.refresh_layout">
 <span class="sig-name descname"><span class="pre">refresh_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.refresh_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.IterationTable.refresh_layout" title="Link to this definition">¶</a></dt>
 <dd><p>Update the layout of the widget.</p>
-<p>Called in widget’s initialization and when a tag push button
-is added or removed.</p>
+<p>Called in widget’s initialization and when a tag push button is added
+or removed.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -10218,7 +10261,7 @@ is added or removed.</p>
 <dd><p>Open a dialog to select which tag to visualize in the iteration table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>int</strong><strong>)</strong> (<em>idx</em>) – Index of the clicked push button.</p>
+<dd class="field-odd"><p><strong>idx</strong> – (int) Index of the clicked push button.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10229,7 +10272,7 @@ is added or removed.</p>
 <dd><p>Update the widget when the iterated tag is modified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>tag_name</em>) – Name of the iterated tag.</p>
+<dd class="field-odd"><p><strong>tag_name</strong> – (str) Name of the iterated tag.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10245,12 +10288,12 @@ is added or removed.</p>
 <span class="sig-name descname"><span class="pre">update_selected_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selected_tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.update_selected_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.IterationTable.update_selected_tag" title="Link to this definition">¶</a></dt>
 <dd><p>Update the lists of values corresponding to the selected tag.</p>
 <p>Retrieves all unique values of the selected tag from scans in the
-current collection that also exist in the scan list. Then updates
-the tag value lists in the current pipeline editor.</p>
+current collection that also exist in the scan list. Then updates the
+tag value lists in the current pipeline editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>selected_tag</em>) – The tag whose values should be
-retrieved and updated.</p>
+<dd class="field-odd"><p><strong>selected_tag</strong> – (str) The tag whose values should be retrieved
+and updated.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10278,6 +10321,30 @@ AttributedProcessWidget.</p></li>
 <p>The widget is designed to integrate with a pipeline editor, providing
 real-time updates and synchronization between the UI and the underlying
 pipeline state.</p>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>display_parameters: Displays the parameters of the selected node
+and configures the UI.</p></li>
+<li><p>filter_attributes: Opens a dialog for filtering node attributes.</p></li>
+<li><p>release_process: Cleans up process notifications and signals.</p></li>
+<li><p>rename_subprocesses: Recursively renames subprocesses and updates
+context names.</p></li>
+<li><p>static_release: Removes trait change notifications from a
+process.</p></li>
+<li><p>parameters_changed: Handles parameter value changes and emits a
+signal.</p></li>
+<li><p>update_attributes_from_filter: Applies selected attributes from
+the filter widget.</p></li>
+<li><p>update_node_name: Renames the selected node and updates the
+pipeline.</p></li>
+<li><p>update_parameters: Placeholder for backward compatibility (no
+operation).</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 <p>Signals:</p>
 <blockquote>
 <div><ul class="simple">
@@ -10295,10 +10362,8 @@ changed.</p></li>
 <li><p><strong>project</strong> – Current project instance.</p></li>
 <li><p><strong>scan_list</strong> – List of available scans.</p></li>
 <li><p><strong>pipeline_manager_tab</strong> – Parent pipeline manager tab.</p></li>
+<li><p><strong>main_window</strong> – Main application window.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Parammain_window<span class="colon">:</span></dt>
-<dd class="field-even"><p>Main application window.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10313,7 +10378,7 @@ inputs/outputs nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>node_name</em>) – Name of the node to display.</p></li>
+<li><p><strong>node_name</strong> – (str) Name of the node to display.</p></li>
 <li><p><strong>process</strong> – Process instance associated with the node.</p></li>
 <li><p><strong>pipeline</strong> – Current pipeline containing the node.</p></li>
 </ul>
@@ -10350,7 +10415,7 @@ each subprocess.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>node</strong> – The current node being processed.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>parent_node_name</em>) – The name of the parent node to be
+<li><p><strong>parent_node_name</strong> – (str) The name of the parent node to be
 included in the context name.</p></li>
 </ul>
 </dd>
@@ -10379,7 +10444,7 @@ included in the context name.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>_</strong> – Unused parameter (object instance).</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – Name of the changed parameter.</p></li>
+<li><p><strong>plug_name</strong> – (str) Name of the changed parameter.</p></li>
 <li><p><strong>old_value</strong> – Previous parameter value.</p></li>
 <li><p><strong>new_value</strong> – New parameter value.</p></li>
 </ul>
@@ -10396,7 +10461,7 @@ selection from the filter dialog. Shows a warning if no matching
 attributes are found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>attributes</em>) – Dictionary of attribute names and values to
+<dd class="field-odd"><p><strong>attributes</strong> – (dict) Dictionary of attribute names and values to
 apply.</p>
 </dd>
 </dl>
@@ -10412,14 +10477,13 @@ with “<a href="#id94"><span class="problematic" id="id95">iterated_</span></a>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>old_node_name</em>) – New name for the node. If None (when this
-method is not called from an undo/redo),
-reads from the line edit widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Current node name. If None (when this
-method is not called from an undo/redo),
-uses self.node_name.</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>from_redo</em>) – True if this action is from an undo operation.</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> – True ifthis action is from a redo operation.</p></li>
+<li><p><strong>new_node_name</strong> – (str) New name for the node. If None (when this
+method is not called from an undo/redo), reads from the line edit
+widget.</p></li>
+<li><p><strong>old_node_name</strong> – (str) Current node name. If None (when this
+method is not called from an undo/redo), uses self.node_name.</p></li>
+<li><p><strong>from_undo</strong> – (bool) True if this action is from an undo operation.</p></li>
+<li><p><strong>from_redo</strong> – (bool) True ifthis action is from a redo operation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -10450,15 +10514,38 @@ parameters of a pipeline node.</p>
 allowing users to:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>View and edit node names and parameters</p></li>
-<li><p>Filter and update plug values</p></li>
-<li><p>Handle undo/redo operations for parameter changes</p></li>
-<li><p>Manage subprocesses and context names</p></li>
+<li><p>View and edit node names and parameters.</p></li>
+<li><p>Filter and update plug values.</p></li>
+<li><p>Handle undo/redo operations for parameter changes.</p></li>
+<li><p>Manage subprocesses and context names.</p></li>
 </ul>
 </div></blockquote>
 <p>The widget is designed to integrate with a pipeline editor, providing
 real-time updates and synchronization between the UI and the underlying
 pipeline state.</p>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<ul class="simple">
+<li><p>clearLayout: Clears and deletes all items from a widget’s layout,
+including nested layouts.</p></li>
+<li><p>display_filter: Displays a filter dialog for a plug.</p></li>
+<li><p>display_parameters: Renders the parameters UI for a selected node.</p></li>
+<li><p>get_index_from_plug_name: Returns the index of a plug label in the
+UI.</p></li>
+<li><p>update_node_name: Updates the name of the selected node in the
+pipeline.</p></li>
+<li><p>rename_subprocesses: Recursively updates context names for
+subprocesses.</p></li>
+<li><p>update_parameters: Synchronizes UI parameter values with the process
+traits.</p></li>
+<li><p>update_plug_value: Updates a plug value.</p></li>
+<li><p>update_plug_value_from_filter: Updates a plug value from filter
+results.</p></li>
+<li><p>release_process: Placeholder for process release logic (to be
+overridden by subclasses).</p></li>
+</ul>
+</div></blockquote>
 <p>Signals:</p>
 <blockquote>
 <div><ul class="simple">
@@ -10477,7 +10564,7 @@ interface.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>project</strong> – The current project instance.</p></li>
-<li><p><strong>scan_list</strong> – lThe list of selected database files (scans).</p></li>
+<li><p><strong>scan_list</strong> – The list of selected database files (scans).</p></li>
 <li><p><strong>pipeline_manager_tab</strong> – The parent pipeline manager tab widget.</p></li>
 <li><p><strong>main_window</strong> – The main application window.</p></li>
 </ul>
@@ -10499,7 +10586,7 @@ interface.</p>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>QtWidgets.QWidget</strong><strong>)</strong> (<em>widget</em>) – The widget whose layout should be
+<dd class="field-odd"><p><strong>widget</strong> – (QtWidgets.QWidget) The widget whose layout should be
 cleared.</p>
 </dd>
 </dl>
@@ -10518,8 +10605,9 @@ connection.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>node_name</strong> – The name of the pipeline node containing the plug.</p></li>
 <li><p><strong>plug_name</strong> – The name of the plug to filter.</p></li>
-<li><p><strong>parameters</strong> – A tuple containing (plug_index, pipeline_instance,
-plug_value_type) that provides context for the plug being filtered.</p></li>
+<li><p><strong>parameters</strong> – A three-element tuple (plug_index,
+pipeline_instance, plug_value_type) that provides the context of the
+plug currently being filtered.</p></li>
 <li><p><strong>process</strong> – The process instance associated with the node.</p></li>
 </ul>
 </dd>
@@ -10542,31 +10630,28 @@ parameters with editable fields. For pipeline global inputs (except
 types.</p>
 <dl class="simple">
 <dt>Special handling:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>‘inputs’/’outputs’ nodes: Name field is read-only, displays</dt><dd><p>“Pipeline inputs/outputs”</p>
-</dd>
-</dl>
-</li>
-<li><p>Other nodes: Name field is editable and updates on Enter</p></li>
-<li><p>Parameters with userlevel &gt; 0 are hidden from the interface</p></li>
+<li><p>‘inputs’/’outputs’ nodes: Name field is read-only, displays
+“Pipeline inputs/outputs”.</p></li>
+<li><p>Other nodes: Name field is editable and updates on Enter.</p></li>
+<li><p>Parameters with userlevel &gt; 0 are hidden from the interface.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – Identifier for the node being displayed</p></li>
+<li><p><strong>node_name</strong> – Identifier for the node being displayed.</p></li>
 <li><p><strong>process</strong> – Node’s process object containing traits and their
-values</p></li>
-<li><p><strong>pipeline</strong> – Parent pipeline instance containing this node</p></li>
+values.</p></li>
+<li><p><strong>pipeline</strong> – Parent pipeline instance containing this node.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="simple">
 <dt>Side effects:</dt><dd><ul class="simple">
-<li><p>Clears and rebuilds the widget layout</p></li>
-<li><p>Updates node_parameters_tmp in the current pipeline editor</p></li>
-<li><p>Enables the run_pipeline_action</p></li>
+<li><p>Clears and rebuilds the widget layout.</p></li>
+<li><p>Updates node_parameters_tmp in the current pipeline editor.</p></li>
+<li><p>Enables the run_pipeline_action.</p></li>
 </ul>
 </dd>
 </dl>
@@ -10579,8 +10664,8 @@ values</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>in_or_out</em>) – The name of the plug to find.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – Direction of the plug ; “in” for input,
+<li><p><strong>plug_name</strong> – (str) The name of the plug to find.</p></li>
+<li><p><strong>in_or_out</strong> – (str) Direction of the plug ; “in” for input,
 “out” for output.</p></li>
 </ul>
 </dd>
@@ -10603,8 +10688,8 @@ ProcessIteration, ensures the name is prefixed with ‘<a href="#id96"><span cla
 name from the UI line edit widget. Is not None only when this method
 is called from an “undo/redo”)</p>
 </dd>
-<dt class="field-even">Emits<span class="colon">:</span></dt>
-<dd class="field-even"><p>value_changed: Signal with node rename details for undo/redo
+<dt class="field-even">Emits value_changed<span class="colon">:</span></dt>
+<dd class="field-even"><p>Signal with node rename details for undo/redo
 tracking.</p>
 </dd>
 </dl>
@@ -10622,16 +10707,21 @@ tracking.</p>
 hierarchy, ensuring consistent naming based on the parent context. For
 pipeline processes, it preserves the hierarchical structure while
 incorporating the parent node name.</p>
-<p>The context name follows these rules:
-- Pipeline processes:”Pipeline.{parent_node_name}.{additional_parts}”
-- Non-pipeline processes: “{parent_node_name}”
-- Nested subprocesses are updated recursively</p>
+<dl class="simple">
+<dt>The context name follows these rules:</dt><dd><ul class="simple">
+<li><p>Pipeline processes:
+“Pipeline.{parent_node_name}.{additional_parts}”.</p></li>
+<li><p>Non-pipeline processes: “{parent_node_name}”.</p></li>
+<li><p>Nested subprocesses are updated recursively.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>Node</strong><strong>)</strong> (<em>node</em>) – The node whose context name will be updated, along
+<li><p><strong>node</strong> – (Node) The node whose context name will be updated, along
 with all its subprocesses.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>parent_node_name</em>) – The parent node’s name to incorporate
+<li><p><strong>parent_node_name</strong> – (str) The parent node’s name to incorporate
 into the context naming hierarchy.</p></li>
 </ul>
 </dd>
@@ -10744,6 +10834,74 @@ to implement process release logic. The base implementation is a no-op.</p>
 <p>This widget provides a tabbed interface for creating, editing, and
 managing multiple pipeline configurations. Each tab contains a
 PipelineEditor instance with its own undo/redo history.</p>
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>check_modifications: Check if the nodes of the current pipeline
+have been modified.</p></li>
+<li><p>close_tab: Close the selected tab and editor.</p></li>
+<li><p>emit_node_clicked: Emit a signal when a node is clicked.</p></li>
+<li><p>emit_pipeline_saved: Emit a signal when a pipeline is saved.</p></li>
+<li><p>emit_switch_clicked: Emit a signal when a switch is clicked.</p></li>
+<li><p>export_to_db_scans: Export the input of a filter to
+‘database_scans’.</p></li>
+<li><p>get_capsul_engine: Configure and return a CapsulEngine for the
+current pipeline.</p></li>
+<li><p>get_current_editor: Return the instance of the current editor.</p></li>
+<li><p>get_current_filename: Return the file name of the current
+pipeline.</p></li>
+<li><p>get_current_pipeline: Return the instance of the current
+pipeline.</p></li>
+<li><p>get_current_tab_name: Return the tab title of the current editor.</p></li>
+<li><p>get_editor_by_file_name: Return the editor associated with the
+given pipeline filename.</p></li>
+<li><p>get_editor_by_index: Retrieve an editor widget by its tab index.</p></li>
+<li><p>get_editor_by_tab_name: Retrieve the editor instance associated
+with a specific tab name.</p></li>
+<li><p>get_filename_by_index: get the pipeline filename from its index
+in the editors.</p></li>
+<li><p>get_index_by_editor: Find the tab index for a given editor
+widget.</p></li>
+<li><p>get_index_by_filename: Get the index of the editor corresponding
+to the given pipeline filename.</p></li>
+<li><p>get_index_by_tab_name: Get the index of the editor corresponding
+to the given tab name.</p></li>
+<li><p>get_tab_name_by_index: Get the tab title from its index in the
+editors.</p></li>
+<li><p>has_pipeline_nodes: Check if any of the pipelines in the editor
+tabs have pipeline nodes.</p></li>
+<li><p>load_pipeline: Load a new pipeline.</p></li>
+<li><p>load_pipeline_parameters: Load parameters to the pipeline of the
+current editor.</p></li>
+<li><p>new_tab: Create a new tab and a new editor.</p></li>
+<li><p>open_filter: Open a filter widget.</p></li>
+<li><p>open_sub_pipeline: Open a sub-pipeline in a new tab.</p></li>
+<li><p>reset_pipeline: Reset the pipeline of the current editor.</p></li>
+<li><p>save_pipeline: Save the pipeline of the current editor.</p></li>
+<li><p>save_pipeline_parameters: Save the pipeline parameters of the
+current editor.</p></li>
+<li><p>set_current_editor_by_editor: Set the specified editor as the
+currently active editor.</p></li>
+<li><p>set_current_editor_by_file_name: Activate the editor tab
+containing the specified file.</p></li>
+<li><p>set_current_editor_by_tab_name: Activate the editor tab with the
+specified name.</p></li>
+<li><p>set_tab_index: Activate the tab at the specified index and update
+the current node.</p></li>
+<li><p>update_iteration_checkbox: Update the iteration checkbox state
+based on pipeline node names.</p></li>
+<li><p>update_current_node: Update the node parameters display for the
+current pipeline.</p></li>
+<li><p>update_history: Update undo/redo history of an editor.</p></li>
+<li><p>update_pipeline_editors: Update the pipeline editors after
+changes to the specified editor.</p></li>
+<li><p>update_scans_list: Update the list of database scans in every
+editor.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 <p>Signals:</p>
 <blockquote>
 <div><ul class="simple">
@@ -10778,11 +10936,12 @@ validation for the special “add new pipeline” tab (last position).</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>current_index</strong> – The index of the tab being switched to.</p>
 </dd>
-<dt class="field-even">Note<span class="colon">:</span></dt>
-<dd class="field-even"><p>The last tab (‘+’ button) may not have a widget, which is
-handled gracefully by catching AttributeError.</p>
-</dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The last tab (‘+’ button) may not have a widget, which is handled
+gracefully by catching AttributeError.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -10795,7 +10954,7 @@ user to save before closing. If all tabs are closed, creates a new
 default pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – index of the tab to close</p>
+<dd class="field-odd"><p><strong>idx</strong> – index of the tab to close.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -10811,8 +10970,8 @@ whether the process parameter is a Process instance.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>node_name</strong> – The name of the clicked node.</p></li>
 <li><p><strong>process</strong> – The process associated with the node. If this is a
-Process instance, emits <cite>process_clicked</cite>; otherwise
-emits <cite>node_clicked</cite>.</p></li>
+Process instance, emits <cite>process_clicked</cite>; otherwise emits
+<cite>node_clicked</cite>.</p></li>
 </ul>
 </dd>
 </dl>
@@ -10857,11 +11016,12 @@ node’s input parameter as database_scans at the pipeline level.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>node_name</strong> – Name of the node whose input should be exported.</p>
 </dd>
-<dt class="field-even">Note<span class="colon">:</span></dt>
-<dd class="field-even"><p>This method automatically updates the editor scene after
-modification.</p>
-</dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method automatically updates the editor scene after
+modification.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -10873,17 +11033,17 @@ up the study configuration with project-specific directories. If the
 current pipeline has completion attributes, they are preserved during
 the engine setup process.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns (CapsulEngine)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Configured engine instance with study
-directories set to the project’s raw_data
-and derived_data folders.</p>
-</dd>
-<dt class="field-even">Note<span class="colon">:</span></dt>
-<dd class="field-even"><p>This method temporarily saves and restores completion engine
-attributes to prevent loss of configuration when switching
-between pipelines.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(CapsulEngine) Configured engine instance with study
+directories set to the project’s raw_data and derived_data folders.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method temporarily saves and restores completion engine
+attributes to prevent loss of configuration when switching
+between pipelines.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -10959,14 +11119,15 @@ returned.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The editor widget at the specified index, or None if idx is
-None or if the index corresponds to the “add tab” button
-(last tab) or if index out of range.</p>
-</dd>
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The last tab position is reserved for the “add tab” button and
-does not contain an editor widget.</p>
+None or if the index corresponds to the “add tab” button (last tab) or
+if index out of range.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The last tab position is reserved for the “add tab” button and
+does not contain an editor widget.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -10975,7 +11136,7 @@ does not contain an editor widget.</p>
 <dd><p>Retrieve the editor instance associated with a specific tab name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>tab_name</em>) – The name of the tab to search for.</p>
+<dd class="field-odd"><p><strong>tab_name</strong> – (str) The name of the tab to search for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The editor instance corresponding to the specified tab name,
@@ -10983,8 +11144,8 @@ or None if the tab is not found.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p>ValueError: If tab_name is empty or None.</p></li>
-<li><p>KeyError: If no tab exists with the given name.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If tab_name is empty or None.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If no tab exists with the given name.</p></li>
 </ul>
 </dd>
 </dl>
@@ -11002,7 +11163,7 @@ instead.</p>
 <dd class="field-odd"><p><strong>idx</strong> – The zero-based index of the editor tab.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>str or None. The filename or tab title if the editor exists,
+<dd class="field-even"><p>(str or None) The filename or tab title if the editor exists,
 None if no editor exists at the given index.</p>
 </dd>
 </dl>
@@ -11020,10 +11181,11 @@ None if no editor exists at the given index.</p>
 <dd class="field-even"><p>The zero-based index of the editor’s tab, or None if not
 found.</p>
 </dd>
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Searches all tabs except the last one (count() - 1).</p>
-</dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Searches all tabs except the last one (count() - 1).</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11032,20 +11194,19 @@ found.</p>
 <dd><p>Get the index of the first tab with the specified filename.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>filename</em>) – The pipeline filename to search for. Can be an
-absolute or relative path; will be normalized
-to relative.</p>
+<dd class="field-odd"><p><strong>filename</strong> – (str) The pipeline filename to search for. Can be an
+absolute or relative path; will be normalized to relative.</p>
 </dd>
-<dt class="field-even">Return (int)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The zero-based index of the matching tab, or None
-if no match is found.</p>
-</dd>
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Filenames are internally stored as relative paths for
-consistency. Only searches up to count() - 1 to exclude special
-tabs if any.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(int) The zero-based index of the matching tab, or None if
+no match is found.</p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Filenames are internally stored as relative paths for consistency.
+Only searches up to count() - 1 to exclude special tabs if any.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11056,10 +11217,10 @@ tabs if any.</p>
 matching the given name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>tab_name</em>) – The name of the tab to locate.</p>
+<dd class="field-odd"><p><strong>tab_name</strong> – (str) The name of the tab to locate.</p>
 </dd>
-<dt class="field-even">Return (int)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The zero-based index of the matching tab, or None if no
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(int) The zero-based index of the matching tab, or None if no
 match is found.</p>
 </dd>
 </dl>
@@ -11073,16 +11234,16 @@ match is found.</p>
 characters:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Qt keyboard shortcut indicators (ampersands)</p></li>
-<li><p>Unsaved file indicators (trailing “ <a href="#id92"><span class="problematic" id="id93">*</span></a>”)</p></li>
+<li><p>Qt keyboard shortcut indicators (ampersands).</p></li>
+<li><p>Unsaved file indicators (trailing “ <a href="#id92"><span class="problematic" id="id93">*</span></a>”).</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>idx</strong> – Zero-based index of the tab.</p>
 </dd>
-<dt class="field-even">Return (str)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The cleaned tab name, or None if the index is invalid
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(str) The cleaned tab name, or None if the index is invalid
 or corresponds to the “add tab” button (last position).</p>
 </dd>
 </dl>
@@ -11096,9 +11257,9 @@ or corresponds to the “add tab” button (last position).</p>
 contains nodes by examining the presence of plugs in the pipeline’s
 root node.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return (bool)<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if at least one pipeline contains nodes,
-False otherwise.</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(bool) True if at least one pipeline contains nodes, False
+otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -11112,19 +11273,19 @@ already open, switches to that tab. If the current tab is not empty,
 creates a new tab for the pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>filename</em>) – Path to the pipeline file to load. If None,
-prompts the user to select a file. Defaults to
-None.</p>
+<dd class="field-odd"><p><strong>filename</strong> – (str) Path to the pipeline file to load. If None,
+prompts the user to select a file. Defaults to None.</p>
 </dd>
-<dt class="field-even">Return (None)<span class="colon">:</span></dt>
-<dd class="field-even"><p>Returns early on success, or cleans up and returns on
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(None) Returns early on success, or cleans up and returns on
 failure.</p>
 </dd>
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>This method is also called from <cite>open_sub_pipeline</cite> with a
-filename.</p>
-</dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is also called from <cite>open_sub_pipeline</cite> with a
+filename.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11166,19 +11327,18 @@ associated with the given node in the current pipeline.</p>
 <dd><p>Open a sub-pipeline in a new tab.</p>
 <dl class="simple">
 <dt>This method locates and loads a sub-pipeline by:</dt><dd><ol class="arabic simple">
-<li><p>Reading the process configuration to find package paths</p></li>
+<li><p>Reading the process configuration to find package paths.</p></li>
 <li><p>Determining the pipeline’s source package (mia_processes or
-custom)</p></li>
-<li><p>Resolving the full filesystem path to the pipeline file</p></li>
-<li><p>Loading the pipeline in a new tab</p></li>
+custom).</p></li>
+<li><p>Resolving the full filesystem path to the pipeline file.</p></li>
+<li><p>Loading the pipeline in a new tab.</p></li>
 </ol>
 </dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>sub_pipeline</strong> – The pipeline object to open. Must have a ‘name’
-attribute and ‘__module__’ attribute for package
-resolution.</p>
+attribute and ‘__module__’ attribute for package resolution.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -11192,24 +11352,17 @@ short delay (20ms). The update strategy depends on the editor’s view
 mode:</p>
 <blockquote>
 <div><ul class="simple">
-<li><dl class="simple">
-<dt>Logical view: Displays logical representations of nodes, plugs,</dt><dd><p>and links</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Normal view: Displays standard representations of nodes, plugs,</dt><dd><p>and links</p>
-</dd>
-</dl>
-</li>
+<li><p>Logical view: Displays logical representations of nodes, plugs,
+and links</p></li>
+<li><p>Normal view: Displays standard representations of nodes, plugs,
+and links</p></li>
 </ul>
 </div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The update is performed asynchronously via a single-shot timer
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The update is performed asynchronously via a single-shot timer
 to allow the UI thread to remain responsive.</p>
-</dd>
-</dl>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11221,20 +11374,19 @@ a filename is provided. Updates the tab text and emits a signal upon
 successful save.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>new_file_name</em>) – Target filename for the pipeline. If None,
-triggers a “Save As” dialog. Defaults to
-None.</p>
+<dd class="field-odd"><p><strong>new_file_name</strong> – (str) Target filename for the pipeline. If None,
+triggers a “Save As” dialog. Defaults to None.</p>
 </dd>
-<dt class="field-even">Return (str or None)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The basename of the saved file if successful,
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(str or None) The basename of the saved file if successful,
 None otherwise.</p>
 </dd>
 </dl>
 <dl class="simple">
 <dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Updates the current tab text with the new filename</p></li>
-<li><p>Emits pipeline_saved signal (only for explicit saves)</p></li>
-<li><p>Modifies the editor’s _pipeline_filename attribute</p></li>
+<li><p>Updates the current tab text with the new filename.</p></li>
+<li><p>Emits pipeline_saved signal (only for explicit saves).</p></li>
+<li><p>Modifies the editor’s _pipeline_filename attribute.</p></li>
 </ul>
 </dd>
 </dl>
@@ -11330,10 +11482,11 @@ present.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>editor</strong> – The editor instance whose history should be saved.</p>
 </dd>
-<dt class="field-even">Note<span class="colon">:</span></dt>
-<dd class="field-even"><p>This method assumes the editor is in the currently active tab.</p>
-</dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method assumes the editor is in the currently active tab.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -11357,13 +11510,11 @@ list to reflect any modifications made in the pipeline editor.</p>
 the “add tab” button) and updates the database_scans attribute for
 each pipeline that supports it. Also refreshes the iteration checkbox
 state after updating.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Note<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Silently continues if updating a pipeline fails, logging the
-error without interrupting the update process for remaining
-pipelines.</p>
-</dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Silently continues if updating a pipeline fails, logging the error
+without interrupting the update process for remaining pipelines.</p>
+</div>
 </dd></dl>
 
 </dd></dl>

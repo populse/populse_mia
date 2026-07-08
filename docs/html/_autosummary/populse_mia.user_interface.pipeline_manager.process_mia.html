@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+63bbe3c7 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+e05f3e3c documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=ff1dfa91"></script>
+    <script src="../_static/documentation_options.js?v=079bfa8c"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+63bbe3c7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e05f3e3c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -72,11 +72,11 @@ mia_processes, Nipype, and Capsul.</p>
 <p>A Pipeline is normally subclassed, and its <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition" title="populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a>
 method is overloaded to define its nodes and links.
 <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition" title="populse_mia.user_interface.pipeline_manager.process_mia.Pipeline.pipeline_definition"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pipeline_definition()</span></code></a> will be called by the pipeline constructor.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
 
-<span class="k">class</span> <span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyPipeline</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
 
-  <span class="k">def</span> <span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">pipeline_definition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc1&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process1&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_process</span><span class="p">(</span><span class="s1">&#39;proc2&#39;</span><span class="p">,</span> <span class="s1">&#39;my_toolbox.my_process2&#39;</span><span class="p">)</span>
       <span class="bp">self</span><span class="o">.</span><span class="n">add_switch</span><span class="p">(</span><span class="s1">&#39;main_switch&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;in1&#39;</span><span class="p">,</span> <span class="s1">&#39;in2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;out1&#39;</span><span class="p">,</span> <span class="s1">&#39;out2&#39;</span><span class="p">])</span>
@@ -105,7 +105,7 @@ which represent actual processing bricks.</p></li>
 <li><p>pipeline nodes (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineNode" title="capsul.pipeline.pipeline_nodes.PipelineNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.PipelineNode</span></code></a>) are
 sub-pipelines which allow to reuse an existing pipeline within another
 one</p></li>
-<li><p>switch nodes (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Switch" title="capsul.pipeline.pipeline_nodes.Switch"><code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.Switch</span></code></a>) allows to select values
+<li><p>switch nodes (<code class="xref py py-class docutils literal notranslate"><span class="pre">pipeline_nodes.Switch</span></code>) allows to select values
 between several possible inputs. The switch mechanism also allows to
 select between several alternative processes or processing branches.</p></li>
 <li><p>iterative process (:py:class:process_iteration.ProcessIteration`)
@@ -445,7 +445,7 @@ inputs: “in1_switch_out1”, “in2_switch_out1”, “in1_switch_out2”,
 outputs: “out1”, “out2”</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Switch" title="capsul.pipeline.pipeline_nodes.Switch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">capsul.pipeline.pipeline_nodes.Switch</span></code></a></p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">capsul.pipeline.pipeline_nodes.Switch</span></code></p>
 </div>
 </dd></dl>
 
@@ -669,7 +669,7 @@ manuyally set values to be overridden by completion.</p>
 <dd class="field-odd"><p><strong>nodes</strong> – Iterates over all nodes</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node">Node</a></p>
+<dd class="field-even"><p>Generator of <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node">Node</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -681,7 +681,7 @@ manuyally set values to be overridden by completion.</p>
 state and the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_activated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -700,7 +700,7 @@ activated</p>
 activation state and to the state of its direct neighbouring nodes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
+<dd class="field-odd"><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a><em> (</em><em>mandatory</em><em>)</em>) – node to check</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>plugs_deactivated</strong> – list of (plug_name,plug) containing all plugs that have been
@@ -781,7 +781,7 @@ _free_temporary_files().</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
+<li><p><strong>node</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.Node" title="populse_mia.user_interface.pipeline_manager.process_library.Node"><em>Node</em></a>) – node to check temporary outputs on</p></li>
 <li><p><strong>temp_files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of temporary files for the pipeline execution. The list will
 be modified (completed).</p></li>
 </ul>
@@ -1109,23 +1109,23 @@ execution function, either through a python method, by overloading
 processing machine which has not necessary capsul, nor python, installed.</p>
 <p>Parameters are declared or queried using the traits API, and their values
 are in the process instance variables:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Process</span>
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
 
-<span class="k">class</span> <span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyProcess</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 
     <span class="c1"># a class trait</span>
     <span class="n">param1</span> <span class="o">=</span> <span class="n">traits</span><span class="o">.</span><span class="n">Str</span><span class="p">(</span><span class="s1">&#39;def_param1&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MyProcess</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># declare an input param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;param2&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">Int</span><span class="p">())</span>
         <span class="c1"># declare an output param</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_trait</span><span class="p">(</span><span class="s1">&#39;out_param&#39;</span><span class="p">,</span> <span class="n">traits</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">out_param</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param1:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param1</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;param2:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">param2</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">f</span><span class="p">)</span>
@@ -1968,7 +1968,7 @@ conform to the API.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">ProcessNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/capsul/pipeline/pipeline_nodes.html#ProcessNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.Node" title="capsul.pipeline.pipeline_nodes.Node"><code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Node</span></code></p>
 <p>Process node.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.ProcessNode.process">
@@ -2307,7 +2307,7 @@ it may be called twice if no precaution is taken to avoid it (a
 <cite>__np_init_done__</cite> instance attribute is set once init is done the
 first time).</p>
 <p>Ex:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Smooth</span><span class="p">(</span><span class="n">NipypeProcess</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Smooth</span><span class="p">(</span><span class="n">NipypeProcess</span><span class="p">):</span>
     <span class="n">_nipype_class_type</span> <span class="o">=</span> <span class="n">spm</span><span class="o">.</span><span class="n">Smooth</span>
     <span class="n">_nipype_trait_mapping</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s1">&#39;smoothed_files&#39;</span><span class="p">:</span> <span class="s1">&#39;smoothed_files&#39;</span><span class="p">,</span>
@@ -2457,8 +2457,8 @@ otherwise display it on the console.</p></li>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.process_mia.</span></span><span class="sig-name descname"><span class="pre">File</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value=&lt;traits.trait_type._NoDefaultSpecifiedType</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exists=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolve=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_compressed=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extensions=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/nipype/interfaces/base/traits_extension.html#File"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.File" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BasePath</span></code></p>
 <p>Defines a trait whose value must be a file path.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">TraitedSpec</span><span class="p">,</span> <span class="n">TraitError</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">TraitedSpec</span><span class="p">,</span> <span class="n">TraitError</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span>
@@ -2470,14 +2470,14 @@ otherwise display it on the console.</p></li>
 <span class="go">&#39;/some/made/out/path/to/file&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">resolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">(</span><span class="n">foo</span><span class="o">=</span><span class="s1">&#39;idontexist.txt&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span>  
 <span class="go">&#39;.../idontexist.txt&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;idontexist.txt&#39;</span>  
@@ -2491,21 +2491,21 @@ otherwise display it on the console.</p></li>
 <span class="go">&#39;.../idoexist.txt&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="s1">&#39;idoexist.txt&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span>
 <span class="go">&lt;undefined&gt;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="s1">&#39;idoexist.txt&#39;</span><span class="p">,</span> <span class="n">usedefault</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span>
 <span class="go">&#39;idoexist.txt&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">resolve</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;txt.gz&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;idoexist.badtxt&#39;</span>  
@@ -2518,7 +2518,7 @@ otherwise display it on the console.</p></li>
 <span class="go">&#39;.../idoexist.txt&#39;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.nii&#39;</span><span class="p">,</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;badext.txt&#39;</span>  
@@ -2526,7 +2526,7 @@ otherwise display it on the console.</p></li>
 <span class="gr">TraitError</span><span class="w">:</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">File</span><span class="p">(</span><span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;.nii&#39;</span><span class="p">,</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;goodext.nii&#39;</span>
@@ -2581,8 +2581,8 @@ is _Undefined. It does not accept empty lists.</p>
 <p>XXX This should only be used as a final resort. We should stick to
 established Traits to the extent possible.</p>
 <p>XXX This needs to be vetted by somebody who understands traits</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">TraitedSpec</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">TraitedSpec</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">TraitedSpec</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">foo</span> <span class="o">=</span> <span class="n">InputMultiObject</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">foo</span>

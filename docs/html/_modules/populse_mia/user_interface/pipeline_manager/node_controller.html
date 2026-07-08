@@ -4,452 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+e05f3e3c documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../../../../_static/documentation_options.js?v=079bfa8c"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e05f3e3c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -481,15 +46,6 @@ window.addEventListener("load", load);</script>
 <span class="sd">The module is built on top of Qt and Capsul, leveraging custom widgets like</span>
 <span class="sd">`AttributedProcessWidget` and `TableDataBrowser` to provide a user-friendly</span>
 <span class="sd">interface for complex pipeline interactions.</span>
-
-<span class="sd">:Contains:</span>
-
-<span class="sd">    Class:</span>
-<span class="sd">        - AttributesFilter</span>
-<span class="sd">        - CapsulNodeController</span>
-<span class="sd">        - FilterWidget</span>
-<span class="sd">        - NodeController</span>
-
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -504,7 +60,6 @@ window.addEventListener("load", load);</script>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sip</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
@@ -520,7 +75,7 @@ window.addEventListener("load", load);</script>
 <span class="p">)</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">sip</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -565,6 +120,13 @@ window.addEventListener("load", load);</script>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">type_editors</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;AttributesFilter&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CapsulNodeController&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;FilterWidget&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;NodeController&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
@@ -588,16 +150,23 @@ window.addEventListener("load", load);</script>
 <span class="sd">    represents an attribute name, and the corresponding value is a list of all</span>
 <span class="sd">    values for that attribute across the selected or filtered entries.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - ok_clicked: Closes the widget and emits the collected attributes. If</span>
-<span class="sd">                      rows are selected, only those rows&#39; attributes are</span>
-<span class="sd">                      collected; otherwise, attributes are collected from all</span>
-<span class="sd">                      entries matching the current filter.</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - ok_clicked: Closes the widget and emits the collected attributes.</span>
+<span class="sd">              If rows are selected, only those rows&#39; attributes are collected;</span>
+<span class="sd">              otherwise, attributes are collected from all entries matching the</span>
+<span class="sd">              current filter.</span>
+
+<span class="sd">    Signals:</span>
+
+<span class="sd">        - attributes_selected: Signal emitted when the user validates the</span>
+<span class="sd">          selection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Signal emitted when the user validates the selection. The signal carries</span>
-    <span class="c1"># a dictionary mapping attribute names to lists of values extracted from</span>
-    <span class="c1"># the database.</span>
+    <span class="c1"># The signal carries a dictionary mapping attribute names to lists of</span>
+    <span class="c1"># values extracted from the database.</span>
     <span class="n">attributes_selected</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
 
 <div class="viewcode-block" id="AttributesFilter.ok_clicked">
@@ -665,25 +234,34 @@ window.addEventListener("load", load);</script>
 <span class="sd">    real-time updates and synchronization between the UI and the underlying</span>
 <span class="sd">    pipeline state.</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - display_parameters: Displays the parameters of the selected node and</span>
-<span class="sd">                              configures the UI.</span>
-<span class="sd">        - filter_attributes: Opens a dialog for filtering node attributes.</span>
-<span class="sd">        - release_process: Cleans up process notifications and signals.</span>
-<span class="sd">        - rename_subprocesses: Recursively renames subprocesses and updates</span>
-<span class="sd">                               context names.</span>
-<span class="sd">        - static_release: Removes trait change notifications from a process.</span>
-<span class="sd">        - parameters_changed: Handles parameter value changes and emits a</span>
-<span class="sd">                              signal.</span>
-<span class="sd">        - update_attributes_from_filter: Applies selected attributes from the</span>
-<span class="sd">                                         filter widget.</span>
-<span class="sd">        - update_node_name: Renames the selected node and updates the pipeline.</span>
-<span class="sd">        - update_parameters: Placeholder for backward compatibility (no</span>
-<span class="sd">                             operation).</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - display_parameters: Displays the parameters of the selected node</span>
+<span class="sd">              and configures the UI.</span>
+<span class="sd">            - filter_attributes: Opens a dialog for filtering node attributes.</span>
+<span class="sd">            - release_process: Cleans up process notifications and signals.</span>
+<span class="sd">            - rename_subprocesses: Recursively renames subprocesses and updates</span>
+<span class="sd">              context names.</span>
+<span class="sd">            - static_release: Removes trait change notifications from a</span>
+<span class="sd">              process.</span>
+<span class="sd">            - parameters_changed: Handles parameter value changes and emits a</span>
+<span class="sd">              signal.</span>
+<span class="sd">            - update_attributes_from_filter: Applies selected attributes from</span>
+<span class="sd">              the filter widget.</span>
+<span class="sd">            - update_node_name: Renames the selected node and updates the</span>
+<span class="sd">              pipeline.</span>
+<span class="sd">            - update_parameters: Placeholder for backward compatibility (no</span>
+<span class="sd">              operation).</span>
+
+<span class="sd">    Signals:</span>
+
+<span class="sd">        - value_changed: Signal emitted when a node or parameter value is</span>
+<span class="sd">          changed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Signal emitted when a node or parameter value is changed. Used for</span>
-    <span class="c1"># undo/redo functionality.</span>
+    <span class="c1"># Used for undo/redo functionality.</span>
     <span class="n">value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CapsulNodeController.__init__">
@@ -695,7 +273,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        :param project: Current project instance.</span>
 <span class="sd">        :param scan_list: List of available scans.</span>
 <span class="sd">        :param pipeline_manager_tab: Parent pipeline manager tab.</span>
-<span class="sd">        :parammain_window: Main application window.</span>
+<span class="sd">        :param main_window: Main application window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -729,7 +307,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        edits, labels, and control buttons. Handles special cases for pipeline</span>
 <span class="sd">        inputs/outputs nodes.</span>
 
-<span class="sd">        :param node_name (str): Name of the node to display.</span>
+<span class="sd">        :param node_name: (str) Name of the node to display.</span>
 <span class="sd">        :param process: Process instance associated with the node.</span>
 <span class="sd">        :param pipeline: Current pipeline containing the node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -869,8 +447,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">        each subprocess.</span>
 
 <span class="sd">        :param node: The current node being processed.</span>
-<span class="sd">        :param parent_node_name (str): The name of the parent node to be</span>
-<span class="sd">                                       included in the context name.</span>
+<span class="sd">        :param parent_node_name: (str) The name of the parent node to be</span>
+<span class="sd">         included in the context name.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the context name or process name and split by &quot;.&quot;</span>
         <span class="n">context_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
@@ -926,7 +504,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Handle parameter value changes and emit signal.</span>
 
 <span class="sd">        :param _: Unused parameter (object instance).</span>
-<span class="sd">        :param plug_name (str): Name of the changed parameter.</span>
+<span class="sd">        :param plug_name: (str) Name of the changed parameter.</span>
 <span class="sd">        :param old_value: Previous parameter value.</span>
 <span class="sd">        :param new_value: New parameter value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -953,8 +531,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">        selection from the filter dialog. Shows a warning if no matching</span>
 <span class="sd">        attributes are found.</span>
 
-<span class="sd">        :param attributes (dict): Dictionary of attribute names and values to</span>
-<span class="sd">                                  apply.</span>
+<span class="sd">        :param attributes: (dict) Dictionary of attribute names and values to</span>
+<span class="sd">         apply.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">compl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">completion_engine</span>
         <span class="n">atts</span> <span class="o">=</span> <span class="n">compl</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span>
@@ -1003,14 +581,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        links. For iterated processes, ensures the name starts</span>
 <span class="sd">        with &quot;iterated_&quot;.</span>
 
-<span class="sd">        :param new_node_name (str): New name for the node. If None (when this</span>
-<span class="sd">                                    method is not called from an undo/redo),</span>
-<span class="sd">                                    reads from the line edit widget.</span>
-<span class="sd">        :param old_node_name (str): Current node name. If None (when this</span>
-<span class="sd">                                    method is not called from an undo/redo),</span>
-<span class="sd">                                    uses self.node_name.</span>
-<span class="sd">        :param from_undo (bool): True if this action is from an undo operation.</span>
-<span class="sd">        :param from_redo (bool): True ifthis action is from a redo operation.</span>
+<span class="sd">        :param new_node_name: (str) New name for the node. If None (when this</span>
+<span class="sd">         method is not called from an undo/redo), reads from the line edit</span>
+<span class="sd">         widget.</span>
+<span class="sd">        :param old_node_name: (str) Current node name. If None (when this</span>
+<span class="sd">         method is not called from an undo/redo), uses self.node_name.</span>
+<span class="sd">        :param from_undo: (bool) True if this action is from an undo operation.</span>
+<span class="sd">        :param from_redo: (bool) True ifthis action is from a redo operation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Ignore programmatic refresh emissions</span>
@@ -1111,7 +688,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FilterWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for filtering and selecting files in a pipeline&#39;s</span>
@@ -1129,31 +706,34 @@ window.addEventListener("load", load);</script>
 <span class="sd">    The widget is designed to integrate seamlessly with the pipeline editor,</span>
 <span class="sd">    providing real-time feedback and updates as filters are applied.</span>
 
-<span class="sd">    .. Methods:</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
 <span class="sd">        - layout_view: Configures and initializes the main widget layout,</span>
-<span class="sd">                       including search bars, data tables, and action buttons.</span>
+<span class="sd">          including search bars, data tables, and action buttons.</span>
 <span class="sd">        - normalize_scan_path: Normalize a scan path to a logical</span>
-<span class="sd">                               project-relative path.</span>
+<span class="sd">          project-relative path.</span>
 <span class="sd">        - ok_clicked: Applies the configured filter to the process and closes</span>
-<span class="sd">                      the widget.</span>
+<span class="sd">          the widget.</span>
 <span class="sd">        - reset_search_bar: Resets the search interface to its default state,</span>
-<span class="sd">                            clearing all filters.</span>
+<span class="sd">          clearing all filters.</span>
 <span class="sd">        - search_str: Filters and updates the displayed scans based on the</span>
-<span class="sd">                      provided search string.</span>
+<span class="sd">          provided search string.</span>
 <span class="sd">        - update_tag_to_filter: Opens a dialog for selecting tags to filter and</span>
-<span class="sd">                                updates the filter button text.</span>
+<span class="sd">          updates the filter button text.</span>
 <span class="sd">        - update_tags: Updates the list of visualized tags through a user</span>
-<span class="sd">                       dialog and refreshes the table view.</span>
+<span class="sd">          dialog and refreshes the table view.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FilterWidget.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Filter Widget for pipeline node filtering.</span>
 
 <span class="sd">        :param project: Current project instance containing database and</span>
-<span class="sd">                        configuration.</span>
+<span class="sd">         configuration.</span>
 <span class="sd">        :param node_name: Display name of the filter node.</span>
 <span class="sd">        :param node: Input_Filter node instance containing the filter process.</span>
 <span class="sd">        :param main_window: Parent main window for UI hierarchy.</span>
@@ -1215,7 +795,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.layout_view">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.layout_view">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.layout_view">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure and initialize the main widget layout.</span>
@@ -1269,23 +849,24 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.normalize_scan_path">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.normalize_scan_path">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.normalize_scan_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">normalize_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Normalize a scan path to a logical project-relative path.</span>
 
 <span class="sd">        Converts any scan path (absolute, relative, or symlinked) into a</span>
-<span class="sd">        consistent project-relative representation, preferably starting at</span>
-<span class="sd">        the project&#39;s data directory.</span>
+<span class="sd">        consistent project-relative representation, preferably starting at the</span>
+<span class="sd">        project&#39;s data directory.</span>
 
 <span class="sd">        Resolution strategy (in order of preference):</span>
-<span class="sd">            1. Path relative to project root (if path is under project)</span>
-<span class="sd">            2. Path relative to &#39;data/&#39; directory (semantic anchor fallback)</span>
-<span class="sd">            3. Absolute path string (last resort)</span>
+<span class="sd">            1. Path relative to project root (if path is under project).</span>
+<span class="sd">            2. Path relative to &#39;data/&#39; directory (semantic anchor fallback).</span>
+<span class="sd">            3. Absolute path string (last resort).</span>
 
-<span class="sd">        :param scan_path: File path to normalize (absolute or relative)</span>
+<span class="sd">        :param scan_path: File path to normalize (absolute or relative).</span>
 
-<span class="sd">        :return: Normalized path string, relative to project root when possible</span>
+<span class="sd">        :Returns: Normalized path string, relative to project root when</span>
+<span class="sd">         possible.</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; normalize_scan_path(&#39;/abs/path/project/data/scans/001.tif&#39;)</span>
@@ -1341,7 +922,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.ok_clicked">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.ok_clicked">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.ok_clicked">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the configured filter to the process and close the dialog.</span>
@@ -1377,7 +958,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.reset_search_bar">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.reset_search_bar">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.reset_search_bar">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset search interface to default state.</span>
@@ -1387,10 +968,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        updated efficiently by tracking the previous visualization state.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">            - Clears rapid_search text field</span>
-<span class="sd">            - Resets advanced_search rows to empty list</span>
-<span class="sd">            - Updates advanced_search display</span>
-<span class="sd">            - Restores table_data to show all scans from scan_list</span>
+<span class="sd">            - Clears rapid_search text field.</span>
+<span class="sd">            - Resets advanced_search rows to empty list.</span>
+<span class="sd">            - Updates advanced_search display.</span>
+<span class="sd">            - Restores table_data to show all scans from scan_list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Clear search inputs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -1404,7 +985,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.search_str">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.search_str">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.search_str">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter and update the displayed scans based on a search string.</span>
@@ -1414,14 +995,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">        provided for undefined values and custom search filters.</span>
 
 <span class="sd">        :param str_search: Search query string. Use empty string to show all</span>
-<span class="sd">                           scans, or NOT_DEFINED_VALUE constant to filter scans</span>
-<span class="sd">                           with undefined fields.</span>
+<span class="sd">         scans, or NOT_DEFINED_VALUE constant to filter scans with undefined</span>
+<span class="sd">         fields.</span>
 
 <span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates self.table_data.scans_to_visualize with filtered results</span>
-<span class="sd">            - Updates self.advanced_search.scans_list with filtered results</span>
+<span class="sd">            - Updates self.table_data.scans_to_visualize with filtered results.</span>
+<span class="sd">            - Updates self.advanced_search.scans_list with filtered results.</span>
 <span class="sd">            - Triggers table row update via</span>
-<span class="sd">              self.table_data.update_visualized_rows()</span>
+<span class="sd">              self.table_data.update_visualized_rows().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
@@ -1460,7 +1041,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.update_tag_to_filter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tag_to_filter">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tag_to_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a tag selection dialog and update the filter button text.</span>
@@ -1478,7 +1059,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="FilterWidget.update_tags">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tags">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the list of visualized tags through a user dialog.</span>
@@ -1563,34 +1144,41 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">    This controller provides a user interface to interact with pipeline nodes,</span>
 <span class="sd">    allowing users to:</span>
-<span class="sd">        - View and edit node names and parameters</span>
-<span class="sd">        - Filter and update plug values</span>
-<span class="sd">        - Handle undo/redo operations for parameter changes</span>
-<span class="sd">        - Manage subprocesses and context names</span>
+<span class="sd">        - View and edit node names and parameters.</span>
+<span class="sd">        - Filter and update plug values.</span>
+<span class="sd">        - Handle undo/redo operations for parameter changes.</span>
+<span class="sd">        - Manage subprocesses and context names.</span>
 
 <span class="sd">    The widget is designed to integrate with a pipeline editor, providing</span>
 <span class="sd">    real-time updates and synchronization between the UI and the underlying</span>
 <span class="sd">    pipeline state.</span>
 
-<span class="sd">    .. Methods:</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
 <span class="sd">        - clearLayout: Clears and deletes all items from a widget&#39;s layout,</span>
-<span class="sd">                       including nested layouts.</span>
+<span class="sd">          including nested layouts.</span>
 <span class="sd">        - display_filter: Displays a filter dialog for a plug.</span>
 <span class="sd">        - display_parameters: Renders the parameters UI for a selected node.</span>
 <span class="sd">        - get_index_from_plug_name: Returns the index of a plug label in the</span>
-<span class="sd">                                    UI.</span>
+<span class="sd">          UI.</span>
 <span class="sd">        - update_node_name: Updates the name of the selected node in the</span>
-<span class="sd">                            pipeline.</span>
+<span class="sd">          pipeline.</span>
 <span class="sd">        - rename_subprocesses: Recursively updates context names for</span>
-<span class="sd">                               subprocesses.</span>
+<span class="sd">          subprocesses.</span>
 <span class="sd">        - update_parameters: Synchronizes UI parameter values with the process</span>
-<span class="sd">                             traits.</span>
+<span class="sd">          traits.</span>
 <span class="sd">        - update_plug_value: Updates a plug value.</span>
 <span class="sd">        - update_plug_value_from_filter: Updates a plug value from filter</span>
-<span class="sd">                                         results.</span>
+<span class="sd">          results.</span>
 <span class="sd">        - release_process: Placeholder for process release logic (to be</span>
-<span class="sd">                           overridden by subclasses).</span>
+<span class="sd">          overridden by subclasses).</span>
 
+<span class="sd">    Signals:</span>
+
+<span class="sd">        - value_changed: Signal emitted when a node or parameter value is</span>
+<span class="sd">          changed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -1606,7 +1194,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        interface.</span>
 
 <span class="sd">        :param project: The current project instance.</span>
-<span class="sd">        :param scan_list: lThe list of selected database files (scans).</span>
+<span class="sd">        :param scan_list: The list of selected database files (scans).</span>
 <span class="sd">        :param pipeline_manager_tab: The parent pipeline manager tab widget.</span>
 <span class="sd">        :param main_window: The main application window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1636,8 +1224,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - Nested layouts are emptied and scheduled for deletion.</span>
 <span class="sd">            - The layout itself is deleted once cleared.</span>
 
-<span class="sd">        :param widget (QtWidgets.QWidget): The widget whose layout should be</span>
-<span class="sd">                                           cleared.</span>
+<span class="sd">        :param widget: (QtWidgets.QWidget) The widget whose layout should be</span>
+<span class="sd">         cleared.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
 
@@ -1677,9 +1265,9 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        :param node_name: The name of the pipeline node containing the plug.</span>
 <span class="sd">        :param plug_name: The name of the plug to filter.</span>
-<span class="sd">        :param parameters: A tuple containing (plug_index, pipeline_instance,</span>
-<span class="sd">                           plug_value_type) that provides context for the plug</span>
-<span class="sd">                           being filtered.</span>
+<span class="sd">        :param parameters: A three-element tuple (plug_index,</span>
+<span class="sd">         pipeline_instance, plug_value_type) that provides the context of the</span>
+<span class="sd">         plug currently being filtered.</span>
 <span class="sd">        :param process: The process instance associated with the node.</span>
 
 <span class="sd">        Note:</span>
@@ -1716,19 +1304,19 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        Special handling:</span>
 <span class="sd">            - &#39;inputs&#39;/&#39;outputs&#39; nodes: Name field is read-only, displays</span>
-<span class="sd">                                        &quot;Pipeline inputs/outputs&quot;</span>
-<span class="sd">            - Other nodes: Name field is editable and updates on Enter</span>
-<span class="sd">            - Parameters with userlevel &gt; 0 are hidden from the interface</span>
+<span class="sd">              &quot;Pipeline inputs/outputs&quot;.</span>
+<span class="sd">            - Other nodes: Name field is editable and updates on Enter.</span>
+<span class="sd">            - Parameters with userlevel &gt; 0 are hidden from the interface.</span>
 
-<span class="sd">        :param node_name: Identifier for the node being displayed</span>
+<span class="sd">        :param node_name: Identifier for the node being displayed.</span>
 <span class="sd">        :param process: Node&#39;s process object containing traits and their</span>
-<span class="sd">                        values</span>
-<span class="sd">        :param pipeline: Parent pipeline instance containing this node</span>
+<span class="sd">         values.</span>
+<span class="sd">        :param pipeline: Parent pipeline instance containing this node.</span>
 
 <span class="sd">        Side effects:</span>
-<span class="sd">            - Clears and rebuilds the widget layout</span>
-<span class="sd">            - Updates node_parameters_tmp in the current pipeline editor</span>
-<span class="sd">            - Enables the run_pipeline_action</span>
+<span class="sd">            - Clears and rebuilds the widget layout.</span>
+<span class="sd">            - Updates node_parameters_tmp in the current pipeline editor.</span>
+<span class="sd">            - Enables the run_pipeline_action.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">current_process</span> <span class="o">=</span> <span class="n">process</span>
@@ -1884,11 +1472,11 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of a plug by its name.</span>
 
-<span class="sd">        :param plug_name (str): The name of the plug to find.</span>
-<span class="sd">        :param in_or_out (str): Direction of the plug ; &quot;in&quot; for input,</span>
-<span class="sd">                                &quot;out&quot; for output.</span>
+<span class="sd">        :param plug_name: (str) The name of the plug to find.</span>
+<span class="sd">        :param in_or_out: (str) Direction of the plug ; &quot;in&quot; for input,</span>
+<span class="sd">         &quot;out&quot; for output.</span>
 
-<span class="sd">        :return: The zero-based index of the plug if found, None otherwise.</span>
+<span class="sd">        :Returns: The zero-based index of the plug if found, None otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_input</span> <span class="k">if</span> <span class="n">in_or_out</span> <span class="o">==</span> <span class="s2">&quot;in&quot;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_output</span>
 
@@ -1913,12 +1501,11 @@ window.addEventListener("load", load);</script>
 <span class="sd">        ProcessIteration, ensures the name is prefixed with &#39;iterated_&#39;.</span>
 
 <span class="sd">        :param new_node_name: The new name for the node. If None, retrieves the</span>
-<span class="sd">                              name from the UI line edit widget. Is not None</span>
-<span class="sd">                              only when this method is called from an</span>
-<span class="sd">                              &quot;undo/redo&quot;)</span>
+<span class="sd">         name from the UI line edit widget. Is not None only when this method</span>
+<span class="sd">         is called from an &quot;undo/redo&quot;)</span>
 
-<span class="sd">        :Emits: value_changed: Signal with node rename details for undo/redo</span>
-<span class="sd">                               tracking.</span>
+<span class="sd">        :Emits value_changed: Signal with node rename details for undo/redo</span>
+<span class="sd">         tracking.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Does nothing if the new name already exists in the pipeline.</span>
@@ -1968,14 +1555,15 @@ window.addEventListener("load", load);</script>
 <span class="sd">        incorporating the parent node name.</span>
 
 <span class="sd">        The context name follows these rules:</span>
-<span class="sd">        - Pipeline processes:&quot;Pipeline.{parent_node_name}.{additional_parts}&quot;</span>
-<span class="sd">        - Non-pipeline processes: &quot;{parent_node_name}&quot;</span>
-<span class="sd">        - Nested subprocesses are updated recursively</span>
+<span class="sd">            - Pipeline processes:</span>
+<span class="sd">              &quot;Pipeline.{parent_node_name}.{additional_parts}&quot;.</span>
+<span class="sd">            - Non-pipeline processes: &quot;{parent_node_name}&quot;.</span>
+<span class="sd">            - Nested subprocesses are updated recursively.</span>
 
-<span class="sd">        :param node (Node): The node whose context name will be updated, along</span>
-<span class="sd">                            with all its subprocesses.</span>
-<span class="sd">        :param parent_node_name (str): The parent node&#39;s name to incorporate</span>
-<span class="sd">                                       into the context naming hierarchy.</span>
+<span class="sd">        :param node: (Node) The node whose context name will be updated, along</span>
+<span class="sd">         with all its subprocesses.</span>
+<span class="sd">        :param parent_node_name: (str) The parent node&#39;s name to incorporate</span>
+<span class="sd">         into the context naming hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">):</span>
@@ -2016,7 +1604,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Undefined trait values are handled gracefully.</span>
 
 <span class="sd">        :param process: Optional process node whose parameters should be</span>
-<span class="sd">                        displayed. If None, uses self.current_process.</span>
+<span class="sd">         displayed. If None, uses self.current_process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Resolve process</span>
@@ -2074,23 +1662,22 @@ window.addEventListener("load", load);</script>
 <span class="sd">        evaluated. If the update fails, the previous value is restored in the</span>
 <span class="sd">        UI and a warning dialog is shown.</span>
 
-<span class="sd">        :param in_or_out (str): Direction of the plug - &quot;in&quot; for input plugs,</span>
-<span class="sd">                                &quot;out&quot; for output plugs.</span>
-<span class="sd">        :param plug_name (str): Name of the plug to update.</span>
+<span class="sd">        :param in_or_out: (str) Direction of the plug - &quot;in&quot; for input plugs,</span>
+<span class="sd">         &quot;out&quot; for output plugs.</span>
+<span class="sd">        :param plug_name: (str) Name of the plug to update.</span>
 <span class="sd">        :param pipeline: The current pipeline instance.</span>
-<span class="sd">        :param value_type (type): Expected type of the plug value.</span>
-<span class="sd">        :param new_value (optional): New value for the plug. If None, reads</span>
-<span class="sd">                                     from the line edit widget (is None except</span>
-<span class="sd">                                     when this method is called from an</span>
-<span class="sd">                                     undo/redo)</span>
+<span class="sd">        :param value_type: (type) Expected type of the plug value.</span>
+<span class="sd">        :param new_value: (optional) New value for the plug. If None, reads</span>
+<span class="sd">         from the line edit widget (is None except when this method is called</span>
+<span class="sd">         from an &quot;undo/redo&quot;).</span>
 
 <span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates the plug value in the pipeline node</span>
-<span class="sd">            - Updates the corresponding line edit widget text</span>
-<span class="sd">            - Triggers pipeline node and plug activation updates</span>
-<span class="sd">            - Emits value_changed signal for undo/redo tracking</span>
-<span class="sd">            - Displays status message in the main window</span>
-<span class="sd">            - Shows error dialog on TraitError or OSError</span>
+<span class="sd">            - Updates the plug value in the pipeline node.</span>
+<span class="sd">            - Updates the corresponding line edit widget text.</span>
+<span class="sd">            - Triggers pipeline node and plug activation updates.</span>
+<span class="sd">            - Emits value_changed signal for undo/redo tracking.</span>
+<span class="sd">            - Displays status message in the main window.</span>
+<span class="sd">            - Shows error dialog on TraitError or OSError.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The method uses eval() to parse string input, which handles</span>
@@ -2214,8 +1801,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">        plug value to the item itself rather than a list containing one item.</span>
 
 <span class="sd">        :param plug_name: Name of the plug to update.</span>
-<span class="sd">        :param parameters: Tuple of (plug_index, pipeline_instance,</span>
-<span class="sd">                           value_type).</span>
+<span class="sd">        :param parameters: Tuple (plug_index, pipeline_instance, value_type).</span>
 <span class="sd">        :param filter_res_list: Filtered file list to set as the plug value.</span>
 
 <span class="sd">        Note:</span>
