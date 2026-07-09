@@ -1994,16 +1994,14 @@ class PipelineManagerTab(QWidget):
 
         When a pipeline contains only one process node with no connections,
         this method returns the process directly instead of the pipeline
-        wrapper. This simplifies GUI workflows where single processes can
-        act as pipelines.
+        wrapper. This simplifies GUI workflows where single processes can act
+        as pipelines.
 
-        :param pipeline (Pipeline): Optional pipeline to evaluate. If None,
-                                    uses the currently selected pipeline from
-                                    the editor GUI.
+        :param pipeline: (Pipeline) Optional pipeline to evaluate. If None,
+         uses the currently selected pipeline from the editor GUI.
 
-        :return (Pipeline | Process): The process node if pipeline contains a
-                                      single unconnected process, otherwise
-                                      the pipeline itself.
+        :Returns: (Pipeline | Process) The process node if pipeline contains a
+         single unconnected process, otherwise the pipeline itself.
         """
 
         if pipeline is None:
@@ -2092,21 +2090,21 @@ class PipelineManagerTab(QWidget):
         Initialize the pipeline after cleaning up any previous initialization.
 
         This method performs the following operations:
-            1. Sets a wait cursor to indicate processing
-            2. Cleans up any previous initialization if needed
-            3. Resets internal state variables
-            4. Attempts to initialize the pipeline
-            5. Updates the UI with the results
-            6. Restores the normal cursor
+            1. Sets a wait cursor to indicate processing.
+            2. Cleans up any previous initialization if needed.
+            3. Resets internal state variables.
+            4. Attempts to initialize the pipeline.
+            5. Updates the UI with the results.
+            6. Restores the normal cursor.
 
         The method handles initialization errors gracefully by logging
         warnings and updating the status bar with error messages.
 
         Side Effects:
-            - Modifies cursor appearance during execution
-            - Updates pipeline editor tabs and node parameters
-            - May display error messages in the status bar
-            - Sets self.init_clicked to True upon completion
+            - Modifies cursor appearance during execution.
+            - Updates pipeline editor tabs and node parameters.
+            - May display error messages in the status bar.
+            - Sets self.init_clicked to True upon completion.
         """
         app = QApplication.instance()
         app.setOverrideCursor(QCursor(Qt.Qt.WaitCursor))
@@ -2188,14 +2186,22 @@ class PipelineManagerTab(QWidget):
             - Records initialization results in the project database.
             - Updates the status bar and displays warnings when needed.
 
-        :param pipeline (Pipeline, Process): The pipeline or process instance
-                                             to initialize. If None, the main
-                                             pipeline is retrieved.
-        :param pipeline_name (str): The name of the parent pipeline, if
-                                    applicable.
+        :param pipeline: (Pipeline, Process) The pipeline or process instance
+         to initialize. If None, the main pipeline is retrieved.
+        :param pipeline_name: (str) The name of the parent pipeline, if
+         applicable.
 
-        :return (bool): True if the pipeline was successfully initialized,
-                        False otherwise.
+        :Returns: (bool) True if the pipeline was successfully initialized,
+         False otherwise.
+
+        Contains:
+
+            Inner functions:
+
+                - _calculate_duration: Calculate the elapsed time since `t0`,
+                  rounded to the nearest significant digit.
+                - _get_node_name: Extracts a node's name, preferring
+                  ``context_name`` if available.
         """
 
         def _calculate_duration(t0: float) -> float:
@@ -2203,10 +2209,10 @@ class PipelineManagerTab(QWidget):
             Calculate the elapsed time since `t0`, rounded to the nearest
             significant digit of the fractional part of the duration.
 
-            :param t0 (float): The starting time.
+            :param t0: (float) The starting time.
 
-            :return (float): The elapsed duration since `t0`, rounded to the
-                             nearest significant digit.
+            :Returns: (float) The elapsed duration since `t0`, rounded to the
+             nearest significant digit.
             """
 
             try:
@@ -2229,11 +2235,10 @@ class PipelineManagerTab(QWidget):
             otherwise, the node's ``name`` attribute is used. If the resulting
             name starts with ``"Pipeline."``, the prefix is stripped.
 
-            :param node: The node object, expected to have at least a
-                         ``name`` attribute, and optionally a ``context_name``
-                         attribute.
-            :return (str): The extracted node name with any leading
-                           ``"Pipeline."`` prefix removed.
+            :param node: The node object, expected to have at least a ``name``
+             attribute, and optionally a ``context_name`` attribute.
+            :Returns: (str) The extracted node name with any leading
+             ``"Pipeline."`` prefix removed.
             """
             node_name = getattr(node, "context_name", node.name)
 
@@ -2898,8 +2903,7 @@ class PipelineManagerTab(QWidget):
         """
         Load a pipeline into the pipeline editor.
 
-        This method initializes the pipeline editor with the selected
-        pipeline.
+        This method initializes the pipeline editor with the selected pipeline.
         """
         self.pipelineEditorTabs.load_pipeline()
 
@@ -2924,11 +2928,9 @@ class PipelineManagerTab(QWidget):
         The method can be called from within a worker run thread, thus has to
         be thread-safe.
 
-        :param pipeline (Pipeline): The pipeline to postprocess. If not
-                                    provided, the method will use
-                                    `self.last_run_pipeline` or fetch the
-                                    currently selected pipeline from the
-                                    pipeline editor.
+        :param pipeline: (Pipeline) The pipeline to postprocess. If not
+         provided, the method will use `self.last_run_pipeline` or fetch the
+         currently selected pipeline from the pipeline editor.
         """
         # TODO:
         # Question 1: do we have to postprocess failed runs (pipelines which
@@ -2987,7 +2989,7 @@ class PipelineManagerTab(QWidget):
 
     def redo(self):
         """
-        Redo the last undone action on the current pipeline editor
+        Redo the last undone action on the current pipeline editor.
 
         Supported redoable actions:
             - add_process
@@ -3082,8 +3084,8 @@ class PipelineManagerTab(QWidget):
 
     def register_completion_attributes(self, pipeline):
         """
-        Register completion attributes for a given pipeline in the
-        project database.
+        Register completion attributes for a given pipeline in the project
+        database.
 
         This method retrieves attribute values from the pipeline's completion
         engine and records them in the project database. Only attributes
@@ -3092,10 +3094,9 @@ class PipelineManagerTab(QWidget):
         within the project directory, the attributes are associated with both
         the *current* and *initial* collections.
 
-        :param pipeline (Pipeline): The pipeline whose completion attributes
-                                    should be registered. The pipeline must
-                                    provide a completion engin capable of
-                                    exporting its attributes
+        :param pipeline: (Pipeline) The pipeline whose completion attributes
+         should be registered. The pipeline must provide a completion engine
+         capable of exporting its attributes.
         """
         completion = ProcessCompletionEngine.get_completion_engine(pipeline)
 
@@ -3185,10 +3186,10 @@ class PipelineManagerTab(QWidget):
 
         This method initializes and runs the active pipeline with the
         following steps:
-            1. Initializes the pipeline and validates prerequisites
-            2. Sets up pipeline metadata and UI state
-            3. Configures soma-workflow connection (if enabled)
-            4. Starts pipeline execution with progress tracking
+            1. Initializes the pipeline and validates prerequisites.
+            2. Sets up pipeline metadata and UI state.
+            3. Configures soma-workflow connection (if enabled).
+            4. Starts pipeline execution with progress tracking.
 
         The method handles both local and remote execution via soma-workflow,
         displays progress animation, and manages UI state during execution.
@@ -3659,8 +3660,8 @@ class PipelineManagerTab(QWidget):
 
         The method follows this precedence order:
             1. Project-specific inheritance history (if matching parameters
-               are found)
-            2. Process-level inheritance dictionary (fallback)
+               are found).
+            2. Process-level inheritance dictionary (fallback).
 
         :param job: Job execution object containing param_dict (parameter
          name->value mapping) and inheritance_dict (will be updated by this
@@ -3875,15 +3876,16 @@ class PipelineManagerTab(QWidget):
         iteration node and reverts to the original scan list.
 
         :param iteration_list: Current list of scans in the iteration table
-                               (unused in current implementation)
-        :param all_iterations_list: Complete list of all iteration scan lists
+         (unused in current implementation).
+        :param all_iterations_list: Complete list of all iteration scan lists.
 
         Side Effects:
-            - Updates UI button states
-            - May modify the current pipeline (switch between regular/iterated)
-            - Updates scan lists for both iteration table and pipeline editor
-            - May update node parameters display
-            - Falls back to database scan list if pipeline scan list is empty
+            - Updates UI button states.
+            - May modify the current pipeline (switch between
+              regular/iterated).
+            - Updates scan lists for both iteration table and pipeline editor.
+            - May update node parameters display.
+            - Falls back to database scan list if pipeline scan list is empty.
         """
         self.update_user_buttons_states()
         current_editor = self.pipelineEditorTabs.get_current_editor()
@@ -3982,9 +3984,9 @@ class PipelineManagerTab(QWidget):
         Update the visibility and state of pipeline-related UI actions.
 
         Updates the enabled/disabled state of pipeline actions (Run, Save,
-        Save As) based on the current pipeline state. The method evaluates
-        the pipeline associated with either the specified editor or the
-        current active editor.
+        Save As) based on the current pipeline state. The method evaluates the
+        pipeline associated with either the specified editor or the current
+        active editor.
 
         Button states updated:
             - Run Pipeline: Disabled when pipeline is empty or None.
@@ -4022,9 +4024,9 @@ class PipelineManagerTab(QWidget):
         configuration.
 
         In user mode:
-            - Disables pipeline saving (process library unavailable)
-            - Disables pipeline overwriting
-            - Disables project deletion
+            - Disables pipeline saving (process library unavailable).
+            - Disables pipeline overwriting.
+            - Disables project deletion.
 
         Also synchronizes user level across pipeline editor and node
         controller components.
@@ -4094,11 +4096,10 @@ class RunProgress(QWidget):
         Initialize the RunProgress widget with a progress bar and worker
         thread.
 
-        :param pipeline_manager (PipelineManagerTab): A `PipelineManagerTab`
-                                                      instance responsible for
-                                                      managing the pipeline.
-        :param settings (dict): A dictionary of settings to customize pipeline
-                                iteration, default is None.
+        :param pipeline_manager: (PipelineManagerTab) A `PipelineManagerTab`
+         instance responsible for managing the pipeline.
+        :param settings: (dict) A dictionary of settings to customize pipeline
+         iteration, default is None.
         """
         super().__init__()
         self.pipeline_manager = pipeline_manager
@@ -4110,8 +4111,8 @@ class RunProgress(QWidget):
         """
         Analyze execution results and determine appropriate user message.
 
-        :return: Dictionary containing message box configuration with keys:
-                 'icon', 'title', and 'text'.
+        :Returns: Dictionary containing message box configuration with keys:
+         'icon', 'title', and 'text'.
         """
 
         if self.worker.exec_id is None:
@@ -4151,9 +4152,9 @@ class RunProgress(QWidget):
         """
         Set up the user interface for the widget.
 
-        This method initializes an indeterminate progress bar with a
-        predefined minimum width and places it inside a horizontal
-        box layout, which is then assigned to the widget.
+        This method initializes an indeterminate progress bar with a predefined
+        minimum width and places it inside a horizontal box layout, which is
+        then assigned to the widget.
         """
         self.progressbar = QtWidgets.QProgressBar()
         self.progressbar.setRange(0, 0)  # Indeterminate progress
@@ -4167,9 +4168,9 @@ class RunProgress(QWidget):
         """
         Display execution completion message with auto-close timer.
 
-        :param icon (QMessageBox.Icon): Message box icon type.
-        :param title (str): Dialog window title.
-        :param text (str): Message content to display.
+        :param icon: (QMessageBox.Icon) Message box icon type.
+        :param title: (str) Dialog window title.
+        :param text: (str) Message content to display.
         """
         message_box = QMessageBox(icon, title, text, parent=self)
         # Auto-close timer
@@ -4196,9 +4197,9 @@ class RunProgress(QWidget):
         """
         Handle completion of pipeline execution and show results.
 
-        Called automatically when the worker thread finishes. Restores
-        the application cursor, evaluates execution status, and displays
-        an appropriate message to the user.
+        Called automatically when the worker thread finishes. Restores the
+        application cursor, evaluates execution status, and displays an
+        appropriate message to the user.
 
         The message dialog automatically closes after a brief delay.
         """
@@ -4223,9 +4224,9 @@ class RunProgress(QWidget):
         interrupt.
 
         This method sets the `interrupt_request` flag to `True` within the
-        worker thread's lock, which tells the worker to stop its execution.
-        The method can be used to cancel the pipeline execution at any point
-        during its run.
+        worker thread's lock, which tells the worker to stop its execution. The
+        method can be used to cancel the pipeline execution at any point during
+        its run.
         """
         logger.info("Requesting pipeline execution cancellation")
 
@@ -4235,27 +4236,28 @@ class RunProgress(QWidget):
 
 class RunWorker(QThread):
     """
-     Worker thread for executing a pipeline in the background.
+    Worker thread for executing a pipeline in the background.
 
     This class runs a pipeline or process using a separate thread to avoid
     blocking the GUI. Execution can be interrupted at any time by setting
     the :attr:`interrupt_request` flag while holding :attr:`lock`.
 
-    .. Methods:
-        - _check_interrupt: Check whether an interrupt has been requested
-        -  _disable_nipype_copy: Recursively check and disable the copy flag
-                                 for Nipype processes in the pipeline.
-        - run: Run the pipeline in a background thread
+    Contains:
+
+        Methods:
+
+            - _check_interrupt: Check whether an interrupt has been requested.
+            - _disable_nipype_copy: Recursively check and disable the copy
+              flag for Nipype processes in the pipeline.
+            - run: Run the pipeline in a background thread.
     """
 
     def __init__(self, pipeline_manager):
         """
         Initialize the worker thread for pipeline execution.
 
-        :param pipeline_manager (PipelineManager): The manager responsible for
-                                                   configuring, running, and
-                                                   monitoring the pipeline
-                                                   execution.
+        :param pipeline_manager: (PipelineManager) The manager responsible for
+         configuring, running, and monitoring the pipeline execution.
         """
         super().__init__()
         self.pipeline_manager = pipeline_manager
@@ -4272,13 +4274,12 @@ class RunWorker(QThread):
         """
         Check whether an interrupt has been requested.
 
-        If an interrupt is detected, log the event and optionally stop
-        the execution engine.
+        If an interrupt is detected, log the event and optionally stop the
+        execution engine.
 
-        :param engine (CapsulEngine): Execution engine to interrupt if
-                                      running.
+        :param engine: (CapsulEngine) Execution engine to interrupt if running.
 
-        :return (bool): True if an interrupt was requested, False otherwise.
+        :Returns: (bool) True if an interrupt was requested, False otherwise.
         """
 
         with self.lock:
@@ -4298,10 +4299,9 @@ class RunWorker(QThread):
         Recursively check and disable the copy flag for Nipype processes in
         the pipeline.
 
-        This function traverses the pipeline's nodes and checks if the
-        nodes contain a NipypeProcess. If it does, it sets the
-        `activate_copy` flag to `False`. The recursion handles nested
-        pipelines.
+        This function traverses the pipeline's nodes and checks if the nodes
+        contain a NipypeProcess. If it does, it sets the `activate_copy` flag
+        to `False`. The recursion handles nested pipelines.
 
         :param proc: A Pipeline or NipypeProcess instance.
         """
@@ -4331,8 +4331,8 @@ class RunWorker(QThread):
         """
         Run the pipeline in a background thread.
 
-        The method prepares the pipeline, disables unnecessary copy flags
-        for Nipype processes, rebuilds workflows when file transfer or path
+        The method prepares the pipeline, disables unnecessary copy flags for
+        Nipype processes, rebuilds workflows when file transfer or path
         translation is required, and starts execution using the Capsul engine.
         The status is monitored until the workflow completes or an interrupt
         is requested.
@@ -4415,7 +4415,7 @@ class RunWorker(QThread):
 
 class StatusWidget(QWidget):
     """
-     A widget that displays the current or last pipeline execution status
+    A widget that displays the current or last pipeline execution status
     along with logs and an optional Soma-Workflow monitoring panel.
 
     Features:
@@ -4424,9 +4424,12 @@ class StatusWidget(QWidget):
         - Displays the execution log of the most recent run.
         - Provides a toggleable Soma-Workflow monitoring section.
 
-    .. Methods:
-        - toggle_soma_workflow: Show or hide the Soma-Workflow monitoring
-                                widget
+    Contains:
+
+        Methods:
+
+            - toggle_soma_workflow: Show or hide the Soma-Workflow monitoring
+              widget.
     """
 
     def __init__(self, pipeline_manager):
@@ -4438,7 +4441,7 @@ class StatusWidget(QWidget):
         monitoring. The log is automatically populated from the pipeline
         manager's last recorded run.
 
-        :param pipeline_manager: The pipeline manager instance containing
+        :param pipeline_manager: The pipeline manager instance containing.
         """
         super().__init__()
         self.pipeline_manager = pipeline_manager
@@ -4474,10 +4477,10 @@ class StatusWidget(QWidget):
         """
         Show or hide the Soma-Workflow monitoring widget.
 
-        If enabled and the widget does not yet exist, it is created and
-        added below the status section.
+        If enabled and the widget does not yet exist, it is created and added
+        below the status section.
 
-        :param checked (bool): Whether the monitoring panel is enabled.
+        :param checked: (bool) Whether the monitoring panel is enabled.
         """
 
         if self.swf_widget:
