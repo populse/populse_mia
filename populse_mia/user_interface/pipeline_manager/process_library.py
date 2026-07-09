@@ -1,21 +1,6 @@
 """
 Module that contains class and methods to process the different libraries of
 the project.
-
-:Contains:
-    :Class:
-        - DictionaryTreeModel
-        - InstallProcesses
-        - Node
-        - PackageLibrary
-        - PackageLibraryDialog
-        - ProcessHelp
-        - ProcessLibrary
-        - ProcessLibraryWidget
-
-    :Functions:
-        - import_file
-        - node_structure_from_dict
 """
 
 ##########################################################################
@@ -88,6 +73,18 @@ from soma.qt_gui.qt_backend.QtWidgets import QGroupBox, QListWidget, QMenu
 from populse_mia.software_properties import Config
 from populse_mia.utils import verCmp
 
+__all__ = [
+    "DictionaryTreeModel",
+    "InstallProcesses",
+    "Node",
+    "PackageLibrary",
+    "PackageLibraryDialog",
+    "ProcessLibrary",
+    "ProcessLibraryWidget",
+    "import_file",
+    "node_structure_from_dict",
+]
+
 logger = logging.getLogger(__name__)
 
 
@@ -98,23 +95,26 @@ class DictionaryTreeModel(QAbstractItemModel):
     This model is designed to represent a dictionary as a tree structure,
     enabling interaction with the data through a tree view.
 
-    .. Methods:
-        - columnCount: Return always 1.
-        - data: Return the data requested by the view.
-        - flags: Everything is enabled and selectable, only the leaves can be
-                 dragged.
-        - getNode: Return a Node() from given index.
-        - headerData: Return the name of the requested column.
-        - index: Return an index from given row, column and parent.
-        - insertRows: Insert rows from starting position and number given by
-                      rows.
-        - mimeData: Used when the widget is dragged by the user.
-        - mimeTypes: Return a constant.
-        - parent: return the parent from given index.
-        - removeRows: Remove the rows from position to position+rows.
-        - rowCount: The number of rows is the number of children.
-        - setData: Method called when the user changes data.
-        - to_dict: return the root node as a dictionary.
+    Contains:
+
+        Methods:
+
+            - columnCount: Return always 1.
+            - data: Return the data requested by the view.
+            - flags: Everything is enabled and selectable, only the leaves can
+              be dragged.
+            - getNode: Return a Node() from given index.
+            - headerData: Return the name of the requested column.
+            - index: Return an index from given row, column and parent.
+            - insertRows: Insert rows from starting position and number given
+              by rows.
+            - mimeData: Used when the widget is dragged by the user.
+            - mimeTypes: Return a constant.
+            - parent: return the parent from given index.
+            - removeRows: Remove the rows from position to position+rows.
+            - rowCount: The number of rows is the number of children.
+            - setData: Method called when the user changes data.
+            - to_dict: return the root node as a dictionary.
     """
 
     def __init__(self, root, parent=None):
@@ -122,7 +122,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         Initializes the DictionaryTreeModel with a root node.
 
         :param root: The root node of the tree.
-        "param parent (QObject): The parent object.
+        "param parent: (QObject): The parent object.
         """
         super().__init__(parent)
         self._rootNode = root
@@ -131,9 +131,10 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the number of columns, which is always 1.
 
-        :param parent (QModelIndex): The parent index (unused in this
-                                     implementation).
-        :return (int): The number of columns.
+        :param parent: (QModelIndex) The parent index (unused in this
+         implementation).
+
+        :Returns: (int) The number of columns.
         """
         return 1
 
@@ -142,10 +143,11 @@ class DictionaryTreeModel(QAbstractItemModel):
         Returns the data stored under the given role for the item at the
         given index.
 
-        :param index (QModelIndex): The index of the item.
-        :param role (Qt.ItemDataRole): The role of the data to retrieve.
-        :return: The data stored under the given role, or None if not
-                 available.
+        :param index: (QModelIndex) The index of the item.
+        :param role: (Qt.ItemDataRole) The role of the data to retrieve.
+
+        :Returns: The data stored under the given role, or None if not
+         available.
         """
 
         if not index.isValid():
@@ -161,9 +163,9 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Get the item flags for the specified index.
 
-        :param index (QModelIndex): The model index to retrieve flags for.
+        :param index: (QModelIndex) The model index to retrieve flags for.
 
-        :return (Qt.ItemFlags): The corresponding item flags.
+        :Returns: (Qt.ItemFlags) The corresponding item flags.
         """
         node = index.internalPointer()
         base_flags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
@@ -177,8 +179,9 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Retrieves the Node object from the given index.
 
-        :param index (QModelIndex): The index of the node.
-        :return: The Node object.
+        :param index: (QModelIndex) The index of the node.
+
+        :Returns: The Node object.
         """
         node = index.internalPointer() if index.isValid() else None
         return node if node else self._rootNode
@@ -187,12 +190,12 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the data for the given role and section in the header.
 
-        :param section (int): The section number.
-        :param orientation (Qt.Orientation): The orientation of the header
-                                             (unused in this implementation).
-        :param role (Qt.ItemDataRole): The role of the data to retrieve.
+        :param section: (int) The section number.
+        :param orientation: (Qt.Orientation) The orientation of the header
+         (unused in this implementation).
+        :param role: (Qt.ItemDataRole) The role of the data to retrieve.
 
-        :return (str): The header data, or None if not available.
+        :Returns: (str) The header data, or None if not available.
         """
 
         if role == Qt.DisplayRole:
@@ -209,12 +212,12 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Creates an index for the given row, column, and parent.
 
-        :param row (int): The row number.
-        :param column (int): The column number.
-        :param parent (QModelIndex): The parent index.
+        :param row: (int) The row number.
+        :param column: (int) The column number.
+        :param parent: (QModelIndex) The parent index.
 
-        :return (QModelIndex): The created index, or an invalid index if
-                               not available.
+        :Returns: (QModelIndex) The created index, or an invalid index if not
+         available.
         """
         parentNode = self.getNode(parent)
         childItem = parentNode.child(row)
@@ -228,11 +231,12 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Inserts rows starting from the specified position.
 
-        :param position (int): The starting position to insert rows.
-        :param rows (int): The number of rows to insert.
-        :param parent (QModelIndex): The parent index.
-        :return (bool): True if the rows were successfully inserted,
-                        False otherwise.
+        :param position: (int) The starting position to insert rows.
+        :param rows: (int) The number of rows to insert.
+        :param parent: (QModelIndex) The parent index.
+
+        :Returns: (bool) True if the rows were successfully inserted, False
+         otherwise.
         """
         parentNode = self.getNode(parent)
         self.beginInsertRows(parent, position, position + rows - 1)
@@ -252,10 +256,11 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Generate MIME data for a drag-and-drop operation.
 
-        :param indexes (list of QModelIndex): The list of model indexes being
-                                              dragged.
-        :return (QMimeData): A QMimeData object containing serialized node
-                             information.
+        :param indexes: (list of QModelIndex) The list of model indexes being
+         dragged.
+
+        :Returns: (QMimeData) A QMimeData object containing serialized node
+         information.
         """
         mimedata = QMimeData()
         encoded_data = QByteArray()
@@ -274,7 +279,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the supported MIME types.
 
-        :return (list of str): A list of supported MIME types.
+        :Returns: (list of str) A list of supported MIME types.
         """
         return ["component/name"]
 
@@ -282,9 +287,10 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the parent index for the given index.
 
-        :param index (QModelIndex): The index of the item.
-        :return (QModelIndex): The parent index, or an invalid index if not
-                               available.
+        :param index: (QModelIndex) The index of the item.
+
+        :Returns: (QModelIndex) The parent index, or an invalid index if not
+         available.
         """
         node = self.getNode(index)
         parentNode = node.parent()
@@ -298,11 +304,12 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Removes rows starting from the specified position to position+rows.
 
-        :param position (int): The starting position to remove rows.
-        :param rows (int): The number of rows to remove.
-        :param parent (QModelIndex): The parent index.
-        :return (bool): True if all rows were successfully removed,
-                        False otherwise.
+        :param position: (int) The starting position to remove rows.
+        :param rows: (int) The number of rows to remove.
+        :param parent: (QModelIndex) The parent index.
+
+        :Returns: (bool) True if all rows were successfully removed, False
+         otherwise.
         """
         parentNode = self.getNode(parent)
         self.beginRemoveRows(parent, position, position + rows - 1)
@@ -321,8 +328,9 @@ class DictionaryTreeModel(QAbstractItemModel):
         Returns the number of rows, which corresponds to the number of
         children.
 
-        :param parent (QModelIndex): The parent index.
-        :return (int): The number of rows.
+        :param parent: (QModelIndex) The parent index.
+
+        :Returns: (int) The number of rows.
         """
         parentNode = (
             self.getNode(parent) if parent.isValid() else self._rootNode
@@ -333,10 +341,12 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Updates the data when the user makes changes.
 
-        :param index (QModelIndex): The index of the item.
+        :param index: (QModelIndex) The index of the item.
         :param value: The new value to set.
-        :param role (Qt.ItemDataRole): The role of the data to set.
-        :return (bool): True if the data was successfully set, False otherwise.
+        :param role: (Qt.ItemDataRole) The role of the data to set.
+
+        :Returns: (bool) True if the data was successfully set, False
+         otherwise.
         """
 
         if index.isValid() and role == Qt.EditRole:
@@ -350,7 +360,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Converts the root node to a dictionary.
 
-        :return (dict): The dictionary representation of the root node.
+        :Returns: (dict) The dictionary representation of the root node.
         """
         return self._rootNode.to_dict()
 
@@ -362,20 +372,24 @@ class InstallProcesses(QDialog):
     This widget allows users to browse and select a Python package or zip file
     containing packages, then install them into Populse_MIA.
 
-    .. Methods:
-        - _add_package: Add a package and its modules to the process tree.
-        - _change_pattern_in_folder: Replace pattern in all Python files
-                                     within a folder.
-        - _install_new_package: Install a new package.
-        - _load_process_config: Load the process configuration from YAML.
-        - _rollback_changes: Roll back changes in case of installation failure.
-        - _show_qmessagebox: Display an error message box.
-        - _show_status_message: Update status message in the main window.
-        - _update_existing_package: Update an existing package.
-        - _validate_input: Validate the input file or directory.
-        - get_filename: Opens a file dialog to get the folder or zip file to
-                        install.
-        - install: Installs the selected file/folder on Populse_mia.
+    Contains:
+
+        Methods:
+
+            - _add_package: Add a package and its modules to the process tree.
+            - _change_pattern_in_folder: Replace pattern in all Python files
+              within a folder.
+            - _install_new_package: Install a new package.
+            - _load_process_config: Load the process configuration from YAML.
+            - _rollback_changes: Roll back changes in case of installation
+              failure.
+            - _show_qmessagebox: Display an error message box.
+            - _show_status_message: Update status message in the main window.
+            - _update_existing_package: Update an existing package.
+            - _validate_input: Validate the input file or directory.
+            - get_filename: Opens a file dialog to get the folder or zip file
+              to install.
+            - install: Installs the selected file/folder on Populse_mia.
 
     Signals:
 
@@ -389,10 +403,9 @@ class InstallProcesses(QDialog):
         """
         Initialize the installation dialog.
 
-        :param main_window: The main application window
-        :param folder (bool): If True, install from folder; if False, install
-                              from zip file
-
+        :param main_window: The main application window.
+        :param folder: (bool) If True, install from folder; if False, install
+         from zip file.
         """
         super().__init__(parent=main_window)
         self.main_window = main_window
@@ -432,10 +445,10 @@ class InstallProcesses(QDialog):
         """
         Add a package and its modules to the process tree.
 
-        :param proc_dic (dict): The process tree dictionary to update.
-        :param module_name (str): Name of the module to add.
+        :param proc_dic: (dict) The process tree dictionary to update.
+        :param module_name: (str) Name of the module to add.
 
-        :return (dict): The updated process tree dictionary.
+        :Returns: (dict) The updated process tree dictionary.
         """
 
         if not module_name:
@@ -511,9 +524,9 @@ class InstallProcesses(QDialog):
         """
         Replace pattern in all Python files within a folder.
 
-        :param path (str): Directory path to process.
-        :param old_pattern (str): Pattern to search for.
-        :param new_pattern (str): Pattern to replace with.
+        :param path: (str) Directory path to process.
+        :param old_pattern: (str) Pattern to search for.
+        :param new_pattern: (str) Pattern to replace with.
         """
 
         for root, _, files in os.walk(path):
@@ -542,9 +555,9 @@ class InstallProcesses(QDialog):
         """
         Install a new package.
 
-        :param filename (str): Path to zip file or directory.
-        :param package_name (str): Name of the package to install.
-        :param processes_path (str): Target directory for installation.
+        :param filename: (str) Path to zip file or directory.
+        :param package_name: (str) Name of the package to install.
+        :param processes_path: (str) Target directory for installation.
         """
 
         if is_zipfile(filename):
@@ -566,9 +579,9 @@ class InstallProcesses(QDialog):
         """
         Load the process configuration from YAML.
 
-        :param config_path (str): Path to the configuration file.
+        :param config_path: (str) Path to the configuration file.
 
-        :return (dict): The loaded configuration or empty dict if error.
+        :Returns: (dict) The loaded configuration or empty dict if error.
         """
 
         try:
@@ -599,16 +612,14 @@ class InstallProcesses(QDialog):
         """
         Roll back changes in case of installation failure.
 
-        Parameters
-        ----------
-        :param config_path (str): Path to configuration file.
-        :param original_config (dict): Original configuration to restore.
-        :param processes_path (str): Path to processes directory.
-        :param package_names (list): Names of packages that were being
-                                     installed.
-        :param mia_processes_not_found (bool): Flag indicating if
-                                               Mia processes backup was made.
-        :param tmp_folder4MIA (str): Path to Mia processes backup.
+        :param config_path: (str) Path to configuration file.
+        :param original_config: (dict) Original configuration to restore.
+        :param processes_path: (str) Path to processes directory.
+        :param package_names: (list) Names of packages that were being
+         installed.
+        :param mia_processes_not_found: (bool) Flag indicating if Mia processes
+         backup was made.
+        :param tmp_folder4MIA: (str) Path to Mia processes backup.
         """
         if original_config is None:
             original_config = {}
@@ -641,8 +652,8 @@ class InstallProcesses(QDialog):
         """
         Display an error message box.
 
-        :param message (str): Message to display
-        :param critical (bool): If True, display a critical message box.
+        :param message: (str) Message to display.
+        :param critical: (bool) If True, display a critical message box.
         """
         msg = QMessageBox()
 
@@ -662,7 +673,7 @@ class InstallProcesses(QDialog):
         """
         Update status message in the main window.
 
-        :param message (str): Status message to display
+        :param message: (str) Status message to display.
         """
 
         try:
@@ -676,11 +687,11 @@ class InstallProcesses(QDialog):
         """
         Update an existing package.
 
-        :param filename (str): Path to zip file or directory.
-        :param package_name (str): Name of the package to update.
-        :param processes_path (str): Target directory for installation.
+        :param filename: (str) Path to zip file or directory.
+        :param package_name: (str) Name of the package to update.
+        :param processes_path: (str) Target directory for installation.
 
-        :return (str): The new package name (with timestamp).
+        :Returns: (str) The new package name (with timestamp).
         """
         # Create timestamped name for the new version
         date = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -720,9 +731,9 @@ class InstallProcesses(QDialog):
         """
         Validate the input file or directory.
 
-        :param filename (str): Path to the file or directory.
+        :param filename: (str) Path to the file or directory.
 
-        :return (bool): True if valid, False otherwise
+        :Returns: (bool) True if valid, False otherwise
         """
 
         if not os.path.exists(filename):
@@ -741,8 +752,8 @@ class InstallProcesses(QDialog):
         """
         Open a file dialog to select the package source.
 
-        :param folder (bool): If True, opens a directory selection dialog;
-                              If False, opens a zip file selection dialog
+        :param folder: (bool) If True, opens a directory selection dialog; If
+         False, opens a zip file selection dialog.
         """
 
         if folder:
@@ -774,12 +785,12 @@ class InstallProcesses(QDialog):
         Install a package from a zip file or a folder.
 
         This method handles the complete installation process:
-        1. Extracts or copies the package to the processes directory
-        2. Updates the process dictionary
-        3. Registers the new package in the configuration
+            1. Extracts or copies the package to the processes directory.
+            2. Updates the process dictionary.
+            3. Registers the new package in the configuration.
 
-        Any exceptions during installation are caught and reported to the
-        user, with automatic rollback of any changes made.
+        Any exceptions during installation are caught and reported to the user,
+        with automatic rollback of any changes made.
         """
         tmp_folder4MIA = None
 
@@ -965,37 +976,40 @@ class Node:
     This class provides functionality to create and manipulate tree nodes,
     where each node can have a name, value, parent, and multiple children.
 
-    .. Methods:
-        -  __repr__: Define what should be printed by the class.
-        - _recurse_dict: Recursively build a dictionary representation of the
-                         node hierarchy.
-        - addChild: Add a child to the children list.
-        - attrs: Get attributes of this node as a dictionary.
-        - child: Return a child from its index in the list.
-        - childCount: return the number of children.
-        - data: Return the name or the value of the object.
-        - insertChild: Insert a child to a specific position.
-        - log: Generate a formatted string representation of the node
-               hierarchy.
-        - name: Gets or sets the name of the node.
-        - parent: Return the parent of the node.
-        - removeChild:  Remove a child node at the specified position.
-        - resource: Placeholder that always returns None.
-        - row: Return the index of the object in its parent list of children.
-        - setData: Update the name or the value of the object.
-        - to_dict: Convert the node hierarchy to a dictionary.
-        - to_list: Convert the node hierarchy to a list.
-        - value: Gets or sets the value of the node.
+    Contains:
+
+        Methods:
+
+            - __repr__: Define what should be printed by the class.
+            - _recurse_dict: Recursively build a dictionary representation of
+              the node hierarchy.
+            - addChild: Add a child to the children list.
+            - attrs: Get attributes of this node as a dictionary.
+            - child: Return a child from its index in the list.
+            - childCount: return the number of children.
+            - data: Return the name or the value of the object.
+            - insertChild: Insert a child to a specific position.
+            - log: Generate a formatted string representation of the node
+              hierarchy.
+            - name: Gets or sets the name of the node.
+            - parent: Return the parent of the node.
+            - removeChild:  Remove a child node at the specified position.
+            - resource: Placeholder that always returns None.
+            - row: Return the index of the object in its parent list of
+              children.
+            - setData: Update the name or the value of the object.
+            - to_dict: Convert the node hierarchy to a dictionary.
+            - to_list: Convert the node hierarchy to a list.
+            - value: Gets or sets the value of the node.
     """
 
     def __init__(self, name, parent=None):
         """
         Initialize a new Node instance.
 
-        :param name (str): The name of the node.
-        :param parent: The parent node. If provided, this node is
-                       automatically added as a child to the parent.
-                       Defaults to None.
+        :param name: (str) The name of the node.
+        :param parent: The parent node. If provided, this node is automatically
+         added as a child to the parent. Defaults to None.
         """
 
         if parent is not None:
@@ -1010,7 +1024,7 @@ class Node:
         """
         Return a string representation of the node hierarchy.
 
-        :return (str): A formatted string showing the node hierarchy.
+        :Returns: (str) A formatted string showing the node hierarchy.
         """
         return self.log()
 
@@ -1018,7 +1032,7 @@ class Node:
         """
         Recursively build a dictionary representation of the node hierarchy.
 
-        :param d (dict): The dictionary to populate with the node hierarchy.
+        :param d: (dict) The dictionary to populate with the node hierarchy.
         """
         d[self.name] = {} if self._children else self.value
 
@@ -1037,7 +1051,7 @@ class Node:
         """
         Get attributes of this node as a dictionary.
 
-        :return (dict): A dictionary of property names and their values.
+        :Returns: (dict) A dictionary of property names and their values.
         """
         classes = self.__class__.__mro__
         keyvalued = {}
@@ -1055,9 +1069,9 @@ class Node:
         """
         Get a child node by its index.
 
-        :param row (int): The index of the child node in the children list.
+        :param row: (int) The index of the child node in the children list.
 
-        :return: The child node at the specified index.
+        :Returns: The child node at the specified index.
         """
         return self._children[row]
 
@@ -1065,7 +1079,7 @@ class Node:
         """
         Get the number of children of this node.
 
-        :return (int): The number of child nodes.
+        :Returns: (int) The number of child nodes.
         """
         return len(self._children)
 
@@ -1073,9 +1087,10 @@ class Node:
         """
         Get data about this node based on the column parameter.
 
-        :param column (int): 0 for the fully qualified name (including parent
-                             names), 1 for the value of this node.
-        :return (str): The requested data (either string path or node value).
+        :param column: (int) 0 for the fully qualified name (including parent
+         names), 1 for the value of this node.
+
+        :Returns: (str) The requested data (either string path or node value).
         """
 
         if column == 0:
@@ -1096,10 +1111,10 @@ class Node:
         """
         Insert a child node at a specific position.
 
-        :param position (int): The position at which to insert the child.
+        :param position: (int) The position at which to insert the child.
         :param child: The child node to insert.
 
-        :return (bool): True if insertion was successful, False otherwise.
+        :Returns: (bool) True if insertion was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1113,9 +1128,9 @@ class Node:
         """
         Generate a formatted string representation of the node hierarchy.
 
-        :param tabLevel (int): The current indentation level. Defaults to -1.
+        :param tabLevel: (int) The current indentation level. Defaults to -1.
 
-        :retur (str): A formatted string showing the node hierarchy.
+        :Returns: (str) A formatted string showing the node hierarchy.
         """
         tabLevel += 1
         indent = "    " * tabLevel
@@ -1131,22 +1146,24 @@ class Node:
         """
         Get the name of this node.
 
-        :return (str): The name of the node.
+        :Returns: (str) The name of the node.
         """
         return self._name
 
     @name.setter
     def name(self, value):
-        """Set the name of this node.
+        """
+        Set the name of this node.
 
-        :param value (str): The new name for the node.
+        :param value: (str) The new name for the node.
         """
         self._name = value
 
     def parent(self):
-        """Get the parent of this node.
+        """
+        Get the parent of this node.
 
-        :return: The parent node or None if this is a root node.
+        :Returns: The parent node or None if this is a root node.
 
         """
         return self._parent
@@ -1155,10 +1172,10 @@ class Node:
         """
         Remove a child node at the specified position.
 
-        :param position (int): The position of the child to remove.
+        :param position: (int) The position of the child to remove.
         :param child: The child node to remove.
 
-        :return (bool): True if removal was successful, False otherwise.
+        :Returns: (bool) True if removal was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1174,15 +1191,16 @@ class Node:
 
         This method is a placeholder that always returns None.
 
-        :return: None
+        :Returns: None.
         """
         return None
 
     def row(self):
-        """Get the index of this node in its parent's children list.
+        """
+        Get the index of this node in its parent's children list.
 
-        :return (int): The index of this node in its parent's children list,
-                       or None if this node has no parent.
+        :Returns: (int) The index of this node in its parent's children list,
+         or None if this node has no parent.
         """
 
         if self._parent is not None:
@@ -1194,7 +1212,7 @@ class Node:
         """
         Set the name or value of this node based on the column parameter.
 
-        :param column (int): 0 to set the name, 1 to set the value.
+        :param column: (int) 0 to set the name, 1 to set the value.
         :param value: The new name or value to set.
         """
 
@@ -1208,9 +1226,9 @@ class Node:
         """
         Convert the node hierarchy to a dictionary.
 
-        :param d (dict): A dictionary to populate. Defaults to empty dict.
+        :param d: (dict) A dictionary to populate. Defaults to empty dict.
 
-        :return (dict): A dictionary representation of the node hierarchy.
+        :Returns: (dict) A dictionary representation of the node hierarchy.
         """
 
         if d is None:
@@ -1225,7 +1243,7 @@ class Node:
         """
         Convert the node hierarchy to a list.
 
-        :return (list): A list representation of the node hierarchy.
+        :Returns: (list) A list representation of the node hierarchy.
         """
         output = []
 
@@ -1244,13 +1262,14 @@ class Node:
         """
         Get the value of this node.
 
-        :return: The value of the node.
+        :Returns: The value of the node.
         """
         return self._value
 
     @value.setter
     def value(self, value):
-        """Set the value of this node.
+        """
+        Set the value of this node.
 
         :param value: The new value for the node.
         """
@@ -1265,14 +1284,17 @@ class PackageLibrary(QTreeWidget):
     checking or unchecking them in the tree view. The tree structure
     reflects the hierarchical organization of packages and their modules.
 
-    .. Methods:
-        - fill_item: fills the items of the tree recursively
-        - generate_tree: generates the package tree
-        - recursive_checks: checks/unchecks all child items
-        - recursive_checks_from_child: checks/unchecks all parent items
-        - set_module_view: sets if a module has to be enabled or disabled in
-                           the process library
-        - update_checks: updates the checks of the tree from an item
+    Contains:
+
+        Methods:
+
+            - fill_item: fills the items of the tree recursively.
+            - generate_tree: generates the package tree.
+            - recursive_checks: checks/unchecks all child items.
+            - recursive_checks_from_child: checks/unchecks all parent items.
+            - set_module_view: sets if a module has to be enabled or disabled
+              in the process library.
+            - update_checks: updates the checks of the tree from an item.
 
     """
 
@@ -1280,8 +1302,8 @@ class PackageLibrary(QTreeWidget):
         """
         Initialize the PackageLibrary widget.
 
-        :param package_tree (dict): Hierarchical representation of packages.
-        :param paths (list): System paths for importing the packages.
+        :param package_tree: (dict) Hierarchical representation of packages.
+        :param paths: (list) System paths for importing the packages.
         """
         super().__init__()
         self.itemChanged.connect(self.update_checks)
@@ -1298,8 +1320,8 @@ class PackageLibrary(QTreeWidget):
         Traverses the package tree and creates corresponding QTreeWidgetItems
         with appropriate check states.
 
-        :param item (QTreeWidgetItem): Current tree item to populate.
-        :param value (dict, list, or str): Value to populate the item with.
+        :param item: (QTreeWidgetItem) Current tree item to populate.
+        :param value: (dict, list, or str) Value to populate the item with.
 
         """
         item.setExpanded(True)
@@ -1367,8 +1389,8 @@ class PackageLibrary(QTreeWidget):
         When a parent item is checked/unchecked, all its children
         inherit the same check state.
 
-        :param parent (QTreeWidgetItem): Parent item whose check state is
-                                         propagated.
+        :param parent: (QTreeWidgetItem) Parent item whose check state is
+         propagated.
         """
         check_state = parent.checkState(0)
 
@@ -1383,12 +1405,12 @@ class PackageLibrary(QTreeWidget):
         """
         Propagate check state up to parent items.
 
-        When a child item is checked, its parents are also checked.
-        When a child item is unchecked, its parent is unchecked only if
-        all siblings are also unchecked.
+        When a child item is checked, its parents are also checked. When a
+        child item is unchecked, its parent is unchecked only if all siblings
+        are also unchecked.
 
-        :param child (QTreeWidgetItem): Child item whose check state affects
-                                        parents.
+        :param child: (QTreeWidgetItem) Child item whose check state affects
+         parents.
         """
         check_state = child.checkState(0)
 
@@ -1421,12 +1443,10 @@ class PackageLibrary(QTreeWidget):
         Updates the underlying package_tree data structure when an item's
         check state changes in the UI.
 
-        :param item (QTreeWidgetItem): Tree item corresponding to a module.
-        :param state (Qt.CheckState): New check state, Qt.Checked or
-                                      Qt.Unchecked.
-                                      (Qt.Checked == 2. So if
-                                      val == 2 -> checkbox is checked, and if
-                                      val == 0 -> checkbox is not checked)
+        :param item: (QTreeWidgetItem) Tree item corresponding to a module.
+        :param state: (Qt.CheckState) New check state: Qt.Checked or
+         Qt.Unchecked. (Qt.Checked == 2. So if val == 2 -> checkbox is checked,
+         and if val == 0 -> checkbox is not checked)
         """
         val = "process_enabled" if state == Qt.Checked else "process_disabled"
 
@@ -1459,13 +1479,13 @@ class PackageLibrary(QTreeWidget):
 
     def update_checks(self, item, column):
         """
-        "Handle check state changes and propagate them.
+        Handle check state changes and propagate them.
 
-        When an item's check state changes, this method ensures the change
-        is properly propagated to children and parent items.
+        When an item's check state changes, this method ensures the change is
+        properly propagated to children and parent items.
 
-        :param item (QTreeWidgetItem): Item whose check state changed.
-        :param column (int): Column index of the change (should be 0).
+        :param item: (QTreeWidgetItem) Item whose check state changed.
+        :param column: (int) Column index of the change (should be 0).
         """
 
         # Checked state is stored on column 0
@@ -1493,38 +1513,44 @@ class PackageLibraryDialog(QDialog):
     process library. It provides interfaces for installing packages, updating
     the package tree, and saving configurations.
 
-    .. Methods:
-        - _create_button: Create a standardized button.
-        - _create_install_buttons: Create buttons for installing processes.
-        - _create_line_edit: Create and configure the line edit.
-        - _create_list_group: Create a group box for a list with reset
-                              functionality.
-        - _create_list_widget: Create a list widget with extended selection
-                               mode.
-        - _create_main_layout: Create the main layout for the dialog.
-        - _create_package_management_buttons: Create buttons for package
-                                              management.
-        - _create_save_cancel_layout: Create layout for save and cancel
-                                      buttons.
-        - _create_status_label: Create and configure the status label.
-        - _load_initial_configuration: Load initial package configuration.
-        - _setup_ui: Set up the user interface components
-        - add_package: Add a package and its modules to the package tree.
-        - add_package_with_text: Add a package from the line edit text.
-        - browse_package: Open a browser to select a package (commented).
-        - delete_package: Delete a package (admin-only functionality).
-        - delete_package_with_text: Delete a package from the line edit text.
-        - install_processes_pop_up: Open popup for installing processes.
-        - load_config: Load package configuration from YAML file.
-        - load_packages: Update the process library tree.
-        - ok_clicked: Handle applying changes to packages.
-        - remove_package: Remove a package from the package tree.
-        - remove_package_with_text: Remove a package from the line edit text.
-        - reset_action: Reset previous package addition or removal actions.
-        - save: Save package configuration to process_config.yml.
-        - save_config: save the current config to process_config.yml
-                       (commented).
-        - update_config: Update package configuration and library attributes.
+    Contains:
+
+        Methods:
+
+            - _create_button: Create a standardized button.
+            - _create_install_buttons: Create buttons for installing processes.
+            - _create_line_edit: Create and configure the line edit.
+            - _create_list_group: Create a group box for a list with reset
+              functionality.
+            - _create_list_widget: Create a list widget with extended selection
+              mode.
+            - _create_main_layout: Create the main layout for the dialog.
+            - _create_package_management_buttons: Create buttons for package
+              management.
+            - _create_save_cancel_layout: Create layout for save and cancel
+              buttons.
+            - _create_status_label: Create and configure the status label.
+            - _load_initial_configuration: Load initial package configuration.
+            - _setup_ui: Set up the user interface components
+            - add_package: Add a package and its modules to the package tree.
+            - add_package_with_text: Add a package from the line edit text.
+            - browse_package: Open a browser to select a package (commented).
+            - delete_package: Delete a package (admin-only functionality).
+            - delete_package_with_text: Delete a package from the line edit
+              text.
+            - install_processes_pop_up: Open popup for installing processes.
+            - load_config: Load package configuration from YAML file.
+            - load_packages: Update the process library tree.
+            - ok_clicked: Handle applying changes to packages.
+            - remove_package: Remove a package from the package tree.
+            - remove_package_with_text: Remove a package from the line edit
+              text.
+            - reset_action: Reset previous package addition or removal actions.
+            - save: Save package configuration to process_config.yml.
+            - save_config: save the current config to process_config.yml
+              (commented).
+            - update_config: Update package configuration and library
+              attributes.
 
     Signals:
 
@@ -1539,7 +1565,7 @@ class PackageLibraryDialog(QDialog):
         Initialize the PackageLibraryDialog.
 
         :param mia_main_window: Reference to the main application window.
-        :param parent (QWidget): Parent widget for the dialog.
+        :param parent: (QWidget) Parent widget for the dialog.
         """
         super().__init__(parent)
         self.main_window = mia_main_window
@@ -1549,19 +1575,20 @@ class PackageLibraryDialog(QDialog):
     def _create_button(self, text, callback):
         """Create a standardized button.
 
-        :param text (str): Button text.
-        :param callback (callable): Function to call when button is clicked.
+        :param text: (str) Button text.
+        :param callback: (a callable) Function to call when button is clicked.
 
-        :returns (QPushButton): Configured button.
+        :Returns: (QPushButton) Configured button.
         """
         btn = QPushButton(text, default=False, autoDefault=False)
         btn.clicked.connect(callback)
         return btn
 
     def _create_install_buttons(self):
-        """Create buttons for installing processes.
+        """
+        Create buttons for installing processes.
 
-        :return (QHBoxLayout): Layout with install process buttons.
+        :Returns: (QHBoxLayout) Layout with install process buttons.
         """
         layout = QHBoxLayout()
         layout.addWidget(QLabel("Install processes from:"))
@@ -1577,9 +1604,10 @@ class PackageLibraryDialog(QDialog):
         return layout
 
     def _create_line_edit(self):
-        """Create and configure the line edit.
+        """
+        Create and configure the line edit.
 
-        :return QLineEdit: Configured line edit for package input.
+        :Returns: (QLineEdit) Configured line edit for package input.
         """
         line_edit = QLineEdit()
         line_edit.setPlaceholderText(
@@ -1588,13 +1616,14 @@ class PackageLibraryDialog(QDialog):
         return line_edit
 
     def _create_list_group(self, title, list_widget, reset_callback):
-        """Create a group box for a list with reset functionality.
+        """
+        Create a group box for a list with reset functionality.
 
-        :param title (str): Group box title.
-        :param list_widget (QListWidget): List widget to add to group.
-        :param reset_callback (callable): Callback for reset button.
+        :param title: (str) Group box title.
+        :param list_widget: (QListWidget) List widget to add to group.
+        :param reset_callback: (callable) Callback for reset button.
 
-        :return (QGroupBox): Configured group box with list and reset button.
+        :Returns: (QGroupBox) Configured group box with list and reset button.
         """
         group = QGroupBox(title)
         layout = QHBoxLayout()
@@ -1606,9 +1635,10 @@ class PackageLibraryDialog(QDialog):
         return group
 
     def _create_list_widget(self):
-        """Create a list widget with extended selection mode.
+        """
+        Create a list widget with extended selection mode.
 
-        :return (QListWidget): Configured list widget.
+        :Returns (QListWidget: Configured list widget.
         """
         list_widget = QListWidget()
         list_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -1617,14 +1647,15 @@ class PackageLibraryDialog(QDialog):
     def _create_main_layout(
         self, install_layout, management_layout, user_mode
     ):
-        """Create the main layout for the dialog.
+        """
+        Create the main layout for the dialog.
 
-        :param install_layout (QHBoxLayout): Layout for install buttons.
-        :param management_layout (QHBoxLayout): Layout for package management
-                                                buttons.
-        :param user_mode (bool): Whether the application is in user mode.
+        :param install_layout: (QHBoxLayout) Layout for install buttons.
+        :param management_layout: (QHBoxLayout) Layout for package management
+         buttons.
+        :param user_mode: (bool) Whether the application is in user mode.
 
-        :return (QHBoxLayout): Main layout of the dialog.
+        :Returns: (QHBoxLayout) Main layout of the dialog.
         """
         # Create package library and vertical layout
         self.package_library = PackageLibrary(self.packages, self.paths)
@@ -1677,11 +1708,12 @@ class PackageLibraryDialog(QDialog):
         return h_box
 
     def _create_package_management_buttons(self, user_mode):
-        """Create buttons for package management.
+        """
+        Create buttons for package management.
 
-        :param user_mode (bool): Whether the application is in user mode.
+        :param user_mode: (bool) Whether the application is in user mode.
 
-        :return (QHBoxLayout): Layout with package management buttons.
+        :Returns: (QHBoxLayout) Layout with package management buttons.
         """
         layout = QHBoxLayout()
         add_btn = self._create_button(
@@ -1702,9 +1734,10 @@ class PackageLibraryDialog(QDialog):
         return layout
 
     def _create_save_cancel_layout(self):
-        """Create layout for save and cancel buttons.
+        """
+        Create layout for save and cancel buttons.
 
-        :return (QHBoxLayout): Layout with save and cancel buttons.
+        :Returns: (QHBoxLayout) Layout with save and cancel buttons.
         """
         layout = QHBoxLayout()
         layout.addStretch(1)
@@ -1715,9 +1748,10 @@ class PackageLibraryDialog(QDialog):
         return layout
 
     def _create_status_label(self):
-        """Create and configure the status label.
+        """
+        Create and configure the status label.
 
-        :return (QLabel): Configured status label.
+        :Returns: (QLabel) Configured status label.
         """
         label = QLabel()
         label.setText("")
@@ -1780,23 +1814,20 @@ class PackageLibraryDialog(QDialog):
         their classes to the package tree. It provides flexible options for
         package initialization and error handling.
 
-        :param module_name (str): Fully qualified name of the module to add.
-                                  Example: 'myproject.processors'
-        :param class_name (str): Specific class name to focus on during
-                                 package addition. If provided, only this
-                                 class or its parent packages will be
-                                 processed.
-        :param show_error (bool): Controls error reporting behavior. If True,
-                                  displays error messages in a QMessageBox. If
-                                  False, collects errors silently. Defaults
-                                  to False.
-        :param init_package_tree (bool): If True, reinitializes the entire
-                                         package tree before adding the
-                                         module. Defaults to False.
+        :param module_name: (str) Fully qualified name of the module to add.
+         Example: 'myproject.processors'
+        :param class_name: (str) Specific class name to focus on during package
+         addition. If provided, only this class or its parent packages will be
+         processed.
+        :param show_error: (bool) Controls error reporting behavior. If True,
+         displays error messages in a QMessageBox. If False, collects errors
+         silently. Defaults to False.
+        :param init_package_tree: (bool) If True, reinitializes the entire
+         package tree before adding the module. Defaults to False.
 
-        :return (List[str] | str): A list of error messages encountered during
-                                   package addition, or "No package selected!"
-                                   if no module name is provided.
+        :Returns: (List[str] | str) A list of error messages encountered during
+         package addition, or "No package selected!" if no module name is
+         provided.
         """
 
         if init_package_tree:
@@ -1916,11 +1947,10 @@ class PackageLibraryDialog(QDialog):
         on the provided package name. It supports adding packages with or
         without file extensions, and handles various import scenarios.
 
-        :param package_name (str | False): Name of the package to add.
-                                           If False (default), uses the text
-                                           from the line edit widget.
-        :param update_view (bool): Whether to update the package list view.
-                                   Defaults to True.
+        :param package_name: (str | False) Name of the package to add. If False
+         (default), uses the text from the line edit widget.
+        :param update_view: (bool) Whether to update the package list view.
+         Defaults to True.
         """
 
         # Use line edit text if no package name provided
@@ -2080,22 +2110,21 @@ class PackageLibraryDialog(QDialog):
         Delete a package from the library (admin-only functionality).
 
         This method removes the package from the package library tree,
-        updates the `__init__.py` file, and deletes the package directory
-        and files if they are empty.
+        updates the `__init__.py` file, and deletes the package directory and
+        files if they are empty.
 
-        :param index (int): Recursive index for navigating modules.
-                            Defaults to 1.
-        :param to_delete (str): The package/brick to delete
-                                (e.g., 'test.Test'). Defaults to None.
-        :param remove (bool): Whether to remove the brick from the package
-                              tree. Defaults to True.
-        :param loop (bool): Whether to delete silently without confirmation.
-                            Defaults to False.
-        :param from_pipeline_manager (bool): Whether deletion is initiated
-                                             from pipeline manager. Defaults
-                                             to False.
+        :param index: (int) Recursive index for navigating modules. Defaults
+         to 1.
+        :param to_delete: (str) The package/brick to delete (e.g.,
+         'test.Test'). Defaults to None.
+        :param remove: (bool) Whether to remove the brick from the package
+         tree. Defaults to True.
+        :param loop: (bool) Whether to delete silently without confirmation.
+         Defaults to False.
+        :param from_pipeline_manager: (bool) Whether deletion is initiated
+         from pipeline manager. Defaults to False.
 
-        :return (list[str]): A list of deleted packages/bricks.(classes).
+        :Returns: (list[str]) A list of deleted packages/bricks (classes).
         """
         deleted_packages = []
         self.packages = self.package_library.package_tree
@@ -2450,10 +2479,10 @@ class PackageLibraryDialog(QDialog):
         """
         Delete a package from the line edit's text.
 
-        :param package_name (str): The name of the package to delete. Defaults
-                                   to the text in the line edit.
-        :param update_view (bool): Whether to update the QListWidget after
-                                   deletion. Defaults to True.
+        :param package_name: (str) The name of the package to delete. Defaults
+         to the text in the line edit.
+        :param update_view: (bool) Whether to update the QListWidget after
+         deletion. Defaults to True.
         """
         old_status = self.status_label.text()
         package_name = package_name or self.line_edit.text()
@@ -2499,8 +2528,8 @@ class PackageLibraryDialog(QDialog):
         """
         Display the install processes pop-up.
 
-        :param from_folder (bool): Whether the installation is from a folder.
-                                   Defaults to False.
+        :param from_folder: (bool) Whether the installation is from a folder.
+         Defaults to False.
         """
         self.pop_up_install_processes = InstallProcesses(
             self, folder=from_folder
@@ -2515,8 +2544,8 @@ class PackageLibraryDialog(QDialog):
         """
         Loads and returns the configuration from 'process_config.yml'.
 
-        :return (dict | {}): The configuration dictionary if successfully
-                               loaded, otherwise None in case of an error.
+        :Returns: (dict | {}) The configuration dictionary if successfully
+         loaded, otherwise None in case of an error.
         """
         config = Config()
         config_path = os.path.join(
@@ -2599,11 +2628,11 @@ class PackageLibraryDialog(QDialog):
         library. If the package is not found, a warning message is displayed.
         The package tree is updated after a successful removal.
 
-        :param package (str): The fully qualified module name (e.g.,
-                              'nipype.interfaces.spm').
-        :returns (bool): True if the package was successfully removed,
-                         False if the package was not found or no package was
-                         provided.
+        :param package: (str) The fully qualified module name (e.g.,
+         'nipype.interfaces.spm').
+
+        :Returns: (bool) True if the package was successfully removed, False
+         if the package was not found or no package was provided.
         """
 
         if not package:
@@ -2663,13 +2692,12 @@ class PackageLibraryDialog(QDialog):
         Removes the specified package from the package tree and updates the
         view accordingly.
 
-        :param package_name (str): The name of the package to remove. If not
-                                   provided, the package name is taken from
-                                   the line edit.
-        :param update_view (bool): Whether to update the QListWidget view after
-                                   removal. Defaults to True.
-        :param tree_remove (bool): Whether to remove the package from the
-                                   tree. Defaults to True.
+        :param package_name: (str) The name of the package to remove. If not
+         provided, the package name is taken from the line edit.
+        :param update_view: (bool) Whether to update the QListWidget view after
+         removal. Defaults to True.
+        :param tree_remove: (bool) Whether to remove the package from the tree.
+         Defaults to True.
         """
         old_status = self.status_label.text()
         package_name = package_name or self.line_edit.text()
@@ -2716,11 +2744,10 @@ class PackageLibraryDialog(QDialog):
         """
         Resets a previous package addition or removal action.
 
-        :param itemlist (QListWidget): The list widget containing items to
-                                       reset.
-        :param add (bool): If True, resets an addition by removing the
-                           package if it exists in the configuration.
-                           If False, re-adds the package.
+        :param itemlist: (QListWidget) The list widget containing items to
+         reset.
+        :param add: (bool) If True, resets an addition by removing the package
+         if it exists in the configuration. If False, re-adds the package.
         """
 
         for item in itemlist.selectedItems():
@@ -2752,11 +2779,11 @@ class PackageLibraryDialog(QDialog):
         Saves the package library configuration to `process_config.yml`.
 
         This method updates the package information from the package library
-        tree and writes it to the configuration file. Optionally, it can
-        close the dialog after saving.
+        tree and writes it to the configuration file. Optionally, it can close
+        the dialog after saving.
 
-        :param close (bool): If True, closes the dialog after saving.
-                             Defaults to True.
+        :param close: (bool) If True, closes the dialog after saving. Defaults
+         to True.
         """
         config = Config()
         self.process_config = self.process_config or {}
@@ -2843,14 +2870,14 @@ class ProcessLibrary(QTreeView):
     """
     A tree view to display available Capsul's processes.
 
+    Contains:
 
-    :param d: dictionary corresponding to the tree (dict)
+        Methods:
 
-    .. Methods:
-        - keyPressEvent: Event when the delete key is pressed.
-        - load_dictionary: Loads a dictionary to the tree.
-        - mousePressEvent: Event when the mouse is pressed.
-        - to_dict: Returns a dictionary from the current tree.
+            - keyPressEvent: Event when the delete key is pressed.
+            - load_dictionary: Loads a dictionary to the tree.
+            - mousePressEvent: Event when the mouse is pressed.
+            - to_dict: Returns a dictionary from the current tree.
 
     Signals:
 
@@ -2864,7 +2891,7 @@ class ProcessLibrary(QTreeView):
         """
         Initialize the ProcessLibrary class.
 
-        :param d (dict): Dictionary corresponding to the tree.
+        :param d: (dict) Dictionary corresponding to the tree.
         :param pkg_lib: An instance of the PackageLibraryDialog class.
         """
         super().__init__()
@@ -2878,7 +2905,7 @@ class ProcessLibrary(QTreeView):
         If the Delete key is pressed and the user is not in user mode, the
         selected package(s) will be deleted from the package library.
 
-        :param event (QKeyEvent): The key event triggering this handler.
+        :param event: (QKeyEvent) The key event triggering this handler.
         """
         config = Config()
 
@@ -2903,8 +2930,8 @@ class ProcessLibrary(QTreeView):
         """
         Load a dictionary into the tree.
 
-        :param d (dict): Dictionary to load. See the packages attribute in the
-                         ProcessLibraryWidget class.
+        :param d :(dict) Dictionary to load. See the packages attribute in the
+         ProcessLibraryWidget class.
         """
         self.dictionary = d
         self._nodes = node_structure_from_dict(d)
@@ -2920,7 +2947,7 @@ class ProcessLibrary(QTreeView):
         pressed, a context menu is displayed, allowing the user to remove or
         delete a package.
 
-        :param event (QMouseEvent): The mouse event triggering this handler.
+        :param event: (QMouseEvent) The mouse event triggering this handler.
         """
 
         idx = self.indexAt(event.pos())
@@ -2967,7 +2994,7 @@ class ProcessLibrary(QTreeView):
         """
         Return a dictionary representation of the current tree.
 
-        :return: The dictionary of the tree.
+        :Returns: The dictionary of the tree.
         """
         return self._model.to_dict()
 
@@ -2976,19 +3003,23 @@ class ProcessLibraryWidget(QWidget):
     """
     Widget that manages the available Capsul's processes in the software.
 
-    .. Methods:
-        - _configure_process_library: Configure the process library settings.
-        - _setup_layout: Setup the layout for the widget.
-        - load_config: Read the config in process_config.yml and return it as
-                       a dictionary.
-        - load_packages: Set packages and paths to the widget and to the
-                         system paths.
-        - open_pkg_lib: Open the package library.
-        - save_config: Save the current config to process_config.yml.
-                       (commented)
-        - update_config: Update the config and loads the corresponding
-                         packages.
-        - update_process_library: Update the tree of the process library.
+    Contains:
+
+        Methods:
+
+            - _configure_process_library: Configure the process library
+              settings.
+            - _setup_layout: Setup the layout for the widget.
+            - load_config: Read the config in process_config.yml and return it
+              as a dictionary.
+            - load_packages: Set packages and paths to the widget and to the
+              system paths.
+            - open_pkg_lib: Open the package library.
+            - save_config: Save the current config to process_config.yml.
+              (commented)
+            - update_config: Update the config and loads the corresponding
+              packages.
+            - update_process_library: Update the tree of the process library.
     """
 
     def __init__(self, main_window=None):
@@ -3046,7 +3077,7 @@ class ProcessLibraryWidget(QWidget):
         Read the configuration from process_config.yml and return it as a
         dictionary.
         .
-        :return: The configuration as a dictionary.
+        :Returns: The configuration as a dictionary.
         """
         config = Config()
         config_path = os.path.join(
@@ -3122,9 +3153,10 @@ def import_file(full_name, path):
     This function dynamically imports a module from a given file path and
     returns the module object. It does not modify `sys.modules`.
 
-    :param full_name (str): The name of the module to import.
-    :param path (str): The file path of the module.
-    :return: The imported module.
+    :param full_name: (str) The name of the module to import.
+    :param path: (str) The file path of the module.
+
+    :Returns: The imported module.
     """
     spec = util.spec_from_file_location(full_name, path)
     module = util.module_from_spec(spec)
@@ -3140,11 +3172,11 @@ def node_structure_from_dict(datadict, parent=None, root_node=None):
     for a TreeModel. It processes nodes based on specific conditions and
     recursively builds the tree.
 
-    :param datadict (dict): The dictionary to convert into a node structure.
+    :param datadict: (dict) The dictionary to convert into a node structure.
     :param parent: The parent node of the current node. Defaults to None.
     :param root_node: The root node of the tree. Defaults to None.
 
-    :return: The root node of the constructed tree.
+    :Returns: The root node of the constructed tree.
     """
 
     if parent is None:

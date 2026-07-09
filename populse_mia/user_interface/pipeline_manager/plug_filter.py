@@ -7,27 +7,22 @@ assignment to a pipeline node plug.
 
 The widget integrates several components of the user interface:
 
-    - A tag-based data browser (TableDataBrowser)
-    - Rapid text search (RapidSearch)
-    - Advanced multi-criteria filtering (AdvancedSearch)
-    - Tag visualization management dialogs
+    - A tag-based data browser (TableDataBrowser).
+    - Rapid text search (RapidSearch).
+    - Advanced multi-criteria filtering (AdvancedSearch).
+    - Tag visualization management dialogs.
     - Automatic exclusion of pipeline brick outputs to prevent circular
-      dependencies in workflows
+      dependencies in workflows.
 
 It interacts with:
-    - The project database (COLLECTION_CURRENT, COLLECTION_BRICK)
-    - The pipeline manager to determine existing brick outputs
-    - The node controller to manage visible tags and plug updates
-    - The main application window for integration in the pipeline editor
+    - The project database (COLLECTION_CURRENT, COLLECTION_BRICK).
+    - The pipeline manager to determine existing brick outputs.
+    - The node controller to manage visible tags and plug updates.
+    - The main application window for integration in the pipeline editor.
 
 When the user confirms a selection, the widget emits the ``plug_value_changed``
 signal containing the selected values (absolute file paths or tag values
 depending on the selected filter).
-
-:Contains:
-
-    Class:
-        - PlugFilter
 """
 
 ##########################################################################
@@ -75,6 +70,8 @@ from populse_mia.user_interface.pop_ups import (
     PopUpVisualizedTags,
 )
 
+__all__ = ["PlugFilter"]
+
 
 class PlugFilter(QWidget):
     """
@@ -95,29 +92,30 @@ class PlugFilter(QWidget):
     the selection is confirmed, the chosen files are emitted as a list via
     the `plug_value_changed` signal.
 
+    Contains:
 
-    .. Methods:
-        - ok_clicked: Applies the selected files to the node plug and closes
-                      the widget.
-        - reset_search_bar: Resets the search interface to its initial state,
-                            clearing all filters.
-        - search_str: Filters and updates the displayed scans based on the
-                      provided search string.
-        - set_plug_value: Extracts the selected or filtered scan values and
-                          emits them via the `plug_value_changed` signal.
-        - update_tag_to_filter: Opens a dialog to select a tag for filtering
-                                and updates the filter button text.
-        - update_tags: Opens a dialog to update the list of visualized tags
-                       and refreshes the table view.
+        Methods:
+
+            - ok_clicked: Applies the selected files to the node plug and
+              closes the widget.
+            - reset_search_bar: Resets the search interface to its initial
+              state, clearing all filters.
+            - search_str: Filters and updates the displayed scans based on the
+              provided search string.
+            - set_plug_value: Extracts the selected or filtered scan values and
+              emits them via the `plug_value_changed` signal.
+            - update_tag_to_filter: Opens a dialog to select a tag for
+              filtering and updates the filter button text.
+            - update_tags: Opens a dialog to update the list of visualized tags
+              and refreshes the table view.
 
     Signals:
 
         - plug_value_changed: Signal emitted when the user confirms their
-          selection
+          selection.
     """
 
-    # Signal emitted when the user confirms their selection. The signal carries
-    # a list of selected file paths or attribute values.
+    # The signal carries a list of selected file paths or attribute values.
     plug_value_changed = pyqtSignal(list)
 
     def __init__(
@@ -138,18 +136,17 @@ class PlugFilter(QWidget):
         scans that are outputs from existing pipeline bricks.
 
         :param project: Current project instance containing database and
-                        folder paths
+         folder paths.
         :param scans_list: Initial list of database file paths to filter. If
-                           empty, all scans from COLLECTION_CURRENT are
-                           included
+         empty, all scans from COLLECTION_CURRENT are included.
         :param process: Process instance associated with the selected pipeline
-                        node
-        :param node_name: Display name of the current pipeline node
-        :param plug_name: Name of the selected node plug/connection point
+         node.
+        :param node_name: Display name of the current pipeline node.
+        :param plug_name: Name of the selected node plug/connection point.
         :param node_controller: Parent controller managing node visibility and
-                                tags
+         tags.
         :param main_window: Main application window containing the pipeline
-                            manager
+         manager.
         """
         super().__init__(None)
         self.project = project
@@ -268,9 +265,9 @@ class PlugFilter(QWidget):
         """
         Reset search interface to initial state and restore all scan rows.
 
-        Clears the rapid search text field, resets advanced search rows,
-        and restores the full scan list to the table view, updating the
-        display to reflect all available scans.
+        Clears the rapid search text field, resets advanced search rows, and
+        restores the full scan list to the table view, updating the display to
+        reflect all available scans.
         """
         # Clear search UI components
         self.rapid_search.setText("")
@@ -292,17 +289,16 @@ class PlugFilter(QWidget):
         Special handling is provided for the NOT_DEFINED_VALUE constant to
         filter scans with undefined tag values.
 
-        :parm str_search (str): The search string entered by the user. An
-                                empty string shows all scans, NOT_DEFINED_VALUE
-                                filters for scans with undefined tags, and any
-                                other value performs a rapid search filter.
+        :parm str_search: (str) The search string entered by the user. An
+         empty string shows all scans, NOT_DEFINED_VALUE filters for scans with
+         undefined tags, and any other value performs a rapid search filter.
 
         Side Effects:
             - Updates self.table_data.scans_to_visualize with filtered scan
-              list
+              list.
             - Updates self.advanced_search.scans_list with the same filtered
-              list
-            - Triggers UI update via self.table_data.update_visualized_rows()
+              list.
+            - Triggers UI update via self.table_data.update_visualized_rows().
         """
         old_scan_list = self.table_data.scans_to_visualize
 
@@ -340,10 +336,17 @@ class PlugFilter(QWidget):
 
         Retrieves values from the database for the currently filtered tag.
         If items are selected in the table, only those values are extracted.
-        Otherwise, all filtered items are processed. For filename tags,
-        paths are converted to absolute paths within the project folder.
+        Otherwise, all filtered items are processed. For filename tags, paths
+        are converted to absolute paths within the project folder.
 
-        :Emits: plug_value_changed: Signal with list of extracted values.
+        :Emits plug_value_changed: Signal with list of extracted values.
+
+        Contains:
+
+            Inner functions:
+
+                - _get_scan_value: Retrieve and process a single scan value
+                  from the database.
         """
 
         def _get_scan_value(database_data, scan_name, tag_name):
@@ -354,8 +357,8 @@ class PlugFilter(QWidget):
             :param scan_name: Primary key identifying the scan.
             :param tag_name: Field name to retrieve.
 
-            :return: The field value, with absolute path conversion for
-                     filename tags.
+            :Returns: The field value, with absolute path conversion for
+             filename tags.
             """
             value = database_data.get_value(
                 collection_name=COLLECTION_CURRENT,
