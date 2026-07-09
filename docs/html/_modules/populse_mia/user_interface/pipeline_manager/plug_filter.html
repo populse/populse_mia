@@ -4,452 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../../../../_static/documentation_options.js?v=15c471b9"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.plug_filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -472,27 +39,22 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">The widget integrates several components of the user interface:</span>
 
-<span class="sd">    - A tag-based data browser (TableDataBrowser)</span>
-<span class="sd">    - Rapid text search (RapidSearch)</span>
-<span class="sd">    - Advanced multi-criteria filtering (AdvancedSearch)</span>
-<span class="sd">    - Tag visualization management dialogs</span>
+<span class="sd">    - A tag-based data browser (TableDataBrowser).</span>
+<span class="sd">    - Rapid text search (RapidSearch).</span>
+<span class="sd">    - Advanced multi-criteria filtering (AdvancedSearch).</span>
+<span class="sd">    - Tag visualization management dialogs.</span>
 <span class="sd">    - Automatic exclusion of pipeline brick outputs to prevent circular</span>
-<span class="sd">      dependencies in workflows</span>
+<span class="sd">      dependencies in workflows.</span>
 
 <span class="sd">It interacts with:</span>
-<span class="sd">    - The project database (COLLECTION_CURRENT, COLLECTION_BRICK)</span>
-<span class="sd">    - The pipeline manager to determine existing brick outputs</span>
-<span class="sd">    - The node controller to manage visible tags and plug updates</span>
-<span class="sd">    - The main application window for integration in the pipeline editor</span>
+<span class="sd">    - The project database (COLLECTION_CURRENT, COLLECTION_BRICK).</span>
+<span class="sd">    - The pipeline manager to determine existing brick outputs.</span>
+<span class="sd">    - The node controller to manage visible tags and plug updates.</span>
+<span class="sd">    - The main application window for integration in the pipeline editor.</span>
 
 <span class="sd">When the user confirms a selection, the widget emits the ``plug_value_changed``</span>
 <span class="sd">signal containing the selected values (absolute file paths or tag values</span>
 <span class="sd">depending on the selected filter).</span>
-
-<span class="sd">:Contains:</span>
-
-<span class="sd">    Class:</span>
-<span class="sd">        - PlugFilter</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -503,12 +65,12 @@ window.addEventListener("load", load);</script>
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QDialogButtonBox</span><span class="p">,</span>
@@ -520,30 +82,32 @@ window.addEventListener("load", load);</script>
 <span class="p">)</span>
 
 <span class="c1"># Populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
     <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.advanced_search</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.data_browser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">TableDataBrowser</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
     <span class="n">PopUpVisualizedTags</span><span class="p">,</span>
 <span class="p">)</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PlugFilter&quot;</span><span class="p">]</span>
+
 
 <div class="viewcode-block" id="PlugFilter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PlugFilter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter">[docs]</a>
+<span class="k">class</span> <span class="nc">PlugFilter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for interactively filtering and selecting database scans to</span>
 <span class="sd">    assign to a pipeline node plug.</span>
@@ -562,29 +126,35 @@ window.addEventListener("load", load);</script>
 <span class="sd">    the selection is confirmed, the chosen files are emitted as a list via</span>
 <span class="sd">    the `plug_value_changed` signal.</span>
 
+<span class="sd">    Contains:</span>
 
-<span class="sd">    .. Methods:</span>
-<span class="sd">        - ok_clicked: Applies the selected files to the node plug and closes</span>
-<span class="sd">                      the widget.</span>
-<span class="sd">        - reset_search_bar: Resets the search interface to its initial state,</span>
-<span class="sd">                            clearing all filters.</span>
-<span class="sd">        - search_str: Filters and updates the displayed scans based on the</span>
-<span class="sd">                      provided search string.</span>
-<span class="sd">        - set_plug_value: Extracts the selected or filtered scan values and</span>
-<span class="sd">                          emits them via the `plug_value_changed` signal.</span>
-<span class="sd">        - update_tag_to_filter: Opens a dialog to select a tag for filtering</span>
-<span class="sd">                                and updates the filter button text.</span>
-<span class="sd">        - update_tags: Opens a dialog to update the list of visualized tags</span>
-<span class="sd">                       and refreshes the table view.</span>
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - ok_clicked: Applies the selected files to the node plug and</span>
+<span class="sd">              closes the widget.</span>
+<span class="sd">            - reset_search_bar: Resets the search interface to its initial</span>
+<span class="sd">              state, clearing all filters.</span>
+<span class="sd">            - search_str: Filters and updates the displayed scans based on the</span>
+<span class="sd">              provided search string.</span>
+<span class="sd">            - set_plug_value: Extracts the selected or filtered scan values and</span>
+<span class="sd">              emits them via the `plug_value_changed` signal.</span>
+<span class="sd">            - update_tag_to_filter: Opens a dialog to select a tag for</span>
+<span class="sd">              filtering and updates the filter button text.</span>
+<span class="sd">            - update_tags: Opens a dialog to update the list of visualized tags</span>
+<span class="sd">              and refreshes the table view.</span>
+
+<span class="sd">    Signals:</span>
+
+<span class="sd">        - plug_value_changed: Signal emitted when the user confirms their</span>
+<span class="sd">          selection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Signal emitted when the user confirms their selection. The signal carries</span>
-    <span class="c1"># a list of selected file paths or attribute values.</span>
+    <span class="c1"># The signal carries a list of selected file paths or attribute values.</span>
     <span class="n">plug_value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PlugFilter.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">project</span><span class="p">,</span>
         <span class="n">scans_list</span><span class="p">,</span>
@@ -602,18 +172,17 @@ window.addEventListener("load", load);</script>
 <span class="sd">        scans that are outputs from existing pipeline bricks.</span>
 
 <span class="sd">        :param project: Current project instance containing database and</span>
-<span class="sd">                        folder paths</span>
+<span class="sd">         folder paths.</span>
 <span class="sd">        :param scans_list: Initial list of database file paths to filter. If</span>
-<span class="sd">                           empty, all scans from COLLECTION_CURRENT are</span>
-<span class="sd">                           included</span>
+<span class="sd">         empty, all scans from COLLECTION_CURRENT are included.</span>
 <span class="sd">        :param process: Process instance associated with the selected pipeline</span>
-<span class="sd">                        node</span>
-<span class="sd">        :param node_name: Display name of the current pipeline node</span>
-<span class="sd">        :param plug_name: Name of the selected node plug/connection point</span>
+<span class="sd">         node.</span>
+<span class="sd">        :param node_name: Display name of the current pipeline node.</span>
+<span class="sd">        :param plug_name: Name of the selected node plug/connection point.</span>
 <span class="sd">        :param node_controller: Parent controller managing node visibility and</span>
-<span class="sd">                                tags</span>
+<span class="sd">         tags.</span>
 <span class="sd">        :param main_window: Main application window containing the pipeline</span>
-<span class="sd">                            manager</span>
+<span class="sd">         manager.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -720,8 +289,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.ok_clicked">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.ok_clicked">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.ok_clicked">[docs]</a>
+    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle OK button click by applying changes and closing the dialog.</span>
 
@@ -733,14 +302,14 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.reset_search_bar">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.reset_search_bar">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.reset_search_bar">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset search interface to initial state and restore all scan rows.</span>
 
-<span class="sd">        Clears the rapid search text field, resets advanced search rows,</span>
-<span class="sd">        and restores the full scan list to the table view, updating the</span>
-<span class="sd">        display to reflect all available scans.</span>
+<span class="sd">        Clears the rapid search text field, resets advanced search rows, and</span>
+<span class="sd">        restores the full scan list to the table view, updating the display to</span>
+<span class="sd">        reflect all available scans.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Clear search UI components</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rapid_search</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -754,8 +323,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.search_str">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.search_str">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.search_str">[docs]</a>
+    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter and update the list of scans displayed in the browser based on</span>
 <span class="sd">        search criteria.</span>
@@ -765,17 +334,16 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Special handling is provided for the NOT_DEFINED_VALUE constant to</span>
 <span class="sd">        filter scans with undefined tag values.</span>
 
-<span class="sd">        :parm str_search (str): The search string entered by the user. An</span>
-<span class="sd">                                empty string shows all scans, NOT_DEFINED_VALUE</span>
-<span class="sd">                                filters for scans with undefined tags, and any</span>
-<span class="sd">                                other value performs a rapid search filter.</span>
+<span class="sd">        :parm str_search: (str) The search string entered by the user. An</span>
+<span class="sd">         empty string shows all scans, NOT_DEFINED_VALUE filters for scans with</span>
+<span class="sd">         undefined tags, and any other value performs a rapid search filter.</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates self.table_data.scans_to_visualize with filtered scan</span>
-<span class="sd">              list</span>
+<span class="sd">              list.</span>
 <span class="sd">            - Updates self.advanced_search.scans_list with the same filtered</span>
-<span class="sd">              list</span>
-<span class="sd">            - Triggers UI update via self.table_data.update_visualized_rows()</span>
+<span class="sd">              list.</span>
+<span class="sd">            - Triggers UI update via self.table_data.update_visualized_rows().</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
 
@@ -809,20 +377,27 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.set_plug_value">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.set_plug_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.set_plug_value">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract selected or filtered scan values and emit to node plug.</span>
 
 <span class="sd">        Retrieves values from the database for the currently filtered tag.</span>
 <span class="sd">        If items are selected in the table, only those values are extracted.</span>
-<span class="sd">        Otherwise, all filtered items are processed. For filename tags,</span>
-<span class="sd">        paths are converted to absolute paths within the project folder.</span>
+<span class="sd">        Otherwise, all filtered items are processed. For filename tags, paths</span>
+<span class="sd">        are converted to absolute paths within the project folder.</span>
 
-<span class="sd">        :Emits: plug_value_changed: Signal with list of extracted values.</span>
+<span class="sd">        :Emits plug_value_changed: Signal with list of extracted values.</span>
+
+<span class="sd">        Contains:</span>
+
+<span class="sd">            Inner functions:</span>
+
+<span class="sd">                - _get_scan_value: Retrieve and process a single scan value</span>
+<span class="sd">                  from the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve and process a single scan value from the database.</span>
 
@@ -830,8 +405,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">            :param scan_name: Primary key identifying the scan.</span>
 <span class="sd">            :param tag_name: Field name to retrieve.</span>
 
-<span class="sd">            :return: The field value, with absolute path conversion for</span>
-<span class="sd">                     filename tags.</span>
+<span class="sd">            :Returns: The field value, with absolute path conversion for</span>
+<span class="sd">             filename tags.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                 <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
@@ -870,8 +445,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.update_tag_to_filter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.update_tag_to_filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tag_to_filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to select a tag filter and update the button text.</span>
 
@@ -890,8 +465,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="PlugFilter.update_tags">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.node_controller.PlugFilter.update_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to update the list of visualized tags.</span>
 
