@@ -4,452 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+13e255af documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=89cb35f0"></script>
+    <script src="../../../../_static/documentation_options.js?v=82506ad4"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+13e255af documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -464,22 +31,14 @@ window.addEventListener("load", load);</script>
         
   <h1>Source code for populse_mia.user_interface.pipeline_manager.process_mia</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Module for managing and running processes within the Populse_mia framework.</span>
+<span class="sd">Module for managing and running processes within the populse_mia framework.</span>
 
 <span class="sd">This module provides specialized classes and methods to handle the execution</span>
 <span class="sd">and completion of processes within the Populse_mia framework. It includes</span>
 <span class="sd">functionalities for managing process attributes, handling database</span>
-<span class="sd">interactions, and ensuring proper inheritance of metadata tags.</span>
-<span class="sd">The module supports various process types, including those from</span>
-<span class="sd">mia_processes, Nipype, and Capsul.</span>
-
-<span class="sd">:Contains:</span>
-<span class="sd">    :Class:</span>
-<span class="sd">        - MIAProcessCompletionEngine</span>
-<span class="sd">        - MIAProcessCompletionEngineFactory</span>
-<span class="sd">        - ProcessMIA</span>
-
-
+<span class="sd">interactions, and ensuring proper inheritance of metadata tags. The module</span>
+<span class="sd">supports various process types, including those from mia_processes, Nipype,</span>
+<span class="sd">and Capsul.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">##########################################################################</span>
@@ -492,37 +51,37 @@ window.addEventListener("load", load);</script>
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># capsul import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">capsul_engine</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span><span class="p">,</span> <span class="n">capsul_engine</span>
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ProcessCompletionEngine</span><span class="p">,</span>
     <span class="n">ProcessCompletionEngineFactory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine_factory</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine_factory</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BuiltinProcessCompletionEngineFactory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessNode</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.process.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipypeProcess</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
+<span class="kn">from</span> <span class="nn">capsul.process.process</span> <span class="kn">import</span> <span class="n">NipypeProcess</span>
 
 <span class="c1"># nipype import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">traits_extension</span>
+<span class="kn">from</span> <span class="nn">nipype.interfaces.base</span> <span class="kn">import</span> <span class="n">File</span><span class="p">,</span> <span class="n">InputMultiObject</span><span class="p">,</span> <span class="n">traits_extension</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">relax_exists_constraint</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.utils.weak_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_ref</span>
+<span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">relax_exists_constraint</span>
+<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">get_ref</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">TAG_BRICKS</span><span class="p">,</span>
@@ -531,29 +90,35 @@ window.addEventListener("load", load);</script>
     <span class="n">TAG_HISTORY</span><span class="p">,</span>
     <span class="n">TAG_TYPE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_auto_inheritance</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">PopUpInheritanceDict</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">update_auto_inheritance</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;MIAProcessCompletionEngine&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;MIAProcessCompletionEngineFactory&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ProcessMIA&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine">[docs]</a>
+<span class="k">class</span> <span class="nc">MIAProcessCompletionEngine</span><span class="p">(</span><span class="n">ProcessCompletionEngine</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A specialized completion engine for all processes within the Populse_mia</span>
+<span class="sd">    A specialized completion engine for all processes within the populse_mia</span>
 <span class="sd">    context.</span>
 
-<span class="sd">    This engine handles both PopulseMIA processes and NipypeProcess instances</span>
+<span class="sd">    This engine handles both ProcessMIA processes and NipypeProcess instances</span>
 <span class="sd">    with special consideration for their unique requirements:</span>
 
-<span class="sd">    - PopulseMIA processes use their `list_outputs` method to generate outputs</span>
-<span class="sd">      based on input parameters, primarily using filename patterns rather</span>
-<span class="sd">      than attributes.</span>
+<span class="sd">        - ProcessMIA processes use their `list_outputs` method to generate</span>
+<span class="sd">          outputs based on input parameters, primarily using filename patterns</span>
+<span class="sd">          rather than attributes.</span>
 
-<span class="sd">    - NipypeProcess instances have their MATLAB/SPM settings configured from</span>
-<span class="sd">      the application configuration.</span>
+<span class="sd">        - NipypeProcess instances have their MATLAB/SPM settings configured</span>
+<span class="sd">          from the application configuration.</span>
 
 <span class="sd">    The engine also manages project-specific parameters including &quot;project&quot;</span>
 <span class="sd">    and &quot;output_directory&quot; when available in the study configuration.</span>
@@ -565,41 +130,41 @@ window.addEventListener("load", load);</script>
 <span class="sd">    This engine tracks completed processes in the correct order, enabling</span>
 <span class="sd">    other operations to be performed in the same sequence later.</span>
 
-<span class="sd">    :Contains:</span>
-<span class="sd">        :Method:</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
 <span class="sd">            - _complete_mia_process: Complete parameters for Mia-specific</span>
-<span class="sd">                                     processes.</span>
+<span class="sd">              processes.</span>
 <span class="sd">            - _complete_standard_process: Complete parameters for standard</span>
-<span class="sd">                                          (non-Mia) processes.</span>
+<span class="sd">              (non-Mia) processes.</span>
 <span class="sd">            - complete_attributes_with_database: Augments the Capsul</span>
-<span class="sd">                                                 completion system attributes</span>
-<span class="sd">                                                 associated with a process.</span>
+<span class="sd">              completion system attributes associated with a process.</span>
 <span class="sd">            - complete_nipype_common: Set Nipype parameters for SPM.</span>
-<span class="sd">            - complete_parameters: Completes file parameters from</span>
-<span class="sd">                                   given inputs parameters.</span>
+<span class="sd">            - complete_parameters: Completes file parameters from given inputs</span>
+<span class="sd">              parameters.</span>
 <span class="sd">            - complete_parameters_mia: Completion for :class:`ProcessMIA`</span>
-<span class="sd">                                       instances.</span>
+<span class="sd">              instances.</span>
 <span class="sd">            - get_attribute_values: Get attribute values from the fallback</span>
-<span class="sd">                                    engine.</span>
+<span class="sd">              engine.</span>
 <span class="sd">            - get_path_completion_engine: Get the path completion engine from</span>
-<span class="sd">                                          the fallback engine.</span>
+<span class="sd">              the fallback engine.</span>
 <span class="sd">            - get_project: Get the project associated with the process</span>
 <span class="sd">            - path_attributes: Get path attributes from the fallback engine.</span>
 <span class="sd">            - remove_switch_observe: Reimplemented since it is expects</span>
-<span class="sd">                                     in switches completion engine.</span>
-
+<span class="sd">              in switches completion engine.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback_engine</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">fallback_engine</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Mia process completion engine.</span>
 
 <span class="sd">        :param process: The process instance to be completed.</span>
-<span class="sd">        :param name (str): The name of the process.</span>
-<span class="sd">        :param fallback_engine: The fallback engine to use when MIA-specific</span>
-<span class="sd">                                completion is not applicable.</span>
+<span class="sd">        :param name: (str) The name of the process.</span>
+<span class="sd">        :param fallback_engine: The fallback engine to use when Mia-specific</span>
+<span class="sd">         completion is not applicable.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span> <span class="o">=</span> <span class="n">fallback_engine</span>
@@ -608,17 +173,16 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine._complete_standard_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine._complete_standard_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_complete_standard_process</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine._complete_standard_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">_complete_standard_process</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">process_inputs</span><span class="p">,</span> <span class="n">complete_iterations</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Complete parameters for standard (non-Mia) processes.</span>
 
 <span class="sd">        :param process: The process to complete.</span>
-<span class="sd">        :param process_inputs (dict): Parameters to set on the process.</span>
-<span class="sd">        :param complete_iterations (bool): Whether to complete iteration</span>
-<span class="sd">                                           nodes.</span>
+<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
+<span class="sd">        :param complete_iterations: (bool) Whether to complete iteration nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Determine node name for logging</span>
@@ -698,17 +262,16 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine._complete_mia_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine._complete_mia_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_complete_mia_process</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine._complete_mia_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">_complete_mia_process</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">process_inputs</span><span class="p">,</span> <span class="n">complete_iterations</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Complete parameters for Mia-specific processes.</span>
 
 <span class="sd">        :param process: The Mia process to complete.</span>
-<span class="sd">        :param process_inputs (dict): Parameters to set on the process.</span>
-<span class="sd">        :param complete_iterations (bool): Whether to complete iteration</span>
-<span class="sd">                                           nodes.</span>
+<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
+<span class="sd">        :param complete_iterations: (bool) Whether to complete iteration nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Here the process is a ProcessMIA instance. Use the specific</span>
         <span class="c1"># method.</span>
@@ -809,16 +372,17 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_attributes_with_database">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.complete_attributes_with_database">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_attributes_with_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_attributes_with_database">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_attributes_with_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Augment the completion attributes with values from the Mia database.</span>
 
 <span class="sd">        Queries the database for attributes associated with input parameters</span>
 <span class="sd">        and adds them to the completion attributes if matches are found.</span>
 
-<span class="sd">        :param process_inputs (dict): Parameters to be set on the process.</span>
-<span class="sd">        :return: The augmented attributes collection.</span>
+<span class="sd">        :param process_inputs: (dict) Parameters to be set on the process.</span>
+
+<span class="sd">        :Returns: The augmented attributes collection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Get attributes from the fallback engine</span>
@@ -928,18 +492,18 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_nipype_common">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.complete_nipype_common">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_nipype_common">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_nipype_common</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">complete_nipype_common</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure Nipype/SPM parameters for a process.</span>
 
-<span class="sd">        Sets MATLAB/SPM paths, commands, and project-specific parameters</span>
-<span class="sd">        based on the configuration.</span>
+<span class="sd">        Sets MATLAB/SPM paths, commands, and project-specific parameters based</span>
+<span class="sd">        on the configuration.</span>
 
 <span class="sd">        :param process: The process to configure.</span>
-<span class="sd">        :param output_dir (bool): If False, the output_directory attribute</span>
-<span class="sd">                                  value is not initialised.</span>
+<span class="sd">        :param output_dir: (bool) If False, the output_directory attribute</span>
+<span class="sd">         value is not initialised.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Test for matlab launch</span>
@@ -1050,8 +614,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.complete_parameters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_parameters</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_parameters</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">complete_iterations</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1060,17 +624,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method handles both standard Capsul processes and Mia-specific</span>
 <span class="sd">        processes, applying the appropriate completion strategy for each.</span>
 
-<span class="sd">        :param process_inputs (dict): Parameters to be set on the process.</span>
-<span class="sd">                                      May include regular parameters and</span>
-<span class="sd">                                      completion attributes (under</span>
-<span class="sd">                                      &#39;capsul_attributes&#39; key).</span>
-<span class="sd">        :param complete_iterations (bool): If False, iteration nodes in</span>
-<span class="sd">                                           pipelines will not complete their</span>
-<span class="sd">                                           parameters. This prevents</span>
-<span class="sd">                                           modification of the input pipeline</span>
-<span class="sd">                                           and avoids redundant iterations</span>
-<span class="sd">                                           completion that will be done again</span>
-<span class="sd">                                           during workflow building.</span>
+<span class="sd">        :param process_inputs: (dict) Parameters to be set on the process. May</span>
+<span class="sd">         include regular parameters and completion attributes (under</span>
+<span class="sd">         &#39;capsul_attributes&#39; key).</span>
+<span class="sd">        :param complete_iterations: (bool) If False, iteration nodes in</span>
+<span class="sd">         pipelines will not complete their parameters. This prevents</span>
+<span class="sd">         modification of the input pipeline and avoids redundant iterations</span>
+<span class="sd">         completion that will be done again during workflow building.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Update progress tracking</span>
@@ -1104,8 +664,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.complete_parameters_mia">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.complete_parameters_mia">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">complete_parameters_mia</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.complete_parameters_mia">[docs]</a>
+    <span class="k">def</span> <span class="nf">complete_parameters_mia</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">process_inputs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1115,10 +675,10 @@ window.addEventListener("load", load);</script>
 <span class="sd">        based on input values and sets the inheritance_dict for data</span>
 <span class="sd">        indexation.</span>
 
-<span class="sd">        :param process_inputs (dict): Parameters to set on the process.</span>
-<span class="sd">        :param iteration (bool): Whether this completion is for an iteration</span>
-<span class="sd">                                 node.</span>
-<span class="sd">        :param verbose (bool): If true, makes the method verbose</span>
+<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
+<span class="sd">        :param iteration: (bool) Whether this completion is for an iteration</span>
+<span class="sd">         node.</span>
+<span class="sd">        :param verbose: (bool) If true, makes the method verbose</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Set input parameters</span>
@@ -1182,19 +742,19 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_attribute_values">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.get_attribute_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_attribute_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_attribute_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_attribute_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get attribute values from the fallback engine.</span>
 
-<span class="sd">        :return: The attribute values collection.</span>
+<span class="sd">        :Returns: The attribute values collection.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_path_completion_engine">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.get_path_completion_engine">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_path_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_path_completion_engine">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_path_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the path completion engine from the fallback engine.</span>
 
@@ -1204,15 +764,15 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.get_project">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.get_project">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.get_project">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_project</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_project</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the project associated with a process.</span>
 
 <span class="sd">        :param process: The process to get the project for.</span>
 
-<span class="sd">        :return: The associated project or None if not found.</span>
+<span class="sd">        :Returns: The associated project or None if not found.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1227,29 +787,29 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.path_attributes">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.path_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">path_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.path_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">path_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get path attributes from the fallback engine.</span>
 
-<span class="sd">        :param filename (str): The filename to get attributes for.</span>
-<span class="sd">        :param parameter (str): The parameter name associated with the</span>
-<span class="sd">                                filename.</span>
+<span class="sd">        :param filename: (str) The filename to get attributes for.</span>
+<span class="sd">        :param parameter: (str) The parameter name associated with the</span>
+<span class="sd">         filename.</span>
 
-<span class="sd">        :return: The path attributes.</span>
+<span class="sd">        :Returns: The path attributes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">path_attributes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngine.remove_switch_observer">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngine.remove_switch_observer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_switch_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.remove_switch_observer">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_switch_observer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">observer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a switch observer from the fallback engine.</span>
 
 <span class="sd">        :param observer: The observer to remove.</span>
 
-<span class="sd">        :return: The result from the fallback engine.</span>
+<span class="sd">        :Returns: The result from the fallback engine.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">remove_switch_observer</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span></div>
@@ -1258,50 +818,52 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="MIAProcessCompletionEngineFactory">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngineFactory">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MIAProcessCompletionEngineFactory</span><span class="p">(</span><span class="n">ProcessCompletionEngineFactory</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory">[docs]</a>
+<span class="k">class</span> <span class="nc">MIAProcessCompletionEngineFactory</span><span class="p">(</span><span class="n">ProcessCompletionEngineFactory</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Specialization of the ProcessCompletionEngineFactory for the Populse Mia</span>
+<span class="sd">    Specialization of the ProcessCompletionEngineFactory for the populse_mia</span>
 <span class="sd">    context.</span>
 
 <span class="sd">    This factory is identified by ``factory_id = &quot;mia_completion&quot;`` and is</span>
 <span class="sd">    activated in a :class:`~capsul.study_config.study_config.StudyConfig`</span>
 <span class="sd">    instance by setting the following 2 parameters:</span>
 
-<span class="sd">        study_config.attributes_schema_paths += [</span>
-<span class="sd">            &#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span>
-<span class="sd">        ]</span>
-<span class="sd">        study_config.process_completion = &#39;mia_completion&#39;</span>
+<span class="sd">        &gt;&gt;&gt; study_config.attributes_schema_paths += [</span>
+<span class="sd">        &gt;&gt;&gt;     &#39;populse_mia.user_interface.pipeline_manager.process_mia&#39;</span>
+<span class="sd">        &gt;&gt;&gt; ]</span>
+<span class="sd">        &gt;&gt;&gt; study_config.process_completion = &#39;mia_completion&#39;</span>
 
 
 <span class="sd">    Once activated, the completion system is applied to all processes,</span>
-<span class="sd">    distinguishing between MIA and Nipype processes. For standard processes,</span>
-<span class="sd">    additional database operations are performed before invoking the underlying</span>
-<span class="sd">    completion system (such as FOM or others).</span>
+<span class="sd">    distinguishing between Mia and Nipype processes. For standard processes,</span>
+<span class="sd">    additional database operations are performed before invoking the</span>
+<span class="sd">    underlying completion system (such as FOM or others).</span>
 
-<span class="sd">    :Contains:</span>
-<span class="sd">        :Method:</span>
-<span class="sd">            - get_completion_engine: get a ProcessCompletionEngine instance for</span>
-<span class="sd">              a given process/node</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
+<span class="sd">            - get_completion_engine: get a ProcessCompletionEngine instance</span>
+<span class="sd">            for a given process/node.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">factory_id</span> <span class="o">=</span> <span class="s2">&quot;mia_completion&quot;</span>
 
 <div class="viewcode-block" id="MIAProcessCompletionEngineFactory.get_completion_engine">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.MIAProcessCompletionEngineFactory.get_completion_engine">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.get_completion_engine">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_completion_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a `ProcessCompletionEngine` instance for the given process</span>
 <span class="sd">        or node.</span>
 
-<span class="sd">        :param process (Process or Node): The process or node for which to get</span>
-<span class="sd">                                          the completion engine.</span>
-<span class="sd">        :param name (str, optional): An optional name for the completion</span>
-<span class="sd">                                     engine.</span>
+<span class="sd">        :param process: (Process or Node) The process or node for which to get</span>
+<span class="sd">         the completion engine.</span>
+<span class="sd">        :param name: (str, optional) An optional name for the completion</span>
+<span class="sd">         engine.</span>
 
-<span class="sd">        :return (ProcessCompletionEngine): A completion engine instance</span>
-<span class="sd">                                           associated with the process.</span>
+<span class="sd">        :Returns: (ProcessCompletionEngine) A completion engine instance</span>
+<span class="sd">         associated with the process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;completion_engine&quot;</span><span class="p">):</span>
@@ -1344,52 +906,51 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProcessMIA</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA">[docs]</a>
+<span class="k">class</span> <span class="nc">ProcessMIA</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extends the Capsul Process class to customize execution for Mia bricks.</span>
 
 <span class="sd">    This class provides specialized methods for Mia bricks, including process</span>
 <span class="sd">    initialization, output handling, and trait management.</span>
 
-<span class="sd">    .. Methods:</span>
+<span class="sd">    Contains:</span>
+
+<span class="sd">        Methods:</span>
+
 <span class="sd">        - _add_field_to_collections: Add a new field to the specified</span>
-<span class="sd">                                     collection in the database.</span>
+<span class="sd">          collection in the database.</span>
 <span class="sd">        - _add_or_modify_tags: Add new tags or modify existing tag values in</span>
-<span class="sd">                               the database.</span>
+<span class="sd">          the database.</span>
 <span class="sd">        - _all_values_identical: Checks if all dictionaries have identical</span>
-<span class="sd">                                 content</span>
+<span class="sd">          content</span>
 <span class="sd">        - _after_run_process: Try to recover the output values, when the</span>
-<span class="sd">                              calculation has been delegated to a process in</span>
-<span class="sd">                              ProcessMIA.</span>
-<span class="sd">        - _find_plug_for_output:  Find the plug name associated with the given</span>
-<span class="sd">                                  output file.</span>
+<span class="sd">          calculation has been delegated to a process in ProcessMIA.</span>
+<span class="sd">        - _find_plug_for_output: Find the plug name associated with the given</span>
+<span class="sd">          output file.</span>
 <span class="sd">        - _get_relative_path: Converts an absolute file path to a relative</span>
-<span class="sd">                              path based on the project folder.</span>
+<span class="sd">          path based on the project folder.</span>
 <span class="sd">        - _remove_tags: Remove specified tags from value dictionaries and the</span>
-<span class="sd">                        database.</span>
+<span class="sd">          database.</span>
 <span class="sd">        - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple</span>
-<span class="sd">                                          input files could provide tags.</span>
-<span class="sd">        - _run_process: call the run_process_mia method in the ProcessMIA</span>
-<span class="sd">                        subclass.</span>
+<span class="sd">          input files could provide tags.</span>
+<span class="sd">        - _run_process: Call the run_process_mia method in the ProcessMIA</span>
+<span class="sd">          subclass.</span>
 <span class="sd">        - _save_tag_values: Save tag values to the database.</span>
 <span class="sd">        - init_default_traits: Automatically initialise necessary parameters</span>
-<span class="sd">                               for nipype or capsul.</span>
-<span class="sd">        - init_process: Instantiation of the process attribute given a</span>
-<span class="sd">                        process identifier.</span>
+<span class="sd">          for nipype or capsul.</span>
+<span class="sd">        - init_process: Instantiation of the process attribute given a process</span>
+<span class="sd">          identifier.</span>
 <span class="sd">        - list_outputs: Override the outputs of the process.</span>
 <span class="sd">        - load_nii: Return the header and the data of a nibabel image object.</span>
-<span class="sd">        - make_initResult: Make the final dictionary for outputs,</span>
-<span class="sd">                           inheritance and requirement from the</span>
-<span class="sd">                           initialisation of a brick.</span>
+<span class="sd">        - make_initResult: Make the final dictionary for outputs, inheritance</span>
+<span class="sd">          and requirement from the initialisation of a brick.</span>
 <span class="sd">        - relax_nipype_exists_constraints: Relax the exists constraint of</span>
-<span class="sd">                                           the process.inputs traits.</span>
+<span class="sd">          the process.inputs traits.</span>
 <span class="sd">        - requirements: Capsul Process.requirements() implementation using</span>
-<span class="sd">                        MIA&#39;s ProcessMIA.requirement attribute.</span>
-<span class="sd">        - run_process_mia: Implements specific runs for ProcessMia</span>
-<span class="sd">                           subclasses.</span>
-<span class="sd">        - tags_inheritance: create tags for data.</span>
-
+<span class="sd">          Mia&#39;s ProcessMIA.requirement attribute.</span>
+<span class="sd">        - run_process_mia: Implements specific runs for ProcessMia subclasses.</span>
+<span class="sd">        - tags_inheritance: Create tags for data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Class attributes used for the inheritance dictionary</span>
@@ -1398,13 +959,13 @@ window.addEventListener("load", load);</script>
     <span class="n">key</span> <span class="o">=</span> <span class="p">{}</span>
 
 <div class="viewcode-block" id="ProcessMIA.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the process instance with default attributes.</span>
 
-<span class="sd">        :param args (tuple): Positional arguments passed to the parent class.</span>
-<span class="sd">        :param kwargs (dict): Keyword arguments passed to the parent class</span>
+<span class="sd">        :param args: (tuple) Positional arguments passed to the parent class.</span>
+<span class="sd">        :param kwargs: (dict) Keyword arguments passed to the parent class</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1414,28 +975,24 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._add_field_to_collections">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._add_field_to_collections">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_field_to_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_schema</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">tag_def</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._add_field_to_collections">[docs]</a>
+    <span class="k">def</span> <span class="nf">_add_field_to_collections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database_schema</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">tag_def</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new field to the specified collection in the database.</span>
 
 <span class="sd">        :param database_schema: The database schema context used for modifying</span>
-<span class="sd">                                collections.</span>
-<span class="sd">        :param collection (str): The name of the collection to which the field</span>
-<span class="sd">                                 should be added.</span>
-<span class="sd">        :param tag_def (dict): Dictionary containing the field definition with</span>
-<span class="sd">                               the following keys:</span>
-<span class="sd">                               - &#39;name&#39; (str): The name of the field.</span>
-<span class="sd">                               - &#39;field_type&#39; (str): The type of the field.</span>
-<span class="sd">                               - &#39;description&#39; (str): A description of the</span>
-<span class="sd">                                                      field.</span>
-<span class="sd">                               - &#39;visibility&#39; (str): The visibility status of</span>
-<span class="sd">                                                     the field.</span>
-<span class="sd">                               - &#39;origin&#39; (str): The origin of the field.</span>
-<span class="sd">                               - &#39;unit&#39; (str): The unit associated with the</span>
-<span class="sd">                                               field.</span>
-<span class="sd">                               - &#39;default_value&#39; (Any): The default value of</span>
-<span class="sd">                                                        the field.</span>
+<span class="sd">         collections.</span>
+<span class="sd">        :param collection: (str) The name of the collection to which the field</span>
+<span class="sd">         should be added.</span>
+<span class="sd">        :param tag_def: (dict) Dictionary containing the field definition with</span>
+<span class="sd">         the following keys:</span>
+<span class="sd">            - &#39;name&#39; (str): The name of the field.</span>
+<span class="sd">            - &#39;field_type&#39; (str): The type of the field.</span>
+<span class="sd">            - &#39;description&#39; (str): A description of the field.</span>
+<span class="sd">            - &#39;visibility&#39; (str): The visibility status of the field.</span>
+<span class="sd">            - &#39;origin&#39; (str): The origin of the field.</span>
+<span class="sd">            - &#39;unit&#39; (str): The unit associated with the field.</span>
+<span class="sd">            - &#39;default_value&#39; (Any): The default value of the field.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_config</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;field_name&quot;</span><span class="p">:</span> <span class="n">tag_def</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
@@ -1453,24 +1010,23 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._add_or_modify_tags">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._add_or_modify_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_or_modify_tags</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._add_or_modify_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">_add_or_modify_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">own_tags</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">field_names</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add new tags or modify existing tag values in the current and initial</span>
 <span class="sd">        collections.</span>
 
-<span class="sd">        :param own_tags (list[dict]): List of tags to be added or modified,</span>
-<span class="sd">                                      where each tag is a dictionary with</span>
-<span class="sd">                                      &#39;name&#39;, &#39;value&#39;, &#39;description&#39;, etc.,</span>
-<span class="sd">                                      keys.</span>
-<span class="sd">        :param current_values (dict): Dictionary storing the current tag</span>
-<span class="sd">                                      values.</span>
-<span class="sd">        :param initial_values (dict): Dictionary storing the initial tag</span>
-<span class="sd">                                      values.</span>
-<span class="sd">        :param field_names (set[str]): Set of field names that exist in the</span>
-<span class="sd">                                       database schema.</span>
+<span class="sd">        :param own_tags: (list[dict]) List of tags to be added or modified,</span>
+<span class="sd">         where each tag is a dictionary with &#39;name&#39;, &#39;value&#39;, &#39;description&#39;,</span>
+<span class="sd">         etc., keys.</span>
+<span class="sd">        :param current_values: (dict) Dictionary storing the current tag</span>
+<span class="sd">         values.</span>
+<span class="sd">        :param initial_values: (dict) Dictionary storing the initial tag</span>
+<span class="sd">         values.</span>
+<span class="sd">        :param field_names: (set[str]) Set of field names that exist in the</span>
+<span class="sd">         database schema.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_schema</span><span class="p">:</span>
@@ -1498,16 +1054,16 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._all_values_identical">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._all_values_identical">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_all_values_identical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._all_values_identical">[docs]</a>
+    <span class="k">def</span> <span class="nf">_all_values_identical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if all dictionaries in `values_dict` have identical content.</span>
 
-<span class="sd">        :param values_dict (dict): A dictionary where each value is expected</span>
-<span class="sd">                                   to be comparable to the others.</span>
+<span class="sd">        :param values_dict: (dict) A dictionary where each value is expected to</span>
+<span class="sd">         be comparable to the others.</span>
 
-<span class="sd">        :return (bool): True if all values in `values_dict` are identical or</span>
-<span class="sd">                         if the dictionary is empty, otherwise False.</span>
+<span class="sd">        :Returns: (bool) True if all values in `values_dict` are identical or</span>
+<span class="sd">         if the dictionary is empty, otherwise False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values_dict</span><span class="p">:</span>
@@ -1527,13 +1083,13 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._after_run_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._after_run_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._after_run_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">_after_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_process_result</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve output values when the process is a NipypeProcess.</span>
 
-<span class="sd">        :param run_process_result: The result of the process execution.</span>
-<span class="sd">                                   (unused)</span>
+<span class="sd">        :param run_process_result: The result of the process execution</span>
+<span class="sd">         (unused).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -1554,15 +1110,15 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._find_plug_for_output">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._find_plug_for_output">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_find_plug_for_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._find_plug_for_output">[docs]</a>
+    <span class="k">def</span> <span class="nf">_find_plug_for_output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the plug name associated with the given output file.</span>
 
-<span class="sd">        :param out_file (str): The output file to search for in user traits.</span>
+<span class="sd">        :param out_file: (str) The output file to search for in user traits.</span>
 
-<span class="sd">        :return (str | None): The name of the plug (trait) if found,</span>
-<span class="sd">                               otherwise None.</span>
+<span class="sd">        :Returns: (str | None) The name of the plug (trait) if found, otherwise</span>
+<span class="sd">         None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">trait_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
@@ -1579,16 +1135,16 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._get_relative_path">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._get_relative_path">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_relative_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._get_relative_path">[docs]</a>
+    <span class="k">def</span> <span class="nf">_get_relative_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Converts an absolute file path to a relative path based on the</span>
-<span class="sd">        project folder.</span>
+<span class="sd">        Converts an absolute file path to a relative path based on the project</span>
+<span class="sd">        folder.</span>
 
-<span class="sd">        :param file_path (str): The absolute path of the file.</span>
-<span class="sd">        :param base_dir (str): The base directory to make the path relative to.</span>
+<span class="sd">        :param file_path: (str) The absolute path of the file.</span>
+<span class="sd">        :param base_dir: (str) The base directory to make the path relative to.</span>
 
-<span class="sd">        :return (str): The relative file path.</span>
+<span class="sd">        :Returns: (str) The relative file path.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rel_path</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -1600,18 +1156,18 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._remove_tags">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._remove_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_remove_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags2del</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._remove_tags">[docs]</a>
+    <span class="k">def</span> <span class="nf">_remove_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags2del</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">,</span> <span class="n">out_file</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified tags from value dictionaries and the database.</span>
 
-<span class="sd">        :param tags2del (list[str]): List of tag names to be removed.</span>
-<span class="sd">        :param current_values (dict): Dictionary storing the current tag</span>
-<span class="sd">                                      values.</span>
-<span class="sd">        :param initial_values (dict): Dictionary storing the initial tag</span>
-<span class="sd">                                      values.</span>
-<span class="sd">        :param out_file (str): The output file associated with the tags being</span>
-<span class="sd">                               removed.</span>
+<span class="sd">        :param tags2del: (list[str]) List of tag names to be removed.</span>
+<span class="sd">        :param current_values: (dict) Dictionary storing the current tag</span>
+<span class="sd">         values.</span>
+<span class="sd">        :param initial_values: (dict) Dictionary storing the initial tag</span>
+<span class="sd">         values.</span>
+<span class="sd">        :param out_file: (str) The output file associated with the tags being</span>
+<span class="sd">         removed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">tag_to_del</span> <span class="ow">in</span> <span class="n">tags2del</span><span class="p">:</span>
@@ -1638,8 +1194,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._resolve_inheritance_ambiguity">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._resolve_inheritance_ambiguity">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_inheritance_ambiguity</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._resolve_inheritance_ambiguity">[docs]</a>
+    <span class="k">def</span> <span class="nf">_resolve_inheritance_ambiguity</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">all_current_values</span><span class="p">,</span>
         <span class="n">all_initial_values</span><span class="p">,</span>
@@ -1652,23 +1208,24 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Resolves ambiguity when multiple input files could provide tags.</span>
 
 <span class="sd">        This method applies a series of resolution strategies in order:</span>
-<span class="sd">        1. If all input files have identical tag values, the first input is</span>
-<span class="sd">           selected.</span>
-<span class="sd">        2. If a previously stored selection rule exists, it is used.</span>
-<span class="sd">        3. If neither condition applies, the user is prompted to manually</span>
-<span class="sd">           resolve the ambiguity, and their decision is stored for future use.</span>
+<span class="sd">            1. If all input files have identical tag values, the first input</span>
+<span class="sd">               is selected.</span>
+<span class="sd">            2. If a previously stored selection rule exists, it is used.</span>
+<span class="sd">            3. If neither condition applies, the user is prompted to manually</span>
+<span class="sd">               resolve the ambiguity, and their decision is stored for future</span>
+<span class="sd">               use.</span>
 
-<span class="sd">        :param all_current_values (dict): A dictionary containing the current</span>
-<span class="sd">                                          values for each possible input file.</span>
-<span class="sd">        :param all_initial_values (dict): A dictionary containing the initial</span>
-<span class="sd">                                          values for each possible input file.</span>
-<span class="sd">        :param in_files (dict): A mapping of input file indices to their</span>
-<span class="sd">                                corresponding file paths.</span>
-<span class="sd">        :param node_name (str): The name of the processing node.</span>
-<span class="sd">        :param plug_name (str | None): The name of the plug (trait) causing</span>
-<span class="sd">                                       the ambiguity.</span>
-<span class="sd">        :param out_file (str): The output file for which inheritance needs to</span>
-<span class="sd">                               be resolved.</span>
+<span class="sd">        :param all_current_values: (dict) A dictionary containing the current</span>
+<span class="sd">         values for each possible input file.</span>
+<span class="sd">        :param all_initial_values: (dict) A dictionary containing the initial</span>
+<span class="sd">         values for each possible input file.</span>
+<span class="sd">        :param in_files: (dict) A mapping of input file indices to their</span>
+<span class="sd">         corresponding file paths.</span>
+<span class="sd">        :param node_name: (str) The name of the processing node.</span>
+<span class="sd">        :param plug_name: (str | None) The name of the plug (trait) causing</span>
+<span class="sd">         the ambiguity.</span>
+<span class="sd">        :param out_file: (str) The output file for which inheritance needs to</span>
+<span class="sd">         be resolved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if all inputs have identical tag values</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_values_identical</span><span class="p">(</span>
@@ -1776,24 +1333,24 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA._run_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._run_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._run_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">_run_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Execute the specific run method for ProcessMIA subclasses.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_process_mia</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ProcessMIA._save_tag_values">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA._save_tag_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_save_tag_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel_out_file</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA._save_tag_values">[docs]</a>
+    <span class="k">def</span> <span class="nf">_save_tag_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rel_out_file</span><span class="p">,</span> <span class="n">current_values</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save tag values to the CURRENT and INITIAL database collections.</span>
 
-<span class="sd">        :param rel_out_file (str): The relative path of the output file used</span>
-<span class="sd">                                   as the document&#39;s primary key.</span>
-<span class="sd">        :param current_values (dict): Dictionary containing the current tag</span>
-<span class="sd">                                      values to be saved.</span>
-<span class="sd">        :param initial_values (dict): Dictionary containing the initial tag</span>
-<span class="sd">                                      values to be saved.</span>
+<span class="sd">        :param rel_out_file: (str) The relative path of the output file used</span>
+<span class="sd">         as the document&#39;s primary key.</span>
+<span class="sd">        :param current_values: (dict) Dictionary containing the current tag</span>
+<span class="sd">         values to be saved.</span>
+<span class="sd">        :param initial_values: (dict) Dictionary containing the initial tag</span>
+<span class="sd">         values to be saved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1836,8 +1393,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.init_default_traits">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.init_default_traits">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">init_default_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_default_traits">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_default_traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize required traits for Nipype or Capsul processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1872,13 +1429,13 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.init_process">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.init_process">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">init_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">int_name</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.init_process">[docs]</a>
+    <span class="k">def</span> <span class="nf">init_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">int_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate the process attribute given a process identifier.</span>
 
-<span class="sd">        :param int_name (str): A process identifier used to fetch the</span>
-<span class="sd">                               process instance.</span>
+<span class="sd">        :param int_name: (str) A process identifier used to fetch the process</span>
+<span class="sd">         instance.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ce</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">engine</span>
@@ -1889,8 +1446,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.list_outputs">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.list_outputs">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.list_outputs">[docs]</a>
+    <span class="k">def</span> <span class="nf">list_outputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset and override process outputs.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">relax_nipype_exists_constraints</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -1898,11 +1455,11 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.load_nii">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.load_nii">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_nii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_like</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.load_nii">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_nii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">,</span> <span class="n">scaled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">matlab_like</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Load a NIfTI image and return its header and data, optionally</span>
-<span class="sd">        adjusting for MATLAB conventions.</span>
+<span class="sd">        Load a NIfTI image and return its header and data, optionally adjusting</span>
+<span class="sd">        for MATLAB conventions.</span>
 
 <span class="sd">        MATLAB and Python (in particular NumPy) treat the order of dimensions</span>
 <span class="sd">        and the origin of the coordinate system differently. MATLAB uses main</span>
@@ -1911,20 +1468,20 @@ window.addEventListener("load", load);</script>
 <span class="sd">        data(x, y, z) in MATLAB, the equivalent in NumPy is data[y, x, z].</span>
 <span class="sd">        MATLAB and NumPy also handle the origin of the coordinate system</span>
 <span class="sd">        differently:</span>
-<span class="sd">        MATLAB&#39;s coordinate system starts with the origin in the lower</span>
-<span class="sd">        left-hand corner (as in traditional matrix mathematics).</span>
-<span class="sd">        NumPy&#39;s coordinate system starts with the origin in the top left-hand</span>
-<span class="sd">        corner.</span>
+<span class="sd">            - MATLAB&#39;s coordinate system starts with the origin in the lower</span>
+<span class="sd">              left-hand corner (as in traditional matrix mathematics).</span>
+<span class="sd">            - NumPy&#39;s coordinate system starts with the origin in the top</span>
+<span class="sd">              left-hand corner.</span>
 <span class="sd">        When taking matlab_like=True as argument, the numpy matrix is</span>
-<span class="sd">        rearranged to follow MATLAB conventions.</span>
-<span class="sd">        Using scaled=False generates a raw unscaled data matrix (as in MATLAB</span>
-<span class="sd">        with `header = loadnifti(fnii)` and `header.reco.data`).</span>
+<span class="sd">        rearranged to follow MATLAB conventions. Using scaled=False generates</span>
+<span class="sd">        a raw unscaled data matrix (as in MATLAB with</span>
+<span class="sd">        `header = loadnifti(fnii)` and `header.reco.data`).</span>
 
-<span class="sd">        :param file_path (str): The path to a NIfTI file.</span>
-<span class="sd">        :param scaled (bool): If True the data is scaled.</span>
-<span class="sd">        :param matlab_like (bool): If True the data is rearranged to match the</span>
-<span class="sd">                                   order of the dimensions and the origin of</span>
-<span class="sd">                                   the coordinate system in Matlab.</span>
+<span class="sd">        :param file_path: (str) The path to a NIfTI file.</span>
+<span class="sd">        :param scaled: (bool) If True the data is scaled.</span>
+<span class="sd">        :param matlab_like: (bool) If True the data is rearranged to match the</span>
+<span class="sd">         order of the dimensions and the origin of the coordinate system in</span>
+<span class="sd">         Matlab.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">header</span>
@@ -1942,8 +1499,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.make_initResult">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.make_initResult">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.make_initResult">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_initResult</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the initialization result dictionary.&quot;&quot;&quot;</span>
         <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;requirement&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span><span class="p">,</span>
@@ -1974,8 +1531,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.relax_nipype_exists_constraints">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.relax_nipype_exists_constraints">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">relax_nipype_exists_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.relax_nipype_exists_constraints">[docs]</a>
+    <span class="k">def</span> <span class="nf">relax_nipype_exists_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Relax the &#39;exists&#39; constraint of the process.inputs traits.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;inputs&quot;</span><span class="p">):</span>
@@ -1985,8 +1542,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.requirements">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.requirements">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.requirements">[docs]</a>
+    <span class="k">def</span> <span class="nf">requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the process requirements using MIA&#39;s requirement attribute.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1998,8 +1555,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.run_process_mia">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.run_process_mia">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run_process_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.run_process_mia">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_process_mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute a customized run for ProcessMIA subclasses.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2019,8 +1576,8 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="ProcessMIA.tags_inheritance">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.iteration_table.ProcessMIA.tags_inheritance">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">tags_inheritance</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.process_mia.html#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA.tags_inheritance">[docs]</a>
+    <span class="k">def</span> <span class="nf">tags_inheritance</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">in_file</span><span class="p">,</span>
         <span class="n">out_file</span><span class="p">,</span>
@@ -2031,45 +1588,45 @@ window.addEventListener("load", load);</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inherit and manage data tags from input file(s) to an output file.</span>
 
-<span class="sd">        This method handles the inheritance of metadata tags from one or</span>
-<span class="sd">        more input files to an output file. It also allows adding new tags,</span>
+<span class="sd">        This method handles the inheritance of metadata tags from one or more</span>
+<span class="sd">        input files to an output file. It also allows adding new tags,</span>
 <span class="sd">        modifying existing ones, or deleting unwanted tags in the process.</span>
 
-<span class="sd">        Notes:</span>
-<span class="sd">        This method performs inheritance in two ways:</span>
-<span class="sd">        1. Immediate inheritance during process execution</span>
-<span class="sd">        2. Deferred inheritance by storing inheritance information for later</span>
-<span class="sd">           use during workflow generation (addresses issue #290, #310)</span>
+<span class="sd">        Note:</span>
+<span class="sd">            This method performs inheritance in two ways:</span>
+
+<span class="sd">                1. Immediate inheritance during process execution.</span>
+<span class="sd">                2. Deferred inheritance by storing inheritance information for</span>
+<span class="sd">                later use during workflow generation.</span>
 
 <span class="sd">        In ambiguous cases (multiple input files), the method will either:</span>
-<span class="sd">        - Use previously stored inheritance rules</span>
-<span class="sd">        - Prompt the user for a decision if no rule exists</span>
-<span class="sd">        - Auto-resolve if all inputs have identical tag values</span>
+<span class="sd">            - Use previously stored inheritance rules.</span>
+<span class="sd">            - Prompt the user for a decision if no rule exists.</span>
+<span class="sd">            - Auto-resolve if all inputs have identical tag values.</span>
 
-<span class="sd">        :param in_file (str or dict): Source of tag inheritance. Either:</span>
-<span class="sd">                                      - A string representing a single input</span>
-<span class="sd">                                        file path (unambiguous case)</span>
-<span class="sd">                                      - A dictionary mapping plug names to</span>
-<span class="sd">                                        corresponding input file paths</span>
-<span class="sd">                                        (ambiguous case)</span>
-<span class="sd">        :param out_file (str): Path of the output file that will inherit the</span>
-<span class="sd">                               tags.</span>
-<span class="sd">        :param node_name (str): Name of the processing node in the workflow.</span>
-<span class="sd">        :param own_tags (list of dict): Tags to be added or modified. Each</span>
-<span class="sd">                                        dictionary must contain:</span>
-<span class="sd">                                        - &quot;name&quot;: Tag identifier</span>
-<span class="sd">                                        - &quot;field_type&quot;: Data type of the tag</span>
-<span class="sd">                                        - &quot;description&quot;: Human-readable</span>
-<span class="sd">                                                         description</span>
-<span class="sd">                                        - &quot;visibility&quot;: Boolean or visibility</span>
-<span class="sd">                                                        level</span>
-<span class="sd">                                        - &quot;origin&quot;: Source of the tag</span>
-<span class="sd">                                        - &quot;unit&quot;: Unit of measurement</span>
-<span class="sd">                                                  (if applicable)</span>
-<span class="sd">                                        - &quot;default_value&quot;: Default value</span>
-<span class="sd">                                        - &quot;value&quot;: Current value to set</span>
-<span class="sd">        :param tags2del (list of str): Tags to be deleted from the output</span>
-<span class="sd">                                       file.</span>
+<span class="sd">        :param in_file: (str or dict) Source of tag inheritance. Either:</span>
+
+<span class="sd">            - A string representing a single input file path (unambiguous</span>
+<span class="sd">              case).</span>
+<span class="sd">            - A dictionary mapping plug names to corresponding input file paths</span>
+<span class="sd">              (ambiguous case).</span>
+
+<span class="sd">        :param out_file: (str) Path of the output file that will inherit the</span>
+<span class="sd">         tags.</span>
+<span class="sd">        :param node_name: (str) Name of the processing node in the workflow.</span>
+<span class="sd">        :param own_tags: (list of dict) Tags to be added or modified. Each</span>
+<span class="sd">         dictionary must contain:</span>
+
+<span class="sd">            - &quot;name&quot;: Tag identifier.</span>
+<span class="sd">            - &quot;field_type&quot;: Data type of the tag.</span>
+<span class="sd">            - &quot;description&quot;: Human-readable description.</span>
+<span class="sd">            - &quot;visibility&quot;: Boolean or visibility level.</span>
+<span class="sd">            - &quot;origin&quot;: Source of the tag.</span>
+<span class="sd">            - &quot;unit&quot;: Unit of measurement (if applicable).</span>
+<span class="sd">            - &quot;default_value&quot;: Default value.</span>
+<span class="sd">            - &quot;value&quot;: Current value to set.</span>
+
+<span class="sd">        :param tags2del: (list of str) Tags to be deleted from the output file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># 1- We want out_file to inherit all the tags from in_file.</span>

@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=15c471b9"></script>
+    <script src="../_static/documentation_options.js?v=82506ad4"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -32,20 +32,6 @@
 <span id="populse-mia-user-interface-pipeline-manager-type-editors"></span><h1>populse_mia.user_interface.pipeline_manager.type_editors<a class="headerlink" href="#module-populse_mia.user_interface.pipeline_manager.type_editors" title="Link to this heading">¶</a></h1>
 <p>Define the Mia logger.</p>
 <p>The soma control classes are overloaded for the needs of Mia.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Class<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>PopulseFileControlWidget</p></li>
-<li><p>PopulseDirectoryControlWidget</p></li>
-<li><p>PopulseOffscreenListFileControlWidget</p></li>
-<li><p>PopulseUndefinedControlWidget</p></li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
 <p class="rubric">Classes</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
@@ -64,494 +50,24 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.partial">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">partial</span></span><a class="reference internal" href="../_modules/functools.html#partial"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.partial" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>partial(func, <a href="#id1"><span class="problematic" id="id2">*</span></a>args, <a href="#id3"><span class="problematic" id="id4">**</span></a>keywords) - new function with partial application
-of the given arguments and keywords.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.partial.args">
-<span class="sig-name descname"><span class="pre">args</span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.partial.args" title="Link to this definition">¶</a></dt>
-<dd><p>tuple of arguments to future partial calls</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.partial.func">
-<span class="sig-name descname"><span class="pre">func</span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.partial.func" title="Link to this definition">¶</a></dt>
-<dd><p>function object to use in future partial calls</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.partial.keywords">
-<span class="sig-name descname"><span class="pre">keywords</span></span><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.partial.keywords" title="Link to this definition">¶</a></dt>
-<dd><p>dictionary of keyword arguments to future partial calls</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">DirectoryControlWidget</span></span><a class="reference internal" href="../_modules/soma/qt_gui/controls/Directory.html#DirectoryControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget" title="soma.qt_gui.controls.File.FileControlWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileControlWidget</span></code></a></p>
-<p>Control to enter a directory.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget.is_valid">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/Directory.html#DirectoryControlWidget.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget.is_valid" title="Link to this definition">¶</a></dt>
-<dd><p>Method to check if the new control value is correct.</p>
-<p>If the new entered value is not correct, the backroung control color
-will be red.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the control widget we want to validate</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – True if the control value is a file,
-False otherwise</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget.onBrowseClicked">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">onBrowseClicked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/Directory.html#DirectoryControlWidget.onBrowseClicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget.onBrowseClicked" title="Link to this definition">¶</a></dt>
-<dd><p>Browse the file system and update the control instance accordingly.</p>
-<p>If a valid direcorty has already been entered the dialogue will
-automatically point to this folder, otherwise the current working
-directory is used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the directory widget item</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">FileControlWidget</span></span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Control to enter a file.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.is_valid">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.is_valid" title="Link to this definition">¶</a></dt>
-<dd><p>Method to check if the new control value is correct.</p>
-<p>If the new entered value is not correct, the backroung control color
-will be red.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the control widget we want to validate</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – True if the control value is a file,
-False otherwise</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.check">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.check" title="Link to this definition">¶</a></dt>
-<dd><p>Check if a controller widget control is filled correctly.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget" title="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget"><em>FileControlWidget</em></a><em> (</em><em>mandatory</em><em>)</em>) – a StrControlWidget control</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the control widget we want to validate</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.add_callback">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.add_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.add_callback" title="Link to this definition">¶</a></dt>
-<dd><p>Method to add a callback to the control instance when a ‘userModification’
-signal is emitted.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>callback</strong> (<em>&#64;function</em><em> (</em><em>mandatory</em><em>)</em>) – the function that will be called when a ‘userModification’ signal is
-emitted.</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the control widget we want to validate</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.create_widget">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
-<dd><p>Method to create the file widget.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the parent widget</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the name of the control we want to create</p></li>
-<li><p><strong>control_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the default control value</p></li>
-<li><p><strong>trait</strong> (<em>Tait</em><em> (</em><em>mandatory</em><em>)</em>) – the trait associated to the control</p></li>
-<li><p><strong>label_class</strong> (<em>Qt widget class</em><em> (</em><em>optional</em><em>, </em><em>default: None</em><em>)</em>) – the label widget will be an instance of this class. Its constructor
-will be called using 2 arguments: the label string and the parent
-widget.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – a two element tuple of the form (control widget: QWidget with two
-elements, a QLineEdit in the ‘path’ parameter and a browse button
-in the ‘browse’ parameter, associated label: QLabel)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>2-uplet</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.update_controller">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_controller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_invalid_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.update_controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.update_controller" title="Link to this definition">¶</a></dt>
-<dd><p>Update one element of the controller.</p>
-<p>At the end the controller trait value with the name ‘control_name’
-will match the controller widget user parameters defined in
-‘control_instance’.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em><em> (</em><em>mandatory</em><em>)</em>) – a controller widget that contains the controller we want to update</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>(</em><em>mandatory</em><em>)</em>) – the name of the controller widget control we want to synchronize
-with the controller</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the instance of the controller widget control we want to
-synchronize with the controller</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.update_controller_widget">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_controller_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.update_controller_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.update_controller_widget" title="Link to this definition">¶</a></dt>
-<dd><p>Update one element of the controller widget.</p>
-<p>At the end the controller widget user editable parameter with the
-name ‘control_name’ will match the controller trait value with the same
-name.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em><em> (</em><em>mandatory</em><em>)</em>) – a controller widget that contains the controller we want to update</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>(</em><em>mandatory</em><em>)</em>) – the name of the controller widget control we want to synchronize
-with the controller</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the instance of the controller widget control we want to
-synchronize with the controller</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.connect">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.connect" title="Link to this definition">¶</a></dt>
-<dd><p>Connect a ‘File’ controller trait and a ‘FileControlWidget’
-controller widget control.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget" title="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget"><em>FileControlWidget</em></a><em> (</em><em>mandatory</em><em>)</em>) – a StrControlWidget control</p></li>
-<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em><em> (</em><em>mandatory</em><em>)</em>) – a controller widget that contains the controller we want to update</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the name of the controller widget control we want to synchronize
-with the controller</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the instance of the controller widget control we want to
-synchronize with the controller</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.disconnect">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.disconnect" title="Link to this definition">¶</a></dt>
-<dd><p>Disconnect a ‘File’ controller trait and a ‘FileControlWidget’
-controller widget control.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em><em> (</em><em>mandatory</em><em>)</em>) – a controller widget that contains the controller we want to update</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>(</em><em>mandatory</em><em>)</em>) – the name of the controller widget control we want to synchronize
-with the controller</p></li>
-<li><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the instance of the controller widget control we want to
-synchronize with the controller</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.onBrowseClicked">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">onBrowseClicked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/File.html#FileControlWidget.onBrowseClicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget.onBrowseClicked" title="Link to this definition">¶</a></dt>
-<dd><p>Browse the file system and update the control instance accordingly.</p>
-<p>If a valid file path has already been entered the file dialogue will
-automatically point to the file folder, otherwise the current working
-directory is used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the file widget item</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">OffscreenListFileControlWidget</span></span><a class="reference internal" href="../_modules/soma/qt_gui/controls/List_File_offscreen.html#OffscreenListFileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OffscreenListControlWidget</span></code></p>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget.create_widget">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/List_File_offscreen.html#OffscreenListFileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
-<dd><p>Method to create the list widget.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the parent widget</p></li>
-<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> (</em><em>mandatory</em><em>)</em>) – the name of the control we want to create</p></li>
-<li><p><strong>control_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>items</em><em> (</em><em>mandatory</em><em>)</em>) – the default control value</p></li>
-<li><p><strong>trait</strong> (<em>Tait</em><em> (</em><em>mandatory</em><em>)</em>) – the trait associated to the control</p></li>
-<li><p><strong>label_class</strong> (<em>Qt widget class</em><em> (</em><em>optional</em><em>, </em><em>default: None</em><em>)</em>) – the label widget will be an instance of this class. Its constructor
-will be called using 2 arguments: the label string and the parent
-widget.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>out</strong> – a two element tuple of the form (control widget: ,
-associated labels: (a label QLabel, the tools QWidget))</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>2-uplet</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget.select_files">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">select_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/qt_gui/controls/List_File_offscreen.html#OffscreenListFileControlWidget.select_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget.select_files" title="Link to this definition">¶</a></dt>
-<dd><p>Browse the file system and update the control instance accordingly.</p>
-<p>If a valid file path has already been entered the file dialogue will
-automatically point to the file folder, otherwise the current working
-directory is used.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>control_instance</strong> (<em>QWidget</em><em> (</em><em>mandatory</em><em>)</em>) – the file widget item</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.weak_proxy">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">weak_proxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/soma/utils/weak_proxy.html#weak_proxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.weak_proxy" title="Link to this definition">¶</a></dt>
-<dd><p>Build a weak proxy (<code class="xref py py-class docutils literal notranslate"><span class="pre">weakref.ProxyType</span></code>) from an object, if it
-is not already one, and keep a reference to the original object (via a
-<code class="xref py py-class docutils literal notranslate"><span class="pre">weakref.ReferenceType</span></code>) in it.</p>
-<p><em>callback</em> is passed to <a class="reference external" href="https://docs.python.org/3.10/library/weakref.html#weakref.proxy" title="(in Python v3.10)"><code class="xref py py-func docutils literal notranslate"><span class="pre">weakref.proxy()</span></code></a>.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PlugFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
-<p>A PyQt widget for interactively filtering and selecting database scans to
-assign to a pipeline node plug.</p>
-<p>This widget provides a powerful interface for browsing, searching, and
-filtering files from the project database. It features:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>A customizable data browser with tag columns.</p></li>
-<li><p>Rapid text search for quick filtering.</p></li>
-<li><p>Advanced multi-criteria filtering for precise selection.</p></li>
-<li><p>Tag visibility controls to customize the displayed information.</p></li>
-<li><p>Automatic exclusion of files that are outputs from existing pipeline
-bricks to prevent circular dependencies.</p></li>
-</ul>
-</div></blockquote>
-<p>The widget is designed to integrate seamlessly with a pipeline editor,
-allowing users to select and assign files to a specific node plug. When
-the selection is confirmed, the chosen files are emitted as a list via
-the <cite>plug_value_changed</cite> signal.</p>
+<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseFileControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseFileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FileControlWidget</span></code></p>
+<p>Widget control for selecting a file.</p>
+<p>Provides methods to create a file selection widget, display a filter
+dialog, and update plug values based on filter results.</p>
 <p>Contains:</p>
 <blockquote>
 <div><p>Methods:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>ok_clicked: Applies the selected files to the node plug and
-closes the widget.</p></li>
-<li><p>reset_search_bar: Resets the search interface to its initial
-state, clearing all filters.</p></li>
-<li><p>search_str: Filters and updates the displayed scans based on the
-provided search string.</p></li>
-<li><p>set_plug_value: Extracts the selected or filtered scan values and
-emits them via the <cite>plug_value_changed</cite> signal.</p></li>
-<li><p>update_tag_to_filter: Opens a dialog to select a tag for
-filtering and updates the filter button text.</p></li>
-<li><p>update_tags: Opens a dialog to update the list of visualized tags
-and refreshes the table view.</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>plug_value_changed: Signal emitted when the user confirms their
-selection.</p></li>
-</ul>
-</div></blockquote>
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>Initialize the PlugFilter widget for filtering database scans.</p>
-<p>Creates a filterable data browser interface with search capabilities,
-tag visualization controls, and scan selection. Automatically excludes
-scans that are outputs from existing pipeline bricks.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project instance containing database and
-folder paths.</p></li>
-<li><p><strong>scans_list</strong> – Initial list of database file paths to filter. If
-empty, all scans from COLLECTION_CURRENT are included.</p></li>
-<li><p><strong>process</strong> – Process instance associated with the selected pipeline
-node.</p></li>
-<li><p><strong>node_name</strong> – Display name of the current pipeline node.</p></li>
-<li><p><strong>plug_name</strong> – Name of the selected node plug/connection point.</p></li>
-<li><p><strong>node_controller</strong> – Parent controller managing node visibility and
-tags.</p></li>
-<li><p><strong>main_window</strong> – Main application window containing the pipeline
-manager.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.ok_clicked">
-<span class="sig-name descname"><span class="pre">ok_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.ok_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.ok_clicked" title="Link to this definition">¶</a></dt>
-<dd><p>Handle OK button click by applying changes and closing the dialog.</p>
-<p>Commits the current widget value to the associated node plug, then
-closes the widget dialog.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.reset_search_bar">
-<span class="sig-name descname"><span class="pre">reset_search_bar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.reset_search_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.reset_search_bar" title="Link to this definition">¶</a></dt>
-<dd><p>Reset search interface to initial state and restore all scan rows.</p>
-<p>Clears the rapid search text field, resets advanced search rows, and
-restores the full scan list to the table view, updating the display to
-reflect all available scans.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.search_str">
-<span class="sig-name descname"><span class="pre">search_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">str_search</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.search_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.search_str" title="Link to this definition">¶</a></dt>
-<dd><p>Filter and update the list of scans displayed in the browser based on
-search criteria.</p>
-<p>This method updates <cite>scans_to_visualize</cite> by applying either a rapid
-search filter or showing all available scans when the search is empty.
-Special handling is provided for the NOT_DEFINED_VALUE constant to
-filter scans with undefined tag values.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parm str_search<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The search string entered by the user. An
-empty string shows all scans, NOT_DEFINED_VALUE filters for scans with
-undefined tags, and any other value performs a rapid search filter.</p>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Updates self.table_data.scans_to_visualize with filtered scan
-list.</p></li>
-<li><p>Updates self.advanced_search.scans_list with the same filtered
-list.</p></li>
-<li><p>Triggers UI update via self.table_data.update_visualized_rows().</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.set_plug_value">
-<span class="sig-name descname"><span class="pre">set_plug_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.set_plug_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.set_plug_value" title="Link to this definition">¶</a></dt>
-<dd><p>Extract selected or filtered scan values and emit to node plug.</p>
-<p>Retrieves values from the database for the currently filtered tag.
-If items are selected in the table, only those values are extracted.
-Otherwise, all filtered items are processed. For filename tags, paths
-are converted to absolute paths within the project folder.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Emits plug_value_changed<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Signal with list of extracted values.</p>
-</dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>_get_scan_value: Retrieve and process a single scan value
-from the database.</p></li>
-</ul>
-</div></blockquote>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.update_tag_to_filter">
-<span class="sig-name descname"><span class="pre">update_tag_to_filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.update_tag_to_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.update_tag_to_filter" title="Link to this definition">¶</a></dt>
-<dd><p>Open a dialog to select a tag filter and update the button text.</p>
-<p>Displays a popup dialog allowing the user to select a tag from the
-available visible tags. If a tag is selected (dialog accepted), updates
-the filter button’s text to reflect the chosen tag.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.update_tags">
-<span class="sig-name descname"><span class="pre">update_tags</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.update_tags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PlugFilter.update_tags" title="Link to this definition">¶</a></dt>
-<dd><p>Open a dialog to update the list of visualized tags.</p>
-<p>Displays a modal dialog allowing users to select which tags should be
-visualized in the table. If accepted, updates the visible columns in
-the data table, refreshes the node controller’s visible tags list, and
-updates all advanced search field dropdowns with the new tag selection.</p>
-<p>The ‘Filename’ tag is always included in the visible tags list.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseFileControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseFileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.FileControlWidget" title="soma.qt_gui.controls.File.FileControlWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">FileControlWidget</span></code></a></p>
-<p>Widget control for selecting a file.</p>
-<p>Provides methods to create a file selection widget, display a filter
-dialog, and update plug values based on filter results.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Method<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
 <li><p>create_widget: Method to create the file widget.</p></li>
 <li><p>filter_clicked: Display a filter widget.</p></li>
-<li><dl class="simple">
-<dt>update_plug_value_from_filter: Update the plug value from</dt><dd><p>a filter result.</p>
-</dd>
-</dl>
-</li>
+<li><p>update_plug_value_from_filter: Update the plug value from
+a filter result.</p></li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseFileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -559,21 +75,30 @@ dialog, and update plug values based on filter results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>parent</em>) – The parent widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_value</em>) – The name of the control to create.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The default control value.</p></li>
-<li><p><strong>(</strong><strong>Trait</strong><strong>)</strong> (<em>trait</em>) – The trait associated with the control.</p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>Type</strong><strong>[</strong><strong>QWidget</strong><strong>]</strong><strong>]</strong><strong>)</strong> (<em>label_class</em>) – Custom label widget
+<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control to create.</p></li>
+<li><p><strong>control_value</strong> – (str) The default control value.</p></li>
+<li><p><strong>trait</strong> – (Trait) The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> – (Optional[Type[QWidget]]) Custom label widget
 class.</p></li>
 <li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>dict</strong><strong>]</strong><strong>)</strong> (<em>user_data</em>) – Additional user data.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (Tuple[QWidget, QLabel])<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing the created widget and its associated label.
-The widget includes a QLineEdit (‘path’) and a browse
-button (‘browse’).</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Tuple[QWidget, QLabel]) A tuple containing the created
+widget and its associated label. The widget includes a QLineEdit
+(‘path’) and a browse button (‘browse’).</p>
 </dd>
 </dl>
+<p>Contains:</p>
+<blockquote>
+<div><p>Inner functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>_is_number: Checks if a value is a number.</p></li>
+</ul>
+</div></blockquote>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -583,9 +108,9 @@ button (‘browse’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The parent widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the node.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the plug.</p></li>
+<li><p><strong>widget</strong> – (QWidget) The parent widget.</p></li>
+<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
+<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -598,9 +123,9 @@ button (‘browse’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The parent widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the plug.</p></li>
-<li><p><strong>(</strong><strong>List</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>filter_res_list</em>) – List of filtered file paths.</p></li>
+<li><p><strong>widget</strong> – (QWidget) The parent widget.</p></li>
+<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
+<li><p><strong>filter_res_list</strong> – (List[str]) List of filtered file paths.</p></li>
 </ul>
 </dd>
 </dl>
@@ -611,25 +136,20 @@ button (‘browse’).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseDirectoryControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseDirectoryControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.DirectoryControlWidget" title="soma.qt_gui.controls.Directory.DirectoryControlWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">DirectoryControlWidget</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DirectoryControlWidget</span></code></p>
 <p>Widget for selecting a directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Method<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>create_widget: Creates the directory selection widget.</p></li>
 <li><p>filter_clicked: Displays a filtering widget.</p></li>
-<li><dl class="simple">
-<dt>update_plug_value_from_filter: Updates the plug value based on</dt><dd><p>the filter result.</p>
-</dd>
-</dl>
-</li>
+<li><p>update_plug_value_from_filter: Updates the plug value based on
+the filter result.</p></li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseDirectoryControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -637,17 +157,17 @@ button (‘browse’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>parent</em>) – The parent widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control.</p></li>
-<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> (<em>trait</em>) – The initial value of the control.</p></li>
-<li><p><strong>(</strong><strong>Any</strong><strong>)</strong> – The trait associated with the control.</p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>Any</strong><strong>]</strong><strong>)</strong> (<em>label_class</em>) – The label class (optional).</p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>dict</strong><strong>]</strong><strong>)</strong> (<em>user_data</em>) – User data associated with
+<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control.</p></li>
+<li><p><strong>control_value</strong> – (Any) The initial value of the control.</p></li>
+<li><p><strong>trait</strong> – (Any) The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> – (Optional[Any]) The label class (optional).</p></li>
+<li><p><strong>user_data</strong> – (Optional[dict]) User data associated with
 the widget.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (QWidget)<span class="colon">:</span></dt>
-<dd class="field-even"><p>The directory selection widget.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(QWidget) The directory selection widget.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -659,9 +179,9 @@ the widget.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The calling widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the node.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the associated plug.</p></li>
+<li><p><strong>widget</strong> – (QWidget) The calling widget.</p></li>
+<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
+<li><p><strong>plug_name</strong> – (str) The name of the associated plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -690,25 +210,20 @@ is used.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseOffscreenListFileControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseOffscreenListFileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.type_editors.OffscreenListFileControlWidget" title="soma.qt_gui.controls.List_File_offscreen.OffscreenListFileControlWidget"><code class="xref py py-class docutils literal notranslate"><span class="pre">OffscreenListFileControlWidget</span></code></a></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OffscreenListFileControlWidget</span></code></p>
 <p>A control widget for entering a list of files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Method<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>create_widget: Creates the list of files widget.</p></li>
 <li><p>filter_clicked: Displays a filter widget.</p></li>
-<li><dl class="simple">
-<dt>update_plug_value_from_filter: Updates the plug value based on</dt><dd><p>the filter result.</p>
-</dd>
-</dl>
-</li>
+<li><p>update_plug_value_from_filter: Updates the plug value based on
+the filter result.</p></li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseOffscreenListFileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -717,17 +232,17 @@ filter button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>parent</em>) – The parent widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>control_value</em>) – The default control value.</p></li>
-<li><p><strong>(</strong><strong>Trait</strong><strong>)</strong> (<em>trait</em>) – The trait associated with the control.</p></li>
-<li><p><strong>(</strong><strong>type</strong><strong>)</strong> (<em>label_class</em>) – A Qt widget class for the label.</p></li>
-<li><p><strong>(</strong><strong>dict</strong><strong>)</strong> (<em>user_data</em>) – Additional data, including project,
-scan list, and connected inputs.</p></li>
+<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control.</p></li>
+<li><p><strong>control_value</strong> – (list) The default control value.</p></li>
+<li><p><strong>trait</strong> – (Trait) The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> – (type) A Qt widget class for the label.</p></li>
+<li><p><strong>user_data</strong> – (dict) Additional data, including project, scan list,
+and connected inputs.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (tuple)<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple (control widget, (QLabel, QWidget)).</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(tuple) A tuple (control widget, (QLabel, QWidget)).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -739,9 +254,9 @@ scan list, and connected inputs.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The file control widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the node.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> – The name of the plug.</p></li>
+<li><p><strong>widget</strong> – (QWidget) The file control widget.</p></li>
+<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
+<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -754,9 +269,9 @@ scan list, and connected inputs.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The file control widget.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the plug.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>filter_res_list</em>) – The filtered file list.</p></li>
+<li><p><strong>widget</strong> – (QWidget) The file control widget.</p></li>
+<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
+<li><p><strong>filter_res_list</strong> – (list) The filtered file list.</p></li>
 </ul>
 </dd>
 </dl>
@@ -771,35 +286,24 @@ scan list, and connected inputs.</p></li>
 <p>Widget control for handling Undefined trait values in a Qt interface.</p>
 <p>This class provides methods to create, validate, and update Qt widgets
 that represent undefined values in a controller-based UI framework.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Contains<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="field-list simple">
-<dt class="field-odd">Method<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<p>Contains:</p>
+<blockquote>
+<div><p>Methods:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>check: Check if a controller widget control is filled correctly.</p></li>
-<li><dl class="simple">
-<dt>connect: Connect a ‘Str’ or ‘String’ controller trait and a</dt><dd><p>‘StrControlWidget’ controller widget control.</p>
-</dd>
-</dl>
-</li>
+<li><p>connect: Connect a ‘Str’ or ‘String’ controller trait and a
+‘StrControlWidget’ controller widget control.</p></li>
 <li><p>create_widget: Method to create the Undefined widget.</p></li>
-<li><dl class="simple">
-<dt>disconnect: Disconnect a ‘Str’ or ‘String’ controller trait and</dt><dd><p>a ‘StrControlWidget’ controller widget control.</p>
-</dd>
-</dl>
-</li>
+<li><p>disconnect: Disconnect a ‘Str’ or ‘String’ controller trait and
+a ‘StrControlWidget’ controller widget control.</p></li>
 <li><p>is_valid: Method to check if the new control value is correct.</p></li>
 <li><p>update_controller: Update one element of the controller.</p></li>
-<li><dl class="simple">
-<dt>update_controller_widget: Update one element of the controller</dt><dd><p>widget.</p>
-</dd>
-</dl>
-</li>
+<li><p>update_controller_widget: Update one element of the controller
+widget.</p></li>
 </ul>
-</dd>
-</dl>
-</dd>
-</dl>
+</div></blockquote>
+</div></blockquote>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.UNDEFINED_TEXT">
 <span class="sig-name descname"><span class="pre">UNDEFINED_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&lt;undefined&gt;'</span></em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.UNDEFINED_TEXT" title="Link to this definition">¶</a></dt>
@@ -823,8 +327,8 @@ that represent undefined values in a controller-based UI framework.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>StrControlWidget</strong><strong>)</strong> (<em>cls</em>) – A StrControlWidget control.</p></li>
-<li><p><strong>(</strong><strong>QLineEdit</strong><strong>)</strong> (<em>control_instance</em>) – The control widget to check.</p></li>
+<li><p><strong>cls</strong> – (StrControlWidget) A StrControlWidget control.</p></li>
+<li><p><strong>control_instance</strong> – (QLineEdit) The control widget to check.</p></li>
 </ul>
 </dd>
 </dl>
@@ -839,11 +343,11 @@ controller widget control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>StrControlWidget</strong><strong>)</strong> (<em>cls</em>) – A StrControlWidget control.</p></li>
-<li><p><strong>(</strong><strong>ControllerWidget</strong><strong>)</strong> (<em>controller_widget</em>) – The controller widget
+<li><p><strong>cls</strong> – (StrControlWidget) A StrControlWidget control.</p></li>
+<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
 containing the controller.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control to connect.</p></li>
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>control_instance</em>) – The widget instance to connect</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control to connect.</p></li>
+<li><p><strong>control_instance</strong> – (QWidget) The widget instance to connect.</p></li>
 </ul>
 </dd>
 </dl>
@@ -855,15 +359,15 @@ containing the controller.</p></li>
 <dd><p>Create a widget for displaying Undefined values in the UI.</p>
 <p>This method creates a read-only QLabel widget that displays a styled
 representation of undefined/null values, along with an optional label.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>parent</em>) – The parent widget that will contain the
+<li><p><strong>parent</strong> – (QWidget) The parent widget that will contain the
 created widgets.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name/text for the label widget.
-If None, no label is created.</p></li>
-<li><p><strong>control_value</strong> – The undefined value to display (currently
-unused in implementation).</p></li>
+<li><p><strong>control_name</strong> – (str) The name/text for the label widget. If None,
+no label is created.</p></li>
+<li><p><strong>control_value</strong> – The undefined value to display (currently unused
+in implementation).</p></li>
 <li><p><strong>trait</strong> – trait: The trait object associated with this control
 (currently unused in implementation).</p></li>
 <li><p><strong>label_class</strong> – The Qt widget class to use for creating the label.
@@ -872,18 +376,13 @@ Defaults to QtGui.QLabel if None.</p></li>
 implementation).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return (tuple)<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing:
-- control_widget: A QLabel displaying the styled undefined value</p>
-<blockquote>
-<div><p>text</p>
-</div></blockquote>
+<dt class="field-even">Returns (tuple)<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt>label_widget: The associated label widget, or None if</dt><dd><p>control_name is None</p>
-</dd>
-</dl>
-</li>
+<li><p>control_widget: A QLabel displaying the styled undefined value
+text.</p></li>
+<li><p>label_widget: The associated label widget, or None if
+control_name is None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -898,10 +397,10 @@ implementation).</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>ControllerWidget</strong><strong>)</strong> (<em>controller_widget</em>) – The controller widget
+<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
 containing the controller.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control to disconnect</p></li>
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>control_instance</em>) – The widget instance to disconnect</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control to disconnect.</p></li>
+<li><p><strong>control_instance</strong> – (QWidget) The widget instance to disconnect.</p></li>
 </ul>
 </dd>
 </dl>
@@ -911,16 +410,20 @@ containing the controller.</p></li>
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseUndefinedControlWidget.is_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid" title="Link to this definition">¶</a></dt>
 <dd><p>Validate if the control contains an Undefined value representation.</p>
-<dl class="simple">
-<dt><a href="#id5"><span class="problematic" id="id6">*</span></a>args, <a href="#id7"><span class="problematic" id="id8">**</span></a>kwargs<span class="classifier">Additional arguments. Not used, kept for</span></dt><dd><p>interface compatibility.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>control_instance</em>) – The control widget to validate.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*args</strong> – <p>Additional arguments. Not used, kept for interface
+compatibility.</p>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments. Not used, kept for interface
+compatibility.</p>
+</p></li>
+<li><p><strong>control_instance</strong> – (QWidget) The control widget to validate.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return (bool)<span class="colon">:</span></dt>
-<dd class="field-even"><p>True if the control value is Undefined, False
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(bool) True if the control value is Undefined, False
 otherwise</p>
 </dd>
 </dl>
@@ -933,23 +436,23 @@ otherwise</p>
 <p>At the end the controller trait value with the name ‘control_name’
 will match the controller widget user parameters defined in
 ‘control_instance’.</p>
-<dl class="simple">
-<dt><a href="#id9"><span class="problematic" id="id10">*</span></a>args, <a href="#id11"><span class="problematic" id="id12">**</span></a>kwargs<span class="classifier">Additional arguments. Not used, kept for</span></dt><dd><p>interface compatibility.</p>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>ControllerWidget</strong><strong>)</strong> (<em>controller_widget</em>) – The controller widget
-containing the controller
-to update</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control to synchronize
-with the controller</p></li>
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>control_instance</em>) – The widget instance to synchronize
-with the controller</p></li>
-<li><p><strong>(</strong><strong>bool</strong><strong>)</strong> (<em>reset_invalid_value</em>) – If True and the value is invalid,
-reset the widget to the
-controller’s value</p></li>
+<li><p><strong>*args</strong> – <p>Additional arguments. Not used, kept for interface
+compatibility.</p>
+</p></li>
+<li><p><strong>**kwargs</strong> – <p>Additional arguments. Not used, kept for interface
+compatibility.</p>
+</p></li>
+<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
+containing the controller to update.</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control to synchronize
+with the controller.</p></li>
+<li><p><strong>control_instance</strong> – (QWidget) The widget instance to synchronize
+with the controller.</p></li>
+<li><p><strong>reset_invalid_value</strong> – (bool) If True and the value is invalid,
+reset the widget to the controller’s value</p></li>
 </ul>
 </dd>
 </dl>
@@ -959,16 +462,16 @@ controller’s value</p></li>
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update_controller_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controller_widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_instance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseUndefinedControlWidget.update_controller_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget" title="Link to this definition">¶</a></dt>
 <dd><p>Update the widget to reflect the controller’s value.</p>
-<p>At the end the controller widget user editable parameter with the
-name ‘control_name’ will match the controller trait value with the
-same name.</p>
+<p>At the end the controller widget user editable parameter with the name
+‘control_name’ will match the controller trait value with the same
+name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>ControllerWidget</strong><strong>)</strong> (<em>controller_widget</em>) – The controller widget
+<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
 containing the controller.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>control_name</em>) – The name of the control to synchronize.</p></li>
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>control_instance</em>) – The widget instance to update.</p></li>
+<li><p><strong>control_name</strong> – (str) The name of the control to synchronize.</p></li>
+<li><p><strong>control_instance</strong> – (QWidget) The widget instance to update.</p></li>
 </ul>
 </dd>
 </dl>
