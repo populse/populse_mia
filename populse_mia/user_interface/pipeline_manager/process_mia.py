@@ -1,20 +1,12 @@
 """
-Module for managing and running processes within the Populse_mia framework.
+Module for managing and running processes within the populse_mia framework.
 
 This module provides specialized classes and methods to handle the execution
 and completion of processes within the Populse_mia framework. It includes
 functionalities for managing process attributes, handling database
-interactions, and ensuring proper inheritance of metadata tags.
-The module supports various process types, including those from
-mia_processes, Nipype, and Capsul.
-
-:Contains:
-    :Class:
-        - MIAProcessCompletionEngine
-        - MIAProcessCompletionEngineFactory
-        - ProcessMIA
-
-
+interactions, and ensuring proper inheritance of metadata tags. The module
+supports various process types, including those from mia_processes, Nipype,
+and Capsul.
 """
 
 ##########################################################################
@@ -70,23 +62,29 @@ from populse_mia.software_properties import Config
 from populse_mia.user_interface.pop_ups import PopUpInheritanceDict
 from populse_mia.utils import update_auto_inheritance
 
+__all__ = [
+    "MIAProcessCompletionEngine",
+    "MIAProcessCompletionEngineFactory",
+    "ProcessMIA",
+]
+
 logger = logging.getLogger(__name__)
 
 
 class MIAProcessCompletionEngine(ProcessCompletionEngine):
     """
-    A specialized completion engine for all processes within the Populse_mia
+    A specialized completion engine for all processes within the populse_mia
     context.
 
-    This engine handles both PopulseMIA processes and NipypeProcess instances
+    This engine handles both ProcessMIA processes and NipypeProcess instances
     with special consideration for their unique requirements:
 
-    - PopulseMIA processes use their `list_outputs` method to generate outputs
-      based on input parameters, primarily using filename patterns rather
-      than attributes.
+        - ProcessMIA processes use their `list_outputs` method to generate
+          outputs based on input parameters, primarily using filename patterns
+          rather than attributes.
 
-    - NipypeProcess instances have their MATLAB/SPM settings configured from
-      the application configuration.
+        - NipypeProcess instances have their MATLAB/SPM settings configured
+          from the application configuration.
 
     The engine also manages project-specific parameters including "project"
     and "output_directory" when available in the study configuration.
@@ -98,29 +96,29 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
     This engine tracks completed processes in the correct order, enabling
     other operations to be performed in the same sequence later.
 
-    :Contains:
-        :Method:
+    Contains:
+
+        Methods:
+
             - _complete_mia_process: Complete parameters for Mia-specific
-                                     processes.
+              processes.
             - _complete_standard_process: Complete parameters for standard
-                                          (non-Mia) processes.
+              (non-Mia) processes.
             - complete_attributes_with_database: Augments the Capsul
-                                                 completion system attributes
-                                                 associated with a process.
+              completion system attributes associated with a process.
             - complete_nipype_common: Set Nipype parameters for SPM.
-            - complete_parameters: Completes file parameters from
-                                   given inputs parameters.
+            - complete_parameters: Completes file parameters from given inputs
+              parameters.
             - complete_parameters_mia: Completion for :class:`ProcessMIA`
-                                       instances.
+              instances.
             - get_attribute_values: Get attribute values from the fallback
-                                    engine.
+              engine.
             - get_path_completion_engine: Get the path completion engine from
-                                          the fallback engine.
+              the fallback engine.
             - get_project: Get the project associated with the process
             - path_attributes: Get path attributes from the fallback engine.
             - remove_switch_observe: Reimplemented since it is expects
-                                     in switches completion engine.
-
+              in switches completion engine.
     """
 
     def __init__(self, process, name, fallback_engine):
@@ -128,9 +126,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         Initialize the Mia process completion engine.
 
         :param process: The process instance to be completed.
-        :param name (str): The name of the process.
-        :param fallback_engine: The fallback engine to use when MIA-specific
-                                completion is not applicable.
+        :param name: (str) The name of the process.
+        :param fallback_engine: The fallback engine to use when Mia-specific
+         completion is not applicable.
         """
         super().__init__(process, name)
         self.fallback_engine = fallback_engine
@@ -144,9 +142,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         Complete parameters for standard (non-Mia) processes.
 
         :param process: The process to complete.
-        :param process_inputs (dict): Parameters to set on the process.
-        :param complete_iterations (bool): Whether to complete iteration
-                                           nodes.
+        :param process_inputs: (dict) Parameters to set on the process.
+        :param complete_iterations: (bool) Whether to complete iteration nodes.
         """
 
         # Determine node name for logging
@@ -231,9 +228,8 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         Complete parameters for Mia-specific processes.
 
         :param process: The Mia process to complete.
-        :param process_inputs (dict): Parameters to set on the process.
-        :param complete_iterations (bool): Whether to complete iteration
-                                           nodes.
+        :param process_inputs: (dict) Parameters to set on the process.
+        :param complete_iterations: (bool) Whether to complete iteration nodes.
         """
         # Here the process is a ProcessMIA instance. Use the specific
         # method.
@@ -339,8 +335,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         Queries the database for attributes associated with input parameters
         and adds them to the completion attributes if matches are found.
 
-        :param process_inputs (dict): Parameters to be set on the process.
-        :return: The augmented attributes collection.
+        :param process_inputs: (dict) Parameters to be set on the process.
+
+        :Returns: The augmented attributes collection.
         """
         process_inputs = process_inputs or {}
         # Get attributes from the fallback engine
@@ -453,12 +450,12 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Configure Nipype/SPM parameters for a process.
 
-        Sets MATLAB/SPM paths, commands, and project-specific parameters
-        based on the configuration.
+        Sets MATLAB/SPM paths, commands, and project-specific parameters based
+        on the configuration.
 
         :param process: The process to configure.
-        :param output_dir (bool): If False, the output_directory attribute
-                                  value is not initialised.
+        :param output_dir: (bool) If False, the output_directory attribute
+         value is not initialised.
         """
 
         # Test for matlab launch
@@ -576,17 +573,13 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         This method handles both standard Capsul processes and Mia-specific
         processes, applying the appropriate completion strategy for each.
 
-        :param process_inputs (dict): Parameters to be set on the process.
-                                      May include regular parameters and
-                                      completion attributes (under
-                                      'capsul_attributes' key).
-        :param complete_iterations (bool): If False, iteration nodes in
-                                           pipelines will not complete their
-                                           parameters. This prevents
-                                           modification of the input pipeline
-                                           and avoids redundant iterations
-                                           completion that will be done again
-                                           during workflow building.
+        :param process_inputs: (dict) Parameters to be set on the process. May
+         include regular parameters and completion attributes (under
+         'capsul_attributes' key).
+        :param complete_iterations: (bool) If False, iteration nodes in
+         pipelines will not complete their parameters. This prevents
+         modification of the input pipeline and avoids redundant iterations
+         completion that will be done again during workflow building.
         """
         process_inputs = process_inputs or {}
         # Update progress tracking
@@ -628,10 +621,10 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         based on input values and sets the inheritance_dict for data
         indexation.
 
-        :param process_inputs (dict): Parameters to set on the process.
-        :param iteration (bool): Whether this completion is for an iteration
-                                 node.
-        :param verbose (bool): If true, makes the method verbose
+        :param process_inputs: (dict) Parameters to set on the process.
+        :param iteration: (bool) Whether this completion is for an iteration
+         node.
+        :param verbose: (bool) If true, makes the method verbose
         """
         process_inputs = process_inputs or {}
         # Set input parameters
@@ -697,7 +690,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Get attribute values from the fallback engine.
 
-        :return: The attribute values collection.
+        :Returns: The attribute values collection.
         """
         return self.fallback_engine.get_attribute_values()
 
@@ -716,7 +709,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param process: The process to get the project for.
 
-        :return: The associated project or None if not found.
+        :Returns: The associated project or None if not found.
 
         """
 
@@ -733,11 +726,11 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Get path attributes from the fallback engine.
 
-        :param filename (str): The filename to get attributes for.
-        :param parameter (str): The parameter name associated with the
-                                filename.
+        :param filename: (str) The filename to get attributes for.
+        :param parameter: (str) The parameter name associated with the
+         filename.
 
-        :return: The path attributes.
+        :Returns: The path attributes.
         """
         return self.fallback_engine.path_attributes(filename, parameter)
 
@@ -747,7 +740,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param observer: The observer to remove.
 
-        :return: The result from the fallback engine.
+        :Returns: The result from the fallback engine.
 
         """
         return self.fallback_engine.remove_switch_observer(observer)
@@ -755,28 +748,30 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
 class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
     """
-    Specialization of the ProcessCompletionEngineFactory for the Populse Mia
+    Specialization of the ProcessCompletionEngineFactory for the populse_mia
     context.
 
     This factory is identified by ``factory_id = "mia_completion"`` and is
     activated in a :class:`~capsul.study_config.study_config.StudyConfig`
     instance by setting the following 2 parameters:
 
-        study_config.attributes_schema_paths += [
-            'populse_mia.user_interface.pipeline_manager.process_mia'
-        ]
-        study_config.process_completion = 'mia_completion'
+        >>> study_config.attributes_schema_paths += [
+        >>>     'populse_mia.user_interface.pipeline_manager.process_mia'
+        >>> ]
+        >>> study_config.process_completion = 'mia_completion'
 
 
     Once activated, the completion system is applied to all processes,
-    distinguishing between MIA and Nipype processes. For standard processes,
-    additional database operations are performed before invoking the underlying
-    completion system (such as FOM or others).
+    distinguishing between Mia and Nipype processes. For standard processes,
+    additional database operations are performed before invoking the
+    underlying completion system (such as FOM or others).
 
-    :Contains:
-        :Method:
-            - get_completion_engine: get a ProcessCompletionEngine instance for
-              a given process/node
+    Contains:
+
+        Methods:
+
+            - get_completion_engine: get a ProcessCompletionEngine instance
+            for a given process/node.
 
     """
 
@@ -787,13 +782,13 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         Retrieves a `ProcessCompletionEngine` instance for the given process
         or node.
 
-        :param process (Process or Node): The process or node for which to get
-                                          the completion engine.
-        :param name (str, optional): An optional name for the completion
-                                     engine.
+        :param process: (Process or Node) The process or node for which to get
+         the completion engine.
+        :param name: (str, optional) An optional name for the completion
+         engine.
 
-        :return (ProcessCompletionEngine): A completion engine instance
-                                           associated with the process.
+        :Returns: (ProcessCompletionEngine) A completion engine instance
+         associated with the process.
         """
 
         if hasattr(process, "completion_engine"):
@@ -840,44 +835,43 @@ class ProcessMIA(Process):
     This class provides specialized methods for Mia bricks, including process
     initialization, output handling, and trait management.
 
-    .. Methods:
+    Contains:
+
+        Methods:
+
         - _add_field_to_collections: Add a new field to the specified
-                                     collection in the database.
+          collection in the database.
         - _add_or_modify_tags: Add new tags or modify existing tag values in
-                               the database.
+          the database.
         - _all_values_identical: Checks if all dictionaries have identical
-                                 content
+          content
         - _after_run_process: Try to recover the output values, when the
-                              calculation has been delegated to a process in
-                              ProcessMIA.
-        - _find_plug_for_output:  Find the plug name associated with the given
-                                  output file.
+          calculation has been delegated to a process in ProcessMIA.
+        - _find_plug_for_output: Find the plug name associated with the given
+          output file.
         - _get_relative_path: Converts an absolute file path to a relative
-                              path based on the project folder.
+          path based on the project folder.
         - _remove_tags: Remove specified tags from value dictionaries and the
-                        database.
+          database.
         - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple
-                                          input files could provide tags.
-        - _run_process: call the run_process_mia method in the ProcessMIA
-                        subclass.
+          input files could provide tags.
+        - _run_process: Call the run_process_mia method in the ProcessMIA
+          subclass.
         - _save_tag_values: Save tag values to the database.
         - init_default_traits: Automatically initialise necessary parameters
-                               for nipype or capsul.
-        - init_process: Instantiation of the process attribute given a
-                        process identifier.
+          for nipype or capsul.
+        - init_process: Instantiation of the process attribute given a process
+          identifier.
         - list_outputs: Override the outputs of the process.
         - load_nii: Return the header and the data of a nibabel image object.
-        - make_initResult: Make the final dictionary for outputs,
-                           inheritance and requirement from the
-                           initialisation of a brick.
+        - make_initResult: Make the final dictionary for outputs, inheritance
+          and requirement from the initialisation of a brick.
         - relax_nipype_exists_constraints: Relax the exists constraint of
-                                           the process.inputs traits.
+          the process.inputs traits.
         - requirements: Capsul Process.requirements() implementation using
-                        MIA's ProcessMIA.requirement attribute.
-        - run_process_mia: Implements specific runs for ProcessMia
-                           subclasses.
-        - tags_inheritance: create tags for data.
-
+          Mia's ProcessMIA.requirement attribute.
+        - run_process_mia: Implements specific runs for ProcessMia subclasses.
+        - tags_inheritance: Create tags for data.
     """
 
     # Class attributes used for the inheritance dictionary
@@ -889,8 +883,8 @@ class ProcessMIA(Process):
         """
         Initializes the process instance with default attributes.
 
-        :param args (tuple): Positional arguments passed to the parent class.
-        :param kwargs (dict): Keyword arguments passed to the parent class
+        :param args: (tuple) Positional arguments passed to the parent class.
+        :param kwargs: (dict) Keyword arguments passed to the parent class
         """
         super().__init__(*args, **kwargs)
         self.requirement = None
@@ -903,22 +897,18 @@ class ProcessMIA(Process):
         Add a new field to the specified collection in the database.
 
         :param database_schema: The database schema context used for modifying
-                                collections.
-        :param collection (str): The name of the collection to which the field
-                                 should be added.
-        :param tag_def (dict): Dictionary containing the field definition with
-                               the following keys:
-                               - 'name' (str): The name of the field.
-                               - 'field_type' (str): The type of the field.
-                               - 'description' (str): A description of the
-                                                      field.
-                               - 'visibility' (str): The visibility status of
-                                                     the field.
-                               - 'origin' (str): The origin of the field.
-                               - 'unit' (str): The unit associated with the
-                                               field.
-                               - 'default_value' (Any): The default value of
-                                                        the field.
+         collections.
+        :param collection: (str) The name of the collection to which the field
+         should be added.
+        :param tag_def: (dict) Dictionary containing the field definition with
+         the following keys:
+            - 'name' (str): The name of the field.
+            - 'field_type' (str): The type of the field.
+            - 'description' (str): A description of the field.
+            - 'visibility' (str): The visibility status of the field.
+            - 'origin' (str): The origin of the field.
+            - 'unit' (str): The unit associated with the field.
+            - 'default_value' (Any): The default value of the field.
         """
         field_config = {
             "field_name": tag_def["name"],
@@ -941,16 +931,15 @@ class ProcessMIA(Process):
         Add new tags or modify existing tag values in the current and initial
         collections.
 
-        :param own_tags (list[dict]): List of tags to be added or modified,
-                                      where each tag is a dictionary with
-                                      'name', 'value', 'description', etc.,
-                                      keys.
-        :param current_values (dict): Dictionary storing the current tag
-                                      values.
-        :param initial_values (dict): Dictionary storing the initial tag
-                                      values.
-        :param field_names (set[str]): Set of field names that exist in the
-                                       database schema.
+        :param own_tags: (list[dict]) List of tags to be added or modified,
+         where each tag is a dictionary with 'name', 'value', 'description',
+         etc., keys.
+        :param current_values: (dict) Dictionary storing the current tag
+         values.
+        :param initial_values: (dict) Dictionary storing the initial tag
+         values.
+        :param field_names: (set[str]) Set of field names that exist in the
+         database schema.
         """
 
         with self.project.database.schema() as database_schema:
@@ -980,11 +969,11 @@ class ProcessMIA(Process):
         """
         Checks if all dictionaries in `values_dict` have identical content.
 
-        :param values_dict (dict): A dictionary where each value is expected
-                                   to be comparable to the others.
+        :param values_dict: (dict) A dictionary where each value is expected to
+         be comparable to the others.
 
-        :return (bool): True if all values in `values_dict` are identical or
-                         if the dictionary is empty, otherwise False.
+        :Returns: (bool) True if all values in `values_dict` are identical or
+         if the dictionary is empty, otherwise False.
         """
 
         if not values_dict:
@@ -1006,8 +995,8 @@ class ProcessMIA(Process):
         """
         Retrieve output values when the process is a NipypeProcess.
 
-        :param run_process_result: The result of the process execution.
-                                   (unused)
+        :param run_process_result: The result of the process execution
+         (unused).
         """
 
         if hasattr(self, "process") and isinstance(
@@ -1030,10 +1019,10 @@ class ProcessMIA(Process):
         """
         Find the plug name associated with the given output file.
 
-        :param out_file (str): The output file to search for in user traits.
+        :param out_file: (str) The output file to search for in user traits.
 
-        :return (str | None): The name of the plug (trait) if found,
-                               otherwise None.
+        :Returns: (str | None) The name of the plug (trait) if found, otherwise
+         None.
         """
 
         for trait_name in self.user_traits():
@@ -1050,13 +1039,13 @@ class ProcessMIA(Process):
 
     def _get_relative_path(self, file_path, base_dir):
         """
-        Converts an absolute file path to a relative path based on the
-        project folder.
+        Converts an absolute file path to a relative path based on the project
+        folder.
 
-        :param file_path (str): The absolute path of the file.
-        :param base_dir (str): The base directory to make the path relative to.
+        :param file_path: (str) The absolute path of the file.
+        :param base_dir: (str) The base directory to make the path relative to.
 
-        :return (str): The relative file path.
+        :Returns: (str) The relative file path.
 
         """
         rel_path = file_path.replace(base_dir, "")
@@ -1070,13 +1059,13 @@ class ProcessMIA(Process):
         """
         Remove specified tags from value dictionaries and the database.
 
-        :param tags2del (list[str]): List of tag names to be removed.
-        :param current_values (dict): Dictionary storing the current tag
-                                      values.
-        :param initial_values (dict): Dictionary storing the initial tag
-                                      values.
-        :param out_file (str): The output file associated with the tags being
-                               removed.
+        :param tags2del: (list[str]) List of tag names to be removed.
+        :param current_values: (dict) Dictionary storing the current tag
+         values.
+        :param initial_values: (dict) Dictionary storing the initial tag
+         values.
+        :param out_file: (str) The output file associated with the tags being
+         removed.
         """
 
         for tag_to_del in tags2del:
@@ -1114,23 +1103,24 @@ class ProcessMIA(Process):
         Resolves ambiguity when multiple input files could provide tags.
 
         This method applies a series of resolution strategies in order:
-        1. If all input files have identical tag values, the first input is
-           selected.
-        2. If a previously stored selection rule exists, it is used.
-        3. If neither condition applies, the user is prompted to manually
-           resolve the ambiguity, and their decision is stored for future use.
+            1. If all input files have identical tag values, the first input
+               is selected.
+            2. If a previously stored selection rule exists, it is used.
+            3. If neither condition applies, the user is prompted to manually
+               resolve the ambiguity, and their decision is stored for future
+               use.
 
-        :param all_current_values (dict): A dictionary containing the current
-                                          values for each possible input file.
-        :param all_initial_values (dict): A dictionary containing the initial
-                                          values for each possible input file.
-        :param in_files (dict): A mapping of input file indices to their
-                                corresponding file paths.
-        :param node_name (str): The name of the processing node.
-        :param plug_name (str | None): The name of the plug (trait) causing
-                                       the ambiguity.
-        :param out_file (str): The output file for which inheritance needs to
-                               be resolved.
+        :param all_current_values: (dict) A dictionary containing the current
+         values for each possible input file.
+        :param all_initial_values: (dict) A dictionary containing the initial
+         values for each possible input file.
+        :param in_files: (dict) A mapping of input file indices to their
+         corresponding file paths.
+        :param node_name: (str) The name of the processing node.
+        :param plug_name: (str | None) The name of the plug (trait) causing
+         the ambiguity.
+        :param out_file: (str) The output file for which inheritance needs to
+         be resolved.
         """
         # Check if all inputs have identical tag values
         if self._all_values_identical(
@@ -1244,12 +1234,12 @@ class ProcessMIA(Process):
         """
         Save tag values to the CURRENT and INITIAL database collections.
 
-        :param rel_out_file (str): The relative path of the output file used
-                                   as the document's primary key.
-        :param current_values (dict): Dictionary containing the current tag
-                                      values to be saved.
-        :param initial_values (dict): Dictionary containing the initial tag
-                                      values to be saved.
+        :param rel_out_file: (str) The relative path of the output file used
+         as the document's primary key.
+        :param current_values: (dict) Dictionary containing the current tag
+         values to be saved.
+        :param initial_values: (dict) Dictionary containing the initial tag
+         values to be saved.
         """
 
         with self.project.database.data(write=True) as database_data:
@@ -1327,8 +1317,8 @@ class ProcessMIA(Process):
         """
         Instantiate the process attribute given a process identifier.
 
-        :param int_name (str): A process identifier used to fetch the
-                               process instance.
+        :param int_name: (str) A process identifier used to fetch the process
+         instance.
         """
         ce = (
             self.study_config.engine
@@ -1345,8 +1335,8 @@ class ProcessMIA(Process):
 
     def load_nii(self, file_path, scaled=True, matlab_like=False):
         """
-        Load a NIfTI image and return its header and data, optionally
-        adjusting for MATLAB conventions.
+        Load a NIfTI image and return its header and data, optionally adjusting
+        for MATLAB conventions.
 
         MATLAB and Python (in particular NumPy) treat the order of dimensions
         and the origin of the coordinate system differently. MATLAB uses main
@@ -1355,20 +1345,20 @@ class ProcessMIA(Process):
         data(x, y, z) in MATLAB, the equivalent in NumPy is data[y, x, z].
         MATLAB and NumPy also handle the origin of the coordinate system
         differently:
-        MATLAB's coordinate system starts with the origin in the lower
-        left-hand corner (as in traditional matrix mathematics).
-        NumPy's coordinate system starts with the origin in the top left-hand
-        corner.
+            - MATLAB's coordinate system starts with the origin in the lower
+              left-hand corner (as in traditional matrix mathematics).
+            - NumPy's coordinate system starts with the origin in the top
+              left-hand corner.
         When taking matlab_like=True as argument, the numpy matrix is
-        rearranged to follow MATLAB conventions.
-        Using scaled=False generates a raw unscaled data matrix (as in MATLAB
-        with `header = loadnifti(fnii)` and `header.reco.data`).
+        rearranged to follow MATLAB conventions. Using scaled=False generates
+        a raw unscaled data matrix (as in MATLAB with
+        `header = loadnifti(fnii)` and `header.reco.data`).
 
-        :param file_path (str): The path to a NIfTI file.
-        :param scaled (bool): If True the data is scaled.
-        :param matlab_like (bool): If True the data is rearranged to match the
-                                   order of the dimensions and the origin of
-                                   the coordinate system in Matlab.
+        :param file_path: (str) The path to a NIfTI file.
+        :param scaled: (bool) If True the data is scaled.
+        :param matlab_like: (bool) If True the data is rearranged to match the
+         order of the dimensions and the origin of the coordinate system in
+         Matlab.
         """
         img = nib.load(file_path)
         header = img.header
@@ -1460,8 +1450,8 @@ class ProcessMIA(Process):
         """
         Inherit and manage data tags from input file(s) to an output file.
 
-        This method handles the inheritance of metadata tags from one or
-        more input files to an output file. It also allows adding new tags,
+        This method handles the inheritance of metadata tags from one or more
+        input files to an output file. It also allows adding new tags,
         modifying existing ones, or deleting unwanted tags in the process.
 
         Note:
@@ -1476,24 +1466,28 @@ class ProcessMIA(Process):
             - Prompt the user for a decision if no rule exists.
             - Auto-resolve if all inputs have identical tag values.
 
-        :param in_file: (str or dict) Source of tag inheritance.
-         Either:
-            - A string representing a single input file path (unambiguous case)
+        :param in_file: (str or dict) Source of tag inheritance. Either:
+
+            - A string representing a single input file path (unambiguous
+              case).
             - A dictionary mapping plug names to corresponding input file paths
-              (ambiguous case)
+              (ambiguous case).
+
         :param out_file: (str) Path of the output file that will inherit the
          tags.
         :param node_name: (str) Name of the processing node in the workflow.
-        :param own_tags: (list of dict) Tags to be added or modified.
-         Each dictionary must contain:
-            - "name": Tag identifier
-            - "field_type": Data type of the tag
-            - "description": Human-readable description
-            - "visibility": Boolean or visibility level
-            - "origin": Source of the tag
-            - "unit": Unit of measurement (if applicable)
-            - "default_value": Default value
-            - "value": Current value to set
+        :param own_tags: (list of dict) Tags to be added or modified. Each
+         dictionary must contain:
+
+            - "name": Tag identifier.
+            - "field_type": Data type of the tag.
+            - "description": Human-readable description.
+            - "visibility": Boolean or visibility level.
+            - "origin": Source of the tag.
+            - "unit": Unit of measurement (if applicable).
+            - "default_value": Default value.
+            - "value": Current value to set.
+
         :param tags2del: (list of str) Tags to be deleted from the output file.
         """
 
