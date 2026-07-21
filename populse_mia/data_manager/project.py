@@ -180,10 +180,13 @@ class Project:
         project is already opened in another instance to prevent conflicts.
 
         :param project_root_folder: Path to the project's root directory. If
-         None, a temporary project directory is created.
-        :param new_project: Boolean indicating whether this is a new project
-         (True) or an existing one (False). If True, the directory structure
-         and databaseschema are initialized.
+            None, a temporary project directory is created.
+        :type project_root_folder: str | None
+        :param new_project:  Whether the project is new. If ``True``, the
+            project directory structure and database schema are initialized.
+            If ``False``, the existing project is opened without
+            reinitializing them.
+        :type new_project: bool
         """
 
         if project_root_folder is None:
@@ -574,7 +577,8 @@ class Project:
     def add_clinical_tags(self):
         """Add new clinical tags to the project.
 
-        :Returns: List of clinical tags that were added.
+        :returns: List of clinical tags that were added.
+        :rtype: list
         """
         return_tags = []
 
@@ -650,8 +654,9 @@ class Project:
               collections
             - Deletes the corresponding physical files from the filesystem
 
-        :param bricks: (str) List of brick IDs to check for orphans. If None,
-         checks all bricks in the database.
+        :param bricks: List of brick IDs to check for orphans. If None,
+            checks all bricks in the database.
+        :type bricks: list[str] | None
         """
         obsolete_bricks, orphan_files = self.get_orphan_bricks(bricks)
         logger.info(f"Identified obsolete bricks: {obsolete_bricks}")
@@ -760,8 +765,9 @@ class Project:
             - Deletes their entries from both current and initial collections,
             - Attempts a defensive filesystem cleanup if the file still exists.
 
-        :param failed: (bool) Passed through to `get_orphan_nonexisting_files`
-         to control orphan selection.
+        :param failed: Passed through to `get_orphan_nonexisting_files` to
+            control orphan selection.
+        :type failed: bool
         """
         base_path = Path(self.folder)
         orphan_files = self.get_orphan_nonexisting_files(failed)
@@ -792,7 +798,8 @@ class Project:
         Iterates through predefined clinical tags and removes them from both
         collections if they exist in the current collection's field names.
 
-        :Returns: (list) Clinical tags that were successfully removed.
+        :returns: Clinical tags that were successfully removed.
+        :rtype: list
         """
         removed_tags = []
 
@@ -814,22 +821,24 @@ class Project:
 
     def files_in_project(self, files):
         """
-        Extract file/directory names from input that are within the project
-        folder.
+        Extract file and directory names from the input that are within the
+        project folder.
 
-        Recursively processes the input to find all file paths, handling
-        nested data structures. Only paths within the project directory are
-        included.
+        Recursively processes the input to find all file paths, handling nested
+        data structures. Only paths within the project directory are included.
 
-        :param files: Input that may contain file paths.
-         Can be:
-            - str: A single file path
-            - list/tuple/set: Collection of file paths or nested structures
-            - dict: Only values are processed, keys are ignored
+        :param files: Input that may contain file paths. It can be:
 
-        :Returns: (set) Relative file paths that exist within the project
-         folder, with paths normalized and made relative to the project
-         directory.
+            - ``str``: A single file path.
+            - ``list``, ``tuple``, ``set``: A collection of file paths or
+              nested structures.
+            - ``dict``: Only values are processed, keys are ignored.
+        :type files: str | list | tuple | set | dict
+
+        :returns: Relative file paths that exist within the project
+            folder, with paths normalized and made relative to the project
+            directory.
+        :rtype: set
         """
         project_dir = os.path.join(
             os.path.abspath(os.path.normpath(self.folder)),
@@ -869,26 +878,28 @@ class Project:
         Retrieve and process finished bricks from workflows and pipelines.
 
         This method:
-            - Gets finished bricks from workflows and optionally a specific
-              pipeline
-            - Filters them based on their presence in the Mia database
-            - Updates brick metadata with execution status and outputs
-            - Collects all output files that are within the project directory
+            - Retrieves finished bricks from workflows and, optionally, a
+              specific pipeline.
+            - Filters them according to their presence in the Mia database.
+            - Updates brick metadata with execution status and outputs.
+            - Collects output files located within the project directory.
 
-        :param engine: Engine instance for retrieving finished bricks.
+        :param engine: Engine instance used to retrieve finished bricks.
         :param pipeline: Optional pipeline object to filter specific bricks.
-        :param include_done: (bool)If True, includes all bricks regardless of
-         execution status. If False, only includes "Not Done" bricks.
+        :param include_done: If ``True``, includes all bricks regardless
+            of execution status. Otherwise, only bricks whose status is
+            ``Not Done`` are included.
+        :type include_done: bool
 
-        :Returns: (dict)
-         Dictionary containing:
-            - 'bricks': Dict mapping brick IDs to their metadata
-            - 'outputs': Set of output file paths relative to project directory
+        :returns: A Dictionary containing:
+
+            - ``bricks``: Mapping of brick identifiers to their metadata.
+            - ``outputs``: Set of output file paths relative to project
+              directory
+        :rtype: dict
 
         Contains:
-
             Inner functions:
-
                 - _update_dict: Merge two dictionaries by updating the first
                   with the second.
                 - _collect_outputs: Recursively collects file paths from
@@ -899,12 +910,14 @@ class Project:
             """
             Merge two dictionaries by updating the first with the second.
 
-            :param d1 (dict): The dictionary to be updated.
-            :param d2 (dict): The dictionary containing new key-value pairs
-                              to merge into `d1`.
+            :param d1: The dictionary to be updated.
+            :type d1: dict
+            :param d2: The dictionary containing new key-value pairs to merge
+                into `d1`.
+            :type d2: dict
 
-            :return (dict): The updated dictionary (`d1`) after merging
-                            with `d2`.
+            :return: The updated dictionary (`d1`) after merging with `d2`.
+            :rtype: dict
 
             """
             d1.update(d2)
@@ -916,11 +929,14 @@ class Project:
             within the project directory.
 
             :param value: Output value to process (can be str, list, set,
-             tuple).
-            :param base_path: (str) Base project directory path.
+                tuple).
+            :type value: str | list | set | tuple
+            :param base_path: Base project directory path.
+            :type base_path: str
 
-            :Returns: (set[str]) A set of collected file paths, relative to
-             the project directory.
+            :returns: A set of collected file paths, relative to the project
+                directory.
+            :rtype: set[str]
             """
             outputs = set()
             to_process = [value]
@@ -999,8 +1015,10 @@ class Project:
               lead to the given one. Elements are process (brick) UUIDs.
 
         :param path: Path to the data file.
+        :type path: str
 
-        :Returns: (dict) History.
+        :returns: History.
+        :rtype: dict
         """
 
         return data_history_inspect.get_data_history(path, self)
@@ -1008,8 +1026,9 @@ class Project:
     def getDate(self):
         """Return the date of creation of the project.
 
-        :Returns: (str) The date of creation of the project if it's not
-         `Unnamed` project, otherwise empty string
+        :returns: The date of creation of the project if it's not `Unnamed`
+            project, otherwise empty string
+        :rtype: str
         """
 
         return self.properties["date"]
@@ -1019,13 +1038,15 @@ class Project:
         Retrieves a dictionary of finished processes (bricks) from a given
         pipeline, including nested pipelines, if any.
 
-        :param pipeline: (Pipeline or Process) The pipeline or single process
-         to analyze. If a single process is provided, it will be treated as a
-         minimal pipeline.
+        :param pipeline: The pipeline or single process to analyze. If a
+            single process is provided, it will be treated as a minimal
+            pipeline.
+        :type pipeline: Pipeline | Process
 
-        :Returns: (dict) A dictionary where keys are process UUIDs (brick IDs)
-         and values are dictionaries containing the associated process
-         instances.
+        :returns: A dictionary where keys are process UUIDs (brick IDs) and
+            values are dictionaries containing the associated process
+            instances.
+        :rtype: dict[str, dict[str, Process]]
 
         """
 
@@ -1088,23 +1109,22 @@ class Project:
 
         :param engine: Engine providing access to the Soma-Workflow controller.
 
-        :Returns: (dict)
-         Mapping ``brick_uuid -> job_info`` where ``job_info`` contains:
-            - ``workflow`` (int): Workflow identifier.
-            - ``job``: Soma-Workflow job instance.
-            - ``job_id`` (int): Job identifier.
-            - ``swf_status`` (tuple): Raw Soma-Workflow status tuple.
-            - ``running`` (bool): True of any job in the workflow is running.
-            - ``failed`` (bool): True if any job in the workflow failed.
+        :returns: Mapping ``brick_uuid -> job_info`` where ``job_info``
+            contains:
+
+                - ``workflow`` (int): Workflow identifier.
+                - ``job``: Soma-Workflow job instance.
+                - ``job_id`` (int): Job identifier.
+                - ``swf_status`` (tuple): Raw Soma-Workflow status tuple.
+                - ``running`` (bool): True of any job in the workflow is
+                  running.
+                - ``failed`` (bool): True if any job in the workflow failed.
+        :rtype: dict[str, dict]
 
         Contains:
-
             Inner functions:
-
                 - parse_status: Parse a Soma-Workflow job status tuple into
                   structured information.
-
-
         """
 
         def parse_status(job_st):
@@ -1116,22 +1136,23 @@ class Project:
             dependent. This helper extracts the relevant fields and derives
             consistent success/failure flags.
 
-            :param job_st (tuple): Raw job status tuple as returned by
-                                   Soma-Workflow.
+            :param job_st: Raw job status tuple as returned by Soma-Workflow.
+            :type job_st: tuple
 
-            :Returns: (tuple)
-                    - job_id (int): Identifier of the job.
-                    - state (str): Execution state (e.g. "done", "failed",
-                      "running").
-                    - termination (str | None): Termination status if available
-                      (e.g. "finished_regularly", "killed", "aborted"), else
-                      None.
-                    - is_success (bool): True if the job completed successfully
-                      (i.e. termination == "finished_regularly").
-                    - is_running (bool): True if the job is currently running
-                      (the job indicates that it is in progress).
-                    - is_failure (bool): True if the job did not complete
-                      successfully.
+            :returns: A tuple containing:
+
+                - job_id (int): Identifier of the job.
+                - state (str): Execution state (e.g. "done", "failed",
+                  "running").
+                - termination (str | None): Termination status if available
+                  (e.g. "finished_regularly", "killed", "aborted"), else None.
+                - is_success (bool): True if the job completed successfully
+                  (i.e. termination == "finished_regularly").
+                - is_running (bool): True if the job is currently running
+                  (the job indicates that it is in progress).
+                - is_failure (bool): True if the job did not complete
+                  successfully.
+            :rtype: tuple[int, str, str | None, bool, bool, bool]
 
             Note:
                 - Success is defined solely based on the termination status,
@@ -1221,10 +1242,12 @@ class Project:
     def getFilter(self, target_filter):
         """Return a Filter object from its name.
 
-        :param target_filter: (str) Filter name.
+        :param target_filter: Filter name.
+        :type target_filter: str
 
-        :Returns: (Filter) Filter object corresponding to the given name or
-         None if not found
+        :returns: Filter object corresponding to the given name or None if not
+            found.
+        :rtype: Filter | None
         """
 
         return next(
@@ -1235,7 +1258,8 @@ class Project:
         """
         Input box to type the name of the filter to save.
 
-        :Returns: (str) Return the name typed by the user or None if cancelled.
+        :returns: Return the name typed by the user or None if cancelled.
+        :rtype: str | None
         """
 
         text, ok_pressed = QInputDialog.getText(
@@ -1251,8 +1275,9 @@ class Project:
     def getName(self):
         """Return the name of the project.
 
-        :Returns: (str) The name of the project if it's not `Unnamed` project,
-         otherwise empty string
+        :returns: The name of the project if it's not `Unnamed` project,
+            otherwise empty string.
+        :rtype: str
         """
 
         return self.properties["name"]
@@ -1261,17 +1286,18 @@ class Project:
         """
         Identifies orphan bricks and their associated weak files.
 
-        :param bricks: (list or set) A list or set of brick IDs to filter the
-         search. If None, all bricks in the database are considered. Defaults
-         to None.
+        :param bricks: A list or set of brick IDs to filter the search. If
+            None, all bricks in the database are considered. Defaults to None.
+        :type bricks: list | set | None
 
-        :Returns: (tuple)
-         A tuple containing two sets:
+        :returns: A tuple containing two sets:
+
             - `orphan`: (set) Brick IDs considered orphaned, meaning they have
               no valid or existing outputs linked to the current database.
             - `orphan_weak_files`: (set) Paths to weak files associated with
               orphaned bricks, such as script files or files that no longer
               exist.
+        :rtype: tuple[set, set]
         """
         orphan = set()
         orphan_weak_files = set()
@@ -1362,14 +1388,15 @@ class Project:
         Identifies orphaned history entries, their associated orphan bricks,
         and weak files.
 
-        :Returns: (tuple)
-         A tuple containing three sets:
+        :returns: A tuple containing three sets:
+
             - `orphan_hist`: (set) IDs of history entries that are no longer
               linked to any current document in the database.
             - `orphan_bricks`: (set) IDs of bricks associated with orphaned
               history entries.
             - `orphan_weak_files`: (set) Paths to weak files (e.g., script
               files or non-existent files) linked to orphaned history entries.
+        :rtype: tuple[set, set, set]
         """
         orphan_hist = set()
         orphan_bricks = set()
@@ -1469,11 +1496,13 @@ class Project:
             - It is not associated with any existing bricks, unless `failed`
               is True (in which case brick association is ignored).
 
-        :param failed: (bool) If True, include files even if they are linked to
-         existing bricks. If False, exclude such files.
+        :param failed: If True, include files even if they are linked to
+            existing bricks. If False, exclude such files.
+        :type failed: bool
 
-        :Returns: (set) A set of filenames from the database that are not found
-         on the filesystem and are not associated with existing bricks.
+        :returns: A set of filenames from the database that are not found on
+            the filesystem and are not associated with existing bricks.
+        :rtype: set
         """
         base_path = Path(self.folder)
 
@@ -1507,8 +1536,9 @@ class Project:
     def getSortedTag(self):
         """Return the sorted tag of the project.
 
-        :Returns: (str) Sorted tag of the project if it's not `Unnamed`
-         project, otherwise empty string.
+        :returns: Sorted tag of the project if it's not `Unnamed` project,
+            otherwise empty string.
+        :rtype: str
         """
 
         return self.properties["sorted_tag"]
@@ -1516,8 +1546,9 @@ class Project:
     def getSortOrder(self):
         """Return the sort order of the project.
 
-        :Returns: (str) Sort order of the project if it's not `Unnamed`
-         project, otherwise empty string.
+        :returns: Sort order of the project if it's not `Unnamed` project,
+            otherwise empty string.
+        :rtype: str
         """
 
         return self.properties["sort_order"]
@@ -1525,8 +1556,9 @@ class Project:
     def hasUnsavedModifications(self):
         """Return if the project has unsaved modifications or not.
 
-        :Returns: (bool) True if the project has pending modifications, False
-         otherwise.
+        :returns: True if the project has pending modifications, False
+            otherwise.
+        :rtype: bool
         """
 
         return self.unsavedModifications
@@ -1572,8 +1604,9 @@ class Project:
         This method reads the project's YAML properties file and returns
         its contents as a Python dictionary.
 
-        :Returns: (dict) A dictionary containing the project properties if
-         successfully loaded, or None if an error occurs.
+        :returns: A dictionary containing the project properties if
+            successfully loaded, or None if an error occurs.
+        :rtype: dict | None
         """
         properties_path = os.path.join(
             self.folder, "properties", "properties.yml"
@@ -1600,8 +1633,8 @@ class Project:
         """
         Redo the last action made by the user on the project.
 
-        :param table: (QTableWidget) The table on which to apply the
-         modifications.
+        :param table: The table on which to apply the modifications.
+        :type table: QTableWidget
 
         Actions that can be redone:
             - add_tag
@@ -1811,7 +1844,8 @@ class Project:
         """
         Re-put the value objects in the database.
 
-        :param values: (list) List of value objects.
+        :param values: List of value objects.
+        :type values: list[tuple[str, str, Any, Any]]
         """
 
         with self.database.data(write=True) as database_data:
@@ -1849,6 +1883,7 @@ class Project:
         """Save the current filter.
 
         :param custom_filters: The customized filter
+        :type custom_filters: tuple[list, list, list, list, list]
         """
         fields, conditions, values, links, nots = custom_filters
         self.currentFilter.fields = fields
@@ -1911,6 +1946,7 @@ class Project:
         """Set the current filter of the project.
 
         :param new_filter: New Filter object.
+        :type new_filter: Filter
         """
         self.currentFilter = new_filter
 
@@ -1918,6 +1954,7 @@ class Project:
         """Set the date of the project.
 
         :param date: New date of the project.
+        :type date: str
         """
         self.properties["date"] = date
 
@@ -1926,7 +1963,8 @@ class Project:
         Set the name of the project if it's not `Unnamed` project, otherwise
         does nothing.
 
-        :param name: (str) New name of the project.
+        :param name: New name of the project.
+        :type name: str
         """
         self.properties["name"] = name
 
@@ -2142,8 +2180,9 @@ class Project:
         Modify the window title depending of whether the project has unsaved
         modifications or not.
 
-        :param value: (bool) True if the project has pending modifications,
-         False otherwise.
+        :param value: True if the project has pending modifications, False
+            otherwise.
+        :type value: bool
         """
         self._unsavedModifications = value
 
@@ -2184,13 +2223,12 @@ class Project:
         'data/derived_data', the method uses the portion before this segment
         as the base path.
 
-        :param new_path: (str) The new project path. If not provided, the
-         current project folder path is used.
+        :param new_path: The new project path. If not provided, the current
+            project folder path is used.
+        :type new_path: str | None
 
         Contains:
-
             Inner functions:
-
                 - _update_json_data: Helper method to update paths in JSON
                   data structures
         """
@@ -2204,12 +2242,18 @@ class Project:
             Serializes the data to JSON, performs string replacement, then
             deserializes and updates the database.
 
-            :param collection (str): Database collection name
-            :param doc_id (str): Document ID
-            :param field (str): Field name to update
-            :param data (dict): The data structure to process
-            :param old_path (str): Old path to replace
-            :param new_path (str): New path to use
+            :param collection: Database collection name.
+            :type collection: str
+            :param doc_id: Document ID.
+            :type doc_id: str
+            :param field: Field name to update.
+            :type field: str
+            :param data: The data structure to process.
+            :type data: dict
+            :param old_path: Old path to replace.
+            :type old_path: str
+            :param new_path: New path to use.
+            :type new_path: str
             """
 
             try:
