@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -58,16 +58,18 @@ mia’s GUI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (pathlib.Path) The directory path to be added to the system
-path.</p></li>
-<li><p><strong>name</strong> – (str) The name of the package being added.</p></li>
-<li><p><strong>index</strong> – (int) The index at which to insert the pathinto sys.path.
-Defaults to 0.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/pathlib.html#pathlib.Path" title="(in Python v3.10)"><em>pathlib.Path</em></a>) – The directory path to be added to the system path.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package being added.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index at which to insert the pathinto sys.path. Defaults
+to 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the path is a valid directory and was added
-to sys.path, False otherwise.</p>
+<dd class="field-even"><p>True if the path is a valid directory and was added to sys.path,
+False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -79,11 +81,14 @@ to sys.path, False otherwise.</p>
 package if successful, and logs an error if the package is missing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> – (str) The name of the package to be imported.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package to be imported.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the package is imported successfully; False if
-the package is missing.</p>
+<dd class="field-even"><p>True if the package is imported successfully; False if the
+package is missing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -114,13 +119,13 @@ or is corrupted, try to create one with a valid properties path.</p>
 </dl>
 </li>
 </ul>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>args</strong> – (argparse.Namespace) The parsed command-line arguments.</p>
-</dd>
-</dl>
 <p>Launches the <code class="docutils literal notranslate"><span class="pre">verify_processes()</span></code> function, then the <code class="docutils literal notranslate"><span class="pre">launch_mia()</span></code>
 function (Mia’s real launch).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/argparse.html#argparse.Namespace" title="(in Python v3.10)"><em>argparse.Namespace</em></a>) – The parsed command-line arguments.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -131,11 +136,11 @@ and print the remaining ones to stderr.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>msg_type</strong> – (QtMsgType) The type of Qt message (debug, warning,
+<li><p><strong>msg_type</strong> (<em>QtMsgType</em>) – The type of Qt message (debug, warning,
 critical, etc. - unused).</p></li>
-<li><p><strong>context</strong> – (QMessageLogContext) Context information about where the
-message originated (unused).</p></li>
-<li><p><strong>message</strong> – (str) The log message string.</p></li>
+<li><p><strong>context</strong> (<em>QMessageLogContext</em>) – Context information about where the message
+originated (unused).</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The log message.</p></li>
 </ul>
 </dd>
 </dl>

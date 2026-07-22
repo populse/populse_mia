@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -80,7 +80,7 @@
 <td><p>Sets the filters directory as default (Json files).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.utils.utils.set_item_data" title="populse_mia.utils.utils.set_item_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_item_data</span></code></a>(item, value, value_type)</p></td>
-<td><p>Sets the data for a given item in the data browser based on the expected type.</p></td>
+<td><p>Set the data of a browser item according to the expected value type.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.utils.utils.set_projects_directory_as_default" title="populse_mia.utils.utils.set_projects_directory_as_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_projects_directory_as_default</span></code></a>(dialog, Config)</p></td>
 <td><p>Sets the projects directory as default.</p></td>
@@ -147,16 +147,18 @@ pipeline library.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>module_name</strong> – (str) Name of the module to add to the pipeline
-library.</p></li>
-<li><p><strong>class_name</strong> – (str) Specific class to add (optional). Only this
-pipeline will be added to the pipeline library.</p></li>
+<li><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the module to add to the pipeline library.</p></li>
+<li><p><strong>class_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Specific class to add (optional). Only this pipeline
+will be added to the pipeline library.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary of dictionaries containing
 package/subpackages/pipelines status.
 ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -170,12 +172,15 @@ ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>date_str</strong> – (str) The date string to validate.</p></li>
-<li><p><strong>date_format</strong> – (str) The expected date format.</p></li>
+<li><p><strong>date_str</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The date string to validate.</p></li>
+<li><p><strong>date_format</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The expected date format.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the string matches the format, False otherwise.</p>
+<dd class="field-even"><p>True if the string matches the format, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -198,15 +203,19 @@ ex: {package: {subpackage: {pipeline: ‘process_enabled’}}}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – (str) Value of the cell (always a str, can be a string
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Value of the cell (always a str, can be a string
 representation of a list)</p></li>
-<li><p><strong>value_type</strong> – (type) Expected type (can be list[str], list[int], etc.)</p></li>
-<li><p><strong>is_subvalue</strong> – (bool) Whether the value is a subvalue of a list.</p></li>
+<li><p><strong>value_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.GenericAlias" title="(in Python v3.10)"><em>types.GenericAlias</em></a>) – Expected Python type of <code class="docutils literal notranslate"><span class="pre">value</span></code> (for example, int,
+str, float, bool, list[int], list[str], etc.)</p></li>
+<li><p><strong>is_subvalue</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the value is a subvalue of a list.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the value is valid to replace the old one, False
-otherwise</p>
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -222,11 +231,12 @@ a tag is not present or its value is <cite>None</cite>, it is assigned the strin
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>runtime_dict</strong> – (dict) Dictionary used to transfer data from
-<cite>list_outputs</cite> to <cite>run_process_mia</cite>.</p></li>
-<li><p><strong>project</strong> – The project instance containing the database.</p></li>
-<li><p><strong>db_filename</strong> – (str) The name of the database file to query.</p></li>
-<li><p><strong>tags</strong> – Variable number of tag names to retrieve from the database.</p></li>
+<li><p><strong>runtime_dict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary used to transfer data from <code class="docutils literal notranslate"><span class="pre">list_outputs</span></code>
+method to the <code class="docutils literal notranslate"><span class="pre">run_process_mia</span></code> method within the bricks of the
+mia_processes library.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p></li>
+<li><p><strong>db_filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the database file to query.</p></li>
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Variable number of tag names to retrieve from the database.</p></li>
 </ul>
 </dd>
 </dl>
@@ -240,10 +250,9 @@ database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance containing the
-database.</p></li>
-<li><p><strong>document</strong> – (str) The absolute path to the document.</p></li>
-<li><p><strong>field</strong> – (str) The name of the field whose value should be retrieved.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The current project instance containing the database.</p></li>
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path to the document.</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field whose value should be retrieved.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -256,17 +265,20 @@ collection.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.get_document_names">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_document_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#get_document_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_document_names" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieves the names of all documents in the specified collection
-from the project’s database.</p>
+<dd><p>Retrieves the names of all documents in the specified collection from the
+project’s database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The project instance containing the database.</p></li>
-<li><p><strong>collection</strong> – (str) The name of the collection to query.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p></li>
+<li><p><strong>collection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to query.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of document names in the collection.</p>
+<dd class="field-even"><p>A list of document names in the collection.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,17 +286,20 @@ from the project’s database.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.get_field_names">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">get_field_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collection</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#get_field_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.get_field_names" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieves the list of field names (i.e., column names) for documents
-in the specified collection of the project’s database.</p>
+<dd><p>Retrieves the list of field names (i.e., column names) for documents in the
+specified collection of the project’s database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The project instance containing the database.</p></li>
-<li><p><strong>collection</strong> – (str) The name of the collection to inspect.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p></li>
+<li><p><strong>collection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to inspect.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of field names in the collection.</p>
+<dd class="field-even"><p>A list of field names in the collection.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -296,10 +311,13 @@ in the specified collection of the project’s database.</p>
 database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The project instance containing the database.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of tag names marked as shown.</p>
+<dd class="field-even"><p>A list of tag names marked as shown.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -312,11 +330,10 @@ collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The project instance containing the database.</p></li>
-<li><p><strong>collection</strong> – (str) The name of the collection containing the
-document.</p></li>
-<li><p><strong>file_name</strong> – (str) The name of the document (typically the file name).</p></li>
-<li><p><strong>field</strong> – (str) The name of the field whose value is to be retrieved.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p></li>
+<li><p><strong>collection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection containing the document.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the document (typically the file name).</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field whose value is to be retrieved.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -329,8 +346,7 @@ document.</p></li>
 <dt class="sig sig-object py" id="populse_mia.utils.utils.launch_mia">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">launch_mia</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">MainWindow</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">SavedProjects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#launch_mia"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.launch_mia" title="Link to this definition">¶</a></dt>
 <dd><p>Launch and run the Mia software application.</p>
-<blockquote>
-<div><dl class="simple">
+<dl class="simple">
 <dt>This function is the main entry point. It:</dt><dd><ul class="simple">
 <li><p>Installs a custom sys.excepthook to handle uncaught exceptions.</p></li>
 <li><p>Prevents multiple instances unless explicitly allowed.</p></li>
@@ -341,19 +357,33 @@ document.</p></li>
 </ul>
 </dd>
 </dl>
-</div></blockquote>
 <p>All state is local and shared via closures.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>MainWindow</strong> – (class): The main window class to be instantiated.</p></li>
-<li><p><strong>Project</strong> – (class) The project class to be instantiated.</p></li>
-<li><p><strong>SavedProjects</strong> – (class) The class that manages all projects saved in
-Mia.</p></li>
-<li><p><strong>Config</strong> – (class) The class that manages Mia’s configuration and
-properties.</p></li>
-<li><p><strong>args</strong> – (argparse.Namespace) Parsed command-line arguments.</p></li>
+<li><p><strong>MainWindow</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>MainWindow</em></a>) – The main window class to be instantiated.</p></li>
+<li><p><strong>Project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project class to be instantiated.</p></li>
+<li><p><strong>SavedProjects</strong> (<a class="reference internal" href="populse_mia.data_manager.project_properties.html#populse_mia.data_manager.project_properties.SavedProjects" title="populse_mia.data_manager.project_properties.SavedProjects"><em>SavedProjects</em></a>) – The class that manages all projects saved in Mia.</p></li>
+<li><p><strong>Config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>Config</em></a>) – The class that manages Mia’s configuration and properties.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/argparse.html#argparse.Namespace" title="(in Python v3.10)"><em>argparse.Namespace</em></a>) – Parsed command-line arguments.</p></li>
 </ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>_clean_up: Perform application cleanup tasks.</p></li>
+<li><p>_cleanup_and_quit: Clean up application state and terminate the
+Qt event loop.</p></li>
+<li><p>_my_excepthook: Handle uncaught exceptions.</p></li>
+<li><p>_restore_terminal: Restore the terminal to a sane state.</p></li>
+<li><p>_signal_handler: Handle termination signals to ensure graceful
+shutdown.</p></li>
+<li><p>_verify_saved_projects: Verify the existence of saved projects
+on disk.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -372,11 +402,11 @@ in the given project’s database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The project instance containing the database.</p></li>
-<li><p><strong>collection</strong> – (str) The name of the collection from which documents
-will be removed.</p></li>
-<li><p><strong>documents</strong> – (str or list[str]) A single document name or a list of
-document names to remove.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database.</p></li>
+<li><p><strong>collection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection from which documents will be
+removed.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A single document name or a list of document names to
+remove.</p></li>
 </ul>
 </dd>
 </dl>
@@ -427,12 +457,20 @@ the given document.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The project instance containing the database
-and schema.</p></li>
-<li><p><strong>document</strong> – (str) The absolute path of the document.</p></li>
-<li><p><strong>tag_to_add</strong> – (dict) A dictionary describing the field with keys:
-‘name’, ‘value’, ‘default_value’, ‘description’, ‘field_type’, ‘origin’,
-‘unit’, and ‘visibility’.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance containing the database and schema.</p></li>
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path of the document.</p></li>
+<li><p><strong>tag_to_add</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>A dictionary describing the field with these keys:</p>
+<ul>
+<li><p>’name’,</p></li>
+<li><p>’value’,</p></li>
+<li><p>’default_value’</p></li>
+<li><p>’description’</p></li>
+<li><p>’field_type’</p></li>
+<li><p>’origin’</p></li>
+<li><p>’unit’</p></li>
+<li><p>’visibility’</p></li>
+</ul>
+</p></li>
 </ul>
 </dd>
 </dl>
@@ -444,7 +482,7 @@ and schema.</p></li>
 <dd><p>Sets the filters directory as default (Json files).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dialog</strong> – (QFileDialog) Current file dialog.</p>
+<dd class="field-odd"><p><strong>dialog</strong> (<em>QFileDialog</em>) – Current file dialog.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -452,22 +490,30 @@ and schema.</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.set_item_data">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">set_item_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#set_item_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.set_item_data" title="Link to this definition">¶</a></dt>
-<dd><p>Sets the data for a given item in the data browser based on the
-expected type.</p>
-<p>This function prepares the input <cite>value</cite> according to the specified
-<cite>value_type</cite>, converting it into a format suitable for PyQt’s <cite>QVariant</cite>.
-It supports both primitive types (e.g., <cite>int</cite>, <cite>str</cite>, <cite>float</cite>) and more
-complex types like <cite>datetime</cite>, <cite>date</cite>, <cite>time</cite>, and lists of these types.</p>
+<dd><p>Set the data of a browser item according to the expected value type.</p>
+<p>This function converts <code class="docutils literal notranslate"><span class="pre">value</span></code> according to <code class="docutils literal notranslate"><span class="pre">value_type</span></code> before
+storing it in <code class="docutils literal notranslate"><span class="pre">item</span></code> using <code class="docutils literal notranslate"><span class="pre">setData()</span></code>. It supports primitive Python
+types (e.g., <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code> and <code class="docutils literal notranslate"><span class="pre">bool</span></code>) as well as
+<code class="docutils literal notranslate"><span class="pre">datetime</span></code>, <code class="docutils literal notranslate"><span class="pre">date</span></code>, <code class="docutils literal notranslate"><span class="pre">time</span></code> and lists of these types.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – (QStandardItem) The item to update (expected to support
-<cite>setData</cite> method).</p></li>
-<li><p><strong>value</strong> – (Any) The new value to set for the item.</p></li>
-<li><p><strong>value_type</strong> – (Type) The expected type of the value, which can be a
+<li><p><strong>item</strong> (<em>QStandardItem</em>) – The item to update (expected to support <cite>setData</cite> method).</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – The new value to set for the item.</p></li>
+<li><p><strong>value_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.GenericAlias" title="(in Python v3.10)"><em>types.GenericAlias</em></a>) – The expected type of the value, which can be a
 standard Python type (e.g., <cite>str</cite>, <cite>int</cite>, <cite>float</cite>, <cite>bool</cite>) or a
 <cite>typing</cite>-based list type (e.g., <cite>list[int]</cite>, <cite>list[datetime]</cite>).</p></li>
 </ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>prepare_value: Prepares the input value according to its expected
+type.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -479,8 +525,8 @@ standard Python type (e.g., <cite>str</cite>, <cite>int</cite>, <cite>float</cit
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dialog</strong> – (QFileDialog) Current file dialog.</p></li>
-<li><p><strong>Config</strong> – The class that manages Mia’s configuration and properties.</p></li>
+<li><p><strong>dialog</strong> (<em>QFileDialog</em>) – Current file dialog.</p></li>
+<li><p><strong>Config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>Config</em></a>) – The class that manages Mia’s configuration and properties.</p></li>
 </ul>
 </dd>
 </dl>
@@ -493,30 +539,35 @@ standard Python type (e.g., <cite>str</cite>, <cite>int</cite>, <cite>float</cit
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – (Any) Value to convert.</p></li>
-<li><p><strong>value_type</strong> – (Type) Value type.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – Value to convert.</p></li>
+<li><p><strong>value_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.GenericAlias" title="(in Python v3.10)"><em>types.GenericAlias</em></a>) – Value type.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Any) The value converted for the database.</p>
+<dd class="field-even"><p>The value converted for the database.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.utils.utils.type_name">
-<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#type_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.type_name" title="Link to this definition">¶</a></dt>
-<dd><p>Returns the name of a type or a string representation for generic
-aliases.</p>
+<span class="sig-prename descclassname"><span class="pre">populse_mia.utils.utils.</span></span><span class="sig-name descname"><span class="pre">type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/utils/utils.html#type_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.utils.utils.type_name" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the name of a type or a string representation for generic aliases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>t</strong> – (Any) The type to get the name or representation for. This can be
-a regular type (e.g., <cite>str</cite>, <cite>list</cite>) or a generic alias
-(e.g., <cite>list[str]</cite>).</p>
+<dd class="field-odd"><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.GenericAlias" title="(in Python v3.10)"><em>types.GenericAlias</em></a>) – The type to get the name or representation for. This can be
+a regular type (e.g., <code class="docutils literal notranslate"><span class="pre">str</span></code>, <code class="docutils literal notranslate"><span class="pre">list</span></code>) or a generic alias
+(e.g., <code class="docutils literal notranslate"><span class="pre">list[str]</span></code>).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The name of the type (e.g., ‘str’) or the string representation
-of the generic alias (e.g., ‘list[str]’).</p>
+<dd class="field-even"><p>The name of the type (e.g., <code class="docutils literal notranslate"><span class="pre">'str'</span></code>) or the string
+representation  of the generic alias (e.g., <code class="docutils literal notranslate"><span class="pre">'list[str]'</span></code>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -534,22 +585,22 @@ have identical database values, fallback to single input behavior.</p></li>
 <li><p><strong>Ambiguous case</strong>: When multiple inputs have different database
 values, track all possible inheritance sources for user resolution.</p></li>
 </ol>
-<p>The process attribute auto_inheritance_dict is a dictionary filled with
-these values: <cite>{output_filename: &lt;input_spec&gt;}</cite></p>
-<blockquote>
-<div><ul>
-<li><p><cite>output_filename</cite> is the relative filename in the database</p></li>
-<li><p><cite>&lt;input_spec&gt;</cite> can be:</p>
+<p>The process attribute <code class="docutils literal notranslate"><span class="pre">auto_inheritance_dict</span></code> is a dictionary filled with
+these values <cite>{output_filename: &lt;input_spec&gt;}</cite>:</p>
 <blockquote>
 <div><ul class="simple">
+<li><p><cite>output_filename</cite> is the relative filename in the database</p></li>
+<li><dl class="simple">
+<dt><cite>&lt;input_spec&gt;</cite> can be:</dt><dd><ul>
 <li><p>a string: filename</p></li>
 <li><p>a dict: <cite>{input_param: input_filename}</cite></p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </li>
 </ul>
 </div></blockquote>
-<p><cite>auto_inheritance_dict</cite> is built automatically, and is used as a
+<p><code class="docutils literal notranslate"><span class="pre">auto_inheritance_dict</span></code> is built automatically, and is used as a
 fallback to <code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessMIA</span></code> <cite>inheritance_dict</cite>, built “manually”
 (specialized for each process) in the <code class="xref py py-meth docutils literal notranslate"><span class="pre">ProcessMIA.list_outputs()</span></code>
 when the latter does not exist, or does not specify what an output
@@ -567,9 +618,12 @@ or populate the node’s inputs and outputs. Defaults to None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict or None): Auto-inheritance mapping if successful and no
-job provided, None if no inheritance can be determined or job is provided
-(in which case the job object is updated in-place).</p>
+<dd class="field-even"><p>Auto-inheritance mapping if successful and no job provided, None
+if no inheritance can be determined or job is provided (in which case
+the job object is updated in-place).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -591,25 +645,28 @@ the second.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>first_ver</strong> – (str) The first version to compare (e.g., ‘0.13.0’).</p></li>
-<li><p><strong>sec_ver</strong> – (str) The second version to compare (e.g., ‘0.13.0’).</p></li>
-<li><p><strong>comp</strong> – (str) The comparator to use (‘sup’, ‘inf’, ‘eq’).</p></li>
+<li><p><strong>first_ver</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The first version to compare (e.g., ‘0.13.0’).</p></li>
+<li><p><strong>sec_ver</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The second version to compare (e.g., ‘0.13.0’).</p></li>
+<li><p><strong>comp</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The comparator to use (‘sup’, ‘inf’, ‘eq’).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the comparison condition is satisfied, False otherwise.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>normalise: Transform a version of a package to a
-corresponding list of integer.</p></li>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>normalise: Transform a version of a package to a corresponding
+list of integer.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -620,10 +677,10 @@ capsul and mia_processes processes libraries.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nipypeVer</strong> – (str) nipype version currently installed.</p></li>
-<li><p><strong>miaProcVer</strong> – (str) mia_processes version currently installed.</p></li>
-<li><p><strong>capsulVer</strong> – (str) capsul version currently installed.</p></li>
-<li><p><strong>Config</strong> – The class that manages Mia’s configuration and properties.</p></li>
+<li><p><strong>nipypeVer</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – nipype version currently installed.</p></li>
+<li><p><strong>miaProcVer</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – mia_processes version currently installed.</p></li>
+<li><p><strong>capsulVer</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – capsul version currently installed.</p></li>
+<li><p><strong>Config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>Config</em></a>) – The class that manages Mia’s configuration and properties.</p></li>
 </ul>
 </dd>
 </dl>
@@ -637,26 +694,25 @@ station. The idea is to use the versioning available with pypi
 (<a class="reference external" href="https://pypi.org/">https://pypi.org/</a>). Thus, it is sufficient for the user to change the
 version of the library installed on the station (pip install…) to
 also change the version available in Mia. Indeed, when starting Mia, the
-verify_processes function will update the nipype, capsul and
-mia_processes libraries in the pipeline library accordingly. Currently, it
-is mandatory to have nipype, capsul and mia_processes installed in the
-station.</p>
+verify_processes function will update the nipype, capsul and mia_processes
+libraries in the pipeline library accordingly. Currently, it is mandatory
+to have nipype, capsul and mia_processes installed in the station.</p>
 <p>All this information, as well as the installed versions and package
 paths are saved in the  properties_path/properties/process_config.yml file.
 When an upgrade or downgrade is performed for a package, the last
 configuration used by the user is kept (if a pipeline was visible, it
-remains so and vice versa). However, if a new pipeline is available in
-the new version it is automatically marked as visible in the library.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+remains so and vice versa). However, if a new pipeline is available in the
+new version it is automatically marked as visible in the library.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_deepCompDic: Keep the previous config existing before
 packages update.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -666,19 +722,16 @@ packages update.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>Config</strong> – The class that manages Mia’s configuration and properties.</p></li>
-<li><p><strong>dev_mode</strong> – (bool) The current developer mode. (True: dev,
-False: user)</p></li>
-<li><p><strong>pypath</strong> – (list) List of paths for the capsul config.</p></li>
-<li><p><strong>dot_mia_config</strong> – (str) Path to the configuration_path.yml file.</p></li>
+<li><p><strong>Config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>Config</em></a>) – The class that manages Mia’s configuration and properties.</p></li>
+<li><p><strong>dev_mode</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – The current developer mode. (True: dev, False: user)</p></li>
+<li><p><strong>pypath</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of paths for the capsul config.</p></li>
+<li><p><strong>dot_mia_config</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the configuration_path.yml file.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_browse_properties_path: The user define the properties_path
 parameter.</p></li>
 <li><p>_cancel_clicked: Exit form Mia.</p></li>
@@ -687,8 +740,10 @@ parameter.</p></li>
 <li><p>_verify_miaConfig: Check the config and try to fix if
 necessary.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </section>

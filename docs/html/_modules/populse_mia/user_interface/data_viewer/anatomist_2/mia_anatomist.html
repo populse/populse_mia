@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../../_static/documentation_options.js?v=15c471b9"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -44,41 +42,41 @@
 <span class="c1">##########################################################################</span>
 
 
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMessageBox</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QToolButton</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QToolButton</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.data_browser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TableDataBrowser</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.anatomist_2</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_viewer.anatomist_2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
     <span class="n">resources</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E501</span>
     <span class="n">AnaSimpleViewer2</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">..data_viewer</span> <span class="kn">import</span> <span class="n">DataViewer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..data_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">DataViewer</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MiaViewer&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="MiaViewer">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer">[docs]</a>
-<span class="k">class</span> <span class="nc">MiaViewer</span><span class="p">(</span><span class="n">DataViewer</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MiaViewer</span><span class="p">(</span><span class="n">DataViewer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt-based viewer using PyAnatomist.</span>
 
@@ -123,7 +121,7 @@
 
 <div class="viewcode-block" id="MiaViewer.__init__">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Mia viewer widget.</span>
 
@@ -145,7 +143,7 @@
 
 <div class="viewcode-block" id="MiaViewer._add_dialog_buttons">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._add_dialog_buttons">[docs]</a>
-    <span class="k">def</span> <span class="nf">_add_dialog_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_dialog_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add action buttons to the filter dialog.</span>
 
@@ -168,7 +166,7 @@
 
 <div class="viewcode-block" id="MiaViewer._apply_preferences">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._apply_preferences">[docs]</a>
-    <span class="k">def</span> <span class="nf">_apply_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the settings from the preferences dialog.</span>
 
@@ -196,7 +194,7 @@
 
 <div class="viewcode-block" id="MiaViewer._create_preferences_dialog">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._create_preferences_dialog">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_preferences_dialog</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_preferences_dialog</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">current_framerate</span><span class="p">,</span> <span class="n">current_config</span><span class="p">,</span> <span class="n">current_ref</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -263,7 +261,7 @@
 
 <div class="viewcode-block" id="MiaViewer._process_selected_documents">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._process_selected_documents">[docs]</a>
-    <span class="k">def</span> <span class="nf">_process_selected_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_process_selected_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Process user&#39;s document selection and display the selected files.&quot;&quot;&quot;</span>
         <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">selectedIndexes</span><span class="p">()</span>
         <span class="n">selected_files</span> <span class="o">=</span> <span class="p">[]</span>
@@ -289,7 +287,7 @@
 
 <div class="viewcode-block" id="MiaViewer._setup_search_interface">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._setup_search_interface">[docs]</a>
-    <span class="k">def</span> <span class="nf">_setup_search_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_search_interface</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialog</span><span class="p">,</span> <span class="n">layout</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the search bar and related UI elements.</span>
 
@@ -322,7 +320,7 @@
 
 <div class="viewcode-block" id="MiaViewer._setup_ui">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._setup_ui">[docs]</a>
-    <span class="k">def</span> <span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up the user interface components and connect signals.&quot;&quot;&quot;</span>
         <span class="c1"># Get references to PyAnatomist widget actions</span>
         <span class="n">awidget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">awidget</span>
@@ -349,7 +347,7 @@
 
 <div class="viewcode-block" id="MiaViewer.close">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.close">[docs]</a>
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Close the viewer and properly clean up PyAnatomist resources.</span>
 
@@ -365,7 +363,7 @@
 
 <div class="viewcode-block" id="MiaViewer.display_files">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.display_files">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Load and display the specified files in the viewer.</span>
 
@@ -377,7 +375,7 @@
 
 <div class="viewcode-block" id="MiaViewer.displayed_files">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.displayed_files">[docs]</a>
-    <span class="k">def</span> <span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">displayed_files</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the list of currently displayed files.</span>
 
@@ -388,7 +386,7 @@
 
 <div class="viewcode-block" id="MiaViewer.filter_documents">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.filter_documents">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to filter and select documents to display.</span>
 
@@ -430,7 +428,7 @@
 
 <div class="viewcode-block" id="MiaViewer.preferences">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.preferences">[docs]</a>
-    <span class="k">def</span> <span class="nf">preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open the preferences dialog to configure viewer settings.</span>
 
@@ -453,7 +451,7 @@
 
 <div class="viewcode-block" id="MiaViewer.remove_files">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.remove_files">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified files from the viewer.</span>
 
@@ -465,14 +463,14 @@
 
 <div class="viewcode-block" id="MiaViewer.reset_search_bar">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.reset_search_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear the search bar text.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MiaViewer.screenshot">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.screenshot">[docs]</a>
-    <span class="k">def</span> <span class="nf">screenshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">screenshot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Take a screenshot of the current viewer state.</span>
 
@@ -489,7 +487,7 @@
 
 <div class="viewcode-block" id="MiaViewer.search_str">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.search_str">[docs]</a>
-    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_term</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">search_term</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search for documents matching the given term and update the view.</span>
 
@@ -542,7 +540,7 @@
 
 <div class="viewcode-block" id="MiaViewer.set_documents">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.set_documents">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the viewer with a set of documents from a project.</span>
 

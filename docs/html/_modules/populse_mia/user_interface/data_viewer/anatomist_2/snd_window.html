@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.snd_window &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.snd_window &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../../_static/documentation_options.js?v=15c471b9"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.snd_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -42,20 +40,20 @@
 <span class="c1"># for details.</span>
 <span class="c1">###############################################################################</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.uic</span> <span class="kn">import</span> <span class="n">loadUi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend.uic</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadUi</span>
 
 <span class="c1"># Register Qt resources (icons embedded in resources_snd_window.py)</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">resources_snd_window</span>  <span class="c1"># noqa: F401</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">resources_snd_window</span>  <span class="c1"># noqa: F401</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">anatomist.direct.api</span> <span class="k">as</span> <span class="nn">ana</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">anatomist.direct.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ana</span>
 
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
@@ -68,7 +66,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer">[docs]</a>
-<span class="k">class</span> <span class="nc">NewWindowViewer</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NewWindowViewer</span><span class="p">(</span><span class="n">QtGui</span><span class="o">.</span><span class="n">QMainWindow</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Window for displaying a selected object in a single anatomical view.</span>
 
@@ -92,7 +90,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.__init__">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the NewWindowViewer with UI components and event</span>
 <span class="sd">        connections.</span>
@@ -136,7 +134,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.changeDisplay">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.changeDisplay">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">         Changes the display based on user&#39;s selection.</span>
 
@@ -154,7 +152,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.close">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.close">[docs]</a>
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Properly closes objects before exiting.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -168,7 +166,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.createNewWindow">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.createNewWindow">[docs]</a>
-    <span class="k">def</span> <span class="nf">createNewWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wintype</span><span class="o">=</span><span class="s2">&quot;Axial&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createNewWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wintype</span><span class="o">=</span><span class="s2">&quot;Axial&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a new window in the vertical layout.</span>
 
@@ -231,7 +229,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.disableButton">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.disableButton">[docs]</a>
-    <span class="k">def</span> <span class="nf">disableButton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disableButton</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Manages button availability and checked state depending on the</span>
 <span class="sd">        displayed view.</span>
@@ -245,7 +243,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.setObject">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.setObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">setObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Stores the object to be displayed.</span>
 
@@ -256,7 +254,7 @@
 
 <div class="viewcode-block" id="NewWindowViewer.showPopup">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.snd_window.html#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.showPopup">[docs]</a>
-    <span class="k">def</span> <span class="nf">showPopup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">showPopup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">         Defines the dimensions of the popup and displays the object.</span>
 

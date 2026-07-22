@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+63bbe3c7 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../../_static/documentation_options.js?v=ff1dfa91"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 3.0.0-dev+63bbe3c7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -47,26 +45,26 @@
 <span class="c1"># for details.</span>
 <span class="c1">###############################################################################</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QSize</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QWidget</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QSize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QApplication</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma</span> <span class="kn">import</span> <span class="n">aims</span>
-<span class="kn">from</span> <span class="nn">soma.aims</span> <span class="kn">import</span> <span class="n">colormaphints</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui</span> <span class="kn">import</span> <span class="n">qt_backend</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.uic</span> <span class="kn">import</span> <span class="n">loadUi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma</span><span class="w"> </span><span class="kn">import</span> <span class="n">aims</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.aims</span><span class="w"> </span><span class="kn">import</span> <span class="n">colormaphints</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui</span><span class="w"> </span><span class="kn">import</span> <span class="n">qt_backend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend.uic</span><span class="w"> </span><span class="kn">import</span> <span class="n">loadUi</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_viewer.anatomist_2.snd_window</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_viewer.anatomist_2.snd_window</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">NewWindowViewer</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -74,7 +72,7 @@
 <span class="n">anatomist_available</span> <span class="o">=</span> <span class="kc">True</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">anatomist.direct.api</span> <span class="k">as</span> <span class="nn">ana</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">anatomist.direct.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ana</span>
 
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
     <span class="n">anatomist_available</span> <span class="o">=</span> <span class="kc">False</span>
@@ -86,7 +84,7 @@
 <span class="k">try</span><span class="p">:</span>
     <span class="c1">#  The following imports have to be made after the qApp.startingUp() test</span>
     <span class="c1">#  since they do instantiate Anatomist for registry to work.</span>
-    <span class="kn">from</span> <span class="nn">anatomist.cpp.simplecontrols</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">anatomist.cpp.simplecontrols</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">Simple2DControl</span><span class="p">,</span>
         <span class="n">registerSimpleControls</span><span class="p">,</span>
     <span class="p">)</span>
@@ -110,7 +108,7 @@
 
 <div class="viewcode-block" id="LeftSimple3DControl">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl">[docs]</a>
-<span class="k">class</span> <span class="nc">LeftSimple3DControl</span><span class="p">(</span><span class="n">Simple2DControl</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LeftSimple3DControl</span><span class="p">(</span><span class="n">Simple2DControl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Control for 3D navigation using the left mouse button.</span>
 
@@ -127,7 +125,7 @@
 
 <div class="viewcode-block" id="LeftSimple3DControl.__init__">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;LeftSimple3DControl&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;LeftSimple3DControl&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the LeftSimple3DControl instance.</span>
 
@@ -140,7 +138,7 @@
 
 <div class="viewcode-block" id="LeftSimple3DControl.eventAutoSubscription">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.eventAutoSubscription">[docs]</a>
-    <span class="k">def</span> <span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auto-subscribes to mouse and keyboard events relevant for 3D controls.</span>
 
@@ -180,7 +178,7 @@
 
 <div class="viewcode-block" id="VolRenderControl">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl">[docs]</a>
-<span class="k">class</span> <span class="nc">VolRenderControl</span><span class="p">(</span><span class="n">LeftSimple3DControl</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">VolRenderControl</span><span class="p">(</span><span class="n">LeftSimple3DControl</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Control for volume rendering navigation using the middle mouse button.</span>
 
@@ -197,7 +195,7 @@
 
 <div class="viewcode-block" id="VolRenderControl.__init__">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;VolRenderControl&quot;</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prio</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;VolRenderControl&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the VolRenderControl instance.</span>
 
@@ -210,7 +208,7 @@
 
 <div class="viewcode-block" id="VolRenderControl.eventAutoSubscription">
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.eventAutoSubscription">[docs]</a>
-    <span class="k">def</span> <span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eventAutoSubscription</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pool</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Auto-subscribes to mouse events for cut slice rotation.</span>
 
@@ -237,8 +235,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2">[docs]</a>
-<span class="k">class</span> <span class="nc">AnaSimpleViewer2</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnaSimpleViewer2</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    AnaSimpleViewer is a simple viewer application and widget.</span>
 
@@ -363,8 +361,8 @@
     <span class="n">_global_handlers_initialized</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="AnaSimpleViewer2.__init__">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">init_global_handlers</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the AnaSimpleViewer2 instance.</span>
 
@@ -397,8 +395,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2._displayVolume">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2._displayVolume">[docs]</a>
-    <span class="k">def</span> <span class="nf">_displayVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2._displayVolume">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_displayVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a volume or Fusion2D object in all available windows.</span>
 
@@ -439,8 +437,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.addMesh">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">addMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addMesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a 2D mesh representation of a volume object to the viewer.</span>
 
@@ -474,8 +472,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.addNewView">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addNewView">[docs]</a>
-    <span class="k">def</span> <span class="nf">addNewView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addNewView">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addNewView</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a popup window displaying the given object.</span>
 
@@ -486,8 +484,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.addObject">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">addObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addObject">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays an object in all Anatomist windows based on its type.</span>
 
@@ -520,8 +518,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.addVolume">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addVolume">[docs]</a>
-    <span class="k">def</span> <span class="nf">addVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.addVolume">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">addVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a volume in all windows.</span>
 
@@ -596,8 +594,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.automaticRunning">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning">[docs]</a>
-    <span class="k">def</span> <span class="nf">automaticRunning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">automaticRunning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enables the automatic running of functional images.</span>
 
@@ -667,8 +665,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.changeConfig">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeConfig">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeConfig">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the configuration based on user settings.</span>
 
@@ -680,8 +678,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.changeIcon">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeIcon">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">icon_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeIcon">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeIcon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">icon_type</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the icon of a list item to indicate its display status.</span>
 
@@ -706,8 +704,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.changeOpacity">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeOpacity">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeOpacity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeOpacity">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeOpacity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the opacity of the selected object based on the slider value.</span>
 
@@ -753,8 +751,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.changeRef">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeRef">[docs]</a>
-    <span class="k">def</span> <span class="nf">changeRef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.changeRef">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changeRef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the referential and reloads objects.</span>
 
@@ -767,8 +765,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.checkviews">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.checkviews">[docs]</a>
-    <span class="k">def</span> <span class="nf">checkviews</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.checkviews">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">checkviews</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prevents closing the last opened view.</span>
 
@@ -787,8 +785,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.clickHandler">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.clickHandler">[docs]</a>
-    <span class="k">def</span> <span class="nf">clickHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.clickHandler">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clickHandler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eventName</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Callback for linked cursor.</span>
 
@@ -826,8 +824,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.closeAll">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.closeAll">[docs]</a>
-    <span class="k">def</span> <span class="nf">closeAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_ana</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.closeAll">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">closeAll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">close_ana</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes all open Anatomist windows and cleans up resources.</span>
 
@@ -872,8 +870,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.colorBackgroundList">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.colorBackgroundList">[docs]</a>
-    <span class="k">def</span> <span class="nf">colorBackgroundList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.colorBackgroundList">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">colorBackgroundList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Colors the background of items in the &#39;objectslist&#39; widget based on</span>
 <span class="sd">        whether their corresponding objects are currently displayed.</span>
@@ -900,8 +898,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.coordsChanged">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.coordsChanged">[docs]</a>
-    <span class="k">def</span> <span class="nf">coordsChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.coordsChanged">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">coordsChanged</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the cursor position in the 3D view based on the coordinates</span>
 <span class="sd">        entered in the GUI fields.</span>
@@ -945,8 +943,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.createWindow">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createWindow">[docs]</a>
-    <span class="k">def</span> <span class="nf">createWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wintype</span><span class="o">=</span><span class="s2">&quot;Axial&quot;</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createWindow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">wintype</span><span class="o">=</span><span class="s2">&quot;Axial&quot;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a new window in the windows grid layout.</span>
 
@@ -1019,8 +1017,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.createTotalWindow">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createTotalWindow">[docs]</a>
-    <span class="k">def</span> <span class="nf">createTotalWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">views</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.createTotalWindow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createTotalWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">views</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates windows that will contain the specified views.</span>
 
@@ -1053,8 +1051,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.deleteObjects">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjects">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects_to_delete</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjects">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">objects_to_delete</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the specified objects from the scene, the object list widget,</span>
 <span class="sd">        and the internal object list.</span>
@@ -1093,8 +1091,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.deleteObjectsFromFiles">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjectsFromFiles">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteObjectsFromFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteObjectsFromFiles">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteObjectsFromFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes objects from the scene based on their filenames.</span>
 
@@ -1109,8 +1107,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.deleteTotalWindow">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteTotalWindow">[docs]</a>
-    <span class="k">def</span> <span class="nf">deleteTotalWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.deleteTotalWindow">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deleteTotalWindow</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clears all existing windows and fusions to prepare for a new display.</span>
 
@@ -1130,8 +1128,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.disableButtons">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.disableButtons">[docs]</a>
-    <span class="k">def</span> <span class="nf">disableButtons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.disableButtons">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disableButtons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Disables the add and remove buttons based on the selected object&#39;s</span>
 <span class="sd">        display status.</span>
@@ -1164,8 +1162,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.dragEnterEvent">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent">[docs]</a>
-    <span class="k">def</span> <span class="nf">dragEnterEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dragEnterEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles the drag enter event to determine if the dragged data can be</span>
 <span class="sd">        decoded.</span>
@@ -1186,8 +1184,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.dropEvent">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dropEvent">[docs]</a>
-    <span class="k">def</span> <span class="nf">dropEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dropEvent">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dropEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles the drop event to load or register Anatomist objects.</span>
 
@@ -1241,8 +1239,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.editAdd">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editAdd">[docs]</a>
-    <span class="k">def</span> <span class="nf">editAdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editAdd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">editAdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display all objects currently selected in the list box.</span>
 
@@ -1263,8 +1261,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.editDelete">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editDelete">[docs]</a>
-    <span class="k">def</span> <span class="nf">editDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editDelete">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">editDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the currently selected objects from the scene and updates the</span>
 <span class="sd">        object list.</span>
@@ -1277,8 +1275,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.editRemove">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editRemove">[docs]</a>
-    <span class="k">def</span> <span class="nf">editRemove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.editRemove">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">editRemove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes the currently selected objects from the scene and updates the</span>
 <span class="sd">        background color list.</span>
@@ -1294,8 +1292,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.enableVolumeRendering">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.enableVolumeRendering">[docs]</a>
-    <span class="k">def</span> <span class="nf">enableVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.enableVolumeRendering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enableVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enables or disables volume rendering in 3D views.</span>
 
@@ -1311,8 +1309,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.fileOpen">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.fileOpen">[docs]</a>
-    <span class="k">def</span> <span class="nf">fileOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.fileOpen">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fileOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a file browser dialog and load selected objects.</span>
 
@@ -1354,8 +1352,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.get_new_mesh2d_color">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.get_new_mesh2d_color">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_mesh2d_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.get_new_mesh2d_color">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_mesh2d_color</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a new color for a 2D mesh that has not been used yet.</span>
 
@@ -1400,8 +1398,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.getViewsToDisplay">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.getViewsToDisplay">[docs]</a>
-    <span class="k">def</span> <span class="nf">getViewsToDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.getViewsToDisplay">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getViewsToDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines which views need to be displayed based on the state of the</span>
 <span class="sd">        view buttons.</span>
@@ -1420,8 +1418,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.init_global_handlers">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers">[docs]</a>
-    <span class="k">def</span> <span class="nf">init_global_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.init_global_handlers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">init_global_handlers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set some global controls/settings in Anatomist application object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1453,8 +1451,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.initialize_components">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.initialize_components">[docs]</a>
-    <span class="k">def</span> <span class="nf">initialize_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">awin</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.initialize_components">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">initialize_components</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">awin</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the component attributes and user interface.</span>
 
@@ -1496,8 +1494,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.loadObject">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.loadObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">loadObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">config_changed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.loadObject">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">loadObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">,</span> <span class="n">config_changed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads objects from the specified files and prepares them for display.</span>
 
@@ -1569,8 +1567,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.newDisplay">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newDisplay">[docs]</a>
-    <span class="k">def</span> <span class="nf">newDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newDisplay">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newDisplay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs a new display of windows, objects, and views.</span>
 
@@ -1594,8 +1592,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.newPalette">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newPalette">[docs]</a>
-    <span class="k">def</span> <span class="nf">newPalette</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.newPalette">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newPalette</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the chosen color palette in the toolbar drop-down menu to the</span>
 <span class="sd">        selected object.</span>
@@ -1607,9 +1605,9 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.objectLoaded">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.objectLoaded">[docs]</a>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.objectLoaded">[docs]</a>
     <span class="nd">@QtCore</span><span class="o">.</span><span class="n">Slot</span><span class="p">(</span><span class="s2">&quot;anatomist::AObject *&quot;</span><span class="p">,</span> <span class="s2">&quot;const std::string &amp;&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">objectLoaded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objectLoaded</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles the event when an object is loaded.</span>
 
@@ -1642,8 +1640,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.object_properties">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.object_properties">[docs]</a>
-    <span class="k">def</span> <span class="nf">object_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.object_properties">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">object_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the properties of selected objects in an Anatomist browser</span>
 <span class="sd">        window.</span>
@@ -1671,8 +1669,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.open_anatomist_main_window">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.open_anatomist_main_window">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_anatomist_main_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.open_anatomist_main_window">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_anatomist_main_window</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens the main Anatomist control window and adds GUI menus</span>
 <span class="sd">        if available.</span>
@@ -1692,8 +1690,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.popup_objects">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.popup_objects">[docs]</a>
-    <span class="k">def</span> <span class="nf">popup_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.popup_objects">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">popup_objects</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a context menu for selected objects in the object list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1715,8 +1713,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.registerObject">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.registerObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">registerObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.registerObject">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">registerObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">views</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Registers an object in the AnaSimpleViewer&#39;s object list and displays</span>
 <span class="sd">        it.</span>
@@ -1758,8 +1756,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.removeMesh">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeMesh">[docs]</a>
-    <span class="k">def</span> <span class="nf">removeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeMesh">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeMesh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes the specified mesh and its associated object from the viewer.</span>
 
@@ -1780,8 +1778,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.removeObject">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeObject">[docs]</a>
-    <span class="k">def</span> <span class="nf">removeObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeObject">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeObject</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove an object from all views.</span>
 
@@ -1808,8 +1806,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.removeVolume">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeVolume">[docs]</a>
-    <span class="k">def</span> <span class="nf">removeVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.removeVolume">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">removeVolume</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Hides a volume from the views.</span>
 
@@ -1872,8 +1870,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.selectedObjects">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.selectedObjects">[docs]</a>
-    <span class="k">def</span> <span class="nf">selectedObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.selectedObjects">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selectedObjects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve objects currently selected in the list box.</span>
 
@@ -1897,8 +1895,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setColorPalette">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setColorPalette">[docs]</a>
-    <span class="k">def</span> <span class="nf">setColorPalette</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setColorPalette">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setColorPalette</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks color palette of a selected object, displays it in the toolbar</span>
 <span class="sd">        drop-down menu and adds it if it isn&#39;t already stored in</span>
@@ -1934,8 +1932,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setComboBox">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setComboBox">[docs]</a>
-    <span class="k">def</span> <span class="nf">setComboBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setComboBox">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setComboBox</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inserts a drop-down menu in the toolbar containing available color</span>
 <span class="sd">        palettes.</span>
@@ -1965,8 +1963,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setSlider">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setSlider">[docs]</a>
-    <span class="k">def</span> <span class="nf">setSlider</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setSlider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setSlider</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inserts an opacity slider in the toolbar.</span>
 
@@ -1988,8 +1986,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setup_anatomist">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_anatomist">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_anatomist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_anatomist">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_anatomist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Registers the Anatomist controls and options.</span>
 
@@ -2003,8 +2001,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setup_color_palette_and_slider">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_color_palette_and_slider">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_color_palette_and_slider</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_color_palette_and_slider">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_color_palette_and_slider</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up the color palette dropdown and opacity slider in the toolbar.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2015,8 +2013,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.setup_gui_connections">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_gui_connections">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_gui_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">awin</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.setup_gui_connections">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_gui_connections</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">awin</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects GUI actions to their respective callbacks.</span>
 
@@ -2066,8 +2064,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.startVolumeRendering">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.startVolumeRendering">[docs]</a>
-    <span class="k">def</span> <span class="nf">startVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.startVolumeRendering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">startVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Enables volume rendering in 3D views.&quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
 
@@ -2104,8 +2102,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.stopVolumeRendering">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.stopVolumeRendering">[docs]</a>
-    <span class="k">def</span> <span class="nf">stopVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.stopVolumeRendering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stopVolumeRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Disables volume rendering and displays a slice instead.&quot;&quot;&quot;</span>
 
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
@@ -2140,8 +2138,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.updateRendering">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.updateRendering">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.updateRendering">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateRendering</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates volume rendering based on the current cursor position.</span>
 
@@ -2160,8 +2158,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.updateVolumeValues">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.updateVolumeValues">[docs]</a>
-    <span class="k">def</span> <span class="nf">updateVolumeValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.updateVolumeValues">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">updateVolumeValues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">win</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">pos</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the volume values displayed based on the cursor position.</span>
 
@@ -2226,8 +2224,8 @@
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.viewReferential">
-<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.viewReferential">[docs]</a>
-    <span class="k">def</span> <span class="nf">viewReferential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.viewReferential">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">viewReferential</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Centers the view on the specified object and sets the referential.</span>
 

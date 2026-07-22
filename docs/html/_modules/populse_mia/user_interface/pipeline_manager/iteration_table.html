@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=15c471b9"></script>
+    <script src="../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -42,16 +40,16 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPixmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QCheckBox</span><span class="p">,</span>
     <span class="n">QComboBox</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -64,10 +62,10 @@
 <span class="p">)</span>
 
 <span class="c1"># Populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">TAG_FILENAME</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessMIA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ClickableLabel</span><span class="p">,</span>
     <span class="n">PopUpSelectIteration</span><span class="p">,</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
@@ -78,7 +76,7 @@
 
 <div class="viewcode-block" id="IterationTable">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable">[docs]</a>
-<span class="k">class</span> <span class="nc">IterationTable</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IterationTable</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget that handles pipeline iteration.</span>
 
@@ -120,7 +118,7 @@
 
 <div class="viewcode-block" id="IterationTable.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_window</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">main_window</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the IterationTable widget.</span>
 
@@ -242,7 +240,7 @@
 
 <div class="viewcode-block" id="IterationTable._create_tag_button">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable._create_tag_button">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_tag_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_tag_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new tag button with the given text and index.</span>
 
 <span class="sd">        :param text: (str) Text to display on the button.</span>
@@ -255,7 +253,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">current_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">current_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the currently active pipeline editor.</span>
 
@@ -273,7 +271,7 @@
 
 <div class="viewcode-block" id="IterationTable.add_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.add_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new tag button to visualize in the iteration table.</span>
 
@@ -287,7 +285,7 @@
 
 <div class="viewcode-block" id="IterationTable.emit_iteration_table_updated">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.emit_iteration_table_updated">[docs]</a>
-    <span class="k">def</span> <span class="nf">emit_iteration_table_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit_iteration_table_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Emit a signal when the iteration scans have been updated.&quot;&quot;&quot;</span>
         <span class="n">visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span>
         <span class="c1"># Toggle visibility of the iteration controls and tags containers</span>
@@ -311,7 +309,7 @@
 
 <div class="viewcode-block" id="IterationTable.fill_values">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.fill_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">fill_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill values_list with unique tag values for the specified tag.</span>
 
@@ -342,7 +340,7 @@
 
 <div class="viewcode-block" id="IterationTable.filter_values">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.filter_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a dialog to select specific tag values for iteration.&quot;&quot;&quot;</span>
         <span class="n">current_editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_editor</span>
         <span class="n">ui_iteration</span> <span class="o">=</span> <span class="n">PopUpSelectIteration</span><span class="p">(</span>
@@ -365,7 +363,7 @@
 
 <div class="viewcode-block" id="IterationTable.format_filter_value">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.format_filter_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">format_filter_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_filter_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a value into a JSON-formatted string.</span>
 
@@ -392,7 +390,7 @@
 
 <div class="viewcode-block" id="IterationTable.refresh_layout">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.refresh_layout">[docs]</a>
-    <span class="k">def</span> <span class="nf">refresh_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the layout of the widget.</span>
 
 <span class="sd">        Called in widget&#39;s initialization and when a tag push button is added</span>
@@ -418,7 +416,7 @@
 
 <div class="viewcode-block" id="IterationTable.remove_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.remove_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the last tag button from the visualization list.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">:</span>
@@ -438,7 +436,7 @@
 
 <div class="viewcode-block" id="IterationTable.select_iteration_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_iteration_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">select_iteration_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_iteration_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open a dialog to let the user select which tag to iterate over.&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -464,7 +462,7 @@
 
 <div class="viewcode-block" id="IterationTable.select_visualized_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.select_visualized_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">select_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to select which tag to visualize in the iteration table.</span>
 
@@ -491,7 +489,7 @@
 
 <div class="viewcode-block" id="IterationTable.update_iterated_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_iterated_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_iterated_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_iterated_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the widget when the iterated tag is modified.</span>
 
@@ -535,7 +533,7 @@
 
 <div class="viewcode-block" id="IterationTable.update_table">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the iteration table with current data.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -642,7 +640,7 @@
 
 <div class="viewcode-block" id="IterationTable.update_selected_tag">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.iteration_table.html#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.update_selected_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_selected_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_tag</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_selected_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected_tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the lists of values corresponding to the selected tag.</span>
 

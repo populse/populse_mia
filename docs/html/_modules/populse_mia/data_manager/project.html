@@ -4,452 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+4cbe6e94 documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=7ba00931"></script>
+    <script src="../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
-
-
-
-
-
-const initStyles = () => {
-    const defaultStyle = document.createElement('style');
-    defaultStyle.textContent = `pre.mermaid {
-    /* Same as .mermaid-container > pre */
-    display: block;
-    width: 100%;
-}
-
-pre.mermaid > svg {
-    /* Same as .mermaid-container > pre > svg */
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}`;
-    document.head.appendChild(defaultStyle);
-
-    const fullscreenStyle = document.createElement('style');
-    fullscreenStyle.textContent = `.mermaid-container {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-}
-
-.mermaid-container > pre {
-    display: block;
-    width: 100%;
-}
-
-.mermaid-container > pre > svg {
-    height: 500px;
-    width: 100%;
-    max-width: 100% !important;
-}
-
-.mermaid-fullscreen-btn {
-    width: 28px;
-    height: 28px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    line-height: 1;
-    padding: 0;
-    color: #333;
-}
-
-.mermaid-fullscreen-btn:hover {
-    opacity: 100% !important;
-    background: rgba(255, 255, 255, 1);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-btn.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-btn.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal {
-    display: none;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 95vw;
-    height: 100vh;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 9999;
-    padding: 20px;
-    overflow: auto;
-}
-
-.mermaid-fullscreen-modal.dark-theme {
-    background: rgba(0, 0, 0, 0.98);
-}
-
-.mermaid-fullscreen-modal.active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen {
-    position: relative;
-    width: 95vw;
-    height: 90vh;
-    max-width: 95vw;
-    max-height: 90vh;
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen.dark-theme {
-    background: #1a1a1a;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-
-.mermaid-container-fullscreen pre.mermaid {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.mermaid-container-fullscreen .mermaid svg {
-    height: 100% !important;
-    width: 100% !important;
-    cursor: grab;
-}
-
-.mermaid-fullscreen-close {
-    position: fixed !important;
-    top: 20px !important;
-    right: 20px !important;
-    width: 40px;
-    height: 40px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 10000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: all 0.2s;
-    font-size: 24px;
-    line-height: 1;
-    color: #333;
-}
-
-.mermaid-fullscreen-close:hover {
-    background: white;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-    transform: scale(1.1);
-}
-
-.mermaid-fullscreen-close.dark-theme {
-    background: rgba(50, 50, 50, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #e0e0e0;
-}
-
-.mermaid-fullscreen-close.dark-theme:hover {
-    background: rgba(60, 60, 60, 1);
-    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
-}
-
-.mermaid-fullscreen-modal .mermaid-fullscreen-btn {
-    display: none !important;
-}`;
-    document.head.appendChild(fullscreenStyle);
-}
-
-// Detect if page has dark background
-const isDarkTheme = () => {
-    // We use a set of heuristics:
-    // 1. Check for common dark mode classes or attributes
-    // 2. Check computed background color brightness
-    if (document.documentElement.classList.contains('dark') ||
-        document.documentElement.getAttribute('data-theme') === 'dark' ||
-        document.body.classList.contains('dark') ||
-        document.body.getAttribute('data-theme') === 'dark') {
-        // console.log("Dark theme detected via class/attribute");
-        return true;
-    }
-    if (document.documentElement.classList.contains('light') ||
-        document.documentElement.getAttribute('data-theme') === 'light' ||
-        document.body.classList.contains('light') ||
-        document.body.getAttribute('data-theme') === 'light') {
-        // console.log("Light theme detected via class/attribute");
-        return false;
-    }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        // console.log("Dark theme detected via prefers-color-scheme");
-        return true;
-    }
-    const bgColor = window.getComputedStyle(document.body).backgroundColor;
-    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
-    if (match) {
-        const r = parseInt(match[1]);
-        const g = parseInt(match[2]);
-        const b = parseInt(match[3]);
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        // console.log("Background color brightness:", brightness);
-        return brightness < 128;
-    }
-    // console.log("No dark or light theme detected, defaulting to light theme");
-    return false;
-};
-
-let darkTheme = isDarkTheme();
-let modal = null;
-let modalContent = null;
-let previousScrollOffset = [window.scrollX, window.scrollY];
-
-const runMermaid = async (rerun) => {
-    console.log("Running mermaid diagrams, rerun =", rerun);
-    // clear all existing mermaid charts
-    let all_mermaids = document.querySelectorAll(".mermaid");
-
-    if (rerun) {
-        all_mermaids.forEach((el) => {
-            if(!el.hasAttribute("data-original-code")) {
-                // store original code
-                // console.log(`Storing original code for first run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-            if(el.getAttribute("data-processed") === "true") {
-                // remove and restore original
-                el.removeAttribute("data-processed");
-                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
-                el.innerHTML = el.getAttribute('data-original-code');
-            } else {
-                // store original code
-                // console.log(`Storing original code for re-run: `, el.innerHTML);
-                el.setAttribute('data-original-code', el.innerHTML);
-            }
-        });
-        await mermaid.run();
-    }
-
-    all_mermaids = document.querySelectorAll(".mermaid");
-    const mermaids_processed = document.querySelectorAll(".mermaid[data-processed='true']");
-
-    if ("False" === "True") {
-        const mermaids_to_add_zoom = -1 === -1 ? all_mermaids.length : -1;
-        if(mermaids_to_add_zoom > 0) {
-            var svgs = d3.selectAll("");
-            if(all_mermaids.length !== mermaids_processed.length) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else if(svgs.size() !== mermaids_to_add_zoom) {
-                setTimeout(() => runMermaid(false), 200);
-                return;
-            } else {
-                svgs.each(function() {
-                    var svg = d3.select(this);
-                    svg.html("<g class='wrapper'>" + svg.html() + "</g>");
-                    var inner = svg.select("g");
-                    var zoom = d3.zoom().on("zoom", function(event) {
-                        inner.attr("transform", event.transform);
-                    });
-                    svg.call(zoom);
-                });
-            }
-        }
-    } else if(all_mermaids.length !== mermaids_processed.length) {
-        // Wait for mermaid to process all diagrams
-        setTimeout(() => runMermaid(false), 200);
-        return;
-    }
-
-    // Stop here if not adding fullscreen capability
-    if ("True" !== "True") return;
-
-    if (modal !== null ) {
-        // Destroy existing modal
-        modal.remove();
-        modal = null;
-        modalContent = null;
-    }
-
-    modal = document.createElement('div');
-    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
-    modal.setAttribute('role', 'dialog');
-    modal.setAttribute('aria-modal', 'true');
-    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
-    modal.innerHTML = `
-        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
-        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
-    `;
-    document.body.appendChild(modal);
-
-    modalContent = modal.querySelector('.mermaid-container-fullscreen');
-    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
-
-    const closeModal = () => {
-        modal.classList.remove('active');
-        modalContent.innerHTML = '';
-        document.body.style.overflow = ''
-        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
-    };
-
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
-    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
-        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
-            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
-            // Already processed, adjust button class if needed
-            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
-            if (existingBtn) {
-                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-            }
-            return;
-        }
-
-        const container = document.createElement('div');
-        container.className = 'mermaid-container';
-        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
-        container.appendChild(mermaidDiv);
-
-        const fullscreenBtn = document.createElement('button');
-        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
-        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
-        fullscreenBtn.textContent = '⛶';
-        fullscreenBtn.style.opacity = '50%';
-
-        // Calculate dynamic position based on diagram's margin and padding
-        const diagramStyle = window.getComputedStyle(mermaidDiv);
-        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
-        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
-        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
-        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
-        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
-        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
-
-        fullscreenBtn.addEventListener('click', () => {
-            previousScrollOffset = [window.scroll, window.scrollY];
-            const clone = mermaidDiv.cloneNode(true);
-            modalContent.innerHTML = '';
-            modalContent.appendChild(clone);
-
-            const svg = clone.querySelector('svg');
-            if (svg) {
-                svg.removeAttribute('width');
-                svg.removeAttribute('height');
-                svg.style.width = '100%';
-                svg.style.height = 'auto';
-                svg.style.maxWidth = '100%';
-                svg.style.sdisplay = 'block';
-
-                if ("False" === "True") {
-                    setTimeout(() => {
-                        const g = svg.querySelector('g');
-                        if (g) {
-                            var svgD3 = d3.select(svg);
-                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
-                            var inner = svgD3.select("g");
-                            var zoom = d3.zoom().on("zoom", function(event) {
-                                inner.attr("transform", event.transform);
-                            });
-                            svgD3.call(zoom);
-                        }
-                    }, 100);
-                }
-            }
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        });
-        container.appendChild(fullscreenBtn);
-    });
-};
-
-const load = async () => {
-    initStyles();
-
-    await runMermaid(true);
-
-    const reRunIfThemeChanges = async () => {
-        const newDarkTheme = isDarkTheme();
-        if (newDarkTheme !== darkTheme) {
-            darkTheme = newDarkTheme;
-            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
-            await mermaid.initialize(
-                {...JSON.parse(
-                    `{"startOnLoad": false}`
-                ),
-                ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-                }
-            );
-            await runMermaid(true);
-        }
-    };
-
-    // Update theme classes when theme changes
-    const themeObserver = new MutationObserver(reRunIfThemeChanges);
-    themeObserver.observe(document.documentElement, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['class', 'style', 'data-theme']
-    });
-};
-
-
-
-
-
-console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
-mermaid.initialize(
-    {...JSON.parse(
-        `{"startOnLoad": false}`
-    ),
-    ...{ darkMode: darkTheme, theme: darkTheme ? 'dark' : 'default' },
-    }
-);
-
-window.addEventListener("load", load);</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+4cbe6e94 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -555,7 +120,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Project</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for managing Populse_mia projects and their associated databases.</span>
@@ -639,7 +204,7 @@ window.addEventListener("load", load);</script>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Project.__init__">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize a Mia project and its associated database.</span>
@@ -649,10 +214,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">        project is already opened in another instance to prevent conflicts.</span>
 
 <span class="sd">        :param project_root_folder: Path to the project&#39;s root directory. If</span>
-<span class="sd">         None, a temporary project directory is created.</span>
-<span class="sd">        :param new_project: Boolean indicating whether this is a new project</span>
-<span class="sd">         (True) or an existing one (False). If True, the directory structure</span>
-<span class="sd">         and databaseschema are initialized.</span>
+<span class="sd">            None, a temporary project directory is created.</span>
+<span class="sd">        :type project_root_folder: str | None</span>
+<span class="sd">        :param new_project:  Whether the project is new. If ``True``, the</span>
+<span class="sd">            project directory structure and database schema are initialized.</span>
+<span class="sd">            If ``False``, the existing project is opened without</span>
+<span class="sd">            reinitializing them.</span>
+<span class="sd">        :type new_project: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">project_root_folder</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1042,11 +610,12 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.add_clinical_tags">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
 
-<span class="sd">        :Returns: List of clinical tags that were added.</span>
+<span class="sd">        :returns: List of clinical tags that were added.</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">return_tags</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1114,7 +683,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_bricks">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan bricks and their associated files from the database.</span>
@@ -1125,8 +694,9 @@ window.addEventListener("load", load);</script>
 <span class="sd">              collections</span>
 <span class="sd">            - Deletes the corresponding physical files from the filesystem</span>
 
-<span class="sd">        :param bricks: (str) List of brick IDs to check for orphans. If None,</span>
-<span class="sd">         checks all bricks in the database.</span>
+<span class="sd">        :param bricks: List of brick IDs to check for orphans. If None,</span>
+<span class="sd">            checks all bricks in the database.</span>
+<span class="sd">        :type bricks: list[str] | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obsolete_bricks</span><span class="p">,</span> <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_bricks</span><span class="p">(</span><span class="n">bricks</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Identified obsolete bricks: </span><span class="si">{</span><span class="n">obsolete_bricks</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1164,7 +734,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_history">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan histories, their associated bricks, and files from</span>
@@ -1230,7 +800,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.cleanup_orphan_nonexisting_files">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.cleanup_orphan_nonexisting_files">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_nonexisting_files">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove database entries for files that are missing on disk.</span>
@@ -1241,8 +811,9 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - Deletes their entries from both current and initial collections,</span>
 <span class="sd">            - Attempts a defensive filesystem cleanup if the file still exists.</span>
 
-<span class="sd">        :param failed: (bool) Passed through to `get_orphan_nonexisting_files`</span>
-<span class="sd">         to control orphan selection.</span>
+<span class="sd">        :param failed: Passed through to `get_orphan_nonexisting_files` to</span>
+<span class="sd">            control orphan selection.</span>
+<span class="sd">        :type failed: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
         <span class="n">orphan_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_orphan_nonexisting_files</span><span class="p">(</span><span class="n">failed</span><span class="p">)</span>
@@ -1267,7 +838,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.del_clinical_tags">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove clinical tags from the project&#39;s current and initial</span>
@@ -1276,7 +847,8 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Iterates through predefined clinical tags and removes them from both</span>
 <span class="sd">        collections if they exist in the current collection&#39;s field names.</span>
 
-<span class="sd">        :Returns: (list) Clinical tags that were successfully removed.</span>
+<span class="sd">        :returns: Clinical tags that were successfully removed.</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">removed_tags</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1298,25 +870,27 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.files_in_project">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.files_in_project">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.files_in_project">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Extract file/directory names from input that are within the project</span>
-<span class="sd">        folder.</span>
+<span class="sd">        Extract file and directory names from the input that are within the</span>
+<span class="sd">        project folder.</span>
 
-<span class="sd">        Recursively processes the input to find all file paths, handling</span>
-<span class="sd">        nested data structures. Only paths within the project directory are</span>
-<span class="sd">        included.</span>
+<span class="sd">        Recursively processes the input to find all file paths, handling nested</span>
+<span class="sd">        data structures. Only paths within the project directory are included.</span>
 
-<span class="sd">        :param files: Input that may contain file paths.</span>
-<span class="sd">         Can be:</span>
-<span class="sd">            - str: A single file path</span>
-<span class="sd">            - list/tuple/set: Collection of file paths or nested structures</span>
-<span class="sd">            - dict: Only values are processed, keys are ignored</span>
+<span class="sd">        :param files: Input that may contain file paths. It can be:</span>
 
-<span class="sd">        :Returns: (set) Relative file paths that exist within the project</span>
-<span class="sd">         folder, with paths normalized and made relative to the project</span>
-<span class="sd">         directory.</span>
+<span class="sd">            - ``str``: A single file path.</span>
+<span class="sd">            - ``list``, ``tuple``, ``set``: A collection of file paths or</span>
+<span class="sd">              nested structures.</span>
+<span class="sd">            - ``dict``: Only values are processed, keys are ignored.</span>
+<span class="sd">        :type files: str | list | tuple | set | dict</span>
+
+<span class="sd">        :returns: Relative file paths that exist within the project</span>
+<span class="sd">            folder, with paths normalized and made relative to the project</span>
+<span class="sd">            directory.</span>
+<span class="sd">        :rtype: set</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)),</span>
@@ -1353,32 +927,34 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.finished_bricks">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">finished_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and process finished bricks from workflows and pipelines.</span>
 
 <span class="sd">        This method:</span>
-<span class="sd">            - Gets finished bricks from workflows and optionally a specific</span>
-<span class="sd">              pipeline</span>
-<span class="sd">            - Filters them based on their presence in the Mia database</span>
-<span class="sd">            - Updates brick metadata with execution status and outputs</span>
-<span class="sd">            - Collects all output files that are within the project directory</span>
+<span class="sd">            - Retrieves finished bricks from workflows and, optionally, a</span>
+<span class="sd">              specific pipeline.</span>
+<span class="sd">            - Filters them according to their presence in the Mia database.</span>
+<span class="sd">            - Updates brick metadata with execution status and outputs.</span>
+<span class="sd">            - Collects output files located within the project directory.</span>
 
-<span class="sd">        :param engine: Engine instance for retrieving finished bricks.</span>
+<span class="sd">        :param engine: Engine instance used to retrieve finished bricks.</span>
 <span class="sd">        :param pipeline: Optional pipeline object to filter specific bricks.</span>
-<span class="sd">        :param include_done: (bool)If True, includes all bricks regardless of</span>
-<span class="sd">         execution status. If False, only includes &quot;Not Done&quot; bricks.</span>
+<span class="sd">        :param include_done: If ``True``, includes all bricks regardless</span>
+<span class="sd">            of execution status. Otherwise, only bricks whose status is</span>
+<span class="sd">            ``Not Done`` are included.</span>
+<span class="sd">        :type include_done: bool</span>
 
-<span class="sd">        :Returns: (dict)</span>
-<span class="sd">         Dictionary containing:</span>
-<span class="sd">            - &#39;bricks&#39;: Dict mapping brick IDs to their metadata</span>
-<span class="sd">            - &#39;outputs&#39;: Set of output file paths relative to project directory</span>
+<span class="sd">        :returns: A Dictionary containing:</span>
+
+<span class="sd">            - ``bricks``: Mapping of brick identifiers to their metadata.</span>
+<span class="sd">            - ``outputs``: Set of output file paths relative to project</span>
+<span class="sd">              directory</span>
+<span class="sd">        :rtype: dict</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _update_dict: Merge two dictionaries by updating the first</span>
 <span class="sd">                  with the second.</span>
 <span class="sd">                - _collect_outputs: Recursively collects file paths from</span>
@@ -1389,12 +965,14 @@ window.addEventListener("load", load);</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Merge two dictionaries by updating the first with the second.</span>
 
-<span class="sd">            :param d1 (dict): The dictionary to be updated.</span>
-<span class="sd">            :param d2 (dict): The dictionary containing new key-value pairs</span>
-<span class="sd">                              to merge into `d1`.</span>
+<span class="sd">            :param d1: The dictionary to be updated.</span>
+<span class="sd">            :type d1: dict</span>
+<span class="sd">            :param d2: The dictionary containing new key-value pairs to merge</span>
+<span class="sd">                into `d1`.</span>
+<span class="sd">            :type d2: dict</span>
 
-<span class="sd">            :return (dict): The updated dictionary (`d1`) after merging</span>
-<span class="sd">                            with `d2`.</span>
+<span class="sd">            :return: The updated dictionary (`d1`) after merging with `d2`.</span>
+<span class="sd">            :rtype: dict</span>
 
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">d1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
@@ -1406,11 +984,14 @@ window.addEventListener("load", load);</script>
 <span class="sd">            within the project directory.</span>
 
 <span class="sd">            :param value: Output value to process (can be str, list, set,</span>
-<span class="sd">             tuple).</span>
-<span class="sd">            :param base_path: (str) Base project directory path.</span>
+<span class="sd">                tuple).</span>
+<span class="sd">            :type value: str | list | set | tuple</span>
+<span class="sd">            :param base_path: Base project directory path.</span>
+<span class="sd">            :type base_path: str</span>
 
-<span class="sd">            :Returns: (set[str]) A set of collected file paths, relative to</span>
-<span class="sd">             the project directory.</span>
+<span class="sd">            :returns: A set of collected file paths, relative to the project</span>
+<span class="sd">                directory.</span>
+<span class="sd">            :rtype: set[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">outputs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
             <span class="n">to_process</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span><span class="p">]</span>
@@ -1480,7 +1061,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_data_history">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the processing history for the given data file.</span>
@@ -1492,39 +1073,44 @@ window.addEventListener("load", load);</script>
 <span class="sd">              lead to the given one. Elements are process (brick) UUIDs.</span>
 
 <span class="sd">        :param path: Path to the data file.</span>
+<span class="sd">        :type path: str</span>
 
-<span class="sd">        :Returns: (dict) History.</span>
+<span class="sd">        :returns: History.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">data_history_inspect</span><span class="o">.</span><span class="n">get_data_history</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Project.getDate">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
-<span class="sd">        :Returns: (str) The date of creation of the project if it&#39;s not</span>
-<span class="sd">         `Unnamed` project, otherwise empty string</span>
+<span class="sd">        :returns: The date of creation of the project if it&#39;s not `Unnamed`</span>
+<span class="sd">            project, otherwise empty string</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_pipeline">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_pipeline">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_pipeline">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a dictionary of finished processes (bricks) from a given</span>
 <span class="sd">        pipeline, including nested pipelines, if any.</span>
 
-<span class="sd">        :param pipeline: (Pipeline or Process) The pipeline or single process</span>
-<span class="sd">         to analyze. If a single process is provided, it will be treated as a</span>
-<span class="sd">         minimal pipeline.</span>
+<span class="sd">        :param pipeline: The pipeline or single process to analyze. If a</span>
+<span class="sd">            single process is provided, it will be treated as a minimal</span>
+<span class="sd">            pipeline.</span>
+<span class="sd">        :type pipeline: Pipeline | Process</span>
 
-<span class="sd">        :Returns: (dict) A dictionary where keys are process UUIDs (brick IDs)</span>
-<span class="sd">         and values are dictionaries containing the associated process</span>
-<span class="sd">         instances.</span>
+<span class="sd">        :returns: A dictionary where keys are process UUIDs (brick IDs) and</span>
+<span class="sd">            values are dictionaries containing the associated process</span>
+<span class="sd">            instances.</span>
+<span class="sd">        :rtype: dict[str, dict[str, Process]]</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1578,7 +1164,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_workflows">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return finished Soma-Workflow jobs indexed by their brick UUID.</span>
@@ -1590,23 +1176,22 @@ window.addEventListener("load", load);</script>
 
 <span class="sd">        :param engine: Engine providing access to the Soma-Workflow controller.</span>
 
-<span class="sd">        :Returns: (dict)</span>
-<span class="sd">         Mapping ``brick_uuid -&gt; job_info`` where ``job_info`` contains:</span>
-<span class="sd">            - ``workflow`` (int): Workflow identifier.</span>
-<span class="sd">            - ``job``: Soma-Workflow job instance.</span>
-<span class="sd">            - ``job_id`` (int): Job identifier.</span>
-<span class="sd">            - ``swf_status`` (tuple): Raw Soma-Workflow status tuple.</span>
-<span class="sd">            - ``running`` (bool): True of any job in the workflow is running.</span>
-<span class="sd">            - ``failed`` (bool): True if any job in the workflow failed.</span>
+<span class="sd">        :returns: Mapping ``brick_uuid -&gt; job_info`` where ``job_info``</span>
+<span class="sd">            contains:</span>
+
+<span class="sd">                - ``workflow`` (int): Workflow identifier.</span>
+<span class="sd">                - ``job``: Soma-Workflow job instance.</span>
+<span class="sd">                - ``job_id`` (int): Job identifier.</span>
+<span class="sd">                - ``swf_status`` (tuple): Raw Soma-Workflow status tuple.</span>
+<span class="sd">                - ``running`` (bool): True of any job in the workflow is</span>
+<span class="sd">                  running.</span>
+<span class="sd">                - ``failed`` (bool): True if any job in the workflow failed.</span>
+<span class="sd">        :rtype: dict[str, dict]</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - parse_status: Parse a Soma-Workflow job status tuple into</span>
 <span class="sd">                  structured information.</span>
-
-
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">job_st</span><span class="p">):</span>
@@ -1618,24 +1203,25 @@ window.addEventListener("load", load);</script>
 <span class="sd">            dependent. This helper extracts the relevant fields and derives</span>
 <span class="sd">            consistent success/failure flags.</span>
 
-<span class="sd">            :param job_st (tuple): Raw job status tuple as returned by</span>
-<span class="sd">                                   Soma-Workflow.</span>
+<span class="sd">            :param job_st: Raw job status tuple as returned by Soma-Workflow.</span>
+<span class="sd">            :type job_st: tuple</span>
 
-<span class="sd">            :returns (tuple):</span>
-<span class="sd">                    - job_id (int): Identifier of the job.</span>
-<span class="sd">                    - state (str): Execution state (e.g. &quot;done&quot;, &quot;failed&quot;,</span>
-<span class="sd">                      &quot;running&quot;).</span>
-<span class="sd">                    - termination (str | None): Termination status if available</span>
-<span class="sd">                      (e.g. &quot;finished_regularly&quot;, &quot;killed&quot;, &quot;aborted&quot;), else</span>
-<span class="sd">                      None.</span>
-<span class="sd">                    - is_success (bool): True if the job completed successfully</span>
-<span class="sd">                      (i.e. termination == &quot;finished_regularly&quot;).</span>
-<span class="sd">                    - is_running (bool): True if the job is currently running</span>
-<span class="sd">                      (the job indicates that it is in progress).</span>
-<span class="sd">                    - is_failure (bool): True if the job did not complete</span>
-<span class="sd">                      successfully.</span>
+<span class="sd">            :returns: A tuple containing:</span>
 
-<span class="sd">            Notes:</span>
+<span class="sd">                - job_id (int): Identifier of the job.</span>
+<span class="sd">                - state (str): Execution state (e.g. &quot;done&quot;, &quot;failed&quot;,</span>
+<span class="sd">                  &quot;running&quot;).</span>
+<span class="sd">                - termination (str | None): Termination status if available</span>
+<span class="sd">                  (e.g. &quot;finished_regularly&quot;, &quot;killed&quot;, &quot;aborted&quot;), else None.</span>
+<span class="sd">                - is_success (bool): True if the job completed successfully</span>
+<span class="sd">                  (i.e. termination == &quot;finished_regularly&quot;).</span>
+<span class="sd">                - is_running (bool): True if the job is currently running</span>
+<span class="sd">                  (the job indicates that it is in progress).</span>
+<span class="sd">                - is_failure (bool): True if the job did not complete</span>
+<span class="sd">                  successfully.</span>
+<span class="sd">            :rtype: tuple[int, str, str | None, bool, bool, bool]</span>
+
+<span class="sd">            Note:</span>
 <span class="sd">                - Success is defined solely based on the termination status,</span>
 <span class="sd">                  which is more reliable than the execution state across</span>
 <span class="sd">                  backends.</span>
@@ -1722,14 +1308,16 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getFilter">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getFilter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getFilter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a Filter object from its name.</span>
 
-<span class="sd">        :param target_filter: (str) Filter name.</span>
+<span class="sd">        :param target_filter: Filter name.</span>
+<span class="sd">        :type target_filter: str</span>
 
-<span class="sd">        :Returns: (Filter) Filter object corresponding to the given name or</span>
-<span class="sd">         None if not found</span>
+<span class="sd">        :returns: Filter object corresponding to the given name or None if not</span>
+<span class="sd">            found.</span>
+<span class="sd">        :rtype: Filter | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
@@ -1738,12 +1326,13 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getFilterName">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getFilterName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getFilterName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getFilterName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input box to type the name of the filter to save.</span>
 
-<span class="sd">        :Returns: (str) Return the name typed by the user or None if cancelled.</span>
+<span class="sd">        :returns: Return the name typed by the user or None if cancelled.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">text</span><span class="p">,</span> <span class="n">ok_pressed</span> <span class="o">=</span> <span class="n">QInputDialog</span><span class="o">.</span><span class="n">getText</span><span class="p">(</span>
@@ -1758,34 +1347,36 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getName">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
-<span class="sd">        :Returns: (str) The name of the project if it&#39;s not `Unnamed` project,</span>
-<span class="sd">         otherwise empty string</span>
+<span class="sd">        :returns: The name of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">            otherwise empty string.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Project.get_orphan_bricks">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_bricks">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_bricks">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphan bricks and their associated weak files.</span>
 
-<span class="sd">        :param bricks: (list or set) A list or set of brick IDs to filter the</span>
-<span class="sd">         search. If None, all bricks in the database are considered. Defaults</span>
-<span class="sd">         to None.</span>
+<span class="sd">        :param bricks: A list or set of brick IDs to filter the search. If</span>
+<span class="sd">            None, all bricks in the database are considered. Defaults to None.</span>
+<span class="sd">        :type bricks: list | set | None</span>
 
-<span class="sd">        :Returns: (tuple)</span>
-<span class="sd">         A tuple containing two sets:</span>
+<span class="sd">        :returns: A tuple containing two sets:</span>
+
 <span class="sd">            - `orphan`: (set) Brick IDs considered orphaned, meaning they have</span>
 <span class="sd">              no valid or existing outputs linked to the current database.</span>
 <span class="sd">            - `orphan_weak_files`: (set) Paths to weak files associated with</span>
 <span class="sd">              orphaned bricks, such as script files or files that no longer</span>
 <span class="sd">              exist.</span>
+<span class="sd">        :rtype: tuple[set, set]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">orphan</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">orphan_weak_files</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1873,20 +1464,21 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_orphan_history">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphaned history entries, their associated orphan bricks,</span>
 <span class="sd">        and weak files.</span>
 
-<span class="sd">        :Returns: (tuple)</span>
-<span class="sd">         A tuple containing three sets:</span>
+<span class="sd">        :returns: A tuple containing three sets:</span>
+
 <span class="sd">            - `orphan_hist`: (set) IDs of history entries that are no longer</span>
 <span class="sd">              linked to any current document in the database.</span>
 <span class="sd">            - `orphan_bricks`: (set) IDs of bricks associated with orphaned</span>
 <span class="sd">              history entries.</span>
 <span class="sd">            - `orphan_weak_files`: (set) Paths to weak files (e.g., script</span>
 <span class="sd">              files or non-existent files) linked to orphaned history entries.</span>
+<span class="sd">        :rtype: tuple[set, set, set]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">orphan_hist</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">orphan_bricks</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1979,7 +1571,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.get_orphan_nonexisting_files">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return filenames that are recorded in the database but missing on disk.</span>
@@ -1989,11 +1581,13 @@ window.addEventListener("load", load);</script>
 <span class="sd">            - It is not associated with any existing bricks, unless `failed`</span>
 <span class="sd">              is True (in which case brick association is ignored).</span>
 
-<span class="sd">        :param failed: (bool) If True, include files even if they are linked to</span>
-<span class="sd">         existing bricks. If False, exclude such files.</span>
+<span class="sd">        :param failed: If True, include files even if they are linked to</span>
+<span class="sd">            existing bricks. If False, exclude such files.</span>
+<span class="sd">        :type failed: bool</span>
 
-<span class="sd">        :Returns: (set) A set of filenames from the database that are not found</span>
-<span class="sd">         on the filesystem and are not associated with existing bricks.</span>
+<span class="sd">        :returns: A set of filenames from the database that are not found on</span>
+<span class="sd">            the filesystem and are not associated with existing bricks.</span>
+<span class="sd">        :rtype: set</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span>
 
@@ -2026,43 +1620,46 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.getSortedTag">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getSortedTag">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getSortedTag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
-<span class="sd">        :Returns: (str) Sorted tag of the project if it&#39;s not `Unnamed`</span>
-<span class="sd">         project, otherwise empty string.</span>
+<span class="sd">        :returns: Sorted tag of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">            otherwise empty string.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sorted_tag&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Project.getSortOrder">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.getSortOrder">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getSortOrder">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
-<span class="sd">        :Returns: (str) Sort order of the project if it&#39;s not `Unnamed`</span>
-<span class="sd">         project, otherwise empty string.</span>
+<span class="sd">        :returns: Sort order of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">            otherwise empty string.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;sort_order&quot;</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Project.hasUnsavedModifications">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.hasUnsavedModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.hasUnsavedModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
-<span class="sd">        :Returns: (bool) True if the project has pending modifications, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :returns: True if the project has pending modifications, False</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">unsavedModifications</span></div>
 
 
 <div class="viewcode-block" id="Project.init_filters">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">init_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes project filters by loading them from stored JSON files.</span>
@@ -2099,7 +1696,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.loadProperties">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.loadProperties">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.loadProperties">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">loadProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads the project properties from the &#39;properties.yml&#39; file.</span>
@@ -2107,8 +1704,9 @@ window.addEventListener("load", load);</script>
 <span class="sd">        This method reads the project&#39;s YAML properties file and returns</span>
 <span class="sd">        its contents as a Python dictionary.</span>
 
-<span class="sd">        :Returns: (dict) A dictionary containing the project properties if</span>
-<span class="sd">         successfully loaded, or None if an error occurs.</span>
+<span class="sd">        :returns: A dictionary containing the project properties if</span>
+<span class="sd">            successfully loaded, or None if an error occurs.</span>
+<span class="sd">        :rtype: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">folder</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="s2">&quot;properties.yml&quot;</span>
@@ -2133,13 +1731,13 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.redo">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.redo">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.redo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last action made by the user on the project.</span>
 
-<span class="sd">        :param table: (QTableWidget) The table on which to apply the</span>
-<span class="sd">         modifications.</span>
+<span class="sd">        :param table: The table on which to apply the modifications.</span>
+<span class="sd">        :type table: QTableWidget</span>
 
 <span class="sd">        Actions that can be redone:</span>
 <span class="sd">            - add_tag</span>
@@ -2347,12 +1945,13 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.reput_values">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.reput_values">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.reput_values">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">reput_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-put the value objects in the database.</span>
 
-<span class="sd">        :param values: (list) List of value objects.</span>
+<span class="sd">        :param values: List of value objects.</span>
+<span class="sd">        :type values: list[tuple[str, str, Any, Any]]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -2373,7 +1972,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.saveConfig">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.saveConfig">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.saveConfig">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the changes in the properties file.&quot;&quot;&quot;</span>
 
@@ -2391,11 +1990,12 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.save_current_filter">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.save_current_filter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.save_current_filter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">save_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_filters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the current filter.</span>
 
 <span class="sd">        :param custom_filters: The customized filter</span>
+<span class="sd">        :type custom_filters: tuple[list, list, list, list, list]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">links</span><span class="p">,</span> <span class="n">nots</span> <span class="o">=</span> <span class="n">custom_filters</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
@@ -2449,7 +2049,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.saveModifications">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.saveModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.saveModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">saveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the pending operations of the project (actions still not saved).</span>
@@ -2459,39 +2059,42 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setCurrentFilter">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setCurrentFilter">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setCurrentFilter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setCurrentFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current filter of the project.</span>
 
 <span class="sd">        :param new_filter: New Filter object.</span>
+<span class="sd">        :type new_filter: Filter</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">currentFilter</span> <span class="o">=</span> <span class="n">new_filter</span></div>
 
 
 <div class="viewcode-block" id="Project.setDate">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setDate">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setDate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the date of the project.</span>
 
 <span class="sd">        :param date: New date of the project.</span>
+<span class="sd">        :type date: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">date</span></div>
 
 
 <div class="viewcode-block" id="Project.setName">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of the project if it&#39;s not `Unnamed` project, otherwise</span>
 <span class="sd">        does nothing.</span>
 
-<span class="sd">        :param name: (str) New name of the project.</span>
+<span class="sd">        :param name: New name of the project.</span>
+<span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">properties</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span></div>
 
 
 <div class="viewcode-block" id="Project.setSortedTag">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setSortedTag">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setSortedTag">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sorted tag of the project.</span>
 
@@ -2505,7 +2108,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.setSortOrder">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.setSortOrder">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setSortOrder">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sort order of the project.</span>
 
@@ -2519,7 +2122,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.undo">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.undo">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.undo">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo the last action made by the user on the project.</span>
 
@@ -2711,8 +2314,9 @@ window.addEventListener("load", load);</script>
 <span class="sd">        Modify the window title depending of whether the project has unsaved</span>
 <span class="sd">        modifications or not.</span>
 
-<span class="sd">        :param value: (bool) True if the project has pending modifications,</span>
-<span class="sd">         False otherwise.</span>
+<span class="sd">        :param value: True if the project has pending modifications, False</span>
+<span class="sd">            otherwise.</span>
+<span class="sd">        :type value: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -2734,7 +2338,7 @@ window.addEventListener("load", load);</script>
             <span class="k">pass</span>
 
 <div class="viewcode-block" id="Project.unsaveModifications">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.unsaveModifications">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.unsaveModifications">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">unsaveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unsave the pending operations of the project.</span>
@@ -2743,7 +2347,7 @@ window.addEventListener("load", load);</script>
 
 
 <div class="viewcode-block" id="Project.update_db_for_paths">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">update_db_for_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update database paths when renaming or loading a project.</span>
@@ -2758,13 +2362,12 @@ window.addEventListener("load", load);</script>
 <span class="sd">        &#39;data/derived_data&#39;, the method uses the portion before this segment</span>
 <span class="sd">        as the base path.</span>
 
-<span class="sd">        :param new_path: (str) The new project path. If not provided, the</span>
-<span class="sd">         current project folder path is used.</span>
+<span class="sd">        :param new_path: The new project path. If not provided, the current</span>
+<span class="sd">            project folder path is used.</span>
+<span class="sd">        :type new_path: str | None</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _update_json_data: Helper method to update paths in JSON</span>
 <span class="sd">                  data structures</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2778,12 +2381,18 @@ window.addEventListener("load", load);</script>
 <span class="sd">            Serializes the data to JSON, performs string replacement, then</span>
 <span class="sd">            deserializes and updates the database.</span>
 
-<span class="sd">            :param collection (str): Database collection name</span>
-<span class="sd">            :param doc_id (str): Document ID</span>
-<span class="sd">            :param field (str): Field name to update</span>
-<span class="sd">            :param data (dict): The data structure to process</span>
-<span class="sd">            :param old_path (str): Old path to replace</span>
-<span class="sd">            :param new_path (str): New path to use</span>
+<span class="sd">            :param collection: Database collection name.</span>
+<span class="sd">            :type collection: str</span>
+<span class="sd">            :param doc_id: Document ID.</span>
+<span class="sd">            :type doc_id: str</span>
+<span class="sd">            :param field: Field name to update.</span>
+<span class="sd">            :type field: str</span>
+<span class="sd">            :param data: The data structure to process.</span>
+<span class="sd">            :type data: dict</span>
+<span class="sd">            :param old_path: Old path to replace.</span>
+<span class="sd">            :type old_path: str</span>
+<span class="sd">            :param new_path: New path to use.</span>
+<span class="sd">            :type new_path: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">try</span><span class="p">:</span>

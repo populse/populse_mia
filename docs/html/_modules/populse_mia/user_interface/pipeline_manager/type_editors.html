@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -46,24 +44,24 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.Directory</span> <span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.File</span> <span class="kn">import</span> <span class="n">FileControlWidget</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.controls.List_File_offscreen</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.Directory</span><span class="w"> </span><span class="kn">import</span> <span class="n">DirectoryControlWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.File</span><span class="w"> </span><span class="kn">import</span> <span class="n">FileControlWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.controls.List_File_offscreen</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">OffscreenListFileControlWidget</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
-<span class="kn">from</span> <span class="nn">soma.utils.weak_proxy</span> <span class="kn">import</span> <span class="n">weak_proxy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.utils.weak_proxy</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_proxy</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;PopulseFileControlWidget&quot;</span><span class="p">,</span>
@@ -77,7 +75,7 @@
 
 <div class="viewcode-block" id="PopulseFileControlWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseFileControlWidget</span><span class="p">(</span><span class="n">FileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for selecting a file.</span>
 
@@ -97,7 +95,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -144,7 +142,7 @@
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
         <span class="n">connected_inputs</span> <span class="o">=</span> <span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;connected_inputs&quot;</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span>
 
-        <span class="k">def</span> <span class="nf">_is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_is_number</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Checks if a value is a number.</span>
 
@@ -196,7 +194,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a filter widget.</span>
 
@@ -231,7 +229,7 @@
 <div class="viewcode-block" id="PopulseFileControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on a filter result.</span>
 
@@ -267,7 +265,7 @@
 
 <div class="viewcode-block" id="PopulseDirectoryControlWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseDirectoryControlWidget</span><span class="p">(</span><span class="n">DirectoryControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget for selecting a directory.</span>
 
@@ -284,7 +282,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -319,7 +317,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting a directory.</span>
 
@@ -353,7 +351,7 @@
 <div class="viewcode-block" id="PopulseDirectoryControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on the filter result.</span>
 
@@ -381,7 +379,7 @@
 
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseOffscreenListFileControlWidget</span><span class="p">(</span><span class="n">OffscreenListFileControlWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A control widget for entering a list of files.</span>
 
@@ -398,7 +396,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -471,7 +469,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.filter_clicked">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.filter_clicked">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_clicked</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting files.</span>
 
@@ -510,7 +508,7 @@
 <div class="viewcode-block" id="PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.update_plug_value_from_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">filter_res_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on the filter results.</span>
 
@@ -532,7 +530,7 @@
 
 <div class="viewcode-block" id="PopulseUndefinedControlWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PopulseUndefinedControlWidget</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget control for handling Undefined trait values in a Qt interface.</span>
 
@@ -565,7 +563,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.check">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.check">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if a controller widget control is filled correctly.</span>
 
@@ -581,7 +579,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.connect">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.connect">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a &#39;StrControlWidget&#39;</span>
 <span class="sd">        controller widget control.</span>
@@ -601,7 +599,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.create_widget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.create_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">create_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_widget</span><span class="p">(</span>
         <span class="n">parent</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_value</span><span class="p">,</span>
@@ -655,7 +653,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.disconnect">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.disconnect">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">disconnect</span><span class="p">(</span><span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Disconnect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
 <span class="sd">        &#39;StrControlWidget&#39; controller widget control.</span>
@@ -674,7 +672,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.is_valid">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.is_valid">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_valid</span><span class="p">(</span><span class="n">control_instance</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate if the control contains an Undefined value representation.</span>
 
@@ -698,7 +696,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_controller</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_controller</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span>
         <span class="n">control_name</span><span class="p">,</span>
         <span class="n">control_instance</span><span class="p">,</span>
@@ -752,7 +750,7 @@
 <div class="viewcode-block" id="PopulseUndefinedControlWidget.update_controller_widget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.update_controller_widget">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">update_controller_widget</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_controller_widget</span><span class="p">(</span>
         <span class="n">controller_widget</span><span class="p">,</span> <span class="n">control_name</span><span class="p">,</span> <span class="n">control_instance</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>

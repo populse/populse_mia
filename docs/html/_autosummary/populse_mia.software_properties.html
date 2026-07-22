@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.software_properties &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.software_properties &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -46,11 +46,9 @@ pop-up in the <code class="docutils literal notranslate"><span class="pre">confi
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.software_properties.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Object that handles the configuration of the software</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_configure_matlab_only: Configures MATLAB without SPM</p></li>
 <li><p>_configure_matlab_spm: Configures SPM and MATLAB</p></li>
 <li><p>_configure_mcr_only: Configures MCR without SPM</p></li>
@@ -198,8 +196,10 @@ running time images</p></li>
 <li><p>update_capsul_config: Update a global CapsulEngine object used
 for all operations in MIA application</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.capsul_engine">
 <span class="sig-name descname"><span class="pre">capsul_engine</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#populse_mia.software_properties.Config.capsul_engine" title="Link to this definition">¶</a></dt>
@@ -211,10 +211,10 @@ for all operations in MIA application</p></li>
 <dd><p>Initialization of the Config class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>properties_path</strong> – (str) If provided, the configuration file
-will be loaded / saved from the given directory. Otherwise, the
-regular heuristics will be used to determine the config path. This
-option allows to use an alternative config directory (for tests for
+<dd class="field-odd"><p><strong>properties_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – If provided, the configuration file will be
+loaded / saved from the given directory. Otherwise, the regular
+heuristics will be used to determine the config path. This option
+allows to use an alternative config directory (for tests for
 instance).</p>
 </dd>
 </dl>
@@ -226,8 +226,7 @@ instance).</p>
 <dd><p>Configures MATLAB without SPM, ensuring that only MATLAB is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>matlab_path</strong> – (str) The directory path of the MATLAB
-installation.</p>
+<dd class="field-odd"><p><strong>matlab_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the MATLAB installation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -240,9 +239,8 @@ installation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spm_dir</strong> – (str) The directory path of the SPM installation.</p></li>
-<li><p><strong>matlab_path</strong> – (str) The directory path of the MATLAB
-installation.</p></li>
+<li><p><strong>spm_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the SPM installation.</p></li>
+<li><p><strong>matlab_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the MATLAB installation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -255,8 +253,8 @@ installation.</p></li>
 that only MCR is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mcr_dir</strong> – (str) The directory path of the MATLAB Compiler
-Runtime (MCR).</p>
+<dd class="field-odd"><p><strong>mcr_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the MATLAB Compiler Runtime
+(MCR).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -269,10 +267,9 @@ Compiler Runtime (MCR) directories.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>spm_dir</strong> – (str) The directory path of the standalone SPM
-installation.</p></li>
-<li><p><strong>mcr_dir</strong> – (str) The directory path of the MATLAB Compiler
-Runtime (MCR).</p></li>
+<li><p><strong>spm_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the standalone SPM installation.</p></li>
+<li><p><strong>mcr_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory path of the MATLAB Compiler Runtime
+(MCR).</p></li>
 </ul>
 </dd>
 </dl>
@@ -294,6 +291,9 @@ MATLAB nor SPM is used.</p>
 <dd class="field-odd"><p>The hashed admin password if found in config, False if not
 present in config.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> or <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -303,7 +303,10 @@ present in config.</p>
 <dd><p>Get the AFNI path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Path to AFNI, or “” if unknown.</p>
+<dd class="field-odd"><p>Path to AFNI, or “” if unknown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -314,7 +317,10 @@ present in config.</p>
 <dd><p>Get the ANTS path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Path to ANTS, or “” if unknown.</p>
+<dd class="field-odd"><p>Path to ANTS, or “” if unknown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,6 +332,9 @@ present in config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(str) Background color, or “” if unknown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -342,37 +351,37 @@ FreeSurfer, MATLAB, AFNI, ANTs, and MRTrix.</p>
 preferences, then constructs the appropriate configuration structure.
 If requested, it can synchronize the configuration with the current
 Capsul engine state.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sync_from_engine</strong> – (bool) If True, synchronizes the configuration
-with the current Capsul engine settings after building the base
+<dd class="field-odd"><p><strong>sync_from_engine</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, synchronizes the configuration with
+the current Capsul engine settings after building the base
 configuration.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A nested dictionary containing the complete Capsul
+<dd class="field-even"><p><p>A nested dictionary containing the complete Capsul
 configuration, structured with the following main sections:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">engine_modules</span></code>:
-List of available processing modules</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">engine</span></code>:
-Contains global and environment-specific settings, as well as
-configurations specific to certain tools (SPM, FSL, etc.)</p></li>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">engine_modules</span></code>: List of available processing modules</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">engine</span></code>: Contains global and environment-specific settings, as
+well as configurations specific to certain tools (SPM, FSL, etc.)</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_configure_spm: Configure SPM settings.</p></li>
-<li><p>_configure_tool: Configure various neuroimaging settings</p></li>
+<li><p>_configure_tool: Configure various neuroimaging settings
+(e.g. ‘fsl’, ‘afni’, etc.)</p></li>
 </ul>
-<p>(e.g. ‘fsl’, ‘afni’, etc.)</p>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -384,7 +393,10 @@ operations.</p>
 initialization). Subsequent calls return the same instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(CapsulEngine) The global CapsulEngine instance.</p>
+<dd class="field-odd"><p>The global CapsulEngine instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.api.capsul_engine</p>
 </dd>
 </dl>
 </dd></dl>
@@ -395,7 +407,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Get the value of the checkbox ‘chain cursor’ in miniviewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) Value of the checkbox.</p>
+<dd class="field-odd"><p>Value of the checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,7 +421,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Get the freesurfer path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Path to freesurfer, or “” if unknown.</p>
+<dd class="field-odd"><p>Path to freesurfer, or “” if unknown.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -417,7 +435,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Get the FSL config file  path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Path to the fsl/etc/fslconf/fsl.sh file.</p>
+<dd class="field-odd"><p>Path to the fsl/etc/fslconf/fsl.sh file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -428,7 +449,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Get the maximized (fullscreen) flag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) Maximized (fullscreen) flag.</p>
+<dd class="field-odd"><p>Maximized (fullscreen) flag.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -439,7 +463,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Get the main window size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) Main window size.</p>
+<dd class="field-odd"><p>Main window size.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,8 +477,10 @@ initialization). Subsequent calls return the same instance.</p>
 <dd><p>Retrieves the appropriate Matlab command based on the configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The Matlab executable path or None if no path is
-specified.</p>
+<dd class="field-odd"><p>The Matlab executable path or None if no path is specified.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -462,7 +491,10 @@ specified.</p>
 <dd><p>Get the path to the matlab executable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -473,7 +505,10 @@ specified.</p>
 <dd><p>Get the path to matlab compiler runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -485,8 +520,11 @@ specified.</p>
 “Saved projects” menu.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The maximum number of projects. Defaults to 5 if not
+<dd class="field-odd"><p>The maximum number of projects. Defaults to 5 if not
 specified.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -494,12 +532,15 @@ specified.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.get_max_thumbnails">
 <span class="sig-name descname"><span class="pre">get_max_thumbnails</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.get_max_thumbnails"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.get_max_thumbnails" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieves the maximum number of thumbnails displayed in the
-mini-viewer at the bottom of the data browser.</p>
+<dd><p>Retrieves the maximum number of thumbnails displayed in the mini-viewer
+at the bottom of the data browser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The maximum number of thumbnails. Defaults to 5 if
-not specified.</p>
+<dd class="field-odd"><p>The maximum number of thumbnails. Defaults to 5 if not
+specified.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -510,7 +551,10 @@ not specified.</p>
 <dd><p>Get the MRIManager.jar path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -521,7 +565,10 @@ not specified.</p>
 <dd><p>Get the  mrtrix path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -532,7 +579,10 @@ not specified.</p>
 <dd><p>Get number the maximum number of slices to display in the miniviewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) Maximum number of slices to display in miniviewer.</p>
+<dd class="field-odd"><p>Maximum number of slices to display in miniviewer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -543,7 +593,10 @@ not specified.</p>
 <dd><p>Get opened projects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) Opened projects.</p>
+<dd class="field-odd"><p>Opened projects.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -554,7 +607,10 @@ not specified.</p>
 <dd><p>Get the path where projects are saved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -576,7 +632,10 @@ located in <cite>~/.populse_mia</cite>.</p>
 are automatically updated in the configuration file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The absolute path to the properties folder.</p>
+<dd class="field-odd"><p>The absolute path to the properties folder.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -587,7 +646,10 @@ are automatically updated in the configuration file.</p>
 <dd><p>Retrieves the chosen referential from the anatomist_2 data viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) “0” for World Coordinates, “1” for Image ref.</p>
+<dd class="field-odd"><p>“0” for World Coordinates, “1” for Image ref.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -598,7 +660,10 @@ are automatically updated in the configuration file.</p>
 <dd><p>Get the resources path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -610,7 +675,10 @@ are automatically updated in the configuration file.</p>
 the miniviewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) True if the show_all_slices parameters was enabled.</p>
+<dd class="field-odd"><p>True if the <code class="docutils literal notranslate"><span class="pre">show_all_slices</span></code> parameters was enabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -621,7 +689,10 @@ the miniviewer.</p>
 <dd><p>Get the source directory for project images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -632,7 +703,10 @@ the miniviewer.</p>
 <dd><p>Get the path of SPM.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -643,7 +717,10 @@ the miniviewer.</p>
 <dd><p>Get the path to the SPM12 standalone version.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) A path.</p>
+<dd class="field-odd"><p>A path.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -654,7 +731,10 @@ the miniviewer.</p>
 <dd><p>Get the text color.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The text color.</p>
+<dd class="field-odd"><p>The text color.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -665,7 +745,10 @@ the miniviewer.</p>
 <dd><p>Get the tag of the thumbnail displayed in the miniviewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The tag of the thumbnail displayed in miniviewer.</p>
+<dd class="field-odd"><p>The tag of the thumbnail displayed in miniviewer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -676,7 +759,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use afni” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use afni” checkbox.</p>
+<dd class="field-odd"><p>The value of “use afni” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -687,7 +773,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use ants” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use ants” checkbox.</p>
+<dd class="field-odd"><p>The value of “use ants” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -698,7 +787,10 @@ the miniviewer.</p>
 <dd><p>Get the clinical mode in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The clinical mode.</p>
+<dd class="field-odd"><p>The clinical mode.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -709,7 +801,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use freesurfer” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use freesurfer” checkbox.</p>
+<dd class="field-odd"><p>The value of “use freesurfer” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -720,7 +815,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use fsl” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use fsl” checkbox.</p>
+<dd class="field-odd"><p>The value of “use fsl” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -731,7 +829,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use matlab” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use matlab” checkbox.</p>
+<dd class="field-odd"><p>The value of “use matlab” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -742,7 +843,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use matlab standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use matlab standalone” checkbox.</p>
+<dd class="field-odd"><p>The value of “use matlab standalone” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -753,7 +857,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use mrtrix” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use mrtrix” checkbox.</p>
+<dd class="field-odd"><p>The value of “use mrtrix” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -764,7 +871,10 @@ the miniviewer.</p>
 <dd><p>Get the user level in the Capsul config.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The user level in the Capsul config.</p>
+<dd class="field-odd"><p>The user level in the Capsul config.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -775,7 +885,10 @@ the miniviewer.</p>
 <dd><p>Get if user mode is disabled or enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) If True, the user mode is enabled.</p>
+<dd class="field-odd"><p>If True, the user mode is enabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -786,7 +899,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use spm” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use spm” checkbox.</p>
+<dd class="field-odd"><p>The value of “use spm” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -797,7 +913,10 @@ the miniviewer.</p>
 <dd><p>Get the value of “use spm standalone” checkbox in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) The value of “use spm standalone” checkbox.</p>
+<dd class="field-odd"><p>The value of “use spm standalone” checkbox.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -805,10 +924,13 @@ the miniviewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.getViewerConfig">
 <span class="sig-name descname"><span class="pre">getViewerConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.getViewerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.getViewerConfig" title="Link to this definition">¶</a></dt>
-<dd><p>Get the viewer config “neuro” or “radio”, “neuro” by default.</p>
+<dd><p>Get the viewer config <code class="docutils literal notranslate"><span class="pre">neuro</span></code> or <code class="docutils literal notranslate"><span class="pre">radio</span></code>, <code class="docutils literal notranslate"><span class="pre">neuro</span></code> by default.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The viewer config (“neuro” or “radio”).</p>
+<dd class="field-odd"><p>The viewer config (<code class="docutils literal notranslate"><span class="pre">neuro</span></code> or <code class="docutils literal notranslate"><span class="pre">radio</span></code>).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -819,7 +941,10 @@ the miniviewer.</p>
 <dd><p>Get the Viewer framerate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The Viewer framerat (ex. “5”).</p>
+<dd class="field-odd"><p>The Viewer framerat (ex. “5”).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -830,7 +955,10 @@ the miniviewer.</p>
 <dd><p>Get if the auto-save mode is enabled or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) If True, auto-save mode is enabled.</p>
+<dd class="field-odd"><p>If True, auto-save mode is enabled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -841,7 +969,10 @@ the miniviewer.</p>
 <dd><p>Gets whether the controller display is of type V1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) If True, V1 controller display.</p>
+<dd class="field-odd"><p>If True, V1 controller display.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -852,8 +983,11 @@ the miniviewer.</p>
 <dd><p>Get if the display in miniviewer is in radiological orientation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) If True, radiological orientation, otherwise
-neurological orientation.</p>
+<dd class="field-odd"><p>If True, radiological orientation, otherwise neurological
+orientation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -869,8 +1003,11 @@ parse it as YAML.</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict) Parsed configuration from the YAML file. Returns
-empty dict if parsing fails.</p>
+<dd class="field-odd"><p>Parsed configuration from the YAML file. Returns empty dict
+if parsing fails.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -880,18 +1017,19 @@ empty dict if parsing fails.</p>
 <span class="sig-name descname"><span class="pre">saveConfig</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.saveConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.saveConfig" title="Link to this definition">¶</a></dt>
 <dd><p>Save the current parameters in the config.yml file.</p>
 <p>Encrypts and writes the current configuration (self.config) to
-config.yml using Fernet encryption. Creates the necessary
-directory structure if it doesn’t exist. After saving, updates
-the capsul configuration.</p>
+config.yml using Fernet encryption. Creates the necessary directory
+structure if it doesn’t exist. After saving, updates the capsul
+configuration.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_admin_hash">
 <span class="sig-name descname"><span class="pre">set_admin_hash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">admin_hash</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_admin_hash"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_admin_hash" title="Link to this definition">¶</a></dt>
-<dd><p>Set the password hash.</p>
+<dd><p>Set the administrator password hash.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>admin_hash</strong> – A string.</p>
+<dd class="field-odd"><p><strong>admin_hash</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The hashed administrator password to store in the
+configuration.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -902,7 +1040,7 @@ the capsul configuration.</p>
 <dd><p>Set the AFNI path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -913,7 +1051,7 @@ the capsul configuration.</p>
 <dd><p>Set the ANTS path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -921,10 +1059,11 @@ the capsul configuration.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setAutoSave">
 <span class="sig-name descname"><span class="pre">setAutoSave</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setAutoSave"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setAutoSave" title="Link to this definition">¶</a></dt>
-<dd><p>Set auto-save mode.</p>
+<dd><p>Set the automatic saving mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>save</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>save</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> to enable automatic saving, <code class="docutils literal notranslate"><span class="pre">False</span></code> to disable
+it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -935,7 +1074,7 @@ the capsul configuration.</p>
 <dd><p>Set background color and save configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>color</strong> – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’, ‘Orange’,
+<dd class="field-odd"><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’, ‘Orange’,
 ‘Red’, ‘Yellow’, ‘White’)</p>
 </dd>
 </dl>
@@ -952,7 +1091,7 @@ with Mia preferences. Configures various neuroimaging tools
 (AFNI, ANTs, FSL, etc.) based on the Capsul engine configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>capsul_config_dict</strong> – Dictionary containing Capsul configuration.</p>
+<dd class="field-odd"><p><strong>capsul_config_dict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing Capsul configuration.</p>
 </dd>
 </dl>
 <p>Structure of capsul_config_dict:</p>
@@ -964,25 +1103,26 @@ with Mia preferences. Configures various neuroimaging tools
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>_get_module_config: Extracts module configuration from the</p></li>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>_get_module_config: Extracts module configuration from the
+global Capsul configuration.</p></li>
 </ul>
-<p>global Capsul configuration.</p>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setChainCursors">
 <span class="sig-name descname"><span class="pre">setChainCursors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chain_cursors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setChainCursors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setChainCursors" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of the checkbox ‘chain cursor’ in the mini viewer.</p>
+<dd><p>Enable or disable cursor synchronization in the mini viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>chain_cursors</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>chain_cursors</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> to synchronize the cursors across the
+mini viewer, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -993,7 +1133,8 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Enable or disable clinical mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>clinical_mode</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>clinical_mode</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> to enable clinical mode, <code class="docutils literal notranslate"><span class="pre">False</span></code> to
+disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1001,10 +1142,11 @@ with Mia preferences. Configures various neuroimaging tools
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setControlV1">
 <span class="sig-name descname"><span class="pre">setControlV1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">controlV1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setControlV1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setControlV1" title="Link to this definition">¶</a></dt>
-<dd><p>Set controller display mode (True if V1).</p>
+<dd><p>Set the controller display mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>controlV1</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>controlV1</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – <code class="docutils literal notranslate"><span class="pre">True</span></code> to use the V1 controller display mode,
+<code class="docutils literal notranslate"><span class="pre">False</span></code> to use the alternative mode (V2).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1015,7 +1157,7 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Set the freesurfer config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) Path to freesurfer/FreeSurferEnv.sh.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to freesurfer/FreeSurferEnv.sh.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1026,7 +1168,7 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Set the FSL config file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) Path to fsl/etc/fslconf/fsl.sh.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to fsl/etc/fslconf/fsl.sh.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1034,10 +1176,10 @@ with Mia preferences. Configures various neuroimaging tools
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_mainwindow_maximized">
 <span class="sig-name descname"><span class="pre">set_mainwindow_maximized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_mainwindow_maximized"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_mainwindow_maximized" title="Link to this definition">¶</a></dt>
-<dd><p>Set the maximized (full-screen) flag.</p>
+<dd><p>Set whether the main window is maximized.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>enabled</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>enabled</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the main window should be maximized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1048,7 +1190,7 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Set main window size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>size</strong> – A list of two integers.</p>
+<dd class="field-odd"><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>]</em>) – A list of two integers.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1059,7 +1201,7 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Set the path of Matlab’s executable.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to Matlab’s executable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1070,7 +1212,7 @@ with Mia preferences. Configures various neuroimaging tools
 <dd><p>Set the path of Matlab Compiler Runtime.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to Matlab Compiler Runtime.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1078,11 +1220,11 @@ with Mia preferences. Configures various neuroimaging tools
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_max_projects">
 <span class="sig-name descname"><span class="pre">set_max_projects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_max_projects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_max_projects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_max_projects" title="Link to this definition">¶</a></dt>
-<dd><p>Set the maximum number of projects displayed in the “Saved projects”
+<dd><p>Set the maximum number of recent projects shown in the “Saved projects”
 menu.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_max_projects</strong> – An integer.</p>
+<dd class="field-odd"><p><strong>nb_max_projects</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum number of recent projects to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1090,10 +1232,11 @@ menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_max_thumbnails">
 <span class="sig-name descname"><span class="pre">set_max_thumbnails</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nb_max_thumbnails</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_max_thumbnails"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_max_thumbnails" title="Link to this definition">¶</a></dt>
-<dd><p>Set max thumbnails number at the data browser bottom.</p>
+<dd><p>Set the maximum number of thumbnails displayed at the bottom of the
+Data Browser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_max_thumbnails</strong> – An integer.</p>
+<dd class="field-odd"><p><strong>nb_max_thumbnails</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum number of thumbnails to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1104,7 +1247,7 @@ menu.</p>
 <dd><p>Set the MRIManager.jar path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1115,7 +1258,7 @@ menu.</p>
 <dd><p>Set the mrtrix path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1126,7 +1269,7 @@ menu.</p>
 <dd><p>Set the number of slices to display in the mini-viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>nb_slices_max</strong> – (int) Maximum number of slices to display.</p>
+<dd class="field-odd"><p><strong>nb_slices_max</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum number of slices to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1137,7 +1280,7 @@ menu.</p>
 <dd><p>Set the list of opened projects and saves the modification.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_projects</strong> – (list[str]) A list of paths.</p>
+<dd class="field-odd"><p><strong>new_projects</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of paths.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1148,7 +1291,7 @@ menu.</p>
 <dd><p>Set the folder where the projects are saved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1156,14 +1299,11 @@ menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_radioView">
 <span class="sig-name descname"><span class="pre">set_radioView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radio_view</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_radioView"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_radioView" title="Link to this definition">¶</a></dt>
-<dd><p>Set the radiological / neurological orientation in mini viewer.</p>
-<ul class="simple">
-<li><p>True for radiological</p></li>
-<li><p>False for neurological</p></li>
-</ul>
+<dd><p>Set the orientation displayed in the mini viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>radio_view</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>radio_view</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, use the radiological orientation;
+otherwise, use the neurological orientation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1171,11 +1311,11 @@ menu.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_referential">
 <span class="sig-name descname"><span class="pre">set_referential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_referential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_referential" title="Link to this definition">¶</a></dt>
-<dd><p>Set the referential to “image Ref” or “World Coordinates” in
+<dd><p>Set the referential to <code class="docutils literal notranslate"><span class="pre">image</span> <span class="pre">Ref</span></code> or <code class="docutils literal notranslate"><span class="pre">World</span> <span class="pre">Coordinates</span></code> in
 anatomist_2 data viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ref</strong> – (str) “0” for World Coordinates, “1” for Image Ref.</p>
+<dd class="field-odd"><p><strong>ref</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – “0” for <code class="docutils literal notranslate"><span class="pre">World</span> <span class="pre">Coordinates</span></code>, “1” for <code class="docutils literal notranslate"><span class="pre">Image</span> <span class="pre">Ref</span></code>.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1186,7 +1326,7 @@ anatomist_2 data viewer.</p>
 <dd><p>Set the resources path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1194,10 +1334,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setShowAllSlices">
 <span class="sig-name descname"><span class="pre">setShowAllSlices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_all_slices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setShowAllSlices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setShowAllSlices" title="Link to this definition">¶</a></dt>
-<dd><p>Set the show_all_slides setting in miniviewer.</p>
+<dd><p>Set whether all slices are displayed in the mini viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>show_all_slices</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>show_all_slices</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, display all slices; otherwise,
+display only the selected slice.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1208,7 +1349,7 @@ anatomist_2 data viewer.</p>
 <dd><p>Set the source directory for project images.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>source_image_dir</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>source_image_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1216,10 +1357,10 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_spm_path">
 <span class="sig-name descname"><span class="pre">set_spm_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_spm_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_spm_path" title="Link to this definition">¶</a></dt>
-<dd><p>Set the path of SPM (license version).</p>
+<dd><p>Set the path of SPM (MATLAB license version).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1230,7 +1371,7 @@ anatomist_2 data viewer.</p>
 <dd><p>Set the path of SPM (standalone version).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) A path.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A path.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1241,8 +1382,8 @@ anatomist_2 data viewer.</p>
 <dd><p>Set text color and save configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>color</strong> – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’, ‘Orange’,
-‘Red’, ‘Yellow’, ‘White’)</p>
+<dd class="field-odd"><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Color string (‘Black’, ‘Blue’, ‘Green’, ‘Grey’, ‘Orange’,
+‘Red’, ‘Yellow’, ‘White’).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1250,10 +1391,10 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setThumbnailTag">
 <span class="sig-name descname"><span class="pre">setThumbnailTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thumbnail_tag</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setThumbnailTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setThumbnailTag" title="Link to this definition">¶</a></dt>
-<dd><p>Set the tag that is displayed in the mini-viewer.</p>
+<dd><p>Set the tag displayed in the mini viewer for thumbnails.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>thumbnail_tag</strong> – A string.</p>
+<dd class="field-odd"><p><strong>thumbnail_tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the tag to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1261,10 +1402,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_afni">
 <span class="sig-name descname"><span class="pre">set_use_afni</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_afni</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_afni"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_afni" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_afni” checkbox in the preferences.</p>
+<dd><p>Set whether AFNI support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_afni</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_afni</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable AFNI support; otherwise, disable
+it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1272,10 +1414,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_ants">
 <span class="sig-name descname"><span class="pre">set_use_ants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_ants</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_ants"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_ants" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_ants” checkbox in the preferences.</p>
+<dd><p>Set whether ANTs support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_ants</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_ants</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable ANTs support; otherwise, disable
+it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1283,10 +1426,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_freesurfer">
 <span class="sig-name descname"><span class="pre">set_use_freesurfer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_freesurfer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_freesurfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_freesurfer" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_freesurfer” checkbox in the preferences.</p>
+<dd><p>Set whether FreeSurfer support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_freesurfer</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_freesurfer</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable FreeSurfer support;
+otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1294,10 +1438,10 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_fsl">
 <span class="sig-name descname"><span class="pre">set_use_fsl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_fsl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_fsl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_fsl" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_fsl” checkbox in the preferences.</p>
+<dd><p>Set whether FSL support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_fsl</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_fsl</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable FSL support; otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1305,10 +1449,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_matlab">
 <span class="sig-name descname"><span class="pre">set_use_matlab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_matlab</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_matlab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_matlab" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use matlab” checkbox in the preferences.</p>
+<dd><p>Set whether Matlab support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_matlab</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_matlab</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable Matlab support; otherwise,
+disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1316,10 +1461,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_matlab_standalone">
 <span class="sig-name descname"><span class="pre">set_use_matlab_standalone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_matlab_standalone</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_matlab_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_matlab_standalone" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_matlab_standalone” checkbox in the preferences.</p>
+<dd><p>Set whether Matlab standalone support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_matlab</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_matlab_standalone</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable Matlab standalone
+support; otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1327,10 +1473,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_mrtrix">
 <span class="sig-name descname"><span class="pre">set_use_mrtrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_mrtrix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_mrtrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_mrtrix" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use_mrtrix” checkbox in the preferences.</p>
+<dd><p>Set whether MRtrix support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_mrtrix</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_mrtrix</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable MRtrix support; otherwise,
+disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1341,7 +1488,7 @@ anatomist_2 data viewer.</p>
 <dd><p>Enable or disable user mode.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_mode</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>user_mode</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable user mode; otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1349,10 +1496,10 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_spm">
 <span class="sig-name descname"><span class="pre">set_use_spm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_spm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_spm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_spm" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use spm” checkbox in the preferences.</p>
+<dd><p>Set whether SPM support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_spm</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_spm</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable SPM support; otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1360,10 +1507,11 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.set_use_spm_standalone">
 <span class="sig-name descname"><span class="pre">set_use_spm_standalone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_spm_standalone</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.set_use_spm_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.set_use_spm_standalone" title="Link to this definition">¶</a></dt>
-<dd><p>Set the value of “use spm standalone” checkbox in the preferences.</p>
+<dd><p>Set whether SPM standalone support is enabled in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>use_spm_standalone</strong> – A boolean.</p>
+<dd class="field-odd"><p><strong>use_spm_standalone</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, enable SPM standalone support;
+otherwise, disable it.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1371,14 +1519,12 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setViewerConfig">
 <span class="sig-name descname"><span class="pre">setViewerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_NeuRad</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setViewerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerConfig" title="Link to this definition">¶</a></dt>
-<dd><p>sets user’s configuration neuro or radio for data_viewer.</p>
-<ul class="simple">
-<li><p>neuro: neurological</p></li>
-<li><p>radio: radiological</p></li>
-</ul>
+<dd><p>Set the orientation convention used by the data viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config_NeuRad</strong> – A string.</p>
+<dd class="field-odd"><p><strong>config_NeuRad</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Orientation convention. Accepted values are
+<code class="docutils literal notranslate"><span class="pre">&quot;neuro&quot;</span></code> for neurological orientation and <code class="docutils literal notranslate"><span class="pre">&quot;radio&quot;</span></code> for
+radiological orientation.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1386,10 +1532,10 @@ anatomist_2 data viewer.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.software_properties.Config.setViewerFramerate">
 <span class="sig-name descname"><span class="pre">setViewerFramerate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">im_sec</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/software_properties.html#Config.setViewerFramerate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.software_properties.Config.setViewerFramerate" title="Link to this definition">¶</a></dt>
-<dd><p>sets user’s framerate for data_viewer.</p>
+<dd><p>Set the framerate for the data viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>im_sec</strong> – (int) Number of images per second.</p>
+<dd class="field-odd"><p><strong>im_sec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of images per second.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1405,8 +1551,11 @@ engine modules are loaded and configurations are properly imported
 from the saved settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(capsul.engine.CapsulEngine) The updated CapsulEngine object,
-or None if the engine is not initialized.</p>
+<dd class="field-odd"><p>The updated CapsulEngine object, or None if the engine is not
+initialized.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.engine.CapsulEngine | None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -137,11 +137,12 @@ project is already opened in another instance to prevent conflicts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project_root_folder</strong> – Path to the project’s root directory. If
+<li><p><strong>project_root_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Path to the project’s root directory. If
 None, a temporary project directory is created.</p></li>
-<li><p><strong>new_project</strong> – Boolean indicating whether this is a new project
-(True) or an existing one (False). If True, the directory structure
-and databaseschema are initialized.</p></li>
+<li><p><strong>new_project</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the project is new. If <code class="docutils literal notranslate"><span class="pre">True</span></code>, the
+project directory structure and database schema are initialized.
+If <code class="docutils literal notranslate"><span class="pre">False</span></code>, the existing project is opened without
+reinitializing them.</p></li>
 </ul>
 </dd>
 </dl>
@@ -154,6 +155,9 @@ and databaseschema are initialized.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>List of clinical tags that were added.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,7 +177,7 @@ collections</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bricks</strong> – (str) List of brick IDs to check for orphans. If None,
+<dd class="field-odd"><p><strong>bricks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>| </em><em>None</em>) – List of brick IDs to check for orphans. If None,
 checks all bricks in the database.</p>
 </dd>
 </dl>
@@ -210,8 +214,8 @@ collections, along with their corresponding physical files</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>failed</strong> – (bool) Passed through to <cite>get_orphan_nonexisting_files</cite>
-to control orphan selection.</p>
+<dd class="field-odd"><p><strong>failed</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Passed through to <cite>get_orphan_nonexisting_files</cite> to
+control orphan selection.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,7 +229,10 @@ collections.</p>
 collections if they exist in the current collection’s field names.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) Clinical tags that were successfully removed.</p>
+<dd class="field-odd"><p>Clinical tags that were successfully removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -233,28 +240,28 @@ collections if they exist in the current collection’s field names.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.project.Project.files_in_project">
 <span class="sig-name descname"><span class="pre">files_in_project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">files</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/project.html#Project.files_in_project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.files_in_project" title="Link to this definition">¶</a></dt>
-<dd><p>Extract file/directory names from input that are within the project
-folder.</p>
-<p>Recursively processes the input to find all file paths, handling
-nested data structures. Only paths within the project directory are
-included.</p>
+<dd><p>Extract file and directory names from the input that are within the
+project folder.</p>
+<p>Recursively processes the input to find all file paths, handling nested
+data structures. Only paths within the project directory are included.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>files</strong> – <p>Input that may contain file paths.
-Can be:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>str: A single file path</p></li>
-<li><p>list/tuple/set: Collection of file paths or nested structures</p></li>
-<li><p>dict: Only values are processed, keys are ignored</p></li>
+<dd class="field-odd"><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>Input that may contain file paths. It can be:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: A single file path.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">tuple</span></code>, <code class="docutils literal notranslate"><span class="pre">set</span></code>: A collection of file paths or
+nested structures.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dict</span></code>: Only values are processed, keys are ignored.</p></li>
 </ul>
-</div></blockquote>
 </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(set) Relative file paths that exist within the project
+<dd class="field-even"><p>Relative file paths that exist within the project
 folder, with paths normalized and made relative to the project
 directory.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,46 +272,49 @@ directory.</p>
 <dd><p>Retrieve and process finished bricks from workflows and pipelines.</p>
 <dl class="simple">
 <dt>This method:</dt><dd><ul class="simple">
-<li><p>Gets finished bricks from workflows and optionally a specific
-pipeline</p></li>
-<li><p>Filters them based on their presence in the Mia database</p></li>
-<li><p>Updates brick metadata with execution status and outputs</p></li>
-<li><p>Collects all output files that are within the project directory</p></li>
+<li><p>Retrieves finished bricks from workflows and, optionally, a
+specific pipeline.</p></li>
+<li><p>Filters them according to their presence in the Mia database.</p></li>
+<li><p>Updates brick metadata with execution status and outputs.</p></li>
+<li><p>Collects output files located within the project directory.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>engine</strong> – Engine instance for retrieving finished bricks.</p></li>
+<li><p><strong>engine</strong> – Engine instance used to retrieve finished bricks.</p></li>
 <li><p><strong>pipeline</strong> – Optional pipeline object to filter specific bricks.</p></li>
-<li><p><strong>include_done</strong> – (bool)If True, includes all bricks regardless of
-execution status. If False, only includes “Not Done” bricks.</p></li>
+<li><p><strong>include_done</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, includes all bricks regardless
+of execution status. Otherwise, only bricks whose status is
+<code class="docutils literal notranslate"><span class="pre">Not</span> <span class="pre">Done</span></code> are included.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict)
-Dictionary containing:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>‘bricks’: Dict mapping brick IDs to their metadata</p></li>
-<li><p>‘outputs’: Set of output file paths relative to project directory</p></li>
+<dd class="field-even"><p><p>A Dictionary containing:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bricks</span></code>: Mapping of brick identifiers to their metadata.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code>: Set of output file paths relative to project
+directory</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_update_dict: Merge two dictionaries by updating the first
 with the second.</p></li>
 <li><p>_collect_outputs: Recursively collects file paths from
 output values that are within the project directory.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -322,10 +332,13 @@ lead to the given one. Elements are process (brick) UUIDs.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – Path to the data file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the data file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) History.</p>
+<dd class="field-even"><p>History.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,8 +349,11 @@ lead to the given one. Elements are process (brick) UUIDs.</p></li>
 <dd><p>Return the date of creation of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The date of creation of the project if it’s not
-<cite>Unnamed</cite> project, otherwise empty string</p>
+<dd class="field-odd"><p>The date of creation of the project if it’s not <cite>Unnamed</cite>
+project, otherwise empty string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -349,14 +365,17 @@ lead to the given one. Elements are process (brick) UUIDs.</p></li>
 pipeline, including nested pipelines, if any.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – (Pipeline or Process) The pipeline or single process
-to analyze. If a single process is provided, it will be treated as a
-minimal pipeline.</p>
+<dd class="field-odd"><p><strong>pipeline</strong> (<em>Pipeline</em><em> | </em><em>Process</em>) – The pipeline or single process to analyze. If a
+single process is provided, it will be treated as a minimal
+pipeline.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary where keys are process UUIDs (brick IDs)
-and values are dictionaries containing the associated process
+<dd class="field-even"><p>A dictionary where keys are process UUIDs (brick IDs) and
+values are dictionaries containing the associated process
 instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, Process]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,35 +388,40 @@ instances.</p>
 <code class="docutils literal notranslate"><span class="pre">&quot;finished_regularly&quot;</span></code>. Any other termination status is treated
 as a failure. A workflow is marked as <code class="docutils literal notranslate"><span class="pre">failed</span></code> if at least one of
 its jobs did not finish successfully.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>engine</strong> – Engine providing access to the Soma-Workflow controller.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict)
-Mapping <code class="docutils literal notranslate"><span class="pre">brick_uuid</span> <span class="pre">-&gt;</span> <span class="pre">job_info</span></code> where <code class="docutils literal notranslate"><span class="pre">job_info</span></code> contains:</p>
+<dd class="field-even"><p><p>Mapping <code class="docutils literal notranslate"><span class="pre">brick_uuid</span> <span class="pre">-&gt;</span> <span class="pre">job_info</span></code> where <code class="docutils literal notranslate"><span class="pre">job_info</span></code>
+contains:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">workflow</span></code> (int): Workflow identifier.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">job</span></code>: Soma-Workflow job instance.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">job_id</span></code> (int): Job identifier.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">swf_status</span></code> (tuple): Raw Soma-Workflow status tuple.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">running</span></code> (bool): True of any job in the workflow is running.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">running</span></code> (bool): True of any job in the workflow is
+running.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">failed</span></code> (bool): True if any job in the workflow failed.</p></li>
 </ul>
 </div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>]</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>parse_status: Parse a Soma-Workflow job status tuple into
 structured information.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -406,11 +430,14 @@ structured information.</p></li>
 <dd><p>Return a Filter object from its name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>target_filter</strong> – (str) Filter name.</p>
+<dd class="field-odd"><p><strong>target_filter</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Filter name.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Filter) Filter object corresponding to the given name or
-None if not found</p>
+<dd class="field-even"><p>Filter object corresponding to the given name or None if not
+found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="populse_mia.data_manager.filter.html#populse_mia.data_manager.filter.Filter" title="populse_mia.data_manager.filter.Filter">Filter</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -421,7 +448,10 @@ None if not found</p>
 <dd><p>Input box to type the name of the filter to save.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Return the name typed by the user or None if cancelled.</p>
+<dd class="field-odd"><p>Return the name typed by the user or None if cancelled.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,8 +462,11 @@ None if not found</p>
 <dd><p>Return the name of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The name of the project if it’s not <cite>Unnamed</cite> project,
-otherwise empty string</p>
+<dd class="field-odd"><p>The name of the project if it’s not <cite>Unnamed</cite> project,
+otherwise empty string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,24 +475,24 @@ otherwise empty string</p>
 <dt class="sig sig-object py" id="populse_mia.data_manager.project.Project.get_orphan_bricks">
 <span class="sig-name descname"><span class="pre">get_orphan_bricks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bricks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/project.html#Project.get_orphan_bricks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.get_orphan_bricks" title="Link to this definition">¶</a></dt>
 <dd><p>Identifies orphan bricks and their associated weak files.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bricks</strong> – (list or set) A list or set of brick IDs to filter the
-search. If None, all bricks in the database are considered. Defaults
-to None.</p>
+<dd class="field-odd"><p><strong>bricks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)"><em>set</em></a><em> | </em><em>None</em>) – A list or set of brick IDs to filter the search. If
+None, all bricks in the database are considered. Defaults to None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple)
-A tuple containing two sets:</p>
-<blockquote>
-<div><ul class="simple">
+<dd class="field-even"><p><p>A tuple containing two sets:</p>
+<ul class="simple">
 <li><p><cite>orphan</cite>: (set) Brick IDs considered orphaned, meaning they have
 no valid or existing outputs linked to the current database.</p></li>
 <li><p><cite>orphan_weak_files</cite>: (set) Paths to weak files associated with
 orphaned bricks, such as script files or files that no longer
 exist.</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -469,12 +502,10 @@ exist.</p></li>
 <span class="sig-name descname"><span class="pre">get_orphan_history</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/project.html#Project.get_orphan_history"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.project.Project.get_orphan_history" title="Link to this definition">¶</a></dt>
 <dd><p>Identifies orphaned history entries, their associated orphan bricks,
 and weak files.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(tuple)
-A tuple containing three sets:</p>
-<blockquote>
-<div><ul class="simple">
+<dd class="field-odd"><p><p>A tuple containing three sets:</p>
+<ul class="simple">
 <li><p><cite>orphan_hist</cite>: (set) IDs of history entries that are no longer
 linked to any current document in the database.</p></li>
 <li><p><cite>orphan_bricks</cite>: (set) IDs of bricks associated with orphaned
@@ -482,7 +513,10 @@ history entries.</p></li>
 <li><p><cite>orphan_weak_files</cite>: (set) Paths to weak files (e.g., script
 files or non-existent files) linked to orphaned history entries.</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -501,12 +535,15 @@ is True (in which case brick association is ignored).</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>failed</strong> – (bool) If True, include files even if they are linked to
+<dd class="field-odd"><p><strong>failed</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, include files even if they are linked to
 existing bricks. If False, exclude such files.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(set) A set of filenames from the database that are not found
-on the filesystem and are not associated with existing bricks.</p>
+<dd class="field-even"><p>A set of filenames from the database that are not found on
+the filesystem and are not associated with existing bricks.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,8 +554,11 @@ on the filesystem and are not associated with existing bricks.</p>
 <dd><p>Return the sorted tag of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Sorted tag of the project if it’s not <cite>Unnamed</cite>
-project, otherwise empty string.</p>
+<dd class="field-odd"><p>Sorted tag of the project if it’s not <cite>Unnamed</cite> project,
+otherwise empty string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -529,8 +569,11 @@ project, otherwise empty string.</p>
 <dd><p>Return the sort order of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Sort order of the project if it’s not <cite>Unnamed</cite>
-project, otherwise empty string.</p>
+<dd class="field-odd"><p>Sort order of the project if it’s not <cite>Unnamed</cite> project,
+otherwise empty string.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -541,8 +584,11 @@ project, otherwise empty string.</p>
 <dd><p>Return if the project has unsaved modifications or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) True if the project has pending modifications, False
+<dd class="field-odd"><p>True if the project has pending modifications, False
 otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -563,8 +609,11 @@ populates the <cite>filters</cite> list with <cite>Filter</cite> objects created
 its contents as a Python dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict) A dictionary containing the project properties if
+<dd class="field-odd"><p>A dictionary containing the project properties if
 successfully loaded, or None if an error occurs.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -575,8 +624,7 @@ successfully loaded, or None if an error occurs.</p>
 <dd><p>Redo the last action made by the user on the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>table</strong> – (QTableWidget) The table on which to apply the
-modifications.</p>
+<dd class="field-odd"><p><strong>table</strong> (<em>QTableWidget</em>) – The table on which to apply the modifications.</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -602,7 +650,7 @@ modifications.</p>
 <dd><p>Re-put the value objects in the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values</strong> – (list) List of value objects.</p>
+<dd class="field-odd"><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>, </em><em>Any</em><em>]</em><em>]</em>) – List of value objects.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -619,7 +667,7 @@ modifications.</p>
 <dd><p>Save the current filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>custom_filters</strong> – The customized filter</p>
+<dd class="field-odd"><p><strong>custom_filters</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>]</em>) – The customized filter</p>
 </dd>
 </dl>
 </dd></dl>
@@ -636,7 +684,7 @@ modifications.</p>
 <dd><p>Set the current filter of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_filter</strong> – New Filter object.</p>
+<dd class="field-odd"><p><strong>new_filter</strong> (<a class="reference internal" href="populse_mia.data_manager.filter.html#populse_mia.data_manager.filter.Filter" title="populse_mia.data_manager.filter.Filter"><em>Filter</em></a>) – New Filter object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -647,7 +695,7 @@ modifications.</p>
 <dd><p>Set the date of the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>date</strong> – New date of the project.</p>
+<dd class="field-odd"><p><strong>date</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – New date of the project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -659,7 +707,7 @@ modifications.</p>
 does nothing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> – (str) New name of the project.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – New name of the project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -733,20 +781,20 @@ history pipeline XML data. If the old path contains
 as the base path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_path</strong> – (str) The new project path. If not provided, the
-current project folder path is used.</p>
+<dd class="field-odd"><p><strong>new_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The new project path. If not provided, the current
+project folder path is used.</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_update_json_data: Helper method to update paths in JSON
 data structures</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -4,22 +4,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 3.0.0-dev+00270a5e documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=77510892"></script>
-    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../_static/documentation_options.js?v=f5aceaef"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+00270a5e documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.modify_table</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -50,11 +48,11 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
     <span class="n">QMessageBox</span><span class="p">,</span>
@@ -65,7 +63,7 @@
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_BOOLEAN</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_DATE</span><span class="p">,</span>
@@ -75,7 +73,7 @@
     <span class="n">FIELD_TYPE_LIST_STRING</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_LIST_TIME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">check_value_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_value_type</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;ModifyTable&quot;</span><span class="p">]</span>
 
@@ -84,7 +82,7 @@
 
 <div class="viewcode-block" id="ModifyTable">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable">[docs]</a>
-<span class="k">class</span> <span class="nc">ModifyTable</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModifyTable</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Dialog to modify cell contents containing lists in the data browser tab.</span>
 
@@ -106,7 +104,7 @@
 
 <div class="viewcode-block" id="ModifyTable.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">types</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the ModifyTable dialog.</span>
 
@@ -154,7 +152,7 @@
 
 <div class="viewcode-block" id="ModifyTable._convert_value">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable._convert_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">_convert_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">field_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">field_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert a text value to the appropriate type based on field_type.</span>
 
@@ -188,7 +186,7 @@
 
 <div class="viewcode-block" id="ModifyTable._show_error_message">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable._show_error_message">[docs]</a>
-    <span class="k">def</span> <span class="nf">_show_error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">type_problem</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_show_error_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">type_problem</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display an error message for invalid values.</span>
 
@@ -209,7 +207,7 @@
 
 <div class="viewcode-block" id="ModifyTable.add_item">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.add_item">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new element to the list with default value 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -220,7 +218,7 @@
 
 <div class="viewcode-block" id="ModifyTable.fill_table">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.fill_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">fill_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate the table with the current list elements.</span>
 
@@ -254,7 +252,7 @@
 
 <div class="viewcode-block" id="ModifyTable.rem_last_item">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.rem_last_item">[docs]</a>
-    <span class="k">def</span> <span class="nf">rem_last_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rem_last_item</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove the last element of the list if there&#39;s more than one element.</span>
 
@@ -275,7 +273,7 @@
 
 <div class="viewcode-block" id="ModifyTable.update_table_values">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.modify_table.html#populse_mia.user_interface.data_browser.modify_table.ModifyTable.update_table_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_table_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_table_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate user input and update the database with new values.</span>
 
@@ -340,7 +338,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -350,7 +348,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>

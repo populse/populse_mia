@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+16135b66 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=82506ad4"></script>
+    <script src="../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+16135b66 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_history_inspect</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -67,7 +67,7 @@ entries or temporary placeholders.</p></li>
 <td><p>Retrieves the complete &quot;useful&quot; history of a file in the database as a set of processing bricks.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.get_data_history_processes" title="populse_mia.data_manager.data_history_inspect.get_data_history_processes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_data_history_processes</span></code></a>(filename, project)</p></td>
-<td><p>Retrieves the complete &quot;useful&quot; processing history of a file in the database.</p></td>
+<td><p>Retrieves the complete useful processing history of a file in the database.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.get_direct_proc_ancestors" title="populse_mia.data_manager.data_history_inspect.get_direct_proc_ancestors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_direct_proc_ancestors</span></code></a>(filename, project, ...)</p></td>
 <td><p>Retrieve processing bricks referenced in the direct filename history.</p></td>
@@ -82,7 +82,7 @@ entries or temporary placeholders.</p></li>
 <td><p>Retrieve upstream processes connected via a temporary value (&quot;&lt;temp&gt;&quot;).</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.is_data_entry" title="populse_mia.data_manager.data_history_inspect.is_data_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_data_entry</span></code></a>(filename, project[, allow_temp])</p></td>
-<td><p>Determine if the given filename is a valid database entry within the specified project.</p></td>
+<td><p>Check whether a filename corresponds to a valid project data entry.</p></td>
 </tr>
 </tbody>
 </table>
@@ -109,7 +109,7 @@ data.</p>
 <dd><p>Initializes the ProtoProcess instance with a brick database entry.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>brick</strong> – The brick database entry to store. Defaults to None.</p>
+<dd class="field-odd"><p><strong>brick</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> or </em><em>None</em>) – The brick database entry to store. Defaults to None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,16 +128,19 @@ values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>brick</strong> – (dict or str) The brick database entry to convert. If a
-string is provided, it is treated as the brick’s unique ID, and the
-corresponding brick document is retrieved from the project’s database.</p></li>
-<li><p><strong>project</strong> – (object) The project object providing access to the
-database and its documents.</p></li>
+<li><p><strong>brick</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The brick database entry to convert. If a string is provided,
+it is treated as the brick’s unique ID, and the corresponding brick
+document is retrieved from the project’s database.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object providing access to the database and its
+documents.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Process or None) A <cite>Process</cite> instance representing the brick’s
-parameters and values. Returns <cite>None</cite> if the brick is not found.</p>
+<dd class="field-even"><p>A <cite>Process</cite> instance representing the brick’s parameters and
+values. Returns <cite>None</cite> if the brick is not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Process | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -147,26 +150,29 @@ parameters and values. Returns <cite>None</cite> if the brick is not found.</p>
 <span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_history_inspect.</span></span><span class="sig-name descname"><span class="pre">data_history_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_history_inspect.html#data_history_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_history_inspect.data_history_pipeline" title="Link to this definition">¶</a></dt>
 <dd><p>Retrieves the complete processing history of a file in the database,
 formatted as a “fake pipeline”.</p>
-<p>The generated pipeline consists of unspecialized (fake) processes,
-each representing a processing step with all parameters of type <cite>Any</cite>.
-The pipeline includes connections and traces all upstream ancestors
-of the file, capturing the entire processing path leading to the
-latest version of the file.</p>
-<p>If the file was modified multiple times, the pipeline reflects only
-the relevant processing steps that contributed to the final output.
-Orphaned processing steps from overwritten versions are omitted.</p>
+<p>The generated pipeline consists of unspecialized (fake) processes, each
+representing a processing step with all parameters of type <cite>Any</cite>. The
+pipeline includes connections and traces all upstream ancestors of the
+file, capturing the entire processing path leading to the latest version of
+the file.</p>
+<p>If the file was modified multiple times, the pipeline reflects only the
+relevant processing steps that contributed to the final output. Orphaned
+processing steps from overwritten versions are omitted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The name of the file whose processing history is
-being retrieved.</p></li>
-<li><p><strong>project</strong> – (Project) The project object containing the database
-and relevant details.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the file whose processing history is being
+retrieved.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object containing the database and relevant
+details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Pipeline | None) A <cite>Pipeline</cite> object representing the processing
-history, or <cite>None</cite> if no relevant history is found.</p>
+<dd class="field-even"><p>A <cite>Pipeline</cite> object representing the processing history, or
+<cite>None</cite> if no relevant history is found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pipeline | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -177,31 +183,34 @@ history, or <cite>None</cite> if no relevant history is found.</p>
 <dd><p>Determine if the specified filename is present within the given value.</p>
 <p>This function recursively searches through the <cite>value</cite>, which can be a
 string, list, tuple, or dictionary, to check if it contains the specified
-filename. The filename can be a special placeholder “&lt;temp&gt;” or a “short”
+filename. The filename can be a special placeholder <code class="docutils literal notranslate"><span class="pre">&lt;temp&gt;</span></code> or a short
 filename, which is a relative path within the project’s database data
 directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – <p>(str, list, tuple, or dict) The data structure to search. It can be:</p>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>The data structure to search. It can be:</p>
 <ul>
 <li><p>A string representing a file path.</p></li>
 <li><p>A list or tuple containing multiple file paths.</p></li>
 <li><p>A dictionary where file paths are stored as values.</p></li>
 </ul>
 </p></li>
-<li><p><strong>filename</strong> – <p>(str) The filename to search for. It can be:</p>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – <p>The filename to search for. It can be:</p>
 <ul>
 <li><p>The special placeholder “&lt;temp&gt;” indicating a temporary value.</p></li>
 <li><p>A relative file path to the project database data directory.</p></li>
 </ul>
 </p></li>
-<li><p><strong>project</strong> – (object) The project object containing the project’s folder path as an
-attribute (<cite>project.folder</cite>).</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object containing the project’s folder path as
+an attribute (<cite>project.folder</cite>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the filename is found in the value, False otherwise.</p>
+<dd class="field-even"><p>True if the filename is found in the value, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -217,19 +226,20 @@ organized by execution time.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>procs</strong> – (iterable of ProtoProcess) A collection of <cite>ProtoProcess</cite>
-instances to search through.</p></li>
-<li><p><strong>filename</strong> – (str) The filename to search for within the processes’
-outputs.</p></li>
-<li><p><strong>project</strong> – (Project) An instance of the project, used to access the
-database folder.</p></li>
+<li><p><strong>procs</strong> (<em>iterable</em><em> of </em><a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><em>ProtoProcess</em></a>) – A collection of <cite>ProtoProcess</cite> instances to search through.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The filename to search for within the processes outputs.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – An instance of the project, used to access the database
+folder.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary where keys are execution times and values
-are lists of tuples. Each tuple contains a process and the parameter name
+<dd class="field-even"><p>A dictionary where keys are execution times and values are lists
+of tuples. Each tuple contains a process and the parameter name
 associated with the filename.
 Format: <cite>{exec_time: [(process, param_name), …]}</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -240,29 +250,35 @@ Format: <cite>{exec_time: [(process, param_name), …]}</cite>.</p>
 <dd><p>Retrieves the processing history for a given data file, based on
 <a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.get_data_history_processes" title="populse_mia.data_manager.data_history_inspect.get_data_history_processes"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_data_history_processes()</span></code></a>.</p>
 <p>The returned dictionary contains:</p>
-<ul class="simple">
-<li><p><cite>“parent_files”</cite>: A set of filenames representing data (direct or
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parent_files</span></code>: A set of filenames representing data (direct or
 indirect) used to produce the given file.</p></li>
-<li><p><cite>“processes”</cite>: A set of UUIDs of processing bricks that contributed
+<li><p><code class="docutils literal notranslate"><span class="pre">processes</span></code>: A set of UUIDs of processing bricks that contributed
 to the file’s creation.</p></li>
 </ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The name of the file whose processing history is
-being retrieved.</p></li>
-<li><p><strong>project</strong> – (Project) The project object containing the database and
-relevant details.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the file whose processing history is being
+retrieved.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object containing the database and relevant
+details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary with the following keys:</p>
+<dd class="field-even"><p><p>A dictionary with the following keys:</p>
 <ul class="simple">
-<li><p><cite>“processes”</cite>: (set) A set of UUIDs representing the processing
-bricks involved.</p></li>
-<li><p><cite>“parent_files”</cite>: (set) A set of filenames that were used to produce
-the data.</p></li>
+<li><p><cite>”processes”</cite>: A set of UUIDs representing the processing bricks
+involved.</p></li>
+<li><p><cite>”parent_files”</cite>: A set of filenames that were used to produce the
+data.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,16 +295,18 @@ used in the relevant processing history of the file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The name of the file whose processing history is
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the file whose processing history is
 being retrieved.</p></li>
-<li><p><strong>project</strong> – (Project) The project object containing the database and
-relevant details.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object containing the database and relevant
+details.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(set) A set of brick elements representing the “useful”
-processing steps that contributed to the final version of the given data
-file.</p>
+<dd class="field-even"><p>A set of brick elements representing the “useful” processing
+steps that contributed to the final version of the given data file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -296,40 +314,47 @@ file.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_history_inspect.get_data_history_processes">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_history_inspect.</span></span><span class="sig-name descname"><span class="pre">get_data_history_processes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_history_inspect.html#get_data_history_processes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_history_inspect.get_data_history_processes" title="Link to this definition">¶</a></dt>
-<dd><p>Retrieves the complete “useful” processing history of a file in the
-database.</p>
+<dd><p>Retrieves the complete useful processing history of a file in the database.</p>
 <p>This function returns:</p>
-<ul class="simple">
+<blockquote>
+<div><ul class="simple">
 <li><p>A dictionary of processes (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProtoProcess</span></code></a> instances), where
 keys are process UUIDs.</p></li>
 <li><p>A set of links between these processes, forming the processing graph.</p></li>
 </ul>
+</div></blockquote>
 <p>Unlike <a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.data_history_pipeline" title="populse_mia.data_manager.data_history_inspect.data_history_pipeline"><code class="xref py py-func docutils literal notranslate"><span class="pre">data_history_pipeline()</span></code></a>, which converts the history into a
-<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>, this function provides a
-lower-level representation. Some processes retrieved during history
-traversal may not be used; they are distinguished by their <code class="docutils literal notranslate"><span class="pre">used</span></code>
-attribute (set to <cite>True</cite> for relevant processes).</p>
-<p>Processing bricks that are not used (possibly from earlier runs where
-the data file was overwritten) may either be absent from the history
-or have <code class="docutils literal notranslate"><span class="pre">used</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>, this function returns a
+lower-level representation of the processing history. Some processes
+encountered during history traversal may not be relevant to the final
+history; they are identified by their <code class="docutils literal notranslate"><span class="pre">used</span></code> attribute, which is set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> for processes that contribute to the current file history.</p>
+<p>Processing bricks that are not used (for example, from previous runs where
+the output file was overwritten) may either be absent from the history or
+returned with <code class="docutils literal notranslate"><span class="pre">used</span> <span class="pre">=</span> <span class="pre">False</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The name of the file whose processing history is
-being retrieved.</p></li>
-<li><p><strong>project</strong> – (Project) The project object containing the database and
-relevant details.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the file whose processing history is being
+retrieved.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The Project containing the database and related
+information.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple)</p>
+<dd class="field-even"><p><p>A tuple with:</p>
 <ul class="simple">
-<li><p><cite>procs</cite> (dict): <cite>{uuid: ProtoProcess instance}</cite> mapping.</p></li>
-<li><p><cite>links</cite> (set): <cite>{(src_protoprocess, src_plug_name, dst_protoprocess,
-dst_plug_name)}</cite>.
-External connections are represented with <cite>None</cite> as
-<cite>src_protoprocess</cite> or <cite>dst_protoprocess</cite>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">procs</span></code> (dict): Mapping of process UUIDs to
+<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProtoProcess</span></code></a> instances.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">links</span></code> (set): Processing graph connections represented as
+<code class="docutils literal notranslate"><span class="pre">(src_protoprocess,</span> <span class="pre">src_plug_name,</span> <span class="pre">dst_protoprocess,</span>
+<span class="pre">dst_plug_name)</span></code> tuples. External connections are represented with
+<code class="docutils literal notranslate"><span class="pre">None</span></code> as <code class="docutils literal notranslate"><span class="pre">src_protoprocess</span></code> or <code class="docutils literal notranslate"><span class="pre">dst_protoprocess</span></code>.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -345,22 +370,24 @@ filtering by execution time and excluding a specified originating process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The data filename to inspect.</p></li>
-<li><p><strong>project</strong> – (Project) The project instance used to access the database.</p></li>
-<li><p><strong>procs</strong> – (dict) Dictionary mapping process UUIDs to <cite>ProtoProcess</cite>
-instances. This dictionary is updated with newly retrieved processes.</p></li>
-<li><p><strong>before_exec_time</strong> – (datetime) If specified, only processing bricks
-executed before this time are considered.</p></li>
-<li><p><strong>only_latest</strong> – (bool) If True (default), keeps only the latest
-processes found in the history. If <cite>before_exec_time</cite> is specified,
-retains only the latest before that time.</p></li>
-<li><p><strong>org_proc</strong> – (ProtoProcess) The originating process, which is excluded
-from execution time filtering but included in the ancestor list.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The data filename to inspect.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project instance used to access the database.</p></li>
+<li><p><strong>procs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary mapping process UUIDs to <cite>ProtoProcess</cite> instances.
+This dictionary is updated with newly retrieved processes.</p></li>
+<li><p><strong>before_exec_time</strong> (<em>datetime</em><em> | </em><em>None</em>) – If specified, only processing bricks executed
+before this time are considered.</p></li>
+<li><p><strong>only_latest</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True (default), keeps only the latest processes
+found in the history. If <cite>before_exec_time</cite> is specified, retains only
+the latest before that time.</p></li>
+<li><p><strong>org_proc</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><em>ProtoProcess</em></a>) – The originating process, which is excluded from execution
+time filtering but included in the ancestor list.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary mapping brick UUIDs to <cite>ProtoProcess</cite>
-instances.</p>
+<dd class="field-even"><p>A dictionary mapping brick UUIDs to <cite>ProtoProcess</cite> instances.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -373,22 +400,24 @@ dictionaries.</p>
 <p>This function parses the given <cite>value</cite>, which can be a nested combination
 of lists, tuples, and dictionaries, to retrieve all filenames referenced
 within it. Only filenames that are valid database entries or the special
-“&lt;temp&gt;” value (if <cite>allow_temp</cite> is <cite>True</cite>) are retained. Other filenames
+<code class="docutils literal notranslate"><span class="pre">&lt;temp&gt;</span></code> value (if <cite>allow_temp</cite> is <cite>True</cite>) are retained. Other filenames
 are considered read-only static data and are not included in the results.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – (object) The value to parse. It can be a single string, a
-list, tuple, dictionary, or a nested combination of these types.</p></li>
-<li><p><strong>project</strong> – (object) The project object providing access to the
-database.</p></li>
-<li><p><strong>allow_temp</strong> – (bool, optional) If <cite>True</cite>, includes the temporary
-filename “&lt;temp&gt;” in the results. Defaults to <cite>True</cite>.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – The value to parse. It can be a single string, a list,
+a tuple, a dictionary, or any nested combination of these types.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object providing access to the database.</p></li>
+<li><p><strong>allow_temp</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If <cite>True</cite>, includes the temporary filename <code class="docutils literal notranslate"><span class="pre">&lt;temp&gt;</span></code>
+in the results. Defaults to <cite>True</cite>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(set) A set of filenames that are valid database entries or the
-temporary filename “&lt;temp&gt;” (if allowed).</p>
+<dd class="field-even"><p>A set of filenames that are valid database entries or the
+temporary filename <code class="docutils literal notranslate"><span class="pre">&lt;temp&gt;</span></code> (if allowed).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -407,17 +436,26 @@ the function returns <cite>None</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>brick_id</strong> – (str) The unique identifier (UUID) of the brick to
-retrieve.</p></li>
-<li><p><strong>project</strong> – (object) The project object providing access to the
-database.</p></li>
-<li><p><strong>before_exec_time</strong> – (str) An execution time filter. If provided,
-bricks executed after this timestamp are discarded.</p></li>
+<li><p><strong>brick_id</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier (UUID) of the brick to retrieve.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object providing access to the database.</p></li>
+<li><p><strong>before_exec_time</strong> – <dl class="simple">
+<dt>An execution time filter. If provided, bricks</dt><dd><p>executed after this timestamp are discarded.</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">type before_exec_time<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(ProtoProcess or None) A <cite>ProtoProcess</cite> instance representing
-the brick if it meets the criteria; otherwise, <cite>None</cite>.</p>
+<dd class="field-even"><p>A <cite>ProtoProcess</cite> instance representing the brick if it meets the
+criteria; otherwise, <cite>None</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess">ProtoProcess</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -437,68 +475,70 @@ the temporary filename and processing time, which can be error-prone.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>proc</strong> – (ProtoProcess) The process whose ancestors need to be
-determined.</p></li>
-<li><p><strong>project</strong> – (object) The project object providing access to the
-session and other necessary functionalities for processing.</p></li>
-<li><p><strong>procs</strong> – (dict) A dictionary of processes, where keys are process IDs
-and values are <cite>ProtoProcess</cite> instances.</p></li>
+<li><p><strong>proc</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><em>ProtoProcess</em></a>) – The process whose ancestors need to be determined.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object providing access to the database and
+other necessary functionalities for processing.</p></li>
+<li><p><strong>procs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of processes, where keys are process IDs and
+values are <cite>ProtoProcess</cite> instances.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple)</p>
+<dd class="field-even"><p><p>A tuple with:</p>
 <ul class="simple">
-<li><p>new_procs (dict): A dictionary mapping process UUIDs to
-<cite>ProtoProcess</cite> instances.</p></li>
-<li><p>links (set):
-A set of tuples representing pipeline links in the format
-<cite>(src_protoprocess, src_plug_name, dst_protoprocess, dst_plug_name)</cite>.
-Links from/to the pipeline main plugs are also included, where
-<cite>src_protoprocess</cite> or <cite>dst_protoprocess</cite> may be <cite>None</cite>.</p></li>
+<li><p>new_procs (dict): Mapping of process UUIDs to <a class="reference internal" href="#populse_mia.data_manager.data_history_inspect.ProtoProcess" title="populse_mia.data_manager.data_history_inspect.ProtoProcess"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProtoProcess</span></code></a>
+instances.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">links</span></code> (set): Processing graph connections represented as
+<code class="docutils literal notranslate"><span class="pre">(src_protoprocess,</span> <span class="pre">src_plug_name,</span> <span class="pre">dst_protoprocess,</span>
+<span class="pre">dst_plug_name)</span></code> tuples. External connections are represented with
+<code class="docutils literal notranslate"><span class="pre">None</span></code> as <code class="docutils literal notranslate"><span class="pre">src_protoprocess</span></code> or <code class="docutils literal notranslate"><span class="pre">dst_protoprocess</span></code>.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#set" title="(in Python v3.10)">set</a>]</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_get_tmp_param: Identifies a process parameter associated with a
 temporary value.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_history_inspect.is_data_entry">
 <span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_history_inspect.</span></span><span class="sig-name descname"><span class="pre">is_data_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_history_inspect.html#is_data_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_history_inspect.is_data_entry" title="Link to this definition">¶</a></dt>
-<dd><p>Determine if the given filename is a valid database entry within the
-specified project.</p>
-<p>This function checks whether the input filename is either a recognized
-temporary value (“&lt;temp&gt;”) or a file located within the project’s database
-data directory. If the filename is valid, it returns either the relative
-path to the database data directory or “&lt;temp&gt;” (if allowed). If the file
-is not found in the database, the function returns <cite>None</cite>.</p>
+<dd><p>Check whether a filename corresponds to a valid project data entry.</p>
+<p>A valid data entry is a file whose path belongs to the project directory
+and whose relative path exists as a document in the project’s current
+database collection. The special value <code class="docutils literal notranslate"><span class="pre">&quot;&lt;temp&gt;&quot;</span></code> is also considered
+valid when <cite>allow_temp</cite> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+<p>The function returns the path relative to the project folder for valid
+database entries. It returns <code class="docutils literal notranslate"><span class="pre">&quot;&lt;temp&gt;&quot;</span></code> unchanged for temporary entries,
+and <code class="docutils literal notranslate"><span class="pre">None</span></code> for invalid or unknown files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The full path or special value “&lt;temp&gt;” to be
-checked.</p></li>
-<li><p><strong>project</strong> – (object) The project object providing access to the
-database and folder structure.</p></li>
-<li><p><strong>allow_temp</strong> – (bool, optional) If <cite>True</cite>, allows the special value
-“&lt;temp&gt;” to be considered a valid entry. Defaults to <cite>True</cite>.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Absolute file path or the special value <code class="docutils literal notranslate"><span class="pre">&quot;&lt;temp&gt;&quot;</span></code> to
+check.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – Project instance providing access to the project folder
+and database.</p></li>
+<li><p><strong>allow_temp</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the special value <code class="docutils literal notranslate"><span class="pre">&quot;&lt;temp&gt;&quot;</span></code> should be
+accepted as a valid entry. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str or None)</p>
-<ul class="simple">
-<li><p>The relative path to the project’s database data directory if the
-filename is a valid database entry.</p></li>
-<li><p>“&lt;temp&gt;” if the input is “&lt;temp&gt;” and <cite>allow_temp</cite> is <cite>True</cite>.</p></li>
-<li><p><cite>None</cite> if the filename is not a valid database entry.</p></li>
-</ul>
+<dd class="field-even"><p>The path relative to the project folder if <cite>filename</cite> is a valid
+database entry, <code class="docutils literal notranslate"><span class="pre">&quot;&lt;temp&gt;&quot;</span></code> for a temporary entry, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if the
+file is not a valid entry.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+56ffc630 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=15c471b9"></script>
+    <script src="../../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+56ffc630 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.plug_filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -65,12 +63,12 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QDialogButtonBox</span><span class="p">,</span>
@@ -82,22 +80,22 @@
 <span class="p">)</span>
 
 <span class="c1"># Populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
     <span class="n">COLLECTION_BRICK</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.advanced_search</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.data_browser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TableDataBrowser</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
     <span class="n">PopUpVisualizedTags</span><span class="p">,</span>
 <span class="p">)</span>
@@ -106,8 +104,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter">[docs]</a>
-<span class="k">class</span> <span class="nc">PlugFilter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlugFilter</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for interactively filtering and selecting database scans to</span>
 <span class="sd">    assign to a pipeline node plug.</span>
@@ -153,8 +151,8 @@
     <span class="n">plug_value_changed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
 <div class="viewcode-block" id="PlugFilter.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">project</span><span class="p">,</span>
         <span class="n">scans_list</span><span class="p">,</span>
@@ -289,8 +287,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.ok_clicked">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.ok_clicked">[docs]</a>
-    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.ok_clicked">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle OK button click by applying changes and closing the dialog.</span>
 
@@ -302,8 +300,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.reset_search_bar">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.reset_search_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.reset_search_bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset search interface to initial state and restore all scan rows.</span>
 
@@ -323,8 +321,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.search_str">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.search_str">[docs]</a>
-    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.search_str">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter and update the list of scans displayed in the browser based on</span>
 <span class="sd">        search criteria.</span>
@@ -377,8 +375,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.set_plug_value">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.set_plug_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.set_plug_value">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract selected or filtered scan values and emit to node plug.</span>
 
@@ -397,7 +395,7 @@
 <span class="sd">                  from the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_get_scan_value</span><span class="p">(</span><span class="n">database_data</span><span class="p">,</span> <span class="n">scan_name</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve and process a single scan value from the database.</span>
 
@@ -445,8 +443,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.update_tag_to_filter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tag_to_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tag_to_filter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to select a tag filter and update the button text.</span>
 
@@ -465,8 +463,8 @@
 
 
 <div class="viewcode-block" id="PlugFilter.update_tags">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.type_editors.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.update_tags">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to update the list of visualized tags.</span>
 

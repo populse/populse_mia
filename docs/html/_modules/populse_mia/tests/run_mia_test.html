@@ -4,19 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+63bbe3c7 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=ff1dfa91"></script>
+    <script src="../../../_static/documentation_options.js?v=f5aceaef"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+63bbe3c7 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.tests.run_mia_test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -50,50 +48,50 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span> <span class="nn">argon2</span>
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">contextlib</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">import</span> <span class="nn">importlib</span>
-<span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">tempfile</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">unittest</span>
-<span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">argon2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">contextlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
 <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;linux&quot;</span><span class="p">):</span>
     <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">&quot;QT_QPA_PLATFORM&quot;</span><span class="p">,</span> <span class="s2">&quot;offscreen&quot;</span><span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">qtconsole.rich_jupyter_widget</span> <span class="kn">import</span> <span class="n">RichJupyterWidget</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
-<span class="kn">from</span> <span class="nn">unittest.mock</span> <span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">patch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">qtconsole.rich_jupyter_widget</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichJupyterWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">patch</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># nipype import</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces</span> <span class="kn">import</span> <span class="n">Rename</span><span class="p">,</span> <span class="n">Select</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces.base.traits_extension</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces</span><span class="w"> </span><span class="kn">import</span> <span class="n">Rename</span><span class="p">,</span> <span class="n">Select</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.base.traits_extension</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">File</span><span class="p">,</span>
     <span class="n">InputMultiObject</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces.cat12</span> <span class="kn">import</span> <span class="n">CAT12Segment</span>
-<span class="kn">from</span> <span class="nn">nipype.interfaces.spm</span> <span class="kn">import</span> <span class="n">Smooth</span><span class="p">,</span> <span class="n">Threshold</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.cat12</span><span class="w"> </span><span class="kn">import</span> <span class="n">CAT12Segment</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nipype.interfaces.spm</span><span class="w"> </span><span class="kn">import</span> <span class="n">Smooth</span><span class="p">,</span> <span class="n">Threshold</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">sip</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">sip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QT_VERSION_STR</span><span class="p">,</span>
     <span class="n">QCoreApplication</span><span class="p">,</span>
     <span class="n">QEvent</span><span class="p">,</span>
@@ -104,8 +102,8 @@
     <span class="n">QTimer</span><span class="p">,</span>
     <span class="n">qInstallMessageHandler</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtTest</span> <span class="kn">import</span> <span class="n">QSignalSpy</span><span class="p">,</span> <span class="n">QTest</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtTest</span><span class="w"> </span><span class="kn">import</span> <span class="n">QSignalSpy</span><span class="p">,</span> <span class="n">QTest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
@@ -135,7 +133,7 @@
 
 <div class="viewcode-block" id="add_to_syspath">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.add_to_syspath">[docs]</a>
-<span class="k">def</span> <span class="nf">add_to_syspath</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_to_syspath</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a directory to sys.path if it exists and isn&#39;t already there.</span>
 
@@ -201,38 +199,38 @@
 
 <span class="c1"># soma_workflow import</span>
 <span class="c1"># from soma_workflow.client_types import Workflow</span>
-<span class="kn">import</span> <span class="nn">soma_workflow.constants</span> <span class="k">as</span> <span class="nn">swconstants</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">soma_workflow.constants</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">swconstants</span>  <span class="c1"># noqa: E402</span>
 
 <span class="c1"># Capsul import</span>
-<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">PipelineNode</span><span class="p">,</span>
     <span class="n">ProcessNode</span><span class="p">,</span>
     <span class="n">Switch</span><span class="p">,</span>
     <span class="n">get_process_instance</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">ProcessCompletionEngine</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.engine</span> <span class="kn">import</span> <span class="n">CapsulEngine</span><span class="p">,</span> <span class="n">WorkflowExecutionError</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_workflow</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">CapsulEngine</span><span class="p">,</span> <span class="n">WorkflowExecutionError</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_workflow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">workflow_from_pipeline</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">capsul.process.process</span> <span class="kn">import</span> <span class="n">NipypeProcess</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.process.process</span><span class="w"> </span><span class="kn">import</span> <span class="n">NipypeProcess</span>  <span class="c1"># noqa: E402</span>
 
 <span class="c1"># mia_processes import</span>
-<span class="kn">from</span> <span class="nn">mia_processes.bricks.tools</span> <span class="kn">import</span> <span class="n">Input_Filter</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mia_processes.bricks.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input_Filter</span>  <span class="c1"># noqa: E402</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.Qt</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend.Qt</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">QItemSelectionModel</span><span class="p">,</span>
     <span class="n">QTreeView</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend.QtWidgets</span> <span class="kn">import</span> <span class="n">QMenu</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QMenu</span>  <span class="c1"># noqa: E402</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
     <span class="n">BRICK_INIT</span><span class="p">,</span>
@@ -270,27 +268,27 @@
     <span class="n">TYPE_NII</span><span class="p">,</span>
     <span class="n">TYPE_TXT</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.data_loader</span> <span class="kn">import</span> <span class="n">read_log</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project</span> <span class="kn">import</span> <span class="n">Project</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.project_properties</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.data_loader</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_log</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project</span><span class="w"> </span><span class="kn">import</span> <span class="n">Project</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.project_properties</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">SavedProjects</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.modify_table</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
     <span class="n">ModifyTable</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.main_window</span> <span class="kn">import</span> <span class="n">MainWindow</span>  <span class="c1"># noqa: E402</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.main_window</span><span class="w"> </span><span class="kn">import</span> <span class="n">MainWindow</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_editor</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
     <span class="n">PipelineEditor</span><span class="p">,</span>
     <span class="n">save_pipeline</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
     <span class="n">RunProgress</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_library</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402, E501</span>
     <span class="n">PackageLibraryDialog</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">DefaultValueListCreation</span><span class="p">,</span>
     <span class="n">PopUpAddPath</span><span class="p">,</span>
     <span class="n">PopUpAddTag</span><span class="p">,</span>
@@ -304,7 +302,7 @@
     <span class="n">PopUpSeeAllProjects</span><span class="p">,</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: E402</span>
     <span class="n">check_value_type</span><span class="p">,</span>
     <span class="n">table_to_database</span><span class="p">,</span>
     <span class="n">update_auto_inheritance</span><span class="p">,</span>
@@ -332,7 +330,7 @@
 
 <div class="viewcode-block" id="qt_message_handler">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.qt_message_handler">[docs]</a>
-<span class="k">def</span> <span class="nf">qt_message_handler</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">qt_message_handler</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom Qt message handler that filters out or cleans specific unwanted</span>
 <span class="sd">    messages.</span>
@@ -364,7 +362,7 @@
 
 <div class="viewcode-block" id="LogCapture">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.LogCapture">[docs]</a>
-<span class="k">class</span> <span class="nc">LogCapture</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LogCapture</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom logging handler to capture log records for inspection during tests.</span>
 
@@ -382,7 +380,7 @@
 
 <div class="viewcode-block" id="LogCapture.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.LogCapture.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the LogCapture handler.</span>
 
@@ -394,7 +392,7 @@
 
 <div class="viewcode-block" id="LogCapture.clear">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.LogCapture.clear">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clears all captured log records.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -403,7 +401,7 @@
 
 <div class="viewcode-block" id="LogCapture.emit">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.LogCapture.emit">[docs]</a>
-    <span class="k">def</span> <span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">emit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Appends a log record to the internal list.</span>
 
@@ -416,7 +414,7 @@
 
 <div class="viewcode-block" id="TestMIACase">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIACase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIACase</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parent class for the test classes of Mia.</span>
 
 <span class="sd">    Contains:</span>
@@ -451,7 +449,7 @@
 
 <div class="viewcode-block" id="TestMIACase.add_visualized_tag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.add_visualized_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_visualized_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Selects a tag to display from the &quot;Visualized tags&quot; pop-up.</span>
 
@@ -510,7 +508,7 @@
 <div class="viewcode-block" id="TestMIACase.capture_logs">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.capture_logs">[docs]</a>
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">capture_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">capture_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Context manager to temporarily capture log records from a specific</span>
 <span class="sd">        logger.</span>
@@ -559,7 +557,7 @@
 
 <div class="viewcode-block" id="TestMIACase.clean_uts_packages">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.clean_uts_packages">[docs]</a>
-    <span class="k">def</span> <span class="nf">clean_uts_packages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_lib_view</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clean_uts_packages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_lib_view</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove all packages added specifically for unit tests from the given</span>
 <span class="sd">        process library view.</span>
@@ -608,7 +606,7 @@
 
 <div class="viewcode-block" id="TestMIACase.create_mock_jar">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.create_mock_jar">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_mock_jar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_mock_jar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mock Java executable (.jar) for testing.</span>
 
@@ -671,7 +669,7 @@
 
 <div class="viewcode-block" id="TestMIACase.execute_QDialogAccept">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.execute_QDialogAccept">[docs]</a>
-    <span class="k">def</span> <span class="nf">execute_QDialogAccept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">execute_QDialogAccept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Accept (close) a QDialog window.&quot;&quot;&quot;</span>
 
         <span class="n">w</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_app</span><span class="o">.</span><span class="n">activeWindow</span><span class="p">()</span>
@@ -682,7 +680,7 @@
 
 <div class="viewcode-block" id="TestMIACase.find_item_by_data">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.find_item_by_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_item_by_data</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_item_by_data</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">q_tree_view</span><span class="p">:</span> <span class="n">QTreeView</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">str</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QModelIndex</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -714,7 +712,7 @@
 
 <div class="viewcode-block" id="TestMIACase.get_new_test_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.get_new_test_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_new_test_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_project&quot;</span><span class="p">,</span> <span class="n">light</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_new_test_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;test_project&quot;</span><span class="p">,</span> <span class="n">light</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Copies a test project where it can be safely modified.</span>
 
@@ -744,7 +742,7 @@
 
 <div class="viewcode-block" id="TestMIACase.proclibview_nipype_state">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.proclibview_nipype_state">[docs]</a>
-    <span class="k">def</span> <span class="nf">proclibview_nipype_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_lib_view</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">proclibview_nipype_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">proc_lib_view</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine the state of the Nipype process library view.</span>
 
@@ -782,7 +780,7 @@
 
 <div class="viewcode-block" id="TestMIACase.proclibview_nipype_reset_state">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.proclibview_nipype_reset_state">[docs]</a>
-    <span class="k">def</span> <span class="nf">proclibview_nipype_reset_state</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">proclibview_nipype_reset_state</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">ppl_manager</span><span class="p">,</span> <span class="n">init_state</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -835,7 +833,7 @@
 
 <div class="viewcode-block" id="TestMIACase.restart_Mia">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.restart_Mia">[docs]</a>
-    <span class="k">def</span> <span class="nf">restart_Mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restart_Mia</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Restarts Mia within a unit test.</span>
 
@@ -861,7 +859,7 @@
 
 <div class="viewcode-block" id="TestMIACase.setUp">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.setUp">[docs]</a>
-    <span class="k">def</span> <span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called before each test&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUp</span><span class="p">()</span>
         <span class="c1"># Make _app available at instance level</span>
@@ -877,7 +875,7 @@
 <div class="viewcode-block" id="TestMIACase.setUpClass">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.setUpClass">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called once at the beginning of the class&quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setUpClass</span><span class="p">()</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -957,7 +955,7 @@
 <div class="viewcode-block" id="TestMIACase.suppress_all_output">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.suppress_all_output">[docs]</a>
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">suppress_all_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">suppress_all_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cross-platform suppression of all standard output and error, including</span>
 <span class="sd">        C-level and OS-level messages.</span>
@@ -996,7 +994,7 @@
 
 <div class="viewcode-block" id="TestMIACase.tearDown">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.tearDown">[docs]</a>
-    <span class="k">def</span> <span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cleans up after each test to ensure test isolation and prevent state</span>
 <span class="sd">        leakage.</span>
@@ -1066,7 +1064,7 @@
 <div class="viewcode-block" id="TestMIACase.tearDownClass">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIACase.tearDownClass">[docs]</a>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Called once at the end of the class&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">properties_path</span><span class="p">):</span>
@@ -1090,7 +1088,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIADataBrowser</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIADataBrowser</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the data browser tab (DataBrowser).</span>
 
 <span class="sd">    Contains:</span>
@@ -1161,7 +1159,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.assert_scans_present">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.assert_scans_present">[docs]</a>
-    <span class="k">def</span> <span class="nf">assert_scans_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">expected_subset</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">assert_scans_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scans</span><span class="p">,</span> <span class="n">expected_subset</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asserts that all expected scan names are present in the given list.</span>
 
@@ -1180,7 +1178,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.get_cell_text">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.get_cell_text">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_cell_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">label_index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_cell_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">label_index</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to retrieve the text of the QLabel inside a cell widget.</span>
 
@@ -1206,7 +1204,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.get_db_and_databrowser_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.get_db_and_databrowser_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_db_and_databrowser_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">row_nb</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_db_and_databrowser_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">,</span> <span class="n">row_nb</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fetches the current and initial values of a given tag from the</span>
 <span class="sd">        database, along with the corresponding value and item from the data</span>
@@ -1243,7 +1241,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.get_visible_scans">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.get_visible_scans">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_visible_scans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_visible_scans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the list of scan names currently visible in the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1262,7 +1260,7 @@
 <div class="viewcode-block" id="TestMIADataBrowser.suppress_item_changed_signal">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.suppress_item_changed_signal">[docs]</a>
     <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-    <span class="k">def</span> <span class="nf">suppress_item_changed_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">suppress_item_changed_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Temporarily disables the itemChanged signal to prevent unwanted slot</span>
 <span class="sd">        execution during programmatic updates to the table data.</span>
@@ -1284,7 +1282,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_add_path">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_add_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests importing a document into the project via the DataBrowser UI.</span>
 
@@ -1354,7 +1352,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_add_tag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_add_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the add tag functionality in the data browser.</span>
 
@@ -1494,7 +1492,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_advanced_search">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_advanced_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_advanced_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_advanced_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the advanced search widget.&quot;&quot;&quot;</span>
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">switch_project</span><span class="p">(</span><span class="n">project_8_path</span><span class="p">,</span> <span class="s2">&quot;project_8&quot;</span><span class="p">)</span>
@@ -1582,7 +1580,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_brick_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_brick_history">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the brick history popup.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
@@ -1663,7 +1661,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_clear_cell">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_clear_cell">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests clearing a cell and ensuring value is removed from database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1713,7 +1711,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_clone_tag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_clone_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_clone_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_clone_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the pop-up for cloning a tag.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1752,7 +1750,7 @@
         <span class="n">QTest</span><span class="o">.</span><span class="n">mouseClick</span><span class="p">(</span><span class="n">clone_tag</span><span class="o">.</span><span class="n">push_button_ok</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">LeftButton</span><span class="p">)</span>
 
         <span class="c1"># Helper to assert metadata equivalence</span>
-        <span class="k">def</span> <span class="nf">assert_metadata_equal</span><span class="p">(</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">assert_metadata_equal</span><span class="p">(</span><span class="n">tag1</span><span class="p">,</span> <span class="n">tag2</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Assert that two tags have identical metadata in the specified</span>
 <span class="sd">            collection.</span>
@@ -1813,7 +1811,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_count_table">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_count_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_count_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_count_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the count table popup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1822,7 +1820,7 @@
         <span class="n">ECHOTIME</span> <span class="o">=</span> <span class="s2">&quot;EchoTime&quot;</span>
 
         <span class="c1"># Helper to get text from a table header without brackets</span>
-        <span class="k">def</span> <span class="nf">get_header_text</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_header_text</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Returns the header text of a given column without brackets.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -1830,7 +1828,7 @@
             <span class="k">return</span> <span class="n">table</span><span class="o">.</span><span class="n">horizontalHeaderItem</span><span class="p">(</span><span class="n">col</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot;[]&quot;</span><span class="p">)</span>
 
         <span class="c1"># Helper to get text from a table cell without brackets</span>
-        <span class="k">def</span> <span class="nf">get_cell_text</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_cell_text</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Returns the text of a cell in the count table without brackets.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -1909,7 +1907,7 @@
 <div class="viewcode-block" id="TestMIADataBrowser.test_mia_preferences">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_mia_preferences">[docs]</a>
     <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;PyQt5.QtWidgets.QMessageBox.exec_&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Ok</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_mia_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_qmsgbox</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_mia_preferences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_qmsgbox</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the MIA preferences dialog and verify that configuration changes</span>
 <span class="sd">        are correctly saved or discarded.</span>
@@ -1927,7 +1925,7 @@
 <span class="sd">         modal dialogs from blocking the test.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">reload_config</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reload_config</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Reload the application configuration from the test properties</span>
 <span class="sd">            directory.</span>
@@ -1938,7 +1936,7 @@
 
             <span class="k">return</span> <span class="n">Config</span><span class="p">(</span><span class="n">properties_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_path</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">open_preferences</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">open_preferences</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Open the preferences dialog.</span>
 
@@ -2026,7 +2024,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_mini_viewer">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_mini_viewer">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests MiniViewer functionality.</span>
 
@@ -2043,7 +2041,7 @@
         <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">viewer</span>
 
         <span class="c1"># Helper: select scan by row index</span>
-        <span class="k">def</span> <span class="nf">select_scan</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">select_scan</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Selects a scan in the data browser table by index.</span>
 
@@ -2054,7 +2052,7 @@
             <span class="n">item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Helper: set slider to percentage position</span>
-        <span class="k">def</span> <span class="nf">set_slider_percent</span><span class="p">(</span><span class="n">slider</span><span class="p">,</span> <span class="n">percent</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">set_slider_percent</span><span class="p">(</span><span class="n">slider</span><span class="p">,</span> <span class="n">percent</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Sets the slider value to a percentage of its maximum.</span>
 
@@ -2065,7 +2063,7 @@
             <span class="n">slider</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">max_val</span> <span class="o">*</span> <span class="n">percent</span><span class="p">))</span>
 
         <span class="c1"># Helper: toggle a checkbox to a state</span>
-        <span class="k">def</span> <span class="nf">set_checkbox</span><span class="p">(</span><span class="n">checkbox</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">set_checkbox</span><span class="p">(</span><span class="n">checkbox</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Sets the checkbox state to checked or unchecked.</span>
 
@@ -2104,7 +2102,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_modify_table">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_modify_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_modify_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_modify_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test ModifyTable behavior with valid and invalid field types.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2173,7 +2171,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_multiple_sort">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_multiple_sort">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_multiple_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the multiple sort popup functionality and resulting order.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2239,7 +2237,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_multiple_sort_appendix">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_multiple_sort_appendix">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_multiple_sort_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_multiple_sort_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test adding and removing tags in the multiple sort popup.</span>
 
@@ -2271,7 +2269,7 @@
         <span class="p">)</span>
 
         <span class="c1"># Properly scoped mock</span>
-        <span class="k">def</span> <span class="nf">fake_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mocked method to simulate the execution of a QDialog.</span>
 
@@ -2296,7 +2294,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_openTagsPopUp">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_openTagsPopUp">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_openTagsPopUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_openTagsPopUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests opening the tags selection popup in the MiniViewer.</span>
 
@@ -2374,7 +2372,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_open_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_open_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_open_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_open_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests that the project opens correctly, including expected UI title</span>
 <span class="sd">        and document presence in the current and initial collections.</span>
@@ -2429,7 +2427,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_project_filter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_project_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_project_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_project_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests saving and applying a project filter.</span>
 
@@ -2468,7 +2466,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">open_filter_action</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
         <span class="n">popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">popUp</span>
 
-        <span class="k">def</span> <span class="nf">filter_visible_at</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">filter_visible_at</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Checks if the filter item at the given index in the filter list</span>
 <span class="sd">            is visible.</span>
@@ -2511,7 +2509,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_project_properties">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_project_properties">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_project_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_project_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests saved projects addition and removal.</span>
 
@@ -2561,7 +2559,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_proj_remov_from_cur_proj">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_proj_remov_from_cur_proj">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_proj_remov_from_cur_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_proj_remov_from_cur_proj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests that the current project is correctly removed from the list of</span>
 <span class="sd">        opened projects after closing or switching.</span>
@@ -2583,7 +2581,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_rapid_search">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_rapid_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_rapid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_rapid_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the rapid search bar behavior in the DataBrowser.</span>
 
@@ -2597,7 +2595,7 @@
 <span class="sd">            - Test filtering using NOT_DEFINED_VALUE.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">get_visible_scan_names</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_visible_scan_names</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieves the list of scan names currently visible in the data</span>
 <span class="sd">            browser table.</span>
@@ -2701,7 +2699,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_remove_scan">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_remove_scan">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_remove_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_remove_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the removal of scans from the database via the</span>
 <span class="sd">        PipelineManagerTab.</span>
@@ -2756,7 +2754,7 @@
         <span class="n">tb_data</span><span class="o">.</span><span class="n">selectColumn</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># --- Act &amp; Assert: Cancel Removal ---</span>
-        <span class="k">def</span> <span class="nf">fake_exec_cancel</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_exec_cancel</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulates a user cancelling the popup dialog.</span>
 
@@ -2772,7 +2770,7 @@
         <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">PopUpRemoveScan</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">,</span> <span class="n">new</span><span class="o">=</span><span class="n">fake_exec_cancel</span><span class="p">):</span>
             <span class="n">tb_data</span><span class="o">.</span><span class="n">remove_scan</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">fake_exec_no_all</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_exec_no_all</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulates a user selecting the &quot;No to All&quot; option in the popup</span>
 <span class="sd">            dialog.</span>
@@ -2797,7 +2795,7 @@
         <span class="p">)</span>
 
         <span class="c1"># --- Act &amp; Assert: Confirm Removal of Both ---</span>
-        <span class="k">def</span> <span class="nf">fake_exec_yes_all</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_exec_yes_all</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulates a user selecting the &quot;Yes to All&quot; option in the popup</span>
 <span class="sd">            dialog.</span>
@@ -2831,7 +2829,7 @@
         <span class="n">tb_data</span><span class="o">.</span><span class="n">selectColumn</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># --- Act &amp; Assert: Confirm Single Removal ---</span>
-        <span class="k">def</span> <span class="nf">fake_exec_yes</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_exec_yes</span><span class="p">(</span><span class="n">popup</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulates a user confirming the action in the popup dialog.</span>
 
@@ -2856,7 +2854,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_remove_tag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_remove_tag">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_remove_tag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the tag removal popup in the data browser.</span>
 
@@ -2937,7 +2935,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_cell">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_reset_cell">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests the method resetting the selected cells.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
@@ -2945,7 +2943,7 @@
         <span class="n">table</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span>
 
         <span class="c1"># Helper to get fresh item</span>
-        <span class="k">def</span> <span class="nf">get_item</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_item</span><span class="p">(</span><span class="n">tag</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve the table widget item for the specified tag in the first</span>
 <span class="sd">            row.</span>
@@ -2979,7 +2977,7 @@
         <span class="p">)</span>
 
         <span class="c1"># 1) Define exec_ that “does the OK click”:</span>
-        <span class="k">def</span> <span class="nf">exec_as_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">exec_as_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Patched exec_ method that injects a test value into the dialog</span>
 <span class="sd">            table and runs the real update logic without showing the dialog.</span>
@@ -3104,7 +3102,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_column">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_reset_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that edit_table_data_values() properly updates column values,</span>
 <span class="sd">        and reset_column() reverts them to their initial state.</span>
@@ -3133,7 +3131,7 @@
         <span class="p">)</span>
 
         <span class="c1"># 1) Define patched exec_ to simulate user editing both selected rows</span>
-        <span class="k">def</span> <span class="nf">exec_as_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">exec_as_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulated exec_() for ModifyTable: injects value and calls update</span>
 <span class="sd">            logic.</span>
@@ -3199,7 +3197,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_reset_row">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_reset_row">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Tests row reset.&quot;&quot;&quot;</span>
 
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
@@ -3249,7 +3247,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_save_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_save_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_save_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test creating, saving, switching, and reopening a project, while</span>
 <span class="sd">        mocking dialogs and preventing UI blocking.</span>
@@ -3291,7 +3289,7 @@
             <span class="c1"># --- Mock project pop-ups ---</span>
 
             <span class="c1"># Common mock configuration</span>
-            <span class="k">def</span> <span class="nf">mock_popup</span><span class="p">(</span><span class="n">relative_path</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">mock_popup</span><span class="p">(</span><span class="n">relative_path</span><span class="p">):</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Create a MagicMock instance simulating a PopUpNewProject</span>
 <span class="sd">                dialog.</span>
@@ -3354,7 +3352,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_send_doc_to_pipeline_manager">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_send_doc_to_pipeline_manager">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_send_doc_to_pipeline_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_send_doc_to_pipeline_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that documents (scans) can be sent from the data browser to the</span>
 <span class="sd">        pipeline manager.</span>
@@ -3367,7 +3365,7 @@
 <span class="sd">        All popup interactions are mocked to avoid GUI side effects.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">simulate_send_popup</span><span class="p">(</span><span class="n">confirm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">simulate_send_popup</span><span class="p">(</span><span class="n">confirm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulate user interaction with the send_documents_to_pipeline</span>
 <span class="sd">            popup dialog.</span>
@@ -3483,7 +3481,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_set_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_set_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test modification of cell values in the data browser table.</span>
 
@@ -3509,7 +3507,7 @@
         <span class="c1"># Helper to get database values</span>
         <span class="n">DatabaseValues</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;DatabaseValues&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;current&quot;</span><span class="p">,</span> <span class="s2">&quot;initial&quot;</span><span class="p">])</span>
 
-        <span class="k">def</span> <span class="nf">get_db_values</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">convert_to_float</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_db_values</span><span class="p">(</span><span class="n">tag_name</span><span class="p">,</span> <span class="n">convert_to_float</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve the current and initial values associated with a tag.</span>
 
@@ -3564,7 +3562,7 @@
         <span class="c1"># Modify bandwidth value through UI</span>
         <span class="n">bandwidth_item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Mock dialog execution to update table values.&quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -3621,7 +3619,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_show_brick_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_show_brick_history">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_show_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_show_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests that the brick history pop-up opens correctly and allows</span>
 <span class="sd">        navigation between scans through its interface.</span>
@@ -3692,7 +3690,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_sort">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_sort">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_sort</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test sorting functionality in the DataBrowser table.</span>
 
@@ -3709,7 +3707,7 @@
         <span class="n">QT_ASCENDING</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Qt.AscendingOrder</span>
         <span class="n">QT_DESCENDING</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Qt.DescendingOrder</span>
 
-        <span class="k">def</span> <span class="nf">get_visible_bandwidth_values</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">get_visible_bandwidth_values</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Extract BandWidth values from all visible table rows.</span>
 
@@ -3726,7 +3724,7 @@
 
             <span class="k">return</span> <span class="n">bandwidth_values</span>
 
-        <span class="k">def</span> <span class="nf">set_sort_order</span><span class="p">(</span><span class="n">sort_order</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">set_sort_order</span><span class="p">(</span><span class="n">sort_order</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Set the table sort order for the BandWidth column.</span>
 
@@ -3775,7 +3773,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_table_data_add_columns">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_table_data_add_columns">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_table_data_add_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_table_data_add_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds tag columns to the table data window.</span>
 
@@ -3831,7 +3829,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_table_data_appendix">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_table_data_appendix">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_table_data_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_table_data_appendix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test various behaviors of the table data view in the data browser.</span>
 
@@ -3902,7 +3900,7 @@
         <span class="c1"># Selects &#39;FOV&#39; and changes its value to a new one with good type</span>
         <span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Mock dialog execution to update table values.&quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -4014,7 +4012,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_table_data_context_menu">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_table_data_context_menu">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_table_data_context_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_table_data_context_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that context menu actions correctly call their respective</span>
 <span class="sd">        methods on the data table.</span>
@@ -4058,7 +4056,7 @@
         <span class="n">original_init</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="o">.</span><span class="fm">__init__</span>
         <span class="n">msgbox_instances</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">def</span> <span class="nf">capture_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">capture_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Wrap the original __init__ method to capture instances of the</span>
 <span class="sd">            object.</span>
@@ -4074,7 +4072,7 @@
             <span class="n">msgbox_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1"># When exec is called, emit the OK button&#39;s clicked signal</span>
-        <span class="k">def</span> <span class="nf">auto_click_ok</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">auto_click_ok</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Automatically &quot;click&quot; the OK button of the most recently</span>
 <span class="sd">            created QMessageBox.</span>
@@ -4100,7 +4098,7 @@
             <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">QMessageBox</span><span class="p">,</span> <span class="s2">&quot;exec&quot;</span><span class="p">,</span> <span class="n">side_effect</span><span class="o">=</span><span class="n">auto_click_ok</span><span class="p">):</span>
 
                 <span class="c1"># Helper to simulate menu selection</span>
-                <span class="k">def</span> <span class="nf">run_action</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+                <span class="k">def</span><span class="w"> </span><span class="nf">run_action</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">                    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                    Simulate triggering a context menu action in a table for</span>
 <span class="sd">                    testing purposes.</span>
@@ -4124,7 +4122,7 @@
                     <span class="n">created_actions</span> <span class="o">=</span> <span class="p">{}</span>
 
                     <span class="c1"># Patch addAction to capture QAction objects</span>
-                    <span class="k">def</span> <span class="nf">fake_add_action</span><span class="p">(</span><span class="n">action_label</span><span class="p">):</span>
+                    <span class="k">def</span><span class="w"> </span><span class="nf">fake_add_action</span><span class="p">(</span><span class="n">action_label</span><span class="p">):</span>
 <span class="w">                        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                        Create a fake QAction and store it for testing purposes.</span>
 
@@ -4170,7 +4168,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_undo_redo_databrowser">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_undo_redo_databrowser">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_undo_redo_databrowser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_undo_redo_databrowser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test undo and redo functionality in the DataBrowser across several</span>
 <span class="sd">        operations.</span>
@@ -4221,7 +4219,7 @@
         <span class="c1"># Change the value from 50000 to 0.0</span>
         <span class="n">bw_item</span><span class="o">.</span><span class="n">setSelected</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">exec_and_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Mock dialog execution to update table values.&quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_table_values</span><span class="p">()</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -4464,7 +4462,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_unnamed_proj_soft_open">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_unnamed_proj_soft_open">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_unnamed_proj_soft_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_unnamed_proj_soft_open</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that an unnamed project is correctly initialized at software</span>
 <span class="sd">        startup.</span>
@@ -4514,7 +4512,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_update_default_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_update_default_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the update of default tag values for various input types via the</span>
 <span class="sd">        DefaultValueListCreation mechanism.</span>
@@ -4605,7 +4603,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_utils">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_utils">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_utils</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_utils</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test utility functions for type checking and conversion from UI table</span>
 <span class="sd">        strings to correctly typed Python values for various field types.</span>
@@ -4660,7 +4658,7 @@
 
 <div class="viewcode-block" id="TestMIADataBrowser.test_visualized_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_visualized_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_visualized_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_visualized_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate the tag visibility management system and its impact on the</span>
 <span class="sd">        DataBrowser UI.</span>
@@ -4784,7 +4782,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIAMainWindow</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIAMainWindow</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the main window class (MainWindow).</span>
 
 <span class="sd">    Contains:</span>
@@ -4831,7 +4829,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_check_database">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_check_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_check_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_check_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test detection of changes in the project&#39;s database after file removal.</span>
 
@@ -4866,7 +4864,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_create_project_pop_up">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_create_project_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test project creation popup behavior under various conditions.</span>
 
@@ -4945,7 +4943,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_files_in_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_files_in_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test MainWindow.project.files_in_project method.</span>
 
@@ -4975,7 +4973,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_import_data">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_import_data">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_import_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_import_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test importing data via the mocked MRI conversion process.</span>
 
@@ -5096,7 +5094,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_open_project_pop_up">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_open_project_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_open_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_open_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the behavior of MainWindow.open_project_pop_up under different</span>
 <span class="sd">        project state conditions, including:</span>
@@ -5160,7 +5158,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_open_recent_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_open_recent_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_open_recent_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_open_recent_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test opening a recent project via the &#39;recent projects&#39; action.</span>
 
@@ -5217,7 +5215,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_dialog_add_pkg">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_add_pkg">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_package_library_dialog_add_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_dialog_add_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test adding and installing packages through the PackageLibraryDialog.</span>
 
@@ -5454,7 +5452,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_dialog_del_pkg">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_del_pkg">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_package_library_dialog_del_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_dialog_del_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the behavior of the PackageLibraryDialog when deleting packages.</span>
 
@@ -5703,7 +5701,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_dialog_rmv_pkg">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_rmv_pkg">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_package_library_dialog_rmv_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_dialog_rmv_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test removing a package from the package library dialog.</span>
 
@@ -5828,7 +5826,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_package_library_others">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_others">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_package_library_others</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_others</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the behavior of the Package Library Manager dialog.</span>
 
@@ -5870,7 +5868,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_popUpDeletedProject">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_popUpDeletedProject">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_popUpDeletedProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_popUpDeletedProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that the application handles deleted projects properly.</span>
 
@@ -5926,7 +5924,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_popUpDeleteProject">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_popUpDeleteProject">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_popUpDeleteProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_popUpDeleteProject</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the project deletion flow, including dialog behavior and config</span>
 <span class="sd">        updates.</span>
@@ -5990,7 +5988,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_see_all_projects">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_see_all_projects">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_see_all_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the &#39;See All Projects&#39; feature with two saved projects.</span>
 
@@ -6057,7 +6055,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_software_preferences_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_software_preferences_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the software preferences pop-up window behavior.</span>
 
@@ -6330,7 +6328,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up_config_file">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_software_preferences_pop_up_config_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_software_preferences_pop_up_config_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the behavior of the software preferences pop-up when modifying</span>
 <span class="sd">        the config file and Capsul configuration.</span>
@@ -6359,7 +6357,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="p">,</span> <span class="s2">&quot;editConf&quot;</span><span class="p">))</span>
 
         <span class="c1"># Simulate successful config edit with user_mode toggle</span>
-        <span class="k">def</span> <span class="nf">mock_exec_accept</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mock_exec_accept</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mock implementation of QDialog.exec() that simulates a successful</span>
 <span class="sd">            dialog interaction by modifying the config text.</span>
@@ -6439,7 +6437,7 @@
     <span class="c1"># )</span>
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up_modules_config">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_software_preferences_pop_up_modules_config">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up_modules_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_software_preferences_pop_up_modules_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the software module configuration via the Preferences pop-up.</span>
 
@@ -6453,7 +6451,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Mocks executables to be used for the modules tested</span>
-        <span class="k">def</span> <span class="nf">mock_executable</span><span class="p">(</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mock_executable</span><span class="p">(</span>
             <span class="n">directory</span><span class="p">,</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">failing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -6591,7 +6589,7 @@
         <span class="k">with</span> <span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">QMessageBox</span><span class="p">,</span> <span class="s2">&quot;show&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="kc">None</span><span class="p">):</span>
 
             <span class="c1"># Generic test for AFNI, ANTs and MRtrix</span>
-            <span class="k">def</span> <span class="nf">test_module</span><span class="p">(</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_module</span><span class="p">(</span>
                 <span class="n">module_name</span><span class="p">,</span>
                 <span class="n">checkbox_attr</span><span class="p">,</span>
                 <span class="n">path_attr</span><span class="p">,</span>
@@ -6665,7 +6663,7 @@
                 <span class="nb">getattr</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path_setter</span><span class="p">)(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
             <span class="c1"># Test for FSL</span>
-            <span class="k">def</span> <span class="nf">test_fsl</span><span class="p">():</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_fsl</span><span class="p">():</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Tests the configuration workflow for the FSL (FMRIB Software</span>
 <span class="sd">                Library) module.</span>
@@ -6740,7 +6738,7 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_fsl</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_fsl_config</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-            <span class="k">def</span> <span class="nf">test_spm_matlab</span><span class="p">():</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_spm_matlab</span><span class="p">():</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Tests the configuration process for SPM and MATLAB within the</span>
 <span class="sd">                software preferences.</span>
@@ -6851,7 +6849,7 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">set_spm_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-            <span class="k">def</span> <span class="nf">test_matlab_only</span><span class="p">():</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_matlab_only</span><span class="p">():</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Tests the configuration process for MATLAB licensing within the</span>
 <span class="sd">                software preferences.</span>
@@ -6953,7 +6951,7 @@
                 <span class="n">config</span><span class="o">.</span><span class="n">set_use_matlab</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
                 <span class="n">config</span><span class="o">.</span><span class="n">set_matlab_path</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
-            <span class="k">def</span> <span class="nf">test_matlab_mcr_spm_standalone</span><span class="p">():</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">test_matlab_mcr_spm_standalone</span><span class="p">():</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Tests configuration of MATLAB MCR and SPM standalone mode via</span>
 <span class="sd">                the software preferences dialog.</span>
@@ -7251,7 +7249,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_software_preferences_pop_up_validate">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_software_preferences_pop_up_validate">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_software_preferences_pop_up_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_software_preferences_pop_up_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates configuration changes via the software preferences pop-up.</span>
 
@@ -7423,7 +7421,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_switch_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_switch_project">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_switch_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_switch_project</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests switching to various project states using</span>
 <span class="sd">        `MainWindow.switch_project`.</span>
@@ -7485,7 +7483,7 @@
 
 <div class="viewcode-block" id="TestMIAMainWindow.test_tab_changed">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_tab_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_tab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_tab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests tab switching behavior in the main window.</span>
 
@@ -7527,7 +7525,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIANodeController</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIANodeController</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the node controller, part of the pipeline manager tab.</span>
 
 <span class="sd">    Contains:</span>
@@ -7553,7 +7551,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.create_mock_exec">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.create_mock_exec">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mock function for PopUpSelectTagCountTable.exec_() that</span>
 <span class="sd">        simulates user tag selection behavior.</span>
@@ -7570,7 +7568,7 @@
 <span class="sd">        :Returns: A mock function that can be used to replace exec_() method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mock implementation of exec_() that simulates tag selection.</span>
 
@@ -7599,7 +7597,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.test_attributes_filter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_attributes_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_attributes_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_attributes_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the display and modification of the attributes filter in the</span>
 <span class="sd">        CapsulNodeController GUI.</span>
@@ -7658,7 +7656,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.test_capsul_node_controller">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_capsul_node_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_capsul_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_capsul_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates the behavior of the CapsulNodeController for process</span>
 <span class="sd">        management within a pipeline editor GUI.</span>
@@ -7781,7 +7779,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.test_display_filter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_display_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_display_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_display_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the display and modification of node parameters and plug filters</span>
 <span class="sd">        in the CapsulNodeController V1 interface.</span>
@@ -7855,7 +7853,7 @@
     <span class="c1">#       system in order to make the necessary corrections.</span>
 <div class="viewcode-block" id="TestMIANodeController.test_filter_widget">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_filter_widget">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_filter_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_filter_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the `FilterWidget` class used for filtering input data within a</span>
 <span class="sd">        Capsul pipeline node.</span>
@@ -8017,7 +8015,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.test_node_controller">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_node_controller">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the behavior of the V1 `NodeController` interface for:</span>
 <span class="sd">            - Adding, renaming, and deleting nodes</span>
@@ -8151,7 +8149,7 @@
     <span class="c1">#       system in order to make the necessary corrections.</span>
 <div class="viewcode-block" id="TestMIANodeController.test_plug_filter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_plug_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_plug_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_plug_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests plug filtering in the Node Controller V1 interface.</span>
 
@@ -8309,7 +8307,7 @@
 
 <div class="viewcode-block" id="TestMIANodeController.test_update_node_name">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIANodeController.test_update_node_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests renaming of nodes in the pipeline and verifies the correct</span>
 <span class="sd">        update or rejection of name changes based on naming conflicts.</span>
@@ -8320,7 +8318,7 @@
 <span class="sd">            - Node renaming preserves the connections (links) between nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">simulate_rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">simulate_rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Helper to rename the selected node via the GUI line edit.</span>
 
@@ -8439,7 +8437,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIAPipelineEditor</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIAPipelineEditor</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the pipeline editor, part of the pipeline manager tab.</span>
 
 <span class="sd">    Contains:</span>
@@ -8469,7 +8467,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_add_tab">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_add_tab">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the addition of new tabs in the PipelineEditorTabs.</span>
 
@@ -8499,7 +8497,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_close_tab">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_close_tab">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_close_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_close_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the `PipelineEditor.close_tab()` method under various conditions.</span>
 
@@ -8602,7 +8600,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_drop_process">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_drop_process">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_drop_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_drop_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the addition of a Nipype SPM &#39;Smooth&#39; process to the pipeline</span>
 <span class="sd">        editor.</span>
@@ -8625,7 +8623,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_export_plug">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_export_plug">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_export_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_export_plug</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the export of plugs in the pipeline editor.</span>
 
@@ -8766,7 +8764,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_save_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_save_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_save_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a pipeline and verifies various scenarios when saving it.</span>
 
@@ -8903,7 +8901,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_update_plug_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_update_plug_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_plug_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests updating plug values through the node controller UI.</span>
 
@@ -9005,7 +9003,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_check_modif">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_check_modif">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_check_modif</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_check_modif</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests plug modification propagation when a pipeline is opened as a</span>
 <span class="sd">        sub-process.</span>
@@ -9173,7 +9171,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_get_editor">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_get_editor">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_get_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that editor instances in PipelineEditorTabs are correctly</span>
 <span class="sd">        retrieved using various access methods.</span>
@@ -9233,7 +9231,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_get_filename">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_get_filename">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests retrieval of the filename associated with a pipeline editor tab.</span>
 
@@ -9277,7 +9275,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_get_index">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_get_index">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_get_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verifies that editor tab indices can be correctly retrieved by tab</span>
 <span class="sd">        name, filename, and editor instance.</span>
@@ -9339,7 +9337,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_get_tab_name">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_get_tab_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_get_tab_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_get_tab_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that the tab names of pipeline editors are correctly retrieved.</span>
 
@@ -9366,7 +9364,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_load_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_load_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_load_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_load_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads a pipeline file into the editor and verifies its content.</span>
 
@@ -9397,7 +9395,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_open_sub_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_open_sub_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_open_sub_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_open_sub_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the ability to open a sub-pipeline in a new editor tab.</span>
 
@@ -9463,7 +9461,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_z_set_current_editor">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_z_set_current_editor">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_set_current_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_set_current_editor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests setting the current editor using different criteria.</span>
 
@@ -9516,7 +9514,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineEditor.test_zz_del_pack">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_zz_del_pack">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_zz_del_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_zz_del_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes the &#39;Test_pipeline_1&#39; brick from the package library and</span>
 <span class="sd">        verifies its removal.</span>
@@ -9550,7 +9548,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab">[docs]</a>
-<span class="k">class</span> <span class="nc">TestMIAPipelineManagerTab</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestMIAPipelineManagerTab</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests the pipeline manager tab class, part of the homonym tab.</span>
 
 <span class="sd">    Contains:</span>
@@ -9609,7 +9607,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_plug_value_to_database_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_plug_value_to_database_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests adding a list-type plug value to the database from a process</span>
 <span class="sd">        node.</span>
@@ -9734,7 +9732,7 @@
     <span class="c1">#       system in order to make the necessary corrections.</span>
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_add_plug_value_to_database_non_list_type">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_non_list_type">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_plug_value_to_database_non_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_plug_value_to_database_non_list_type</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the behavior of `add_plug_value_to_database()` when handling a</span>
 <span class="sd">        non-list input plug value in different contexts.</span>
@@ -10085,7 +10083,7 @@
     <span class="c1">#       on a MacOs system in order to make the necessary corrections.</span>
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_add_plug_value_to_database_several_inputs">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_several_inputs">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_add_plug_value_to_database_several_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_add_plug_value_to_database_several_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test `add_plug_value_to_database` under various inheritance and input</span>
 <span class="sd">        conditions.</span>
@@ -10104,7 +10102,7 @@
 <span class="sd">            - PopUpInheritanceDict interaction</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mock `exec` of PopUpInheritanceDict to simulate user selection.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -10115,7 +10113,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">everything</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">return</span> <span class="kc">True</span>
 
-        <span class="k">def</span> <span class="nf">mock_get_document</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_keys</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">mock_get_document</span><span class="p">(</span><span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_keys</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Simulates fetching a database document and customizes the</span>
 <span class="sd">            &#39;Exp Type&#39; field based on the primary key.</span>
@@ -10146,7 +10144,7 @@
 
             <span class="k">return</span> <span class="n">scan_copy</span>
 
-        <span class="k">def</span> <span class="nf">reset_collections</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reset_collections</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Remove test documents from current and initial collections.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -10160,7 +10158,7 @@
 
                             <span class="n">db</span><span class="o">.</span><span class="n">remove_document</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">doc</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">reset_inheritance_dicts</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">reset_inheritance_dicts</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Reset inheritance configuration on the job.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -10411,7 +10409,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_ask_iterated_pipeline_plugs">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_ask_iterated_pipeline_plugs">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_ask_iterated_pipeline_plugs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the iteration dialog invocation on exported plugs of a pipeline.</span>
 
@@ -10453,7 +10451,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_build_iterated_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_build_iterated_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_build_iterated_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test &#39;PipelineManagerTab.build_iterated_pipeline&#39;.</span>
 
@@ -10516,7 +10514,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_check_requirements">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_check_requirements">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_check_requirements</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the &#39;PipelineManagerTab.check_requirements&#39; method.</span>
 
@@ -10559,7 +10557,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_cleanup_older_init">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_cleanup_older_init">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_cleanup_older_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test &#39;PipelineManagerTab.cleanup_older_init&#39;.</span>
 
@@ -10605,7 +10603,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_complete_pipeline_parameters">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_complete_pipeline_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_complete_pipeline_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Mocks a method of pipeline manager and completes the pipeline</span>
 <span class="sd">        parameters.</span>
@@ -10623,7 +10621,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_delete_processes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_delete_processes">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_delete_processes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_delete_processes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test deletion of a process node and verification of undo/redo</span>
 <span class="sd">        functionality.</span>
@@ -10637,7 +10635,7 @@
 <span class="sd">            - Redo operation removes the node again</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_assert_connection_counts</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">expected_counts</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_assert_connection_counts</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">expected_counts</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Assert that connection counts match expected values.</span>
 
@@ -10664,7 +10662,7 @@
                     <span class="sa">f</span><span class="s2">&quot;but got </span><span class="si">{</span><span class="n">actual_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_assert_nodes_exist</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">node_names</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_assert_nodes_exist</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">node_names</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Assert that all specified nodes exist within the given pipeline.</span>
 
@@ -10680,7 +10678,7 @@
                     <span class="sa">f</span><span class="s2">&quot;Node &#39;</span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">&#39; should exist in pipeline&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_assert_nodes_not_exist</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">node_names</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_assert_nodes_not_exist</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">node_names</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Assert that the specified nodes are absent from the given</span>
 <span class="sd">            pipeline.</span>
@@ -10778,7 +10776,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_end_progress">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_end_progress">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_end_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests `RunProgress.end_progress` under different worker execution</span>
 <span class="sd">        states.</span>
@@ -10834,7 +10832,7 @@
     <span class="c1"># @patch(&#39;logging.basicConfig&#39;, lambda *a, **kw: None)</span>
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_garbage_collect">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_garbage_collect">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_garbage_collect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests &#39;PipelineManagerTab.garbage_collect&#39; both in integrated and</span>
 <span class="sd">        isolated contexts.</span>
@@ -10891,7 +10889,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_get_capsul_engine">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_get_capsul_engine">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests &#39;PipelineManagerTab.get_capsul_engine&#39; in both integrated</span>
 <span class="sd">        and isolated contexts.</span>
@@ -10925,7 +10923,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_get_missing_mandatory_parameters">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_get_missing_mandatory_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_missing_mandatory_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests &#39;PipelineManagerTab.get_missing_mandatory_parameters&#39;.</span>
 
@@ -10984,7 +10982,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_get_pipeline_or_process">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_get_pipeline_or_process">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_get_pipeline_or_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test retrieving either a pipeline or a process from the pipeline</span>
 <span class="sd">        manager.</span>
@@ -11015,7 +11013,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_initialize">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_initialize">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the `initialize` method of `PipelineManagerTab`.</span>
 
@@ -11105,7 +11103,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_register_completion_attributes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_register_completion_attributes">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_register_completion_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the registration of completion attributes in the pipeline manager.</span>
 
@@ -11209,7 +11207,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_register_node_io_in_database">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_register_node_io_in_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_register_node_io_in_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_register_node_io_in_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the registration of node input/output data in the project</span>
 <span class="sd">        database for different types of process nodes.</span>
@@ -11345,7 +11343,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_remove_progress">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_remove_progress">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_remove_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that `PipelineManagerTab.remove_progress` correctly deletes the</span>
 <span class="sd">        `progress` attribute.</span>
@@ -11373,7 +11371,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_run">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_run">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the standard execution of a pipeline with mixed node types</span>
 <span class="sd">        (process, sub-pipeline, switch).</span>
@@ -11454,7 +11452,7 @@
         <span class="c1">#             error</span>
         <span class="n">ppl_manager</span><span class="o">.</span><span class="n">progress</span> <span class="o">=</span> <span class="n">RunProgress</span><span class="p">(</span><span class="n">ppl_manager</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">fake_start</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_pipeline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_start</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">workflow</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">get_pipeline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mock implementation of ``engine.start`` used in tests.</span>
 
@@ -11593,7 +11591,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_savePipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_savePipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_savePipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the behavior of `PipelineManagerTab.savePipeline` under different</span>
 <span class="sd">        conditions by mocking dependent methods.</span>
@@ -11643,7 +11641,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_save_pipeline_as">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_save_pipeline_as">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_pipeline_as</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that saving a pipeline under a new name works correctly by</span>
 <span class="sd">        mocking the underlying `save_pipeline` method.</span>
@@ -11683,7 +11681,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_set_anim_frame">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_set_anim_frame">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_set_anim_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that `_set_anim_frame` updates the pipeline status action icon</span>
 <span class="sd">        with the current frame of the animated GIF.</span>
@@ -11731,7 +11729,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_show_status">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_show_status">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_show_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the behavior of the pipeline status display in the</span>
 <span class="sd">        `PipelineManagerTab`.</span>
@@ -11794,7 +11792,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_stop_execution">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_stop_execution">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_stop_execution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that stopping execution in the pipeline manager behaves as</span>
 <span class="sd">        expected.</span>
@@ -11847,7 +11845,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_undo_redo">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_undo_redo">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_undo_redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_undo_redo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test the consistency and correctness of undo/redo operations in the</span>
 <span class="sd">        pipeline editor.</span>
@@ -12165,7 +12163,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_update_auto_inheritance">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_update_auto_inheritance">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_auto_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_auto_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that PipelineManagerTab.update_auto_inheritance correctly sets</span>
 <span class="sd">        the `auto_inheritance_dict` attribute of a job under different</span>
@@ -12232,7 +12230,7 @@
         <span class="n">fake_db_data</span><span class="o">.</span><span class="n">has_document</span><span class="o">.</span><span class="n">return_value</span> <span class="o">=</span> <span class="kc">True</span>
 
         <span class="nd">@contextlib</span><span class="o">.</span><span class="n">contextmanager</span>
-        <span class="k">def</span> <span class="nf">fake_data_cm</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">fake_data_cm</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Context manager that yields mock database data for testing</span>
 <span class="sd">            purposes.</span>
@@ -12364,7 +12362,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_update_inheritance">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_update_inheritance">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_inheritance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify that `PipelineManagerTab.update_inheritance` correctly updates</span>
 <span class="sd">        a job&#39;s inheritance dictionary based on the associated node.</span>
@@ -12442,7 +12440,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_update_node_list">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_update_node_list">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_update_node_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that adding a process updates the PipelineManagerTab node list.</span>
 
@@ -12488,7 +12486,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_z_init_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_z_init_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_init_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify initialization behavior of a pipeline in ``PipelineManagerTab``.</span>
 
@@ -12622,7 +12620,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_z_runPipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_z_runPipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_runPipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test running and interrupting a pipeline in PipelineManagerTab.</span>
 
@@ -12732,7 +12730,7 @@
 
 <div class="viewcode-block" id="TestMIAPipelineManagerTab.test_zz_del_pack">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_zz_del_pack">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_zz_del_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_zz_del_pack</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensure that a test package can be removed from the package library.</span>
 
@@ -12765,7 +12763,7 @@
 
 <div class="viewcode-block" id="Test_Z_MIAOthers">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.Test_Z_MIAOthers">[docs]</a>
-<span class="k">class</span> <span class="nc">Test_Z_MIAOthers</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Test_Z_MIAOthers</span><span class="p">(</span><span class="n">TestMIACase</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Tests for other parts of the MIA software that do not relate much with the</span>
 <span class="sd">    other classes.</span>
@@ -12788,7 +12786,7 @@
 
 <div class="viewcode-block" id="Test_Z_MIAOthers._mock_mouse_event">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.Test_Z_MIAOthers._mock_mouse_event">[docs]</a>
-    <span class="k">def</span> <span class="nf">_mock_mouse_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mock_mouse_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns a mock QMouseEvent for a right-click at position (0, 0).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -12801,7 +12799,7 @@
 <div class="viewcode-block" id="Test_Z_MIAOthers.test_check_setup">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.Test_Z_MIAOthers.test_check_setup">[docs]</a>
     <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;PyQt5.QtWidgets.QDialog.exec&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_check_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_exec</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_check_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_exec</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check that Mia&#39;s configuration control is working correctly.</span>
 
 <span class="sd">        Tests: utils.verify_setup()</span>
@@ -12821,7 +12819,7 @@
         <span class="n">return_value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;PyQt5.QtWidgets.QDialog.exec_&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">QDialog</span><span class="o">.</span><span class="n">Accepted</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_iteration_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_exec</span><span class="p">,</span> <span class="n">mock_pop_up</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_iteration_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mock_exec</span><span class="p">,</span> <span class="n">mock_pop_up</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a new project, initializes the pipeline iteration and changes its</span>
 <span class="sd">        parameters.</span>
@@ -12930,7 +12928,7 @@
         <span class="s2">&quot;PyQt5.QtWidgets.QMessageBox.question&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Yes</span>
     <span class="p">)</span>
     <span class="nd">@patch</span><span class="p">(</span><span class="s2">&quot;PyQt5.QtWidgets.QMessageBox.exec&quot;</span><span class="p">,</span> <span class="n">return_value</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">test_process_library</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_process_library</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">mock_msgbox_exec</span><span class="p">,</span> <span class="n">mock_msgbox_question</span><span class="p">,</span> <span class="n">mock_menu_exec</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -13030,7 +13028,7 @@
 
 <div class="viewcode-block" id="Test_Z_MIAOthers.test_verify_processes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.Test_Z_MIAOthers.test_verify_processes">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_verify_processes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_verify_processes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check that Mia&#39;s processes control is working correctly</span>
 
 <span class="sd">        Tests: utils.verify_processes()</span>
@@ -13065,7 +13063,7 @@
 
 <div class="viewcode-block" id="Test_Z_MIAOthers.test_z_open_shell">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.Test_Z_MIAOthers.test_z_open_shell">[docs]</a>
-    <span class="k">def</span> <span class="nf">test_z_open_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_z_open_shell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test that MainWindow.open_shell() correctly opens an in-process</span>
 <span class="sd">        QtConsole with an IPython kernel.</span>

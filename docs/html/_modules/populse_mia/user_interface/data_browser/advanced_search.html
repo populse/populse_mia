@@ -4,22 +4,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+6733b3df documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=dfa0e015" />
-    <script src="../../../../_static/documentation_options.js?v=cfb36fc2"></script>
-    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../../_static/documentation_options.js?v=f5aceaef"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+6733b3df documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.advanced_search</span></h2>
       </div>
-      <div class="topnav" role="navigation" aria-label="top navigation">
+      <div class="topnav" role="navigation" aria-label="Top">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -42,14 +40,14 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_origin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_origin</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QObjectCleanupHandler</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QObjectCleanupHandler</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPixmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QComboBox</span><span class="p">,</span>
     <span class="n">QGridLayout</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -61,15 +59,15 @@
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ALL_TYPES</span><span class="p">,</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_STRING</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">ClickableLabel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClickableLabel</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;AdvancedSearch&quot;</span><span class="p">]</span>
 
@@ -77,8 +75,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch">[docs]</a>
-<span class="k">class</span> <span class="nc">AdvancedSearch</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AdvancedSearch</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class that manages the widget of the advanced search.</span>
 
@@ -113,8 +111,8 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="AdvancedSearch.__init__">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">project</span><span class="p">,</span>
         <span class="n">data_browser</span><span class="p">,</span>
@@ -148,8 +146,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.add_search_bar">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.add_search_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.add_search_bar">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add an advanced search bar row to the search interface.</span>
 
@@ -173,7 +171,7 @@
 <span class="sd">                  as visible from the project database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_create_combo_box</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_create_combo_box</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Create and return a QComboBox populated with the given items.</span>
 
@@ -191,7 +189,7 @@
 
             <span class="k">return</span> <span class="n">combo</span>
 
-        <span class="k">def</span> <span class="nf">_get_shown_tags_from_db</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_get_shown_tags_from_db</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Retrieve the tags currently marked as visible from the project</span>
 <span class="sd">            database.</span>
@@ -267,8 +265,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.apply_filter">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.apply_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">apply_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.apply_filter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">apply_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply a filter to update the displayed scans in the data browser.</span>
 
@@ -377,8 +375,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.displayConditionRules">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.displayConditionRules">[docs]</a>
-    <span class="k">def</span> <span class="nf">displayConditionRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayConditionRules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">displayConditionRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update available condition operators based on the selected field&#39;s</span>
 <span class="sd">        type.</span>
@@ -408,7 +406,7 @@
 <span class="sd">                  widget.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_update_operators</span><span class="p">(</span><span class="n">condition_widget</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">should_add</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_update_operators</span><span class="p">(</span><span class="n">condition_widget</span><span class="p">,</span> <span class="n">operators</span><span class="p">,</span> <span class="n">should_add</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Add or remove operators from the condition widget.</span>
 
@@ -458,8 +456,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.displayValueRules">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.displayValueRules">[docs]</a>
-    <span class="k">def</span> <span class="nf">displayValueRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.displayValueRules">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">displayValueRules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">choice</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure the value input widget based on the selected condition</span>
 <span class="sd">        operator.</span>
@@ -505,8 +503,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.get_filters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.get_filters">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace_all_by_fields</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.get_filters">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">replace_all_by_fields</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract filter criteria from UI widgets.</span>
 
@@ -607,8 +605,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.launch_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.launch_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">launch_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.launch_search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">launch_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute search query and update the data browser table.</span>
 
@@ -675,9 +673,9 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.prepare_filters">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.prepare_filters">[docs]</a>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.prepare_filters">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">prepare_filters</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">nots</span><span class="p">,</span> <span class="n">scans</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_filters</span><span class="p">(</span><span class="n">links</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">nots</span><span class="p">,</span> <span class="n">scans</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct a filter query string from filter components.</span>
 
@@ -709,7 +707,7 @@
 <span class="sd">                  use in queries.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_format_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_format_value</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Convert a Python value into a string safe for use in queries.</span>
 
@@ -775,8 +773,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.refresh_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.refresh_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">refresh_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.refresh_search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Refresh the search widget by rebuilding its layout with the current</span>
 <span class="sd">        filters.</span>
@@ -821,8 +819,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.remove_row">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.remove_row">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_layout</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.remove_row">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_layout</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a specified row from the layout while ensuring at least one row</span>
 <span class="sd">        remains.</span>
@@ -858,8 +856,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.rows_borders_added">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.rows_borders_added">[docs]</a>
-    <span class="k">def</span> <span class="nf">rows_borders_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_added">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rows_borders_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">links</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add UI controls (links and add button) to search query rows.</span>
 
@@ -896,8 +894,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.rows_borders_removed">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.rows_borders_removed">[docs]</a>
-    <span class="k">def</span> <span class="nf">rows_borders_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.rows_borders_removed">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rows_borders_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove the link widget and the &quot;add row&quot; widget from every row.</span>
 
@@ -912,7 +910,7 @@
 <span class="sd">                  schedules it for deletion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_remove_widget</span><span class="p">(</span><span class="n">widget_ref</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_remove_widget</span><span class="p">(</span><span class="n">widget_ref</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Safely removes a QWidget from its parent and schedules it for</span>
 <span class="sd">            deletion.</span>
@@ -941,8 +939,8 @@
 
 
 <div class="viewcode-block" id="AdvancedSearch.show_search">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.plug_filter.html#populse_mia.user_interface.data_browser.data_browser.AdvancedSearch.show_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">show_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.advanced_search.html#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.show_search">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset the search rows and display the search bar.</span>
 
@@ -959,7 +957,7 @@
 </pre></div>
 
       </div>
-      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
       
         <p>
         <a class="uplink" href="../../../../index.html">Contents</a>
@@ -969,7 +967,7 @@
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2022, populse.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
   </body>
 </html>
