@@ -55,14 +55,17 @@ def add_to_sys_path(path, name, index=0):
     """
     Adds the specified path to the system path if it's a valid directory.
 
-    :param path: (pathlib.Path) The directory path to be added to the system
-     path.
-    :param name: (str) The name of the package being added.
-    :param index: (int) The index at which to insert the pathinto sys.path.
-     Defaults to 0.
+    :param path: The directory path to be added to the system path.
+    :type path: pathlib.Path
+    :param name: The name of the package being added.
+    :type name: str
+    :param index: The index at which to insert the pathinto sys.path. Defaults
+        to 0.
+    :type index: int
 
-    :Returns: (bool) True if the path is a valid directory and was added
-     to sys.path, False otherwise.
+    :returns: True if the path is a valid directory and was added to sys.path,
+        False otherwise.
+    :rtype: bool
     """
 
     if path.is_dir():
@@ -80,10 +83,12 @@ def check_package(name):
     Attempts to import a package by its name, logs the location of the
     package if successful, and logs an error if the package is missing.
 
-    :param name: (str) The name of the package to be imported.
+    :param name: The name of the package to be imported.
+    :type name: str
 
-    :Returns: (bool) True if the package is imported successfully; False if
-     the package is missing.
+    :returns: True if the package is imported successfully; False if the
+        package is missing.
+    :rtype: bool
     """
 
     try:
@@ -118,10 +123,11 @@ def main(args):
         - the properties_path is the "properties_user_path" parameter in
           ~/.populse_mia/configuration_path.yml
 
-    :param args: (argparse.Namespace) The parsed command-line arguments.
-
     Launches the ``verify_processes()`` function, then the ``launch_mia()``
     function (Mia's real launch).
+
+    :param args: The parsed command-line arguments.
+    :type args: argparse.Namespace
     """
     pypath = []
     package_not_found = []
@@ -399,11 +405,14 @@ def qt_message_handler(msg_type, context, message):
     Custom Qt message handler to filter out specific unwanted messages
     and print the remaining ones to stderr.
 
-    :param msg_type: (QtMsgType) The type of Qt message (debug, warning,
-     critical, etc. - unused).
-    :param context: (QMessageLogContext) Context information about where the
-     message originated (unused).
-    :param message: (str) The log message string.
+    :param msg_type: The type of Qt message (debug, warning,
+        critical, etc. - unused).
+    :type msg_type: QtMsgType
+    :param context: Context information about where the message
+        originated (unused).
+    :type context: QMessageLogContext
+    :param message: The log message.
+    :type message: str
     """
 
     for unwanted_message in unwanted_messages:

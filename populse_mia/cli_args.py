@@ -20,13 +20,14 @@ def parse_args():
     """
     Parse command-line arguments for the Mia application.
 
-    This function configures and parses command-line arguments for
-    launching the Mia application.
+    This function configures and parses command-line arguments for launching
+    the Mia application.
 
-    :Returns: (argparse.Namespace) Parsed command-line arguments containing:
+    :returns: Parsed command-line arguments containing:
 
         - multi_instance (bool): Whether multiple instances of the application
           can be launched simultaneously (default: False).
+    :rtype: argparse.Namespace
     """
     parser = argparse.ArgumentParser(
         description="Populse Mia Application Entry Point."
