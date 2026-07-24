@@ -18,24 +18,21 @@ import argparse
 
 def parse_args():
     """
-    Parse command-line arguments for the Mia application.
+    Parse the command-line arguments for the Populse Mia application.
 
-    This function configures and parses command-line arguments for launching
-    the Mia application.
-
-    :returns: Parsed command-line arguments containing:
-
-        - multi_instance (bool): Whether multiple instances of the application
-          can be launched simultaneously (default: False).
+    :returns: The parsed command-line arguments.
     :rtype: argparse.Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Populse Mia Application Entry Point."
+        description="Launch the Populse MIA application."
     )
     parser.add_argument(
-        "--multi_instance",
-        type=bool,
-        default=False,
-        help="Set the value of multi_instance.",
+        "-mi",
+        "--multi-instance",
+        action="store_true",
+        help=(
+            "Allow multiple instances of Populse MIA to run simultaneously. "
+            "By default, only one instance is allowed."
+        ),
     )
     return parser.parse_args()
