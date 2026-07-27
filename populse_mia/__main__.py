@@ -17,6 +17,7 @@ This will execute the main entry point of the application.
 ##########################################################################
 
 import logging
+import sys
 
 from populse_mia.logging_config import configure_logging
 
@@ -24,6 +25,7 @@ from populse_mia.logging_config import configure_logging
 from populse_mia.main import main
 
 from .cli_args import parse_args
+from .install.mia_install import run_installer
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +38,16 @@ if __name__ == "__main__":
             keep_log_files=args.keep_log_files,
             log_level=args.log_level,
         )
+
+        if args.install:
+            print("Install or try to repair Mia...")
+            run_installer()
+            sys.exit(0)
+
         print("Starting Populse Mia...")
         logger.info("Starting Populse Mia...")
+        logger.info("Python version: %s", sys.version)
+        logger.info("Python executable: %s", sys.executable)
         # Print the multi_instance argument value
         logger.info(f"--multi_instance is set to: {args.multi_instance}")
         main(args)

@@ -83,4 +83,11 @@ def parse_args():
         help=("Number of log files to retain " "(default: %(default)s)."),
     )
 
+    parser.add_argument(
+        "-i",
+        "--install",
+        action="store_true",
+        help=("Install the Mia app or try to fix it."),
+    )
+
     return parser.parse_args()

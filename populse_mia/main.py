@@ -24,8 +24,6 @@ import tempfile
 import tomli
 from pathlib import Path
 
-from logging_config import configure_logging
-
 # isort: on
 
 # PyQt5 import
@@ -46,6 +44,15 @@ try:
 except ImportError:
     # Running as a top-level script (python main.py)
     from cli_args import parse_args
+
+try:
+    # Running inside the package (installed or `python -m populse_mia.main`)
+    from .logging_config import configure_logging
+
+except ImportError:
+    # Running as a top-level script (python main.py)
+    from logging_config import configure_logging
+
 
 __all__ = ["add_to_sys_path", "check_package", "main", "qt_message_handler"]
 
@@ -433,13 +440,27 @@ def qt_message_handler(msg_type, context, message):
 if __name__ == "__main__":
 
     args = parse_args()
+
     configure_logging(
         log_in_stdout=args.log_in_stdout,
         keep_log_files=args.keep_log_files,
         log_level=args.log_level,
     )
-    print("Starting Populse Mia...")
-    logger.info("Starting Populse Mia...")
+
+    if args.install:
+        msg = (
+            "Populse Mia cannot be installed in developer mode!\nDevelopers "
+            "must clone the source code.\nSee the "
+            "populse_mia’s developer installation part in the documentation.\n"
+        )
+        print(msg)
+        logger.warning(msg)
+
+    msg = "Starting Populse Mia..."
+    print(msg)
+    logger.info(msg)
+    logger.info("Python version: %s", sys.version)
+    logger.info("Python executable: %s", sys.executable)
     # Print the multi_instance argument value
     logger.info(f"--multi_instance is set to: {args.multi_instance}")
     # This will only be executed when this module is run directly
