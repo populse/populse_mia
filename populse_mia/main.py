@@ -24,6 +24,8 @@ import tempfile
 import tomli
 from pathlib import Path
 
+from logging_config import configure_logging
+
 # isort: on
 
 # PyQt5 import
@@ -47,7 +49,6 @@ except ImportError:
 
 __all__ = ["add_to_sys_path", "check_package", "main", "qt_message_handler"]
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -431,6 +432,11 @@ def qt_message_handler(msg_type, context, message):
 
 if __name__ == "__main__":
     args = parse_args()
+    configure_logging(
+        log_in_stdout=args.log_in_stdout,
+        keep_log_files=args.keep_log_files,
+    )
+    logger.info("Starting Populse Mia...")
     # Print the multi_instance argument value
     logger.info(f"--multi_instance is set to: {args.multi_instance}")
     # This will only be executed when this module is run directly

@@ -18,18 +18,24 @@ This will execute the main entry point of the application.
 
 import logging
 
+from populse_mia.logging_config import configure_logging
+
 # populse_mia import
 from populse_mia.main import main
 
 from .cli_args import parse_args
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 if __name__ == "__main__":
 
     try:
         args = parse_args()
+        configure_logging(
+            log_in_stdout=args.log_in_stdout,
+            keep_log_files=args.keep_log_files,
+        )
+        logger.info("Starting Populse Mia...")
         # Print the multi_instance argument value
         logger.info(f"--multi_instance is set to: {args.multi_instance}")
         main(args)
