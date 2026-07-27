@@ -624,6 +624,8 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         _restore_terminal()
         sys.excepthook = previous_excepthook
         app = QApplication.instance()
+        logger.info("Stopping Populse Mia...")
+        print("Stopping Populse Mia...")
 
         if app:
             app.quit()

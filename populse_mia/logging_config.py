@@ -23,8 +23,7 @@ __all__ = ["configure_logging", "_cleanup_old_logs"]
 
 
 def configure_logging(
-    log_in_stdout: bool,
-    keep_log_files: int,
+    log_in_stdout: bool, keep_log_files: int, log_level: str
 ) -> None:
     """
     Configure the application logging.
@@ -34,6 +33,8 @@ def configure_logging(
     :type param log_in_stdout: bool
     :param keep_log_files : Number of log files to retain.
     :type param keep_log_files: int
+    :param log_level: Level of the logger.
+    :type param log_level: str
     """
     formatter = logging.Formatter(
         "%(asctime)s %(levelname)-8s %(name)s: %(message)s"
@@ -59,7 +60,7 @@ def configure_logging(
     handler.setFormatter(formatter)
 
     logging.basicConfig(
-        level=logging.INFO,
+        level=getattr(logging, log_level),
         handlers=[handler],
         force=True,
     )

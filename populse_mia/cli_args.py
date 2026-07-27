@@ -50,6 +50,14 @@ def parse_args():
         description="Launch the Populse MIA application."
     )
     parser.add_argument(
+        "-ll",
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+        default="INFO",
+        type=str.upper,
+        help="Logging level (default: INFO).",
+    )
+    parser.add_argument(
         "-mi",
         "--multi-instance",
         action="store_true",
