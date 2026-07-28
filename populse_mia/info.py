@@ -135,8 +135,8 @@ REQUIRES = [
     "scikit-image",
     "scipy",
     "snakeviz",
-    "soma-base >= 5.3.0, < 6.0.0",
-    "soma-workflow >= 3.3.0",
+    "soma-base >= 5.0",
+    "soma-workflow >= 3.2",
     "six >= 1.13",
     "traits",
 ]
