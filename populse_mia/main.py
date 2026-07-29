@@ -452,6 +452,7 @@ if __name__ == "__main__":
             "Populse Mia cannot be installed in developer mode!\nDevelopers "
             "must clone the source code.\nSee the "
             "populse_mia’s developer installation part in the documentation.\n"
+            "... The installation option is skipped ..."
         )
         print(msg)
         logger.warning(msg)

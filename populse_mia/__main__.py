@@ -40,7 +40,6 @@ if __name__ == "__main__":
         )
 
         if args.install:
-            print("Install or try to repair Mia...")
             run_installer()
             sys.exit(0)
 
