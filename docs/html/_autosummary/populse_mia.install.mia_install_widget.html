@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>populse_mia.install.mia_install_widget &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=907353be"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.install.mia_install_widget</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.install.mia_install_widget">
+<span id="populse-mia-install-mia-install-widget"></span><h1>populse_mia.install.mia_install_widget<a class="headerlink" href="#module-populse_mia.install.mia_install_widget" title="Link to this heading">¶</a></h1>
+<p>The module used for mia’s installation and configuration.</p>
+<p>Basically, this module is dedicated to the GUI used at the installation time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Contains<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="field-list simple">
+<dt class="field-odd">Class<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>MIAInstallWidget</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.install.mia_install_widget.MIAInstallWidget" title="populse_mia.install.mia_install_widget.MIAInstallWidget"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIAInstallWidget</span></code></a>()</p></td>
+<td><p>The main class for mia's installation and configuration.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.install.mia_install_widget.</span></span><span class="sig-name descname"><span class="pre">Path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/pathlib.html#pathlib.PurePath" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">PurePath</span></code></a></p>
+<p>PurePath subclass that can make system calls.</p>
+<p>Path represents a filesystem path but unlike PurePath, also offers
+methods to do system calls on path objects. Depending on your system,
+instantiating a Path will return either a PosixPath or a WindowsPath
+object. You can also instantiate a PosixPath or WindowsPath directly,
+but cannot instantiate a WindowsPath on a POSIX system or vice versa.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path._accessor">
+<span class="sig-name descname"><span class="pre">_accessor</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;pathlib._NormalAccessor</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path._accessor" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path._make_child_relpath">
+<span class="sig-name descname"><span class="pre">_make_child_relpath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path._make_child_relpath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path._make_child_relpath" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.__enter__">
+<span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.__enter__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.__exit__">
+<span class="sig-name descname"><span class="pre">__exit__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.__exit__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.__exit__" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.cwd">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cwd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.cwd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.cwd" title="Link to this definition">¶</a></dt>
+<dd><p>Return a new path pointing to the current working directory
+(as returned by os.getcwd()).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.home">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.home"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.home" title="Link to this definition">¶</a></dt>
+<dd><p>Return a new path pointing to the user’s home directory (as
+returned by os.path.expanduser(‘~’)).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.samefile">
+<span class="sig-name descname"><span class="pre">samefile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.samefile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.samefile" title="Link to this definition">¶</a></dt>
+<dd><p>Return whether other_path is the same or not as this file
+(as returned by os.path.samefile()).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.iterdir">
+<span class="sig-name descname"><span class="pre">iterdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.iterdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.iterdir" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over the files in this directory.  Does not yield any
+result for the special paths ‘.’ and ‘..’.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.glob">
+<span class="sig-name descname"><span class="pre">glob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.glob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.glob" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over this subtree and yield all existing files (of any
+kind, including directories) matching the given relative pattern.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.rglob">
+<span class="sig-name descname"><span class="pre">rglob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.rglob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.rglob" title="Link to this definition">¶</a></dt>
+<dd><p>Recursively yield all existing files (of any kind, including
+directories) matching the given relative pattern, anywhere in
+this subtree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.absolute">
+<span class="sig-name descname"><span class="pre">absolute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.absolute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.absolute" title="Link to this definition">¶</a></dt>
+<dd><p>Return an absolute version of this path.  This function works
+even if the path doesn’t point to anything.</p>
+<p>No normalization is done, i.e. all ‘.’ and ‘..’ will be kept along.
+Use resolve() to get the canonical path to a file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.resolve">
+<span class="sig-name descname"><span class="pre">resolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.resolve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.resolve" title="Link to this definition">¶</a></dt>
+<dd><p>Make the path absolute, resolving all symlinks on the way and also
+normalizing it (for example turning slashes into backslashes under
+Windows).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.stat">
+<span class="sig-name descname"><span class="pre">stat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_symlinks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.stat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.stat" title="Link to this definition">¶</a></dt>
+<dd><p>Return the result of the stat() system call on this path, like
+os.stat() does.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.owner">
+<span class="sig-name descname"><span class="pre">owner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.owner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.owner" title="Link to this definition">¶</a></dt>
+<dd><p>Return the login name of the file owner.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.group">
+<span class="sig-name descname"><span class="pre">group</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.group"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.group" title="Link to this definition">¶</a></dt>
+<dd><p>Return the group name of the file gid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'r'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffering</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.open" title="Link to this definition">¶</a></dt>
+<dd><p>Open the file pointed by this path and return a file object, as
+the built-in open() function does.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.read_bytes">
+<span class="sig-name descname"><span class="pre">read_bytes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.read_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.read_bytes" title="Link to this definition">¶</a></dt>
+<dd><p>Open the file in bytes mode, read it, and close the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.read_text">
+<span class="sig-name descname"><span class="pre">read_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.read_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.read_text" title="Link to this definition">¶</a></dt>
+<dd><p>Open the file in text mode, read it, and close the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.write_bytes">
+<span class="sig-name descname"><span class="pre">write_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.write_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.write_bytes" title="Link to this definition">¶</a></dt>
+<dd><p>Open the file in bytes mode, write to it, and close the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.write_text">
+<span class="sig-name descname"><span class="pre">write_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.write_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.write_text" title="Link to this definition">¶</a></dt>
+<dd><p>Open the file in text mode, write to it, and close the file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.readlink">
+<span class="sig-name descname"><span class="pre">readlink</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.readlink"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.readlink" title="Link to this definition">¶</a></dt>
+<dd><p>Return the path to which the symbolic link points.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.touch">
+<span class="sig-name descname"><span class="pre">touch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">438</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exist_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.touch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.touch" title="Link to this definition">¶</a></dt>
+<dd><p>Create this file with the given access mode, if it doesn’t exist.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.mkdir">
+<span class="sig-name descname"><span class="pre">mkdir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">511</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exist_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.mkdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.mkdir" title="Link to this definition">¶</a></dt>
+<dd><p>Create a new directory at this given path.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.chmod">
+<span class="sig-name descname"><span class="pre">chmod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">follow_symlinks</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.chmod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.chmod" title="Link to this definition">¶</a></dt>
+<dd><p>Change the permissions of the path, like os.chmod().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.lchmod">
+<span class="sig-name descname"><span class="pre">lchmod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.lchmod"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.lchmod" title="Link to this definition">¶</a></dt>
+<dd><p>Like chmod(), except if the path points to a symlink, the symlink’s
+permissions are changed, rather than its target’s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.unlink">
+<span class="sig-name descname"><span class="pre">unlink</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">missing_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.unlink"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.unlink" title="Link to this definition">¶</a></dt>
+<dd><p>Remove this file or link.
+If the path is a directory, use rmdir() instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.rmdir">
+<span class="sig-name descname"><span class="pre">rmdir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.rmdir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.rmdir" title="Link to this definition">¶</a></dt>
+<dd><p>Remove this directory.  The directory must be empty.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.lstat">
+<span class="sig-name descname"><span class="pre">lstat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.lstat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.lstat" title="Link to this definition">¶</a></dt>
+<dd><p>Like stat(), except if the path points to a symlink, the symlink’s
+status information is returned, rather than its target’s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.rename" title="Link to this definition">¶</a></dt>
+<dd><p>Rename this path to the target path.</p>
+<p>The target path may be absolute or relative. Relative paths are
+interpreted relative to the current working directory, <em>not</em> the
+directory of the Path object.</p>
+<p>Returns the new Path instance pointing to the target path.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.replace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.replace" title="Link to this definition">¶</a></dt>
+<dd><p>Rename this path to the target path, overwriting if that path exists.</p>
+<p>The target path may be absolute or relative. Relative paths are
+interpreted relative to the current working directory, <em>not</em> the
+directory of the Path object.</p>
+<p>Returns the new Path instance pointing to the target path.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.symlink_to">
+<span class="sig-name descname"><span class="pre">symlink_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_is_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.symlink_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.symlink_to" title="Link to this definition">¶</a></dt>
+<dd><p>Make this path a symlink pointing to the target path.
+Note the order of arguments (link, target) is the reverse of os.symlink.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.hardlink_to">
+<span class="sig-name descname"><span class="pre">hardlink_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.hardlink_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.hardlink_to" title="Link to this definition">¶</a></dt>
+<dd><p>Make this path a hard link pointing to the same file as <em>target</em>.</p>
+<p>Note the order of arguments (self, target) is the reverse of os.link’s.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.link_to">
+<span class="sig-name descname"><span class="pre">link_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.link_to"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.link_to" title="Link to this definition">¶</a></dt>
+<dd><p>Make the target path a hard link pointing to this path.</p>
+<p>Note this function does not make this path a hard link to <em>target</em>,
+despite the implication of the function and argument names. The order
+of arguments (target, link) is the reverse of Path.symlink_to, but
+matches that of os.link.</p>
+<p>Deprecated since Python 3.10 and scheduled for removal in Python 3.12.
+Use <cite>hardlink_to()</cite> instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.exists" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path exists.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_dir">
+<span class="sig-name descname"><span class="pre">is_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_dir" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a directory.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_file">
+<span class="sig-name descname"><span class="pre">is_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_file" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a regular file (also True for symlinks pointing
+to regular files).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_mount">
+<span class="sig-name descname"><span class="pre">is_mount</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_mount"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_mount" title="Link to this definition">¶</a></dt>
+<dd><p>Check if this path is a POSIX mount point</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_symlink">
+<span class="sig-name descname"><span class="pre">is_symlink</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_symlink"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_symlink" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a symbolic link.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_block_device">
+<span class="sig-name descname"><span class="pre">is_block_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_block_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_block_device" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a block device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_char_device">
+<span class="sig-name descname"><span class="pre">is_char_device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_char_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_char_device" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a character device.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_fifo">
+<span class="sig-name descname"><span class="pre">is_fifo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_fifo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_fifo" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a FIFO.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.is_socket">
+<span class="sig-name descname"><span class="pre">is_socket</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.is_socket"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.is_socket" title="Link to this definition">¶</a></dt>
+<dd><p>Whether this path is a socket.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.Path.expanduser">
+<span class="sig-name descname"><span class="pre">expanduser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pathlib.html#Path.expanduser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.Path.expanduser" title="Link to this definition">¶</a></dt>
+<dd><p>Return a new path with expanded ~ and ~user constructs
+(as returned by os.path.expanduser)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.install.mia_install_widget.</span></span><span class="sig-name descname"><span class="pre">MIAInstallWidget</span></span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>The main class for mia’s installation and configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Contains<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="field-list simple">
+<dt class="field-odd">Method<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>__init__</p></li>
+<li><p>browse_matlab</p></li>
+<li><p>browse_matlab_standalone</p></li>
+<li><p>browse_mia_config_path</p></li>
+<li><p>browse_projects_path</p></li>
+<li><p>browse_spm</p></li>
+<li><p>browse_spm_standalone</p></li>
+<li><p>btnstate</p></li>
+<li><p>clone_miaResources</p></li>
+<li><p>find_matlab_path</p></li>
+<li><p>install</p></li>
+<li><p>install_matlab_api</p></li>
+<li><p>install_package</p></li>
+<li><p>last_layout</p></li>
+<li><p>make_mrifilemanager_folder</p></li>
+<li><p>ok_or_abort</p></li>
+<li><p>set_new_layout</p></li>
+<li><p>uninstall_package</p></li>
+<li><p>upgrade_soma_capsul</p></li>
+<li><p>use_matlab_changed</p></li>
+<li><p>use_spm_changed</p></li>
+<li><p>use_spm_standalone_changed</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Constructor</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab">
+<span class="sig-name descname"><span class="pre">browse_matlab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_matlab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a file dialog for the user to select a MATLAB executable file.</p>
+<p>This method presents a file selection dialog to the user, allowing
+them to choose the MATLAB executable file from their file system.
+If a file is selected, the file path is displayed in the
+<cite>matlab_choice</cite> widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for file selection with the title
+‘Choose Matlab executable file’.</p></li>
+<li><p>The dialog starts in the user’s home directory.</p></li>
+<li><p>If the user selects a file, sets the <cite>matlab_choice</cite> widget
+text to the selected file path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab_standalone">
+<span class="sig-name descname"><span class="pre">browse_matlab_standalone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_matlab_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab_standalone" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a directory dialog for the user to select the MATLAB Compile
+Runtime (MCR) directory.</p>
+<p>This method opens a directory selection dialog, allowing the user
+to choose the folder where the MATLAB Compiler Runtime (MCR) is
+installed. If a directory is selected, the path is displayed in
+the <cite>matlab_standalone_choice</cite> widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for directory selection with the title
+‘Choose MCR directory’.</p></li>
+<li><p>The dialog starts in the user’s home directory.</p></li>
+<li><p>If the user selects a directory, sets the
+<cite>matlab_standalone_choice</cite> widget text to the selected
+directory path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_mia_config_path">
+<span class="sig-name descname"><span class="pre">browse_mia_config_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_mia_config_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_mia_config_path" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a directory dialog for the user to select a folder for
+installing the MIA configuration.</p>
+<p>This method displays a dialog that allows the user to choose a
+directory in which the MIA configuration files will be installed.
+If a directory is selected, its path is displayed in the
+<cite>mia_config_path_choice</cite> widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for directory selection with the title
+‘Select a folder where to install Mia configuration’.</p></li>
+<li><p>Starts the dialog in the user’s home directory.</p></li>
+<li><p>If a directory is selected, updates the <cite>mia_config_path_choice</cite>
+widget text with the selected directory path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_projects_path">
+<span class="sig-name descname"><span class="pre">browse_projects_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_projects_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_projects_path" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a directory dialog for the user to select a folder to store
+Mia’s projects.</p>
+<p>This method opens a directory selection dialog, allowing the user
+to choose a folder where Mia’s projects will be stored. If a folder
+is selected, its path is displayed in the <cite>projects_path_choice</cite>
+widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for directory selection with the title
+“Select a folder where to store Mia’s projects”.</p></li>
+<li><p>Starts the dialog in the user’s home directory.</p></li>
+<li><p>If a directory is selected, updates the <cite>projects_path_choice</cite>
+widget text with the selected folder path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm">
+<span class="sig-name descname"><span class="pre">browse_spm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_spm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a directory dialog for the user to select the SPM (Statistical
+Parametric Mapping) directory.</p>
+<p>This method displays a directory selection dialog, allowing the user
+to choose the folder where the SPM software is installed. If a
+directory is selected, its path is displayed in the <cite>spm_choice</cite>
+widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for directory selection with the title
+‘Choose SPM directory’.</p></li>
+<li><p>Starts the dialog in the user’s home directory.</p></li>
+<li><p>If a directory is selected, updates the <cite>spm_choice</cite> widget
+text with the selected directory path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm_standalone">
+<span class="sig-name descname"><span class="pre">browse_spm_standalone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.browse_spm_standalone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm_standalone" title="Link to this definition">¶</a></dt>
+<dd><p>Opens a directory dialog for the user to select the SPM (Statistical
+Parametric Mapping) standalone directory.</p>
+<p>This method opens a directory selection dialog, allowing the user
+to choose the folder where the standalone version of SPM is installed.
+If a directory is selected, its path is displayed in the
+<cite>spm_standalone_choice</cite> widget.</p>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Opens a <cite>QFileDialog</cite> for directory selection with the title
+‘Choose SPM standalone directory’.</p></li>
+<li><p>Starts the dialog in the user’s home directory.</p></li>
+<li><p>If a directory is selected, updates the <cite>spm_standalone_choice</cite>
+widget text with the selected directory path.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.btnstate">
+<span class="sig-name descname"><span class="pre">btnstate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.btnstate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.btnstate" title="Link to this definition">¶</a></dt>
+<dd><p>Toggles the state of two related buttons based on the text of the
+clicked button.</p>
+<p>This method manages the state of two buttons
+(<cite>host_target_push_button</cite> and <cite>casa_target_push_button</cite>) based on
+the text of the button that is clicked. If the button text is
+‘Casa_Distro’, it ensures that the <cite>host_target_push_button</cite> is
+unchecked when the button is checked and vice versa. If the button
+text is ‘Host’, it ensures that the <cite>casa_target_push_button</cite> is
+unchecked when the button is checked and vice versa.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>button</strong> (<em>QtWidgets.QPushButton</em>) – The button that was clicked to
+trigger the state change.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>If the clicked button’s text is “Casa_Distro”, toggles the
+state of the <cite>host_target_push_button</cite>.</p></li>
+<li><p>If the clicked button’s text is “Host”, toggles the state of
+the <cite>casa_target_push_button</cite>.</p></li>
+<li><p>Ensures that when one button is checked, the other is unchecked.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.find_matlab_path">
+<span class="sig-name descname"><span class="pre">find_matlab_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.find_matlab_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.find_matlab_path" title="Link to this definition">¶</a></dt>
+<dd><p>Attempts to find the installation path of MATLAB on the system.</p>
+<p>This method tries to locate the MATLAB installation by running the
+<cite>matlab</cite> command with specific options to retrieve the root directory
+of MATLAB. It checks if the path is valid and whether the MATLAB
+executable (<cite>matlab</cite> or <cite>matlab.exe</cite>) exists in the ‘bin’ directory
+under the root directory. If the executable is found, it returns the
+full path to the MATLAB executable.</p>
+<p>If MATLAB cannot be found or an error occurs during the process, an
+empty string is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>The path to the MATLAB executable if found, otherwise an</dt><dd><p>empty string.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
+</dl>
+<dl>
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Runs the MATLAB command</p></li>
+</ul>
+<p><cite>matlab -nodisplay -nosplash -nodesktop -r ‘disp(matlabroot);exit’</cite>
+to obtain the root installation directory.
+- Checks for the existence of the MATLAB executable (<cite>matlab</cite> or
+<cite>matlab.exe</cite>) under the <cite>bin</cite> folder.
+- Returns the full path to the executable if found, or an empty
+string if not.
+- In case of an exception (e.g., MATLAB is not installed), prints
+a message and returns an empty string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.install">
+<span class="sig-name descname"><span class="pre">install</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.install"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.install" title="Link to this definition">¶</a></dt>
+<dd><p>Manages the installation and configuration of Mia and associated
+software components.</p>
+<p>This method performs the following steps:
+1. Installs populse_mia and mia_processes from PyPi.
+2. Checks the selected installation target (Host or Casa_Distro).
+3. Configures the operating mode (clinical or research).
+4. Optionally integrates with MATLAB and SPM based on user selections.
+5. Manages the creation and initialization of necessary directories and</p>
+<blockquote>
+<div><dl class="simple">
+<dt>configuration files:</dt><dd><ul class="simple">
+<li><p>Creates the directory ~/.populse_mia if it does not exist and
+ensures the presence of configuration files.</p></li>
+<li><p>Initializes user-specific directories for properties, processes,
+and projects.</p></li>
+<li><p>Manages MRI conversion directories and resources.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>Prompts the user with warnings and asks for confirmation before
+overwriting existing directories if necessary.</p></li>
+<li><p>Clones required repositories (MRI conversion tools and
+miaresources).</p></li>
+<li><p>Updates the configuration file with new paths and settings.</p></li>
+<li><p>Optionally upgrades packages (soma-base, soma-workflow, capsul) if
+the Host installation target is selected.</p></li>
+<li><p>Finalizes the installation and updates the GUI with the
+installation status.</p></li>
+</ol>
+<p>The method requires user input via checkboxes and buttons to configure
+various aspects of the installation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`host_target_push_button`</span></span></dt>
+<dd><p>Defines whether the host target
+installation is selected.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`clinical_mode_push_button`</span></span></dt>
+<dd><p>Defines whether the clinical mode
+is selected.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`use_matlab_checkbox`</span></span></dt>
+<dd><p>Defines whether MATLAB integration is
+enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`use_spm_checkbox`</span></span></dt>
+<dd><p>Defines whether SPM integration is enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`use_spm_standalone_checkbox`</span></span></dt>
+<dd><p>Defines whether standalone SPM
+integration is enabled.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`mia_config_path_choice`</span></span></dt>
+<dd><p>Path for the configuration directory.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`projects_path_choice`</span></span></dt>
+<dd><p>Path for the projects directory.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">`check_box_mia`,</span> <span class="pre">`check_box_mri_conv`,</span> <span class="pre">`check_box_config`,</span></span></dt>
+<dd><p><cite>check_box_pkgs</cite>: GUI elements for status display.</p>
+</dd></dl>
+
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>- Exception</strong> – If any unexpected issues arise during the directory
+    creation or software installation steps.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.install_matlab_api">
+<span class="sig-name descname"><span class="pre">install_matlab_api</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.install_matlab_api"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.install_matlab_api" title="Link to this definition">¶</a></dt>
+<dd><p>Installs the MATLAB Engine API for Python.</p>
+<p>This method attempts to install the MATLAB Engine API by calling
+<cite>pip install .</cite> in the MATLAB <cite>extern/engines/python</cite> directory.
+It temporarily changes the working directory to execute the
+installation command and then restores the directory.</p>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p><cite>self.matlab_path</cite> must be set to the MATLAB installation path.</p></li>
+<li><p>This method uses <cite>subprocess.check_call()</cite> to run <cite>pip install .</cite>
+for compatibility with virtual environments.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the installation succeeds, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>- FileNotFoundError</strong> – If the MATLAB installation path is invalid.</p></li>
+<li><p><strong>- subprocess.CalledProcessError</strong> – If the installation command fails.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.install_package">
+<span class="sig-name descname"><span class="pre">install_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.install_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.install_package" title="Link to this definition">¶</a></dt>
+<dd><p>Installs or upgrades a Python package using pip.</p>
+<p>This method constructs a pip command to install or upgrade a
+specified package.
+It checks if the current environment is a virtual environment
+and, if not, adds the <cite>–user</cite> flag to the command to install
+the package for the current user.</p>
+<p>The method executes the command using <cite>subprocess.check_call()</cite>
+to ensure that the package is installed or upgraded successfully.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package to be installed or upgraded.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.10)"><strong>subprocess.CalledProcessError</strong></a> – If the pip installation
+    command fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.last_layout">
+<span class="sig-name descname"><span class="pre">last_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.last_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.last_layout" title="Link to this definition">¶</a></dt>
+<dd><p>Sets the final layout for the application window after
+Mia installation.</p>
+<p>This method constructs and sets the final user interface layout after
+the successful installation of Mia.
+It displays information about the installation paths and operating
+mode, along with a command to launch the application.
+Additionally, it provides a “Quit” button for the user to exit
+the window.</p>
+<dl class="simple">
+<dt>The layout includes the following elements:</dt><dd><ul class="simple">
+<li><p>A label confirming that Mia has been installed.</p></li>
+<li><p>Paths for the Mia configuration, project storage
+MRI conversion, and Mia resources.</p></li>
+<li><p>The operating mode used for the installation.</p></li>
+<li><p>Command lines to launch Populse_MIA depending on
+the Python setup.</p></li>
+<li><p>A “Quit” button to close the application.</p></li>
+</ul>
+</dd>
+</dl>
+<p>It ensures that all widgets and layouts are properly added to the
+window, and that the layout is set as the main layout of the window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.make_mrifilemanager_folder">
+<span class="sig-name descname"><span class="pre">make_mrifilemanager_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mri_conv_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.make_mrifilemanager_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.make_mrifilemanager_folder" title="Link to this definition">¶</a></dt>
+<dd><p>Clones the MRI conversion repository into the specified directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mri_conv_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory where the repository will
+be cloned.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if cloning succeeds, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.clone_miaResources">
+<span class="sig-name descname"><span class="pre">clone_miaResources</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">miaresources_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.clone_miaResources"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.clone_miaResources" title="Link to this definition">¶</a></dt>
+<dd><p>Clones the MiaResources repository from GitLab to the
+specified directory.</p>
+<p>This method uses <cite>git clone</cite> to download the MiaResources repository
+from the specified GitLab URL to the given local directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>miaresources_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory where the MiaResources
+repository will be cloned.</p>
+</dd>
+</dl>
+<p>Returns:
+bool: True if cloning succeeds, False otherwise.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.ok_or_abort">
+<span class="sig-name descname"><span class="pre">ok_or_abort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">button</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.ok_or_abort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.ok_or_abort" title="Link to this definition">¶</a></dt>
+<dd><p>Handles the action when the user clicks a button in a message box.</p>
+<p>This method checks the role of the clicked button.
+If the “OK” button is clicked, it sets the <cite>folder_exists_flag</cite>
+to <cite>False</cite>. If any other button is clicked, it sets the
+<cite>folder_exists_flag</cite> to <cite>True</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>button</strong> (<em>QtWidgets.QPushButton</em>) – The button that was clicked</p></li>
+<li><p><strong>box.</strong> (<em>in the message</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Modifies:</dt><dd><dl class="simple">
+<dt>folder_exists_flag (bool): A flag that indicates whether the</dt><dd><p>folder exists based on the user’s
+response to the message box.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.set_new_layout">
+<span class="sig-name descname"><span class="pre">set_new_layout</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.set_new_layout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.set_new_layout" title="Link to this definition">¶</a></dt>
+<dd><p>Changes the layout to show the installation progress.</p>
+<p>This method sets up a temporary layout to display the progress of the
+installation. It includes a label indicating the installation is
+ongoing, and checkboxes for tracking the status of various installation
+steps, such as installing Mia, MRIFileManager, writing the config file,
+and installing Python packages. The layout is then set as the current
+layout for the widget.</p>
+<dl class="simple">
+<dt>Modifies:</dt><dd><p>The layout of the widget to reflect the installation status, with
+labels and checkboxes to indicate progress.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.uninstall_package">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uninstall_package</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">package</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.uninstall_package"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.uninstall_package" title="Link to this definition">¶</a></dt>
+<dd><p>Uninstalls a Python package using pip.</p>
+<p>This method attempts to uninstall a specified package using pip.
+It first tries to use the current Python interpreter
+(<cite>sys.executable</cite>) to uninstall the package. If an exception occurs
+(e.g., if pip is not available for the current interpreter), it falls
+back to using the <cite>pip3</cite> command to uninstall the package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>package</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the Python package to uninstall.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3.10/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.10)"><strong>subprocess.CalledProcessError</strong></a> – If the package uninstall</p></li>
+<li><p><strong>command fails.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.upgrade_soma_capsul">
+<span class="sig-name descname"><span class="pre">upgrade_soma_capsul</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.upgrade_soma_capsul"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.upgrade_soma_capsul" title="Link to this definition">¶</a></dt>
+<dd><p>Upgrades the soma-base, soma-workflow, and capsul packages by cloning
+their latest versions from GitHub and reinstalling them.</p>
+<dl class="simple">
+<dt>This method performs the following steps:</dt><dd><ol class="arabic simple">
+<li><p>Creates a temporary directory to store the cloned repositories.</p></li>
+<li><p>Uninstalls the current versions of soma-base,
+soma-workflow, and capsul.</p></li>
+<li><p>Clones each package’s repository (soma-base,
+soma-workflow, and capsul) from GitHub.</p></li>
+<li><p>Installs the cloned package using the current Python
+interpreter with <cite>setup.py install</cite>.</p></li>
+</ol>
+</dd>
+</dl>
+<p>If any step fails, an error message is printed, and the process
+continues to the next package. After the upgrades, the method
+returns to the original working directory and deletes the
+temporary directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.10)"><strong>subprocess.CalledProcessError</strong></a> – If any command execution fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.use_matlab_changed">
+<span class="sig-name descname"><span class="pre">use_matlab_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.use_matlab_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.use_matlab_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Toggles the state of MATLAB-related options based on the ‘use_matlab’
+checkbox. When unchecked, all MATLAB and SPM options are disabled.</p>
+<p>Called when the use_matlab checkbox is changed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_changed">
+<span class="sig-name descname"><span class="pre">use_spm_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.use_spm_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the state of SPM-related options based on the ‘use_spm’
+checkbox.</p>
+<p>When unchecked, disables all SPM options, and when checked, enables the
+regular SPM options while disabling the standalone SPM options.</p>
+<p>Called when the use_spm checkbox is changed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_standalone_changed">
+<span class="sig-name descname"><span class="pre">use_spm_standalone_changed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install_widget.html#MIAInstallWidget.use_spm_standalone_changed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_standalone_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the state of standalone SPM-related options based on the
+‘use_spm_standalone’ checkbox.</p>
+<p>When checked, enables the standalone SPM options while disabling
+the regular SPM options, and vice versa.</p>
+<p>Called when the use_spm_standalone checkbox is changed</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

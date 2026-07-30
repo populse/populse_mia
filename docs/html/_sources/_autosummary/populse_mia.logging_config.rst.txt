@@ -1,0 +1,12 @@
+populse\_mia.logging\_config
+============================
+
+.. automodule:: populse_mia.logging_config
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      configure_logging
+   

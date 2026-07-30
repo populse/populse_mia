@@ -12,16 +12,26 @@
 Populse_MIA's from source installation
 ======================================
 
-* Without waiting for the latest version available on `CheeseShop <https://pypi.org/project/populse-mia/>`_, it is possible to install from source the latest development version of populse_mia. This procedure will be rather reserved to the user mode because in developer mode it is possible to update the clone using the ``git pull`` command. In user mode, a version of populse_mia being already installed we recommend to uninstall first popuse_mia, then download the master branch of populse_mia and finally perform the "from source installation": ::
+Without waiting for the latest version available on
+`PyPI <https://pypi.org/project/populse-mia/>`_, it is possible to install
+the latest development version of ``populse_mia`` directly from the source
+code. This procedure is mainly intended for users. In developer mode, the
+local clone can simply be updated using the ``git pull`` command.
 
-    pip3 uninstall populse_mia
+To install ``populse_mia`` from source in user mode, clone the repository,
+install it, and then remove the clone if it is no longer needed: ::
+
     cd /tmp
     git clone https://github.com/populse/populse_mia.git
     cd populse_mia
-    python3 setup.py install --user
+    python3 -m pip install --user --force-reinstall .
     cd ..
     rm -rf populse_mia
 
-|
-
-* It is of course possible to do this for all python packages in the populse project (`capsul <https://github.com/populse/capsul>`_, `mia_processes <https://github.com/populse/mia_processes>`_, `populse_db <https://github.com/populse/populse_db>`_, `soma-workflow <https://github.com/populse//soma-workflow>`_ and `soma-base <https://github.com/populse//soma-base>`_).
+The same procedure can be used for the other Python packages in the Populse
+project, including
+`capsul <https://github.com/populse/capsul>`_,
+`mia_processes <https://github.com/populse/mia_processes>`_,
+`populse_db <https://github.com/populse/populse_db>`_,
+`soma-workflow <https://github.com/populse/soma-workflow>`_, and
+`soma-base <https://github.com/populse/soma-base>`_.

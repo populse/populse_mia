@@ -13,6 +13,8 @@
    cli_args
    data_manager
    info
+   install
+   logging_config
    main
    software_properties
    sources_images
