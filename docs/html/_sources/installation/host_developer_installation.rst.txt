@@ -23,7 +23,7 @@ Installation
 
 **Installation by cloning the source codes**
 
-`populse_mia <https://github.com/populse/populse_mia>`__ sources can be found on gihub.
+`populse_mia <https://github.com/populse/populse_mia>`__ sources can be found on github.
 
 To use the whole populse project in developer mode on host (and have the latest versions available), it will be necessary to clone all this projects:
     |   - `populse_mia <https://github.com/populse/populse_mia>`__

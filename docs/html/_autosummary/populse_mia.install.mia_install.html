@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
+    <script src="../_static/documentation_options.js?v=907353be"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.install.mia_install</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <section id="module-populse_mia.install.mia_install">
+<span id="populse-mia-install-mia-install"></span><h1>populse_mia.install.mia_install<a class="headerlink" href="#module-populse_mia.install.mia_install" title="Link to this heading">¶</a></h1>
+<p>Initialize the Populse MIA installation environment.</p>
+<p>This module provides the first stage of the Populse MIA installation process.
+It verifies that the Python packages required by the installer are available,
+installs any missing dependencies, and then launches the graphical installer.</p>
+<p>The module is intended to run only in user mode.</p>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#populse_mia.install.mia_install.install_and_import" title="populse_mia.install.mia_install.install_and_import"><code class="xref py py-obj docutils literal notranslate"><span class="pre">install_and_import</span></code></a>(module_name)</p></td>
+<td><p>Ensure that a Python module is available.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#populse_mia.install.mia_install.run_installer" title="populse_mia.install.mia_install.run_installer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_installer</span></code></a>()</p></td>
+<td><p>Launch the Populse Mia installation wizard.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install.install_and_import">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.install.mia_install.</span></span><span class="sig-name descname"><span class="pre">install_and_import</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install.html#install_and_import"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install.install_and_import" title="Link to this definition">¶</a></dt>
+<dd><p>Ensure that a Python module is available.</p>
+<p>The function first attempts to import the requested module. If it is not
+installed, it installs the corresponding package using <code class="docutils literal notranslate"><span class="pre">pip</span></code> and retries
+the import.</p>
+<p>When executed inside a virtual environment, the package is installed into
+that environment. Otherwise, the installation is performed with the
+<code class="docutils literal notranslate"><span class="pre">--user</span></code> option.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>module_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the package to install.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3.10/library/subprocess.html#subprocess.CalledProcessError" title="(in Python v3.10)"><strong>subprocess.CalledProcessError</strong></a> – If the package installation fails.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ImportError" title="(in Python v3.10)"><strong>ImportError</strong></a> – If the module cannot be imported after installation.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Some package names differ from their import names. For example,
+<code class="docutils literal notranslate"><span class="pre">pyyaml</span></code> is installed from PyPI but imported as <code class="docutils literal notranslate"><span class="pre">yaml</span></code>.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="populse_mia.install.mia_install.run_installer">
+<span class="sig-prename descclassname"><span class="pre">populse_mia.install.mia_install.</span></span><span class="sig-name descname"><span class="pre">run_installer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/install/mia_install.html#run_installer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.install.mia_install.run_installer" title="Link to this definition">¶</a></dt>
+<dd><p>Launch the Populse Mia installation wizard.</p>
+<p>This function verifies that all Python packages required by the installer
+are available. Missing packages are installed automatically whenever
+possible. Once the installation environment has been validated, the
+graphical installation wizard is created and displayed.</p>
+<p>If a required dependency cannot be imported after installation, the
+process terminates with an error message describing how to retry the
+installation.</p>
+</dd></dl>
+
+</section>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>

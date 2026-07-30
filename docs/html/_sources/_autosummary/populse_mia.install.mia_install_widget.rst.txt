@@ -1,0 +1,12 @@
+populse\_mia.install.mia\_install\_widget
+=========================================
+
+.. automodule:: populse_mia.install.mia_install_widget
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      MIAInstallWidget
+   

@@ -9,4 +9,5 @@ populse\_mia.cli\_args
    .. autosummary::
    
       parse_args
+      positive_int
    

@@ -4,17 +4,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.cli_args &#8212; populse_mia 3.0.0-dev+fa16f83b documentation</title>
+    <title>populse_mia.cli_args &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=fce32b03" />
-    <script src="../../_static/documentation_options.js?v=f5aceaef"></script>
+    <script src="../../_static/documentation_options.js?v=907353be"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 3.0.0-dev+fa16f83b documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.cli_args</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -45,31 +45,86 @@
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">argparse</span>
 
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;positive_int&quot;</span><span class="p">,</span> <span class="s2">&quot;parse_args&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="positive_int">
+<a class="viewcode-back" href="../../_autosummary/populse_mia.cli_args.html#populse_mia.cli_args.positive_int">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">positive_int</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Convert a string to a strictly positive integer.</span>
+
+<span class="sd">    :param value: String representation of an integer.</span>
+<span class="sd">    :type value: str</span>
+
+<span class="sd">    :returns: The converted integer.</span>
+<span class="sd">    :rtype: int</span>
+
+<span class="sd">    :raises argparse.ArgumentTypeError: If the integer is less than 1.</span>
+<span class="sd">    :raises ValueError: If *value* cannot be converted to an integer.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentTypeError</span><span class="p">(</span><span class="s2">&quot;must be greater than or equal to 1&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">value</span></div>
+
+
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../_autosummary/populse_mia.cli_args.html#populse_mia.cli_args.parse_args">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parse command-line arguments for the Mia application.</span>
+<span class="sd">    Parse the command-line arguments for the Populse Mia application.</span>
 
-<span class="sd">    This function configures and parses command-line arguments for launching</span>
-<span class="sd">    the Mia application.</span>
-
-<span class="sd">    :returns: Parsed command-line arguments containing:</span>
-
-<span class="sd">        - multi_instance (bool): Whether multiple instances of the application</span>
-<span class="sd">          can be launched simultaneously (default: False).</span>
+<span class="sd">    :returns: The parsed command-line arguments.</span>
 <span class="sd">    :rtype: argparse.Namespace</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Populse Mia Application Entry Point.&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Launch the Populse MIA application.&quot;</span>
     <span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
-        <span class="s2">&quot;--multi_instance&quot;</span><span class="p">,</span>
-        <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Set the value of multi_instance.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-ll&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--log-level&quot;</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;DEBUG&quot;</span><span class="p">,</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">,</span> <span class="s2">&quot;ERROR&quot;</span><span class="p">,</span> <span class="s2">&quot;CRITICAL&quot;</span><span class="p">],</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Logging level (default: INFO).&quot;</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-mi&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--multi-instance&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Allow multiple instances of Populse MIA to run simultaneously. &quot;</span>
+            <span class="s2">&quot;By default, only one instance is allowed.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-lis&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--log-in-stdout&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Write log messages to stdout instead of a log file.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-klf&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--keep-log-files&quot;</span><span class="p">,</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">positive_int</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;N&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Number of log files to retain &quot;</span> <span class="s2">&quot;(default: </span><span class="si">%(default)s</span><span class="s2">).&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--install&quot;</span><span class="p">,</span>
+        <span class="n">action</span><span class="o">=</span><span class="s2">&quot;store_true&quot;</span><span class="p">,</span>
+        <span class="n">help</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Install the Mia app or try to fix it.&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
+
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 </pre></div>

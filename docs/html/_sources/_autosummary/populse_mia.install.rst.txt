@@ -1,0 +1,14 @@
+populse\_mia.install
+====================
+
+.. automodule:: populse_mia.install
+
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   mia_install
+   mia_install_widget

@@ -1,0 +1,13 @@
+populse\_mia.install.mia\_install
+=================================
+
+.. automodule:: populse_mia.install.mia_install
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      install_and_import
+      run_installer
+   

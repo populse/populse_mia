@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
+    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+      <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
+          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+        <h2 class="heading"><span>populse_mia.install.mia_install</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="Top">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content" role="main">
+        
+        
+  <h1>Source code for populse_mia.install.mia_install</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Initialize the Populse MIA installation environment.</span>
+
+<span class="sd">This module provides the first stage of the Populse MIA installation process.</span>
+<span class="sd">It verifies that the Python packages required by the installer are available,</span>
+<span class="sd">installs any missing dependencies, and then launches the graphical installer.</span>
+
+<span class="sd">The module is intended to run only in user mode.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">###############################################################################</span>
+<span class="c1"># Populse_mia - Copyright (C) IRMaGe/CEA, 2018</span>
+<span class="c1"># Distributed under the terms of the CeCILL license, as published by</span>
+<span class="c1"># the CEA-CNRS-INRIA. Refer to the LICENSE file or to</span>
+<span class="c1"># http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.html</span>
+<span class="c1"># for details.</span>
+<span class="c1">###############################################################################</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+
+<span class="c1"># We use this module only in user mode.</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;MIA_DEV_MODE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="install_and_import">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install.html#populse_mia.install.mia_install.install_and_import">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">install_and_import</span><span class="p">(</span><span class="n">module_name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ensure that a Python module is available.</span>
+
+<span class="sd">    The function first attempts to import the requested module. If it is not</span>
+<span class="sd">    installed, it installs the corresponding package using ``pip`` and retries</span>
+<span class="sd">    the import.</span>
+
+<span class="sd">    When executed inside a virtual environment, the package is installed into</span>
+<span class="sd">    that environment. Otherwise, the installation is performed with the</span>
+<span class="sd">    ``--user`` option.</span>
+
+<span class="sd">    :param module_name: Name of the package to install.</span>
+<span class="sd">    :type module_name: str</span>
+
+<span class="sd">    :raises subprocess.CalledProcessError: If the package installation fails.</span>
+<span class="sd">    :raises ImportError: If the module cannot be imported after installation.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Some package names differ from their import names. For example,</span>
+<span class="sd">        ``pyyaml`` is installed from PyPI but imported as ``yaml``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">import_name</span> <span class="o">=</span> <span class="s2">&quot;yaml&quot;</span> <span class="k">if</span> <span class="n">module_name</span> <span class="o">==</span> <span class="s2">&quot;pyyaml&quot;</span> <span class="k">else</span> <span class="n">module_name</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try to import the module</span>
+        <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">import_name</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># Module not found, install it</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2"> not found. Installing...&quot;</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+            <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;pip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;install&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="c1"># Check if running in a virtual environment</span>
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">prefix</span> <span class="o">==</span> <span class="n">sys</span><span class="o">.</span><span class="n">base_prefix</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--user&quot;</span><span class="p">)</span>
+
+        <span class="n">command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Try to import the module again after installation</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">import_name</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Unable to import &#39;</span><span class="si">{</span><span class="n">import_name</span><span class="si">}</span><span class="s2">&#39; after installing &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">&#39;.&quot;</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
+
+
+
+<div class="viewcode-block" id="run_installer">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install.html#populse_mia.install.mia_install.run_installer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">run_installer</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Launch the Populse Mia installation wizard.</span>
+
+<span class="sd">    This function verifies that all Python packages required by the installer</span>
+<span class="sd">    are available. Missing packages are installed automatically whenever</span>
+<span class="sd">    possible. Once the installation environment has been validated, the</span>
+<span class="sd">    graphical installation wizard is created and displayed.</span>
+
+<span class="sd">    If a required dependency cannot be imported after installation, the</span>
+<span class="sd">    process terminates with an error message describing how to retry the</span>
+<span class="sd">    installation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Please wait, installation in progress...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Please wait, installation in progress...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># List of required packages</span>
+    <span class="n">packages</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PyQt5&quot;</span><span class="p">,</span> <span class="s2">&quot;pyyaml&quot;</span><span class="p">,</span> <span class="s2">&quot;packaging&quot;</span><span class="p">,</span> <span class="s2">&quot;cryptography&quot;</span><span class="p">)</span>
+
+    <span class="c1"># We start by checking whether the packages needed for the installation are</span>
+    <span class="c1"># available; if they aren&#39;t, we try to install them...</span>
+    <span class="k">for</span> <span class="n">package</span> <span class="ow">in</span> <span class="n">packages</span><span class="p">:</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">install_and_import</span><span class="p">(</span><span class="n">package</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to install </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">. Please check your &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;pip installation.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Could not import </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> after installation. &quot;</span>
+                <span class="s2">&quot;Please check compatibility or try reinstalling manually.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="c1"># Clear specific packages from sys.modules to avoid conflicts</span>
+    <span class="n">modules_to_clear</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;yaml&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;packaging&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;cryptography&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;PyQt5&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">modules_to_clear</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># FIXME: Do we really need to import the following three modules here?</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">cryptography</span>  <span class="c1"># noqa: F401</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">packaging</span>  <span class="c1"># noqa: F401</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>  <span class="c1"># noqa: F401</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtWidgets</span>
+
+        <span class="c1"># Import MIAInstallWidget after confirming dependencies</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.mia_install_widget</span><span class="w"> </span><span class="kn">import</span> <span class="n">MIAInstallWidget</span>
+
+    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">...</span><span class="se">\n\n</span><span class="s2">Python package environment was not correctly &quot;</span>
+            <span class="s2">&quot;updated!</span><span class="se">\n\n</span><span class="s2">Please retry by running:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    python3 -m populse_mia -i</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;If the issue persists, try manually installing the problematic &quot;</span>
+            <span class="s2">&quot;module.</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Initialize and display Mia installation widget</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">mia_install_widget</span> <span class="o">=</span> <span class="n">MIAInstallWidget</span><span class="p">()</span>
+    <span class="c1"># Center widget on screen</span>
+    <span class="n">frame_gm</span> <span class="o">=</span> <span class="n">mia_install_widget</span><span class="o">.</span><span class="n">frameGeometry</span><span class="p">()</span>
+    <span class="n">screen</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenNumber</span><span class="p">(</span>
+        <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">center_point</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">desktop</span><span class="p">()</span><span class="o">.</span><span class="n">screenGeometry</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">frame_gm</span><span class="o">.</span><span class="n">moveCenter</span><span class="p">(</span><span class="n">center_point</span><span class="p">)</span>
+    <span class="n">mia_install_widget</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">frame_gm</span><span class="o">.</span><span class="n">topLeft</span><span class="p">())</span>
+    <span class="n">mia_install_widget</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span></div>
+
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="Bottom">
+      
+        <p>
+        <a class="uplink" href="../../../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2022, populse.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    </div>
+  </body>
+</html>
