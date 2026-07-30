@@ -38,15 +38,16 @@ if __name__ == "__main__":
             keep_log_files=args.keep_log_files,
             log_level=args.log_level,
         )
+        logger.info("Python version: %s", sys.version)
+        logger.info("Python executable: %s", sys.executable)
 
         if args.install:
             run_installer()
             sys.exit(0)
 
-        print("Starting Populse Mia...")
-        logger.info("Starting Populse Mia...")
-        logger.info("Python version: %s", sys.version)
-        logger.info("Python executable: %s", sys.executable)
+        msg = "Starting Populse Mia..."
+        print(msg)
+        logger.info(msg)
         # Print the multi_instance argument value
         logger.info(f"--multi_instance is set to: {args.multi_instance}")
         main(args)

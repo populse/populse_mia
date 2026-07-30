@@ -1,5 +1,5 @@
 """
-Docstring to write ...
+The module covering the installation and repair attempts for Mia in user mode.
 """
 
 ###############################################################################

@@ -25,6 +25,8 @@ import sys
 # We use this module only in user mode.
 os.environ["MIA_DEV_MODE"] = "0"
 
+__all__ = ["install_and_import", "run_installer"]
+
 logger = logging.getLogger(__name__)
 
 
@@ -59,7 +61,7 @@ def install_and_import(module_name):
 
     except ImportError:
         # Module not found, install it
-        print(f"{module_name} not found. Installing...")
+        logger.info(f"{module_name} not found. Installing...")
         command = [
             sys.executable,
             "-m",
@@ -98,8 +100,9 @@ def run_installer():
     process terminates with an error message describing how to retry the
     installation.
     """
-    print("Please wait, installation in progress...\n")
-    logger.info("Please wait, installation in progress...\n")
+    msg = "Please wait, installation in progress...\n"
+    print(msg)
+    logger.info(msg)
     # List of required packages
     packages = ("PyQt5", "pyyaml", "packaging", "cryptography")
 
@@ -111,15 +114,15 @@ def run_installer():
             install_and_import(package)
 
         except subprocess.CalledProcessError:
-            print(
-                f"Failed to install {package}. Please check your "
-                f"pip installation."
+            logger.warning(
+                f"Failed to install {package}. Please check your pip "
+                f"installation."
             )
 
         except ImportError:
-            print(
-                f"Could not import {package} after installation. "
-                "Please check compatibility or try reinstalling manually."
+            logger.warning(
+                f"Could not import {package} after installation. Please "
+                f"check compatibility or try reinstalling manually."
             )
 
     # Clear specific packages from sys.modules to avoid conflicts
@@ -168,3 +171,6 @@ def run_installer():
     mia_install_widget.move(frame_gm.topLeft())
     mia_install_widget.show()
     app.exec()
+    msg = "End of the installation process...\n"
+    print(msg)
+    logger.info(msg)

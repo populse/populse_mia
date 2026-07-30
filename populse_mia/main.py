@@ -440,12 +440,13 @@ def qt_message_handler(msg_type, context, message):
 if __name__ == "__main__":
 
     args = parse_args()
-
     configure_logging(
         log_in_stdout=args.log_in_stdout,
         keep_log_files=args.keep_log_files,
         log_level=args.log_level,
     )
+    logger.info("Python version: %s", sys.version)
+    logger.info("Python executable: %s", sys.executable)
 
     if args.install:
         msg = (
@@ -460,8 +461,6 @@ if __name__ == "__main__":
     msg = "Starting Populse Mia..."
     print(msg)
     logger.info(msg)
-    logger.info("Python version: %s", sys.version)
-    logger.info("Python executable: %s", sys.executable)
     # Print the multi_instance argument value
     logger.info(f"--multi_instance is set to: {args.multi_instance}")
     # This will only be executed when this module is run directly
