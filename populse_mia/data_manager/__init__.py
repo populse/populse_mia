@@ -251,13 +251,13 @@ COLLECTION_HISTORY = "history"
 FIELD_ATTRIBUTES_COLLECTION = "mia_field_attributes"
 
 # Tag origins
-#: Tag origin indicating the tag is a built-in MIA tag.
+#: Tag origin indicating the tag is a built-in Mia tag.
 TAG_ORIGIN_BUILTIN = "builtin"
 
 #: Tag origin indicating the tag was created by the user.
 TAG_ORIGIN_USER = "user"
 
-# MIA tags
+# Mia tags
 #: Tag name for the file checksum, used to detect file modifications.
 TAG_CHECKSUM = "Checksum"
 

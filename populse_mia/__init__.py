@@ -1,5 +1,5 @@
 """
-MIA (Multiparametric Image Analysis) is a comprehensive image processing
+Mia (Multiparametric Image Analysis) is a comprehensive image processing
 environment primarily designed for the analysis and visualization of large
 MRI datasets.
 
@@ -12,7 +12,7 @@ processing pipelines are often distributed across various heterogeneous
 toolboxes, developed either in-house or by other researchers, further
 increasing the complexity of manually invoking these modules.
 
-MIA (populse_mia) aims to simplify complex data processing by providing
+Mia (populse_mia) aims to simplify complex data processing by providing
 intuitive tools that define inputs and outputs at a conceptual level. It
 organizes data based on their roles in an analysis project, such
 as “scan type,” “subject,” or “subject group,” making it easier to structure

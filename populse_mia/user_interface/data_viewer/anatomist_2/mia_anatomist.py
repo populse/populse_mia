@@ -52,7 +52,7 @@ class MiaViewer(DataViewer):
     to visualize and interact with medical imaging data through the PyAnatomist
     visualization library.
 
-    :class:`MIA data viewer
+    :class:`Mia data viewer
            <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>`
            implementation based on
            `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_

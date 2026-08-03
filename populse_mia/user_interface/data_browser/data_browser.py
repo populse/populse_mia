@@ -182,7 +182,7 @@ class DataBrowser(QWidget):
         self.open_filter_action = QAction(
             "Open filter", self, shortcut="Ctrl+F"
         )
-        # Initialize core MIA functional components
+        # Initialize core Mia functional components
         # Quick search functionality
         self.search_bar = RapidSearch(self)
         # Compact data viewer component

@@ -1649,7 +1649,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Configure and return a CapsulEngine for the current pipeline.
 
-        Retrieves a CapsulEngine instance from the MIA configuration and sets
+        Retrieves a CapsulEngine instance from the Mia configuration and sets
         up the study configuration with project-specific directories. If the
         current pipeline has completion attributes, they are preserved during
         the engine setup process.

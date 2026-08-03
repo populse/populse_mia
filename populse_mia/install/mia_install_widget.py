@@ -41,46 +41,46 @@ class MIAInstallWidget(QtWidgets.QWidget):
     Contains:
         Methods:
             - _create_info_button: Return a circular information button with
-                the given tooltip.
+              the given tooltip.
             - browse_matlab: Opens a file dialog for the user to select a
-                MATLAB executable file.
+              MATLAB executable file.
             - browse_matlab_standalone: Opens a directory dialog for the user
-                to select the MATLAB Compile Runtime (MCR) directory.
+              to select the MATLAB Compile Runtime (MCR) directory.
             - browse_mia_config_path: Opens a directory dialog for the user to
-                select a folder for installing the MiA configuration.
+              select a folder for installing the MiA configuration.
             - browse_projects_path: Opens a directory dialog for the user to
-                select a folder to store Mia's projects.
+              select a folder to store Mia's projects.
             - browse_spm: Opens a directory dialog for the user to select the
-                SPM directory.
+              SPM directory.
             - browse_spm_standalone: Opens a directory dialog for the user to
-                select the SPM standalone directory.
+              select the SPM standalone directory.
             - btnstate: Toggles the state of two related buttons based on the
-                text of the clicked button.
+              text of the clicked button.
             - clone_mia_resources: Clones the mia_resources repository from
-                GitLab to the specified directory.
+              GitLab to the specified directory.
             - find_matlab_path: Attempts to find the installation path of
-                MATLAB on the system.
+              MATLAB on the system.
             - install: Manages the installation and configuration of Mia and
-                associated software components.
+              associated software components.
             - install_matlab_api: Installs the MATLAB Engine API for Python.
             - install_package: Installs or upgrades a Python package using pip.
             - last_layout: Sets the final layout for the application window
-                after Mia installation.
+              after Mia installation.
             - make_mrifilemanager_folder: Clones the MRI conversion repository
-                into the specified directory.
+              into the specified directory.
             - ok_or_abort: Handles the action when the user clicks a button in
-                a message box.
+              a message box.
             - set_new_layout: Changes the layout to show the installation
-                progress.
+              progress.
             - uninstall_package: Uninstalls a Python package using pip.
             - upgrade_soma_capsul: Upgrades the soma-base, soma-workflow, and
-                capsul packages by cloning their latest versions from GitHub.
+              capsul packages by cloning their latest versions from GitHub.
             - use_matlab_changed: Toggles the state of MATLAB-related options
-                based on the 'use_matlab' checkbox.
+              based on the 'use_matlab' checkbox.
             - use_spm_changed: Updates the state of SPM-related options based
-                on the 'use_spm' checkbox.
+              on the 'use_spm' checkbox.
             - use_spm_standalone_changed: Updates the state of standalone
-                SPM-related options based on the 'use_spm_standalone' checkbox.
+              SPM-related options based on the 'use_spm_standalone' checkbox.
     """
 
     def __init__(self):
@@ -410,10 +410,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
     def browse_mia_config_path(self):
         """
         Opens a directory dialog for the user to select a folder for
-        installing the MIA configuration.
+        installing the Mia configuration.
 
         This method displays a dialog that allows the user to choose a
-        directory in which the MIA configuration files will be installed.
+        directory in which the Mia configuration files will be installed.
         If a directory is selected, its path is displayed in the
         `mia_config_path_choice` widget.
 
@@ -1190,11 +1190,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         The layout includes the following elements:
             - A label confirming that Mia has been installed.
-            - Paths for the Mia configuration, project storage
-              MRI conversion, and Mia resources.
+            - Paths for the Mia configuration, project storage MRI conversion,
+              and Mia resources.
             - The operating mode used for the installation.
-            - Command lines to launch Populse_MIA depending on
-              the Python setup.
+            - Command lines to launch Mia depending on the Python setup.
             - A "Quit" button to close the application.
 
         It ensures that all widgets and layouts are properly added to the
@@ -1223,7 +1222,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             self.mia_resources_path
         )
         operating_mode_label_text = (
-            "Populse_MIA has been installed with {} " "mode."
+            "MiA has been installed with {} " "mode."
         ).format(self.operating_mode)
         mia_label = QtWidgets.QLabel(mia_label_text)
         projects_label = QtWidgets.QLabel(projects_label_text)

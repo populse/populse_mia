@@ -758,7 +758,7 @@ class TestMIACase(unittest.TestCase):
         """
         Restarts Mia within a unit test.
 
-        Can be used to restart MIA after changing the controller version in
+        Can be used to restart Mia after changing the controller version in
         Mia preferences.
         """
 
@@ -1773,7 +1773,7 @@ class TestMIADataBrowser(TestMIACase):
     @patch("PyQt5.QtWidgets.QMessageBox.exec_", return_value=QMessageBox.Ok)
     def test_mia_preferences(self, mock_qmsgbox):
         """
-        Test the MIA preferences dialog and verify that configuration changes
+        Test the Mia preferences dialog and verify that configuration changes
         are correctly saved or discarded.
 
         The test checks that:
@@ -2231,7 +2231,7 @@ class TestMIADataBrowser(TestMIACase):
         self.assertEqual(self.main_window.project.getName(), "project_8")
         self.assertEqual(
             self.main_window.windowTitle(),
-            "MIA - Multiparametric Image Analysis (Admin mode) - project_8",
+            "Mia - Multiparametric Image Analysis (Admin mode) - project_8",
         )
 
         # Expected document list in both current and initial collections
@@ -4294,7 +4294,7 @@ class TestMIADataBrowser(TestMIACase):
 
             self.assertEqual(
                 self.main_window.windowTitle(),
-                "MIA - Multiparametric Image Analysis "
+                "Mia - Multiparametric Image Analysis "
                 "(Admin mode) - Unnamed project",
             )
 
@@ -7193,7 +7193,7 @@ echo {output}
             config = Config(properties_path=self.properties_path)
             config.set_opened_projects([])
 
-            # Delete the 'filters' folder to make the project non-MIA compliant
+            # Delete the 'filters' folder to make the project non-Mia compliant
             filters_path = os.path.join(test_proj_path, "filters")
             subprocess.run(["rm", "-rf", filters_path], check=False)
 
@@ -12310,7 +12310,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
 class Test_Z_MIAOthers(TestMIACase):
     """
-    Tests for other parts of the MIA software that do not relate much with the
+    Tests for other parts of the Mia software that do not relate much with the
     other classes.
 
     Contains:

@@ -370,7 +370,7 @@ class InstallProcesses(QDialog):
     Dialog for installing Python packages from a folder or zip file.
 
     This widget allows users to browse and select a Python package or zip file
-    containing packages, then install them into Populse_MIA.
+    containing packages, then install them into Mia.
 
     Contains:
 

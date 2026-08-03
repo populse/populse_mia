@@ -99,7 +99,7 @@ LONG_DESCRIPTION = """
 ===============
 populse_mia
 ===============
-[MIA] Multi parametric Image Analysis:
+[Mia] Multi parametric Image Analysis:
 A complete image processing environment mainly targeted at
 the analysis and visualization of large amounts of MRI data
 """

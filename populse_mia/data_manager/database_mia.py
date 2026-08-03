@@ -227,7 +227,7 @@ class DatabaseMIA:
 
 class DatabaseMiaSchema:
     """
-    Provides tools for managing the schema of a MIA database.
+    Provides tools for managing the schema of a Mia database.
 
     This class allows users to manipulate database collections, fields, and
     field attributes under the supervision of populse_db.

@@ -363,7 +363,7 @@ def main(args):
         importlib.import_module("nipype")
 
     except (ImportError, AttributeError) as e:
-        logger.error(f"MIA warning {e.__class__}: {e}")
+        logger.error(f"Mia warning {e.__class__}: {e}")
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
         msg.setWindowTitle("populse_mia -  warning: ImportError!")

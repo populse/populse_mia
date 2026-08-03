@@ -1,7 +1,7 @@
 """
-Initialize the Populse MIA installation environment.
+Initialize the Populse Mia installation environment.
 
-This module provides the first stage of the Populse MIA installation process.
+This module provides the first stage of the Mia installation process.
 It verifies that the Python packages required by the installer are available,
 installs any missing dependencies, and then launches the graphical installer.
 

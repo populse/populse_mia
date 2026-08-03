@@ -168,7 +168,7 @@ class MainWindow(QMainWindow):
                 "sources_images",
             )
         )
-        self.windowName = "MIA - Multiparametric Image Analysis"
+        self.windowName = "Mia - Multiparametric Image Analysis"
         self.projectName = "Unnamed project"
         self.project = project
         self.test = test
@@ -694,7 +694,7 @@ class MainWindow(QMainWindow):
         else:
             logger.warning(
                 "Mri_conv, did not work properly. Current absolute"
-                " path to MRIManager.jar defined in File > MIA Preferences:"
+                " path to MRIManager.jar defined in File > Mia Preferences:"
             )
             logger.warning(f"{config.get_mri_conv_path}")
 
@@ -703,7 +703,7 @@ class MainWindow(QMainWindow):
                     f"Warning: mri_conv did not work properly. The "
                     f"current absolute path to MRIManager.jar doesn't "
                     f"seem to be correctly defined.\nCurrent absolute "
-                    f"path to MRIManager.jar defined in\nFile > MIA "
+                    f"path to MRIManager.jar defined in\nFile > Mia "
                     f"Preferences:\n{config.get_mri_conv_path()}"
                 )
 
@@ -712,7 +712,7 @@ class MainWindow(QMainWindow):
                     f"Warning : mri_conv did not work properly. Please "
                     f"check if the currently installed mri_conv Java "
                     f"ARchive is not corrupted.\nCurrent absolute path "
-                    f"to MRIManager.jar defined in\nFile > MIA "
+                    f"to MRIManager.jar defined in\nFile > Mia "
                     f"Preferences:\n{config.get_mri_conv_path()}"
                 )
 
@@ -1424,7 +1424,7 @@ class MainWindow(QMainWindow):
         self.action_check_database = QAction("Check the whole database", self)
         self.action_see_all_projects = QAction("See all projects", self)
         self.action_project_properties = QAction("Project properties", self)
-        self.action_software_preferences = QAction("MIA preferences", self)
+        self.action_software_preferences = QAction("Mia preferences", self)
         self.action_package_library = QAction("Package library manager", self)
         self.action_open_shell = QAction("Open python shell", self)
         self.action_exit = QAction(
@@ -1592,7 +1592,7 @@ class MainWindow(QMainWindow):
             else:
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
-                msg.setText("The project selected isn't a valid MIA project")
+                msg.setText("The project selected isn't a valid Mia project")
                 msg.setInformativeText(
                     f"The project selected {name} isn't a Mia project"
                     f".\nPlease select a valid one."

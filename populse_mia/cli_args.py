@@ -47,7 +47,7 @@ def parse_args():
     :rtype: argparse.Namespace
     """
     parser = argparse.ArgumentParser(
-        description="Launch the Populse MIA application."
+        description="Launch the Populse Mia application."
     )
     parser.add_argument(
         "-ll",
@@ -62,7 +62,7 @@ def parse_args():
         "--multi-instance",
         action="store_true",
         help=(
-            "Allow multiple instances of Populse MIA to run simultaneously. "
+            "Allow multiple instances of Populse Mia to run simultaneously. "
             "By default, only one instance is allowed."
         ),
     )

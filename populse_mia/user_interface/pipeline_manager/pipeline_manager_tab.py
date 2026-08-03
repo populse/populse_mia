@@ -342,7 +342,7 @@ class PipelineManagerTab(QWidget):
             if not config.isControlV1()
             else NodeController
         )
-        # Set up MIA processing project reference
+        # Set up Mia processing project reference
         ProcessMIA.project = project
 
         # Initialize the scan list from database or provided list
@@ -2331,7 +2331,7 @@ class PipelineManagerTab(QWidget):
             )
             self.msg.setIcon(QMessageBox.Critical)
             yes_button = self.msg.addButton(
-                "Open MIA preferences", QMessageBox.YesRole
+                "Open Mia preferences", QMessageBox.YesRole
             )
             self.msg.addButton(QMessageBox.Ok)
             self.msg.exec()
@@ -2773,7 +2773,7 @@ class PipelineManagerTab(QWidget):
                     self.msg.setIcon(QMessageBox.Critical)
 
                 yes_button = self.msg.addButton(
-                    "Open MIA preferences", QMessageBox.YesRole
+                    "Open Mia preferences", QMessageBox.YesRole
                 )
                 self.msg.addButton(QMessageBox.Ok)
                 self.msg.exec()

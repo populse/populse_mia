@@ -2679,7 +2679,7 @@ class PopUpPreferences(QDialog):
             self.msg.setInformativeText(
                 f"To change the controller from "
                 f"{'V1' if config.isControlV1() else 'V2'} to "
-                f"{'V2' if config.isControlV1() else 'V1'}, MIA must be "
+                f"{'V2' if config.isControlV1() else 'V1'}, Mia must be "
                 f"restarted. Would you like to plan this change for next "
                 f"start-up?"
             )
@@ -3256,7 +3256,7 @@ class PopUpPreferences(QDialog):
         Capsul engine edition.
 
         This method is used when user hit the Edit CAPSUL config button
-        (File > MIA preferences > Pipeline tab).
+        (File > Mia preferences > Pipeline tab).
         """
 
         # Validate the current Mia config first
@@ -3512,7 +3512,7 @@ class PopUpPreferences(QDialog):
             min(max(self.max_thumbnails_box.value(), 1), 15)
         )
         config.set_max_projects(min(max(self.max_projects_box.value(), 1), 20))
-        self.main_window.windowName = "MIA - Multiparametric Image Analysis"
+        self.main_window.windowName = "Mia - Multiparametric Image Analysis"
 
         if self.admin_mode_checkbox.isChecked():
             config.set_user_mode(False)
@@ -3597,7 +3597,7 @@ class PopUpPreferences(QDialog):
     def setup_ui(self):
         """Set up the user interface components."""
         self.setObjectName("Dialog")
-        self.setWindowTitle("MIA preferences")
+        self.setWindowTitle("Mia preferences")
         _translate = QtCore.QCoreApplication.translate
         self.tab_widget = QTabWidget(self)
         self.tab_widget.setEnabled(True)
@@ -5005,7 +5005,7 @@ class PopUpRemoveScan(QDialog):
 
 class PopUpRemoveTag(QDialog):
     """
-    Dialog for removing user-defined tags from a Populse MIA project.
+    Dialog for removing user-defined tags from a Populse Mia project.
 
     Allows users to select and remove custom tags from the project's database.
 
