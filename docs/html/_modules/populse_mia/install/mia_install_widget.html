@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.install.mia_install_widget &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <title>populse_mia.install.mia_install_widget &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
+    <script src="../../../_static/documentation_options.js?v=392872ff"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.install.mia_install_widget</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -75,46 +75,46 @@
 <span class="sd">    Contains:</span>
 <span class="sd">        Methods:</span>
 <span class="sd">            - _create_info_button: Return a circular information button with</span>
-<span class="sd">                the given tooltip.</span>
+<span class="sd">              the given tooltip.</span>
 <span class="sd">            - browse_matlab: Opens a file dialog for the user to select a</span>
-<span class="sd">                MATLAB executable file.</span>
+<span class="sd">              MATLAB executable file.</span>
 <span class="sd">            - browse_matlab_standalone: Opens a directory dialog for the user</span>
-<span class="sd">                to select the MATLAB Compile Runtime (MCR) directory.</span>
+<span class="sd">              to select the MATLAB Compile Runtime (MCR) directory.</span>
 <span class="sd">            - browse_mia_config_path: Opens a directory dialog for the user to</span>
-<span class="sd">                select a folder for installing the MiA configuration.</span>
+<span class="sd">              select a folder for installing the MiA configuration.</span>
 <span class="sd">            - browse_projects_path: Opens a directory dialog for the user to</span>
-<span class="sd">                select a folder to store Mia&#39;s projects.</span>
+<span class="sd">              select a folder to store Mia&#39;s projects.</span>
 <span class="sd">            - browse_spm: Opens a directory dialog for the user to select the</span>
-<span class="sd">                SPM directory.</span>
+<span class="sd">              SPM directory.</span>
 <span class="sd">            - browse_spm_standalone: Opens a directory dialog for the user to</span>
-<span class="sd">                select the SPM standalone directory.</span>
+<span class="sd">              select the SPM standalone directory.</span>
 <span class="sd">            - btnstate: Toggles the state of two related buttons based on the</span>
-<span class="sd">                text of the clicked button.</span>
+<span class="sd">              text of the clicked button.</span>
 <span class="sd">            - clone_mia_resources: Clones the mia_resources repository from</span>
-<span class="sd">                GitLab to the specified directory.</span>
+<span class="sd">              GitLab to the specified directory.</span>
 <span class="sd">            - find_matlab_path: Attempts to find the installation path of</span>
-<span class="sd">                MATLAB on the system.</span>
+<span class="sd">              MATLAB on the system.</span>
 <span class="sd">            - install: Manages the installation and configuration of Mia and</span>
-<span class="sd">                associated software components.</span>
+<span class="sd">              associated software components.</span>
 <span class="sd">            - install_matlab_api: Installs the MATLAB Engine API for Python.</span>
 <span class="sd">            - install_package: Installs or upgrades a Python package using pip.</span>
 <span class="sd">            - last_layout: Sets the final layout for the application window</span>
-<span class="sd">                after Mia installation.</span>
+<span class="sd">              after Mia installation.</span>
 <span class="sd">            - make_mrifilemanager_folder: Clones the MRI conversion repository</span>
-<span class="sd">                into the specified directory.</span>
+<span class="sd">              into the specified directory.</span>
 <span class="sd">            - ok_or_abort: Handles the action when the user clicks a button in</span>
-<span class="sd">                a message box.</span>
+<span class="sd">              a message box.</span>
 <span class="sd">            - set_new_layout: Changes the layout to show the installation</span>
-<span class="sd">                progress.</span>
+<span class="sd">              progress.</span>
 <span class="sd">            - uninstall_package: Uninstalls a Python package using pip.</span>
 <span class="sd">            - upgrade_soma_capsul: Upgrades the soma-base, soma-workflow, and</span>
-<span class="sd">                capsul packages by cloning their latest versions from GitHub.</span>
+<span class="sd">              capsul packages by cloning their latest versions from GitHub.</span>
 <span class="sd">            - use_matlab_changed: Toggles the state of MATLAB-related options</span>
-<span class="sd">                based on the &#39;use_matlab&#39; checkbox.</span>
+<span class="sd">              based on the &#39;use_matlab&#39; checkbox.</span>
 <span class="sd">            - use_spm_changed: Updates the state of SPM-related options based</span>
-<span class="sd">                on the &#39;use_spm&#39; checkbox.</span>
+<span class="sd">              on the &#39;use_spm&#39; checkbox.</span>
 <span class="sd">            - use_spm_standalone_changed: Updates the state of standalone</span>
-<span class="sd">                SPM-related options based on the &#39;use_spm_standalone&#39; checkbox.</span>
+<span class="sd">              SPM-related options based on the &#39;use_spm_standalone&#39; checkbox.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MIAInstallWidget.__init__">
@@ -458,10 +458,10 @@
     <span class="k">def</span> <span class="nf">browse_mia_config_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select a folder for</span>
-<span class="sd">        installing the MIA configuration.</span>
+<span class="sd">        installing the Mia configuration.</span>
 
 <span class="sd">        This method displays a dialog that allows the user to choose a</span>
-<span class="sd">        directory in which the MIA configuration files will be installed.</span>
+<span class="sd">        directory in which the Mia configuration files will be installed.</span>
 <span class="sd">        If a directory is selected, its path is displayed in the</span>
 <span class="sd">        `mia_config_path_choice` widget.</span>
 
@@ -1268,11 +1268,10 @@
 
 <span class="sd">        The layout includes the following elements:</span>
 <span class="sd">            - A label confirming that Mia has been installed.</span>
-<span class="sd">            - Paths for the Mia configuration, project storage</span>
-<span class="sd">              MRI conversion, and Mia resources.</span>
+<span class="sd">            - Paths for the Mia configuration, project storage MRI conversion,</span>
+<span class="sd">              and Mia resources.</span>
 <span class="sd">            - The operating mode used for the installation.</span>
-<span class="sd">            - Command lines to launch Populse_MIA depending on</span>
-<span class="sd">              the Python setup.</span>
+<span class="sd">            - Command lines to launch Mia depending on the Python setup.</span>
 <span class="sd">            - A &quot;Quit&quot; button to close the application.</span>
 
 <span class="sd">        It ensures that all widgets and layouts are properly added to the</span>
@@ -1301,7 +1300,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">mia_resources_path</span>
         <span class="p">)</span>
         <span class="n">operating_mode_label_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;Populse_MIA has been installed with </span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="s2">&quot;mode.&quot;</span>
+            <span class="s2">&quot;MiA has been installed with </span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="s2">&quot;mode.&quot;</span>
         <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operating_mode</span><span class="p">)</span>
         <span class="n">mia_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">mia_label_text</span><span class="p">)</span>
         <span class="n">projects_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">projects_label_text</span><span class="p">)</span>

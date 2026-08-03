@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
+    <script src="../../../_static/documentation_options.js?v=392872ff"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
@@ -16,7 +16,7 @@
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -3030,7 +3030,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setInformativeText</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;To change the controller from &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;V1&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;V2&#39;</span><span class="si">}</span><span class="s2"> to &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;V2&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;V1&#39;</span><span class="si">}</span><span class="s2">, MIA must be &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;V2&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;V1&#39;</span><span class="si">}</span><span class="s2">, Mia must be &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;restarted. Would you like to plan this change for next &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;start-up?&quot;</span>
             <span class="p">)</span>
@@ -3658,7 +3658,7 @@
 <span class="sd">        Capsul engine edition.</span>
 
 <span class="sd">        This method is used when user hit the Edit CAPSUL config button</span>
-<span class="sd">        (File &gt; MIA preferences &gt; Pipeline tab).</span>
+<span class="sd">        (File &gt; Mia preferences &gt; Pipeline tab).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Validate the current Mia config first</span>
@@ -3929,7 +3929,7 @@
             <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_thumbnails_box</span><span class="o">.</span><span class="n">value</span><span class="p">(),</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">15</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_max_projects</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_projects_box</span><span class="o">.</span><span class="n">value</span><span class="p">(),</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">20</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">=</span> <span class="s2">&quot;MIA - Multiparametric Image Analysis&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">windowName</span> <span class="o">=</span> <span class="s2">&quot;Mia - Multiparametric Image Analysis&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">admin_mode_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="n">config</span><span class="o">.</span><span class="n">set_user_mode</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -4020,7 +4020,7 @@
     <span class="k">def</span> <span class="nf">setup_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up the user interface components.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;Dialog&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;MIA preferences&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia preferences&quot;</span><span class="p">)</span>
         <span class="n">_translate</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_widget</span> <span class="o">=</span> <span class="n">QTabWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_widget</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -5540,7 +5540,7 @@
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpRemoveTag">[docs]</a>
 <span class="k">class</span> <span class="nc">PopUpRemoveTag</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Dialog for removing user-defined tags from a Populse MIA project.</span>
+<span class="sd">    Dialog for removing user-defined tags from a Populse Mia project.</span>
 
 <span class="sd">    Allows users to select and remove custom tags from the project&#39;s database.</span>
 
