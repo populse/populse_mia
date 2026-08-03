@@ -40,110 +40,112 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
     Contains:
         Methods:
-            - browse_matlab
-            - browse_matlab_standalone
-            - browse_mia_config_path
-            - browse_projects_path
-            - browse_spm
-            - browse_spm_standalone
-            - btnstate
-            - clone_mia_resources
-            - find_matlab_path
-            - install
-            - install_matlab_api
-            - install_package
-            - last_layout
-            - make_mrifilemanager_folder
-            - ok_or_abort
-            - set_new_layout
-            - uninstall_package
-            - upgrade_soma_capsul
-            - use_matlab_changed
-            - use_spm_changed
-            - use_spm_standalone_changed
+            - _create_info_button: Return a circular information button with
+                the given tooltip.
+            - browse_matlab: Opens a file dialog for the user to select a
+                MATLAB executable file.
+            - browse_matlab_standalone: Opens a directory dialog for the user
+                to select the MATLAB Compile Runtime (MCR) directory.
+            - browse_mia_config_path: Opens a directory dialog for the user to
+                select a folder for installing the MiA configuration.
+            - browse_projects_path: Opens a directory dialog for the user to
+                select a folder to store Mia's projects.
+            - browse_spm: Opens a directory dialog for the user to select the
+                SPM directory.
+            - browse_spm_standalone: Opens a directory dialog for the user to
+                select the SPM standalone directory.
+            - btnstate: Toggles the state of two related buttons based on the
+                text of the clicked button.
+            - clone_mia_resources: Clones the mia_resources repository from
+                GitLab to the specified directory.
+            - find_matlab_path: Attempts to find the installation path of
+                MATLAB on the system.
+            - install: Manages the installation and configuration of Mia and
+                associated software components.
+            - install_matlab_api: Installs the MATLAB Engine API for Python.
+            - install_package: Installs or upgrades a Python package using pip.
+            - last_layout: Sets the final layout for the application window
+                after Mia installation.
+            - make_mrifilemanager_folder: Clones the MRI conversion repository
+                into the specified directory.
+            - ok_or_abort: Handles the action when the user clicks a button in
+                a message box.
+            - set_new_layout: Changes the layout to show the installation
+                progress.
+            - uninstall_package: Uninstalls a Python package using pip.
+            - upgrade_soma_capsul: Upgrades the soma-base, soma-workflow, and
+                capsul packages by cloning their latest versions from GitHub.
+            - use_matlab_changed: Toggles the state of MATLAB-related options
+                based on the 'use_matlab' checkbox.
+            - use_spm_changed: Updates the state of SPM-related options based
+                on the 'use_spm' checkbox.
+            - use_spm_standalone_changed: Updates the state of standalone
+                SPM-related options based on the 'use_spm_standalone' checkbox.
     """
 
     def __init__(self):
-        """Constructor"""
+        """Initialize the installation dialog.
+
+        Build the user interface, initialize installation parameters and
+        default paths, detect the execution environment, and configure the
+        Matlab and SPM options according to the software available on the
+        system.
+        """
         super().__init__()
-        # Check if running in a virtual environment
+        # Internal state
         self.is_venv = sys.prefix != sys.base_prefix
         self.matlab_path = ""
         self.top_label_font = QtGui.QFont()
         self.top_label_font.setBold(True)
-        self.middle_label_text = (
-            "Please select a configuration installation "
-            "path, a folder to store the projects and "
-            "the paths to run Matlab and SPM.\nThe "
-            "paths to Matlab and SPM can then be "
-            "modified in the Mia preferences.\n\n"
+        # Introduction
+        self.middle_label = QtWidgets.QLabel(
+            "Please select a configuration installation path, a folder "
+            "to store the projects and the paths to run Matlab and SPM.\n"
+            "The paths to Matlab and SPM can later be modified in the "
+            "Mia preferences.\n"
         )
-        self.middle_label = QtWidgets.QLabel(self.middle_label_text)
-        h_box_middle_label = QtWidgets.QHBoxLayout()
-        h_box_middle_label.addStretch(1)
-        h_box_middle_label.addWidget(self.middle_label)
-        h_box_middle_label.addStretch(1)
-        # Groupbox
-        self.groupbox = QtWidgets.QGroupBox()
+        middle_layout = QtWidgets.QHBoxLayout()
+        middle_layout.addStretch()
+        middle_layout.addWidget(self.middle_label)
+        middle_layout.addStretch()
+        # Configuration path
         self.mia_config_path_label = QtWidgets.QLabel(
             "Mia configuration path:"
         )
         self.mia_config_path_choice = QtWidgets.QLineEdit(
-            os.path.join(os.path.expanduser("~"), ".populse_mia")
+            str(Path.home() / ".populse_mia")
         )
         self.mia_config_path_browse = QtWidgets.QPushButton("Browse")
         self.mia_config_path_browse.clicked.connect(
             self.browse_mia_config_path
         )
-        self.mia_config_path_info = QtWidgets.QPushButton(" ? ")
-        self.mia_config_path_info.setFixedHeight(27)
-        self.mia_config_path_info.setFixedWidth(27)
-        self.mia_config_path_info.setStyleSheet(
-            "background-color:rgb(150,150,200)"
+        self.mia_config_path_info = self._create_info_button(
+            "Three folders will be created in the selected folder:\n"
+            "    - usr/properties: Containing Mia's configuration and "
+            "                      resources files.\n"
+            "    - usr/processes: Containing personal pipelines and bricks.\n"
+            "    - usr/MRIFileManager: Containing the data converter used in "
+            "                          Mia.\n"
+            "    - usr/mia_resources: Containing reference data (ROI,"
+            "                         templates, etc.).\n"
         )
-        rect = QtCore.QRect(4, 4, 17, 17)
-        region = QtGui.QRegion(rect, QtGui.QRegion.Ellipse)
-        self.mia_config_path_info.setMask(region)
-        tool_tip_message = (
-            "Three folders will be created in the selected "
-            "folder:\n"
-            "- usr/properties: containing Mia's configuration "
-            "and resources files.\n"
-            "- usr/processes: containing personal pipelines "
-            "and bricks.\n"
-            "- usr/MRIFileManager: containing the data "
-            "converter used in Mia.\n"
-            "- usr/mia_resources: containing reference data "
-            "(ROI, templates, etc.)"
-        )
-        self.mia_config_path_info.setToolTip(tool_tip_message)
-        h_box_mia_config = QtWidgets.QHBoxLayout()
-        h_box_mia_config.addWidget(self.mia_config_path_choice)
-        h_box_mia_config.addWidget(self.mia_config_path_browse)
-        h_box_mia_config.addWidget(self.mia_config_path_info)
-        v_box_mia_config = QtWidgets.QVBoxLayout()
-        v_box_mia_config.addWidget(self.mia_config_path_label)
-        v_box_mia_config.addLayout(h_box_mia_config)
-        projects_path_default = os.path.join(
-            os.path.expanduser("~"), "Documents", "user_mia_projects"
-        )
+        config_row = QtWidgets.QHBoxLayout()
+        config_row.addWidget(self.mia_config_path_choice)
+        config_row.addWidget(self.mia_config_path_browse)
+        config_row.addWidget(self.mia_config_path_info)
+        config_layout = QtWidgets.QVBoxLayout()
+        config_layout.addWidget(self.mia_config_path_label)
+        config_layout.addLayout(config_row)
+        # Projects path
         self.projects_path_label = QtWidgets.QLabel("Mia projects path:")
-        self.projects_path_choice = QtWidgets.QLineEdit(projects_path_default)
+        self.projects_path_choice = QtWidgets.QLineEdit(
+            str(Path.home() / "Documents" / "user_mia_projects")
+        )
         self.projects_path_browse = QtWidgets.QPushButton("Browse")
         self.projects_path_browse.clicked.connect(self.browse_projects_path)
-        self.projects_path_info = QtWidgets.QPushButton(" ? ")
-        self.projects_path_info.setFixedHeight(27)
-        self.projects_path_info.setFixedWidth(27)
-        self.projects_path_info.setStyleSheet(
-            "background-color:" "rgb(150,150,200)"
+        self.projects_path_info = self._create_info_button(
+            'A "projects" folder will be created in this folder.'
         )
-        rect = QtCore.QRect(4, 4, 17, 17)
-        region = QtGui.QRegion(rect, QtGui.QRegion.Ellipse)
-        self.projects_path_info.setMask(region)
-        tool_tip_message = (
-            'A "projects" folder will be created in this ' "specified folder."
-        )
-        self.projects_path_info.setToolTip(tool_tip_message)
         h_box_projects_path = QtWidgets.QHBoxLayout()
         h_box_projects_path.addWidget(self.projects_path_choice)
         h_box_projects_path.addWidget(self.projects_path_browse)
@@ -151,8 +153,9 @@ class MIAInstallWidget(QtWidgets.QWidget):
         v_box_projects_path = QtWidgets.QVBoxLayout()
         v_box_projects_path.addWidget(self.projects_path_label)
         v_box_projects_path.addLayout(h_box_projects_path)
+        self.groupbox = QtWidgets.QGroupBox()
         v_box_paths = QtWidgets.QVBoxLayout()
-        v_box_paths.addLayout(v_box_mia_config)
+        v_box_paths.addLayout(config_layout)
         v_box_paths.addLayout(v_box_projects_path)
         self.groupbox.setLayout(v_box_paths)
         # Installation target groupbox
@@ -160,14 +163,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
             "Installation target:"
         )
         self.casa_target_push_button = QtWidgets.QRadioButton("Casa_Distro")
-        self.casa_target_push_button.toggled.connect(
-            lambda: self.btnstate(self.casa_target_push_button)
-        )
         self.host_target_push_button = QtWidgets.QRadioButton("Host")
         self.host_target_push_button.setChecked(True)
-        self.host_target_push_button.toggled.connect(
-            lambda: self.btnstate(self.host_target_push_button)
-        )
         v_box_install_target = QtWidgets.QVBoxLayout()
         v_box_install_target.addWidget(self.casa_target_push_button)
         v_box_install_target.addWidget(self.host_target_push_button)
@@ -180,15 +177,20 @@ class MIAInstallWidget(QtWidgets.QWidget):
         self.clinical_mode_push_button = QtWidgets.QRadioButton(
             "Clinical mode"
         )
-        self.clinical_mode_push_button.toggled.connect(
-            lambda: self.btnstate(self.clinical_mode_push_button)
-        )
         v_box_clinical_mode = QtWidgets.QVBoxLayout()
         v_box_clinical_mode.addWidget(self.clinical_mode_push_button)
         self.clinical_mode_group_box.setLayout(v_box_clinical_mode)
         h_box_clinical_mode = QtWidgets.QVBoxLayout()
         h_box_clinical_mode.addWidget(self.clinical_mode_group_box)
         h_box_clinical_mode.addStretch(1)
+        # All radio buttons share the same toggled -> btnstate behaviour
+        for button in (
+            self.casa_target_push_button,
+            self.host_target_push_button,
+            self.clinical_mode_push_button,
+        ):
+            button.toggled.connect(lambda _checked, b=button: self.btnstate(b))
+
         # Push buttons
         self.push_button_install = QtWidgets.QPushButton("Install")
         self.push_button_install.clicked.connect(self.install)
@@ -288,34 +290,42 @@ class MIAInstallWidget(QtWidgets.QWidget):
         h_box_matlab_spm.addWidget(self.groupbox_matlab)
         h_box_matlab_spm.addWidget(self.groupbox_spm)
         self.global_layout = QtWidgets.QVBoxLayout()
-        # self.global_layout.addLayout(h_box_top_label)
-        self.global_layout.addLayout(h_box_middle_label)
+        self.global_layout.addLayout(middle_layout)
         self.global_layout.addStretch(1)
         self.global_layout.addLayout(h_box_mode_paths)
         self.global_layout.addLayout(h_box_matlab_spm)
         self.global_layout.addLayout(h_box_buttons)
         self.setLayout(self.global_layout)
-        self.setWindowTitle("MIA installation")
+        self.setWindowTitle("Mia installation")
+        # Setting the checkbox / widget states
+        matlab_widgets = (
+            self.matlab_choice,
+            self.matlab_standalone_choice,
+            self.matlab_label,
+            self.matlab_standalone_label,
+            self.matlab_browse,
+            self.matlab_standalone_browse,
+        )
 
-        # Setting the checkbox values
-        if matlab_path == "":
-            self.matlab_choice.setDisabled(True)
-            self.matlab_standalone_choice.setDisabled(True)
-            self.matlab_label.setDisabled(True)
-            self.matlab_standalone_label.setDisabled(True)
-            self.matlab_browse.setDisabled(True)
-            self.matlab_standalone_browse.setDisabled(True)
-
-        else:
+        if matlab_path:
             self.install_matlab_api()
             self.use_matlab_checkbox.setChecked(True)
 
-        self.spm_choice.setDisabled(True)
-        self.spm_standalone_choice.setDisabled(True)
-        self.spm_label.setDisabled(True)
-        self.spm_standalone_label.setDisabled(True)
-        self.spm_browse.setDisabled(True)
-        self.spm_standalone_browse.setDisabled(True)
+        else:
+
+            for widget in matlab_widgets:
+                widget.setDisabled(True)
+
+        for widget in (
+            self.spm_choice,
+            self.spm_standalone_choice,
+            self.spm_label,
+            self.spm_standalone_label,
+            self.spm_browse,
+            self.spm_standalone_browse,
+        ):
+            widget.setDisabled(True)
+
         self.use_spm_checkbox.setChecked(False)
         self.use_spm_standalone_checkbox.setChecked(False)
         # Signals
@@ -324,6 +334,30 @@ class MIAInstallWidget(QtWidgets.QWidget):
         self.use_spm_standalone_checkbox.stateChanged.connect(
             self.use_spm_standalone_changed
         )
+
+    def _create_info_button(self, tooltip: str) -> QtWidgets.QPushButton:
+        """
+        Return a circular information button with the given tooltip.
+
+        :param tooltip: The tooltip text to display when hovering over the
+            button.
+        :type tooltip: str
+
+        :returns: A QPushButton configured as an information button.
+        :type: QtWidgets.QPushButton
+        """
+
+        button = QtWidgets.QPushButton("?")
+        button.setFixedSize(27, 27)
+        button.setStyleSheet("background-color: rgb(150,150,200)")
+        region = QtGui.QRegion(
+            QtCore.QRect(4, 4, 17, 17),
+            QtGui.QRegion.Ellipse,
+        )
+        button.setMask(region)
+        button.setToolTip(tooltip)
+
+        return button
 
     def browse_matlab(self):
         """
@@ -1281,10 +1315,9 @@ class MIAInstallWidget(QtWidgets.QWidget):
         :type button: QtWidgets.QPushButton
 
         Note:
-            Modifies:
-                - folder_exists_flag (bool): A flag that indicates whether the
-                  folder exists based on the user's response to the message
-                  box.
+            Modifies the folder_exists_flag (bool): A flag that indicates
+            whether the folder exists based on the user's response to the
+            message box.
         """
         role = self.msg.buttonRole(button)
 
@@ -1306,9 +1339,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
         layout for the widget.
 
         Note:
-            Modifies:
-                - The layout of the widget to reflect the installation status,
-                  with labels and checkboxes to indicate progress.
+            Modifies the layout of the widget to reflect the installation
+            status, with labels and checkboxes to indicate progress.
         """
         QtWidgets.QWidget().setLayout(self.global_layout)
         # Setting a new layout
@@ -1430,9 +1462,10 @@ class MIAInstallWidget(QtWidgets.QWidget):
     def use_matlab_changed(self):
         """
         Toggles the state of MATLAB-related options based on the 'use_matlab'
-        checkbox. When unchecked, all MATLAB and SPM options are disabled.
+        checkbox.
 
-        Called when the use_matlab checkbox is changed.
+        When unchecked, all MATLAB and SPM options are disabled. Called when
+        the use_matlab checkbox is changed.
         """
 
         if not self.use_matlab_checkbox.isChecked():
