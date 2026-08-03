@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -47,28 +49,28 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># capsul import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">pipeline_tools</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline</span> <span class="kn">import</span> <span class="n">pipeline_tools</span>
+<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span><span class="p">,</span> <span class="n">ProcessNode</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QCoreApplication</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QCoreApplication</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QInputDialog</span><span class="p">,</span> <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QMessageBox</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
     <span class="n">BRICK_ID</span><span class="p">,</span>
@@ -100,17 +102,17 @@
     <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
     <span class="n">TAG_TYPE</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.database_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatabaseMIA</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.database_mia</span> <span class="kn">import</span> <span class="n">DatabaseMIA</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager.filter</span> <span class="kn">import</span> <span class="n">Filter</span>
+<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">safe_connect</span><span class="p">,</span>
     <span class="n">safe_disconnect</span><span class="p">,</span>
     <span class="n">set_item_data</span><span class="p">,</span>
     <span class="n">verCmp</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_history_inspect</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">data_history_inspect</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;Project&quot;</span><span class="p">,</span>
@@ -121,7 +123,7 @@
 
 <div class="viewcode-block" id="Project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Project</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">Project</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for managing Populse_mia projects and their associated databases.</span>
 
@@ -205,7 +207,7 @@
 
 <div class="viewcode-block" id="Project.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_root_folder</span><span class="p">,</span> <span class="n">new_project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize a Mia project and its associated database.</span>
 
@@ -611,7 +613,7 @@
 
 <div class="viewcode-block" id="Project.add_clinical_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.add_clinical_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
 
 <span class="sd">        :returns: List of clinical tags that were added.</span>
@@ -684,7 +686,7 @@
 
 <div class="viewcode-block" id="Project.cleanup_orphan_bricks">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_bricks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cleanup_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan bricks and their associated files from the database.</span>
 
@@ -735,7 +737,7 @@
 
 <div class="viewcode-block" id="Project.cleanup_orphan_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cleanup_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove orphan histories, their associated bricks, and files from</span>
 <span class="sd">        the database.</span>
@@ -801,7 +803,7 @@
 
 <div class="viewcode-block" id="Project.cleanup_orphan_nonexisting_files">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.cleanup_orphan_nonexisting_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">cleanup_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove database entries for files that are missing on disk.</span>
 
@@ -839,7 +841,7 @@
 
 <div class="viewcode-block" id="Project.del_clinical_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.del_clinical_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">del_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove clinical tags from the project&#39;s current and initial</span>
 <span class="sd">        collections.</span>
@@ -871,7 +873,7 @@
 
 <div class="viewcode-block" id="Project.files_in_project">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.files_in_project">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">files_in_project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">files</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract file and directory names from the input that are within the</span>
 <span class="sd">        project folder.</span>
@@ -928,7 +930,7 @@
 
 <div class="viewcode-block" id="Project.finished_bricks">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.finished_bricks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">finished_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">finished_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">include_done</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve and process finished bricks from workflows and pipelines.</span>
 
@@ -961,7 +963,7 @@
 <span class="sd">                  output values that are within the project directory.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_update_dict</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_update_dict</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Merge two dictionaries by updating the first with the second.</span>
 
@@ -978,7 +980,7 @@
             <span class="n">d1</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">d1</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_collect_outputs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">base_path</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_collect_outputs</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">base_path</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Recursively collects file paths from output values that are</span>
 <span class="sd">            within the project directory.</span>
@@ -1062,7 +1064,7 @@
 
 <div class="viewcode-block" id="Project.get_data_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_data_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_data_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the processing history for the given data file.</span>
 
@@ -1084,7 +1086,7 @@
 
 <div class="viewcode-block" id="Project.getDate">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getDate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
 <span class="sd">        :returns: The date of creation of the project if it&#39;s not `Unnamed`</span>
@@ -1097,7 +1099,7 @@
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_pipeline">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_finished_bricks_in_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a dictionary of finished processes (bricks) from a given</span>
 <span class="sd">        pipeline, including nested pipelines, if any.</span>
@@ -1165,7 +1167,7 @@
 
 <div class="viewcode-block" id="Project.get_finished_bricks_in_workflows">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_finished_bricks_in_workflows">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_finished_bricks_in_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_finished_bricks_in_workflows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return finished Soma-Workflow jobs indexed by their brick UUID.</span>
 
@@ -1194,7 +1196,7 @@
 <span class="sd">                  structured information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">parse_status</span><span class="p">(</span><span class="n">job_st</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">parse_status</span><span class="p">(</span><span class="n">job_st</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Parse a Soma-Workflow job status tuple into structured information.</span>
 
@@ -1309,7 +1311,7 @@
 
 <div class="viewcode-block" id="Project.getFilter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getFilter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_filter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a Filter object from its name.</span>
 
 <span class="sd">        :param target_filter: Filter name.</span>
@@ -1327,7 +1329,7 @@
 
 <div class="viewcode-block" id="Project.getFilterName">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getFilterName">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getFilterName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getFilterName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input box to type the name of the filter to save.</span>
 
@@ -1348,7 +1350,7 @@
 
 <div class="viewcode-block" id="Project.getName">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getName">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
 <span class="sd">        :returns: The name of the project if it&#39;s not `Unnamed` project,</span>
@@ -1361,7 +1363,7 @@
 
 <div class="viewcode-block" id="Project.get_orphan_bricks">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_bricks">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_orphan_bricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bricks</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphan bricks and their associated weak files.</span>
 
@@ -1465,7 +1467,7 @@
 
 <div class="viewcode-block" id="Project.get_orphan_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_history">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_orphan_history</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies orphaned history entries, their associated orphan bricks,</span>
 <span class="sd">        and weak files.</span>
@@ -1572,7 +1574,7 @@
 
 <div class="viewcode-block" id="Project.get_orphan_nonexisting_files">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.get_orphan_nonexisting_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_orphan_nonexisting_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">failed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return filenames that are recorded in the database but missing on disk.</span>
 
@@ -1621,7 +1623,7 @@
 
 <div class="viewcode-block" id="Project.getSortedTag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getSortedTag">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
 <span class="sd">        :returns: Sorted tag of the project if it&#39;s not `Unnamed` project,</span>
@@ -1634,7 +1636,7 @@
 
 <div class="viewcode-block" id="Project.getSortOrder">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.getSortOrder">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
 <span class="sd">        :returns: Sort order of the project if it&#39;s not `Unnamed` project,</span>
@@ -1647,7 +1649,7 @@
 
 <div class="viewcode-block" id="Project.hasUnsavedModifications">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.hasUnsavedModifications">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
 <span class="sd">        :returns: True if the project has pending modifications, False</span>
@@ -1660,7 +1662,7 @@
 
 <div class="viewcode-block" id="Project.init_filters">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.init_filters">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">init_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">init_filters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes project filters by loading them from stored JSON files.</span>
 
@@ -1697,7 +1699,7 @@
 
 <div class="viewcode-block" id="Project.loadProperties">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.loadProperties">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">loadProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">loadProperties</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads the project properties from the &#39;properties.yml&#39; file.</span>
 
@@ -1732,7 +1734,7 @@
 
 <div class="viewcode-block" id="Project.redo">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.redo">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">redo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Redo the last action made by the user on the project.</span>
 
@@ -1946,7 +1948,7 @@
 
 <div class="viewcode-block" id="Project.reput_values">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.reput_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">reput_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">reput_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Re-put the value objects in the database.</span>
 
@@ -1973,7 +1975,7 @@
 
 <div class="viewcode-block" id="Project.saveConfig">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.saveConfig">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">saveConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the changes in the properties file.&quot;&quot;&quot;</span>
 
         <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -1991,7 +1993,7 @@
 
 <div class="viewcode-block" id="Project.save_current_filter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.save_current_filter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_filters</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">save_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">custom_filters</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the current filter.</span>
 
 <span class="sd">        :param custom_filters: The customized filter</span>
@@ -2050,7 +2052,7 @@
 
 <div class="viewcode-block" id="Project.saveModifications">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.saveModifications">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">saveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">saveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save the pending operations of the project (actions still not saved).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2060,7 +2062,7 @@
 
 <div class="viewcode-block" id="Project.setCurrentFilter">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setCurrentFilter">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setCurrentFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_filter</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setCurrentFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_filter</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the current filter of the project.</span>
 
 <span class="sd">        :param new_filter: New Filter object.</span>
@@ -2071,7 +2073,7 @@
 
 <div class="viewcode-block" id="Project.setDate">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setDate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setDate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the date of the project.</span>
 
 <span class="sd">        :param date: New date of the project.</span>
@@ -2082,7 +2084,7 @@
 
 <div class="viewcode-block" id="Project.setName">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setName">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the name of the project if it&#39;s not `Unnamed` project, otherwise</span>
 <span class="sd">        does nothing.</span>
@@ -2095,7 +2097,7 @@
 
 <div class="viewcode-block" id="Project.setSortedTag">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setSortedTag">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sorted tag of the project.</span>
 
 <span class="sd">        :param tag: New sorted tag of the project.</span>
@@ -2109,7 +2111,7 @@
 
 <div class="viewcode-block" id="Project.setSortOrder">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.setSortOrder">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">setSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the sort order of the project.</span>
 
 <span class="sd">        :param order: New sort order of the project (ascending or descending).</span>
@@ -2123,7 +2125,7 @@
 
 <div class="viewcode-block" id="Project.undo">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.undo">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">undo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">table</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Undo the last action made by the user on the project.</span>
 
 <span class="sd">        :param table: Table on which to apply the modifications.</span>
@@ -2304,12 +2306,12 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Getter for _unsavedModifications.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unsavedModifications</span>
 
     <span class="nd">@unsavedModifications</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Modify the window title depending of whether the project has unsaved</span>
 <span class="sd">        modifications or not.</span>
@@ -2339,7 +2341,7 @@
 
 <div class="viewcode-block" id="Project.unsaveModifications">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.unsaveModifications">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">unsaveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">unsaveModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Unsave the pending operations of the project.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2348,7 +2350,7 @@
 
 <div class="viewcode-block" id="Project.update_db_for_paths">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project.update_db_for_paths">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_db_for_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">update_db_for_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update database paths when renaming or loading a project.</span>
 
@@ -2372,7 +2374,7 @@
 <span class="sd">                  data structures</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span><span class="w"> </span><span class="nf">_update_json_data</span><span class="p">(</span>
+        <span class="k">def</span> <span class="nf">_update_json_data</span><span class="p">(</span>
             <span class="n">collection</span><span class="p">,</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">old_path</span><span class="p">,</span> <span class="n">new_path</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>

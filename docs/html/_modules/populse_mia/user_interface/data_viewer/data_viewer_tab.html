@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -40,12 +42,12 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qt_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qt_backend</span> <span class="kn">import</span> <span class="n">Qt</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;DataViewerTab&quot;</span><span class="p">,</span>
@@ -56,7 +58,7 @@
 
 <div class="viewcode-block" id="DataViewerTab">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DataViewerTab</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">DataViewerTab</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A flexible and extensible widget for managing data viewers in a GUI</span>
 <span class="sd">    application.</span>
@@ -85,7 +87,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the DataViewerTab with a reference to the main window.</span>
 
@@ -117,7 +119,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.activate_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.activate_viewer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">activate_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Activate a specific viewer by name.</span>
 
@@ -138,7 +140,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.change_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.change_viewer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">change_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">change_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle viewer change event triggered by the combobox.</span>
 
@@ -152,7 +154,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.clear">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.clear">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up and close all loaded viewers.</span>
 
@@ -168,7 +170,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.closeEvent">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.closeEvent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override close event to ensure proper cleanup.</span>
 
@@ -180,7 +182,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.current_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">current_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">current_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the name of the currently active viewer.</span>
 
@@ -196,7 +198,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.load_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.load_viewer">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">load_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">viewer_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Dynamically load viewers from the data_viewer directory.</span>
 
@@ -255,7 +257,7 @@
 
 <div class="viewcode-block" id="DataViewerTab.set_documents">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.set_documents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Distribute project and document information to the current viewer.</span>
 

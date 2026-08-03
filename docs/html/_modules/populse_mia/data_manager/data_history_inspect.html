@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.data_manager.data_history_inspect &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_history_inspect</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -59,17 +61,17 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">osp</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">traits</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os.path</span> <span class="k">as</span> <span class="nn">osp</span>
+<span class="kn">import</span> <span class="nn">traits.api</span> <span class="k">as</span> <span class="nn">traits</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># capsul import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="n">Pipeline</span><span class="p">,</span> <span class="n">Process</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_EXEC</span><span class="p">,</span>
     <span class="n">BRICK_EXEC_TIME</span><span class="p">,</span>
     <span class="n">BRICK_ID</span><span class="p">,</span>
@@ -102,7 +104,7 @@
 
 <div class="viewcode-block" id="ProtoProcess">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.ProtoProcess">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ProtoProcess</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">ProtoProcess</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A lightweight convenience class that stores a brick database entry along</span>
 <span class="sd">    with additional usage information.</span>
@@ -114,7 +116,7 @@
 
 <div class="viewcode-block" id="ProtoProcess.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.ProtoProcess.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ProtoProcess instance with a brick database entry.</span>
 
@@ -129,7 +131,7 @@
 
 <div class="viewcode-block" id="brick_to_process">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.brick_to_process">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">brick_to_process</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">brick_to_process</span><span class="p">(</span><span class="n">brick</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a brick database entry into a &#39;fake process&#39;.</span>
 
@@ -185,7 +187,7 @@
 
 <div class="viewcode-block" id="data_history_pipeline">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.data_history_pipeline">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">data_history_pipeline</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">data_history_pipeline</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the complete processing history of a file in the database,</span>
 <span class="sd">    formatted as a &quot;fake pipeline&quot;.</span>
@@ -311,7 +313,7 @@
 
 <div class="viewcode-block" id="data_in_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.data_in_value">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">data_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine if the specified filename is present within the given value.</span>
 
@@ -372,7 +374,7 @@
 
 <div class="viewcode-block" id="find_procs_with_output">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.find_procs_with_output">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_procs_with_output</span><span class="p">(</span><span class="n">procs</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">find_procs_with_output</span><span class="p">(</span><span class="n">procs</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identify processes in the given list that have the specified filename as</span>
 <span class="sd">    part of their outputs.</span>
@@ -413,7 +415,7 @@
 
 <div class="viewcode-block" id="get_data_history">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_data_history">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_data_history</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_data_history</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the processing history for a given data file, based on</span>
 <span class="sd">    :func:`get_data_history_processes`.</span>
@@ -461,7 +463,7 @@
 
 <div class="viewcode-block" id="get_data_history_bricks">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_data_history_bricks">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_data_history_bricks</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_data_history_bricks</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the complete &quot;useful&quot; history of a file in the database as a set</span>
 <span class="sd">    of processing bricks.</span>
@@ -489,7 +491,7 @@
 
 <div class="viewcode-block" id="get_data_history_processes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_data_history_processes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_data_history_processes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the complete useful processing history of a file in the database.</span>
 
@@ -639,7 +641,7 @@
 
 <div class="viewcode-block" id="get_direct_proc_ancestors">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_direct_proc_ancestors">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_direct_proc_ancestors</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">get_direct_proc_ancestors</span><span class="p">(</span>
     <span class="n">filename</span><span class="p">,</span>
     <span class="n">project</span><span class="p">,</span>
     <span class="n">procs</span><span class="p">,</span>
@@ -751,7 +753,7 @@
 
 <div class="viewcode-block" id="get_filenames_in_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_filenames_in_value">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_filenames_in_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract filenames from a nested structure of lists, tuples, and</span>
 <span class="sd">    dictionaries.</span>
@@ -800,7 +802,7 @@
 
 <div class="viewcode-block" id="get_history_brick_process">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_history_brick_process">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_history_brick_process</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_history_brick_process</span><span class="p">(</span><span class="n">brick_id</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">before_exec_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve a brick from the database using its UUID and return it as a</span>
 <span class="sd">    `ProtoProcess` instance.</span>
@@ -855,7 +857,7 @@
 
 <div class="viewcode-block" id="get_proc_ancestors_via_tmp">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.get_proc_ancestors_via_tmp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_proc_ancestors_via_tmp</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">procs</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_proc_ancestors_via_tmp</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">procs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve upstream processes connected via a temporary value (&quot;&lt;temp&gt;&quot;).</span>
 
@@ -898,7 +900,7 @@
     <span class="n">dlink</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">tmp_filename</span> <span class="o">=</span> <span class="s2">&quot;&lt;temp&gt;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_tmp_param</span><span class="p">(</span><span class="n">proc</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_tmp_param</span><span class="p">(</span><span class="n">proc</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Identifies a process parameter associated with a temporary value.</span>
 
@@ -1009,7 +1011,7 @@
 
 <div class="viewcode-block" id="is_data_entry">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_history_inspect.html#populse_mia.data_manager.data_history_inspect.is_data_entry">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">is_data_entry</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">is_data_entry</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">allow_temp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check whether a filename corresponds to a valid project data entry.</span>
 

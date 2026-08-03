@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -40,41 +42,41 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">atexit</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pkgutil</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">signal</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">types</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">atexit</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">signal</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">types</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">argon2</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">dateutil.parser</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">argon2</span>
+<span class="kn">import</span> <span class="nn">dateutil.parser</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="c1"># Capsul imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.api</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span> <span class="nn">capsul.api</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
     <span class="n">Node</span><span class="p">,</span>
     <span class="n">Pipeline</span><span class="p">,</span>
     <span class="n">Process</span><span class="p">,</span>
     <span class="n">ProcessNode</span><span class="p">,</span>
     <span class="n">get_process_instance</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
 
 <span class="c1"># PyQt5 imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">QDate</span><span class="p">,</span> <span class="n">QDateTime</span><span class="p">,</span> <span class="n">QDir</span><span class="p">,</span> <span class="n">QLockFile</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QTime</span><span class="p">,</span> <span class="n">QVariant</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
@@ -88,14 +90,14 @@
     <span class="n">QVBoxLayout</span><span class="p">,</span>
     <span class="n">QWidget</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller.trait_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_file_trait</span>
+<span class="kn">from</span> <span class="nn">soma.controller.trait_utils</span> <span class="kn">import</span> <span class="n">is_file_trait</span>
 
 <span class="c1"># Soma-base imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">soma.qt_gui.qtThread</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtThreadCall</span>  <span class="c1"># noqa E402</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Undefined</span>
+<span class="kn">from</span> <span class="nn">soma.qt_gui.qtThread</span> <span class="kn">import</span> <span class="n">QtThreadCall</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">Undefined</span>
 
 <span class="c1"># Populse_mia imports</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa E402</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
@@ -144,7 +146,7 @@
 
 <div class="viewcode-block" id="PackagesInstall">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.PackagesInstall">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">PackagesInstall</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">PackagesInstall</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Helps make a pipeline package available in the Mia pipeline library</span>
 <span class="sd">    recursively.</span>
@@ -169,14 +171,14 @@
 
 <div class="viewcode-block" id="PackagesInstall.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.PackagesInstall.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the package registry.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">packages</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
 <div class="viewcode-block" id="PackagesInstall.add_package">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.PackagesInstall.add_package">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">,</span> <span class="n">class_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively adds a package and its subpackages/modules to the Mia</span>
 <span class="sd">        pipeline library.</span>
@@ -308,7 +310,7 @@
 
 <div class="viewcode-block" id="_is_valid_date">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils._is_valid_date">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">_is_valid_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">date_format</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_is_valid_date</span><span class="p">(</span><span class="n">date_str</span><span class="p">,</span> <span class="n">date_format</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if a string matches the given date format.</span>
 
@@ -332,7 +334,7 @@
 
 <div class="viewcode-block" id="check_python_version">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.check_python_version">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">check_python_version</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">check_python_version</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the Python version is at least 3.10.</span>
 
@@ -349,7 +351,7 @@
 
 <div class="viewcode-block" id="check_value_type">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.check_value_type">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks the type of new value in a table cell (QTableWidget).</span>
 
@@ -442,7 +444,7 @@
 
 <div class="viewcode-block" id="dict4runtime_update">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.dict4runtime_update">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">dict4runtime_update</span><span class="p">(</span><span class="n">runtime_dict</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">dict4runtime_update</span><span class="p">(</span><span class="n">runtime_dict</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">db_filename</span><span class="p">,</span> <span class="o">*</span><span class="n">tags</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update a dictionary with tag values from the project&#39;s current collection.</span>
 
@@ -482,7 +484,7 @@
 
 <div class="viewcode-block" id="get_db_field_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.get_db_field_value">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieve the value of a specific field for a document from the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -509,7 +511,7 @@
 
 <div class="viewcode-block" id="get_document_names">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.get_document_names">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_document_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_document_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the names of all documents in the specified collection from the</span>
 <span class="sd">    project&#39;s database.</span>
@@ -530,7 +532,7 @@
 
 <div class="viewcode-block" id="get_field_names">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.get_field_names">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_field_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_field_names</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of field names (i.e., column names) for documents in the</span>
 <span class="sd">    specified collection of the project&#39;s database.</span>
@@ -551,7 +553,7 @@
 
 <div class="viewcode-block" id="get_shown_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.get_shown_tags">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_shown_tags</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the list of tags that are marked as &#39;shown&#39; in the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -570,7 +572,7 @@
 
 <div class="viewcode-block" id="get_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.get_value">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Retrieves the value of a specific field from a document in the given</span>
 <span class="sd">    collection.</span>
@@ -594,7 +596,7 @@
 
 <div class="viewcode-block" id="launch_mia">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.launch_mia">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">launch_mia</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">SavedProjects</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">launch_mia</span><span class="p">(</span><span class="n">MainWindow</span><span class="p">,</span> <span class="n">Project</span><span class="p">,</span> <span class="n">SavedProjects</span><span class="p">,</span> <span class="n">Config</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Launch and run the Mia software application.</span>
 
@@ -635,7 +637,7 @@
     <span class="c1"># Register the exception hook early</span>
     <span class="n">previous_excepthook</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_up</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">_clean_up</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform application cleanup tasks.</span>
 
@@ -665,7 +667,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Clean up before closing Mia completed.&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_cleanup_and_quit</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">_cleanup_and_quit</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up application state and terminate the Qt event loop.</span>
 
@@ -698,7 +700,7 @@
         <span class="k">if</span> <span class="n">app</span><span class="p">:</span>
             <span class="n">app</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_my_excepthook</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_my_excepthook</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle uncaught exceptions.</span>
 
@@ -721,7 +723,7 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">__excepthook__</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_restore_terminal</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">_restore_terminal</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Restore the terminal to a sane state.</span>
 
@@ -740,7 +742,7 @@
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_signal_handler</span><span class="p">(</span><span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_signal_handler</span><span class="p">(</span><span class="n">signum</span><span class="p">,</span> <span class="n">frame</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle termination signals to ensure graceful shutdown.</span>
 
@@ -757,7 +759,7 @@
         <span class="n">_restore_terminal</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_saved_projects</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">_verify_saved_projects</span><span class="p">():</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Verify the existence of saved projects on disk.</span>
 
@@ -830,7 +832,7 @@
 
 <div class="viewcode-block" id="message_already_exists">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.message_already_exists">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">message_already_exists</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">message_already_exists</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays a message box to tell that a project name already exists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -847,7 +849,7 @@
 
 <div class="viewcode-block" id="remove_document">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.remove_document">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">remove_document</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">collection</span><span class="p">,</span> <span class="n">documents</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Removes one or multiple documents from the specified collection</span>
 <span class="sd">    in the given project&#39;s database.</span>
@@ -874,7 +876,7 @@
 
 <div class="viewcode-block" id="safe_connect">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.safe_connect">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">safe_connect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">safe_connect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Connect a Qt signal to a slot, ensuring a single connection.</span>
 
@@ -892,7 +894,7 @@
 
 <div class="viewcode-block" id="safe_disconnect">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.safe_disconnect">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">safe_disconnect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">safe_disconnect</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">slot</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Disconnect a Qt signal from a slot if connected.</span>
 
@@ -915,7 +917,7 @@
 
 <div class="viewcode-block" id="set_db_field_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.set_db_field_value">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">tag_to_add</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">set_db_field_value</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">tag_to_add</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create or update a field and its value for a document in the project&#39;s</span>
 <span class="sd">    database.</span>
@@ -983,7 +985,7 @@
 
 <div class="viewcode-block" id="set_filters_directory_as_default">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.set_filters_directory_as_default">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_filters_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">set_filters_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the filters directory as default (Json files).</span>
 
@@ -1000,7 +1002,7 @@
 
 <div class="viewcode-block" id="set_item_data">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.set_item_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set the data of a browser item according to the expected value type.</span>
 
@@ -1074,7 +1076,7 @@
         <span class="n">FIELD_TYPE_JSON</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>  <span class="c1"># Assume valid JSON-like dict</span>
     <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Prepares the input value according to its expected type.</span>
 
@@ -1122,7 +1124,7 @@
 
 <div class="viewcode-block" id="set_projects_directory_as_default">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.set_projects_directory_as_default">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">set_projects_directory_as_default</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Sets the projects directory as default.</span>
 
@@ -1140,7 +1142,7 @@
 
 <div class="viewcode-block" id="table_to_database">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.table_to_database">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">table_to_database</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">table_to_database</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Prepares the value to the database based on its type.</span>
 
@@ -1209,7 +1211,7 @@
 
 <div class="viewcode-block" id="type_name">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.type_name">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">type_name</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">type_name</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the name of a type or a string representation for generic aliases.</span>
 
@@ -1228,7 +1230,7 @@
 
 <div class="viewcode-block" id="update_auto_inheritance">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.update_auto_inheritance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">update_auto_inheritance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">job</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Automatically infer database tags for output parameters from input</span>
 <span class="sd">    parameters.</span>
@@ -1464,7 +1466,7 @@
 
 <div class="viewcode-block" id="verCmp">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.verCmp">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">verCmp</span><span class="p">(</span><span class="n">first_ver</span><span class="p">,</span> <span class="n">sec_ver</span><span class="p">,</span> <span class="n">comp</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Version comparator.</span>
 
 <span class="sd">    Compares two package versions according to the specified comparator:</span>
@@ -1490,7 +1492,7 @@
 <span class="sd">              list of integer.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a version of a package to a list of integer.</span>
 
 <span class="sd">        :param v: Version of a package (ex. 5.4.1).</span>
@@ -1521,7 +1523,7 @@
 
 <div class="viewcode-block" id="verify_processes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.verify_processes">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">verify_processes</span><span class="p">(</span><span class="n">nipypeVer</span><span class="p">,</span> <span class="n">miaProcVer</span><span class="p">,</span> <span class="n">capsulVer</span><span class="p">,</span> <span class="n">Config</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Install or update to the last version available on the station, for nipype,</span>
 <span class="sd">    capsul and mia_processes processes libraries.</span>
@@ -1562,7 +1564,7 @@
 <span class="sd">              packages update.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_deepCompDic</span><span class="p">(</span><span class="n">old_dic</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_deepCompDic</span><span class="p">(</span><span class="n">old_dic</span><span class="p">,</span> <span class="n">new_dic</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively compares two dictionaries and retains the previous</span>
 <span class="sd">        configuration where applicable.</span>
@@ -2135,7 +2137,7 @@
 
 <div class="viewcode-block" id="verify_setup">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.verify_setup">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_setup</span><span class="p">(</span>
+<span class="k">def</span> <span class="nf">verify_setup</span><span class="p">(</span>
     <span class="n">Config</span><span class="p">,</span>
     <span class="n">dev_mode</span><span class="p">,</span>
     <span class="n">pypath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -2169,7 +2171,7 @@
     <span class="k">if</span> <span class="n">pypath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pypath</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_browse_properties_path</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Let the user define the properties_path parameter.</span>
 
@@ -2208,7 +2210,7 @@
         <span class="k">if</span> <span class="n">existDir</span><span class="o">.</span><span class="n">exec</span><span class="p">():</span>
             <span class="n">dialog</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">existDir</span><span class="o">.</span><span class="n">selectedFiles</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_cancel_clicked</span><span class="p">(</span><span class="n">dialog</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Cancel the configuration check.</span>
 
@@ -2224,7 +2226,7 @@
         <span class="p">)</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create default configuration files and directories.</span>
 
@@ -2310,7 +2312,7 @@
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Default configuration checked!&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_save_yml_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_save_yml_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Save data in a YAML file.</span>
 
 <span class="sd">        :param content: The content of the file_path.</span>
@@ -2327,7 +2329,7 @@
                 <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_verify_miaConfig</span><span class="p">(</span><span class="n">dialog</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check the config is not corrupted and try to fix if necessary.</span>
 

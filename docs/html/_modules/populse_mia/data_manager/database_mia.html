@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -54,14 +56,14 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
 
 <span class="c1"># populse_db import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_db.database</span><span class="w"> </span><span class="kn">import</span> <span class="n">str_to_type</span><span class="p">,</span> <span class="n">type_to_str</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_db.storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">Storage</span>
+<span class="kn">from</span> <span class="nn">populse_db.database</span> <span class="kn">import</span> <span class="n">str_to_type</span><span class="p">,</span> <span class="n">type_to_str</span>
+<span class="kn">from</span> <span class="nn">populse_db.storage</span> <span class="kn">import</span> <span class="n">Storage</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">FIELD_ATTRIBUTES_COLLECTION</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
@@ -159,7 +161,7 @@
 
 <div class="viewcode-block" id="DatabaseMIA">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseMIA</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">DatabaseMIA</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class providing tools for interacting with a database, under the</span>
 <span class="sd">    supervision of populse_db.</span>
@@ -177,7 +179,7 @@
 
 <div class="viewcode-block" id="DatabaseMIA.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_engine</span><span class="p">,</span>
         <span class="c1"># schema_name=&quot;populse_mia.data_manager.database_mia&quot;,</span>
@@ -197,7 +199,7 @@
 
 <div class="viewcode-block" id="DatabaseMIA.__enter__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.__enter__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a database connection and return it.</span>
 
@@ -209,7 +211,7 @@
 
 <div class="viewcode-block" id="DatabaseMIA.__exit__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.__exit__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make sure the database connection gets closed.</span>
 
@@ -228,7 +230,7 @@
 
 <div class="viewcode-block" id="DatabaseMIA.close">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.close">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Closes any open resources or connections held by the instance.</span>
 
 <span class="sd">        This method sets the `storage` attribute to `None`, effectively</span>
@@ -240,7 +242,7 @@
 <div class="viewcode-block" id="DatabaseMIA.data">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.data">[docs]</a>
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">write</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provides a context manager for accessing the database data layer.</span>
 
@@ -260,7 +262,7 @@
 <div class="viewcode-block" id="DatabaseMIA.schema">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMIA.schema">[docs]</a>
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">schema</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provides a context manager for accessing the database schema.</span>
 
@@ -278,7 +280,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseMiaSchema</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">DatabaseMiaSchema</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides tools for managing the schema of a MIA database.</span>
 
@@ -305,7 +307,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_schema</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_schema</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DatabaseMiaSchema instance.</span>
 
@@ -317,7 +319,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.add_collection">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_collection">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_collection</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">add_collection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">collection_name</span><span class="p">,</span>
         <span class="n">primary_key</span><span class="p">,</span>
@@ -363,7 +365,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.add_field">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds one or more fields to the collection.</span>
 
@@ -411,7 +413,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.add_field_attributes_collection">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.add_field_attributes_collection">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_field_attributes_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Ensures that the `FIELD_ATTRIBUTES_COLLECTION` is available in the</span>
 <span class="sd">        database.</span>
@@ -480,7 +482,7 @@
 <div class="viewcode-block" id="DatabaseMiaSchema.data">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.data">[docs]</a>
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Provides a context manager for accessing the database data.</span>
 
@@ -496,7 +498,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.remove_field">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_field</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes a specified field in the collection_name</span>
 
@@ -524,7 +526,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.remove_field_attributes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove attributes associated with a specific field in a collection.</span>
 
@@ -556,7 +558,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaSchema.update_field_attributes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema.update_field_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">update_field_attributes</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">update_field_attributes</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">collection_name</span><span class="p">,</span>
         <span class="n">field_name</span><span class="p">,</span>
@@ -606,7 +608,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">DatabaseMiaData</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">DatabaseMiaData</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Managing database interactions within the Mia framework.</span>
 
@@ -646,7 +648,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_data</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storage_data</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a new instance of the DatabaseMiaData class.</span>
 
@@ -658,7 +660,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.add_document">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.add_document">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">add_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">document</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Adds a document to a specified collection in the storage.</span>
 
@@ -681,7 +683,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.filter_documents">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.filter_documents">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">filter_query</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">filter_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">filter_query</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve documents from a specified collection that match a given</span>
 <span class="sd">        filter.</span>
@@ -739,7 +741,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_collection_names">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_collection_names">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_collection_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_collection_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a list of all collection names in the database.</span>
 
@@ -750,7 +752,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_document">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fields</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve documents from the specified collection with optional</span>
 <span class="sd">        filtering.</span>
@@ -804,7 +806,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_document_names">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_document_names">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_document_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_document_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve a list of all document names in the specified collection.</span>
 
@@ -827,7 +829,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_field_attributes">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_attributes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_field_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">field_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve attributes of a specific field or all fields in a collection</span>
 <span class="sd">        from the storage.</span>
@@ -876,7 +878,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_field_names">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_field_names">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_field_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_field_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the list of all field names in the specified collection.</span>
 
@@ -893,7 +895,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_primary_key_name">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_primary_key_name">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_primary_key_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_primary_key_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the primary key of the specified collection.</span>
 
@@ -911,7 +913,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_shown_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_shown_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Give the list of visible tags.</span>
 
@@ -941,7 +943,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.get_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.get_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the current value of a specific field in a document from</span>
 <span class="sd">        the specified collection.</span>
@@ -964,7 +966,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.has_collection">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">has_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">has_collection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">         Checks if a collection with the specified name exists in the database.</span>
 
@@ -977,7 +979,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.has_document">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.has_document">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">has_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">has_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if a document with the specified primary key exists in the</span>
 <span class="sd">        given collection.</span>
@@ -993,7 +995,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.remove_document">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_document">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_document</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove a document from a specified collection.</span>
 
@@ -1021,7 +1023,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.remove_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.remove_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">remove_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Removes the specified field from a document in the given collection,</span>
 <span class="sd">        if it exists. Raises a KeyError if the field, collection, or document</span>
@@ -1045,12 +1047,12 @@
                 <span class="sa">f</span><span class="s2">&quot;Failed to remove the &#39;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">&#39; for &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;document ID &#39;</span><span class="si">{</span><span class="n">primary_key</span><span class="si">}</span><span class="s2">&#39; in &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;collection &#39;</span><span class="si">{</span><span class="n">collection_name</span><span class="si">}</span><span class="s2">&#39;: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span></div>
+            <span class="p">)</span> <span class="kn">from</span> <span class="nn">e</span></div>
 
 
 <div class="viewcode-block" id="DatabaseMiaData.set_shown_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_shown_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_shown</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_shown_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields_shown</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the list of visible tags.</span>
 
@@ -1069,7 +1071,7 @@
 
 <div class="viewcode-block" id="DatabaseMiaData.set_value">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData.set_value">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">collection_name</span><span class="p">,</span> <span class="n">primary_key</span><span class="p">,</span> <span class="n">values_dict</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store or update a record in the specified collection.</span>
 

@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_loader</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -49,22 +51,22 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>  <span class="c1"># To generate the md5 of each path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">sleep</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">time_time</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>  <span class="c1"># To generate the md5 of each path</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">time_time</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QProgressDialog</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QThread</span><span class="p">,</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="n">QProgressDialog</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">COLLECTION_INITIAL</span><span class="p">,</span>
     <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">,</span>
@@ -106,7 +108,7 @@
 
 <div class="viewcode-block" id="ImportProgress">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ImportProgress</span><span class="p">(</span><span class="n">QProgressDialog</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ImportProgress</span><span class="p">(</span><span class="n">QProgressDialog</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Displays a progress bar for the import process.</span>
 
@@ -119,7 +121,7 @@
 
 <div class="viewcode-block" id="ImportProgress.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the ImportProgress dialog for tracking the import process.</span>
 
@@ -151,7 +153,7 @@
 
 <div class="viewcode-block" id="ImportProgress.onProgress">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportProgress.onProgress">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">onProgress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the progress bar value.</span>
 
@@ -164,7 +166,7 @@
 
 <div class="viewcode-block" id="ImportWorker">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">ImportWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">ImportWorker</span><span class="p">(</span><span class="n">QThread</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Worker thread for importing scans into the project database.</span>
 
@@ -212,7 +214,7 @@
 
 <div class="viewcode-block" id="ImportWorker.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">progress</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">progress</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the ImportWorker thread for importing scans into the</span>
 <span class="sd">        project database.</span>
@@ -234,7 +236,7 @@
 
 <div class="viewcode-block" id="ImportWorker.run">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker.run">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Execute the import process.</span>
 
@@ -281,7 +283,7 @@
 
 
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">scans_added</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">scans_added</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get a copy of the scans_added list in a thread-safe manner.&quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
@@ -289,7 +291,7 @@
 
 <div class="viewcode-block" id="ImportWorker._add_tag_to_database">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._add_tag_to_database">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_add_tag_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_add_tag_to_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new tag to the database.</span>
 
@@ -316,7 +318,7 @@
 
 <div class="viewcode-block" id="ImportWorker._apply_default_values">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._apply_default_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_default_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">values_added</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_apply_default_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">values_added</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply default values for user-defined tags.</span>
 
@@ -361,7 +363,7 @@
 
 <div class="viewcode-block" id="ImportWorker._convert_datetime_values">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._convert_datetime_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_convert_datetime_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_convert_datetime_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert string values to datetime objects.</span>
 
@@ -394,7 +396,7 @@
 
 <div class="viewcode-block" id="ImportWorker._ensure_associated_file_tag_exists">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._ensure_associated_file_tag_exists">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_associated_file_tag_exists</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_ensure_associated_file_tag_exists</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">database_data</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">tags_names_added</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -421,7 +423,7 @@
 
 <div class="viewcode-block" id="ImportWorker._extract_tag_info">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._extract_tag_info">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_tag_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_extract_tag_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_name</span><span class="p">,</span> <span class="n">properties</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract tag information from properties.</span>
 
@@ -485,7 +487,7 @@
 
 <div class="viewcode-block" id="ImportWorker._get_export_logs">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._get_export_logs">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_get_export_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data_folder</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_export_logs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_data_folder</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the export logs from the raw data folder.</span>
 
 <span class="sd">        :param raw_data_folder: (str) Path to the raw data folder.</span>
@@ -507,7 +509,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_associated_file">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_associated_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_associated_file</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_associated_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_database_path</span><span class="p">,</span>
@@ -568,7 +570,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_associated_files">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_associated_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_associated_files</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_associated_files</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -629,7 +631,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_datetime_format">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_datetime_format">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_datetime_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process_datetime_format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process datetime format strings.</span>
 
@@ -669,7 +671,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_file_tags">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_file_tags">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_file_tags</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_file_tags</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -738,7 +740,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_fsl_format_files">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_fsl_format_files">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_fsl_format_files</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_fsl_format_files</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">bvec_path</span><span class="p">,</span>
@@ -794,7 +796,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_list_values">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_list_values">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_list_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_process_list_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_info</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process list values.</span>
 
@@ -840,7 +842,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_log_entries">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_log_entries">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_log_entries</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_log_entries</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">list_dict_log</span><span class="p">,</span>
         <span class="n">raw_data_folder</span><span class="p">,</span>
@@ -886,7 +888,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_mrtrix_format_file">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_mrtrix_format_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_mrtrix_format_file</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_mrtrix_format_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">bvec_bval_path</span><span class="p">,</span>
@@ -927,7 +929,7 @@
 
 <div class="viewcode-block" id="ImportWorker._process_scan_file">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._process_scan_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_process_scan_file</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_process_scan_file</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">database_data</span><span class="p">,</span>
         <span class="n">file_name</span><span class="p">,</span>
@@ -1015,7 +1017,7 @@
 
 <div class="viewcode-block" id="ImportWorker._update_database">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.ImportWorker._update_database">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_update_database</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_update_database</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">,</span> <span class="n">tags_added</span><span class="p">,</span> <span class="n">values_added</span><span class="p">,</span> <span class="n">historyMaker</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1077,7 +1079,7 @@
 
 <div class="viewcode-block" id="read_log">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.read_log">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">read_log</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">read_log</span><span class="p">(</span><span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Display a progress bar for data loading and return loaded file paths.</span>
 
@@ -1106,7 +1108,7 @@
 
 <div class="viewcode-block" id="tags_from_file">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.tags_from_file">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">tags_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">tags_from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a list of [tag, value] pairs from a JSON file.</span>
 
@@ -1141,7 +1143,7 @@
 
 <div class="viewcode-block" id="verify_scans">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.data_manager.data_loader.html#populse_mia.data_manager.data_loader.verify_scans">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">verify_scans</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">verify_scans</span><span class="p">(</span><span class="n">project</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if the project&#39;s scans have been modified.</span>
 

@@ -4,17 +4,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.install.mia_install_widget &#8212; populse_mia 3.0.0-dev+738531de documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
+    <title>populse_mia.install.mia_install_widget &#8212; populse_mia 3.0.0-dev+f5e8ec87 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=f63d8bfa" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=907353be"></script>
+    <script src="../../../_static/documentation_options.js?v=d4c96d18"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+738531de documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+f5e8ec87 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.install.mia_install_widget</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -31,10 +33,6 @@
 <span></span><span class="sd">&quot;&quot;&quot;The module used for mia&#39;s installation and configuration.</span>
 
 <span class="sd">Basically, this module is dedicated to the GUI used at the installation time</span>
-
-<span class="sd">:Contains:</span>
-<span class="sd">    :Class:</span>
-<span class="sd">        - MIAInstallWidget</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="c1">###############################################################################</span>
@@ -45,16 +43,20 @@
 <span class="c1"># for details.</span>
 <span class="c1">###############################################################################</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtCore</span><span class="p">,</span> <span class="n">QtGui</span><span class="p">,</span> <span class="n">QtWidgets</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MIAInstallWidget&quot;</span><span class="p">]</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="c1">###############################################################################</span>
@@ -63,212 +65,187 @@
 <span class="c1"># We&#39;ll have to switch to using pypi for these packages when master will be on</span>
 <span class="c1"># V3 in populse.</span>
 <span class="c1">###############################################################################</span>
+
+
 <div class="viewcode-block" id="MIAInstallWidget">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">MIAInstallWidget</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The main class for mia&#39;s installation and configuration.</span>
+<span class="k">class</span> <span class="nc">MIAInstallWidget</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The main class for Mia&#39;s installation and configuration.</span>
 
-<span class="sd">    :Contains:</span>
-<span class="sd">        :Method:</span>
-<span class="sd">            - __init__</span>
-<span class="sd">            - browse_matlab</span>
-<span class="sd">            - browse_matlab_standalone</span>
-<span class="sd">            - browse_mia_config_path</span>
-<span class="sd">            - browse_projects_path</span>
-<span class="sd">            - browse_spm</span>
-<span class="sd">            - browse_spm_standalone</span>
-<span class="sd">            - btnstate</span>
-<span class="sd">            - clone_miaResources</span>
-<span class="sd">            - find_matlab_path</span>
-<span class="sd">            - install</span>
-<span class="sd">            - install_matlab_api</span>
-<span class="sd">            - install_package</span>
-<span class="sd">            - last_layout</span>
-<span class="sd">            - make_mrifilemanager_folder</span>
-<span class="sd">            - ok_or_abort</span>
-<span class="sd">            - set_new_layout</span>
-<span class="sd">            - uninstall_package</span>
-<span class="sd">            - upgrade_soma_capsul</span>
-<span class="sd">            - use_matlab_changed</span>
-<span class="sd">            - use_spm_changed</span>
-<span class="sd">            - use_spm_standalone_changed</span>
+<span class="sd">    Contains:</span>
+<span class="sd">        Methods:</span>
+<span class="sd">            - _create_info_button: Return a circular information button with</span>
+<span class="sd">                the given tooltip.</span>
+<span class="sd">            - browse_matlab: Opens a file dialog for the user to select a</span>
+<span class="sd">                MATLAB executable file.</span>
+<span class="sd">            - browse_matlab_standalone: Opens a directory dialog for the user</span>
+<span class="sd">                to select the MATLAB Compile Runtime (MCR) directory.</span>
+<span class="sd">            - browse_mia_config_path: Opens a directory dialog for the user to</span>
+<span class="sd">                select a folder for installing the MiA configuration.</span>
+<span class="sd">            - browse_projects_path: Opens a directory dialog for the user to</span>
+<span class="sd">                select a folder to store Mia&#39;s projects.</span>
+<span class="sd">            - browse_spm: Opens a directory dialog for the user to select the</span>
+<span class="sd">                SPM directory.</span>
+<span class="sd">            - browse_spm_standalone: Opens a directory dialog for the user to</span>
+<span class="sd">                select the SPM standalone directory.</span>
+<span class="sd">            - btnstate: Toggles the state of two related buttons based on the</span>
+<span class="sd">                text of the clicked button.</span>
+<span class="sd">            - clone_mia_resources: Clones the mia_resources repository from</span>
+<span class="sd">                GitLab to the specified directory.</span>
+<span class="sd">            - find_matlab_path: Attempts to find the installation path of</span>
+<span class="sd">                MATLAB on the system.</span>
+<span class="sd">            - install: Manages the installation and configuration of Mia and</span>
+<span class="sd">                associated software components.</span>
+<span class="sd">            - install_matlab_api: Installs the MATLAB Engine API for Python.</span>
+<span class="sd">            - install_package: Installs or upgrades a Python package using pip.</span>
+<span class="sd">            - last_layout: Sets the final layout for the application window</span>
+<span class="sd">                after Mia installation.</span>
+<span class="sd">            - make_mrifilemanager_folder: Clones the MRI conversion repository</span>
+<span class="sd">                into the specified directory.</span>
+<span class="sd">            - ok_or_abort: Handles the action when the user clicks a button in</span>
+<span class="sd">                a message box.</span>
+<span class="sd">            - set_new_layout: Changes the layout to show the installation</span>
+<span class="sd">                progress.</span>
+<span class="sd">            - uninstall_package: Uninstalls a Python package using pip.</span>
+<span class="sd">            - upgrade_soma_capsul: Upgrades the soma-base, soma-workflow, and</span>
+<span class="sd">                capsul packages by cloning their latest versions from GitHub.</span>
+<span class="sd">            - use_matlab_changed: Toggles the state of MATLAB-related options</span>
+<span class="sd">                based on the &#39;use_matlab&#39; checkbox.</span>
+<span class="sd">            - use_spm_changed: Updates the state of SPM-related options based</span>
+<span class="sd">                on the &#39;use_spm&#39; checkbox.</span>
+<span class="sd">            - use_spm_standalone_changed: Updates the state of standalone</span>
+<span class="sd">                SPM-related options based on the &#39;use_spm_standalone&#39; checkbox.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="MIAInstallWidget.__init__">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.__init__">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Constructor&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the installation dialog.</span>
+
+<span class="sd">        Build the user interface, initialize installation parameters and</span>
+<span class="sd">        default paths, detect the execution environment, and configure the</span>
+<span class="sd">        Matlab and SPM options according to the software available on the</span>
+<span class="sd">        system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="c1"># Check if running in a virtual environment</span>
+        <span class="c1"># Internal state</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">is_venv</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">prefix</span> <span class="o">!=</span> <span class="n">sys</span><span class="o">.</span><span class="n">base_prefix</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">top_label_font</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QFont</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">top_label_font</span><span class="o">.</span><span class="n">setBold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">middle_label_text</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;Please select a configuration installation &quot;</span>
-            <span class="s2">&quot;path, a folder to store the projects and &quot;</span>
-            <span class="s2">&quot;the paths to run Matlab and SPM.</span><span class="se">\n</span><span class="s2">The &quot;</span>
-            <span class="s2">&quot;paths to Matlab and SPM can then be &quot;</span>
-            <span class="s2">&quot;modified in the Mia preferences.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+        <span class="c1"># Introduction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">middle_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
+            <span class="s2">&quot;Please select a configuration installation path, a folder &quot;</span>
+            <span class="s2">&quot;to store the projects and the paths to run Matlab and SPM.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;The paths to Matlab and SPM can later be modified in the &quot;</span>
+            <span class="s2">&quot;Mia preferences.</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">middle_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">middle_label_text</span><span class="p">)</span>
-        <span class="n">h_box_middle_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">h_box_middle_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">h_box_middle_label</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">middle_label</span><span class="p">)</span>
-        <span class="n">h_box_middle_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="c1"># Groupbox</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">()</span>
+        <span class="n">middle_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">middle_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">()</span>
+        <span class="n">middle_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">middle_label</span><span class="p">)</span>
+        <span class="n">middle_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">()</span>
+        <span class="c1"># Configuration path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
             <span class="s2">&quot;Mia configuration path:&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">)</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_browse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">browse_mia_config_path</span>
         <span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot; ? &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
-            <span class="s2">&quot;background-color:rgb(150,150,200)&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_info_button</span><span class="p">(</span>
+            <span class="s2">&quot;Three folders will be created in the selected folder:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    - usr/properties: Containing Mia&#39;s configuration and &quot;</span>
+            <span class="s2">&quot;                      resources files.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    - usr/processes: Containing personal pipelines and bricks.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    - usr/MRIFileManager: Containing the data converter used in &quot;</span>
+            <span class="s2">&quot;                          Mia.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;    - usr/mia_resources: Containing reference data (ROI,&quot;</span>
+            <span class="s2">&quot;                         templates, etc.).</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
-        <span class="n">rect</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QRect</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
-        <span class="n">region</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="o">.</span><span class="n">Ellipse</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="o">.</span><span class="n">setMask</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
-        <span class="n">tool_tip_message</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">&quot;Three folders will be created in the selected &quot;</span>
-            <span class="s2">&quot;folder:</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;- usr/properties: containing Mia&#39;s configuration &quot;</span>
-            <span class="s2">&quot;and resources files.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;- usr/processes: containing personal pipelines &quot;</span>
-            <span class="s2">&quot;and bricks.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;- usr/MRIFileManager: containing the data &quot;</span>
-            <span class="s2">&quot;converter used in Mia.</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;- usr/MiaResources: containing reference data &quot;</span>
-            <span class="s2">&quot;(ROI, templates, etc.)&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="n">tool_tip_message</span><span class="p">)</span>
-
-        <span class="n">h_box_mia_config</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">h_box_mia_config</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_choice</span><span class="p">)</span>
-        <span class="n">h_box_mia_config</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_browse</span><span class="p">)</span>
-        <span class="n">h_box_mia_config</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="p">)</span>
-
-        <span class="n">v_box_mia_config</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="n">v_box_mia_config</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_label</span><span class="p">)</span>
-        <span class="n">v_box_mia_config</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_mia_config</span><span class="p">)</span>
-
-        <span class="n">projects_path_default</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;Documents&quot;</span><span class="p">,</span> <span class="s2">&quot;user_mia_projects&quot;</span>
-        <span class="p">)</span>
-
+        <span class="n">config_row</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
+        <span class="n">config_row</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_choice</span><span class="p">)</span>
+        <span class="n">config_row</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_browse</span><span class="p">)</span>
+        <span class="n">config_row</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_info</span><span class="p">)</span>
+        <span class="n">config_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">config_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_label</span><span class="p">)</span>
+        <span class="n">config_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">config_row</span><span class="p">)</span>
+        <span class="c1"># Projects path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Mia projects path:&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">(</span><span class="n">projects_path_default</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">(</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;Documents&quot;</span> <span class="o">/</span> <span class="s2">&quot;user_mia_projects&quot;</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_browse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_projects_path</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot; ? &quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="mi">27</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span>
-            <span class="s2">&quot;background-color:&quot;</span> <span class="s2">&quot;rgb(150,150,200)&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_info_button</span><span class="p">(</span>
+            <span class="s1">&#39;A &quot;projects&quot; folder will be created in this folder.&#39;</span>
         <span class="p">)</span>
-        <span class="n">rect</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QRect</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
-        <span class="n">region</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="p">(</span><span class="n">rect</span><span class="p">,</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="o">.</span><span class="n">Ellipse</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="o">.</span><span class="n">setMask</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
-        <span class="n">tool_tip_message</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s1">&#39;A &quot;projects&quot; folder will be created in this &#39;</span> <span class="s2">&quot;specified folder.&quot;</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="n">tool_tip_message</span><span class="p">)</span>
-
         <span class="n">h_box_projects_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_projects_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_path_choice</span><span class="p">)</span>
         <span class="n">h_box_projects_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_path_browse</span><span class="p">)</span>
         <span class="n">h_box_projects_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_path_info</span><span class="p">)</span>
-
         <span class="n">v_box_projects_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_projects_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">projects_path_label</span><span class="p">)</span>
         <span class="n">v_box_projects_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_projects_path</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">()</span>
         <span class="n">v_box_paths</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="n">v_box_paths</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_mia_config</span><span class="p">)</span>
+        <span class="n">v_box_paths</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">config_layout</span><span class="p">)</span>
         <span class="n">v_box_paths</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_projects_path</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_paths</span><span class="p">)</span>
-
         <span class="c1"># Installation target groupbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">install_target_group_box</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span>
             <span class="s2">&quot;Installation target:&quot;</span>
         <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Casa_Distro&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnstate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span><span class="p">)</span>
-        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QRadioButton</span><span class="p">(</span><span class="s2">&quot;Host&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnstate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span><span class="p">)</span>
-        <span class="p">)</span>
-
         <span class="n">v_box_install_target</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_install_target</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span><span class="p">)</span>
         <span class="n">v_box_install_target</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">install_target_group_box</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_install_target</span><span class="p">)</span>
-
         <span class="n">h_box_install_target</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_install_target</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">install_target_group_box</span><span class="p">)</span>
         <span class="n">h_box_install_target</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="c1"># Clinical mode groupbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_group_box</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;Operating mode:&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_push_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QRadioButton</span><span class="p">(</span>
             <span class="s2">&quot;Clinical mode&quot;</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_push_button</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnstate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_push_button</span><span class="p">)</span>
-        <span class="p">)</span>
-
         <span class="n">v_box_clinical_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_clinical_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_push_button</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_group_box</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_clinical_mode</span><span class="p">)</span>
-
         <span class="n">h_box_clinical_mode</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_clinical_mode</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_group_box</span><span class="p">)</span>
         <span class="n">h_box_clinical_mode</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># All radio buttons share the same toggled -&gt; btnstate behaviour</span>
+        <span class="k">for</span> <span class="n">button</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">host_target_push_button</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">clinical_mode_push_button</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">button</span><span class="o">.</span><span class="n">toggled</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">_checked</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">button</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnstate</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
 
         <span class="c1"># Push buttons</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_install</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Install&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_install</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">install</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-
         <span class="n">h_box_buttons</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_buttons</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">h_box_buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_button_install</span><span class="p">)</span>
         <span class="n">h_box_buttons</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">push_button_cancel</span><span class="p">)</span>
-
         <span class="c1"># Matlab and SPM12 groupboxes</span>
         <span class="c1"># Groupbox &quot;Matlab&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_matlab</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;Matlab&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Use Matlab&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
         <span class="n">matlab_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find_matlab_path</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Matlab path:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">(</span><span class="n">matlab_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_browse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_matlab</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
             <span class="s2">&quot;Matlab standalone &quot;</span> <span class="s2">&quot;path:&quot;</span>
         <span class="p">)</span>
@@ -277,133 +254,116 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">browse_matlab_standalone</span>
         <span class="p">)</span>
-
         <span class="n">h_box_use_matlab</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_use_matlab</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="p">)</span>
         <span class="n">h_box_use_matlab</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_label</span><span class="p">)</span>
         <span class="n">h_box_use_matlab</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="n">h_box_matlab_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_matlab_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="p">)</span>
         <span class="n">h_box_matlab_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_browse</span><span class="p">)</span>
-
         <span class="n">v_box_matlab_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_matlab_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_label</span><span class="p">)</span>
         <span class="n">v_box_matlab_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_matlab_path</span><span class="p">)</span>
-
         <span class="n">h_box_matlab_standalone_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_matlab_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="p">)</span>
         <span class="n">h_box_matlab_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="p">)</span>
-
         <span class="n">v_box_matlab_standalone_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_matlab_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span><span class="p">)</span>
         <span class="n">v_box_matlab_standalone_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_matlab_standalone_path</span><span class="p">)</span>
-
         <span class="n">v_box_matlab</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_matlab</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_use_matlab</span><span class="p">)</span>
         <span class="n">v_box_matlab</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_matlab_path</span><span class="p">)</span>
         <span class="n">v_box_matlab</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_matlab_standalone_path</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_matlab</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_matlab</span><span class="p">)</span>
-
         <span class="c1"># Groupbox &quot;SPM&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QGroupBox</span><span class="p">(</span><span class="s2">&quot;SPM&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Use SPM&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;SPM path:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_spm</span><span class="p">)</span>
-
         <span class="n">h_box_use_spm</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_use_spm</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="p">)</span>
         <span class="n">h_box_use_spm</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_spm_label</span><span class="p">)</span>
         <span class="n">h_box_use_spm</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="n">h_box_spm_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_spm_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="p">)</span>
         <span class="n">h_box_spm_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span><span class="p">)</span>
-
         <span class="n">v_box_spm_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_spm_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span><span class="p">)</span>
         <span class="n">v_box_spm_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_spm_path</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Use SPM standalone&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;SPM standalone path:&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLineEdit</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Browse&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">browse_spm_standalone</span><span class="p">)</span>
-
         <span class="n">h_box_use_spm_standalone</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_use_spm_standalone</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="p">)</span>
         <span class="n">h_box_use_spm_standalone</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_label</span><span class="p">)</span>
         <span class="n">h_box_use_spm_standalone</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="n">h_box_spm_standalone_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_spm_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="p">)</span>
         <span class="n">h_box_spm_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="p">)</span>
-
         <span class="n">v_box_spm_standalone_path</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_spm_standalone_path</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="p">)</span>
         <span class="n">v_box_spm_standalone_path</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_spm_standalone_path</span><span class="p">)</span>
-
         <span class="n">v_box_spm</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_spm</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_use_spm</span><span class="p">)</span>
         <span class="n">v_box_spm</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_spm_path</span><span class="p">)</span>
         <span class="n">v_box_spm</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_use_spm_standalone</span><span class="p">)</span>
         <span class="n">v_box_spm</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">v_box_spm_standalone_path</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_spm</span><span class="p">)</span>
-
         <span class="c1"># Final layout</span>
-
         <span class="n">qradiobutton_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">qradiobutton_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_install_target</span><span class="p">)</span>
         <span class="n">qradiobutton_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_clinical_mode</span><span class="p">)</span>
-
         <span class="n">h_box_mode_paths</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_mode_paths</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">qradiobutton_layout</span><span class="p">)</span>
         <span class="n">h_box_mode_paths</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox</span><span class="p">)</span>
-
         <span class="n">h_box_matlab_spm</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_matlab_spm</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_matlab</span><span class="p">)</span>
         <span class="n">h_box_matlab_spm</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">groupbox_spm</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
-        <span class="c1"># self.global_layout.addLayout(h_box_top_label)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_middle_label</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">middle_layout</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_mode_paths</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_matlab_spm</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_buttons</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;MIA installation&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia installation&quot;</span><span class="p">)</span>
+        <span class="c1"># Setting the checkbox / widget states</span>
+        <span class="n">matlab_widgets</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_browse</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="p">,</span>
+        <span class="p">)</span>
 
-        <span class="c1"># Setting the checkbox values</span>
-        <span class="k">if</span> <span class="n">matlab_path</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">matlab_path</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">install_matlab_api</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="n">matlab_widgets</span><span class="p">:</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">widget</span> <span class="ow">in</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_browse</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="p">,</span>
+        <span class="p">):</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
-
         <span class="c1"># Signals</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_changed</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">stateChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_spm_changed</span><span class="p">)</span>
@@ -412,9 +372,36 @@
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="MIAInstallWidget._create_info_button">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget._create_info_button">[docs]</a>
+    <span class="k">def</span> <span class="nf">_create_info_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tooltip</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a circular information button with the given tooltip.</span>
+
+<span class="sd">        :param tooltip: The tooltip text to display when hovering over the</span>
+<span class="sd">            button.</span>
+<span class="sd">        :type tooltip: str</span>
+
+<span class="sd">        :returns: A QPushButton configured as an information button.</span>
+<span class="sd">        :type: QtWidgets.QPushButton</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;?&quot;</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="s2">&quot;background-color: rgb(150,150,200)&quot;</span><span class="p">)</span>
+        <span class="n">region</span> <span class="o">=</span> <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="p">(</span>
+            <span class="n">QtCore</span><span class="o">.</span><span class="n">QRect</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">),</span>
+            <span class="n">QtGui</span><span class="o">.</span><span class="n">QRegion</span><span class="o">.</span><span class="n">Ellipse</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">setMask</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+        <span class="n">button</span><span class="o">.</span><span class="n">setToolTip</span><span class="p">(</span><span class="n">tooltip</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">button</span></div>
+
+
 <div class="viewcode-block" id="MIAInstallWidget.browse_matlab">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_matlab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_matlab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a file dialog for the user to select a MATLAB executable file.</span>
 
@@ -423,7 +410,7 @@
 <span class="sd">        If a file is selected, the file path is displayed in the</span>
 <span class="sd">        `matlab_choice` widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for file selection with the title</span>
 <span class="sd">              &#39;Choose Matlab executable file&#39;.</span>
 <span class="sd">            - The dialog starts in the user&#39;s home directory.</span>
@@ -440,7 +427,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.browse_matlab_standalone">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_matlab_standalone">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_matlab_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_matlab_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select the MATLAB Compile</span>
 <span class="sd">        Runtime (MCR) directory.</span>
@@ -450,7 +437,7 @@
 <span class="sd">        installed. If a directory is selected, the path is displayed in</span>
 <span class="sd">        the `matlab_standalone_choice` widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for directory selection with the title</span>
 <span class="sd">              &#39;Choose MCR directory&#39;.</span>
 <span class="sd">            - The dialog starts in the user&#39;s home directory.</span>
@@ -468,7 +455,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.browse_mia_config_path">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_mia_config_path">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_mia_config_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_mia_config_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select a folder for</span>
 <span class="sd">        installing the MIA configuration.</span>
@@ -478,7 +465,7 @@
 <span class="sd">        If a directory is selected, its path is displayed in the</span>
 <span class="sd">        `mia_config_path_choice` widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for directory selection with the title</span>
 <span class="sd">              &#39;Select a folder where to install Mia configuration&#39;.</span>
 <span class="sd">            - Starts the dialog in the user&#39;s home directory.</span>
@@ -497,7 +484,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.browse_projects_path">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_projects_path">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_projects_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_projects_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select a folder to store</span>
 <span class="sd">        Mia&#39;s projects.</span>
@@ -507,7 +494,7 @@
 <span class="sd">        is selected, its path is displayed in the `projects_path_choice`</span>
 <span class="sd">        widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for directory selection with the title</span>
 <span class="sd">              &quot;Select a folder where to store Mia&#39;s projects&quot;.</span>
 <span class="sd">            - Starts the dialog in the user&#39;s home directory.</span>
@@ -526,7 +513,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.browse_spm">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_spm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_spm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select the SPM (Statistical</span>
 <span class="sd">        Parametric Mapping) directory.</span>
@@ -536,7 +523,7 @@
 <span class="sd">        directory is selected, its path is displayed in the `spm_choice`</span>
 <span class="sd">        widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for directory selection with the title</span>
 <span class="sd">              &#39;Choose SPM directory&#39;.</span>
 <span class="sd">            - Starts the dialog in the user&#39;s home directory.</span>
@@ -553,7 +540,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.browse_spm_standalone">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.browse_spm_standalone">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">browse_spm_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">browse_spm_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Opens a directory dialog for the user to select the SPM (Statistical</span>
 <span class="sd">        Parametric Mapping) standalone directory.</span>
@@ -563,7 +550,7 @@
 <span class="sd">        If a directory is selected, its path is displayed in the</span>
 <span class="sd">        `spm_standalone_choice` widget.</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Opens a `QFileDialog` for directory selection with the title</span>
 <span class="sd">              &#39;Choose SPM standalone directory&#39;.</span>
 <span class="sd">            - Starts the dialog in the user&#39;s home directory.</span>
@@ -581,30 +568,30 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.btnstate">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.btnstate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">btnstate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">btnstate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggles the state of two related buttons based on the text of the</span>
 <span class="sd">        clicked button.</span>
 
-<span class="sd">        This method manages the state of two buttons</span>
-<span class="sd">        (`host_target_push_button` and `casa_target_push_button`) based on</span>
-<span class="sd">        the text of the button that is clicked. If the button text is</span>
-<span class="sd">        &#39;Casa_Distro&#39;, it ensures that the `host_target_push_button` is</span>
-<span class="sd">        unchecked when the button is checked and vice versa. If the button</span>
-<span class="sd">        text is &#39;Host&#39;, it ensures that the `casa_target_push_button` is</span>
-<span class="sd">        unchecked when the button is checked and vice versa.</span>
+<span class="sd">        This method manages the state of two buttons (`host_target_push_button`</span>
+<span class="sd">        and `casa_target_push_button`) based on the text of the button that is</span>
+<span class="sd">        clicked. If the button text is &#39;Casa_Distro&#39;, it ensures that the</span>
+<span class="sd">        `host_target_push_button` is unchecked when the button is checked and</span>
+<span class="sd">        vice versa. If the button text is &#39;Host&#39;, it ensures that the</span>
+<span class="sd">        `casa_target_push_button` isunchecked when the button is checked and</span>
+<span class="sd">        vice versa.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            button (QtWidgets.QPushButton): The button that was clicked to</span>
-<span class="sd">                                            trigger the state change.</span>
+<span class="sd">        :param button: The button that was clicked to trigger the state change.</span>
+<span class="sd">        :type button: QtWidgets.QPushButton</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - If the clicked button&#39;s text is &quot;Casa_Distro&quot;, toggles the</span>
 <span class="sd">              state of the `host_target_push_button`.</span>
 <span class="sd">            - If the clicked button&#39;s text is &quot;Host&quot;, toggles the state of</span>
 <span class="sd">              the `casa_target_push_button`.</span>
 <span class="sd">            - Ensures that when one button is checked, the other is unchecked.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="n">button</span><span class="o">.</span><span class="n">text</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Casa_Distro&quot;</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="n">button</span><span class="o">.</span><span class="n">isChecked</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
@@ -622,9 +609,61 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">casa_target_push_button</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="MIAInstallWidget.clone_mia_resources">
+<a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.clone_mia_resources">[docs]</a>
+    <span class="k">def</span> <span class="nf">clone_mia_resources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mia_resources_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clones the mia_resources repository from GitLab to the</span>
+<span class="sd">        specified directory.</span>
+
+<span class="sd">        This method uses `git clone` to download the mia_resources repository</span>
+<span class="sd">        from the specified GitLab URL to the given local directory.</span>
+
+<span class="sd">        :param mia_resources_dir: The directory where the mia_resources</span>
+<span class="sd">         repository will be cloned.</span>
+<span class="sd">        :type mia_resources_dir: str</span>
+
+<span class="sd">        :returns: True if cloning succeeds, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="s2">&quot;git&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;clone&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;https://gricad-gitlab.univ-grenoble-alpes.fr/mia/&quot;</span>
+                    <span class="s2">&quot;mia_resources.git&quot;</span><span class="p">,</span>
+                    <span class="n">mia_resources_dir</span><span class="p">,</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Handle errors related to the git clone process</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Git clone failed with error code </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Handle cases where &#39;git&#39; is not installed or not found in PATH</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Error: &#39;git&#39; command not found. Please ensure Git is &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;installed and available in your PATH (</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">).&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Catch any other unforeseen errors</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
 <div class="viewcode-block" id="MIAInstallWidget.find_matlab_path">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.find_matlab_path">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_matlab_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">find_matlab_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Attempts to find the installation path of MATLAB on the system.</span>
 
@@ -638,20 +677,20 @@
 <span class="sd">        If MATLAB cannot be found or an error occurs during the process, an</span>
 <span class="sd">        empty string is returned.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            str: The path to the MATLAB executable if found, otherwise an</span>
-<span class="sd">                 empty string.</span>
+<span class="sd">        :returns: The path to the MATLAB executable if found, otherwise an</span>
+<span class="sd">            empty string.</span>
+<span class="sd">        :rtype: str</span>
 
-<span class="sd">        Behavior:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - Runs the MATLAB command</span>
-<span class="sd">            `matlab -nodisplay -nosplash -nodesktop -r &#39;disp(matlabroot);exit&#39;`</span>
-<span class="sd">            to obtain the root installation directory.</span>
+<span class="sd">              `matlab -nodisplay -nosplash -nodesktop -r &#39;disp(matlabroot);</span>
+<span class="sd">              exit&#39;` to obtain the root installation directory.</span>
 <span class="sd">            - Checks for the existence of the MATLAB executable (`matlab` or</span>
-<span class="sd">            `matlab.exe`) under the `bin` folder.</span>
+<span class="sd">              `matlab.exe`) under the `bin` folder.</span>
 <span class="sd">            - Returns the full path to the executable if found, or an empty</span>
-<span class="sd">            string if not.</span>
+<span class="sd">              string if not.</span>
 <span class="sd">            - In case of an exception (e.g., MATLAB is not installed), prints</span>
-<span class="sd">            a message and returns an empty string.</span>
+<span class="sd">              a message and returns an empty string.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">return_value</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
@@ -683,7 +722,7 @@
                     <span class="n">return_value</span> <span class="o">=</span> <span class="n">return_v_windows</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">The matlab path could not be determined &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;automatically ...</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="p">)</span>
@@ -693,37 +732,39 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.install">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.install">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">install</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Manages the installation and configuration of Mia and associated</span>
 <span class="sd">        software components.</span>
 
 <span class="sd">        This method performs the following steps:</span>
-<span class="sd">        1. Installs populse_mia and mia_processes from PyPi.</span>
-<span class="sd">        2. Checks the selected installation target (Host or Casa_Distro).</span>
-<span class="sd">        3. Configures the operating mode (clinical or research).</span>
-<span class="sd">        4. Optionally integrates with MATLAB and SPM based on user selections.</span>
-<span class="sd">        5. Manages the creation and initialization of necessary directories and</span>
-<span class="sd">           configuration files:</span>
-<span class="sd">            - Creates the directory ~/.populse_mia if it does not exist and</span>
-<span class="sd">              ensures the presence of configuration files.</span>
-<span class="sd">            - Initializes user-specific directories for properties, processes,</span>
-<span class="sd">              and projects.</span>
-<span class="sd">            - Manages MRI conversion directories and resources.</span>
-<span class="sd">        6. Prompts the user with warnings and asks for confirmation before</span>
-<span class="sd">           overwriting existing directories if necessary.</span>
-<span class="sd">        7. Clones required repositories (MRI conversion tools and</span>
-<span class="sd">           miaresources).</span>
-<span class="sd">        8. Updates the configuration file with new paths and settings.</span>
-<span class="sd">        9. Optionally upgrades packages (soma-base, soma-workflow, capsul) if</span>
-<span class="sd">           the Host installation target is selected.</span>
-<span class="sd">        10. Finalizes the installation and updates the GUI with the</span>
-<span class="sd">            installation status.</span>
+
+<span class="sd">            1. Installs populse_mia and mia_processes from PyPi.</span>
+<span class="sd">            2. Checks the selected installation target (Host or Casa_Distro).</span>
+<span class="sd">            3. Configures the operating mode (clinical or research).</span>
+<span class="sd">            4. Optionally integrates with MATLAB and SPM based on user</span>
+<span class="sd">               selections.</span>
+<span class="sd">            5. Manages the creation and initialization of necessary directories</span>
+<span class="sd">               and configuration files:</span>
+<span class="sd">                - Creates the directory ~/.populse_mia if it does not exist and</span>
+<span class="sd">                  ensures the presence of configuration files.</span>
+<span class="sd">                - Initializes user-specific directories for properties,</span>
+<span class="sd">                  processes, and projects.</span>
+<span class="sd">                - Manages MRI conversion directories and resources.</span>
+<span class="sd">            6. Prompts the user with warnings and asks for confirmation before</span>
+<span class="sd">               overwriting existing directories if necessary.</span>
+<span class="sd">            7. Clones required repositories (MRI conversion tools and</span>
+<span class="sd">               mia_resources).</span>
+<span class="sd">            8. Updates the configuration file with new paths and settings.</span>
+<span class="sd">            9. Optionally upgrades packages (soma-base, soma-workflow, capsul)</span>
+<span class="sd">               if the Host installation target is selected.</span>
+<span class="sd">            10. Finalizes the installation and updates the GUI with the</span>
+<span class="sd">                installation status.</span>
 
 <span class="sd">        The method requires user input via checkboxes and buttons to configure</span>
 <span class="sd">        various aspects of the installation.</span>
 
-<span class="sd">        Attributes:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - `host_target_push_button`: Defines whether the host target</span>
 <span class="sd">              installation is selected.</span>
 <span class="sd">            - `clinical_mode_push_button`: Defines whether the clinical mode</span>
@@ -738,15 +779,14 @@
 <span class="sd">            - `check_box_mia`, `check_box_mri_conv`, `check_box_config`,</span>
 <span class="sd">              `check_box_pkgs`: GUI elements for status display.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            - Exception: If any unexpected issues arise during the directory</span>
-<span class="sd">                         creation or software installation steps.</span>
+<span class="sd">        :raises Exception: If any unexpected issues arise during the directory</span>
+<span class="sd">            creation or software installation steps.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Installing Populse_mia and mia_processes from pypi</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">install_package</span><span class="p">(</span><span class="s2">&quot;populse_mia&quot;</span><span class="p">)</span>
 
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">verCmp</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
+        <span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="n">verCmp</span>
 
         <span class="c1"># Flag used later</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">folder_exists_flag</span> <span class="o">=</span> <span class="kc">False</span>
@@ -798,10 +838,11 @@
         <span class="n">dot_mia_config</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">),</span> <span class="s2">&quot;.populse_mia&quot;</span><span class="p">,</span> <span class="s2">&quot;configuration_path.yml&quot;</span>
         <span class="p">)</span>
+
         <span class="c1"># ~/.populse_mia/configuration_path.yml management/initialisation</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{}</span><span class="s2"> directory is created &quot;</span>
                 <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
             <span class="p">)</span>
@@ -832,7 +873,6 @@
                 <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
         <span class="n">mia_home_properties_path_new</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-
         <span class="n">properties_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">properties_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">):</span>
@@ -840,17 +880,17 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">mia_config_path_choice</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">properties_path</span><span class="p">)</span>
 
         <span class="n">properties_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;usr&quot;</span><span class="p">)</span>
-
         <span class="c1"># properties folder management / initialisation:</span>
         <span class="n">properties_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{</span><span class="n">properties_dir</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{</span><span class="n">properties_dir</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">)</span>
         <span class="p">):</span>
+
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">),</span>
                 <span class="s2">&quot;w&quot;</span><span class="p">,</span>
@@ -863,7 +903,7 @@
                     <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
 
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
@@ -892,12 +932,11 @@
                     <span class="n">allow_unicode</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                 <span class="p">)</span>
 
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-
             <span class="c1"># processes/User_processes folder management / initialisation:</span>
             <span class="n">user_processes_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                 <span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;processes&quot;</span><span class="p">,</span> <span class="s2">&quot;User_processes&quot;</span>
@@ -905,7 +944,7 @@
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">):</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{}</span><span class="s2"> directory is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">user_processes_dir</span>
                     <span class="p">)</span>
@@ -920,7 +959,7 @@
                         <span class="s2">&quot;__init__.py&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
-                <span class="nb">print</span><span class="p">(</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                     <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{}</span><span class="s2"> file is created...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
                     <span class="p">)</span>
@@ -933,7 +972,7 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">projects_path</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">projects_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{</span><span class="n">projects_path</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">The </span><span class="si">{</span><span class="n">projects_path</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">projects_path</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;The </span><span class="si">{}</span><span class="s2"> folder already contains data!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
@@ -974,7 +1013,7 @@
                             <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">elmt_path</span><span class="p">)</span>
 
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                             <span class="s2">&quot;Failed to delete </span><span class="si">{}</span><span class="s2">. Reason: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                 <span class="n">elmt_path</span><span class="p">,</span> <span class="n">e</span>
                             <span class="p">)</span>
@@ -1013,23 +1052,19 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">properties_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">projects_save_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">projects_path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mri_conv_dir</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">set_new_layout</span><span class="p">()</span>
-
         <span class="c1"># Updating the checkbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_mia</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
-
         <span class="c1"># Clones the MRI conversion repository into the specified directory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">make_mrifilemanager_folder</span><span class="p">(</span><span class="n">mri_conv_dir</span><span class="p">)</span>
+        <span class="c1"># Clone mia_resources</span>
+        <span class="n">mia_resources_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;mia_resources&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mia_resources_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mia_resources_dir</span><span class="p">)</span>
 
-        <span class="c1"># Clone MiaResources</span>
-        <span class="n">miaresources_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;miaresources&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mia_resources_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">miaresources_dir</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">miaresources_dir</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">mia_resources_dir</span><span class="p">):</span>
             <span class="n">message</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="s2">&quot;A &#39;miaresources&#39; folder already exists in the </span><span class="si">{}</span><span class="s2"> &quot;</span>
+                <span class="s2">&quot;A &#39;mia_resources&#39; folder already exists in the </span><span class="si">{}</span><span class="s2"> &quot;</span>
                 <span class="s2">&quot;folder!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">properties_path</span><span class="p">)</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
@@ -1047,19 +1082,23 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">buttonClicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ok_or_abort</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
+        <span class="c1"># miaresources is an obsolete package that has been replaced by</span>
+        <span class="c1"># mia_resources. We will remove it if it is still present.</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">properties_path</span><span class="p">,</span> <span class="s2">&quot;miaresources&quot;</span><span class="p">),</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
         <span class="c1"># If the user has clicked on &quot;Cancel&quot; the installation is aborted</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">folder_exists_flag</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">miaresources_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">mia_resources_dir</span><span class="p">,</span> <span class="n">ignore_errors</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">clone_miaResources</span><span class="p">(</span><span class="n">miaresources_dir</span><span class="p">)</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">clone_mia_resources</span><span class="p">(</span><span class="n">mia_resources_dir</span><span class="p">)</span>
         <span class="c1"># Updating the checkbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_mri_conv</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
-
         <span class="c1"># Adding properties_user_path to dot_mia_config file</span>
         <span class="n">mia_home_properties_path_new</span><span class="p">[</span><span class="s2">&quot;properties_user_path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
             <span class="n">properties_path</span>
@@ -1068,6 +1107,7 @@
             <span class="o">**</span><span class="n">mia_home_properties_path</span><span class="p">,</span>
             <span class="o">**</span><span class="n">mia_home_properties_path_new</span><span class="p">,</span>
         <span class="p">}</span>
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">configfile</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span>
                 <span class="n">mia_home_properties_path</span><span class="p">,</span>
@@ -1078,7 +1118,7 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_projects_save_path</span><span class="p">(</span><span class="n">projects_path</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">set_resources_path</span><span class="p">(</span><span class="n">miaresources_dir</span><span class="p">)</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">set_resources_path</span><span class="p">(</span><span class="n">mia_resources_dir</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_mri_conv_path</span><span class="p">(</span>
             <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mri_conv_dir</span><span class="p">,</span> <span class="s2">&quot;MRIFileManager&quot;</span><span class="p">,</span> <span class="s2">&quot;MRIManager.jar&quot;</span><span class="p">)</span>
         <span class="p">)</span>
@@ -1090,7 +1130,6 @@
         <span class="n">config</span><span class="o">.</span><span class="n">set_spm_path</span><span class="p">(</span><span class="n">spm</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_spm_standalone</span><span class="p">(</span><span class="n">use_spm_standalone</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_spm_standalone_path</span><span class="p">(</span><span class="n">spm_standalone</span><span class="p">)</span>
-
         <span class="c1"># Updating the checkbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_config</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
@@ -1109,33 +1148,32 @@
         <span class="c1"># Updating the checkbox</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_pkgs</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span>
-
         <span class="c1"># Displaying the result of the installation</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_layout</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="MIAInstallWidget.install_matlab_api">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.install_matlab_api">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">install_matlab_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">install_matlab_api</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Installs the MATLAB Engine API for Python.</span>
 
 <span class="sd">        This method attempts to install the MATLAB Engine API by calling</span>
-<span class="sd">        `pip install .` in the MATLAB `extern/engines/python` directory.</span>
+<span class="sd">        ``pip install .`` in the MATLAB `extern/engines/python` directory.</span>
 <span class="sd">        It temporarily changes the working directory to execute the</span>
 <span class="sd">        installation command and then restores the directory.</span>
 
-<span class="sd">        Notes:</span>
+<span class="sd">        :returns: True if the installation succeeds, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
+
+<span class="sd">        :raises FileNotFoundError: If the MATLAB installation path is invalid.</span>
+<span class="sd">        :raises subprocess.CalledProcessError: If the installation command</span>
+<span class="sd">            fails.</span>
+
+<span class="sd">        Note:</span>
 <span class="sd">            - `self.matlab_path` must be set to the MATLAB installation path.</span>
 <span class="sd">            - This method uses `subprocess.check_call()` to run `pip install .`</span>
 <span class="sd">              for compatibility with virtual environments.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            bool: True if the installation succeeds, False otherwise.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            - FileNotFoundError: If the MATLAB installation path is invalid.</span>
-<span class="sd">            - subprocess.CalledProcessError: If the installation command fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">matlab_path</span><span class="p">):</span>
@@ -1161,15 +1199,17 @@
             <span class="n">pip_install_command</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;--user&quot;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Starting MATLAB Engine API installation...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting MATLAB Engine API installation...&quot;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">matlab_engine_path</span><span class="p">)</span>
             <span class="c1"># Install the package with pip</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">pip_install_command</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;MATLAB Engine API installation completed successfully.&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="s2">&quot;MATLAB Engine API installation completed successfully.&quot;</span>
+            <span class="p">)</span>
             <span class="k">return</span> <span class="kc">True</span>
 
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Installation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Installation failed: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">finally</span><span class="p">:</span>
@@ -1178,25 +1218,23 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.install_package">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.install_package">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">install_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">install_package</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">package</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Installs or upgrades a Python package using pip.</span>
 
 <span class="sd">        This method constructs a pip command to install or upgrade a</span>
-<span class="sd">        specified package.</span>
-<span class="sd">        It checks if the current environment is a virtual environment</span>
-<span class="sd">        and, if not, adds the `--user` flag to the command to install</span>
-<span class="sd">        the package for the current user.</span>
+<span class="sd">        specified package. It checks if the current environment is a virtual</span>
+<span class="sd">        environment and, if not, adds the `--user` flag to the command to</span>
+<span class="sd">        install the package for the current user.</span>
 
 <span class="sd">        The method executes the command using `subprocess.check_call()`</span>
 <span class="sd">        to ensure that the package is installed or upgraded successfully.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            package (str): The name of the package to be installed or upgraded.</span>
+<span class="sd">        :param package: The name of the package to be installed or upgraded.</span>
+<span class="sd">        :type package: str</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            subprocess.CalledProcessError: If the pip installation</span>
-<span class="sd">                                           command fails.</span>
+<span class="sd">        :raises subprocess.CalledProcessError: If the pip installation command</span>
+<span class="sd">            fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pip_install_command</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
@@ -1216,7 +1254,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.last_layout">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.last_layout">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">last_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">last_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the final layout for the application window after</span>
 <span class="sd">        Mia installation.</span>
@@ -1241,18 +1279,15 @@
 <span class="sd">        window, and that the layout is set as the main layout of the window.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="p">)</span>
-
         <span class="c1"># Setting a new layout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_installed_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
             <span class="s2">&quot;Mia has been correctly &quot;</span> <span class="s2">&quot;installed.&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_installed_label</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top_label_font</span><span class="p">)</span>
-
         <span class="n">h_box_top_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_installed_label</span><span class="p">)</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="n">mia_label_text</span> <span class="o">=</span> <span class="s2">&quot;- Mia configuration path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">properties_dir</span>
         <span class="p">)</span>
@@ -1262,19 +1297,17 @@
         <span class="n">mri_conv_label_text</span> <span class="o">=</span> <span class="s2">&quot;- MRIFileManager path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mri_conv_path</span>
         <span class="p">)</span>
-        <span class="n">mia_resources_label_text</span> <span class="o">=</span> <span class="s2">&quot;- MiaResources path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">mia_resources_label_text</span> <span class="o">=</span> <span class="s2">&quot;- mia_resources path: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mia_resources_path</span>
         <span class="p">)</span>
         <span class="n">operating_mode_label_text</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;Populse_MIA has been installed with </span><span class="si">{}</span><span class="s2"> &quot;</span> <span class="s2">&quot;mode.&quot;</span>
         <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operating_mode</span><span class="p">)</span>
-
         <span class="n">mia_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">mia_label_text</span><span class="p">)</span>
         <span class="n">projects_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">projects_label_text</span><span class="p">)</span>
         <span class="n">mri_conv_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">mri_conv_label_text</span><span class="p">)</span>
         <span class="n">mia_resources_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">mia_resources_label_text</span><span class="p">)</span>
         <span class="n">operating_mode_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">operating_mode_label_text</span><span class="p">)</span>
-
         <span class="n">mia_command_label_text</span> <span class="o">=</span> <span class="p">(</span>
             <span class="s2">&quot;To launch populse_mia, execute one of these &quot;</span>
             <span class="s2">&quot;command lines depending on your Python &quot;</span>
@@ -1284,14 +1317,11 @@
         <span class="p">)</span>
         <span class="n">mia_command_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="n">mia_command_label_text</span><span class="p">)</span>
         <span class="n">mia_command_label</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top_label_font</span><span class="p">)</span>
-
         <span class="n">button_quit</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Quit&quot;</span><span class="p">)</span>
         <span class="n">button_quit</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">)</span>
-
         <span class="n">h_box_button</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_button</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">h_box_button</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">button_quit</span><span class="p">)</span>
-
         <span class="n">v_box_last_layout</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">v_box_last_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_top_label</span><span class="p">)</span>
         <span class="n">v_box_last_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1305,25 +1335,23 @@
         <span class="n">v_box_last_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">mia_command_label</span><span class="p">)</span>
         <span class="n">v_box_last_layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">v_box_last_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_button</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="n">v_box_last_layout</span><span class="p">)</span>
-
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="MIAInstallWidget.make_mrifilemanager_folder">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.make_mrifilemanager_folder">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">make_mrifilemanager_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mri_conv_dir</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">make_mrifilemanager_folder</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mri_conv_dir</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clones the MRI conversion repository into the specified directory.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            mri_conv_dir (str): The directory where the repository will</span>
-<span class="sd">                                 be cloned.</span>
+<span class="sd">        :param mri_conv_dir: The directory where the repository will be cloned.</span>
+<span class="sd">        :type mri_conv_dir: str</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            bool: True if cloning succeeds, False otherwise.</span>
+<span class="sd">        :returns: True if cloning succeeds, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span>
                 <span class="p">[</span>
@@ -1337,7 +1365,7 @@
 
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Handle errors related to the git clone process</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Git clone failed with error code </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
@@ -1345,7 +1373,7 @@
 
         <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Handle cases where &#39;git&#39; is not installed or not found in PATH</span>
-            <span class="nb">print</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Error: &#39;git&#39; command not found. Please ensure Git is &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;installed and available in your PATH (</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">).&quot;</span>
             <span class="p">)</span>
@@ -1353,80 +1381,27 @@
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="c1"># Catch any other unforeseen errors</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
-
-
-<div class="viewcode-block" id="MIAInstallWidget.clone_miaResources">
-<a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.clone_miaResources">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">clone_miaResources</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">miaresources_dir</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Clones the MiaResources repository from GitLab to the</span>
-<span class="sd">        specified directory.</span>
-
-<span class="sd">        This method uses `git clone` to download the MiaResources repository</span>
-<span class="sd">        from the specified GitLab URL to the given local directory.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            miaresources_dir (str): The directory where the MiaResources</span>
-<span class="sd">                                    repository will be cloned.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">        bool: True if cloning succeeds, False otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="s2">&quot;git&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;clone&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;https://gricad-gitlab.univ-grenoble-alpes.fr/&quot;</span>
-                    <span class="s2">&quot;condamie/miaresources.git&quot;</span><span class="p">,</span>
-                    <span class="n">miaresources_dir</span><span class="p">,</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">True</span>
-
-        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># Handle errors related to the git clone process</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Git clone failed with error code </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">returncode</span><span class="si">}</span><span class="s2">.&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Error message: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">except</span> <span class="ne">FileNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># Handle cases where &#39;git&#39; is not installed or not found in PATH</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Error: &#39;git&#39; command not found. Please ensure Git is &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;installed and available in your PATH (</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">).&quot;</span>
-            <span class="p">)</span>
-            <span class="k">return</span> <span class="kc">False</span>
-
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="c1"># Catch any other unforeseen errors</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An unexpected error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="MIAInstallWidget.ok_or_abort">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.ok_or_abort">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">ok_or_abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">ok_or_abort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles the action when the user clicks a button in a message box.</span>
 
-<span class="sd">        This method checks the role of the clicked button.</span>
-<span class="sd">        If the &quot;OK&quot; button is clicked, it sets the `folder_exists_flag`</span>
-<span class="sd">        to `False`. If any other button is clicked, it sets the</span>
-<span class="sd">        `folder_exists_flag` to `True`.</span>
+<span class="sd">        This method checks the role of the clicked button. If the &quot;OK&quot; button</span>
+<span class="sd">        is clicked, it sets the `folder_exists_flag` to `False`. If any other</span>
+<span class="sd">        button is clicked, it sets the `folder_exists_flag` to `True`.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            button (QtWidgets.QPushButton): The button that was clicked</span>
-<span class="sd">            in the message box.</span>
+<span class="sd">        :param button: The button that was clicked in the message box.</span>
+<span class="sd">        :type button: QtWidgets.QPushButton</span>
 
-<span class="sd">        Modifies:</span>
-<span class="sd">            folder_exists_flag (bool): A flag that indicates whether the</span>
-<span class="sd">                                       folder exists based on the user&#39;s</span>
-<span class="sd">                                       response to the message box.</span>
+<span class="sd">        Note:</span>
+<span class="sd">            Modifies the folder_exists_flag (bool): A flag that indicates</span>
+<span class="sd">            whether the folder exists based on the user&#39;s response to the</span>
+<span class="sd">            message box.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">role</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">buttonRole</span><span class="p">(</span><span class="n">button</span><span class="p">)</span>
 
@@ -1439,7 +1414,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.set_new_layout">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.set_new_layout">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">set_new_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">set_new_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the layout to show the installation progress.</span>
 
@@ -1450,37 +1425,29 @@
 <span class="sd">        and installing Python packages. The layout is then set as the current</span>
 <span class="sd">        layout for the widget.</span>
 
-<span class="sd">        Modifies:</span>
-<span class="sd">            The layout of the widget to reflect the installation status, with</span>
-<span class="sd">            labels and checkboxes to indicate progress.</span>
+<span class="sd">        Note:</span>
+<span class="sd">            Modifies the layout of the widget to reflect the installation</span>
+<span class="sd">            status, with labels and checkboxes to indicate progress.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QWidget</span><span class="p">()</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_layout</span><span class="p">)</span>
-
         <span class="c1"># Setting a new layout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_installing_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
             <span class="s2">&quot;Mia is getting installed.&quot;</span> <span class="s2">&quot; Please wait! ...&quot;</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mia_installing_label</span><span class="o">.</span><span class="n">setFont</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">top_label_font</span><span class="p">)</span>
-
         <span class="n">h_box_top_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mia_installing_label</span><span class="p">)</span>
         <span class="n">h_box_top_label</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Status:&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_mia</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;Installing Mia&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_mri_conv</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span>
             <span class="s2">&quot;Installing &quot;</span> <span class="s2">&quot;MRIFileManager&quot;</span>
         <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_config</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span><span class="s2">&quot;Writing config file&quot;</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">check_box_pkgs</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QCheckBox</span><span class="p">(</span>
             <span class="s2">&quot;Installing Python packages &quot;</span> <span class="s2">&quot;(may take a few minutes)&quot;</span>
         <span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">h_box_top_label</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="p">)</span>
@@ -1489,16 +1456,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_box_config</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_box_pkgs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-
         <span class="bp">self</span><span class="o">.</span><span class="n">setLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">v_box_install_status</span><span class="p">)</span>
-
         <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QApplication</span><span class="o">.</span><span class="n">processEvents</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="MIAInstallWidget.uninstall_package">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.uninstall_package">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">uninstall_package</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">uninstall_package</span><span class="p">(</span><span class="n">package</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uninstalls a Python package using pip.</span>
 
@@ -1508,13 +1473,13 @@
 <span class="sd">        (e.g., if pip is not available for the current interpreter), it falls</span>
 <span class="sd">        back to using the `pip3` command to uninstall the package.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            package (str): The name of the Python package to uninstall.</span>
+<span class="sd">        :param package: The name of the Python package to uninstall.</span>
+<span class="sd">        :type package: str</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            subprocess.CalledProcessError: If the package uninstall</span>
-<span class="sd">            command fails.</span>
+<span class="sd">        :raises subprocess.CalledProcessError: If the package uninstall command</span>
+<span class="sd">            fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span> <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="s2">&quot;pip&quot;</span><span class="p">,</span> <span class="s2">&quot;uninstall&quot;</span><span class="p">,</span> <span class="s2">&quot;--yes&quot;</span><span class="p">,</span> <span class="n">package</span><span class="p">]</span>
@@ -1524,12 +1489,12 @@
             <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">([</span><span class="s2">&quot;pip3&quot;</span><span class="p">,</span> <span class="s2">&quot;uninstall&quot;</span><span class="p">,</span> <span class="s2">&quot;--yes&quot;</span><span class="p">,</span> <span class="n">package</span><span class="p">])</span>
 
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to uninstall </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to uninstall </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MIAInstallWidget.upgrade_soma_capsul">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.upgrade_soma_capsul">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">upgrade_soma_capsul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">upgrade_soma_capsul</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Upgrades the soma-base, soma-workflow, and capsul packages by cloning</span>
 <span class="sd">        their latest versions from GitHub and reinstalling them.</span>
@@ -1548,8 +1513,7 @@
 <span class="sd">        returns to the original working directory and deletes the</span>
 <span class="sd">        temporary directory.</span>
 
-<span class="sd">        Raises:</span>
-<span class="sd">            subprocess.CalledProcessError: If any command execution fails.</span>
+<span class="sd">        :raises subprocess.CalledProcessError: If any command execution fails.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">temp_dir</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkdtemp</span><span class="p">()</span>
         <span class="n">cwd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
@@ -1573,7 +1537,7 @@
                 <span class="n">subprocess</span><span class="o">.</span><span class="n">check_call</span><span class="p">(</span><span class="n">pip_install_command</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while upgrading </span><span class="si">{</span><span class="n">package_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while upgrading </span><span class="si">{</span><span class="n">package_name</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;if not os.name == &#39;nt&#39;:  # if not on windows</span>
 <span class="sd">                   self.uninstall_package(&#39;capsul&#39;)</span>
@@ -1591,12 +1555,13 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.use_matlab_changed">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.use_matlab_changed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">use_matlab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">use_matlab_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggles the state of MATLAB-related options based on the &#39;use_matlab&#39;</span>
-<span class="sd">        checkbox. When unchecked, all MATLAB and SPM options are disabled.</span>
+<span class="sd">        checkbox.</span>
 
-<span class="sd">        Called when the use_matlab checkbox is changed.</span>
+<span class="sd">        When unchecked, all MATLAB and SPM options are disabled. Called when</span>
+<span class="sd">        the use_matlab checkbox is changed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_matlab_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
@@ -1614,6 +1579,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">setChecked</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -1625,7 +1591,7 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.use_spm_changed">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_changed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">use_spm_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">use_spm_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the state of SPM-related options based on the &#39;use_spm&#39;</span>
 <span class="sd">        checkbox.</span>
@@ -1635,6 +1601,7 @@
 
 <span class="sd">        Called when the use_spm checkbox is changed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1652,21 +1619,21 @@
 
 <div class="viewcode-block" id="MIAInstallWidget.use_spm_standalone_changed">
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.install.mia_install_widget.html#populse_mia.install.mia_install_widget.MIAInstallWidget.use_spm_standalone_changed">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">use_spm_standalone_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">use_spm_standalone_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the state of standalone SPM-related options based on the</span>
 <span class="sd">        &#39;use_spm_standalone&#39; checkbox.</span>
 
 <span class="sd">        When checked, enables the standalone SPM options while disabling</span>
-<span class="sd">        the regular SPM options, and vice versa.</span>
-
-<span class="sd">        Called when the use_spm_standalone checkbox is changed</span>
+<span class="sd">        the regular SPM options, and vice versa. Called when</span>
+<span class="sd">        the use_spm_standalone checkbox is changed</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_spm_standalone_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_browse</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_choice</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">spm_standalone_label</span><span class="o">.</span><span class="n">setDisabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
