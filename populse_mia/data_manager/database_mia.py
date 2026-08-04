@@ -133,9 +133,7 @@ class DatabaseMIA:
     supervision of populse_db.
 
     Contains:
-
         Methods:
-
             - __enter__: Make a database connection and return it.
             - __exit__: Make sure the database connection gets closed.
             - close: Releases database resources.
@@ -151,8 +149,9 @@ class DatabaseMIA:
         """
         Initializes a DatabaseMIA instance with the given database file.
 
-        :param database_engine: (str) Path to the database file
-         (e.g. '/a/folder/path/file.db').
+        :param database_engine: Path to the database file (e.g.
+         '/a/folder/path/file.db').
+        :type database_engine: str
         """
         # Initialize the storage with the provided database engine
         self.storage = Storage(database_engine)
@@ -162,10 +161,18 @@ class DatabaseMIA:
 
     def __enter__(self):
         """
-        Make a database connection and return it.
+        Enter the runtime context and initialize the database connection.
 
-        Enables the use of `with DatabaseMIA(...) as foo:` for automatic
-        resource management.
+        This method enables usage of the class as a context manager:
+
+        .. code-block:: python
+
+            with DatabaseMIA(...) as database:
+                ...
+
+        :returns: The current instance, allowing database operations within the
+         context block.
+        :rtype: DatabaseMIA
         """
         return self
 
@@ -176,17 +183,21 @@ class DatabaseMIA:
         Ensures the database is properly closed when exiting a `with`
         statement.
 
-        :param exc_type: (Type[BaseException]) The exception type if an
-         exception occurred, otherwise None (unused).
-        :param exc_value: (BaseException) The exception instance if an
-         exception occurred, otherwise None (unused).
-        :param traceback: (TracebackType) The traceback object if an exception
-         occurred, otherwise None (unused).
+        :param exc_type: The exception type if an exception occurred,
+         otherwise None (unused).
+        :type exc_type: BaseException | None
+        :param exc_value: The exception instance if an exception occurred,
+         otherwise None (unused).
+        :type exc_value: BaseException | None
+        :param traceback: The traceback object if an exception occurred,
+         otherwise None (unused).
+        :type traceback: types.TracebackType | None
         """
         self.close()
 
     def close(self):
-        """Closes any open resources or connections held by the instance.
+        """
+        Closes any open resources or connections held by the instance.
 
         This method sets the `storage` attribute to `None`, effectively
         releasing any held references and cleaning up the object's state.
@@ -201,10 +212,13 @@ class DatabaseMIA:
         This method allows safe read and write access to the database data,
         ensuring proper resource management.
 
-        :param write: (bool) If True, enables write mode.
-        :param create: (bool) If True, allows creating new records.
+        :param write: If True, enables write mode.
+        :type write: bool | None
+        :param create: If True, allows creating new records.
+        :type create: bool | None
 
-        :Yields: (DatabaseMiaData) The data interface for the database.
+        :yields: The data interface for the database.
+        :rtype: DatabaseMiaData
         """
 
         with self.storage.data(write=write, create=create) as data:
@@ -218,7 +232,8 @@ class DatabaseMIA:
         This method allows safe access to the database schema, ensuring proper
         resource management.
 
-        :Yields: (DatabaseMiaSchema) The schema interface for the database.
+        :yields: The schema interface for the database.
+        :rtype: DatabaseMiaSchema
         """
 
         with self.storage.schema() as schema:
@@ -233,9 +248,7 @@ class DatabaseMiaSchema:
     field attributes under the supervision of populse_db.
 
     Contains:
-
         Methods:
-
             - __init__: Initializes the schema interface.
             - add_collection: Adds a new collection to the database.
             - add_field: Adds one or more fields to a collection.
@@ -254,8 +267,8 @@ class DatabaseMiaSchema:
         """
         Initializes the DatabaseMiaSchema instance.
 
-        :param storage_schema: (populse_db.storage.Storage) The schema storage
-         interface for the database.
+        :param storage_schema: The schema storage interface for the database.
+        :type storage_schema: populse_db.storage.Storage
         """
         self.storage_schema = storage_schema
 
@@ -275,12 +288,18 @@ class DatabaseMiaSchema:
         additional field attributes, ensuring proper schema updates and
         collection initialization.
 
-        :param collection_name: (str) The name of the new collection.
-        :param primary_key: (str) The primary key column for the collection.
-        :param visibility: (bool) Visibility of the primary key field.
-        :param origin: (str) Origin of the primary key field.
-        :param unit: (str) Unit of the primary key field.
-        :param default_value: (Any) Default value for the primary key field.
+        :param collection_name: The name of the new collection.
+        :type collection_name: str
+        :param primary_key: The primary key column for the collection.
+        :type primary_key: str
+        :param visibility: Visibility of the primary key field.
+        :type visibility: bool
+        :param origin: Origin of the primary key field.
+        :type origin: str
+        :param unit: Unit of the primary key field.
+        :type unit: str
+        :param default_value: Default value for the primary key field.
+        :type default_value: Any
         """
         self.add_field_attributes_collection()
 
@@ -319,9 +338,9 @@ class DatabaseMiaSchema:
             - `unit` (str): The unit associated with the field.
             - `default_value` (Any): The default value of the field.
 
-        :param fields: (dict | list[dict]) A dictionary representing a single
-         field's attributes, or a list of dictionaries representing multiple
-         field's attributes.
+        :param fields: A dictionary representing a single field's attributes,
+         or a list of dictionaries representing multiple field's attributes.
+        :type fields: dict | list[dict]
         """
 
         # Ensure fields is always a list for consistent processing
@@ -417,10 +436,11 @@ class DatabaseMiaSchema:
         """
         Provides a context manager for accessing the database data.
 
-        This method ensures safe access to the database data layer,
-        managing resources properly.
+        This method ensures safe access to the database data layer, managing
+        resources properly.
 
-        :Yields: (DatabaseMiaData) The data interface for the database.
+        :yields: The data interface for the database.
+        :rtype: DatabaseMiaData
         """
 
         with self.storage_schema.data() as storage_data:
@@ -433,13 +453,16 @@ class DatabaseMiaSchema:
         This method updates the schema to remove the specified field from the
         collection and handles associated attributes cleanup.
 
-        :param collection_name: (str) The name of the collection from which
-         the field will be removed (must exist).
-        :param field_name: (str) The name of the field to remove (must exist).
+        :param collection_name: The name of the collection from which the field
+         will be removed (must exist).
+        :type collection_name: str
+        :param field_name: The name of the field to remove (must exist).
+        :type field_name: str
 
         :raises ValueError: If the `collection_name` does not exist or if
-                            the `field_name` does not exist.
+         the `field_name` does not exist.
         """
+
         try:
             self.storage_schema.remove_field(collection_name, field_name)
 
@@ -455,16 +478,18 @@ class DatabaseMiaSchema:
         """
         Remove attributes associated with a specific field in a collection.
 
-        This method deletes the document storing metadata or attributes for
-        the specified field in the given collection.
+        This method deletes the document storing metadata or attributes for the
+        specified field in the given collection.
 
-        :param collection_name: (str) The name of the collection containing
-         the field.
-        :param field_name: (str) The name of the field whose attributes are
-         to be removed.
+        :param collection_name: The name of the collection containing the
+         field.
+        :type collection_name: str
+        :param field_name: The name of the field whose attributes are to be
+         removed.
+        :type field_name: str
 
-        :raises ValueError: If the attributes document does not exist or
-         cannot be removed.
+        :raises ValueError: If the attributes document does not exist or cannot
+         be removed.
         """
         index = f"{collection_name}|{field_name}"
 
@@ -499,15 +524,23 @@ class DatabaseMiaSchema:
         field_name ('collection|field_name'), and then updates the field's
         attributes in the FIELD_ATTRIBUTES_COLLECTION.
 
-        :param collection_name: (str) The name of the collection the field
-         belongs to.
-        :param field_name: (str) The name of the field to update.
-        :param visibility: (bool) The visibility status of the field.
-        :param origin: (str) The origin or source of the field.
-        :param unit: (str) The unit of measurement for the field.
-        :param default_value: (Any) The default value to assign to the field.
-        :param description: (str) The description of the field.
-        :param field_type: (Any) The type of the field.
+        :param collection_name: The name of the collection the field belongs
+         to.
+        :type collection_name: str
+        :param field_name: The name of the field to update.
+        :type field_name: str
+        :param visibility: The visibility status of the field.
+        :type visibility: bool
+        :param origin: The origin or source of the field.
+        :type origin: str
+        :param unit: The unit of measurement for the field.
+        :type unit: str
+        :param default_value: The default value to assign to the field.
+        :type default_value: Any
+        :param description: The description of the field.
+        :type description: str
+        :param field_type: The type of the field.
+        :type field_type: Any
         """
         index = f"{collection_name}|{field_name}"
 
@@ -535,9 +568,7 @@ class DatabaseMiaData:
     removing records.
 
     Contains:
-
         Methods:
-
             - add_document: Adds a document to a collection.
             - filter_documents: Retrieves documents from a specified collection
               that match a given filter.
@@ -568,8 +599,8 @@ class DatabaseMiaData:
         """
         Initializes a new instance of the DatabaseMiaData class.
 
-        :param storage_data: (populse_db.storage.Storage) The data storage
-         interface for the database.
+        :param storage_data: The data storage interface for the database.
+        :type storage_data: populse_db.storage.Storage
         """
         self.storage_data = storage_data
 
@@ -582,9 +613,11 @@ class DatabaseMiaData:
         collection's primary key configuration. The changes are saved
         to the storage.
 
-        :param collection_name: (str) The name of the collection where the
-         document should be added.
-        :param document: (str) The document name to be added.
+        :param collection_name: The name of the collection where the document
+         should be added.
+        :type collection_name: str
+        :param document: The document name to be added.
+        :type document: str
         """
 
         if self.has_collection(collection_name):
@@ -599,25 +632,23 @@ class DatabaseMiaData:
         filter.
 
         This method searches for documents in the specified collection based
-        on the provided filter query. It returns the results as a list of
-        rows from the collection table.
+        on the provided filter query. It returns the results as a list of rows
+        from the collection table.
 
         The `filter_query` can either be:
-
             - The result of `self.filter_query()`.
             - A string defining a filter.
 
         **Filter Query Format:**
-
             - A filter condition must follow this syntax:
               `{<field>} <operator> "<value>"`.
             - Supported operators:
               `==`, `!=`, `<=`, `>=`, `<`, `>`, `IN`, `ILIKE`, `LIKE`.
             - Multiple filter conditions can be combined using `AND` or `OR`.
             - Example:
-                ```
-                "((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))"
-                ```
+                .. code-block:: python
+
+                  '((({BandWidth} == "50000")) AND (({FileName} LIKE "%G1%")))'
 
         Note:
             Due to potential database access issues such as
@@ -625,11 +656,14 @@ class DatabaseMiaData:
             list instead of using `yield`. However, using `yield` may be
             reconsidered in the future for better memory management.
 
-        :param collection_name: (str) The name of the collection to filter
-         (must exist).
-        :param filter_query: (str) The filter query to apply.
+        :param collection_name: The name of the collection to filter (must
+         exist).
+        :type collection_name: str
+        :param filter_query: The filter query to apply.
+        :type filter_query: str
 
-        :Returns: (list) A list of rows matching the filter criteria.
+        :returns: A list of rows matching the filter criteria.
+        :rtype: list
         """
 
         if not self.has_collection(collection_name):
@@ -652,7 +686,8 @@ class DatabaseMiaData:
         """
         Retrieves a list of all collection names in the database.
 
-        :Returns: (list) All collection names in the database.
+        :returns: All collection names in the database.
+        :rtype: list
         """
         return self.storage_data.collection_names()
 
@@ -666,16 +701,19 @@ class DatabaseMiaData:
         primary keys and selecting specific fields. If the collection does not
         exist, an empty list is returned.
 
-        :param collection_name: (str) Name of the document collection. The
-         collection must already exist in the database.
-        :param primary_keys: (str | list[str], optional) A single primary key
-         or a list of primary keys to filter ocuments. If None, no filtering by
-         primary keys is applied.
-        :param fields: (str | list[str], optional) A single field or a list of
-         fields to include in the result. If None, all fields are included.
+        :param collection_name: Name of the document collection. The collection
+         must already exist in the database.
+        :type collection_name: str
+        :param primary_keys: A single primary key or a list of primary keys to
+         filter documents. If None, no filtering by primary keys is applied.
+        :type primary_keys: str | list[str]
+        :param fields: A single field or a list of fields to include in the
+         result. If None, all fields are included.
+        :type fields: str | list[str]
 
-        :Returns: (list) A list of documents matching the specified criteria,
-         or an empty list if the collection does not exist.
+        :returns: A list of documents matching the specified criteria, or an
+         empty list if the collection does not exist.
+        :rtype: list
         """
 
         if not self.has_collection(collection_name):
@@ -711,11 +749,13 @@ class DatabaseMiaData:
         """
         Retrieve a list of all document names in the specified collection.
 
-        :param collection_name: (str) The name of the collection to retrieve
-         document names from. The collection must already exist.
+        :param collection_name: The name of the collection to retrieve document
+         names from. The collection must already exist.
+        :type collection_name: str
 
-        :Returns: (list[str]) A list of document names if the collection
-         exists, otherwise an empty list.
+        :returns: A list of document names if the collection exists, otherwise
+         an empty list.
+        :rtype: list[str]
         """
         if self.has_collection(collection_name):
             primary_key = self.get_primary_key_name(collection_name)
@@ -732,14 +772,17 @@ class DatabaseMiaData:
         Retrieve attributes of a specific field or all fields in a collection
         from the storage.
 
-        :param collection_name: (str) The name of the collection.
-        :param field_name: (str, optional) The name of a specific field within
-         the collection. If not provided, attributes for all fields in the
-         collection will be retrieved.
+        :param collection_name: The name of the collection.
+        :type collection_name: str
+        :param field_name: The name of a specific field within the collection.
+         If not provided, attributes for all fields in the collection will be
+         retrieved.
+        :type field_name: str | None
 
-        :Returns: (dict | list[dict]) Attributes of the specified field as a
-         dictionary, or a list of dictionaries with attributes for all fields
-         if `field_name` is not provided.
+        :returns: Attributes of the specified field as a dictionary, or a list
+         of dictionaries with attributes for all fields if `field_name` is not
+         provided.
+        :rtype: dict | list[dict] | None
         """
 
         if field_name:
@@ -777,12 +820,13 @@ class DatabaseMiaData:
         """
         Retrieve the list of all field names in the specified collection.
 
-        :param collection_name: (str) The name of the collection to retrieve
-         field names from. The collection must exist in the database.
+        :param collection_name: The name of the collection to retrieve field
+         names from. The collection must exist in the database.
+        :type collection_name: str
 
-        :Returns: (list | None) A list of all field names in the collection
-         if it exists, or `None` if the collection has no fields or does not
-         exist.
+        :returns: A list of all field names in the collection if it exists, or
+         `None` if the collection has no fields or does not exist.
+        :rtype: list | None
         """
         field_names = list(self.storage_data[collection_name].keys())
         return field_names if field_names else None
@@ -794,11 +838,13 @@ class DatabaseMiaData:
         This method returns the first key from the specified collection within
         the database.
 
-        :param collection_name: (str) The name of the collection to retrieve
-         the primary key from.
+        :param collection_name: The name of the collection to retrieve the
+         primary key from.
+        :type collection_name: str
 
-        :Returns: (str) The first key in the collection, representing the
-         primary key.
+        :returns: The first key in the collection, representing the primary
+         key.
+        :rtype: str
         """
         return self.storage_data[collection_name].primary_key()[0]
 
@@ -806,7 +852,8 @@ class DatabaseMiaData:
         """
         Give the list of visible tags.
 
-        :Returns: (list) The list of visible tags.
+        :returns: The list of visible tags.
+        :rtype: list
         """
         visible_names = []
         names_set = set()
@@ -838,24 +885,29 @@ class DatabaseMiaData:
         given field within a document, identified by its primary key, in the
         specified collection.
 
-        :param collection_name: (str) The name of the collection containing
-         the document.
-        :param primary_key: (str) The unique identifier (primary key) of the
+        :param collection_name: The name of the collection containing the
          document.
-        :param field: (str) The name of the field within the document to
-         retrieve.
+        :type collection_name: str
+        :param primary_key: The unique identifier (primary key) of the
+         document.
+        :type primary_key: str
+        :param field: The name of the field within the document to retrieve.
+        :type field: str
 
-        :Returns: (Any) The current value of the specified field.
+        :returns: The current value of the specified field.
+        :rtype: Any
         """
         return self.storage_data[collection_name][primary_key][field].get()
 
     def has_collection(self, collection_name):
         """
-         Checks if a collection with the specified name exists in the database.
+        Checks if a collection with the specified name exists in the database.
 
-        :param collection_name: (str) The name of the collection to check.
+        :param collection_name: The name of the collection to check.
+        :type collection_name: str
 
-        :Returns: (bool) `True` if the collection exists, otherwise `False`.
+        :returns: `True` if the collection exists, otherwise `False`.
+        :rtype: bool
         """
         return self.storage_data.has_collection(collection_name)
 
@@ -864,10 +916,13 @@ class DatabaseMiaData:
         Checks if a document with the specified primary key exists in the
         given collection.
 
-        :param collection_name: (str) The name of the collection.
-        :param primary_key: (str) The primary key of the document to check.
+        :param collection_name: The name of the collection.
+        :type collection_name: str
+        :param primary_key: The primary key of the document to check.
+        :type primary_key: str
 
-        :Returns: (bool) `True` if the document exists, `False` otherwise.
+        :returns: `True` if the document exists, `False` otherwise.
+        :rtype: bool
         """
         documents = self.get_document_names(collection_name)
         return primary_key in documents
@@ -879,10 +934,12 @@ class DatabaseMiaData:
         This method deletes the document identified by `primary_key` from
         the given collection in the storage.
 
-        :param collection_name: (str) The name of the collection containing
-         the document.
-        :param primary_key: (str) The unique identifier of the document to be
+        :param collection_name: The name of the collection containing the
+         document.
+        :type collection_name: str
+        :param primary_key: The unique identifier of the document to be
          removed.
+        :type primary_key: str
 
         :raises KeyError: If the collection or the document does not exist.
         """
@@ -903,11 +960,13 @@ class DatabaseMiaData:
         if it exists. Raises a KeyError if the field, collection, or document
         is not found.
 
-        :param collection_name: (str) The name of the collection containing
-         the document.
-        :param primary_key: (str) The primary key of the document in the
-         collection.
-        :param field: (str) The field to be removed from the document.
+        :param collection_name: The name of the collection containing the
+         document.
+        :type collection_name: str
+        :param primary_key: The primary key of the document in the collection.
+        :type primary_key: str
+        :param field: The field to be removed from the document.
+        :type field: str
 
         :raises KeyError: If the collection or document cannot be found.
         """
@@ -927,7 +986,8 @@ class DatabaseMiaData:
         """
         Set the list of visible tags.
 
-        :param fields_shown: (list) A list of visible tags.
+        :param fields_shown: A list of visible tags.
+        :type fields_shown: list
         """
         doc_names = self.get_document_names(FIELD_ATTRIBUTES_COLLECTION)
 
@@ -948,12 +1008,15 @@ class DatabaseMiaData:
         fields of the record are set according to the data in the provided
         dictionary.
 
-        :param collection_name: (str) The name of the collection where the
-         record will be stored or updated.
-        :param primary_key: (str) The unique key used to identify the record.
-        :param values_dict: (dict) A dictionary containing the data to store
-         or update in the record. Keys represent field names, and values
-         represent the corresponding data.
+        :param collection_name: The name of the collection where the record
+         will be stored or updated.
+        :type collection_name: str
+        :param primary_key: The unique key used to identify the record.
+        :type primary_key: str
+        :param values_dict: A dictionary containing the data to store or update
+         in the record. Keys represent field names, and values represent the
+         corresponding data.
+        :type values_dict: dict
         """
         existing_record = (
             self.storage_data[collection_name][primary_key].get() or {}

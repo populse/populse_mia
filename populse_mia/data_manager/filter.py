@@ -40,9 +40,7 @@ class Filter:
     advanced search.
 
     Contains:
-
         Methods:
-
             - generate_filter: apply the filter to the given list of scans
             - json_format: returns the filter as a dictionary
 
@@ -63,13 +61,20 @@ class Filter:
         Initialization of the Filter class.
 
         :param name: filter's name
+        :type name: str
         :param nots: list of negations ("" or NOT)
+        :type nots: list
         :param values: list of values
+        :type values: list
         :param fields: list of list of fields
+        :type fields: list
         :param links: list of links (AND/OR)
+        :type links: list
         :param conditions: list of conditions (==, !=, <, >, <=, >=, IN,
          BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)
+        :type conditions: list
         :param search_bar: value in the rapid search bar
+        :type search_bar: str
         """
         self.name = name
         self.nots = nots
@@ -84,10 +89,14 @@ class Filter:
         Apply the filter to the given list of scans.
 
         :param current_project: Current project.
+        :type current_project: populse_mia.data_manager.project.Project
         :param scans: List of scans to apply the filter into.
+        :type scans: list
         :param tags: List of tags to search in.
+        :type tags: list
 
-        :Returns: (list) The list of scans matching the filter.
+        :returns: The list of scans matching the filter.
+        :rtype: list
         """
 
         rapid_filter = data_browser.rapid_search.RapidSearch.prepare_filter(
@@ -121,7 +130,8 @@ class Filter:
         """
         Return the filter as a dictionary.
 
-        :Returns: (dict) The filter as a dictionary.
+        :returns: The filter as a dictionary.
+        :rtype: dict
         """
         # Filter dictionary
         data = {

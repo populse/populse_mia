@@ -42,12 +42,13 @@ __all__ = [
 
 class SavedProjects:
     """
-    Handles all saved projects in the software.
+    Manage the list of saved project paths.
+
+    The saved paths are stored in ``saved_projects.yml`` and are used to
+    keep track of recently accessed projects.
 
     Contains:
-
         Methods:
-
             - addSavedProject: Adds a new saved project.
             - loadSavedProjects: Loads saved projects from
               'saved_projects.yml'.
@@ -57,7 +58,10 @@ class SavedProjects:
 
     def __init__(self):
         """
-        Initializes the saved projects from 'saved_projects.yml'.
+        Initialize the saved project paths from ``saved_projects.yml``.
+
+        If the file does not exist or contains invalid data, initialize an
+        empty saved project list.
         """
         # Dictionary containing saved project paths
         self.savedProjects = self.loadSavedProjects()
@@ -78,11 +82,15 @@ class SavedProjects:
 
     def addSavedProject(self, newPath):
         """
-        Adds a project path or moves it to the front if it exists.
+        Add a project path to the saved list.
 
-        :param newPath: (str) Path of the new project.
+        If the path already exists, it is moved to the beginning of the list.
 
-        :Returns: (list) Updated project paths list.
+        :param newPath: Path of the project to save.
+        :type newPath: str
+
+        :return: Updated list of saved project paths.
+        :rtype: list[str]
         """
 
         if newPath in self.pathsList:
@@ -96,10 +104,12 @@ class SavedProjects:
 
     def loadSavedProjects(self):
         """
-        Loads saved projects from 'saved_projects.yml', or creates a default
-        file if missing.
+        Load saved project paths from ``saved_projects.yml``.
 
-        :Returns: (dict): Loaded project paths.
+        If the file does not exist, create a default empty configuration.
+
+        :return: Dictionary containing saved project paths.
+        :rtype: dict
         """
         config = Config()
 
@@ -131,9 +141,10 @@ class SavedProjects:
 
     def removeSavedProject(self, path):
         """
-        Removes a project path from pathsList and updates the file.
+        Remove a project path from the saved list.
 
-        :param path: (str) Path to remove.
+        :param path: Path of the project to remove.
+        :type path: str
         """
 
         if path in self.pathsList:
@@ -143,7 +154,8 @@ class SavedProjects:
 
     def saveSavedProjects(self):
         """
-        Writes savedProjects to 'saved_projects.yml'.
+        Serialize the current saved project paths and write them to
+        ``saved_projects.yml``.
         """
 
         config = Config()

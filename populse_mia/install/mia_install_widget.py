@@ -677,6 +677,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
                selections.
             5. Manages the creation and initialization of necessary directories
                and configuration files:
+
                 - Creates the directory ~/.populse_mia if it does not exist and
                   ensures the presence of configuration files.
                 - Initializes user-specific directories for properties,

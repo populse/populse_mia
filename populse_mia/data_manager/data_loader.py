@@ -79,9 +79,7 @@ class ImportProgress(QProgressDialog):
     Displays a progress bar for the import process.
 
     Contains:
-
         Methods:
-
             - onProgress: Updates the progress bar value.
     """
 
@@ -89,8 +87,9 @@ class ImportProgress(QProgressDialog):
         """
         Initializes the ImportProgress dialog for tracking the import process.
 
-        :param project: (Project) The project object being imported. Passed
-         to the ImportWorker.
+        :param project: The project object being imported. Passed to the
+         ImportWorker.
+        :type project: Project
 
         Sets up a modal progress dialog with a window title, custom flags, and
         macOS compatibility. Progress bar range is fixed at 0 to 3 (as per
@@ -118,7 +117,8 @@ class ImportProgress(QProgressDialog):
         """
         Updates the progress bar value.
 
-        :param value: (int) The current progress value.
+        :param value: The current progress value.
+        :type value: int
         """
         self.setValue(value)
 
@@ -131,9 +131,7 @@ class ImportWorker(QThread):
     processing scan files, and updating the database accordingly.
 
     Contains:
-
         Methods:
-
             - run : override the QThread run method.
             - scans_added: get a copy of the scans_added list in a thread-safe
               manner.
@@ -161,7 +159,6 @@ class ImportWorker(QThread):
               documents.
 
     Signals:
-
         - notifyProgress: Signal to update the progress bar. Emits an integer
           representing the progress percentage.
     """
@@ -174,10 +171,12 @@ class ImportWorker(QThread):
         Initialize the ImportWorker thread for importing scans into the
         project database.
 
-        :param project: (Project) The project object containing the database
-         and configuration for importing scans.
-        :param progress: (ImportProgress) The progress dialog instance to
-         update the import progress via the `notifyProgress` signal.
+        :param project: The project object containing the database and
+         configuration for importing scans.
+        :type project: Project
+        :param progress: The progress dialog instance to update the import
+         progress via the `notifyProgress` signal.
+        :type progress: ImportProgress
         """
         super().__init__()
         self.project = project
@@ -244,9 +243,12 @@ class ImportWorker(QThread):
         """
         Add a new tag to the database.
 
-        :param tag_info: (dict) Tag information dictionary.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added: (list) List to track added tag names.
+        :param tag_info: Tag information dictionary.
+        :type tag_info: dict
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
         """
         tag_definition = {
             "collection_name": COLLECTION_CURRENT,
@@ -268,8 +270,10 @@ class ImportWorker(QThread):
         """
         Apply default values for user-defined tags.
 
-        :param documents: (dict) Dictionary containing document information.
-        :param values_added: (list) List to track added values.
+        :param documents: Dictionary containing document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
         """
         with self.project.database.data() as database_data:
 
@@ -310,9 +314,12 @@ class ImportWorker(QThread):
         """
         Convert string values to datetime objects.
 
-        :param tag_info: (dict) Tag information dictionary.
+        :param tag_info: Tag information dictionary.
+        :type tag_info: dict
 
-        :Returns: (dict) Updated tag information dictionary.
+        :returns: Updated tag information dictionary.
+        :rtype: dict
+
         """
         value = tag_info["value"]
 
@@ -343,10 +350,15 @@ class ImportWorker(QThread):
         Ensure the associated file tag exists in the database.
 
         :param database_data: Context-Managed database.
-        :param tag_name: (str) Name of the tag.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added: (list) List to track added tag names.
+        :type database_data: DatabaseMiaData
+        :param tag_name: Name of the tag.
+        :type tag_name: str
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
         """
+
         if (
             database_data.get_field_attributes(COLLECTION_CURRENT, tag_name)
             is None
@@ -364,10 +376,13 @@ class ImportWorker(QThread):
         """
         Extract tag information from properties.
 
-        :param tag_name: (str) Name of the tag.
-        :param properties: (any) Properties of the tag.
+        :param tag_name: Name of the tag.
+        :type tag_name: str
+        :param properties: Properties of the tag.
+        :type properties: any
 
-        :Returns: (dict) Dictionary containing tag information.
+        :returns: Dictionary containing tag information.
+        :rtype: dict
         """
         tag_info = {
             "name": tag_name,
@@ -424,9 +439,11 @@ class ImportWorker(QThread):
     def _get_export_logs(self, raw_data_folder):
         """Get the export logs from the raw data folder.
 
-        :param raw_data_folder: (str) Path to the raw data folder.
+        :param raw_data_folder: Path to the raw data folder.
+        :type raw_data_folder: str
 
-        :Returns: (list) Log entries.
+        :returns: List of log entries.
+        :rtype: list
         """
         # Find all export logs
         list_logs = glob.glob(os.path.join(raw_data_folder, "logExport*.json"))
@@ -455,13 +472,21 @@ class ImportWorker(QThread):
         Process an associated file.
 
         :param database_data: Context-Managed database.
-        :param file_database_path: (str) Relative path of the file.
-        :param checksum: (str) MD5 checksum of the file.
-        :param file_type: (Type) Type of the file.
-        :param associated_file_path: (str) Path of the associated main file.
-        :param tag_name: (str) Name of the association tag.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
+        :type database_data: DatabaseMiaData
+        :param file_database_path: Relative path of the file.
+        :type file_database_path: str
+        :param checksum: MD5 checksum of the file.
+        :type checksum: str
+        :param file_type: Type of the file.
+        :type file_type: str
+        :param associated_file_path: Path of the associated main file.
+        :type associated_file_path: str
+        :param tag_name: Name of the association tag.
+        :type tag_name: str
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
         """
         document_not_existing = not database_data.has_document(
             collection_name=COLLECTION_CURRENT,
@@ -513,13 +538,21 @@ class ImportWorker(QThread):
         Process associated bvec/bval files.
 
         :param database_data: Context-Managed database.
-        :param file_name: (str) Base name of the file.
-        :param raw_data_folder: (str) Path to the raw data folder.
-        :param file_database_path (str): Relative path of the main file.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added: (list) List to track added tag names.
+        :type database_data: DatabaseMiaData
+        :param file_name: Base name of the file.
+        :type file_name: str
+        :param raw_data_folder: Path to the raw data folder.
+        :type raw_data_folder: str
+        :param file_database_path: Relative path of the main file.
+        :type file_database_path: str
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
         """
         # Define paths for FSL and MRtrix format files
         bvec_path = os.path.join(raw_data_folder, f"{file_name}.bvec")
@@ -560,9 +593,11 @@ class ImportWorker(QThread):
         """
         Process datetime format strings.
 
-        :param tag_info: (dict) Tag information dictionary.
+        :param tag_info: Tag information dictionary.
+        :type tag_info: dict
 
-        :Returns: (dict) Updated tag information dictionary.
+        :returns: Updated tag information dictionary.
+        :rtype: dict
         """
         format_str = tag_info["format"]
         # Convert from display format to Python datetime format
@@ -610,15 +645,25 @@ class ImportWorker(QThread):
         Process tags from a file.
 
         :param database_data: Context-Managed database.
-        :param file_name: (str) Base name of the file.
-        :param path_name: (str) Path to the file directory.
-        :param file_database_path: (str) Relative path in the database.
-        :param document_not_existing: (bool) Whether the document is new.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added: (list) List to track added tag names.
-        :param tags_to_exclude: (list) List of tags to exclude.
+        :type database_data: DatabaseMiaData
+        :param file_name: Base name of the file.
+        :type file_name: str
+        :param path_name: Path to the file directory.
+        :type path_name: str
+        :param file_database_path: Relative path in the database.
+        :type file_database_path: str
+        :param document_not_existing: Whether the document is new.
+        :type document_not_existing: bool
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
+        :param tags_to_exclude: List of tags to exclude.
+        :type tags_to_exclude: list
         """
         # Process each tag from the file
         for tag_name, properties in tags_from_file(file_name, path_name):
@@ -673,12 +718,19 @@ class ImportWorker(QThread):
         Process FSL format bvec/bval files.
 
         :param database_data: Context-Managed database.
-        :param bvec_path: (str) Path to the bvec file.
-        :param bval_path: (str) Path to the bval file.
-        :param file_database_path: (str) Relative path of the main file.
-        :param tag_name: (str) Name of the association tag.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
+        :type database_data: DatabaseMiaData
+        :param bvec_path: Path to the bvec file.
+        :type bvec_path: str
+        :param bval_path: Path to the bval file.
+        :type bval_path: str
+        :param file_database_path: Relative path of the main file.
+        :type file_database_path: str
+        :param tag_name: Name of the association tag.
+        :type tag_name: str
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
         """
         # Process bvec file
         with open(bvec_path, "rb") as bvec_file:
@@ -716,9 +768,11 @@ class ImportWorker(QThread):
         """
         Process list values.
 
-        :param tag_info: (dict) Tag information dictionary.
+        :param tag_info: Tag information dictionary.
+        :type tag_info: dict
 
-        :Returns: (dict) Updated tag information dictionary.
+        :returns: Updated tag information dictionary.
+        :rtype: dict
         """
         value = tag_info["value"]
 
@@ -767,12 +821,18 @@ class ImportWorker(QThread):
         """
         Process each log entry to import scans.
 
-        :param list_dict_log: (list) Log entries.
-        :param raw_data_folder: (str) Path to the raw data folder.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added: (list) List to track added tag names.
+        :param list_dict_log: Log entries.
+        :type list_dict_log: list
+        :param raw_data_folder: Path to the raw data folder.
+        :type raw_data_folder: str
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
         """
         # List of tags to exclude
         tags_to_exclude = ["Dataset data file", "Dataset header file"]
@@ -811,11 +871,17 @@ class ImportWorker(QThread):
         Process MRtrix format bvec/bval file.
 
         :param database_data: Context-Managed database.
-        :param bvec_bval_path: (str) Path to the MRtrix format file.
-        :param file_database_path: (str) Relative path of the main file.
-        :param tag_name: (str) Name of the association tag.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
+        :type database_data: DatabaseMiaData
+        :param bvec_bval_path: Path to the MRtrix format file.
+        :type bvec_bval_path: str
+        :param file_database_path: Relative path of the main file.
+        :type file_database_path: str
+        :param tag_name: Name of the association tag.
+        :type tag_name: str
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
         """
         with open(bvec_bval_path, "rb") as bval_bvec_file:
             original_md5_bvec_bval = hashlib.md5(
@@ -852,14 +918,23 @@ class ImportWorker(QThread):
         Process a single scan file and its associated files.
 
         :param database_data: Context-Managed database.
-        :param file_name: (str) Base name of the scan file.
-        :param raw_data_folder: (str) Path to the raw data folder.
-        :param dict_log: (dict) Log entry for this scan.
-        :param documents: (dict) Dictionary to store document information.
-        :param values_added: (list) List to track added values.
-        :param tags_added: (list) List to track added tags.
-        :param tags_names_added (list): List to track added tag names.
-        :param tags_to_exclude (list): List of tags to exclude.
+        :type database_data: DatabaseMiaData
+        :param file_name: Base name of the scan file.
+        :type file_name: str
+        :param raw_data_folder: Path to the raw data folder.
+        :type raw_data_folder: str
+        :param dict_log: Log entry for this scan.
+        :type dict_log: dict
+        :param documents: Dictionary to store document information.
+        :type documents: dict
+        :param values_added: List to track added values.
+        :type values_added: list
+        :param tags_added: List to track added tags.
+        :type tags_added: list
+        :param tags_names_added: List to track added tag names.
+        :type tags_names_added: list
+        :param tags_to_exclude: List of tags to exclude.
+        :type tags_to_exclude: list
         """
         # Process main NIfTI file
         file_path = os.path.join(raw_data_folder, f"{file_name}.nii")
@@ -927,10 +1002,14 @@ class ImportWorker(QThread):
         """
         Update the database with the processed documents.
 
-        :param documents: (dict) Dictionary containing document information.
-        :param tags_added: (list) List of tags to add.
-        :param values_added: (list) List of values to add.
-        :param historyMaker: (list) List for history tracking.
+        :param documents: Dictionary containing document information.
+        :type documents: dict
+        :param tags_added: List of tags to add.
+        :type tags_added: list
+        :param values_added: List of values to add.
+        :type values_added: list
+        :param historyMaker: List for history tracking.
+        :type historyMaker: list
         """
         # Emit progress updates
         self.notifyProgress.emit(1)
@@ -987,12 +1066,15 @@ def read_log(project, main_window):
     files and returns a list of paths to each data file that was successfully
     loaded.
 
-    :param project: (Project) The current project instance in the software.
-    :param main_window: (MainWindow) The software's main window instance used
-     to display the progress bar.
+    :param project: The current project instance in the software.
+    :type project: Project
+    :param main_window: The software's main window instance used to display the
+     progress bar.
+    :type main_window: MainWindow
 
-    :Returns: (list) A list of paths to the data files (scans) that were
-     successfully added.
+    :returns: A list of paths to the data files (scans) that were successfully
+     added.
+    :rtype: list
     """
 
     main_window.progress = ImportProgress(project)
@@ -1009,11 +1091,13 @@ def tags_from_file(file_path, path):
     """
     Returns a list of [tag, value] pairs from a JSON file.
 
-    :param file_path: (str) File path of the Json file (without the extension).
-    :param path: (str) Project path.
+    :param file_path: File path of the Json file (without the extension).
+    :type file_path: str
+    :param path: Project path.
+    :type path: str
 
-    :Returns: (List[List[Union[str, dict]]] A list of the Json tags of the
-     file.
+    :returns: A list of the Json tags of the file.
+    :rtype: list[list[Union[str, dict]]]
     """
     json_tags = []
     file = f"{os.path.join(path, file_path)}.json"
@@ -1041,10 +1125,11 @@ def verify_scans(project):
     """
     Check if the project's scans have been modified.
 
-    :param project: (Project) Current project in the software.
+    :param project: Current project in the software.
+    :type project: Project
 
-    :Returns: (List[str]) The list of scans that have been modifiedor are
-     missing.
+    :returns: The list of scans that have been modifiedor are missing.
+    :rtype: list[str]
     """
     # Returning the files that are problematic
     modified_scans = []

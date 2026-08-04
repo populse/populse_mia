@@ -29,12 +29,12 @@ def configure_logging(
     Configure the application logging.
 
     :param log_in_stdout: If True, log messages are written to stdout.
-        Otherwise, they are written to a log file.
-    :type param log_in_stdout: bool
-    :param keep_log_files : Number of log files to retain.
-    :type param keep_log_files: int
+     Otherwise, they are written to a log file.
+    :type log_in_stdout: bool
+    :param keep_log_files: Number of log files to retain.
+    :type keep_log_files: int
     :param log_level: Level of the logger.
-    :type param log_level: str
+    :type log_level: str
     """
     formatter = logging.Formatter(
         "%(asctime)s %(levelname)-8s %(name)s: %(message)s"

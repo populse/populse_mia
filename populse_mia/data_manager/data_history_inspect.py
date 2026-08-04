@@ -740,23 +740,23 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
     Retrieve a brick from the database using its UUID and return it as a
     `ProtoProcess` instance.
 
-    This function fetches a brick from the database using its unique
-    identifier (UUID). It returns the brick as a `ProtoProcess` instance if
-    the brick has been executed (its execution status is "Done") and, if
-    specified, its execution time is not later than `before_exec_time`. If
-    the brick does not meet these criteria or is not found in the database,
-    the function returns `None`.
+    This function fetches a brick from the database using its unique identifier
+    (UUID). It returns the brick as a `ProtoProcess` instance if the brick has
+    been executed (its execution status is "Done") and, if specified, its
+    execution time is not later than `before_exec_time`. If the brick does not
+    meet these criteria or is not found in the database, the function returns
+    `None`.
 
     :param brick_id: The unique identifier (UUID) of the brick to retrieve.
     :type brick_id: str
     :param project: The project object providing access to the database.
     :type project: Project
     :param before_exec_time: An execution time filter. If provided, bricks
-        executed after this timestamp are discarded.
-     :type before_exec_time: str | None
+     executed after this timestamp are discarded.
+    :type before_exec_time: str | None
 
     :returns: A `ProtoProcess` instance representing the brick if it meets the
-        criteria; otherwise, `None`.
+     criteria; otherwise, `None`.
     :rtype: ProtoProcess | None
     """
 
