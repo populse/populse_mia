@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.data_manager.data_loader &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.data_loader</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -70,23 +70,23 @@ files).</p></li>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.data_manager.data_loader.</span></span><span class="sig-name descname"><span class="pre">ImportProgress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_loader.html#ImportProgress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_loader.ImportProgress" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QProgressDialog</span></code></p>
 <p>Displays a progress bar for the import process.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>onProgress: Updates the progress bar value.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_loader.ImportProgress.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_loader.html#ImportProgress.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_loader.ImportProgress.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the ImportProgress dialog for tracking the import process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – (Project) The project object being imported. Passed
-to the ImportWorker.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object being imported. Passed to the
+ImportWorker.</p>
 </dd>
 </dl>
 <p>Sets up a modal progress dialog with a window title, custom flags, and
@@ -101,7 +101,7 @@ button) and appears immediately (minimum duration = 0).</p>
 <dd><p>Updates the progress bar value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> – (int) The current progress value.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The current progress value.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -115,11 +115,9 @@ button) and appears immediately (minimum duration = 0).</p>
 <p>Worker thread for importing scans into the project database.</p>
 <p>This class manages the import process, reading from export logs,
 processing scan files, and updating the database accordingly.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>run : override the QThread run method.</p></li>
 <li><p>scans_added: get a copy of the scans_added list in a thread-safe
 manner.</p></li>
@@ -146,15 +144,15 @@ associated files.</p></li>
 <li><p>_update_database: update the database with the processed
 documents.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>notifyProgress: Signal to update the progress bar. Emits an integer
 representing the progress percentage.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.data_loader.ImportWorker.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/data_loader.html#ImportWorker.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.data_loader.ImportWorker.__init__" title="Link to this definition">¶</a></dt>
@@ -163,10 +161,10 @@ project database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The project object containing the database
-and configuration for importing scans.</p></li>
-<li><p><strong>progress</strong> – (ImportProgress) The progress dialog instance to
-update the import progress via the <cite>notifyProgress</cite> signal.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The project object containing the database and
+configuration for importing scans.</p></li>
+<li><p><strong>progress</strong> (<a class="reference internal" href="#populse_mia.data_manager.data_loader.ImportProgress" title="populse_mia.data_manager.data_loader.ImportProgress"><em>ImportProgress</em></a>) – The progress dialog instance to update the import
+progress via the <cite>notifyProgress</cite> signal.</p></li>
 </ul>
 </dd>
 </dl>
@@ -194,9 +192,9 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag_info</strong> – (dict) Tag information dictionary.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>tags_names_added</strong> – (list) List to track added tag names.</p></li>
+<li><p><strong>tag_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Tag information dictionary.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
 </ul>
 </dd>
 </dl>
@@ -209,8 +207,8 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>documents</strong> – (dict) Dictionary containing document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -222,10 +220,13 @@ and updates the database.</p>
 <dd><p>Convert string values to datetime objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_info</strong> – (dict) Tag information dictionary.</p>
+<dd class="field-odd"><p><strong>tag_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Tag information dictionary.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) Updated tag information dictionary.</p>
+<dd class="field-even"><p>Updated tag information dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -237,10 +238,10 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>tag_name</strong> – (str) Name of the tag.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>tags_names_added</strong> – (list) List to track added tag names.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the tag.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
 </ul>
 </dd>
 </dl>
@@ -253,12 +254,15 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag_name</strong> – (str) Name of the tag.</p></li>
-<li><p><strong>properties</strong> – (any) Properties of the tag.</p></li>
+<li><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the tag.</p></li>
+<li><p><strong>properties</strong> (<em>any</em>) – Properties of the tag.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) Dictionary containing tag information.</p>
+<dd class="field-even"><p>Dictionary containing tag information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -269,10 +273,13 @@ and updates the database.</p>
 <dd><p>Get the export logs from the raw data folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>raw_data_folder</strong> – (str) Path to the raw data folder.</p>
+<dd class="field-odd"><p><strong>raw_data_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the raw data folder.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list) Log entries.</p>
+<dd class="field-even"><p>List of log entries.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -284,14 +291,14 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>file_database_path</strong> – (str) Relative path of the file.</p></li>
-<li><p><strong>checksum</strong> – (str) MD5 checksum of the file.</p></li>
-<li><p><strong>file_type</strong> – (Type) Type of the file.</p></li>
-<li><p><strong>associated_file_path</strong> – (str) Path of the associated main file.</p></li>
-<li><p><strong>tag_name</strong> – (str) Name of the association tag.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>file_database_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path of the file.</p></li>
+<li><p><strong>checksum</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – MD5 checksum of the file.</p></li>
+<li><p><strong>file_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Type of the file.</p></li>
+<li><p><strong>associated_file_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path of the associated main file.</p></li>
+<li><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the association tag.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -304,14 +311,14 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>file_name</strong> – (str) Base name of the file.</p></li>
-<li><p><strong>raw_data_folder</strong> – (str) Path to the raw data folder.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>file_database_path</em>) – Relative path of the main file.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>tags_names_added</strong> – (list) List to track added tag names.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Base name of the file.</p></li>
+<li><p><strong>raw_data_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the raw data folder.</p></li>
+<li><p><strong>file_database_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path of the main file.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
 </ul>
 </dd>
 </dl>
@@ -323,10 +330,13 @@ and updates the database.</p>
 <dd><p>Process datetime format strings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_info</strong> – (dict) Tag information dictionary.</p>
+<dd class="field-odd"><p><strong>tag_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Tag information dictionary.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) Updated tag information dictionary.</p>
+<dd class="field-even"><p>Updated tag information dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -338,16 +348,16 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>file_name</strong> – (str) Base name of the file.</p></li>
-<li><p><strong>path_name</strong> – (str) Path to the file directory.</p></li>
-<li><p><strong>file_database_path</strong> – (str) Relative path in the database.</p></li>
-<li><p><strong>document_not_existing</strong> – (bool) Whether the document is new.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>tags_names_added</strong> – (list) List to track added tag names.</p></li>
-<li><p><strong>tags_to_exclude</strong> – (list) List of tags to exclude.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Base name of the file.</p></li>
+<li><p><strong>path_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the file directory.</p></li>
+<li><p><strong>file_database_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path in the database.</p></li>
+<li><p><strong>document_not_existing</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the document is new.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
+<li><p><strong>tags_to_exclude</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of tags to exclude.</p></li>
 </ul>
 </dd>
 </dl>
@@ -360,13 +370,13 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>bvec_path</strong> – (str) Path to the bvec file.</p></li>
-<li><p><strong>bval_path</strong> – (str) Path to the bval file.</p></li>
-<li><p><strong>file_database_path</strong> – (str) Relative path of the main file.</p></li>
-<li><p><strong>tag_name</strong> – (str) Name of the association tag.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>bvec_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the bvec file.</p></li>
+<li><p><strong>bval_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the bval file.</p></li>
+<li><p><strong>file_database_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path of the main file.</p></li>
+<li><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the association tag.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -378,10 +388,13 @@ and updates the database.</p>
 <dd><p>Process list values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_info</strong> – (dict) Tag information dictionary.</p>
+<dd class="field-odd"><p><strong>tag_info</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Tag information dictionary.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) Updated tag information dictionary.</p>
+<dd class="field-even"><p>Updated tag information dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -393,12 +406,12 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list_dict_log</strong> – (list) Log entries.</p></li>
-<li><p><strong>raw_data_folder</strong> – (str) Path to the raw data folder.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>tags_names_added</strong> – (list) List to track added tag names.</p></li>
+<li><p><strong>list_dict_log</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Log entries.</p></li>
+<li><p><strong>raw_data_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the raw data folder.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
 </ul>
 </dd>
 </dl>
@@ -411,12 +424,12 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>bvec_bval_path</strong> – (str) Path to the MRtrix format file.</p></li>
-<li><p><strong>file_database_path</strong> – (str) Relative path of the main file.</p></li>
-<li><p><strong>tag_name</strong> – (str) Name of the association tag.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>bvec_bval_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the MRtrix format file.</p></li>
+<li><p><strong>file_database_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Relative path of the main file.</p></li>
+<li><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the association tag.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
 </ul>
 </dd>
 </dl>
@@ -429,15 +442,15 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_data</strong> – Context-Managed database.</p></li>
-<li><p><strong>file_name</strong> – (str) Base name of the scan file.</p></li>
-<li><p><strong>raw_data_folder</strong> – (str) Path to the raw data folder.</p></li>
-<li><p><strong>dict_log</strong> – (dict) Log entry for this scan.</p></li>
-<li><p><strong>documents</strong> – (dict) Dictionary to store document information.</p></li>
-<li><p><strong>values_added</strong> – (list) List to track added values.</p></li>
-<li><p><strong>tags_added</strong> – (list) List to track added tags.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>tags_to_exclude</em>) – List to track added tag names.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> – List of tags to exclude.</p></li>
+<li><p><strong>database_data</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData"><em>DatabaseMiaData</em></a>) – Context-Managed database.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Base name of the scan file.</p></li>
+<li><p><strong>raw_data_folder</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the raw data folder.</p></li>
+<li><p><strong>dict_log</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Log entry for this scan.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary to store document information.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added values.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tags.</p></li>
+<li><p><strong>tags_names_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List to track added tag names.</p></li>
+<li><p><strong>tags_to_exclude</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of tags to exclude.</p></li>
 </ul>
 </dd>
 </dl>
@@ -450,10 +463,10 @@ and updates the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>documents</strong> – (dict) Dictionary containing document information.</p></li>
-<li><p><strong>tags_added</strong> – (list) List of tags to add.</p></li>
-<li><p><strong>values_added</strong> – (list) List of values to add.</p></li>
-<li><p><strong>historyMaker</strong> – (list) List for history tracking.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing document information.</p></li>
+<li><p><strong>tags_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of tags to add.</p></li>
+<li><p><strong>values_added</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of values to add.</p></li>
+<li><p><strong>historyMaker</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List for history tracking.</p></li>
 </ul>
 </dd>
 </dl>
@@ -471,14 +484,17 @@ loaded.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance in the software.</p></li>
-<li><p><strong>main_window</strong> – (MainWindow) The software’s main window instance used
-to display the progress bar.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – The current project instance in the software.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>MainWindow</em></a>) – The software’s main window instance used to display the
+progress bar.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list) A list of paths to the data files (scans) that were
-successfully added.</p>
+<dd class="field-even"><p>A list of paths to the data files (scans) that were successfully
+added.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -490,13 +506,15 @@ successfully added.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> – (str) File path of the Json file (without the extension).</p></li>
-<li><p><strong>path</strong> – (str) Project path.</p></li>
+<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – File path of the Json file (without the extension).</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Project path.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(List[List[Union[str, dict]]] A list of the Json tags of the
-file.</p>
+<dd class="field-even"><p>A list of the Json tags of the file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[Union[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -507,11 +525,13 @@ file.</p>
 <dd><p>Check if the project’s scans have been modified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – (Project) Current project in the software.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>Project</em></a>) – Current project in the software.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(List[str]) The list of scans that have been modifiedor are
-missing.</p>
+<dd class="field-even"><p>The list of scans that have been modifiedor are missing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>

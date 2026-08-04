@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -66,27 +66,27 @@ fields, and documents.</p></li>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class providing tools for interacting with a database, under the
 supervision of populse_db.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>__enter__: Make a database connection and return it.</p></li>
 <li><p>__exit__: Make sure the database connection gets closed.</p></li>
 <li><p>close: Releases database resources.</p></li>
 <li><p>data: Context manager for accessing the database data</p></li>
 <li><p>schema: Context manager for accessing the database schema.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database_engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes a DatabaseMIA instance with the given database file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database_engine</strong> – (str) Path to the database file
-(e.g. ‘/a/folder/path/file.db’).</p>
+<dd class="field-odd"><p><strong>database_engine</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the database file (e.g.
+‘/a/folder/path/file.db’).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -94,9 +94,21 @@ supervision of populse_db.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMIA.__enter__">
 <span class="sig-name descname"><span class="pre">__enter__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMIA.__enter__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMIA.__enter__" title="Link to this definition">¶</a></dt>
-<dd><p>Make a database connection and return it.</p>
-<p>Enables the use of <cite>with DatabaseMIA(…) as foo:</cite> for automatic
-resource management.</p>
+<dd><p>Enter the runtime context and initialize the database connection.</p>
+<p>This method enables usage of the class as a context manager:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">DatabaseMIA</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="k">as</span> <span class="n">database</span><span class="p">:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current instance, allowing database operations within the
+context block.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMIA" title="populse_mia.data_manager.database_mia.DatabaseMIA">DatabaseMIA</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -108,12 +120,12 @@ statement.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>exc_type</strong> – (Type[BaseException]) The exception type if an
-exception occurred, otherwise None (unused).</p></li>
-<li><p><strong>exc_value</strong> – (BaseException) The exception instance if an
-exception occurred, otherwise None (unused).</p></li>
-<li><p><strong>traceback</strong> – (TracebackType) The traceback object if an exception
-occurred, otherwise None (unused).</p></li>
+<li><p><strong>exc_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#BaseException" title="(in Python v3.10)"><em>BaseException</em></a><em> | </em><em>None</em>) – The exception type if an exception occurred,
+otherwise None (unused).</p></li>
+<li><p><strong>exc_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#BaseException" title="(in Python v3.10)"><em>BaseException</em></a><em> | </em><em>None</em>) – The exception instance if an exception occurred,
+otherwise None (unused).</p></li>
+<li><p><strong>traceback</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/types.html#types.TracebackType" title="(in Python v3.10)"><em>types.TracebackType</em></a><em> | </em><em>None</em>) – The traceback object if an exception occurred,
+otherwise None (unused).</p></li>
 </ul>
 </dd>
 </dl>
@@ -136,12 +148,15 @@ ensuring proper resource management.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>write</strong> – (bool) If True, enables write mode.</p></li>
-<li><p><strong>create</strong> – (bool) If True, allows creating new records.</p></li>
+<li><p><strong>write</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>) – If True, enables write mode.</p></li>
+<li><p><strong>create</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>) – If True, allows creating new records.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><p>(DatabaseMiaData) The data interface for the database.</p>
+<dd class="field-even"><p>The data interface for the database.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData">DatabaseMiaData</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -154,7 +169,10 @@ ensuring proper resource management.</p>
 resource management.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(DatabaseMiaSchema) The schema interface for the database.</p>
+<dd class="field-odd"><p>The schema interface for the database.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema" title="populse_mia.data_manager.database_mia.DatabaseMiaSchema">DatabaseMiaSchema</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -168,11 +186,9 @@ resource management.</p>
 <p>Provides tools for managing the schema of a Mia database.</p>
 <p>This class allows users to manipulate database collections, fields, and
 field attributes under the supervision of populse_db.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>__init__: Initializes the schema interface.</p></li>
 <li><p>add_collection: Adds a new collection to the database.</p></li>
 <li><p>add_field: Adds one or more fields to a collection.</p></li>
@@ -186,16 +202,17 @@ specific field in a collection.</p></li>
 <li><p>update_field_attributes: Updates the attributes of a field in
 the database.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the DatabaseMiaSchema instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>storage_schema</strong> – (populse_db.storage.Storage) The schema storage
-interface for the database.</p>
+<dd class="field-odd"><p><strong>storage_schema</strong> (<em>populse_db.storage.Storage</em>) – The schema storage interface for the database.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -211,12 +228,12 @@ collection initialization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the new collection.</p></li>
-<li><p><strong>primary_key</strong> – (str) The primary key column for the collection.</p></li>
-<li><p><strong>visibility</strong> – (bool) Visibility of the primary key field.</p></li>
-<li><p><strong>origin</strong> – (str) Origin of the primary key field.</p></li>
-<li><p><strong>unit</strong> – (str) Unit of the primary key field.</p></li>
-<li><p><strong>default_value</strong> – (Any) Default value for the primary key field.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the new collection.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The primary key column for the collection.</p></li>
+<li><p><strong>visibility</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Visibility of the primary key field.</p></li>
+<li><p><strong>origin</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Origin of the primary key field.</p></li>
+<li><p><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Unit of the primary key field.</p></li>
+<li><p><strong>default_value</strong> (<em>Any</em>) – Default value for the primary key field.</p></li>
 </ul>
 </dd>
 </dl>
@@ -243,9 +260,8 @@ belongs.</p></li>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fields</strong> – (dict | list[dict]) A dictionary representing a single
-field’s attributes, or a list of dictionaries representing multiple
-field’s attributes.</p>
+<dd class="field-odd"><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – A dictionary representing a single field’s attributes,
+or a list of dictionaries representing multiple field’s attributes.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,11 +280,14 @@ fields to it such as ‘visibility’, ‘origin’, ‘unit’, and
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.data">
 <span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.data" title="Link to this definition">¶</a></dt>
 <dd><p>Provides a context manager for accessing the database data.</p>
-<p>This method ensures safe access to the database data layer,
-managing resources properly.</p>
+<p>This method ensures safe access to the database data layer, managing
+resources properly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Yields<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(DatabaseMiaData) The data interface for the database.</p>
+<dd class="field-odd"><p>The data interface for the database.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#populse_mia.data_manager.database_mia.DatabaseMiaData" title="populse_mia.data_manager.database_mia.DatabaseMiaData">DatabaseMiaData</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,9 +301,9 @@ collection and handles associated attributes cleanup.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection from which
-the field will be removed (must exist).</p></li>
-<li><p><strong>field_name</strong> – (str) The name of the field to remove (must exist).</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection from which the field
+will be removed (must exist).</p></li>
+<li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field to remove (must exist).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -298,20 +317,20 @@ the <cite>field_name</cite> does not exist.</p>
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes">
 <span class="sig-name descname"><span class="pre">remove_field_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaSchema.remove_field_attributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaSchema.remove_field_attributes" title="Link to this definition">¶</a></dt>
 <dd><p>Remove attributes associated with a specific field in a collection.</p>
-<p>This method deletes the document storing metadata or attributes for
-the specified field in the given collection.</p>
+<p>This method deletes the document storing metadata or attributes for the
+specified field in the given collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection containing
-the field.</p></li>
-<li><p><strong>field_name</strong> – (str) The name of the field whose attributes are
-to be removed.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection containing the
+field.</p></li>
+<li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field whose attributes are to be
+removed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the attributes document does not exist or
-cannot be removed.</p>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the attributes document does not exist or cannot
+be removed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,15 +346,15 @@ attributes in the FIELD_ATTRIBUTES_COLLECTION.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection the field
-belongs to.</p></li>
-<li><p><strong>field_name</strong> – (str) The name of the field to update.</p></li>
-<li><p><strong>visibility</strong> – (bool) The visibility status of the field.</p></li>
-<li><p><strong>origin</strong> – (str) The origin or source of the field.</p></li>
-<li><p><strong>unit</strong> – (str) The unit of measurement for the field.</p></li>
-<li><p><strong>default_value</strong> – (Any) The default value to assign to the field.</p></li>
-<li><p><strong>description</strong> – (str) The description of the field.</p></li>
-<li><p><strong>field_type</strong> – (Any) The type of the field.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection the field belongs
+to.</p></li>
+<li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field to update.</p></li>
+<li><p><strong>visibility</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – The visibility status of the field.</p></li>
+<li><p><strong>origin</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The origin or source of the field.</p></li>
+<li><p><strong>unit</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unit of measurement for the field.</p></li>
+<li><p><strong>default_value</strong> (<em>Any</em>) – The default value to assign to the field.</p></li>
+<li><p><strong>description</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The description of the field.</p></li>
+<li><p><strong>field_type</strong> (<em>Any</em>) – The type of the field.</p></li>
 </ul>
 </dd>
 </dl>
@@ -351,11 +370,9 @@ belongs to.</p></li>
 <p>This class provides methods to handle collections and documents within the
 database, allowing operations such as retrieving, adding, updating, and
 removing records.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_document: Adds a document to a collection.</p></li>
 <li><p>filter_documents: Retrieves documents from a specified collection
 that match a given filter.</p></li>
@@ -381,16 +398,17 @@ collection.</p></li>
 <li><p>set_value: Stores or updates a record in the specified
 collection.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storage_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes a new instance of the DatabaseMiaData class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>storage_data</strong> – (populse_db.storage.Storage) The data storage
-interface for the database.</p>
+<dd class="field-odd"><p><strong>storage_data</strong> (<em>populse_db.storage.Storage</em>) – The data storage interface for the database.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -406,9 +424,9 @@ to the storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection where the
-document should be added.</p></li>
-<li><p><strong>document</strong> – (str) The document name to be added.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection where the document
+should be added.</p></li>
+<li><p><strong>document</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The document name to be added.</p></li>
 </ul>
 </dd>
 </dl>
@@ -420,32 +438,30 @@ document should be added.</p></li>
 <dd><p>Retrieve documents from a specified collection that match a given
 filter.</p>
 <p>This method searches for documents in the specified collection based
-on the provided filter query. It returns the results as a list of
-rows from the collection table.</p>
-<p>The <cite>filter_query</cite> can either be:</p>
-<blockquote>
-<div><ul class="simple">
+on the provided filter query. It returns the results as a list of rows
+from the collection table.</p>
+<dl>
+<dt>The <cite>filter_query</cite> can either be:</dt><dd><ul class="simple">
 <li><p>The result of <cite>self.filter_query()</cite>.</p></li>
 <li><p>A string defining a filter.</p></li>
 </ul>
-</div></blockquote>
-<p><strong>Filter Query Format:</strong></p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+<dt><strong>Filter Query Format:</strong></dt><dd><ul>
 <li><p>A filter condition must follow this syntax:
 <cite>{&lt;field&gt;} &lt;operator&gt; “&lt;value&gt;”</cite>.</p></li>
 <li><p>Supported operators:
 <cite>==</cite>, <cite>!=</cite>, <cite>&lt;=</cite>, <cite>&gt;=</cite>, <cite>&lt;</cite>, <cite>&gt;</cite>, <cite>IN</cite>, <cite>ILIKE</cite>, <cite>LIKE</cite>.</p></li>
 <li><p>Multiple filter conditions can be combined using <cite>AND</cite> or <cite>OR</cite>.</p></li>
-<li><dl class="simple">
-<dt>Example:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">&quot;((({BandWidth}</span> <span class="pre">==</span> <span class="pre">&quot;50000&quot;))</span> <span class="pre">AND</span> <span class="pre">(({FileName}</span> <span class="pre">LIKE</span> <span class="pre">&quot;%G1%&quot;)))&quot;</span>
-<span class="pre">`</span></code></p>
+<li><dl>
+<dt>Example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="s1">&#39;(((</span><span class="si">{BandWidth}</span><span class="s1"> == &quot;50000&quot;)) AND ((</span><span class="si">{FileName}</span><span class="s1"> LIKE &quot;</span><span class="si">%G</span><span class="s1">1%&quot;)))&#39;</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 </li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Due to potential database access issues such as
@@ -456,13 +472,16 @@ reconsidered in the future for better memory management.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection to filter
-(must exist).</p></li>
-<li><p><strong>filter_query</strong> – (str) The filter query to apply.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to filter (must
+exist).</p></li>
+<li><p><strong>filter_query</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The filter query to apply.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list) A list of rows matching the filter criteria.</p>
+<dd class="field-even"><p>A list of rows matching the filter criteria.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -473,7 +492,10 @@ reconsidered in the future for better memory management.</p>
 <dd><p>Retrieves a list of all collection names in the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) All collection names in the database.</p>
+<dd class="field-odd"><p>All collection names in the database.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -490,18 +512,20 @@ exist, an empty list is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) Name of the document collection. The
-collection must already exist in the database.</p></li>
-<li><p><strong>primary_keys</strong> – (str | list[str], optional) A single primary key
-or a list of primary keys to filter ocuments. If None, no filtering by
-primary keys is applied.</p></li>
-<li><p><strong>fields</strong> – (str | list[str], optional) A single field or a list of
-fields to include in the result. If None, all fields are included.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the document collection. The collection
+must already exist in the database.</p></li>
+<li><p><strong>primary_keys</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A single primary key or a list of primary keys to
+filter documents. If None, no filtering by primary keys is applied.</p></li>
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A single field or a list of fields to include in the
+result. If None, all fields are included.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list) A list of documents matching the specified criteria,
-or an empty list if the collection does not exist.</p>
+<dd class="field-even"><p>A list of documents matching the specified criteria, or an
+empty list if the collection does not exist.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -512,12 +536,15 @@ or an empty list if the collection does not exist.</p>
 <dd><p>Retrieve a list of all document names in the specified collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>collection_name</strong> – (str) The name of the collection to retrieve
-document names from. The collection must already exist.</p>
+<dd class="field-odd"><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to retrieve document
+names from. The collection must already exist.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of document names if the collection
-exists, otherwise an empty list.</p>
+<dd class="field-even"><p>A list of document names if the collection exists, otherwise
+an empty list.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -530,16 +557,19 @@ from the storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection.</p></li>
-<li><p><strong>field_name</strong> – (str, optional) The name of a specific field within
-the collection. If not provided, attributes for all fields in the
-collection will be retrieved.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection.</p></li>
+<li><p><strong>field_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The name of a specific field within the collection.
+If not provided, attributes for all fields in the collection will be
+retrieved.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict | list[dict]) Attributes of the specified field as a
-dictionary, or a list of dictionaries with attributes for all fields
-if <cite>field_name</cite> is not provided.</p>
+<dd class="field-even"><p>Attributes of the specified field as a dictionary, or a list
+of dictionaries with attributes for all fields if <cite>field_name</cite> is not
+provided.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a> | <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a>] | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -550,13 +580,15 @@ if <cite>field_name</cite> is not provided.</p>
 <dd><p>Retrieve the list of all field names in the specified collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>collection_name</strong> – (str) The name of the collection to retrieve
-field names from. The collection must exist in the database.</p>
+<dd class="field-odd"><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to retrieve field
+names from. The collection must exist in the database.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list | None) A list of all field names in the collection
-if it exists, or <cite>None</cite> if the collection has no fields or does not
-exist.</p>
+<dd class="field-even"><p>A list of all field names in the collection if it exists, or
+<cite>None</cite> if the collection has no fields or does not exist.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -569,12 +601,15 @@ exist.</p>
 the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>collection_name</strong> – (str) The name of the collection to retrieve
-the primary key from.</p>
+<dd class="field-odd"><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to retrieve the
+primary key from.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The first key in the collection, representing the
-primary key.</p>
+<dd class="field-even"><p>The first key in the collection, representing the primary
+key.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -585,7 +620,10 @@ primary key.</p>
 <dd><p>Give the list of visible tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) The list of visible tags.</p>
+<dd class="field-odd"><p>The list of visible tags.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -601,16 +639,18 @@ specified collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection containing
-the document.</p></li>
-<li><p><strong>primary_key</strong> – (str) The unique identifier (primary key) of the
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection containing the
 document.</p></li>
-<li><p><strong>field</strong> – (str) The name of the field within the document to
-retrieve.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier (primary key) of the
+document.</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field within the document to retrieve.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Any) The current value of the specified field.</p>
+<dd class="field-even"><p>The current value of the specified field.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -618,15 +658,16 @@ retrieve.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection">
 <span class="sig-name descname"><span class="pre">has_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">collection_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/data_manager/database_mia.html#DatabaseMiaData.has_collection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.data_manager.database_mia.DatabaseMiaData.has_collection" title="Link to this definition">¶</a></dt>
-<dd><blockquote>
-<div><p>Checks if a collection with the specified name exists in the database.</p>
-</div></blockquote>
+<dd><p>Checks if a collection with the specified name exists in the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>collection_name</strong> – (str) The name of the collection to check.</p>
+<dd class="field-odd"><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to check.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) <cite>True</cite> if the collection exists, otherwise <cite>False</cite>.</p>
+<dd class="field-even"><p><cite>True</cite> if the collection exists, otherwise <cite>False</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -639,12 +680,15 @@ given collection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection.</p></li>
-<li><p><strong>primary_key</strong> – (str) The primary key of the document to check.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The primary key of the document to check.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) <cite>True</cite> if the document exists, <cite>False</cite> otherwise.</p>
+<dd class="field-even"><p><cite>True</cite> if the document exists, <cite>False</cite> otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -658,9 +702,9 @@ the given collection in the storage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection containing
-the document.</p></li>
-<li><p><strong>primary_key</strong> – (str) The unique identifier of the document to be
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection containing the
+document.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier of the document to be
 removed.</p></li>
 </ul>
 </dd>
@@ -679,11 +723,10 @@ is not found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection containing
-the document.</p></li>
-<li><p><strong>primary_key</strong> – (str) The primary key of the document in the
-collection.</p></li>
-<li><p><strong>field</strong> – (str) The field to be removed from the document.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection containing the
+document.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The primary key of the document in the collection.</p></li>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The field to be removed from the document.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -698,7 +741,7 @@ collection.</p></li>
 <dd><p>Set the list of visible tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fields_shown</strong> – (list) A list of visible tags.</p>
+<dd class="field-odd"><p><strong>fields_shown</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list of visible tags.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -714,12 +757,12 @@ dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>collection_name</strong> – (str) The name of the collection where the
-record will be stored or updated.</p></li>
-<li><p><strong>primary_key</strong> – (str) The unique key used to identify the record.</p></li>
-<li><p><strong>values_dict</strong> – (dict) A dictionary containing the data to store
-or update in the record. Keys represent field names, and values
-represent the corresponding data.</p></li>
+<li><p><strong>collection_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection where the record
+will be stored or updated.</p></li>
+<li><p><strong>primary_key</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique key used to identify the record.</p></li>
+<li><p><strong>values_dict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary containing the data to store or update
+in the record. Keys represent field names, and values represent the
+corresponding data.</p></li>
 </ul>
 </dd>
 </dl>

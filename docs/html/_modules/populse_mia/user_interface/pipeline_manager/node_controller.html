@@ -4,19 +4,373 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../../../../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -60,27 +414,27 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">traits.api</span> <span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitError</span><span class="p">,</span> <span class="n">Undefined</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># capsul import</span>
-<span class="kn">from</span> <span class="nn">capsul.attributes.completion_engine</span> <span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.pipeline_nodes</span> <span class="kn">import</span> <span class="n">PipelineNode</span>
-<span class="kn">from</span> <span class="nn">capsul.pipeline.process_iteration</span> <span class="kn">import</span> <span class="n">ProcessIteration</span>
-<span class="kn">from</span> <span class="nn">capsul.qt_gui.widgets.attributed_process_widget</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.attributes.completion_engine</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessCompletionEngine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.pipeline_nodes</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineNode</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.pipeline.process_iteration</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessIteration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">capsul.qt_gui.widgets.attributed_process_widget</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AttributedProcessWidget</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">sip</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">pyqtSignal</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QIcon</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">sip</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QIcon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QApplication</span><span class="p">,</span>
     <span class="n">QDialog</span><span class="p">,</span>
     <span class="n">QDialogButtonBox</span><span class="p">,</span>
@@ -96,31 +450,31 @@
 <span class="p">)</span>
 
 <span class="c1"># soma import</span>
-<span class="kn">from</span> <span class="nn">soma.controller</span> <span class="kn">import</span> <span class="n">trait_ids</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">soma.controller</span><span class="w"> </span><span class="kn">import</span> <span class="n">trait_ids</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">COLLECTION_CURRENT</span><span class="p">,</span>
     <span class="n">NOT_DEFINED_VALUE</span><span class="p">,</span>
     <span class="n">TAG_FILENAME</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager.filter</span> <span class="kn">import</span> <span class="n">Filter</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager.filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.advanced_search</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.data_browser</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.data_browser</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">TableDataBrowser</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span> <span class="kn">import</span> <span class="n">PlugFilter</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span> <span class="kn">import</span> <span class="n">ProcessMIA</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.plug_filter</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlugFilter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pipeline_manager.process_mia</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProcessMIA</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">PopUpSelectTagCountTable</span><span class="p">,</span>
     <span class="n">PopUpVisualizedTags</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">type_editors</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">type_editors</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;AttributesFilter&quot;</span><span class="p">,</span>
@@ -134,7 +488,7 @@
 
 <div class="viewcode-block" id="AttributesFilter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter">[docs]</a>
-<span class="k">class</span> <span class="nc">AttributesFilter</span><span class="p">(</span><span class="n">PlugFilter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AttributesFilter</span><span class="p">(</span><span class="n">PlugFilter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A specialized widget for filtering database entries and collecting their</span>
 <span class="sd">    attributes.</span>
@@ -173,7 +527,7 @@
 
 <div class="viewcode-block" id="AttributesFilter.ok_clicked">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">[docs]</a>
-    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Close the widget and emit the collected attributes.</span>
 
@@ -218,7 +572,7 @@
 <span class="c1"># Node controller V2 style</span>
 <div class="viewcode-block" id="CapsulNodeController">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController">[docs]</a>
-<span class="k">class</span> <span class="nc">CapsulNodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CapsulNodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for managing and editing pipeline node parameters using</span>
 <span class="sd">    Capsul&#39;s AttributedProcessWidget.</span>
@@ -268,7 +622,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the node controller.</span>
 
@@ -301,7 +655,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.display_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.display_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the parameters of the selected node.</span>
 
@@ -393,7 +747,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.filter_attributes">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.filter_attributes">[docs]</a>
-    <span class="k">def</span> <span class="nf">filter_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the attributes filter dialog.</span>
 
@@ -417,7 +771,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.release_process">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.release_process">[docs]</a>
-    <span class="k">def</span> <span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clean up process notifications and signals.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -436,7 +790,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.rename_subprocesses">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.rename_subprocesses">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively rename subprocesses within the pipeline, adjusting the</span>
 <span class="sd">        context name.</span>
@@ -488,7 +842,7 @@
 <div class="viewcode-block" id="CapsulNodeController.static_release">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.static_release">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">static_release</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">param_changed</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">static_release</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">param_changed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove trait change notification from process.</span>
 
@@ -501,7 +855,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.parameters_changed">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.parameters_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">parameters_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parameters_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">old_value</span><span class="p">,</span> <span class="n">new_value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle parameter value changes and emit signal.</span>
 
@@ -525,7 +879,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.update_attributes_from_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_attributes_from_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_attributes_from_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_attributes_from_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attributes</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply selected attributes from the filter widget.</span>
 
@@ -569,7 +923,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.update_node_name">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_node_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_node_name</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_node_name</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">old_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -675,7 +1029,7 @@
 
 <div class="viewcode-block" id="CapsulNodeController.update_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.update_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update parameter values.</span>
 
@@ -691,7 +1045,7 @@
 
 <div class="viewcode-block" id="FilterWidget">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget">[docs]</a>
-<span class="k">class</span> <span class="nc">FilterWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FilterWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for filtering and selecting files in a pipeline&#39;s</span>
 <span class="sd">    Input_Filter process.</span>
@@ -730,7 +1084,7 @@
 
 <div class="viewcode-block" id="FilterWidget.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the Filter Widget for pipeline node filtering.</span>
 
@@ -798,7 +1152,7 @@
 
 <div class="viewcode-block" id="FilterWidget.layout_view">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.layout_view">[docs]</a>
-    <span class="k">def</span> <span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">layout_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Configure and initialize the main widget layout.</span>
 
@@ -852,7 +1206,7 @@
 
 <div class="viewcode-block" id="FilterWidget.normalize_scan_path">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.normalize_scan_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">normalize_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalize_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Normalize a scan path to a logical project-relative path.</span>
 
@@ -925,7 +1279,7 @@
 
 <div class="viewcode-block" id="FilterWidget.ok_clicked">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.ok_clicked">[docs]</a>
-    <span class="k">def</span> <span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ok_clicked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the configured filter to the process and close the dialog.</span>
 
@@ -961,7 +1315,7 @@
 
 <div class="viewcode-block" id="FilterWidget.reset_search_bar">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.reset_search_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset search interface to default state.</span>
 
@@ -988,7 +1342,7 @@
 
 <div class="viewcode-block" id="FilterWidget.search_str">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.search_str">[docs]</a>
-    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter and update the displayed scans based on a search string.</span>
 
@@ -1044,7 +1398,7 @@
 
 <div class="viewcode-block" id="FilterWidget.update_tag_to_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tag_to_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_tag_to_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a tag selection dialog and update the filter button text.</span>
 
@@ -1062,7 +1416,7 @@
 
 <div class="viewcode-block" id="FilterWidget.update_tags">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.update_tags">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the list of visualized tags through a user dialog.</span>
 
@@ -1139,7 +1493,7 @@
 <span class="c1"># Node controller V1 style</span>
 <div class="viewcode-block" id="NodeController">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController">[docs]</a>
-<span class="k">class</span> <span class="nc">NodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NodeController</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A PyQt widget for managing and editing the input/output values and</span>
 <span class="sd">    parameters of a pipeline node.</span>
@@ -1187,7 +1541,7 @@
 
 <div class="viewcode-block" id="NodeController.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">scan_list</span><span class="p">,</span> <span class="n">pipeline_manager_tab</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the node controller widget.</span>
 
@@ -1217,7 +1571,7 @@
 
 <div class="viewcode-block" id="NodeController.clearLayout">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.clearLayout">[docs]</a>
-    <span class="k">def</span> <span class="nf">clearLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clearLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and delete all items from a widget&#39;s layout.</span>
 
@@ -1256,7 +1610,7 @@
 
 <div class="viewcode-block" id="NodeController.display_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">process</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display an interactive filter widget for modifying plug values.</span>
 
@@ -1295,7 +1649,7 @@
 
 <div class="viewcode-block" id="NodeController.display_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.display_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node_name</span><span class="p">,</span> <span class="n">process</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display and configure parameters for the selected pipeline node.</span>
 
@@ -1470,7 +1824,7 @@
 
 <div class="viewcode-block" id="NodeController.get_index_from_plug_name">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.get_index_from_plug_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_index_from_plug_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_index_from_plug_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of a plug by its name.</span>
 
@@ -1494,7 +1848,7 @@
 
 <div class="viewcode-block" id="NodeController.update_node_name">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_node_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_node_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the name of the currently selected node in the pipeline.</span>
 
@@ -1547,7 +1901,7 @@
 
 <div class="viewcode-block" id="NodeController.rename_subprocesses">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses">[docs]</a>
-    <span class="k">def</span> <span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rename_subprocesses</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">parent_node_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Recursively update context names for a node and its subprocesses.</span>
 
@@ -1596,7 +1950,7 @@
 
 <div class="viewcode-block" id="NodeController.update_parameters">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_parameters">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">process</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update parameter values in the UI from the process traits.</span>
 
@@ -1652,7 +2006,7 @@
 
 <div class="viewcode-block" id="NodeController.update_plug_value">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_plug_value</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">in_or_out</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">new_value</span><span class="o">=</span><span class="kc">None</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1793,7 +2147,7 @@
 
 <div class="viewcode-block" id="NodeController.update_plug_value_from_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_plug_value_from_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_plug_value_from_filter</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_plug_value_from_filter</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">plug_name</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">filter_res_list</span>
     <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1830,7 +2184,7 @@
 
 <div class="viewcode-block" id="NodeController.release_process">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.release_process">[docs]</a>
-    <span class="k">def</span> <span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release_process</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Release the process from notification tracking.</span>
 

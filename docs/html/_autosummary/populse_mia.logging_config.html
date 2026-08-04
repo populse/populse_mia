@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.logging_config &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.logging_config &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.logging_config</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -47,14 +47,14 @@ and remove old log files according to the configured retention policy.</p>
 <dd><p>Configure the application logging.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>log_in_stdout</strong> – If True, log messages are written to stdout.
-Otherwise, they are written to a log file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>log_in_stdout</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, log messages are written to stdout.
+Otherwise, they are written to a log file.</p></li>
+<li><p><strong>keep_log_files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Number of log files to retain.</p></li>
+<li><p><strong>log_level</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Level of the logger.</p></li>
+</ul>
 </dd>
 </dl>
-<p>:param keep_log_files : Number of log files to retain.
-:type param keep_log_files: int
-:param log_level: Level of the logger.
-:type param log_level: str</p>
 </dd></dl>
 
 <dl class="py function">

@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.data_manager.filter &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.data_manager.filter &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -63,16 +63,16 @@ transmission.</p></li>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Class that represent a Filter, containing the results of both rapid and
 advanced search.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>generate_filter: apply the filter to the given list of scans</p></li>
 <li><p>json_format: returns the filter as a dictionary</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <p>The advanced search creates a complex query to the database and is a
 combination of several “query lines” which are linked with AND or OR
 and all composed of:</p>
@@ -91,14 +91,14 @@ and all composed of:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – filter’s name</p></li>
-<li><p><strong>nots</strong> – list of negations (”” or NOT)</p></li>
-<li><p><strong>values</strong> – list of values</p></li>
-<li><p><strong>fields</strong> – list of list of fields</p></li>
-<li><p><strong>links</strong> – list of links (AND/OR)</p></li>
-<li><p><strong>conditions</strong> – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – filter’s name</p></li>
+<li><p><strong>nots</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of negations (”” or NOT)</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of values</p></li>
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of list of fields</p></li>
+<li><p><strong>links</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of links (AND/OR)</p></li>
+<li><p><strong>conditions</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – list of conditions (==, !=, &lt;, &gt;, &lt;=, &gt;=, IN,
 BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
-<li><p><strong>search_bar</strong> – value in the rapid search bar</p></li>
+<li><p><strong>search_bar</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – value in the rapid search bar</p></li>
 </ul>
 </dd>
 </dl>
@@ -111,13 +111,16 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>current_project</strong> – Current project.</p></li>
-<li><p><strong>scans</strong> – List of scans to apply the filter into.</p></li>
-<li><p><strong>tags</strong> – List of tags to search in.</p></li>
+<li><p><strong>current_project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project.</p></li>
+<li><p><strong>scans</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of scans to apply the filter into.</p></li>
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of tags to search in.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list) The list of scans matching the filter.</p>
+<dd class="field-even"><p>The list of scans matching the filter.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,7 +131,10 @@ BETWEEN, CONTAINS, HAS VALUE, HAS NO VALUE)</p></li>
 <dd><p>Return the filter as a dictionary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(dict) The filter as a dictionary.</p>
+<dd class="field-odd"><p>The filter as a dictionary.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>

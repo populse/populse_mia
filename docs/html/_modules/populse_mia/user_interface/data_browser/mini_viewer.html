@@ -4,19 +4,373 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../../../../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -56,22 +410,22 @@
 
 <span class="c1"># isort: off</span>
 
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">skimage</span> <span class="k">as</span> <span class="nn">sk</span>
-<span class="kn">from</span> <span class="nn">packaging</span> <span class="kn">import</span> <span class="n">version</span>
-<span class="kn">from</span> <span class="nn">skimage.transform</span> <span class="kn">import</span> <span class="n">resize</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">nibabel</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">skimage</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sk</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">resize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 <span class="c1"># isort: on</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5</span> <span class="kn">import</span> <span class="n">QtCore</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5</span><span class="w"> </span><span class="kn">import</span> <span class="n">QtCore</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QFont</span><span class="p">,</span> <span class="n">QImage</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QCheckBox</span><span class="p">,</span>
     <span class="n">QFrame</span><span class="p">,</span>
     <span class="n">QHBoxLayout</span><span class="p">,</span>
@@ -85,9 +439,9 @@
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="n">ClickableLabel</span><span class="p">,</span> <span class="n">PopUpSelectTag</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">COLLECTION_CURRENT</span><span class="p">,</span> <span class="n">NOT_DEFINED_VALUE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClickableLabel</span><span class="p">,</span> <span class="n">PopUpSelectTag</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;MiniViewer&quot;</span><span class="p">]</span>
 
@@ -96,7 +450,7 @@
 
 <div class="viewcode-block" id="MiniViewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer">[docs]</a>
-<span class="k">class</span> <span class="nc">MiniViewer</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MiniViewer</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    MiniViewer allows rapid visualization of scans with either a single image</span>
 <span class="sd">    per scan or all images of the greater dimension of the scan.</span>
@@ -160,7 +514,7 @@
 
 <div class="viewcode-block" id="MiniViewer.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the MiniViewer with project configuration.</span>
 
@@ -201,7 +555,7 @@
 
 <div class="viewcode-block" id="MiniViewer._create_layouts">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer._create_layouts">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_layouts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_layouts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize and configure all layout managers for the MiniViewer widget.</span>
 
@@ -238,7 +592,7 @@
 
 <div class="viewcode-block" id="MiniViewer._create_top_bar">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer._create_top_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">_create_top_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_top_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the top control bar of the MiniViewer.</span>
 
@@ -271,7 +625,7 @@
 
 <div class="viewcode-block" id="MiniViewer._initialize_checkboxes">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer._initialize_checkboxes">[docs]</a>
-    <span class="k">def</span> <span class="nf">_initialize_checkboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_checkboxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize checkboxes for controlling visualization behavior.</span>
 
@@ -291,7 +645,7 @@
 <span class="sd">                - _create_checkbox: Create a configured checkbox.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_create_checkbox</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">checked</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_create_checkbox</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">checked</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Create a configured checkbox with consistent styling.</span>
 
@@ -331,7 +685,7 @@
 
 <div class="viewcode-block" id="MiniViewer._initialize_components">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer._initialize_components">[docs]</a>
-    <span class="k">def</span> <span class="nf">_initialize_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_initialize_components</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize UI components for the MiniViewer.</span>
 
@@ -381,7 +735,7 @@
 
 <div class="viewcode-block" id="MiniViewer.boxSlider">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.boxSlider">[docs]</a>
-    <span class="k">def</span> <span class="nf">boxSlider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">boxSlider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize dimensional sliders and value fields for a given index.</span>
 
@@ -423,7 +777,7 @@
 
 <div class="viewcode-block" id="MiniViewer.changePosValue">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.changePosValue">[docs]</a>
-    <span class="k">def</span> <span class="nf">changePosValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cursor_to_change</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">changePosValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cursor_to_change</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Synchronize cursor positions across multiple image viewers when chain</span>
 <span class="sd">        mode is enabled.</span>
@@ -498,7 +852,7 @@
 
 <div class="viewcode-block" id="MiniViewer.check_box_cursors_state_changed">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.check_box_cursors_state_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_box_cursors_state_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_box_cursors_state_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update cursor chaining configuration based on checkbox state.</span>
 
@@ -511,7 +865,7 @@
 
 <div class="viewcode-block" id="MiniViewer.clear">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clear">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clear cached Nibabel image to free memory.</span>
 
@@ -528,7 +882,7 @@
 
 <div class="viewcode-block" id="MiniViewer.clear_layouts">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.clear_layouts">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear_layouts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_layouts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove and safely delete all widgets from the dynamic content layout.</span>
 
@@ -550,7 +904,7 @@
 
 <div class="viewcode-block" id="MiniViewer.createDimensionLabels">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createDimensionLabels">[docs]</a>
-    <span class="k">def</span> <span class="nf">createDimensionLabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createDimensionLabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure dimension labels for the specified index.</span>
 
@@ -579,7 +933,7 @@
 
 <div class="viewcode-block" id="MiniViewer.createFieldValue">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.createFieldValue">[docs]</a>
-    <span class="k">def</span> <span class="nf">createFieldValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createFieldValue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a read-only field for displaying cursor position.</span>
 
@@ -599,7 +953,7 @@
 
 <div class="viewcode-block" id="MiniViewer.create_slider">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.create_slider">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_slider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_slider</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a horizontal slider widget.</span>
 
@@ -629,7 +983,7 @@
 
 <div class="viewcode-block" id="MiniViewer.displayPosValue">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.displayPosValue">[docs]</a>
-    <span class="k">def</span> <span class="nf">displayPosValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">displayPosValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update position display for all dimensional sliders at the given index.</span>
 
@@ -651,7 +1005,7 @@
 
 <div class="viewcode-block" id="MiniViewer.enableSliders">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.enableSliders">[docs]</a>
-    <span class="k">def</span> <span class="nf">enableSliders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enableSliders</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enable sliders at the specified index across all dimensions.</span>
 
@@ -669,7 +1023,7 @@
 
 <div class="viewcode-block" id="MiniViewer.image2DModifications">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image2DModifications">[docs]</a>
-    <span class="k">def</span> <span class="nf">image2DModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">im2D</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image2DModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">im2D</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply display modifications to a 2D image slice.</span>
 
@@ -698,7 +1052,7 @@
 <span class="sd">                  image.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_resize_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_resize_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">target_size</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Resize image with version-aware anti-aliasing handling.</span>
 
 <span class="sd">            :param image: 2D numpy array to resize.</span>
@@ -720,7 +1074,7 @@
                 <span class="c1"># Handle byte order issues</span>
                 <span class="k">return</span> <span class="n">resize</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">byteswap</span><span class="p">()</span><span class="o">.</span><span class="n">newbyteorder</span><span class="p">(),</span> <span class="o">**</span><span class="n">resize_kwargs</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_rescale_intensities</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">pctl</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_rescale_intensities</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">min_val</span><span class="p">,</span> <span class="n">max_val</span><span class="p">,</span> <span class="n">pctl</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Rescale image intensities using percentile-based normalization.</span>
 
 <span class="sd">            Handles NaN and infinite values gracefully by masking them out</span>
@@ -756,7 +1110,7 @@
 
             <span class="k">return</span> <span class="n">image</span>
 
-        <span class="k">def</span> <span class="nf">_apply_rotation</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_apply_rotation</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Apply orientation-specific rotation to image.</span>
 
 <span class="sd">            :param image: 2D numpy array to rotate.</span>
@@ -816,7 +1170,7 @@
 
 <div class="viewcode-block" id="MiniViewer.image_to_pixmap">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.image_to_pixmap">[docs]</a>
-    <span class="k">def</span> <span class="nf">image_to_pixmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image_to_pixmap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert an N-dimensional NIfTI image to a 2D Qt pixmap.</span>
 
@@ -871,7 +1225,7 @@
 
 <div class="viewcode-block" id="MiniViewer.indexImage">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.indexImage">[docs]</a>
-    <span class="k">def</span> <span class="nf">indexImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">indexImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the displayed 2D image slice and adjust slider ranges according</span>
 <span class="sd">        to the dimensionality of the selected image.</span>
@@ -916,7 +1270,7 @@
 
 <div class="viewcode-block" id="MiniViewer.mem_release">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.mem_release">[docs]</a>
-    <span class="k">def</span> <span class="nf">mem_release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mem_release</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Release memory by clearing all internal lists holding images, sliders,</span>
 <span class="sd">        labels, and related UI elements.</span>
@@ -946,7 +1300,7 @@
 
 <div class="viewcode-block" id="MiniViewer.navigImage">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.navigImage">[docs]</a>
-    <span class="k">def</span> <span class="nf">navigImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">navigImage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the 2D image corresponding to the given index.</span>
 
@@ -974,7 +1328,7 @@
 
 <div class="viewcode-block" id="MiniViewer.openTagsPopUp">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp">[docs]</a>
-    <span class="k">def</span> <span class="nf">openTagsPopUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">openTagsPopUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a modal dialog allowing the user to select the tag used as the</span>
 <span class="sd">        thumbnail legend.</span>
@@ -995,7 +1349,7 @@
 
 <div class="viewcode-block" id="MiniViewer.setThumbnail">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.setThumbnail">[docs]</a>
-    <span class="k">def</span> <span class="nf">setThumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path_db</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setThumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path_db</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the thumbnail description label for a given image index.</span>
 
@@ -1035,7 +1389,7 @@
 
 <div class="viewcode-block" id="MiniViewer.show_slices">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.show_slices">[docs]</a>
-    <span class="k">def</span> <span class="nf">show_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display thumbnail previews of neuroimaging files with interactive</span>
 <span class="sd">        controls.</span>
@@ -1302,7 +1656,7 @@
 
 <div class="viewcode-block" id="MiniViewer.update_nb_slices">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_nb_slices">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_nb_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_nb_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update slice configuration and refresh thumbnails.</span>
 
@@ -1321,7 +1675,7 @@
 
 <div class="viewcode-block" id="MiniViewer.update_visualization">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.update_visualization">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_visualization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update visualization settings and refresh thumbnails.</span>
 
@@ -1337,7 +1691,7 @@
 
 <div class="viewcode-block" id="MiniViewer.verify_slices">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.verify_slices">[docs]</a>
-    <span class="k">def</span> <span class="nf">verify_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_slices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update slice display settings based on the number of selected files.</span>
 

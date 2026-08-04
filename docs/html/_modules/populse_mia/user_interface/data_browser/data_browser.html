@@ -4,19 +4,373 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+613d4eee documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=f63d8bfa" />
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=392872ff"></script>
+    <script src="../../../../_static/documentation_options.js?v=89202dc7"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+613d4eee documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -42,21 +396,21 @@
 <span class="c1"># for details.</span>
 <span class="c1">##########################################################################</span>
 
-<span class="kn">import</span> <span class="nn">ast</span>
-<span class="kn">import</span> <span class="nn">bisect</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">platform</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_origin</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bisect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">platform</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_origin</span>
 
 <span class="c1"># PyQt5 import</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtCore</span> <span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QVariant</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtGui</span> <span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
-<span class="kn">from</span> <span class="nn">PyQt5.QtWidgets</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QVariant</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QIcon</span><span class="p">,</span> <span class="n">QPixmap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt5.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">QAbstractItemView</span><span class="p">,</span>
     <span class="n">QAction</span><span class="p">,</span>
     <span class="n">QApplication</span><span class="p">,</span>
@@ -83,7 +437,7 @@
 <span class="p">)</span>
 
 <span class="c1"># populse_mia import</span>
-<span class="kn">from</span> <span class="nn">populse_mia.data_manager</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.data_manager</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">BRICK_INPUTS</span><span class="p">,</span>
     <span class="n">BRICK_NAME</span><span class="p">,</span>
     <span class="n">BRICK_OUTPUTS</span><span class="p">,</span>
@@ -111,15 +465,15 @@
     <span class="n">TAG_ORIGIN_BUILTIN</span><span class="p">,</span>
     <span class="n">TAG_ORIGIN_USER</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.software_properties</span> <span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.advanced_search</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.software_properties</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.advanced_search</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdvancedSearch</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.count_table</span> <span class="kn">import</span> <span class="n">CountTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span> <span class="kn">import</span> <span class="n">MiniViewer</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.modify_table</span> <span class="kn">import</span> <span class="n">ModifyTable</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.data_browser.rapid_search</span> <span class="kn">import</span> <span class="n">RapidSearch</span>
-<span class="kn">from</span> <span class="nn">populse_mia.user_interface.pop_ups</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.count_table</span><span class="w"> </span><span class="kn">import</span> <span class="n">CountTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.mini_viewer</span><span class="w"> </span><span class="kn">import</span> <span class="n">MiniViewer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.modify_table</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModifyTable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.data_browser.rapid_search</span><span class="w"> </span><span class="kn">import</span> <span class="n">RapidSearch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.user_interface.pop_ups</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ClickableLabel</span><span class="p">,</span>
     <span class="n">PopUpAddPath</span><span class="p">,</span>
     <span class="n">PopUpAddTag</span><span class="p">,</span>
@@ -132,7 +486,7 @@
     <span class="n">PopUpSelectFilter</span><span class="p">,</span>
     <span class="n">PopUpShowHistory</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">populse_mia.utils</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">populse_mia.utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">check_value_type</span><span class="p">,</span>
     <span class="n">safe_connect</span><span class="p">,</span>
     <span class="n">safe_disconnect</span><span class="p">,</span>
@@ -155,7 +509,7 @@
 
 <div class="viewcode-block" id="DataBrowser">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser">[docs]</a>
-<span class="k">class</span> <span class="nc">DataBrowser</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataBrowser</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Widget that manages and displays the contents of the **Data Browser** tab.</span>
 
@@ -196,7 +550,7 @@
 
 <div class="viewcode-block" id="DataBrowser.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project</span><span class="p">,</span> <span class="n">main_window</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialization of the data_browser class.</span>
 
@@ -265,7 +619,7 @@
 
 <div class="viewcode-block" id="DataBrowser.add_tag_infos">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_infos">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_tag_infos</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_tag_infos</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">new_tag_name</span><span class="p">,</span>
         <span class="n">new_default_value</span><span class="p">,</span>
@@ -365,7 +719,7 @@
 
 <div class="viewcode-block" id="DataBrowser.add_tag_pop_up">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.add_tag_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_tag_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_tag_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a popup window for adding a new tag to the project.</span>
 
@@ -379,7 +733,7 @@
 
 <div class="viewcode-block" id="DataBrowser.clone_tag_infos">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.clone_tag_infos">[docs]</a>
-    <span class="k">def</span> <span class="nf">clone_tag_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_to_clone</span><span class="p">,</span> <span class="n">new_tag_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clone_tag_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_to_clone</span><span class="p">,</span> <span class="n">new_tag_name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clone a tag and its associated data, creating a new tag with the same</span>
 <span class="sd">        attributes and values.</span>
@@ -478,7 +832,7 @@
 
 <div class="viewcode-block" id="DataBrowser.connect_actions">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_actions">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect UI actions to their corresponding methods.</span>
 
@@ -499,7 +853,7 @@
 
 <div class="viewcode-block" id="DataBrowser.connect_mini_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_mini_viewer">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_mini_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display the selected documents in the viewer.&quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">splitter_vertical</span><span class="o">.</span><span class="n">sizes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span>
@@ -534,7 +888,7 @@
 
 <div class="viewcode-block" id="DataBrowser.connect_toolbar">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.connect_toolbar">[docs]</a>
-    <span class="k">def</span> <span class="nf">connect_toolbar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">connect_toolbar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect methods to toolbar.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_str</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">button_cross</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reset_search_bar</span><span class="p">)</span>
@@ -549,7 +903,7 @@
 
 <div class="viewcode-block" id="DataBrowser.count_table_pop_up">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.count_table_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">count_table_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">count_table_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Open the count table pop-up.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count_table_pop_up</span> <span class="o">=</span> <span class="n">CountTable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">count_table_pop_up</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
@@ -557,7 +911,7 @@
 
 <div class="viewcode-block" id="DataBrowser.create_layout">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_layout">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the layouts of the tab.&quot;&quot;&quot;</span>
         <span class="c1"># Table + buttons frame</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">frame_table_data</span><span class="o">.</span><span class="n">setFrameShape</span><span class="p">(</span><span class="n">QFrame</span><span class="o">.</span><span class="n">StyledPanel</span><span class="p">)</span>
@@ -620,7 +974,7 @@
 
 <div class="viewcode-block" id="DataBrowser.create_toolbar_view">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.create_toolbar_view">[docs]</a>
-    <span class="k">def</span> <span class="nf">create_toolbar_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_toolbar_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create the toolbar menu at the top of the tab.&quot;&quot;&quot;</span>
         <span class="n">tags_tool_button</span> <span class="o">=</span> <span class="n">QToolButton</span><span class="p">()</span>
         <span class="n">tags_tool_button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Tags&quot;</span><span class="p">)</span>
@@ -665,7 +1019,7 @@
 
 <div class="viewcode-block" id="DataBrowser.move_splitter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.move_splitter">[docs]</a>
-    <span class="k">def</span> <span class="nf">move_splitter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">move_splitter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connect the mini viewer if the splitter is not at its minimum</span>
 <span class="sd">        position.</span>
@@ -685,7 +1039,7 @@
 
 <div class="viewcode-block" id="DataBrowser.open_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a dialog for selecting and opening a saved project filter.</span>
 
@@ -700,7 +1054,7 @@
 
 <div class="viewcode-block" id="DataBrowser.open_filter_infos">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.open_filter_infos">[docs]</a>
-    <span class="k">def</span> <span class="nf">open_filter_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">open_filter_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the current project filter to the data table.</span>
 
@@ -742,7 +1096,7 @@
 
 <div class="viewcode-block" id="DataBrowser.remove_tag_infos">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_infos">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_tag_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_names_to_remove</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_tag_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag_names_to_remove</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified tags from the database and update the UI.</span>
 
@@ -831,7 +1185,7 @@
 
 <div class="viewcode-block" id="DataBrowser.remove_tag_pop_up">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.remove_tag_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_tag_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_tag_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a modal dialog for removing user tags from the project.</span>
 
@@ -844,7 +1198,7 @@
 
 <div class="viewcode-block" id="DataBrowser.reset_search_bar">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.reset_search_bar">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_search_bar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clear the search bar input field.</span>
 
@@ -856,7 +1210,7 @@
 
 <div class="viewcode-block" id="DataBrowser.search_str">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.search_str">[docs]</a>
-    <span class="k">def</span> <span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">search_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_search</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Search and filter documents in the table based on a search string.</span>
 
@@ -908,7 +1262,7 @@
 
 <div class="viewcode-block" id="DataBrowser.send_documents_to_pipeline">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.send_documents_to_pipeline">[docs]</a>
-    <span class="k">def</span> <span class="nf">send_documents_to_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_documents_to_pipeline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a popup dialog for sending filtered scans to the Pipeline</span>
 <span class="sd">        Manager.</span>
@@ -932,7 +1286,7 @@
 
 <div class="viewcode-block" id="DataBrowser.show_clone_tag_popup">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.show_clone_tag_popup">[docs]</a>
-    <span class="k">def</span> <span class="nf">show_clone_tag_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_clone_tag_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a popup dialog for cloning a tag.</span>
 
@@ -947,7 +1301,7 @@
 
 <div class="viewcode-block" id="DataBrowser.toggle_advanced_search">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.toggle_advanced_search">[docs]</a>
-    <span class="k">def</span> <span class="nf">toggle_advanced_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle_advanced_search</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Toggle the visibility of the advanced search interface.</span>
 
@@ -993,7 +1347,7 @@
 
 <div class="viewcode-block" id="DataBrowser.update_database">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser.update_database">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_database</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">database</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the project database and reset UI state.</span>
 
@@ -1022,7 +1376,7 @@
 
 <div class="viewcode-block" id="DateFormatDelegate">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate">[docs]</a>
-<span class="k">class</span> <span class="nc">DateFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DateFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A custom delegate for handling date editing in table views.</span>
 
@@ -1041,7 +1395,7 @@
 
 <div class="viewcode-block" id="DateFormatDelegate.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the DateFormatDelegate.</span>
 
@@ -1052,7 +1406,7 @@
 
 <div class="viewcode-block" id="DateFormatDelegate.createEditor">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.createEditor">[docs]</a>
-    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and return a QDateEdit widget for editing dates.</span>
 
@@ -1077,7 +1431,7 @@
 
 <div class="viewcode-block" id="DateTimeFormatDelegate">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate">[docs]</a>
-<span class="k">class</span> <span class="nc">DateTimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DateTimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Custom delegate for displaying and editing datetime values in table views.</span>
 
@@ -1096,7 +1450,7 @@
 
 <div class="viewcode-block" id="DateTimeFormatDelegate.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the datetime delegate.</span>
 
@@ -1107,7 +1461,7 @@
 
 <div class="viewcode-block" id="DateTimeFormatDelegate.createEditor">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.createEditor">[docs]</a>
-    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure a datetime editor widget.</span>
 
@@ -1126,7 +1480,7 @@
 
 <div class="viewcode-block" id="NumberFormatDelegate">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate">[docs]</a>
-<span class="k">class</span> <span class="nc">NumberFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NumberFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Delegate for handling numeric input in table cells.</span>
 
@@ -1143,7 +1497,7 @@
 
 <div class="viewcode-block" id="NumberFormatDelegate.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the NumberFormatDelegate.</span>
 
@@ -1154,7 +1508,7 @@
 
 <div class="viewcode-block" id="NumberFormatDelegate.createEditor">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.createEditor">[docs]</a>
-    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure a QDoubleSpinBox editor for numeric input.</span>
 
@@ -1184,7 +1538,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser">[docs]</a>
-<span class="k">class</span> <span class="nc">TableDataBrowser</span><span class="p">(</span><span class="n">QTableWidget</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TableDataBrowser</span><span class="p">(</span><span class="n">QTableWidget</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Table widget that displays the documents contained in the database and</span>
 <span class="sd">    their associated tags.</span>
@@ -1245,7 +1599,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">project</span><span class="p">,</span>
         <span class="n">data_browser</span><span class="p">,</span>
@@ -1335,7 +1689,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.add_column">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a new column to the table with the specified tag.</span>
 
@@ -1429,7 +1783,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.add_columns">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_columns">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add and update table columns based on database fields.</span>
 
@@ -1566,7 +1920,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.add_path">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to add documents to the current project.</span>
 
@@ -1579,7 +1933,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.add_rows">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.add_rows">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Insert rows into the table if they don&#39;t already exist.</span>
 
@@ -1760,7 +2114,7 @@
 <div class="viewcode-block" id="TableDataBrowser.batch_update">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.batch_update">[docs]</a>
     <span class="nd">@contextmanager</span>
-    <span class="k">def</span> <span class="nf">batch_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">disable_sorting</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">batch_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">disable_sorting</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Context manager for efficient batch updates.</span>
 
@@ -1796,7 +2150,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.clear_cell">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.clear_cell">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Clear values from selected cells in the table.</span>
 
@@ -1857,7 +2211,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.context_menu_table">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.context_menu_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">context_menu_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">context_menu_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and display the context menu for the table, and perform</span>
 <span class="sd">        the corresponding action based on the user&#39;s selection.</span>
@@ -1875,7 +2229,7 @@
 <span class="sd">                - _do_add_document: Safely add a new document to the table.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_confirm_action</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="nb">callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_confirm_action</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="nb">callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Display a warning message box with an OK/Cancel choice and connect</span>
 <span class="sd">            the OK button to a callback function.</span>
@@ -1898,7 +2252,7 @@
             <span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
-        <span class="k">def</span> <span class="nf">_do_add_document</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_do_add_document</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Safely add a new document to the table without triggering the</span>
 <span class="sd">            ``itemChanged`` signal.</span>
@@ -1980,7 +2334,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.delete_from_brick">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.delete_from_brick">[docs]</a>
-    <span class="k">def</span> <span class="nf">delete_from_brick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick_id</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete_from_brick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">brick_id</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Delete a brick and its associated documents from the database.</span>
 
@@ -2012,7 +2366,7 @@
                 <span class="k">return</span>
 
             <span class="c1"># Extract all input and output document IDs</span>
-            <span class="k">def</span> <span class="nf">extract_document_ids</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">extract_document_ids</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Extracts all string values from a nested dictionary structure.</span>
 
@@ -2100,7 +2454,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.display_file">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open the selected file(s) in the user&#39;s default application.</span>
 
@@ -2137,7 +2491,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.display_unreset_values">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.display_unreset_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">display_unreset_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display_unreset_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a warning dialog listing values that cannot be reset.</span>
 
@@ -2161,7 +2515,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.edit_table_data_values">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.edit_table_data_values">[docs]</a>
-    <span class="k">def</span> <span class="nf">edit_table_data_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">edit_table_data_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Edit and update selected cell values in the DataBrowser table.</span>
 
@@ -2340,7 +2694,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.fill_cells_update_table">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_cells_update_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">fill_cells_update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_cells_update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize and populate table cells with scan data from the database.</span>
 
@@ -2555,7 +2909,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.fill_headers">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.fill_headers">[docs]</a>
-    <span class="k">def</span> <span class="nf">fill_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">take_tags_to_update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fill_headers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">take_tags_to_update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize and populate table headers with field metadata.</span>
 
@@ -2623,7 +2977,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.get_current_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_current_filter">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_current_filter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the current data browser selection.</span>
 
@@ -2642,7 +2996,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.get_index_insertion">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_index_insertion">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_index_insertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_insert</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_index_insertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_insert</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the insertion index for a new column to maintain alphabetical</span>
 <span class="sd">        order.</span>
@@ -2674,7 +3028,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.get_scan_row">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_scan_row">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_scan_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_scan_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the row index for a given scan filename.</span>
 
@@ -2697,7 +3051,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.get_tag_column">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.get_tag_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_tag_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_tag_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the column index for a given tag name.</span>
 
@@ -2722,7 +3076,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.mouseReleaseEvent">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.mouseReleaseEvent">[docs]</a>
-    <span class="k">def</span> <span class="nf">mouseReleaseEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mouseReleaseEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle mouse release event and update table data.</span>
 
@@ -2739,7 +3093,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.multiple_sort_infos">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_infos">[docs]</a>
-    <span class="k">def</span> <span class="nf">multiple_sort_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_tags</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiple_sort_infos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">list_tags</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sort table rows by multiple tag values.</span>
 
@@ -2765,7 +3119,7 @@
 <span class="sd">                  specified table cell.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_clear_cell</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_clear_cell</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Clears the specified cell and sets an optional non-editable item.</span>
 
@@ -2781,7 +3135,7 @@
                 <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">_create_brick_widget</span><span class="p">(</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_create_brick_widget</span><span class="p">(</span>
             <span class="n">row</span><span class="p">,</span>
             <span class="n">column</span><span class="p">,</span>
             <span class="n">scan</span><span class="p">,</span>
@@ -2964,7 +3318,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.multiple_sort_pop_up">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.multiple_sort_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">multiple_sort_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">multiple_sort_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the multiple sort configuration dialog.</span>
 
@@ -2980,7 +3334,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.on_cell_changed">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.on_cell_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">on_cell_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_origin</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_cell_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item_origin</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update cell values and appearance when edited by the user.</span>
 
@@ -3011,7 +3365,7 @@
 <span class="sd">            - Resizes columns to fit content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">_show_error_and_revert</span><span class="p">(</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">_show_error_and_revert</span><span class="p">(</span>
             <span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">selected_items</span><span class="p">,</span> <span class="n">database_data</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
@@ -3202,7 +3556,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.remove_scan">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.remove_scan">[docs]</a>
-    <span class="k">def</span> <span class="nf">remove_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_scan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove selected scans from the database and file system.</span>
 
@@ -3349,7 +3703,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.reset_cell">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_cell">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset selected cells to their original values from the initial</span>
 <span class="sd">        collection.</span>
@@ -3437,7 +3791,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.reset_column">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_column</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset selected columns to their original values.</span>
 
@@ -3520,7 +3874,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.reset_row">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.reset_row">[docs]</a>
-    <span class="k">def</span> <span class="nf">reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_row</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reset selected cells to their original values from the initial</span>
 <span class="sd">        collection.</span>
@@ -3617,7 +3971,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.section_moved">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.section_moved">[docs]</a>
-    <span class="k">def</span> <span class="nf">section_moved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logical_index</span><span class="p">,</span> <span class="n">old_index</span><span class="p">,</span> <span class="n">new_index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">section_moved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logical_index</span><span class="p">,</span> <span class="n">old_index</span><span class="p">,</span> <span class="n">new_index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle section movement to keep the FileName column fixed at</span>
 <span class="sd">        position 0.</span>
@@ -3658,7 +4012,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.select_all_column">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">select_all_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_all_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">col</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select all cells in a column when its header is double-clicked.</span>
 
@@ -3673,7 +4027,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.select_all_columns">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.select_all_columns">[docs]</a>
-    <span class="k">def</span> <span class="nf">select_all_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">select_all_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select all columns containing currently selected cells.</span>
 
@@ -3699,7 +4053,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.selection_changed">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.selection_changed">[docs]</a>
-    <span class="k">def</span> <span class="nf">selection_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">selection_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the tab view when the table selection changes.</span>
 
@@ -3750,7 +4104,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.show_brick_history">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.show_brick_history">[docs]</a>
-    <span class="k">def</span> <span class="nf">show_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_brick_history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scan</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a popup window showing the history of a brick.</span>
 
@@ -3776,7 +4130,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.sort_column">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_column">[docs]</a>
-    <span class="k">def</span> <span class="nf">sort_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sort_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sort the currently selected column.</span>
 
@@ -3807,7 +4161,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.sort_updated">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.sort_updated">[docs]</a>
-    <span class="k">def</span> <span class="nf">sort_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sort_updated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update project state and apply sorting to the table.</span>
 
@@ -3842,7 +4196,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.update_colors">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_colors">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update cell background colors based on data state and visibility.</span>
 
@@ -3994,7 +4348,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.update_selection">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_selection">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update table selection based on current scan results.</span>
 
@@ -4020,7 +4374,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.update_table">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_table">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">take_tags_to_update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">take_tags_to_update</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Refresh the table with current project data.</span>
 
@@ -4082,7 +4436,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.update_visualized_columns">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_columns">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_visualized_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_tags</span><span class="p">,</span> <span class="n">showed</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_visualized_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_tags</span><span class="p">,</span> <span class="n">showed</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update column visibility based on tag selection changes.</span>
 
@@ -4143,7 +4497,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.update_visualized_rows">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.update_visualized_rows">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_visualized_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_scans</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_visualized_rows</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">old_scans</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update table row visibility based on current scan visualization state.</span>
 
@@ -4196,7 +4550,7 @@
 
 <div class="viewcode-block" id="TableDataBrowser.visualized_tags_pop_up">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.visualized_tags_pop_up">[docs]</a>
-    <span class="k">def</span> <span class="nf">visualized_tags_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visualized_tags_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a modal dialog for configuring visualized tag columns.</span>
 
@@ -4225,7 +4579,7 @@
 
 <div class="viewcode-block" id="TimeFormatDelegate">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeFormatDelegate</span><span class="p">(</span><span class="n">QItemDelegate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Delegate for handling time data display and editing in table views.</span>
 
@@ -4242,7 +4596,7 @@
 
 <div class="viewcode-block" id="TimeFormatDelegate.__init__">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the time format delegate.</span>
 
@@ -4253,7 +4607,7 @@
 
 <div class="viewcode-block" id="TimeFormatDelegate.createEditor">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.createEditor">[docs]</a>
-    <span class="k">def</span> <span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">createEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">option</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the editor widget for time values.</span>
 
