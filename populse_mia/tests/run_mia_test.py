@@ -105,10 +105,13 @@ def add_to_syspath(path: Path, position: int = 1, name: str = ""):
     """
     Add a directory to sys.path if it exists and isn't already there.
 
-    :param path: (Path) The directory path to be added to sys.path.
-    :param position: (int) The index at which to insert the path. Defaults
+    :param path: The directory path to be added to sys.path.
+    :type path: Path
+    :param position: The index at which to insert the path. Defaults
      to 1.
-    :param name: (str) The name of the package.
+    :type position: int
+    :param name: The name of the package.
+    :type name: str
     """
 
     if path.is_dir() and str(path) not in sys.path:
@@ -305,11 +308,14 @@ def qt_message_handler(mode, context, message):
     it is ignored. If it contains an unwanted substring, that part is removed
     and the cleaned message is printed to stderr (if anything remains).
 
-    :param mode: The Qt message type (ignored here).
+    :param mode: The Qt message type - Debug: 0, Warning:1, Critical: 2,
+     Fatal: 3 - (ignored here).
+    :type mode: PyQt5.QtCore.QtMsgType
     :param context: The context of the message (ignored here).
+    :type context: PyQt5.QtCore.QMessageLogContext
     :param message: (str) The Qt debug/warning message to filter and display.
+    :type message: str
     """
-
     cleaned_message = message.strip()
 
     for unwanted in unwanted_messages:
@@ -332,9 +338,7 @@ class LogCapture(logging.Handler):
     on log content, level, or message during unit tests.
 
     Contains:
-
         Methods:
-
             - clear: Clears all captured log records.
             - emit: Appends a log record to the internal list.
 
@@ -359,7 +363,8 @@ class LogCapture(logging.Handler):
         """
         Appends a log record to the internal list.
 
-        :param record: (logging.LogRecord) The log record to store.
+        :param record: The log record to store.
+        :type record: logging.LogRecord
         """
         self.records.append(record)
 
@@ -368,33 +373,30 @@ class TestMIACase(unittest.TestCase):
     """Parent class for the test classes of Mia.
 
     Contains:
-
         Methods:
-
-                - add_visualized_tag: selects a tag to display with the
-                  "Visualized tags" pop-up.
-                - capture_logs: context manager to temporarily capture log
-                  records.
-                - clean_uts_packages: deleting the package added during the
-                  UTs or old one still existing.
-                - create_mock_jar: creates a mocked java (.jar) executable.
-                - execute_QDialogAccept: accept (close) a QDialog instance.
-                - find_item_by_data: looks for a QModelIndex whose contents
-                  correspond to the argument data.
-                - get_new_test_project: create a temporary project that can
-                  be safely modified.
-                - proclibview_nipype_state: give the state of nipype in the
-                  process.
-                - proclibview_nipype_reset_state: reset nipype to its initial
-                  state (before the start of the current test) in the process
-                  library view.
-                - restart_Mia: restarts Mia within a unit test.
-                - setUp: called automatically before each test method.
-                - setUpClass: called before tests in the individual class.
-                - suppress_all_output: Context manager to suppress all output
-                  during tests.
-                - tearDown: cleans up after each test method.
-                - tearDownClass: called after tests in the individual class.
+            - add_visualized_tag: selects a tag to display with the
+              "Visualized tags" pop-up.
+            - capture_logs: context manager to temporarily capture log records.
+            - clean_uts_packages: deleting the package added during the UTs or
+              old one still existing.
+            - create_mock_jar: creates a mocked java (.jar) executable.
+            - execute_QDialogAccept: accept (close) a QDialog instance.
+            - find_item_by_data: looks for a QModelIndex whose contents
+              correspond to the argument data.
+            - get_new_test_project: create a temporary project that can be
+              safely modified.
+            - proclibview_nipype_state: give the state of nipype in the
+              process.
+            - proclibview_nipype_reset_state: reset nipype to its initial state
+              (before the start of the current test) in the process library
+              view.
+            - restart_Mia: restarts Mia within a unit test.
+            - setUp: called automatically before each test method.
+            - setUpClass: called before tests in the individual class.
+            - suppress_all_output: Context manager to suppress all output
+              during tests.
+            - tearDown: cleans up after each test method.
+            - tearDownClass: called after tests in the individual class.
     """
 
     def add_visualized_tag(self, widget, tag, timeout=5000):
@@ -405,11 +407,15 @@ class TestMIACase(unittest.TestCase):
         within the given timeout period, locates the specified tag in the
         tag list, selects it, and confirms the dialog.
 
-        :param widget: The input filter containing the dialog
-         with visualized tags.
-        :param tag: (str) The tag name to select and visualize.
-        :param timeout: (int) Maximum time to wait for the dialog to appear,
-         in milliseconds. Defaults to 5000 ms.
+        :param widget: The input filter containing the dialog with visualized
+         tags.
+        :type widget:
+          populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget
+        :param tag: The tag name to select and visualize.
+        :type tag: str
+        :param timeout: Maximum time to wait for the dialog to appear, in
+         milliseconds. Defaults to 5000 ms.
+        :type timeout: int
 
         :raises RuntimeError: If the dialog or visualized tags widget is not
          found.
@@ -474,12 +480,15 @@ class TestMIACase(unittest.TestCase):
             - ERROR (40)
             - CRITICAL (50) - Highest priority
 
-        :param logger_name: (str) The name of the logger to capture logs from.
-        :param level: (int) The logging level to use during capture (default:
-         20; INFO).
+        :param logger_name: The name of the logger to capture logs from.
+        :type logger_name: str
+        :param level: The logging level to use during capture (default: 20;
+         INFO).
+        :type level: int
 
-        :Yields: (LogCapture) A custom log handler with a `records` attribute
-         containing captured LogRecord entries.
+        :yields: A custom log handler with a `records` attribute containing
+         captured LogRecord entries.
+        :rtype: LogCapture
         """
         handler = LogCapture()
         logger = logging.getLogger(logger_name)
@@ -514,8 +523,9 @@ class TestMIACase(unittest.TestCase):
         `Delete` key press event to invoke the removal mechanism.
 
         :param proc_lib_view: The process library view containing the package
-         items. Expected to implement `to_dict()`, `selectionModel()`, and
-         `keyPressEvent()`.
+         items.
+        :type proc_lib_view:
+         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary
         """
         # Identify packages related to unit tests
         packages = proc_lib_view.to_dict()
@@ -549,9 +559,11 @@ class TestMIACase(unittest.TestCase):
         """
         Create a mock Java executable (.jar) for testing.
 
-        :param path: (str) Full path to the output .jar file.
+        :param path: Full path to the output .jar file.
+        :type path: str
 
-        :Returns: (int) 0 if creation succeeded, 1 otherwise.
+        :returns: 0 if creation succeeded, 1 otherwise.
+        :rtype: int
         """
 
         folder, name = os.path.split(path)
@@ -620,11 +632,14 @@ class TestMIACase(unittest.TestCase):
         Search for the first QModelIndex in the given QTreeView whose data
         matches the specified value.
 
-        :param q_tree_view: (QTreeView) The tree view to search within.
-        :param data: (str) The target data to match.
+        :param q_tree_view: The tree view to search within.
+        :type q_tree_view:
+         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary
+        :param data: The target data to match.
+        :type data: str
 
-        :Returns: (QModelIndex | None) The matching index if found; otherwise,
-         None.
+        :returns: The matching index if found; otherwise, None.
+        :rtype: QModelIndex or None
         """
 
         if not isinstance(q_tree_view, QTreeView):
@@ -648,8 +663,10 @@ class TestMIACase(unittest.TestCase):
 
         The new project is created in the /tmp (/Temp) folder.
 
-        :param name: (str) Name of the directory containing the project.
-        :param light: (bool) True to copy a project with few documents.
+        :param name: Name of the directory containing the project.
+        :type name: str
+        :param light: True to copy a project with few documents.
+        :type light: bool
         """
 
         new_test_proj = os.path.join(self.project_path, name)
@@ -677,14 +694,17 @@ class TestMIACase(unittest.TestCase):
         a string describing the loading state of the Nipype modules.
 
         :param proc_lib_view: The process library view object.
+        :type proc_lib_view:
+         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary
 
-        :Returns: (str or None)
-         A string representing the current state:
+        :returns: A string representing the current state:
+
             - 'nipype': Nipype is present, but 'interfaces' is not.
             - 'nipype.interfaces': 'interfaces' is present, but 'DataGrabber'
               is not.
             - 'process_enabled': 'nipype.interfaces.DataGrabber' is present.
             - None: No processes loaded, or Nipype is not present.
+        :rtype: str | None
         """
         view_dict = proc_lib_view.to_dict()
         nipype = view_dict.get("nipype")
@@ -711,12 +731,13 @@ class TestMIACase(unittest.TestCase):
         Resets the Nipype process library view in the package library popup
         to a specified initial state.
 
-        :param main_window: (QMainWindow) The main window containing the
-         package library popup.
-        :param ppl_manager: (PipelineManager) The pipeline manager handling
-         the process library.
-        :param init_state: (str or None) The desired reset state of the Nipype
-         process view:
+        :param main_window: The main window containing the package library
+         popup.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
+        :param ppl_manager: The pipeline manager handling the process library.
+        :type ppl_manager:
+            populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab
+        :param init_state: The desired reset state of the Nipype process view:
 
             - None: The library is either empty or 'nipype' is not loaded.
             - 'nipype': Only 'nipype' is loaded.
@@ -724,6 +745,7 @@ class TestMIACase(unittest.TestCase):
               'DataGrabber'.
             - 'process_enabled': 'nipype.interfaces.DataGrabber' is already
               loaded.
+        :type init_state: str | None
         """
         main_window.package_library_pop_up()
         pkg_lib_window = main_window.pop_up_package_library
@@ -994,78 +1016,78 @@ class TestMIADataBrowser(TestMIACase):
     """Tests for the data browser tab (DataBrowser).
 
     Contains:
-
-       Methods:
-
-           - assert_scans_present: Asserts that all expected scan names are
-             present in the given list.
-           - get_cell_text: Returns the text of the QLabel inside a cell
-             widget.
-           - get_db_and_databrowser_value: Returns current, initial DB values
-             and UI value for a given tag.
-           - get_visible_scans: Returns the list of scan names currently
-             visible in the table.
-           - suppress_item_changed_signal: Temporarily disconnects and
-             reconnects the itemChanged signal.
-           - test_add_path: Tests the popup to add a path.
-           - test_add_tag: Tests the pop up adding a tag.
-           - test_advanced_search: Tests the advanced search widget.
-           - test_brick_history: Tests the brick history popup.
-           - test_clear_cell: Tests the method clearing cells.
-           - test_clone_tag: Tests the pop up cloning a tag.
-           - test_count_table: Tests the count table popup.
-           - test_mia_preferences: Tests the Mia preferences popup.
-           - test_mini_viewer: Selects scans and display them in the mini
-             viewer.
-           - test_modify_table: Tests the modify table module.
-           - test_multiple_sort: Tests the multiple sort popup.
-           - test_multiple_sort_appendix: Adds and removes tags in the data
-             browser.
-           - test_openTagsPopUp: Opens a pop-up to select the legend of the
-             thumbnails.
-           - test_open_project: Tests project opening.
-           - test_project_filter: Tests project filter opening.
-           - test_project_properties: Tests saved projects addition and
-             removal.
-           - test_proj_remov_from_cur_proj: Tests that the projects are
-             removed from the list of current projects.
-           - test_rapid_search: Tests the rapid search bar.
-           - test_remove_scan: Tests scans removal in the DataBrowser.
-           - test_remove_tag: Tests the popup removing user tags.
-           - test_reset_cell: Tests the method resetting the selected cells.
-           - test_reset_column: Tests the method resetting the columns
-             selected.
-           - test_reset_row: Tests row reset.
-           - test_save_project: Tests opening & saving of a project.
-           - test_send_doc_to_pipeline_manager: Tests the popup sending
-             documents to the pipeline manager.
-           - test_set_value: Tests the values modifications.
-           - test_show_brick_history: Opens the history pop-up for scans with
-             history related to a brick.
-           - test_sort: Tests the sorting in the DataBrowser.
-           - test_table_data_add_columns: Adds tag columns to the table data
-             window.
-           - test_table_data_appendix: Opens a project and tests miscellaneous
-             methods of the table data view, in the data browser.
-           - test_table_data_context_menu: Right clicks a scan to show the
-             context menu table, and choses one option.
-           - test_undo_redo_databrowser: Tests data browser undo/redo.
-           - test_unnamed_proj_soft_open: Tests unnamed project creation at
-             software opening.
-           - test_update_default_value: Updates the values when a list of
-             default values is created.
-           - test_utils: Tests the utils functions.
-           - test_visualized_tags: Tests the popup modifying the visualized
-             tags.
+        Methods:
+            - assert_scans_present: Asserts that all expected scan names are
+              present in the given list.
+            - get_cell_text: Returns the text of the QLabel inside a cell
+              widget.
+            - get_db_and_databrowser_value: Returns current, initial DB values
+              and UI value for a given tag.
+            - get_visible_scans: Returns the list of scan names currently
+              visible in the table.
+            - suppress_item_changed_signal: Temporarily disconnects and
+              reconnects the itemChanged signal.
+            - test_add_path: Tests the popup to add a path.
+            - test_add_tag: Tests the pop up adding a tag.
+            - test_advanced_search: Tests the advanced search widget.
+            - test_brick_history: Tests the brick history popup.
+            - test_clear_cell: Tests the method clearing cells.
+            - test_clone_tag: Tests the pop up cloning a tag.
+            - test_count_table: Tests the count table popup.
+            - test_mia_preferences: Tests the Mia preferences popup.
+            - test_mini_viewer: Selects scans and display them in the mini
+              viewer.
+            - test_modify_table: Tests the modify table module.
+            - test_multiple_sort: Tests the multiple sort popup.
+            - test_multiple_sort_appendix: Adds and removes tags in the data
+              browser.
+            - test_openTagsPopUp: Opens a pop-up to select the legend of the
+              thumbnails.
+            - test_open_project: Tests project opening.
+            - test_project_filter: Tests project filter opening.
+            - test_project_properties: Tests saved projects addition and
+              removal.
+            - test_proj_remov_from_cur_proj: Tests that the projects are
+              removed from the list of current projects.
+            - test_rapid_search: Tests the rapid search bar.
+            - test_remove_scan: Tests scans removal in the DataBrowser.
+            - test_remove_tag: Tests the popup removing user tags.
+            - test_reset_cell: Tests the method resetting the selected cells.
+            - test_reset_column: Tests the method resetting the columns
+              selected.
+            - test_reset_row: Tests row reset.
+            - test_save_project: Tests opening & saving of a project.
+            - test_send_doc_to_pipeline_manager: Tests the popup sending
+              documents to the pipeline manager.
+            - test_set_value: Tests the values modifications.
+            - test_show_brick_history: Opens the history pop-up for scans with
+              history related to a brick.
+            - test_sort: Tests the sorting in the DataBrowser.
+            - test_table_data_add_columns: Adds tag columns to the table data
+              window.
+            - test_table_data_appendix: Opens a project and tests miscellaneous
+              methods of the table data view, in the data browser.
+            - test_table_data_context_menu: Right clicks a scan to show the
+              context menu table, and choses one option.
+            - test_undo_redo_databrowser: Tests data browser undo/redo.
+            - test_unnamed_proj_soft_open: Tests unnamed project creation at
+              software opening.
+            - test_update_default_value: Updates the values when a list of
+              default values is created.
+            - test_utils: Tests the utils functions.
+            - test_visualized_tags: Tests the popup modifying the visualized
+              tags.
     """
 
     def assert_scans_present(self, scans, expected_subset):
         """
         Asserts that all expected scan names are present in the given list.
 
-        :param scans: (list) List of scan names to check.
-        :param expected_subset: (list) List of expected scan names that should
+        :param scans: List of scan names to check.
+        :type scans: list
+        :param expected_subset: List of expected scan names that should
          be present in the scans list.
+        :type expected_subset: list
 
         :raises AssertionError: If any expected scan name is missing from
          ``scans``.
@@ -1079,13 +1101,18 @@ class TestMIADataBrowser(TestMIACase):
         """
         Utility method to retrieve the text of the QLabel inside a cell widget.
 
-        :param table: (QTableWidget) The table containing the cell.
-        :param row: (int) The row index.
-        :param column: (int) The column index.
-        :param label_index: (int) If multiple labels are present, which one to
+        :param table: The table containing the cell.
+        :ype table: QTableWidget
+        :param row: The row index.
+        :type row: int
+        :param column: The column index.
+        :type column: int
+        :param label_index: If multiple labels are present, which one to
          return. Default is 0 (first QLabel found).
+         :type label_index: int
 
-        :Returns: (str) The text of the QLabel, or fails the test if not found.
+        :returns: The text of the QLabel, or fails the test if not found.
+        :rtype: str
         """
         widget = table.cellWidget(row, column)
         self.assertIsNotNone(widget, f"No widget at cell ({row}, {column})")
@@ -1104,12 +1131,15 @@ class TestMIADataBrowser(TestMIACase):
         database, along with the corresponding value and item from the data
         browser UI.
 
-        :param main_window: (QMainWindow) The main application window
-         containing the project and data browser.
-        :param row_nb: (int) The row index in the data browser table.
-        :param tag: (str) The name of the tag (column) to retrieve.
+        :param main_window: The main application window containing the project
+         and data browser.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
+        :param row_nb: The row index in the data browser table.
+        :type row_nb: int
+        :param tag: The name of the tag (column) to retrieve.
+        :type tag: str
 
-        :Returns: (tuple) A 4-tuple containing:
+        :returns: A 4-tuple containing:
 
             - value (Any): The current value from the database
               (COLLECTION_CURRENT).
@@ -1119,6 +1149,7 @@ class TestMIADataBrowser(TestMIACase):
               UI, or None if not available.
             - item (QTableWidgetItem | None): The table item corresponding to
               the tag, or None if not found.
+        :rtype: tuple
         """
         table = main_window.data_browser.table_data
         col = table.get_tag_column(tag)
@@ -1153,11 +1184,14 @@ class TestMIADataBrowser(TestMIACase):
         Temporarily disables the itemChanged signal to prevent unwanted slot
         execution during programmatic updates to the table data.
 
-        :param table_data: (QTableWidget) The data browser's table widget
-         whose itemChanged signal is to be suppressed.
+        :param table_data: The data browser's table widget whose itemChanged
+         signal is to be suppressed.
+        :type table_data:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
 
-        :Yields: (None) The context block is executed with the signal
-         disconnected, and it is reconnected automatically afterward.
+        :yields: The context block is executed with the signal disconnected,
+         and it is reconnected automatically afterward.
+        :rtype: contextlib._GeneratorContextManager
         """
         table_data.itemChanged.disconnect()
 
@@ -1244,7 +1278,6 @@ class TestMIADataBrowser(TestMIACase):
             - Invalid default values for the selected type are rejected
             - Valid string tags are successfully added to the database and UI
             - List-type tags (Integer List) are properly created and displayed
-
         """
         # Sets shortcuts for often used objects
         data_browser = self.main_window.data_browser
@@ -1630,10 +1663,13 @@ class TestMIADataBrowser(TestMIACase):
             of ``tag1`` is checked to ensure that it has a user-defined origin
             and is marked as visible.
 
-            :param tag1: (str) Name of the first tag.
-            :param tag2: (str) Name of the second tag.
-            :param collection: (str) Name of the collection containing the
+            :param tag1: Name of the first tag.
+            :type tag1: str
+            :param tag2: Name of the second tag.
+            :type tag2: str
+            :param collection: Name of the collection containing the
              tags.
+            :type collection: str
 
             :raises AssertionError: If one or more metadata attributes
              differ, if ``tag1`` does not exist in the collection, or if its
@@ -1787,6 +1823,7 @@ class TestMIADataBrowser(TestMIACase):
 
         :param mock_qmsgbox: (MagicMock) Mocked ``QMessageBox`` used to prevent
          modal dialogs from blocking the test.
+        :type mock_qmsgbox: unittest.mock.MagicMock
         """
 
         def reload_config():
@@ -1794,8 +1831,9 @@ class TestMIADataBrowser(TestMIACase):
             Reload the application configuration from the test properties
             directory.
 
-            :Returns: (Config) A newly created configuration object initialized
-             from ``self.properties_path``.
+            :returns: A newly created configuration object initialized from
+             ``self.properties_path``.
+            :rtype: populse_mia.software_properties.Config
             """
 
             return Config(properties_path=self.properties_path)
@@ -1807,8 +1845,9 @@ class TestMIADataBrowser(TestMIACase):
             Triggers the software preferences action and returns the
             corresponding preferences widget.
 
-            :Returns: (PopUpPreferences) The preferences dialog currently
-             displayed.
+            :returns: The preferences dialog currently displayed.
+            :rtype:
+             populse_mia.user_interface.pop_ups.PopUpPreferences
             """
             self.main_window.action_software_preferences.trigger()
             return self.main_window.pop_up_preferences
@@ -1907,6 +1946,7 @@ class TestMIADataBrowser(TestMIACase):
             Selects a scan in the data browser table by index.
 
             :param index: The row index of the scan to select.
+            :type index: int
             """
             item = data_browser.table_data.item(index, 0)
             self.assertIsNotNone(item)
@@ -1918,7 +1958,9 @@ class TestMIADataBrowser(TestMIACase):
             Sets the slider value to a percentage of its maximum.
 
             :param slider: The slider to set.
+            :type slider: PyQt5.QtWidgets.QSlider
             :param percent: A float between 0.0 and 1.0.
+            :type percent: float
             """
             max_val = slider.maximum()
             slider.setValue(int(max_val * percent))
@@ -1929,7 +1971,9 @@ class TestMIADataBrowser(TestMIACase):
             Sets the checkbox state to checked or unchecked.
 
             :param checkbox: The checkbox to set.
+            :type checkbox: PyQt5.QtWidgets.QCheckBox
             :param state: True for checked, False for unchecked.
+            :type state: bool
             """
             checkbox.setCheckState(Qt.Checked if state else Qt.Unchecked)
 
@@ -2126,14 +2170,15 @@ class TestMIADataBrowser(TestMIACase):
             Mocked method to simulate the execution of a QDialog.
 
             Sets the selected_tag attribute to a predefined tag and simulates
-            the dialog returning an accepted state (i.e., the user
-            clicked "OK").
+            the dialog returning an accepted state (i.e., the user clicked
+            "OK").
 
-            :param self: (PopUpSelectTagCountTable) The dialog instance being
-             mocked.
+            :param self: The dialog instance being mocked.
+            :type self:
+             populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable
 
-            :Returns: (bool) Always returns True to indicate the dialog was
-             accepted.
+            :returns: Always returns True to indicate the dialog was accepted.
+            :rtype: bool
             """
             self.selected_tag = TAG_EXP_TYPE
             return True
@@ -2151,7 +2196,6 @@ class TestMIADataBrowser(TestMIACase):
           PopUpSelectTag.
         - Confirms filtering behavior in the tag selection list.
         - Ensures correct handling of tag selection and dialog interaction.
-
         - Tests: MiniViewer.openTagsPopUp
         - Indirectly tests: PopUpSelectTag
         - Mocks: PopUpSelectTag.exec_ using unittest.mock.patch
@@ -2311,14 +2355,15 @@ class TestMIADataBrowser(TestMIACase):
 
         def filter_visible_at(index: int) -> bool:
             """
-            Checks if the filter item at the given index in the filter list
-            is visible.
+            Checks if the filter item at the given index in the filter list is
+            visible.
 
-            :param index: (int) The index of the filter item in the list
-             widget.
+            :param index: The index of the filter item in the list widget.
+            :type index: int
 
-            :Returns: (bool) True if the filter item is visible, False if
-             it is hidden.
+            :Returns: True if the filter item is visible, False if it is
+             hidden.
+            :rtype: bool
             """
             return not popup.list_widget_filters.item(index).isHidden()
 
@@ -2438,8 +2483,9 @@ class TestMIADataBrowser(TestMIACase):
             table and collects the scan names from the first column (index 0)
             of rows that are not hidden.
 
-            :Returns: (List[str]) A list of scan names (as strings) for all
-             visible rows in the table.
+            :Returns: A list of scan names (as strings) for all visible rows
+             in the table.
+            :rtype: list[str]
             """
 
             return [
@@ -2593,8 +2639,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, effectively mocking user
             interaction with the dialog’s Cancel button during testing.
 
-            :param popup: (PopUpRemoveScan) The popup dialog instance to
-             cancel.
+            :param popup: The popup dialog instance to cancel.
+            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan
             """
             popup.cancel_clicked()
 
@@ -2610,8 +2656,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, emulating a user clicking the
             "No to All" button during testing.
 
-            :param popup: (PopUpRemoveScan) The popup dialog instance to act
-             upon.
+            :param popup: The popup dialog instance to act upon.
+            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan
             """
             popup.no_all_clicked()
 
@@ -2635,8 +2681,8 @@ class TestMIADataBrowser(TestMIACase):
             method of the provided popup instance, emulating a user clicking
             the "Yes to All" button during testing.
 
-            :param popup: (PopUpRemoveScan) The popup dialog instance to act
-             upon.
+            :param popup: The popup dialog instance to act upon.
+            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan
             """
             popup.yes_all_clicked()
 
@@ -2668,8 +2714,8 @@ class TestMIADataBrowser(TestMIACase):
             of the provided popup instance, emulating a user clicking the
             "Yes" button during testing.
 
-            :param popup: (PopUpRemoveScan) The popup dialog instance to act
-             upon.
+            :param popup: The popup dialog instance to act upon.
+            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan
             """
             popup.yes_clicked()
 
@@ -2773,11 +2819,12 @@ class TestMIADataBrowser(TestMIACase):
             Retrieve the table widget item for the specified tag in the first
             row.
 
-            :param tag: (str) The tag (column identifier) whose cell item is
-             to be fetched.
+            :param tag: The tag (column identifier) whose cell item is to be
+             fetched.
+            :type tag: str
 
-            :Returns: (QTableWidgetItem) The item at row 0 of the column
-             corresponding to `tag`.
+            :returns: The item at row 0 of the column corresponding to `tag`.
+            :rtype: PyQt5.QtWidgets.QTableWidgetItem
             """
             col = table.get_tag_column(tag)
 
@@ -2807,12 +2854,16 @@ class TestMIADataBrowser(TestMIACase):
             Patched exec_ method that injects a test value into the dialog
             table and runs the real update logic without showing the dialog.
 
-            :param self: (ModifyTable) The dialog instance being tested.
+            :param self: The dialog instance being tested.
+            :type self:
+             populse_mia.user_interface.data_browser.modify_table.ModifyTable
             :param args: Positional arguments forwarded to exec_, unused here.
+            :type args: tuple
             :param kwargs: Keyword arguments forwarded to exec_, unused here.
+            :type kwargs: dict
 
-            :Returns: (bool) Always returns True to simulate the user clicking
-             "Ok".
+            :returns: Always returns True to simulate the user clicking "Ok".
+            :rtype: bool
             """
             # inject the new text into the dialog’s table
             self.table.setItem(0, 0, QTableWidgetItem("25000"))
@@ -3110,10 +3161,11 @@ class TestMIADataBrowser(TestMIACase):
                 Create a MagicMock instance simulating a PopUpNewProject
                 dialog.
 
-                :param relative_path: (str) The relative path to set as the
-                 selected file and filename in the popup.
+                :param relative_path: The relative path to set as the selected
+                 file and filename in the popup.
+                type relative_path: str
 
-                :Returns: (MagicMock) A mocked PopUpNewProject instance with
+                :returns: (MagicMock) A mocked PopUpNewProject instance with
                  predefined behaviors:
 
                     - `relative_path` attribute set to the given path.
@@ -3122,6 +3174,7 @@ class TestMIADataBrowser(TestMIACase):
                     - `get_filename()` returns the relative path.
                     - `exec_()` returns True, simulating a successful dialog
                       execution.
+                :rtype: MagicMock
                 """
                 popup = MagicMock(spec=PopUpNewProject)
                 popup.relative_path = relative_path
@@ -3187,9 +3240,10 @@ class TestMIADataBrowser(TestMIACase):
             then either confirms the selection by triggering the OK action or
             cancels by closing the popup, depending on the `confirm` parameter.
 
-            :param confirm: (bool) If True, simulate clicking the OK button to
-             confirm the selection. If False, simulate closing/cancelling the
-             popup. Defaults to True.
+            :param confirm: If True, simulate clicking the OK button to confirm
+             the selection. If False, simulate closing/cancelling the popup.
+             Defaults to True.
+            :type confirm: bool
             """
             popup = self.main_window.data_browser.show_selection
             QTest.qWait(100)
@@ -3326,15 +3380,16 @@ class TestMIADataBrowser(TestMIACase):
             element of each value is converted to a ``float`` before being
             returned.
 
-            :param tag_name: (str) Name of the tag whose values are to be
-             retrieved.
-            :param convert_to_float: (bool) If ``True``, convert the first
-             element of the retrieved values to ``float``. Default is
-             ``False``.
+            :param tag_name: Name of the tag whose values are to be retrieved.
+            :type tag_name: str
+            :param convert_to_float: If ``True``, convert the first element of
+             the retrieved values to ``float``. Default is ``False``.
+            :type convert_to_float: bool
 
-            :Returns: (DatabaseValues) A named tuple containing the values from
-             the current and initial collections, accessible through the
-             ``current`` and ``initial`` attributes.
+            :returns: A named tuple containing the values from the current and
+             initial collections, accessible through the ``current`` and
+             ``initial`` attributes.
+            :rtype: namedtuple
             """
 
             with self.main_window.project.database.data() as database_data:
