@@ -45,6 +45,7 @@ from datetime import datetime
 from packaging import version
 from pathlib import Path
 from qtconsole.rich_jupyter_widget import RichJupyterWidget
+from textwrap import dedent
 from traits.api import TraitListObject, Undefined
 from unittest.mock import MagicMock, Mock, patch
 
@@ -2137,8 +2138,11 @@ class TestMIADataBrowser(TestMIACase):
         """
         Test adding and removing tags in the multiple sort popup.
 
-        - Target class: PopUpMultipleSort
-        - Mocks: PopUpSelectTagCountTable.exec_
+        - Target class:
+          :class:`~populse_mia.user_interface.pop_ups.PopUpMultipleSort`
+        - Mocked dialog:
+          :class:`~populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable`
+          (patches ``exec_()``)
         """
         # Sets shortcuts for objects that are often used
         table_data = self.main_window.data_browser.table_data
@@ -2198,7 +2202,11 @@ class TestMIADataBrowser(TestMIACase):
         - Ensures correct handling of tag selection and dialog interaction.
         - Tests: MiniViewer.openTagsPopUp
         - Indirectly tests: PopUpSelectTag
-        - Mocks: PopUpSelectTag.exec_ using unittest.mock.patch
+        - Target method:
+          :meth:`~populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp`
+        - Mocked dialog:
+          :class:`~populse_mia.user_interface.pop_ups.PopUpSelectTag`
+          (patches ``exec_()``)
         """
         data_browser = self.main_window.data_browser
         viewer = data_browser.viewer
@@ -3570,8 +3578,9 @@ class TestMIADataBrowser(TestMIACase):
             """
             Extract BandWidth values from all visible table rows.
 
-            :Returns: (list) BandWidth values from visible rows in current
-             table order.
+            :returns: BandWidth values from visible rows in current table
+             order.
+            :rtype: list[str]
             """
             bandwidth_column = table.get_tag_column("BandWidth")
             bandwidth_values = []
@@ -3589,6 +3598,7 @@ class TestMIADataBrowser(TestMIACase):
 
             :param sort_order: Qt sort order (0 for ascending, 1 for
              descending)
+            :type sort_order: int
             """
             bandwidth_column = table.get_tag_column("BandWidth")
             header = table.horizontalHeader()
@@ -3869,8 +3879,8 @@ class TestMIADataBrowser(TestMIACase):
 
         This covers both:
 
-        - Confirm actions (that trigger a QMessageBox before executing)
-        - Direct actions (executed immediately)
+        - Confirm actions (that trigger a QMessageBox before executing).
+        - Direct actions (executed immediately).
 
         QMessageBox is auto-accepted by simulating a click on the OK button.
         """
@@ -3916,7 +3926,9 @@ class TestMIADataBrowser(TestMIACase):
             testing.
 
             :param args: Positional arguments passed to the original __init__.
+            :type args: tuple
             :param kwargs: Keyword arguments passed to the original __init__.
+            :type kwargs: dict
             """
             original_init(self, *args, **kwargs)
             msgbox_instances.append(self)
@@ -3932,8 +3944,8 @@ class TestMIADataBrowser(TestMIACase):
             click signal on the OK button of the last instance. It always
             returns `QMessageBox.Ok`.
 
-            :Returns: (QMessageBox.StandardButton) The standard OK button
-             value.
+            :returns: The standard OK button value.
+            :rtype: QMessageBox.StandardButton
             """
 
             if msgbox_instances:
@@ -3961,13 +3973,17 @@ class TestMIADataBrowser(TestMIACase):
                     and verifies that the target method was called with the
                     provided arguments.
 
-                    :param label: (str) The label of the QAction to trigger.
-                    :param target: (QObject) The object containing the method
-                     to be called.
-                    :param method_name: (str) The name of the method to be
-                     patched on the target.
-                    :param args: (tuple) Arguments expected to be passed to the
-                     target method.
+                    :param label: The label of the QAction to trigger.
+                    :type label: str
+                    :param target: The object containing the method to be
+                     called.
+                    :type target: QObject
+                    :param method_name: The name of the method to be patched on
+                     the target.
+                    :type method_name: str
+                    :param args: Arguments expected to be passed to the target
+                     method.
+                    :type args: tuple
                     """
                     created_actions = {}
 
@@ -3981,10 +3997,12 @@ class TestMIADataBrowser(TestMIACase):
                         stores it in the `created_actions` dictionary, and
                         returns the action.
 
-                        :param action_label: (str) The label of the QAction to
+                        :param action_label: The label of the QAction to
                          create.
+                        :type action_label: str
 
-                        :Returns: (QAction) The created QAction object.
+                        :returns: The created QAction object.
+                        :rtype: QAction
                         """
                         action = QAction(action_label, table_data)
                         created_actions[action_label] = action
@@ -4500,6 +4518,7 @@ class TestMIADataBrowser(TestMIACase):
 
         This test simulates user interaction with the tag visibility popup
         and verifies:
+
             - Default visible tags are correctly initialized.
             - UI column headers match backend tag visibility.
             - System tags (e.g., checksum, history) remain hidden.
@@ -4617,9 +4636,7 @@ class TestMIAMainWindow(TestMIACase):
     """Tests for the main window class (MainWindow).
 
     Contains:
-
         Methods:
-
             - test_check_database: checks if the database has changed since the
               scans were first imported
             - test_create_project_pop_up: tries to create a new project with a
@@ -4692,18 +4709,27 @@ class TestMIAMainWindow(TestMIACase):
 
     def test_create_project_pop_up(self):
         """
-        Test project creation popup behavior under various conditions.
+        Test the project creation workflow.
 
-        Verifies the MainWindow.create_project_pop_up method handles:
-            - Project creation with unsaved modifications (triggers quit popup)
-            - Project creation without configured projects folder (shows error)
-            - Normal project creation flow with proper configuration
+        Verifies that
+        :meth:`~populse_mia.user_interface.main_window.MainWindow.create_project_pop_up`
+        correctly handles the following situations:
 
-        Components tested:
-            MainWindow.create_project_pop_up, PopUpNewProject
+        - Unsaved project modifications, prompting the user before creating a
+          new project.
+        - Missing project directory configuration, displaying an error message.
+        - Normal project creation when the application is correctly configured.
 
-        Mocked components:
-            PopUpQuit.exec, QMessageBox.exec, PopUpNewProject.exec
+        Collaborating dialogs:
+
+        - :class:`~populse_mia.user_interface.pop_ups.PopUpQuit`
+        - :class:`~populse_mia.user_interface.pop_ups.PopUpNewProject`
+        - ``QMessageBox`` from ``PyQt5.QtWidgets``
+
+        Mocks:
+
+        - Dialog ``exec()`` methods are patched to prevent modal execution and
+          allow automated interaction during the test.
         """
         # Creates a new project folder
         new_proj_path = self.get_new_test_project(light=True)
@@ -5028,21 +5054,24 @@ class TestMIAMainWindow(TestMIACase):
 
     def test_package_library_dialog_add_pkg(self):
         """
-        Test adding and installing packages through the PackageLibraryDialog.
+        Test adding and installing packages through the package library dialog.
 
-        This test verifies the following:
-            - Opening the package library dialog and adding a standard package.
-            - Handling invalid or non-existent packages.
-            - Installing a process package from a directory.
-            - Validating error handling for invalid directories and import
-              errors.
-            - Saving and reloading a new pipeline using the installed process.
+        This test verifies that the package library dialog correctly handles:
 
-        Mocks:
-            - QMessageBox.exec and exec_ (to suppress dialogs)
-            - QFileDialog.exec_ (to simulate dialog acceptance)
+        - Adding a standard Python package.
+        - Rejecting non-existent packages.
+        - Installing a process package from a directory.
+        - Reporting errors for invalid directories and import failures.
+        - Saving and reloading a pipeline that uses the newly installed
+          process.
+
+        To prevent blocking user interaction during the test, the following
+        dialog methods are mocked:
+
+            - ``QMessageBox.exec()`` and ``QMessageBox.exec_()`` (to suppress
+              dialogs).
+            - ``QFileDialog.exec_()`` (to simulate dialog acceptance).
         """
-
         pkg_name = "nipype.interfaces.DataGrabber"
 
         # Creates a new project folder and switches to it
@@ -5508,21 +5537,27 @@ class TestMIAMainWindow(TestMIACase):
 
     def test_package_library_dialog_rmv_pkg(self):
         """
-        Test removing a package from the package library dialog.
+        Test removing packages through the package library dialog.
 
-        This test:
-            - Creates a new project.
-            - Opens the process library and ensures a test package is
-              installed.
-            - Attempts to remove nonexistent and unspecified packages.
-            - Removes a real package through the UI simulation.
-            - Resets the library state and saves the configuration.
+        This test verifies that the package library dialog correctly handles:
 
-        :mocks:
-            - QMessageBox.exec
-            - QMessageBox.exec_
+            - Removing a package when no package name is specified.
+            - Rejecting requests to remove non-existent packages.
+            - Removing an installed package through the graphical interface.
+            - Cancelling a pending removal operation.
+            - Updating the internal package management state.
+            - Saving the resulting package library configuration.
+
+        If the required test package is not already installed, it is first
+        added to the process library. At the end of the test, the initial
+        library state is restored if it was modified.
+
+        The following dialog methods are mocked to prevent modal dialogs from
+        blocking the test execution:
+
+            - ``QMessageBox.exec()``
+            - ``QMessageBox.exec_()``
         """
-
         package_name = "nipype.interfaces.DataGrabber"
 
         # Setup: create and switch to a new lightweight project
@@ -6153,7 +6188,8 @@ class TestMIAMainWindow(TestMIACase):
             'user_mode: true' in the PopUpPreferences config editor, mimicking
             user input.
 
-            :Returns: (bool) Always returns True to simulate user acceptance.
+            :returns: Always returns True to simulate user acceptance.
+            :rtype: bool
             """
             editor = main_wnd.pop_up_preferences.editConf
             content = editor.txt.toPlainText()
@@ -6232,6 +6268,29 @@ class TestMIAMainWindow(TestMIACase):
         tests: PopUpPreferences.validate_and_save
 
         mocks: QMessageBox.show
+
+        Contains:
+            Inner functions:
+                - mock_executable: Creates a mock executable in a specified
+                  directory, simulating the behavior of external software
+                  modules for testing purposes.
+                - test_module: Tests the configuration of a specific software
+                  module, including setting valid and invalid paths, and
+                  verifying the resulting configuration state.
+                - test_fsl: Tests the configuration of the FSL module,
+                  including setting valid and invalid paths, and verifying the
+                  resulting configuration state.
+                - test_spm_matlab: Tests the configuration of the SPM module
+                  when using MATLAB, including setting valid and invalid paths,
+                  and verifying the resulting configuration state.
+                - test_matlab_only: Tests the configuration of the MATLAB
+                  module when used in isolation, including setting valid and
+                  invalid paths, and verifying the resulting configuration
+                  state.
+                - test_matlab_mcr_spm_standalone: Tests the configuration of
+                  the MATLAB MCR module when used with SPM standalone,
+                  including setting valid and invalid paths, and verifying the
+                  resulting configuration state.
         """
 
         # Mocks executables to be used for the modules tested
@@ -6243,122 +6302,143 @@ class TestMIAMainWindow(TestMIACase):
             err_msg="mock_error",
         ):
             """
-            Creates a mocked executable in the specified directory.
+            Create a mock executable in *directory*.
 
-            :param directory: (str) Path where the mock executable should be
-             placed.
-            :param name: (str) Name of the executable.
-            :param failing: (bool) Whether the mock executable should simulate
-             failure.
-            :param output: (str) Output message to be printed.
-            :param err_msg: (str) Error message to be printed on stderr.
+            The generated executable prints *output* to stdout. When *failing*
+            is ``True``, it also prints *err_msg* to stderr and exits with a
+            non-zero status. MATLAB executables receive a dedicated Python
+            implementation that emulates the subset of MATLAB behavior required
+            by the tests.
+
+            :param directory: Directory where the executable is created.
+            :type directory: str
+            :param name: Executable name.
+            :type name: str
+            :param failing: If ``True``, simulate a failing executable.
+            :type failing: bool
+            :param output: Standard output message.
+            :type output: str
+            :param err_msg: Standard error message.
+            :type err_msg: str
+
+            Contains:
+                Inner functions:
+                    - _matlab_mock_script: Generates the source code of a
+                      mocked MATLAB executable, simulating the required subse
+                      of MATLAB behavior for testing.
             """
-            path = os.path.join(directory, name)
-            system = platform.system()
 
-            if name in ["matlab", "matlab.exe", "run_spm12.sh"]:
-                # Use the specific MATLAB mock script
-                python_path = sys.executable
-                # Check if we should print to stderr for this specific output
-                should_print_stderr = output == "_ _ version (standalone)"
-                mock_matlab_script = f"""#!/usr/bin/env {python_path}
-import sys
-import os
+            def _matlab_mock_script(
+                python_path,
+                output,
+                failing=False,
+                err_msg="mock_error",
+            ):
+                """
+                Generate the source code of a mocked MATLAB executable.
 
-def mock_matlab():
-    # Simulate MATLAB command processing
-    args = sys.argv[1:]
+                The generated Python script simulates the subset of MATLAB
+                behavior required by the tests. It recognizes the ``-r`` and
+                ``--version`` command-line options, emulates a few SPM-related
+                commands, prints the requested output, and can optionally fail
+                by writing an error message to stderr and exiting with a
+                non-zero status.
 
-    # Check for specific MATLAB flags
-    if "-r" in args:
-        idx = args.index("-r")
+                :param python_path: Path to the Python interpreter used in the
+                 script shebang.
+                :type python_path: str
+                :param output: Message printed to the standard output.
+                :type output: str
+                :param failing: If ``True``, the generated script prints
+                 *err_msg* to stderr and exits with status code 1.
+                :type failing: bool
+                :param err_msg: Message printed to the standard error stream
+                 when *failing* is ``True``.
+                :type err_msg: str
 
-        if idx + 1 < len(args):
-            matlab_cmd = args[idx + 1]
+                :returns: The source code of the mocked MATLAB executable.
+                :rtype: str
+                """
+                version_stderr = (
+                    'print("Version check completed", file=sys.stderr)'
+                    if output == "_ _ version (standalone)"
+                    else ""
+                )
+                error_output = (
+                    f'print("{err_msg}", file=sys.stderr)' if failing else ""
+                )
+                exit_command = "sys.exit(1)" if failing else ""
 
-            # Simulate MATLAB commands
-            if "restoredefaultpath" in matlab_cmd:
-                print("Default path restored.")
+                return dedent(f"""\
+                    #!/usr/bin/env {python_path}
+                    import sys
 
-            if "addpath" in matlab_cmd:
-                print("Path added.")
+                    def mock_matlab():
+                        '''Simulate a minimal subset of MATLAB behavior.'''
 
-            if "spm('Ver')" in matlab_cmd:
-                print("SPM version: SPM12 (simulated)")
+                        args = sys.argv[1:]
 
-    if "--version" in args:
-        # Only print to stderr if output is the special version string
-        {f'print("Version check completed", file=sys.stderr)'
-         if should_print_stderr else ''}
-        return
+                        if "-r" in args:
+                            idx = args.index("-r")
+                            if idx + 1 < len(args):
+                                matlab_cmd = args[idx + 1]
 
-    # Simulate MATLAB exit
-    print("MATLAB simulation completed.")
+                                if "restoredefaultpath" in matlab_cmd:
+                                    print("Default path restored.")
 
-if __name__ == "__main__":
-    mock_matlab()
-    {f'print("{output}")'}
-    {f'print("{err_msg}", file=sys.stderr)' if failing else ''}
-    {'sys.exit(1)' if failing else ''}
-"""
+                                if "addpath" in matlab_cmd:
+                                    print("Path added.")
 
+                                if "spm('Ver')" in matlab_cmd:
+                                    print("SPM version: SPM12 (simulated)")
+
+                        if "--version" in args:
+                            {version_stderr}
+                            return
+
+                        print("MATLAB simulation completed.")
+
+                    if __name__ == "__main__":
+                        mock_matlab()
+                        print("{output}")
+                        {error_output}
+                        {exit_command}
+                    """)
+
+            path = Path(directory) / name
+
+            if name in {"matlab", "matlab.exe", "run_spm12.sh"}:
                 # Write the script to the file
-                with open(path, "w") as file:
-                    file.write(mock_matlab_script)
-
-                os.chmod(path, 0o755)
+                path.write_text(
+                    _matlab_mock_script(
+                        sys.executable,
+                        output,
+                        failing,
+                        err_msg,
+                    ),
+                    encoding="utf-8",
+                )
+                path.chmod(0o755)
                 return
 
             # --- Windows-specific behavior ---
-            elif system == "Windows":
-                bat_path = f"{path}.bat"
-                # exe_path = f"{path}.exe"  # what the tested code expects
-
-                bat_script = f"""@echo off
-echo {output}
-"""
+            if platform.system() == "Windows":
+                script = f"@echo off\necho {output}\n"
 
                 if failing:
-                    bat_script += f"echo {err_msg} 1>&2\nexit /b 1\n"
+                    script += f"echo {err_msg} 1>&2\nexit /b 1\n"
 
-                with open(bat_path, "w", encoding="utf-8") as f:
-                    f.write(bat_script)
-
-                # Fake .exe by copying .bat (needed for glob to find .exe)
-                # shutil.copyfile(bat_path, exe_path)
+                (path.with_suffix(".bat")).write_text(script, encoding="utf-8")
+                return
 
             # --- Linux/macOS behavior ---
-            else:
-                script = f'#!/bin/bash\necho "{output}"'
+            script = f'#!/bin/bash\necho "{output}"'
 
-                if failing:
-                    script += f'\necho "{err_msg}" 1>&2\nexit 1'
+            if failing:
+                script += f'\necho "{err_msg}" 1>&2\nexit 1'
 
-                with open(path, "w") as f:
-                    f.write(script)
-
-                os.chmod(path, 0o755)
-
-                # uncomment for 2 OS (macos, linux)
-                # system = platform.system()
-
-                # if system == "Linux":
-                #     script = f'#!/bin/bash\necho "{output}"'
-
-                # elif system == "Darwin":
-                #     script = '#!/usr/bin/env bash\necho "mock executable"'
-
-                # elif system == "Windows":
-                #     pass
-                #     # TODO: build mocked executable for Windows
-
-                # if failing:
-                #     script += f'\necho "{err_msg}" 1>&2\nexit 1'
-
-                # with open(path, "w") as f:
-                #     f.write(script)
-
-                # subprocess.run(["chmod", "+x", path])
+            path.write_text(script, encoding="utf-8")
+            path.chmod(0o755)
 
         # Sets shortcuts for objects that are often used
         main_wnd = self.main_window
@@ -6396,20 +6476,27 @@ echo {output}
                     - Verify correct behavior of the corresponding `Config`
                       object methods.
 
-                :param module_name: (str) The display name of the module
-                 (used for logging).
-                :param checkbox_attr: (str) Name of the checkbox attribute
-                 in the preferences popup.
-                :param path_attr: (str) Name of the line edit widget used to
-                 specify the module path.
-                :param executable_name: (str) Name of the module's expected
+                :param module_name: The display name of the module (used for
+                 logging).
+                :type module_name: str
+                :param checkbox_attr: Name of the checkbox attribute in the
+                 preferences popup.
+                :type checkbox_attr: str
+                :param path_attr: Name of the line edit widget used to specify
+                 the module path.
+                :type path_attr: str
+                :param executable_name: Name of the module's expected
                  executable (for mocking).
-                :param config_getter: (str) Name of the `Config` method to
-                 check if the module is enabled.
-                :param config_setter: (str) Name of the `Config` method to
-                 disable the module.
-                :param config_path_setter: (str) Name of the `Config` method
-                 to reset the module path.
+                :type executable_name: str
+                :param config_getter: Name of the `Config` method to check if
+                 the module is enabled.
+                :type config_getter: str
+                :param config_setter: Name of the `Config` method to disable
+                 the module.
+                 :type config_setter: str
+                :param config_path_setter: Name of the `Config` method to
+                 reset the module path.
+                :type config_path_setter: str
                 """
                 print(f"Testing {module_name} configuration...")
 
@@ -7037,10 +7124,11 @@ echo {output}
         This test simulates user interactions in the software preferences
         window without and with confirming via the 'OK' button. It verifies
         correct saving of settings related to:
+
             - Standalone modules (AFNI, ANTS, FSL, SPM, MRtrix, MATLAB,
-              freesurfer)
-            - UI and behavioral options (auto-save, radio view,
-              admin/clinical mode)
+              freesurfer).
+            - UI and behavioral options (auto-save, radio view, admin/clinical
+              mode).
 
         Tests:
             - PopUpPreferences.validate_and_save
@@ -7205,13 +7293,13 @@ echo {output}
         `MainWindow.switch_project`.
 
         This test covers:
-            - Switching to a valid Mia project
-            - Handling non-existent project paths
-            - Preventing switching to already-open projects
-            - Ignoring invalid or malformed Mia projects
+            - Switching to a valid Mia project.
+            - Handling non-existent project paths.
+            - Preventing switching to already-open projects.
+            - Ignoring invalid or malformed Mia projects.
 
-        - Tests: MainWindow.switch_project
-        - Mocks: QMessageBox.exec (to bypass dialog confirmations)
+        - Tests: MainWindow.switch_project.
+        - Mocks: QMessageBox.exec (to bypass dialog confirmations).
         """
 
         # Mocks the execution of a dialog window
@@ -7300,9 +7388,7 @@ class TestMIANodeController(TestMIACase):
     """Tests for the node controller, part of the pipeline manager tab.
 
     Contains:
-
         Methods:
-
             - create_mock_exec: create a mock function for
               PopUpSelectTagCountTable.exec_() that simulates user tag
               selection behavior.
@@ -7333,6 +7419,7 @@ class TestMIANodeController(TestMIACase):
         :param tag_name: (str) The name of the tag to select from the list.
          This should match the text of one of the items in the popup's list
          widget.
+
 
         :Returns: A mock function that can be used to replace exec_() method.
         """
