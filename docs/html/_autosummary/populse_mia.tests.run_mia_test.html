@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=89202dc7"></script>
+    <script src="../_static/documentation_options.js?v=a8471e47"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.tests.run_mia_test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -82,10 +82,10 @@ Mia’s features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (Path) The directory path to be added to sys.path.</p></li>
-<li><p><strong>position</strong> – (int) The index at which to insert the path. Defaults
+<li><p><strong>path</strong> (<em>Path</em>) – The directory path to be added to sys.path.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index at which to insert the path. Defaults
 to 1.</p></li>
-<li><p><strong>name</strong> – (str) The name of the package.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the package.</p></li>
 </ul>
 </dd>
 </dl>
@@ -103,9 +103,10 @@ and the cleaned message is printed to stderr (if anything remains).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mode</strong> – The Qt message type (ignored here).</p></li>
-<li><p><strong>context</strong> – The context of the message (ignored here).</p></li>
-<li><p><strong>message</strong> – (str) The Qt debug/warning message to filter and display.</p></li>
+<li><p><strong>mode</strong> (<em>PyQt5.QtCore.QtMsgType</em>) – The Qt message type - Debug: 0, Warning:1, Critical: 2,
+Fatal: 3 - (ignored here).</p></li>
+<li><p><strong>context</strong> (<em>PyQt5.QtCore.QMessageLogContext</em>) – The context of the message (ignored here).</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – (str) The Qt debug/warning message to filter and display.</p></li>
 </ul>
 </dd>
 </dl>
@@ -118,16 +119,16 @@ and the cleaned message is printed to stderr (if anything remains).</p>
 <p>Custom logging handler to capture log records for inspection during tests.</p>
 <p>This handler stores emitted log records in a list, allowing assertions
 on log content, level, or message during unit tests.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>clear: Clears all captured log records.</p></li>
 <li><p>emit: Appends a log record to the internal list.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.LogCapture.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#LogCapture.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.LogCapture.__init__" title="Link to this definition">¶</a></dt>
@@ -147,7 +148,7 @@ on log content, level, or message during unit tests.</p>
 <dd><p>Appends a log record to the internal list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>record</strong> – (logging.LogRecord) The log record to store.</p>
+<dd class="field-odd"><p><strong>record</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/logging.html#logging.LogRecord" title="(in Python v3.10)"><em>logging.LogRecord</em></a>) – The log record to store.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -159,28 +160,25 @@ on log content, level, or message during unit tests.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIACase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIACase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIACase" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <p>Parent class for the test classes of Mia.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_visualized_tag: selects a tag to display with the
 “Visualized tags” pop-up.</p></li>
-<li><p>capture_logs: context manager to temporarily capture log
-records.</p></li>
-<li><p>clean_uts_packages: deleting the package added during the
-UTs or old one still existing.</p></li>
+<li><p>capture_logs: context manager to temporarily capture log records.</p></li>
+<li><p>clean_uts_packages: deleting the package added during the UTs or
+old one still existing.</p></li>
 <li><p>create_mock_jar: creates a mocked java (.jar) executable.</p></li>
 <li><p>execute_QDialogAccept: accept (close) a QDialog instance.</p></li>
 <li><p>find_item_by_data: looks for a QModelIndex whose contents
 correspond to the argument data.</p></li>
-<li><p>get_new_test_project: create a temporary project that can
-be safely modified.</p></li>
+<li><p>get_new_test_project: create a temporary project that can be
+safely modified.</p></li>
 <li><p>proclibview_nipype_state: give the state of nipype in the
 process.</p></li>
-<li><p>proclibview_nipype_reset_state: reset nipype to its initial
-state (before the start of the current test) in the process
-library view.</p></li>
+<li><p>proclibview_nipype_reset_state: reset nipype to its initial state
+(before the start of the current test) in the process library
+view.</p></li>
 <li><p>restart_Mia: restarts Mia within a unit test.</p></li>
 <li><p>setUp: called automatically before each test method.</p></li>
 <li><p>setUpClass: called before tests in the individual class.</p></li>
@@ -189,8 +187,10 @@ during tests.</p></li>
 <li><p>tearDown: cleans up after each test method.</p></li>
 <li><p>tearDownClass: called after tests in the individual class.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIACase.add_visualized_tag">
 <span class="sig-name descname"><span class="pre">add_visualized_tag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">widget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIACase.add_visualized_tag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIACase.add_visualized_tag" title="Link to this definition">¶</a></dt>
@@ -201,11 +201,11 @@ tag list, selects it, and confirms the dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – The input filter containing the dialog
-with visualized tags.</p></li>
-<li><p><strong>tag</strong> – (str) The tag name to select and visualize.</p></li>
-<li><p><strong>timeout</strong> – (int) Maximum time to wait for the dialog to appear,
-in milliseconds. Defaults to 5000 ms.</p></li>
+<li><p><strong>widget</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget" title="populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget"><em>populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget</em></a>) – The input filter containing the dialog with visualized
+tags.</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The tag name to select and visualize.</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Maximum time to wait for the dialog to appear, in
+milliseconds. Defaults to 5000 ms.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -243,14 +243,17 @@ priority):</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>logger_name</strong> – (str) The name of the logger to capture logs from.</p></li>
-<li><p><strong>level</strong> – (int) The logging level to use during capture (default:
-20; INFO).</p></li>
+<li><p><strong>logger_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the logger to capture logs from.</p></li>
+<li><p><strong>level</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The logging level to use during capture (default: 20;
+INFO).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><p>(LogCapture) A custom log handler with a <cite>records</cite> attribute
-containing captured LogRecord entries.</p>
+<dd class="field-even"><p>A custom log handler with a <cite>records</cite> attribute containing
+captured LogRecord entries.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.tests.run_mia_test.LogCapture" title="populse_mia.tests.run_mia_test.LogCapture">LogCapture</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -272,9 +275,8 @@ if present</p></li>
 <cite>Delete</cite> key press event to invoke the removal mechanism.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>proc_lib_view</strong> – The process library view containing the package
-items. Expected to implement <cite>to_dict()</cite>, <cite>selectionModel()</cite>, and
-<cite>keyPressEvent()</cite>.</p>
+<dd class="field-odd"><p><strong>proc_lib_view</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary" title="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary"><em>populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</em></a>) – The process library view containing the package
+items.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -285,10 +287,13 @@ items. Expected to implement <cite>to_dict()</cite>, <cite>selectionModel()</cit
 <dd><p>Create a mock Java executable (.jar) for testing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) Full path to the output .jar file.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Full path to the output .jar file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) 0 if creation succeeded, 1 otherwise.</p>
+<dd class="field-even"><p>0 if creation succeeded, 1 otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,13 +312,15 @@ matches the specified value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>q_tree_view</strong> – (QTreeView) The tree view to search within.</p></li>
-<li><p><strong>data</strong> – (str) The target data to match.</p></li>
+<li><p><strong>q_tree_view</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary" title="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary"><em>populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</em></a>) – The tree view to search within.</p></li>
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The target data to match.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QModelIndex | None) The matching index if found; otherwise,
-None.</p>
+<dd class="field-even"><p>The matching index if found; otherwise, None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QModelIndex or None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,8 +333,8 @@ None.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – (str) Name of the directory containing the project.</p></li>
-<li><p><strong>light</strong> – (bool) True to copy a project with few documents.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the directory containing the project.</p></li>
+<li><p><strong>light</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True to copy a project with few documents.</p></li>
 </ul>
 </dd>
 </dl>
@@ -339,22 +346,23 @@ None.</p>
 <dd><p>Determine the state of the Nipype process library view.</p>
 <p>This method inspects the provided process library view and returns
 a string describing the loading state of the Nipype modules.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>proc_lib_view</strong> – The process library view object.</p>
+<dd class="field-odd"><p><strong>proc_lib_view</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.process_library.html#populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary" title="populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary"><em>populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</em></a>) – The process library view object.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str or None)
-A string representing the current state:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>‘nipype’: Nipype is present, but ‘interfaces’ is not.</p></li>
-<li><p>‘nipype.interfaces’: ‘interfaces’ is present, but ‘DataGrabber’
+<dd class="field-even"><p><p>A string representing the current state:</p>
+<ul class="simple">
+<li><p>’nipype’: Nipype is present, but ‘interfaces’ is not.</p></li>
+<li><p>’nipype.interfaces’: ‘interfaces’ is present, but ‘DataGrabber’
 is not.</p></li>
-<li><p>‘process_enabled’: ‘nipype.interfaces.DataGrabber’ is present.</p></li>
+<li><p>’process_enabled’: ‘nipype.interfaces.DataGrabber’ is present.</p></li>
 <li><p>None: No processes loaded, or Nipype is not present.</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -367,14 +375,11 @@ to a specified initial state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>main_window</strong> – (QMainWindow) The main window containing the
-package library popup.</p></li>
-<li><p><strong>ppl_manager</strong> – (PipelineManager) The pipeline manager handling
-the process library.</p></li>
-<li><p><strong>init_state</strong> – <p>(str or None) The desired reset state of the Nipype
-process view:</p>
-<blockquote>
-<div><ul>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main window containing the package library
+popup.</p></li>
+<li><p><strong>ppl_manager</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.html#populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab" title="populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab"><em>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab</em></a>) – The pipeline manager handling the process library.</p></li>
+<li><p><strong>init_state</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – <p>The desired reset state of the Nipype process view:</p>
+<ul>
 <li><p>None: The library is either empty or ‘nipype’ is not loaded.</p></li>
 <li><p>’nipype’: Only ‘nipype’ is loaded.</p></li>
 <li><p>’nipype.interfaces’: ‘nipype.interfaces’ is loaded but not
@@ -382,7 +387,6 @@ process view:</p>
 <li><p>’process_enabled’: ‘nipype.interfaces.DataGrabber’ is already
 loaded.</p></li>
 </ul>
-</div></blockquote>
 </p></li>
 </ul>
 </dd>
@@ -456,11 +460,9 @@ leakage.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIADataBrowser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIADataBrowser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIADataBrowser" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests for the data browser tab (DataBrowser).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>assert_scans_present: Asserts that all expected scan names are
 present in the given list.</p></li>
 <li><p>get_cell_text: Returns the text of the QLabel inside a cell
@@ -522,8 +524,10 @@ default values is created.</p></li>
 <li><p>test_visualized_tags: Tests the popup modifying the visualized
 tags.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIADataBrowser.assert_scans_present">
 <span class="sig-name descname"><span class="pre">assert_scans_present</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_subset</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIADataBrowser.assert_scans_present"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIADataBrowser.assert_scans_present" title="Link to this definition">¶</a></dt>
@@ -531,8 +535,8 @@ tags.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scans</strong> – (list) List of scan names to check.</p></li>
-<li><p><strong>expected_subset</strong> – (list) List of expected scan names that should
+<li><p><strong>scans</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of scan names to check.</p></li>
+<li><p><strong>expected_subset</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of expected scan names that should
 be present in the scans list.</p></li>
 </ul>
 </dd>
@@ -550,15 +554,22 @@ be present in the scans list.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>table</strong> – (QTableWidget) The table containing the cell.</p></li>
-<li><p><strong>row</strong> – (int) The row index.</p></li>
-<li><p><strong>column</strong> – (int) The column index.</p></li>
-<li><p><strong>label_index</strong> – (int) If multiple labels are present, which one to
-return. Default is 0 (first QLabel found).</p></li>
+<li><p><strong>table</strong> – The table containing the cell.</p></li>
+<li><p><strong>row</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The row index.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The column index.</p></li>
+<li><p><strong>label_index</strong> – If multiple labels are present, which one to
+return. Default is 0 (first QLabel found).
+:type label_index: int</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The text of the QLabel, or fails the test if not found.</p>
+<dt class="field-even">Ype table<span class="colon">:</span></dt>
+<dd class="field-even"><p>QTableWidget</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The text of the QLabel, or fails the test if not found.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -572,14 +583,14 @@ browser UI.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>main_window</strong> – (QMainWindow) The main application window
-containing the project and data browser.</p></li>
-<li><p><strong>row_nb</strong> – (int) The row index in the data browser table.</p></li>
-<li><p><strong>tag</strong> – (str) The name of the tag (column) to retrieve.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main application window containing the project
+and data browser.</p></li>
+<li><p><strong>row_nb</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The row index in the data browser table.</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tag (column) to retrieve.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple) A 4-tuple containing:</p>
+<dd class="field-even"><p><p>A 4-tuple containing:</p>
 <ul class="simple">
 <li><p>value (Any): The current value from the database
 (COLLECTION_CURRENT).</p></li>
@@ -590,6 +601,10 @@ UI, or None if not available.</p></li>
 <li><p>item (QTableWidgetItem | None): The table item corresponding to
 the tag, or None if not found.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -607,12 +622,15 @@ the tag, or None if not found.</p></li>
 execution during programmatic updates to the table data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>table_data</strong> – (QTableWidget) The data browser’s table widget
-whose itemChanged signal is to be suppressed.</p>
+<dd class="field-odd"><p><strong>table_data</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – The data browser’s table widget whose itemChanged
+signal is to be suppressed.</p>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><p>(None) The context block is executed with the signal
-disconnected, and it is reconnected automatically afterward.</p>
+<dd class="field-even"><p>The context block is executed with the signal disconnected,
+and it is reconnected automatically afterward.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>contextlib._GeneratorContextManager</p>
 </dd>
 </dl>
 </dd></dl>
@@ -698,7 +716,7 @@ are correctly saved or discarded.</p>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>mock_qmsgbox</strong> – (MagicMock) Mocked <code class="docutils literal notranslate"><span class="pre">QMessageBox</span></code> used to prevent
+<dd class="field-odd"><p><strong>mock_qmsgbox</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/unittest.mock.html#unittest.mock.MagicMock" title="(in Python v3.10)"><em>unittest.mock.MagicMock</em></a>) – (MagicMock) Mocked <code class="docutils literal notranslate"><span class="pre">QMessageBox</span></code> used to prevent
 modal dialogs from blocking the test.</p>
 </dd>
 </dl>
@@ -731,8 +749,11 @@ modal dialogs from blocking the test.</p>
 <span class="sig-name descname"><span class="pre">test_multiple_sort_appendix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIADataBrowser.test_multiple_sort_appendix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIADataBrowser.test_multiple_sort_appendix" title="Link to this definition">¶</a></dt>
 <dd><p>Test adding and removing tags in the multiple sort popup.</p>
 <ul class="simple">
-<li><p>Target class: PopUpMultipleSort</p></li>
-<li><p>Mocks: <a href="#id1"><span class="problematic" id="id2">PopUpSelectTagCountTable.exec_</span></a></p></li>
+<li><p>Target class:
+<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpMultipleSort" title="populse_mia.user_interface.pop_ups.PopUpMultipleSort"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpMultipleSort</span></code></a></p></li>
+<li><p>Mocked dialog:
+<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable" title="populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpSelectTagCountTable</span></code></a>
+(patches <code class="docutils literal notranslate"><span class="pre">exec_()</span></code>)</p></li>
 </ul>
 </dd></dl>
 
@@ -747,7 +768,11 @@ PopUpSelectTag.</p></li>
 <li><p>Ensures correct handling of tag selection and dialog interaction.</p></li>
 <li><p>Tests: MiniViewer.openTagsPopUp</p></li>
 <li><p>Indirectly tests: PopUpSelectTag</p></li>
-<li><p>Mocks: <a href="#id3"><span class="problematic" id="id4">PopUpSelectTag.exec_</span></a> using unittest.mock.patch</p></li>
+<li><p>Target method:
+<a class="reference internal" href="populse_mia.user_interface.data_browser.mini_viewer.html#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp" title="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp"><code class="xref py py-meth docutils literal notranslate"><span class="pre">openTagsPopUp()</span></code></a></p></li>
+<li><p>Mocked dialog:
+<a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpSelectTag" title="populse_mia.user_interface.pop_ups.PopUpSelectTag"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpSelectTag</span></code></a>
+(patches <code class="docutils literal notranslate"><span class="pre">exec_()</span></code>)</p></li>
 </ul>
 </dd></dl>
 
@@ -980,8 +1005,8 @@ by the BandWidth column in both ascending and descending order.</p>
 methods on the data table.</p>
 <p>This covers both:</p>
 <ul class="simple">
-<li><p>Confirm actions (that trigger a QMessageBox before executing)</p></li>
-<li><p>Direct actions (executed immediately)</p></li>
+<li><p>Confirm actions (that trigger a QMessageBox before executing).</p></li>
+<li><p>Direct actions (executed immediately).</p></li>
 </ul>
 <p>QMessageBox is auto-accepted by simulating a click on the OK button.</p>
 </dd></dl>
@@ -1104,11 +1129,9 @@ and verifies:</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIAMainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAMainWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAMainWindow" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests for the main window class (MainWindow).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>test_check_database: checks if the database has changed since the
 scans were first imported</p></li>
 <li><p>test_create_project_pop_up: tries to create a new project with a
@@ -1146,8 +1169,10 @@ pop up for AFNI, ANTS, FSL, SPM, mrtrix and MATLAB.</p></li>
 <li><p>test_tab_changed: switches between data browser, data viewer and
 pipeline manager.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAMainWindow.test_check_database">
 <span class="sig-name descname"><span class="pre">test_check_database</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAMainWindow.test_check_database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_check_database" title="Link to this definition">¶</a></dt>
@@ -1159,19 +1184,27 @@ to the database, such as a missing file after import.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAMainWindow.test_create_project_pop_up">
 <span class="sig-name descname"><span class="pre">test_create_project_pop_up</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAMainWindow.test_create_project_pop_up"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_create_project_pop_up" title="Link to this definition">¶</a></dt>
-<dd><p>Test project creation popup behavior under various conditions.</p>
-<dl class="simple">
-<dt>Verifies the MainWindow.create_project_pop_up method handles:</dt><dd><ul class="simple">
-<li><p>Project creation with unsaved modifications (triggers quit popup)</p></li>
-<li><p>Project creation without configured projects folder (shows error)</p></li>
-<li><p>Normal project creation flow with proper configuration</p></li>
+<dd><p>Test the project creation workflow.</p>
+<p>Verifies that
+<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow.create_project_pop_up" title="populse_mia.user_interface.main_window.MainWindow.create_project_pop_up"><code class="xref py py-meth docutils literal notranslate"><span class="pre">create_project_pop_up()</span></code></a>
+correctly handles the following situations:</p>
+<ul class="simple">
+<li><p>Unsaved project modifications, prompting the user before creating a
+new project.</p></li>
+<li><p>Missing project directory configuration, displaying an error message.</p></li>
+<li><p>Normal project creation when the application is correctly configured.</p></li>
 </ul>
-</dd>
-<dt>Components tested:</dt><dd><p>MainWindow.create_project_pop_up, PopUpNewProject</p>
-</dd>
-<dt>Mocked components:</dt><dd><p>PopUpQuit.exec, QMessageBox.exec, PopUpNewProject.exec</p>
-</dd>
-</dl>
+<p>Collaborating dialogs:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpQuit" title="populse_mia.user_interface.pop_ups.PopUpQuit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpQuit</span></code></a></p></li>
+<li><p><a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.PopUpNewProject" title="populse_mia.user_interface.pop_ups.PopUpNewProject"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpNewProject</span></code></a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QMessageBox</span></code> from <code class="docutils literal notranslate"><span class="pre">PyQt5.QtWidgets</span></code></p></li>
+</ul>
+<p>Mocks:</p>
+<ul class="simple">
+<li><p>Dialog <code class="docutils literal notranslate"><span class="pre">exec()</span></code> methods are patched to prevent modal execution and
+allow automated interaction during the test.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py method">
@@ -1238,23 +1271,25 @@ its presence in the recent projects list, and reopening it.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_add_pkg">
 <span class="sig-name descname"><span class="pre">test_package_library_dialog_add_pkg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAMainWindow.test_package_library_dialog_add_pkg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_add_pkg" title="Link to this definition">¶</a></dt>
-<dd><p>Test adding and installing packages through the PackageLibraryDialog.</p>
-<dl class="simple">
-<dt>This test verifies the following:</dt><dd><ul class="simple">
-<li><p>Opening the package library dialog and adding a standard package.</p></li>
-<li><p>Handling invalid or non-existent packages.</p></li>
+<dd><p>Test adding and installing packages through the package library dialog.</p>
+<p>This test verifies that the package library dialog correctly handles:</p>
+<ul class="simple">
+<li><p>Adding a standard Python package.</p></li>
+<li><p>Rejecting non-existent packages.</p></li>
 <li><p>Installing a process package from a directory.</p></li>
-<li><p>Validating error handling for invalid directories and import
-errors.</p></li>
-<li><p>Saving and reloading a new pipeline using the installed process.</p></li>
+<li><p>Reporting errors for invalid directories and import failures.</p></li>
+<li><p>Saving and reloading a pipeline that uses the newly installed
+process.</p></li>
 </ul>
-</dd>
-<dt>Mocks:</dt><dd><ul class="simple">
-<li><p>QMessageBox.exec and <a href="#id5"><span class="problematic" id="id6">exec_</span></a> (to suppress dialogs)</p></li>
-<li><p><a href="#id7"><span class="problematic" id="id8">QFileDialog.exec_</span></a> (to simulate dialog acceptance)</p></li>
+<p>To prevent blocking user interaction during the test, the following
+dialog methods are mocked:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">QMessageBox.exec()</span></code> and <code class="docutils literal notranslate"><span class="pre">QMessageBox.exec_()</span></code> (to suppress
+dialogs).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QFileDialog.exec_()</span></code> (to simulate dialog acceptance).</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -1282,26 +1317,29 @@ errors.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_rmv_pkg">
 <span class="sig-name descname"><span class="pre">test_package_library_dialog_rmv_pkg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAMainWindow.test_package_library_dialog_rmv_pkg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_rmv_pkg" title="Link to this definition">¶</a></dt>
-<dd><p>Test removing a package from the package library dialog.</p>
-<dl class="simple">
-<dt>This test:</dt><dd><ul class="simple">
-<li><p>Creates a new project.</p></li>
-<li><p>Opens the process library and ensures a test package is
-installed.</p></li>
-<li><p>Attempts to remove nonexistent and unspecified packages.</p></li>
-<li><p>Removes a real package through the UI simulation.</p></li>
-<li><p>Resets the library state and saves the configuration.</p></li>
+<dd><p>Test removing packages through the package library dialog.</p>
+<p>This test verifies that the package library dialog correctly handles:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Removing a package when no package name is specified.</p></li>
+<li><p>Rejecting requests to remove non-existent packages.</p></li>
+<li><p>Removing an installed package through the graphical interface.</p></li>
+<li><p>Cancelling a pending removal operation.</p></li>
+<li><p>Updating the internal package management state.</p></li>
+<li><p>Saving the resulting package library configuration.</p></li>
 </ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Mocks<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p>QMessageBox.exec</p></li>
-<li><p><a href="#id9"><span class="problematic" id="id10">QMessageBox.exec_</span></a></p></li>
+</div></blockquote>
+<p>If the required test package is not already installed, it is first
+added to the process library. At the end of the test, the initial
+library state is restored if it was modified.</p>
+<p>The following dialog methods are mocked to prevent modal dialogs from
+blocking the test execution:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">QMessageBox.exec()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">QMessageBox.exec_()</span></code></p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </dd></dl>
 
 <dl class="py method">
@@ -1365,7 +1403,10 @@ deleted.</p></li>
 </ul>
 </dd>
 </dl>
-<p><strong>Notes</strong>: Not to be confused with <cite>test_popUpDeletedProject</cite>.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not to be confused with <cite>test_popUpDeletedProject</cite>.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1445,6 +1486,34 @@ configuration dialog for AFNI, ANTS, FSL, mrtrix, SPM, and MATLAB
 modules, including handling of valid and invalid executable paths.</p>
 <p>tests: PopUpPreferences.validate_and_save</p>
 <p>mocks: QMessageBox.show</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>mock_executable: Creates a mock executable in a specified
+directory, simulating the behavior of external software
+modules for testing purposes.</p></li>
+<li><p>test_module: Tests the configuration of a specific software
+module, including setting valid and invalid paths, and
+verifying the resulting configuration state.</p></li>
+<li><p>test_fsl: Tests the configuration of the FSL module,
+including setting valid and invalid paths, and verifying the
+resulting configuration state.</p></li>
+<li><p>test_spm_matlab: Tests the configuration of the SPM module
+when using MATLAB, including setting valid and invalid paths,
+and verifying the resulting configuration state.</p></li>
+<li><p>test_matlab_only: Tests the configuration of the MATLAB
+module when used in isolation, including setting valid and
+invalid paths, and verifying the resulting configuration
+state.</p></li>
+<li><p>test_matlab_mcr_spm_standalone: Tests the configuration of
+the MATLAB MCR module when used with SPM standalone,
+including setting valid and invalid paths, and verifying the
+resulting configuration state.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1457,9 +1526,9 @@ correct saving of settings related to:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Standalone modules (AFNI, ANTS, FSL, SPM, MRtrix, MATLAB,
-freesurfer)</p></li>
-<li><p>UI and behavioral options (auto-save, radio view,
-admin/clinical mode)</p></li>
+freesurfer).</p></li>
+<li><p>UI and behavioral options (auto-save, radio view, admin/clinical
+mode).</p></li>
 </ul>
 </div></blockquote>
 <dl class="simple">
@@ -1484,16 +1553,16 @@ admin/clinical mode)</p></li>
 <cite>MainWindow.switch_project</cite>.</p>
 <dl class="simple">
 <dt>This test covers:</dt><dd><ul class="simple">
-<li><p>Switching to a valid Mia project</p></li>
-<li><p>Handling non-existent project paths</p></li>
-<li><p>Preventing switching to already-open projects</p></li>
-<li><p>Ignoring invalid or malformed Mia projects</p></li>
+<li><p>Switching to a valid Mia project.</p></li>
+<li><p>Handling non-existent project paths.</p></li>
+<li><p>Preventing switching to already-open projects.</p></li>
+<li><p>Ignoring invalid or malformed Mia projects.</p></li>
 </ul>
 </dd>
 </dl>
 <ul class="simple">
-<li><p>Tests: MainWindow.switch_project</p></li>
-<li><p>Mocks: QMessageBox.exec (to bypass dialog confirmations)</p></li>
+<li><p>Tests: MainWindow.switch_project.</p></li>
+<li><p>Mocks: QMessageBox.exec (to bypass dialog confirmations).</p></li>
 </ul>
 </dd></dl>
 
@@ -1525,11 +1594,9 @@ Mocks: QMessageBox.exec</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIANodeController</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIANodeController"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIANodeController" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests for the node controller, part of the pipeline manager tab.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>create_mock_exec: create a mock function for
 PopUpSelectTagCountTable.exec_() that simulates user tag
 selection behavior.</p></li>
@@ -1546,8 +1613,10 @@ node controller.</p></li>
 <li><p>test_update_node_name: displays node parameters and updates its
 name.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIANodeController.create_mock_exec">
 <span class="sig-name descname"><span class="pre">create_mock_exec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIANodeController.create_mock_exec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIANodeController.create_mock_exec" title="Link to this definition">¶</a></dt>
@@ -1559,12 +1628,25 @@ the OK action, simulating the user workflow without requiring
 actual UI interaction.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_name</strong> – (str) The name of the tag to select from the list.
-This should match the text of one of the items in the popup’s list
-widget.</p>
+<dd class="field-odd"><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tag to select from the list. This
+should match the text of one of the items in the popup’s list widget.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A mock function that can be used to replace exec_() method.</p>
+<dd class="field-even"><p>A function with the same signature as
+<cite>PopUpSelectTagCountTable.exec_`</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>function</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>mock_exec: The actual implementation of exec_() that selects
+a tag from the list.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1603,19 +1685,21 @@ verifies the following capabilities:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Adding two ‘Rename’ nodes to the pipeline (‘rename_1’ and
-‘rename_2’)</p></li>
-<li><p>Displaying and interacting with node parameters</p></li>
-<li><p>Attempting to rename ‘rename_2’ to an existing name (should fail)</p></li>
+‘rename_2’).</p></li>
+<li><p>Displaying and interacting with node parameters.</p></li>
+<li><p>Attempting to rename ‘rename_2’ to an existing name (should
+fail).</p></li>
 <li><p>Renaming ‘rename_2’ to a new unique name (‘rename_3’)
-successfully</p></li>
-<li><p>Deleting an existing node (‘rename_3’)</p></li>
-<li><p>Exporting unconnected mandatory input plugs for a node</p></li>
-<li><p>Setting input plug values using a test document</p></li>
+successfully.</p></li>
+<li><p>Deleting an existing node (‘rename_3’).</p></li>
+<li><p>Exporting unconnected mandatory input plugs for a node.</p></li>
+<li><p>Setting input plug values using a test document.</p></li>
 <li><p>Executing the pipeline and expecting an error due to unexported
-output</p></li>
+output.</p></li>
 <li><p>Opening the attributes filter dialog, selecting a row, and
-confirming</p></li>
-<li><p>Releasing and updating the process associated with the controller</p></li>
+confirming.</p></li>
+<li><p>Releasing and updating the process associated with the
+controller.</p></li>
 </ul>
 </div></blockquote>
 <dl class="simple">
@@ -1630,13 +1714,15 @@ confirming</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>The test assumes that running the pipeline raises an error
 because the output plug is not exported, which is intentional.</p></li>
 <li><p>A QDialog.exec() mock is used to simulate dialog confirmation
 during pipeline execution.</p></li>
 </ul>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1663,15 +1749,15 @@ in the CapsulNodeController V1 interface.</p>
 Capsul pipeline node.</p>
 <dl class="simple">
 <dt>This test:</dt><dd><ul class="simple">
-<li><p>Switches to the V1 node controller (if not already active)</p></li>
-<li><p>Adds an <cite>Input_Filter</cite> process to the pipeline</p></li>
-<li><p>Feeds in documents from a test project</p></li>
-<li><p>Opens the filter widget for the added node</p></li>
+<li><p>Switches to the V1 node controller (if not already active).</p></li>
+<li><p>Adds an <cite>Input_Filter</cite> process to the pipeline.</p></li>
+<li><p>Feeds in documents from a test project.</p></li>
+<li><p>Opens the filter widget for the added node.</p></li>
 <li><dl class="simple">
 <dt>Performs various filtering actions:</dt><dd><ul>
-<li><p>Searching for documents by name</p></li>
-<li><p>Toggling tag visibility</p></li>
-<li><p>Filtering by a specific tag (mocking user interaction)</p></li>
+<li><p>Searching for documents by name.</p></li>
+<li><p>Toggling tag visibility.</p></li>
+<li><p>Filtering by a specific tag (mocking user interaction).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1689,23 +1775,23 @@ controller UIs. Only the V1 GUI is exercised here.</p>
 <span class="sig-name descname"><span class="pre">test_node_controller</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIANodeController.test_node_controller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIANodeController.test_node_controller" title="Link to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Tests the behavior of the V1 <cite>NodeController</cite> interface for:</dt><dd><ul class="simple">
-<li><p>Adding, renaming, and deleting nodes</p></li>
-<li><p>Displaying and updating process parameters</p></li>
-<li><p>Interacting with plug filters and values</p></li>
+<li><p>Adding, renaming, and deleting nodes.</p></li>
+<li><p>Displaying and updating process parameters.</p></li>
+<li><p>Interacting with plug filters and values.</p></li>
 </ul>
 </dd>
 <dt>Workflow:</dt><dd><ul class="simple">
-<li><p>Switches to V1 node controller mode if not already enabled</p></li>
+<li><p>Switches to V1 node controller mode if not already enabled.</p></li>
 <li><p>Opens a test project and adds two Rename processes as
-“rename_1” and “rename_2”</p></li>
+“rename_1” and “rename_2”.</p></li>
 <li><p>Attempts renaming “rename_2” to an existing name (fails)
-then to a unique one</p></li>
-<li><p>Deletes the renamed node</p></li>
-<li><p>Exports input/output plugs and tests plug interaction</p></li>
-<li><p>Displays parameters and plug filters</p></li>
-<li><p>Updates plug values with and without providing new values</p></li>
-<li><p>Releases and refreshes the process</p></li>
-<li><p>Restores the original node controller mode after testing</p></li>
+then to a unique one.</p></li>
+<li><p>Deletes the renamed node.</p></li>
+<li><p>Exports input/output plugs and tests plug interaction.</p></li>
+<li><p>Displays parameters and plug filters.</p></li>
+<li><p>Updates plug values with and without providing new values.</p></li>
+<li><p>Releases and refreshes the process.</p></li>
+<li><p>Restores the original node controller mode after testing.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1717,13 +1803,13 @@ then to a unique one</p></li>
 <dd><p>Tests plug filtering in the Node Controller V1 interface.</p>
 <dl class="simple">
 <dt>This test covers:</dt><dd><ul class="simple">
-<li><p>Switching to Node Controller V1 if not already enabled</p></li>
-<li><p>Opening a test project and retrieving documents</p></li>
-<li><p>Adding and configuring a ‘Smooth’ node in the pipeline</p></li>
-<li><p>Displaying and modifying a plug filter</p></li>
-<li><p>Searching and filtering table rows</p></li>
-<li><p>Modifying visible tag columns</p></li>
-<li><p>Verifying plug value assignment from filtered selections</p></li>
+<li><p>Switching to Node Controller V1 if not already enabled.</p></li>
+<li><p>Opening a test project and retrieving documents.</p></li>
+<li><p>Adding and configuring a ‘Smooth’ node in the pipeline.</p></li>
+<li><p>Displaying and modifying a plug filter.</p></li>
+<li><p>Searching and filtering table rows.</p></li>
+<li><p>Modifying visible tag columns.</p></li>
+<li><p>Verifying plug value assignment from filtered selections.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1740,6 +1826,14 @@ update or rejection of name changes based on naming conflicts.</p>
 <li><p>Duplicate names are not accepted.</p></li>
 <li><p>Node renaming preserves the connections (links) between nodes.</p></li>
 </ul>
+</dd>
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>simulate_rename: Simulates renaming a node via the GUI line
+edit.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1761,11 +1855,9 @@ update or rejection of name changes based on naming conflicts.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIAPipelineEditor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAPipelineEditor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAPipelineEditor" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests for the pipeline editor, part of the pipeline manager tab.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>test_add_tab: Adds tabs to the PipelineEditorTabs.</p></li>
 <li><p>test_close_tab: Closes a tab in the PipelineEditorTabs.</p></li>
 <li><p>test_drop_process: Adds a Nipype SPM Smooth process to the
@@ -1786,8 +1878,10 @@ pipeline file.</p></li>
 <li><p>test_z_set_current_editor: Sets the current editor.</p></li>
 <li><p>test_zz_del_pack: Deletes a brick created during UTs.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_add_tab">
 <span class="sig-name descname"><span class="pre">test_add_tab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAPipelineEditor.test_add_tab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAPipelineEditor.test_add_tab" title="Link to this definition">¶</a></dt>
@@ -1811,12 +1905,12 @@ dialog when attempting to close tabs that are either unmodified or
 modified.</p>
 <dl class="simple">
 <dt>Scenarios covered:</dt><dd><ul class="simple">
-<li><p>Closing an unmodified tab (no dialog shown)</p></li>
+<li><p>Closing an unmodified tab (no dialog shown).</p></li>
 <li><dl class="simple">
 <dt>Closing a modified tab and choosing:</dt><dd><ul>
-<li><p>“Save As”</p></li>
-<li><p>“Do Not Save”</p></li>
-<li><p>“Cancel”</p></li>
+<li><p>“Save As”.</p></li>
+<li><p>“Do Not Save”.</p></li>
+<li><p>“Cancel”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1908,7 +2002,10 @@ correctly.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Notes: This test specifically targets NodeController V1 behavior.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This test specifically targets NodeController V1 behavior.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1934,11 +2031,11 @@ saves it.</p></li>
 </ul>
 </dd>
 <dt>Tested features:</dt><dd><ul class="simple">
-<li><p>Pipeline loading</p></li>
-<li><p>Process instantiation from library</p></li>
-<li><p>Node linking</p></li>
-<li><p>Plug export and save</p></li>
-<li><p>Detection of modifications in sub-pipeline processes</p></li>
+<li><p>Pipeline loading.</p></li>
+<li><p>Process instantiation from library.</p></li>
+<li><p>Node linking.</p></li>
+<li><p>Plug export and save.</p></li>
+<li><p>Detection of modifications in sub-pipeline processes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1999,9 +2096,9 @@ name, filename, and editor instance.</p>
 <li><p>Creates an additional empty pipeline in a second tab.</p></li>
 <li><dl class="simple">
 <dt>Retrieves and checks tab indices using:</dt><dd><ul class="simple">
-<li><p>the tab name</p></li>
-<li><p>the full file path</p></li>
-<li><p>the editor instance</p></li>
+<li><p>the tab name.</p></li>
+<li><p>the full file path.</p></li>
+<li><p>the editor instance.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2074,9 +2171,9 @@ pipeline.</p></li>
 <dd><p>Tests setting the current editor using different criteria.</p>
 <dl class="simple">
 <dt>Validates that the active tab can be correctly switched using:</dt><dd><ul class="simple">
-<li><p>Tab name</p></li>
-<li><p>Pipeline file name</p></li>
-<li><p>Editor instance</p></li>
+<li><p>Tab name.</p></li>
+<li><p>Pipeline file name.</p></li>
+<li><p>Editor instance.</p></li>
 </ul>
 </dd>
 <dt>Targets the following methods:</dt><dd><ul class="simple">
@@ -2121,11 +2218,9 @@ verifies its removal.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.tests.run_mia_test.</span></span><span class="sig-name descname"><span class="pre">TestMIAPipelineManagerTab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAPipelineManagerTab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests the pipeline manager tab class, part of the homonym tab.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>test_add_plug_value_to_database_list_type: Adds a list type plug
 value to the database.</p></li>
 <li><p>test_add_plug_value_to_database_non_list_type: Adds a non list
@@ -2175,8 +2270,10 @@ to the “pipline_manager.node_list”.</p></li>
 <li><p>test_z_runPipeline: Adds a process and runs a pipeline.</p></li>
 <li><p>test_zz_del_pack: Deletion of the brick created during UTs.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type">
 <span class="sig-name descname"><span class="pre">test_add_plug_value_to_database_list_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.TestMIAPipelineManagerTab.test_add_plug_value_to_database_list_type" title="Link to this definition">¶</a></dt>
@@ -2207,13 +2304,13 @@ non-list input plug value in different contexts.</p>
 <dl class="simple">
 <dt>Scenarios covered:</dt><dd><ul class="simple">
 <li><p>Plug value is outside the project directory (should not be
-indexed)</p></li>
-<li><p>Plug value is inside the project directory (should be indexed)</p></li>
-<li><p>Plug value is already in the database (logs an info message)</p></li>
-<li><p>Plug values with different file extensions (.nii.gz, .mat, .txt)</p></li>
+indexed).</p></li>
+<li><p>Plug value is inside the project directory (should be indexed).</p></li>
+<li><p>Plug value is already in the database (logs an info message).</p></li>
+<li><p>Plug values with different file extensions (.nii.gz, .mat, .txt).</p></li>
 <li><p>Handling of <cite>parent_files</cite> via <cite>auto_inheritance_dict</cite> and
-<cite>inheritance_dict</cite></p></li>
-<li><p>Adding and removing tags based on the inheritance information</p></li>
+<cite>inheritance_dict</cite>.</p></li>
+<li><p>Adding and removing tags based on the inheritance information.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2237,10 +2334,23 @@ conditions.</p>
 <p>Also validates <cite>PopUpInheritanceDict</cite> interactive behavior across all
 buttons.</p>
 <dl class="simple">
-<dt>tested:</dt><dd><ul class="simple">
+<dt>Tested:</dt><dd><ul class="simple">
 <li><p>PipelineManagerTab.add_plug_value_to_database</p></li>
 <li><p>PopUpInheritanceDict interaction</p></li>
 </ul>
+</dd>
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>mock_exec: Mock execution function for PopUpInheritanceDict.</p></li>
+<li><p>mock_get_document: Mock function to fetch documents from the
+database.</p></li>
+<li><p>reset_collections: Reset collections to ensure consistent
+state.</p></li>
+<li><p>reset_inheritance_dicts: Reset inheritance dictionaries to
+ensure consistent state.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -2282,13 +2392,13 @@ mocks are invoked as expected.</p></li>
 </ul>
 </dd>
 </dl>
+<p>The test allows an expected exception message to be printed during
+execution.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>update_nodes_and_plugs_activation’ may not exist on the process,
 hence ‘create=True’ is used to safely mock it.</p>
 </div>
-<p>The test allows an expected exception message to be printed during
-execution.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2358,12 +2468,25 @@ functionality.</p>
 verifies:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>The node is properly removed from the pipeline</p></li>
-<li><p>Connected links are cleaned up</p></li>
-<li><p>Undo operation restores the node and its connections</p></li>
-<li><p>Redo operation removes the node again</p></li>
+<li><p>The node is properly removed from the pipeline.</p></li>
+<li><p>Connected links are cleaned up.</p></li>
+<li><p>Undo operation restores the node and its connections.</p></li>
+<li><p>Redo operation removes the node again.</p></li>
 </ul>
 </div></blockquote>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>_assert_connection_counts: Assert that connection counts
+match expected values.</p></li>
+<li><p>_assert_nodes_exist: Assert that nodes exist as expected.</p></li>
+<li><p>_assert_nodes_not_exist: Assert that nodes do not exist as
+expected.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2396,8 +2519,8 @@ pipeline editor’s ‘initialized’ attribute to False.</p>
 dependent methods are called exactly once:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>postprocess_pipeline_execution</p></li>
-<li><p>update_user_buttons_states</p></li>
+<li><p>postprocess_pipeline_execution.</p></li>
+<li><p>update_user_buttons_states.</p></li>
 </ul>
 </div></blockquote>
 </dd></dl>
@@ -2504,11 +2627,11 @@ database for different types of process nodes.</p>
 <li><p>Creates a workflow and job for the pipeline.</p></li>
 <li><dl class="simple">
 <dt>Tests <cite>_register_node_io_in_database</cite> with:</dt><dd><ul class="simple">
-<li><p>NipypeProcess instance</p></li>
-<li><p>ProcessNode instance</p></li>
-<li><p>PipelineNode instance</p></li>
-<li><p>Switch instance</p></li>
-<li><p>Process with no outputs</p></li>
+<li><p>NipypeProcess instance.</p></li>
+<li><p>ProcessNode instance.</p></li>
+<li><p>PipelineNode instance.</p></li>
+<li><p>Switch instance.</p></li>
+<li><p>Process with no outputs.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2561,6 +2684,15 @@ warning logs.</p></li>
 </dd>
 </dl>
 <p>tests: RunWorker.run</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>fake_start: Simulates the start of a worker.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2669,10 +2801,10 @@ pipeline editor.</p>
 handles:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>Node creation, deletion, and renaming</p></li>
-<li><p>Plug export, removal, and value updates</p></li>
-<li><p>Link creation, deletion, and restoration</p></li>
-<li><p>Document deletion (in-memory only; disk behavior is not tested)</p></li>
+<li><p>Node creation, deletion, and renaming.</p></li>
+<li><p>Plug export, removal, and value updates.</p></li>
+<li><p>Link creation, deletion, and restoration.</p></li>
+<li><p>Document deletion (in-memory only; disk behavior is not tested).</p></li>
 </ul>
 </div></blockquote>
 <p>The test is robust and designed to prevent random crashes. It ensures
@@ -2702,8 +2834,8 @@ should not exist).</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#AssertionError" title="(in Python v3.10)"><strong>AssertionError</strong></a> – If expectations about the existence, type,
-or contents of <cite>auto_inheritance_dict</cite> are not met.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#AssertionError" title="(in Python v3.10)"><strong>AssertionError</strong></a> – If expectations about the existence, type, or
+contents of <cite>auto_inheritance_dict</cite> are not met.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2716,7 +2848,7 @@ a job’s inheritance dictionary based on the associated node.</p>
 <dl class="simple">
 <dt>This test covers multiple scenarios of inheritance updating:</dt><dd><ul class="simple">
 <li><p>Ensures that jobs do not initially have <cite>inheritance_dict</cite>
-attribute</p></li>
+attribute.</p></li>
 <li><p>Validates update when the node name does not contain “Pipeline”.</p></li>
 <li><p>Validates update when the node name contains “Pipeline”.</p></li>
 <li><p>Validates update when the node’s inheritance history is recorded
@@ -2763,9 +2895,8 @@ package dependencies.</p></li>
 by <code class="docutils literal notranslate"><span class="pre">workflow_from_pipeline</span></code>.</p></li>
 </ul>
 </dd>
-<dt>Target:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">PipelineManagerTab.init_pipeline</span></code></p>
-</dd>
 </dl>
+<p>Target: <code class="docutils literal notranslate"><span class="pre">PipelineManagerTab.init_pipeline</span></code></p>
 </dd></dl>
 
 <dl class="py method">
@@ -2823,11 +2954,9 @@ expected.</p>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.tests.run_mia_test.TestMIACase" title="populse_mia.tests.run_mia_test.TestMIACase"><code class="xref py py-class docutils literal notranslate"><span class="pre">TestMIACase</span></code></a></p>
 <p>Tests for other parts of the Mia software that do not relate much with the
 other classes.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_mock_mouse_event: Mocks QMouseEvent for a right-click at
 position (0, 0).</p></li>
 <li><p>test_check_setup: Checks that Mia’s configuration control is
@@ -2839,8 +2968,10 @@ it.</p></li>
 working correctly.</p></li>
 <li><p>test_z_open_shell: Opens Qt console and kill it afterwards.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.tests.run_mia_test.Test_Z_MIAOthers._mock_mouse_event">
 <span class="sig-name descname"><span class="pre">_mock_mouse_event</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/tests/run_mia_test.html#Test_Z_MIAOthers._mock_mouse_event"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.tests.run_mia_test.Test_Z_MIAOthers._mock_mouse_event" title="Link to this definition">¶</a></dt>
@@ -2872,11 +3003,11 @@ panel of the Pipeline Manager tab, which contains the list of available
 processes and packages.</p>
 <dl class="simple">
 <dt>The following behaviors are verified:</dt><dd><ul class="simple">
-<li><p>insertion of a new package node,</p></li>
-<li><p>MIME data generation for drag-and-drop,</p></li>
-<li><p>renaming of a package,</p></li>
-<li><p>deletion via the Delete key,</p></li>
-<li><p>context-menu action: remove package,</p></li>
+<li><p>insertion of a new package node.</p></li>
+<li><p>MIME data generation for drag-and-drop.</p></li>
+<li><p>renaming of a package.</p></li>
+<li><p>deletion via the Delete key.</p></li>
+<li><p>context-menu action: remove package.</p></li>
 <li><p>context-menu action: delete package with confirmation dialog.</p></li>
 </ul>
 </dd>
@@ -2886,12 +3017,12 @@ allow automated execution without GUI blocking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mock_msgbox_exec</strong> – Mock for QMessageBox.exec to prevent actual
+<li><p><strong>mock_msgbox_exec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/unittest.mock.html#unittest.mock.MagicMock" title="(in Python v3.10)"><em>unittest.mock.MagicMock</em></a>) – Mock for QMessageBox.exec to prevent actual
 execution of modal dialogs.</p></li>
-<li><p><strong>mock_msgbox_question</strong> – Mock for QMessageBox.question used to
+<li><p><strong>mock_msgbox_question</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/unittest.mock.html#unittest.mock.MagicMock" title="(in Python v3.10)"><em>unittest.mock.MagicMock</em></a>) – Mock for QMessageBox.question used to
 simulate user confirmation (returns QMessageBox.Yes).</p></li>
-<li><p><strong>mock_menu_exec</strong> – Mock for <a href="#id11"><span class="problematic" id="id12">QMenu.exec_</span></a> to simulate context menu
-selection without displaying a GUI menu.</p></li>
+<li><p><strong>mock_menu_exec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/unittest.mock.html#unittest.mock.MagicMock" title="(in Python v3.10)"><em>unittest.mock.MagicMock</em></a>) – Mock for <code class="docutils literal notranslate"><span class="pre">QMenu.exec_</span></code> to simulate context
+menu selection without displaying a GUI menu.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2911,10 +3042,10 @@ selection without displaying a GUI menu.</p></li>
 QtConsole with an IPython kernel.</p>
 <dl class="simple">
 <dt>This test verifies:</dt><dd><ul class="simple">
-<li><p>A RichJupyterWidget is returned</p></li>
-<li><p>The in-process kernel can execute code</p></li>
-<li><p>Application internals are available in the kernel namespace</p></li>
-<li><p>Multiple consoles can coexist safely</p></li>
+<li><p>A RichJupyterWidget is returned.</p></li>
+<li><p>The in-process kernel can execute code.</p></li>
+<li><p>Application internals are available in the kernel namespace.</p></li>
+<li><p>Multiple consoles can coexist safely.</p></li>
 </ul>
 </dd>
 </dl>

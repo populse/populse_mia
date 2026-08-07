@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+19a752c1 documentation</title>
+    <title>populse_mia.tests.run_mia_test &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=89202dc7"></script>
+    <script src="../../../_static/documentation_options.js?v=a8471e47"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+19a752c1 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.tests.run_mia_test</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -431,6 +431,7 @@ window.runMermaid = runMermaid;</script>
 <span class="kn">from</span><span class="w"> </span><span class="nn">packaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">version</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">qtconsole.rich_jupyter_widget</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichJupyterWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">textwrap</span><span class="w"> </span><span class="kn">import</span> <span class="n">dedent</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">traits.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">TraitListObject</span><span class="p">,</span> <span class="n">Undefined</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">unittest.mock</span><span class="w"> </span><span class="kn">import</span> <span class="n">MagicMock</span><span class="p">,</span> <span class="n">Mock</span><span class="p">,</span> <span class="n">patch</span>
 
@@ -493,10 +494,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add a directory to sys.path if it exists and isn&#39;t already there.</span>
 
-<span class="sd">    :param path: (Path) The directory path to be added to sys.path.</span>
-<span class="sd">    :param position: (int) The index at which to insert the path. Defaults</span>
+<span class="sd">    :param path: The directory path to be added to sys.path.</span>
+<span class="sd">    :type path: Path</span>
+<span class="sd">    :param position: The index at which to insert the path. Defaults</span>
 <span class="sd">     to 1.</span>
-<span class="sd">    :param name: (str) The name of the package.</span>
+<span class="sd">    :type position: int</span>
+<span class="sd">    :param name: The name of the package.</span>
+<span class="sd">    :type name: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
@@ -696,11 +700,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    it is ignored. If it contains an unwanted substring, that part is removed</span>
 <span class="sd">    and the cleaned message is printed to stderr (if anything remains).</span>
 
-<span class="sd">    :param mode: The Qt message type (ignored here).</span>
+<span class="sd">    :param mode: The Qt message type - Debug: 0, Warning:1, Critical: 2,</span>
+<span class="sd">     Fatal: 3 - (ignored here).</span>
+<span class="sd">    :type mode: PyQt5.QtCore.QtMsgType</span>
 <span class="sd">    :param context: The context of the message (ignored here).</span>
+<span class="sd">    :type context: PyQt5.QtCore.QMessageLogContext</span>
 <span class="sd">    :param message: (str) The Qt debug/warning message to filter and display.</span>
+<span class="sd">    :type message: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
     <span class="n">cleaned_message</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">unwanted</span> <span class="ow">in</span> <span class="n">unwanted_messages</span><span class="p">:</span>
@@ -726,9 +733,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    on log content, level, or message during unit tests.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - clear: Clears all captured log records.</span>
 <span class="sd">            - emit: Appends a log record to the internal list.</span>
 
@@ -761,7 +766,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Appends a log record to the internal list.</span>
 
-<span class="sd">        :param record: (logging.LogRecord) The log record to store.</span>
+<span class="sd">        :param record: The log record to store.</span>
+<span class="sd">        :type record: logging.LogRecord</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span></div>
 </div>
@@ -774,33 +780,30 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Parent class for the test classes of Mia.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
-<span class="sd">                - add_visualized_tag: selects a tag to display with the</span>
-<span class="sd">                  &quot;Visualized tags&quot; pop-up.</span>
-<span class="sd">                - capture_logs: context manager to temporarily capture log</span>
-<span class="sd">                  records.</span>
-<span class="sd">                - clean_uts_packages: deleting the package added during the</span>
-<span class="sd">                  UTs or old one still existing.</span>
-<span class="sd">                - create_mock_jar: creates a mocked java (.jar) executable.</span>
-<span class="sd">                - execute_QDialogAccept: accept (close) a QDialog instance.</span>
-<span class="sd">                - find_item_by_data: looks for a QModelIndex whose contents</span>
-<span class="sd">                  correspond to the argument data.</span>
-<span class="sd">                - get_new_test_project: create a temporary project that can</span>
-<span class="sd">                  be safely modified.</span>
-<span class="sd">                - proclibview_nipype_state: give the state of nipype in the</span>
-<span class="sd">                  process.</span>
-<span class="sd">                - proclibview_nipype_reset_state: reset nipype to its initial</span>
-<span class="sd">                  state (before the start of the current test) in the process</span>
-<span class="sd">                  library view.</span>
-<span class="sd">                - restart_Mia: restarts Mia within a unit test.</span>
-<span class="sd">                - setUp: called automatically before each test method.</span>
-<span class="sd">                - setUpClass: called before tests in the individual class.</span>
-<span class="sd">                - suppress_all_output: Context manager to suppress all output</span>
-<span class="sd">                  during tests.</span>
-<span class="sd">                - tearDown: cleans up after each test method.</span>
-<span class="sd">                - tearDownClass: called after tests in the individual class.</span>
+<span class="sd">            - add_visualized_tag: selects a tag to display with the</span>
+<span class="sd">              &quot;Visualized tags&quot; pop-up.</span>
+<span class="sd">            - capture_logs: context manager to temporarily capture log records.</span>
+<span class="sd">            - clean_uts_packages: deleting the package added during the UTs or</span>
+<span class="sd">              old one still existing.</span>
+<span class="sd">            - create_mock_jar: creates a mocked java (.jar) executable.</span>
+<span class="sd">            - execute_QDialogAccept: accept (close) a QDialog instance.</span>
+<span class="sd">            - find_item_by_data: looks for a QModelIndex whose contents</span>
+<span class="sd">              correspond to the argument data.</span>
+<span class="sd">            - get_new_test_project: create a temporary project that can be</span>
+<span class="sd">              safely modified.</span>
+<span class="sd">            - proclibview_nipype_state: give the state of nipype in the</span>
+<span class="sd">              process.</span>
+<span class="sd">            - proclibview_nipype_reset_state: reset nipype to its initial state</span>
+<span class="sd">              (before the start of the current test) in the process library</span>
+<span class="sd">              view.</span>
+<span class="sd">            - restart_Mia: restarts Mia within a unit test.</span>
+<span class="sd">            - setUp: called automatically before each test method.</span>
+<span class="sd">            - setUpClass: called before tests in the individual class.</span>
+<span class="sd">            - suppress_all_output: Context manager to suppress all output</span>
+<span class="sd">              during tests.</span>
+<span class="sd">            - tearDown: cleans up after each test method.</span>
+<span class="sd">            - tearDownClass: called after tests in the individual class.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestMIACase.add_visualized_tag">
@@ -813,11 +816,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        within the given timeout period, locates the specified tag in the</span>
 <span class="sd">        tag list, selects it, and confirms the dialog.</span>
 
-<span class="sd">        :param widget: The input filter containing the dialog</span>
-<span class="sd">         with visualized tags.</span>
-<span class="sd">        :param tag: (str) The tag name to select and visualize.</span>
-<span class="sd">        :param timeout: (int) Maximum time to wait for the dialog to appear,</span>
-<span class="sd">         in milliseconds. Defaults to 5000 ms.</span>
+<span class="sd">        :param widget: The input filter containing the dialog with visualized</span>
+<span class="sd">         tags.</span>
+<span class="sd">        :type widget:</span>
+<span class="sd">          populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget</span>
+<span class="sd">        :param tag: The tag name to select and visualize.</span>
+<span class="sd">        :type tag: str</span>
+<span class="sd">        :param timeout: Maximum time to wait for the dialog to appear, in</span>
+<span class="sd">         milliseconds. Defaults to 5000 ms.</span>
+<span class="sd">        :type timeout: int</span>
 
 <span class="sd">        :raises RuntimeError: If the dialog or visualized tags widget is not</span>
 <span class="sd">         found.</span>
@@ -885,12 +892,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - ERROR (40)</span>
 <span class="sd">            - CRITICAL (50) - Highest priority</span>
 
-<span class="sd">        :param logger_name: (str) The name of the logger to capture logs from.</span>
-<span class="sd">        :param level: (int) The logging level to use during capture (default:</span>
-<span class="sd">         20; INFO).</span>
+<span class="sd">        :param logger_name: The name of the logger to capture logs from.</span>
+<span class="sd">        :type logger_name: str</span>
+<span class="sd">        :param level: The logging level to use during capture (default: 20;</span>
+<span class="sd">         INFO).</span>
+<span class="sd">        :type level: int</span>
 
-<span class="sd">        :Yields: (LogCapture) A custom log handler with a `records` attribute</span>
-<span class="sd">         containing captured LogRecord entries.</span>
+<span class="sd">        :yields: A custom log handler with a `records` attribute containing</span>
+<span class="sd">         captured LogRecord entries.</span>
+<span class="sd">        :rtype: LogCapture</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">handler</span> <span class="o">=</span> <span class="n">LogCapture</span><span class="p">()</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="n">logger_name</span><span class="p">)</span>
@@ -928,8 +938,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        `Delete` key press event to invoke the removal mechanism.</span>
 
 <span class="sd">        :param proc_lib_view: The process library view containing the package</span>
-<span class="sd">         items. Expected to implement `to_dict()`, `selectionModel()`, and</span>
-<span class="sd">         `keyPressEvent()`.</span>
+<span class="sd">         items.</span>
+<span class="sd">        :type proc_lib_view:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Identify packages related to unit tests</span>
         <span class="n">packages</span> <span class="o">=</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
@@ -966,9 +977,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a mock Java executable (.jar) for testing.</span>
 
-<span class="sd">        :param path: (str) Full path to the output .jar file.</span>
+<span class="sd">        :param path: Full path to the output .jar file.</span>
+<span class="sd">        :type path: str</span>
 
-<span class="sd">        :Returns: (int) 0 if creation succeeded, 1 otherwise.</span>
+<span class="sd">        :returns: 0 if creation succeeded, 1 otherwise.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">folder</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -1043,11 +1056,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Search for the first QModelIndex in the given QTreeView whose data</span>
 <span class="sd">        matches the specified value.</span>
 
-<span class="sd">        :param q_tree_view: (QTreeView) The tree view to search within.</span>
-<span class="sd">        :param data: (str) The target data to match.</span>
+<span class="sd">        :param q_tree_view: The tree view to search within.</span>
+<span class="sd">        :type q_tree_view:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</span>
+<span class="sd">        :param data: The target data to match.</span>
+<span class="sd">        :type data: str</span>
 
-<span class="sd">        :Returns: (QModelIndex | None) The matching index if found; otherwise,</span>
-<span class="sd">         None.</span>
+<span class="sd">        :returns: The matching index if found; otherwise, None.</span>
+<span class="sd">        :rtype: QModelIndex or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">q_tree_view</span><span class="p">,</span> <span class="n">QTreeView</span><span class="p">):</span>
@@ -1074,8 +1090,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        The new project is created in the /tmp (/Temp) folder.</span>
 
-<span class="sd">        :param name: (str) Name of the directory containing the project.</span>
-<span class="sd">        :param light: (bool) True to copy a project with few documents.</span>
+<span class="sd">        :param name: Name of the directory containing the project.</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        :param light: True to copy a project with few documents.</span>
+<span class="sd">        :type light: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">new_test_proj</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">project_path</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -1106,14 +1124,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        a string describing the loading state of the Nipype modules.</span>
 
 <span class="sd">        :param proc_lib_view: The process library view object.</span>
+<span class="sd">        :type proc_lib_view:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary</span>
 
-<span class="sd">        :Returns: (str or None)</span>
-<span class="sd">         A string representing the current state:</span>
+<span class="sd">        :returns: A string representing the current state:</span>
+
 <span class="sd">            - &#39;nipype&#39;: Nipype is present, but &#39;interfaces&#39; is not.</span>
 <span class="sd">            - &#39;nipype.interfaces&#39;: &#39;interfaces&#39; is present, but &#39;DataGrabber&#39;</span>
 <span class="sd">              is not.</span>
 <span class="sd">            - &#39;process_enabled&#39;: &#39;nipype.interfaces.DataGrabber&#39; is present.</span>
 <span class="sd">            - None: No processes loaded, or Nipype is not present.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">view_dict</span> <span class="o">=</span> <span class="n">proc_lib_view</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
         <span class="n">nipype</span> <span class="o">=</span> <span class="n">view_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span><span class="p">)</span>
@@ -1143,12 +1164,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Resets the Nipype process library view in the package library popup</span>
 <span class="sd">        to a specified initial state.</span>
 
-<span class="sd">        :param main_window: (QMainWindow) The main window containing the</span>
-<span class="sd">         package library popup.</span>
-<span class="sd">        :param ppl_manager: (PipelineManager) The pipeline manager handling</span>
-<span class="sd">         the process library.</span>
-<span class="sd">        :param init_state: (str or None) The desired reset state of the Nipype</span>
-<span class="sd">         process view:</span>
+<span class="sd">        :param main_window: The main window containing the package library</span>
+<span class="sd">         popup.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
+<span class="sd">        :param ppl_manager: The pipeline manager handling the process library.</span>
+<span class="sd">        :type ppl_manager:</span>
+<span class="sd">            populse_mia.user_interface.pipeline_manager.pipeline_manager_tab.PipelineManagerTab</span>
+<span class="sd">        :param init_state: The desired reset state of the Nipype process view:</span>
 
 <span class="sd">            - None: The library is either empty or &#39;nipype&#39; is not loaded.</span>
 <span class="sd">            - &#39;nipype&#39;: Only &#39;nipype&#39; is loaded.</span>
@@ -1156,6 +1178,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              &#39;DataGrabber&#39;.</span>
 <span class="sd">            - &#39;process_enabled&#39;: &#39;nipype.interfaces.DataGrabber&#39; is already</span>
 <span class="sd">              loaded.</span>
+<span class="sd">        :type init_state: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">main_window</span><span class="o">.</span><span class="n">package_library_pop_up</span><span class="p">()</span>
         <span class="n">pkg_lib_window</span> <span class="o">=</span> <span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_package_library</span>
@@ -1448,69 +1471,67 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the data browser tab (DataBrowser).</span>
 
 <span class="sd">    Contains:</span>
-
-<span class="sd">       Methods:</span>
-
-<span class="sd">           - assert_scans_present: Asserts that all expected scan names are</span>
-<span class="sd">             present in the given list.</span>
-<span class="sd">           - get_cell_text: Returns the text of the QLabel inside a cell</span>
-<span class="sd">             widget.</span>
-<span class="sd">           - get_db_and_databrowser_value: Returns current, initial DB values</span>
-<span class="sd">             and UI value for a given tag.</span>
-<span class="sd">           - get_visible_scans: Returns the list of scan names currently</span>
-<span class="sd">             visible in the table.</span>
-<span class="sd">           - suppress_item_changed_signal: Temporarily disconnects and</span>
-<span class="sd">             reconnects the itemChanged signal.</span>
-<span class="sd">           - test_add_path: Tests the popup to add a path.</span>
-<span class="sd">           - test_add_tag: Tests the pop up adding a tag.</span>
-<span class="sd">           - test_advanced_search: Tests the advanced search widget.</span>
-<span class="sd">           - test_brick_history: Tests the brick history popup.</span>
-<span class="sd">           - test_clear_cell: Tests the method clearing cells.</span>
-<span class="sd">           - test_clone_tag: Tests the pop up cloning a tag.</span>
-<span class="sd">           - test_count_table: Tests the count table popup.</span>
-<span class="sd">           - test_mia_preferences: Tests the Mia preferences popup.</span>
-<span class="sd">           - test_mini_viewer: Selects scans and display them in the mini</span>
-<span class="sd">             viewer.</span>
-<span class="sd">           - test_modify_table: Tests the modify table module.</span>
-<span class="sd">           - test_multiple_sort: Tests the multiple sort popup.</span>
-<span class="sd">           - test_multiple_sort_appendix: Adds and removes tags in the data</span>
-<span class="sd">             browser.</span>
-<span class="sd">           - test_openTagsPopUp: Opens a pop-up to select the legend of the</span>
-<span class="sd">             thumbnails.</span>
-<span class="sd">           - test_open_project: Tests project opening.</span>
-<span class="sd">           - test_project_filter: Tests project filter opening.</span>
-<span class="sd">           - test_project_properties: Tests saved projects addition and</span>
-<span class="sd">             removal.</span>
-<span class="sd">           - test_proj_remov_from_cur_proj: Tests that the projects are</span>
-<span class="sd">             removed from the list of current projects.</span>
-<span class="sd">           - test_rapid_search: Tests the rapid search bar.</span>
-<span class="sd">           - test_remove_scan: Tests scans removal in the DataBrowser.</span>
-<span class="sd">           - test_remove_tag: Tests the popup removing user tags.</span>
-<span class="sd">           - test_reset_cell: Tests the method resetting the selected cells.</span>
-<span class="sd">           - test_reset_column: Tests the method resetting the columns</span>
-<span class="sd">             selected.</span>
-<span class="sd">           - test_reset_row: Tests row reset.</span>
-<span class="sd">           - test_save_project: Tests opening &amp; saving of a project.</span>
-<span class="sd">           - test_send_doc_to_pipeline_manager: Tests the popup sending</span>
-<span class="sd">             documents to the pipeline manager.</span>
-<span class="sd">           - test_set_value: Tests the values modifications.</span>
-<span class="sd">           - test_show_brick_history: Opens the history pop-up for scans with</span>
-<span class="sd">             history related to a brick.</span>
-<span class="sd">           - test_sort: Tests the sorting in the DataBrowser.</span>
-<span class="sd">           - test_table_data_add_columns: Adds tag columns to the table data</span>
-<span class="sd">             window.</span>
-<span class="sd">           - test_table_data_appendix: Opens a project and tests miscellaneous</span>
-<span class="sd">             methods of the table data view, in the data browser.</span>
-<span class="sd">           - test_table_data_context_menu: Right clicks a scan to show the</span>
-<span class="sd">             context menu table, and choses one option.</span>
-<span class="sd">           - test_undo_redo_databrowser: Tests data browser undo/redo.</span>
-<span class="sd">           - test_unnamed_proj_soft_open: Tests unnamed project creation at</span>
-<span class="sd">             software opening.</span>
-<span class="sd">           - test_update_default_value: Updates the values when a list of</span>
-<span class="sd">             default values is created.</span>
-<span class="sd">           - test_utils: Tests the utils functions.</span>
-<span class="sd">           - test_visualized_tags: Tests the popup modifying the visualized</span>
-<span class="sd">             tags.</span>
+<span class="sd">        Methods:</span>
+<span class="sd">            - assert_scans_present: Asserts that all expected scan names are</span>
+<span class="sd">              present in the given list.</span>
+<span class="sd">            - get_cell_text: Returns the text of the QLabel inside a cell</span>
+<span class="sd">              widget.</span>
+<span class="sd">            - get_db_and_databrowser_value: Returns current, initial DB values</span>
+<span class="sd">              and UI value for a given tag.</span>
+<span class="sd">            - get_visible_scans: Returns the list of scan names currently</span>
+<span class="sd">              visible in the table.</span>
+<span class="sd">            - suppress_item_changed_signal: Temporarily disconnects and</span>
+<span class="sd">              reconnects the itemChanged signal.</span>
+<span class="sd">            - test_add_path: Tests the popup to add a path.</span>
+<span class="sd">            - test_add_tag: Tests the pop up adding a tag.</span>
+<span class="sd">            - test_advanced_search: Tests the advanced search widget.</span>
+<span class="sd">            - test_brick_history: Tests the brick history popup.</span>
+<span class="sd">            - test_clear_cell: Tests the method clearing cells.</span>
+<span class="sd">            - test_clone_tag: Tests the pop up cloning a tag.</span>
+<span class="sd">            - test_count_table: Tests the count table popup.</span>
+<span class="sd">            - test_mia_preferences: Tests the Mia preferences popup.</span>
+<span class="sd">            - test_mini_viewer: Selects scans and display them in the mini</span>
+<span class="sd">              viewer.</span>
+<span class="sd">            - test_modify_table: Tests the modify table module.</span>
+<span class="sd">            - test_multiple_sort: Tests the multiple sort popup.</span>
+<span class="sd">            - test_multiple_sort_appendix: Adds and removes tags in the data</span>
+<span class="sd">              browser.</span>
+<span class="sd">            - test_openTagsPopUp: Opens a pop-up to select the legend of the</span>
+<span class="sd">              thumbnails.</span>
+<span class="sd">            - test_open_project: Tests project opening.</span>
+<span class="sd">            - test_project_filter: Tests project filter opening.</span>
+<span class="sd">            - test_project_properties: Tests saved projects addition and</span>
+<span class="sd">              removal.</span>
+<span class="sd">            - test_proj_remov_from_cur_proj: Tests that the projects are</span>
+<span class="sd">              removed from the list of current projects.</span>
+<span class="sd">            - test_rapid_search: Tests the rapid search bar.</span>
+<span class="sd">            - test_remove_scan: Tests scans removal in the DataBrowser.</span>
+<span class="sd">            - test_remove_tag: Tests the popup removing user tags.</span>
+<span class="sd">            - test_reset_cell: Tests the method resetting the selected cells.</span>
+<span class="sd">            - test_reset_column: Tests the method resetting the columns</span>
+<span class="sd">              selected.</span>
+<span class="sd">            - test_reset_row: Tests row reset.</span>
+<span class="sd">            - test_save_project: Tests opening &amp; saving of a project.</span>
+<span class="sd">            - test_send_doc_to_pipeline_manager: Tests the popup sending</span>
+<span class="sd">              documents to the pipeline manager.</span>
+<span class="sd">            - test_set_value: Tests the values modifications.</span>
+<span class="sd">            - test_show_brick_history: Opens the history pop-up for scans with</span>
+<span class="sd">              history related to a brick.</span>
+<span class="sd">            - test_sort: Tests the sorting in the DataBrowser.</span>
+<span class="sd">            - test_table_data_add_columns: Adds tag columns to the table data</span>
+<span class="sd">              window.</span>
+<span class="sd">            - test_table_data_appendix: Opens a project and tests miscellaneous</span>
+<span class="sd">              methods of the table data view, in the data browser.</span>
+<span class="sd">            - test_table_data_context_menu: Right clicks a scan to show the</span>
+<span class="sd">              context menu table, and choses one option.</span>
+<span class="sd">            - test_undo_redo_databrowser: Tests data browser undo/redo.</span>
+<span class="sd">            - test_unnamed_proj_soft_open: Tests unnamed project creation at</span>
+<span class="sd">              software opening.</span>
+<span class="sd">            - test_update_default_value: Updates the values when a list of</span>
+<span class="sd">              default values is created.</span>
+<span class="sd">            - test_utils: Tests the utils functions.</span>
+<span class="sd">            - test_visualized_tags: Tests the popup modifying the visualized</span>
+<span class="sd">              tags.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="TestMIADataBrowser.assert_scans_present">
@@ -1519,9 +1540,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Asserts that all expected scan names are present in the given list.</span>
 
-<span class="sd">        :param scans: (list) List of scan names to check.</span>
-<span class="sd">        :param expected_subset: (list) List of expected scan names that should</span>
+<span class="sd">        :param scans: List of scan names to check.</span>
+<span class="sd">        :type scans: list</span>
+<span class="sd">        :param expected_subset: List of expected scan names that should</span>
 <span class="sd">         be present in the scans list.</span>
+<span class="sd">        :type expected_subset: list</span>
 
 <span class="sd">        :raises AssertionError: If any expected scan name is missing from</span>
 <span class="sd">         ``scans``.</span>
@@ -1538,13 +1561,18 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Utility method to retrieve the text of the QLabel inside a cell widget.</span>
 
-<span class="sd">        :param table: (QTableWidget) The table containing the cell.</span>
-<span class="sd">        :param row: (int) The row index.</span>
-<span class="sd">        :param column: (int) The column index.</span>
-<span class="sd">        :param label_index: (int) If multiple labels are present, which one to</span>
+<span class="sd">        :param table: The table containing the cell.</span>
+<span class="sd">        :ype table: QTableWidget</span>
+<span class="sd">        :param row: The row index.</span>
+<span class="sd">        :type row: int</span>
+<span class="sd">        :param column: The column index.</span>
+<span class="sd">        :type column: int</span>
+<span class="sd">        :param label_index: If multiple labels are present, which one to</span>
 <span class="sd">         return. Default is 0 (first QLabel found).</span>
+<span class="sd">         :type label_index: int</span>
 
-<span class="sd">        :Returns: (str) The text of the QLabel, or fails the test if not found.</span>
+<span class="sd">        :returns: The text of the QLabel, or fails the test if not found.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">widget</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;No widget at cell (</span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
@@ -1566,12 +1594,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        database, along with the corresponding value and item from the data</span>
 <span class="sd">        browser UI.</span>
 
-<span class="sd">        :param main_window: (QMainWindow) The main application window</span>
-<span class="sd">         containing the project and data browser.</span>
-<span class="sd">        :param row_nb: (int) The row index in the data browser table.</span>
-<span class="sd">        :param tag: (str) The name of the tag (column) to retrieve.</span>
+<span class="sd">        :param main_window: The main application window containing the project</span>
+<span class="sd">         and data browser.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
+<span class="sd">        :param row_nb: The row index in the data browser table.</span>
+<span class="sd">        :type row_nb: int</span>
+<span class="sd">        :param tag: The name of the tag (column) to retrieve.</span>
+<span class="sd">        :type tag: str</span>
 
-<span class="sd">        :Returns: (tuple) A 4-tuple containing:</span>
+<span class="sd">        :returns: A 4-tuple containing:</span>
 
 <span class="sd">            - value (Any): The current value from the database</span>
 <span class="sd">              (COLLECTION_CURRENT).</span>
@@ -1581,6 +1612,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              UI, or None if not available.</span>
 <span class="sd">            - item (QTableWidgetItem | None): The table item corresponding to</span>
 <span class="sd">              the tag, or None if not found.</span>
+<span class="sd">        :rtype: tuple</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table</span> <span class="o">=</span> <span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span>
         <span class="n">col</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
@@ -1621,11 +1653,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Temporarily disables the itemChanged signal to prevent unwanted slot</span>
 <span class="sd">        execution during programmatic updates to the table data.</span>
 
-<span class="sd">        :param table_data: (QTableWidget) The data browser&#39;s table widget</span>
-<span class="sd">         whose itemChanged signal is to be suppressed.</span>
+<span class="sd">        :param table_data: The data browser&#39;s table widget whose itemChanged</span>
+<span class="sd">         signal is to be suppressed.</span>
+<span class="sd">        :type table_data:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 
-<span class="sd">        :Yields: (None) The context block is executed with the signal</span>
-<span class="sd">         disconnected, and it is reconnected automatically afterward.</span>
+<span class="sd">        :yields: The context block is executed with the signal disconnected,</span>
+<span class="sd">         and it is reconnected automatically afterward.</span>
+<span class="sd">        :rtype: contextlib._GeneratorContextManager</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">table_data</span><span class="o">.</span><span class="n">itemChanged</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
 
@@ -1718,7 +1753,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Invalid default values for the selected type are rejected</span>
 <span class="sd">            - Valid string tags are successfully added to the database and UI</span>
 <span class="sd">            - List-type tags (Integer List) are properly created and displayed</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Sets shortcuts for often used objects</span>
         <span class="n">data_browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span>
@@ -2116,10 +2150,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            of ``tag1`` is checked to ensure that it has a user-defined origin</span>
 <span class="sd">            and is marked as visible.</span>
 
-<span class="sd">            :param tag1: (str) Name of the first tag.</span>
-<span class="sd">            :param tag2: (str) Name of the second tag.</span>
-<span class="sd">            :param collection: (str) Name of the collection containing the</span>
+<span class="sd">            :param tag1: Name of the first tag.</span>
+<span class="sd">            :type tag1: str</span>
+<span class="sd">            :param tag2: Name of the second tag.</span>
+<span class="sd">            :type tag2: str</span>
+<span class="sd">            :param collection: Name of the collection containing the</span>
 <span class="sd">             tags.</span>
+<span class="sd">            :type collection: str</span>
 
 <span class="sd">            :raises AssertionError: If one or more metadata attributes</span>
 <span class="sd">             differ, if ``tag1`` does not exist in the collection, or if its</span>
@@ -2279,6 +2316,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param mock_qmsgbox: (MagicMock) Mocked ``QMessageBox`` used to prevent</span>
 <span class="sd">         modal dialogs from blocking the test.</span>
+<span class="sd">        :type mock_qmsgbox: unittest.mock.MagicMock</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">reload_config</span><span class="p">():</span>
@@ -2286,8 +2324,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Reload the application configuration from the test properties</span>
 <span class="sd">            directory.</span>
 
-<span class="sd">            :Returns: (Config) A newly created configuration object initialized</span>
-<span class="sd">             from ``self.properties_path``.</span>
+<span class="sd">            :returns: A newly created configuration object initialized from</span>
+<span class="sd">             ``self.properties_path``.</span>
+<span class="sd">            :rtype: populse_mia.software_properties.Config</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">return</span> <span class="n">Config</span><span class="p">(</span><span class="n">properties_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_path</span><span class="p">)</span>
@@ -2299,8 +2338,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Triggers the software preferences action and returns the</span>
 <span class="sd">            corresponding preferences widget.</span>
 
-<span class="sd">            :Returns: (PopUpPreferences) The preferences dialog currently</span>
-<span class="sd">             displayed.</span>
+<span class="sd">            :returns: The preferences dialog currently displayed.</span>
+<span class="sd">            :rtype:</span>
+<span class="sd">             populse_mia.user_interface.pop_ups.PopUpPreferences</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">action_software_preferences</span><span class="o">.</span><span class="n">trigger</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pop_up_preferences</span>
@@ -2402,6 +2442,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Selects a scan in the data browser table by index.</span>
 
 <span class="sd">            :param index: The row index of the scan to select.</span>
+<span class="sd">            :type index: int</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">item</span> <span class="o">=</span> <span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">assertIsNotNone</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -2413,7 +2454,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Sets the slider value to a percentage of its maximum.</span>
 
 <span class="sd">            :param slider: The slider to set.</span>
+<span class="sd">            :type slider: PyQt5.QtWidgets.QSlider</span>
 <span class="sd">            :param percent: A float between 0.0 and 1.0.</span>
+<span class="sd">            :type percent: float</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">max_val</span> <span class="o">=</span> <span class="n">slider</span><span class="o">.</span><span class="n">maximum</span><span class="p">()</span>
             <span class="n">slider</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">max_val</span> <span class="o">*</span> <span class="n">percent</span><span class="p">))</span>
@@ -2424,7 +2467,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Sets the checkbox state to checked or unchecked.</span>
 
 <span class="sd">            :param checkbox: The checkbox to set.</span>
+<span class="sd">            :type checkbox: PyQt5.QtWidgets.QCheckBox</span>
 <span class="sd">            :param state: True for checked, False for unchecked.</span>
+<span class="sd">            :type state: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">state</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
 
@@ -2597,8 +2642,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Test adding and removing tags in the multiple sort popup.</span>
 
-<span class="sd">        - Target class: PopUpMultipleSort</span>
-<span class="sd">        - Mocks: PopUpSelectTagCountTable.exec_</span>
+<span class="sd">        - Target class:</span>
+<span class="sd">          :class:`~populse_mia.user_interface.pop_ups.PopUpMultipleSort`</span>
+<span class="sd">        - Mocked dialog:</span>
+<span class="sd">          :class:`~populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable`</span>
+<span class="sd">          (patches ``exec_()``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">table_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">table_data</span>
@@ -2630,14 +2678,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Mocked method to simulate the execution of a QDialog.</span>
 
 <span class="sd">            Sets the selected_tag attribute to a predefined tag and simulates</span>
-<span class="sd">            the dialog returning an accepted state (i.e., the user</span>
-<span class="sd">            clicked &quot;OK&quot;).</span>
+<span class="sd">            the dialog returning an accepted state (i.e., the user clicked</span>
+<span class="sd">            &quot;OK&quot;).</span>
 
-<span class="sd">            :param self: (PopUpSelectTagCountTable) The dialog instance being</span>
-<span class="sd">             mocked.</span>
+<span class="sd">            :param self: The dialog instance being mocked.</span>
+<span class="sd">            :type self:</span>
+<span class="sd">             populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable</span>
 
-<span class="sd">            :Returns: (bool) Always returns True to indicate the dialog was</span>
-<span class="sd">             accepted.</span>
+<span class="sd">            :returns: Always returns True to indicate the dialog was accepted.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">selected_tag</span> <span class="o">=</span> <span class="n">TAG_EXP_TYPE</span>
             <span class="k">return</span> <span class="kc">True</span>
@@ -2658,10 +2707,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">          PopUpSelectTag.</span>
 <span class="sd">        - Confirms filtering behavior in the tag selection list.</span>
 <span class="sd">        - Ensures correct handling of tag selection and dialog interaction.</span>
-
 <span class="sd">        - Tests: MiniViewer.openTagsPopUp</span>
 <span class="sd">        - Indirectly tests: PopUpSelectTag</span>
-<span class="sd">        - Mocks: PopUpSelectTag.exec_ using unittest.mock.patch</span>
+<span class="sd">        - Target method:</span>
+<span class="sd">          :meth:`~populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.openTagsPopUp`</span>
+<span class="sd">        - Mocked dialog:</span>
+<span class="sd">          :class:`~populse_mia.user_interface.pop_ups.PopUpSelectTag`</span>
+<span class="sd">          (patches ``exec_()``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">data_browser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span>
         <span class="n">viewer</span> <span class="o">=</span> <span class="n">data_browser</span><span class="o">.</span><span class="n">viewer</span>
@@ -2824,14 +2876,15 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">filter_visible_at</span><span class="p">(</span><span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Checks if the filter item at the given index in the filter list</span>
-<span class="sd">            is visible.</span>
+<span class="sd">            Checks if the filter item at the given index in the filter list is</span>
+<span class="sd">            visible.</span>
 
-<span class="sd">            :param index: (int) The index of the filter item in the list</span>
-<span class="sd">             widget.</span>
+<span class="sd">            :param index: The index of the filter item in the list widget.</span>
+<span class="sd">            :type index: int</span>
 
-<span class="sd">            :Returns: (bool) True if the filter item is visible, False if</span>
-<span class="sd">             it is hidden.</span>
+<span class="sd">            :Returns: True if the filter item is visible, False if it is</span>
+<span class="sd">             hidden.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="ow">not</span> <span class="n">popup</span><span class="o">.</span><span class="n">list_widget_filters</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">isHidden</span><span class="p">()</span>
 
@@ -2960,8 +3013,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            table and collects the scan names from the first column (index 0)</span>
 <span class="sd">            of rows that are not hidden.</span>
 
-<span class="sd">            :Returns: (List[str]) A list of scan names (as strings) for all</span>
-<span class="sd">             visible rows in the table.</span>
+<span class="sd">            :Returns: A list of scan names (as strings) for all visible rows</span>
+<span class="sd">             in the table.</span>
+<span class="sd">            :rtype: list[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">return</span> <span class="p">[</span>
@@ -3118,8 +3172,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            of the provided popup instance, effectively mocking user</span>
 <span class="sd">            interaction with the dialog’s Cancel button during testing.</span>
 
-<span class="sd">            :param popup: (PopUpRemoveScan) The popup dialog instance to</span>
-<span class="sd">             cancel.</span>
+<span class="sd">            :param popup: The popup dialog instance to cancel.</span>
+<span class="sd">            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">popup</span><span class="o">.</span><span class="n">cancel_clicked</span><span class="p">()</span>
 
@@ -3135,8 +3189,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            of the provided popup instance, emulating a user clicking the</span>
 <span class="sd">            &quot;No to All&quot; button during testing.</span>
 
-<span class="sd">            :param popup: (PopUpRemoveScan) The popup dialog instance to act</span>
-<span class="sd">             upon.</span>
+<span class="sd">            :param popup: The popup dialog instance to act upon.</span>
+<span class="sd">            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">popup</span><span class="o">.</span><span class="n">no_all_clicked</span><span class="p">()</span>
 
@@ -3160,8 +3214,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            method of the provided popup instance, emulating a user clicking</span>
 <span class="sd">            the &quot;Yes to All&quot; button during testing.</span>
 
-<span class="sd">            :param popup: (PopUpRemoveScan) The popup dialog instance to act</span>
-<span class="sd">             upon.</span>
+<span class="sd">            :param popup: The popup dialog instance to act upon.</span>
+<span class="sd">            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">popup</span><span class="o">.</span><span class="n">yes_all_clicked</span><span class="p">()</span>
 
@@ -3193,8 +3247,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            of the provided popup instance, emulating a user clicking the</span>
 <span class="sd">            &quot;Yes&quot; button during testing.</span>
 
-<span class="sd">            :param popup: (PopUpRemoveScan) The popup dialog instance to act</span>
-<span class="sd">             upon.</span>
+<span class="sd">            :param popup: The popup dialog instance to act upon.</span>
+<span class="sd">            :type popup: populse_mia.user_interface.pop_ups.PopUpRemoveScan</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">popup</span><span class="o">.</span><span class="n">yes_clicked</span><span class="p">()</span>
 
@@ -3304,11 +3358,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Retrieve the table widget item for the specified tag in the first</span>
 <span class="sd">            row.</span>
 
-<span class="sd">            :param tag: (str) The tag (column identifier) whose cell item is</span>
-<span class="sd">             to be fetched.</span>
+<span class="sd">            :param tag: The tag (column identifier) whose cell item is to be</span>
+<span class="sd">             fetched.</span>
+<span class="sd">            :type tag: str</span>
 
-<span class="sd">            :Returns: (QTableWidgetItem) The item at row 0 of the column</span>
-<span class="sd">             corresponding to `tag`.</span>
+<span class="sd">            :returns: The item at row 0 of the column corresponding to `tag`.</span>
+<span class="sd">            :rtype: PyQt5.QtWidgets.QTableWidgetItem</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">col</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span>
 
@@ -3338,12 +3393,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Patched exec_ method that injects a test value into the dialog</span>
 <span class="sd">            table and runs the real update logic without showing the dialog.</span>
 
-<span class="sd">            :param self: (ModifyTable) The dialog instance being tested.</span>
+<span class="sd">            :param self: The dialog instance being tested.</span>
+<span class="sd">            :type self:</span>
+<span class="sd">             populse_mia.user_interface.data_browser.modify_table.ModifyTable</span>
 <span class="sd">            :param args: Positional arguments forwarded to exec_, unused here.</span>
+<span class="sd">            :type args: tuple</span>
 <span class="sd">            :param kwargs: Keyword arguments forwarded to exec_, unused here.</span>
+<span class="sd">            :type kwargs: dict</span>
 
-<span class="sd">            :Returns: (bool) Always returns True to simulate the user clicking</span>
-<span class="sd">             &quot;Ok&quot;.</span>
+<span class="sd">            :returns: Always returns True to simulate the user clicking &quot;Ok&quot;.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="c1"># inject the new text into the dialog’s table</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="s2">&quot;25000&quot;</span><span class="p">))</span>
@@ -3650,10 +3709,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                Create a MagicMock instance simulating a PopUpNewProject</span>
 <span class="sd">                dialog.</span>
 
-<span class="sd">                :param relative_path: (str) The relative path to set as the</span>
-<span class="sd">                 selected file and filename in the popup.</span>
+<span class="sd">                :param relative_path: The relative path to set as the selected</span>
+<span class="sd">                 file and filename in the popup.</span>
+<span class="sd">                type relative_path: str</span>
 
-<span class="sd">                :Returns: (MagicMock) A mocked PopUpNewProject instance with</span>
+<span class="sd">                :returns: (MagicMock) A mocked PopUpNewProject instance with</span>
 <span class="sd">                 predefined behaviors:</span>
 
 <span class="sd">                    - `relative_path` attribute set to the given path.</span>
@@ -3662,6 +3722,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                    - `get_filename()` returns the relative path.</span>
 <span class="sd">                    - `exec_()` returns True, simulating a successful dialog</span>
 <span class="sd">                      execution.</span>
+<span class="sd">                :rtype: MagicMock</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="n">popup</span> <span class="o">=</span> <span class="n">MagicMock</span><span class="p">(</span><span class="n">spec</span><span class="o">=</span><span class="n">PopUpNewProject</span><span class="p">)</span>
                 <span class="n">popup</span><span class="o">.</span><span class="n">relative_path</span> <span class="o">=</span> <span class="n">relative_path</span>
@@ -3730,9 +3791,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            then either confirms the selection by triggering the OK action or</span>
 <span class="sd">            cancels by closing the popup, depending on the `confirm` parameter.</span>
 
-<span class="sd">            :param confirm: (bool) If True, simulate clicking the OK button to</span>
-<span class="sd">             confirm the selection. If False, simulate closing/cancelling the</span>
-<span class="sd">             popup. Defaults to True.</span>
+<span class="sd">            :param confirm: If True, simulate clicking the OK button to confirm</span>
+<span class="sd">             the selection. If False, simulate closing/cancelling the popup.</span>
+<span class="sd">             Defaults to True.</span>
+<span class="sd">            :type confirm: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">popup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">data_browser</span><span class="o">.</span><span class="n">show_selection</span>
             <span class="n">QTest</span><span class="o">.</span><span class="n">qWait</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
@@ -3872,15 +3934,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            element of each value is converted to a ``float`` before being</span>
 <span class="sd">            returned.</span>
 
-<span class="sd">            :param tag_name: (str) Name of the tag whose values are to be</span>
-<span class="sd">             retrieved.</span>
-<span class="sd">            :param convert_to_float: (bool) If ``True``, convert the first</span>
-<span class="sd">             element of the retrieved values to ``float``. Default is</span>
-<span class="sd">             ``False``.</span>
+<span class="sd">            :param tag_name: Name of the tag whose values are to be retrieved.</span>
+<span class="sd">            :type tag_name: str</span>
+<span class="sd">            :param convert_to_float: If ``True``, convert the first element of</span>
+<span class="sd">             the retrieved values to ``float``. Default is ``False``.</span>
+<span class="sd">            :type convert_to_float: bool</span>
 
-<span class="sd">            :Returns: (DatabaseValues) A named tuple containing the values from</span>
-<span class="sd">             the current and initial collections, accessible through the</span>
-<span class="sd">             ``current`` and ``initial`` attributes.</span>
+<span class="sd">            :returns: A named tuple containing the values from the current and</span>
+<span class="sd">             initial collections, accessible through the ``current`` and</span>
+<span class="sd">             ``initial`` attributes.</span>
+<span class="sd">            :rtype: namedtuple</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -4067,8 +4130,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Extract BandWidth values from all visible table rows.</span>
 
-<span class="sd">            :Returns: (list) BandWidth values from visible rows in current</span>
-<span class="sd">             table order.</span>
+<span class="sd">            :returns: BandWidth values from visible rows in current table</span>
+<span class="sd">             order.</span>
+<span class="sd">            :rtype: list[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">bandwidth_column</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
             <span class="n">bandwidth_values</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4086,6 +4150,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">            :param sort_order: Qt sort order (0 for ascending, 1 for</span>
 <span class="sd">             descending)</span>
+<span class="sd">            :type sort_order: int</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">bandwidth_column</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">get_tag_column</span><span class="p">(</span><span class="s2">&quot;BandWidth&quot;</span><span class="p">)</span>
             <span class="n">header</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
@@ -4375,8 +4440,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This covers both:</span>
 
-<span class="sd">        - Confirm actions (that trigger a QMessageBox before executing)</span>
-<span class="sd">        - Direct actions (executed immediately)</span>
+<span class="sd">        - Confirm actions (that trigger a QMessageBox before executing).</span>
+<span class="sd">        - Direct actions (executed immediately).</span>
 
 <span class="sd">        QMessageBox is auto-accepted by simulating a click on the OK button.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4422,7 +4487,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            testing.</span>
 
 <span class="sd">            :param args: Positional arguments passed to the original __init__.</span>
+<span class="sd">            :type args: tuple</span>
 <span class="sd">            :param kwargs: Keyword arguments passed to the original __init__.</span>
+<span class="sd">            :type kwargs: dict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">original_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="n">msgbox_instances</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -4438,8 +4505,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            click signal on the OK button of the last instance. It always</span>
 <span class="sd">            returns `QMessageBox.Ok`.</span>
 
-<span class="sd">            :Returns: (QMessageBox.StandardButton) The standard OK button</span>
-<span class="sd">             value.</span>
+<span class="sd">            :returns: The standard OK button value.</span>
+<span class="sd">            :rtype: QMessageBox.StandardButton</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">msgbox_instances</span><span class="p">:</span>
@@ -4467,13 +4534,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                    and verifies that the target method was called with the</span>
 <span class="sd">                    provided arguments.</span>
 
-<span class="sd">                    :param label: (str) The label of the QAction to trigger.</span>
-<span class="sd">                    :param target: (QObject) The object containing the method</span>
-<span class="sd">                     to be called.</span>
-<span class="sd">                    :param method_name: (str) The name of the method to be</span>
-<span class="sd">                     patched on the target.</span>
-<span class="sd">                    :param args: (tuple) Arguments expected to be passed to the</span>
-<span class="sd">                     target method.</span>
+<span class="sd">                    :param label: The label of the QAction to trigger.</span>
+<span class="sd">                    :type label: str</span>
+<span class="sd">                    :param target: The object containing the method to be</span>
+<span class="sd">                     called.</span>
+<span class="sd">                    :type target: QObject</span>
+<span class="sd">                    :param method_name: The name of the method to be patched on</span>
+<span class="sd">                     the target.</span>
+<span class="sd">                    :type method_name: str</span>
+<span class="sd">                    :param args: Arguments expected to be passed to the target</span>
+<span class="sd">                     method.</span>
+<span class="sd">                    :type args: tuple</span>
 <span class="sd">                    &quot;&quot;&quot;</span>
                     <span class="n">created_actions</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -4487,10 +4558,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                        stores it in the `created_actions` dictionary, and</span>
 <span class="sd">                        returns the action.</span>
 
-<span class="sd">                        :param action_label: (str) The label of the QAction to</span>
+<span class="sd">                        :param action_label: The label of the QAction to</span>
 <span class="sd">                         create.</span>
+<span class="sd">                        :type action_label: str</span>
 
-<span class="sd">                        :Returns: (QAction) The created QAction object.</span>
+<span class="sd">                        :returns: The created QAction object.</span>
+<span class="sd">                        :rtype: QAction</span>
 <span class="sd">                        &quot;&quot;&quot;</span>
                         <span class="n">action</span> <span class="o">=</span> <span class="n">QAction</span><span class="p">(</span><span class="n">action_label</span><span class="p">,</span> <span class="n">table_data</span><span class="p">)</span>
                         <span class="n">created_actions</span><span class="p">[</span><span class="n">action_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">action</span>
@@ -5021,6 +5094,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This test simulates user interaction with the tag visibility popup</span>
 <span class="sd">        and verifies:</span>
+
 <span class="sd">            - Default visible tags are correctly initialized.</span>
 <span class="sd">            - UI column headers match backend tag visibility.</span>
 <span class="sd">            - System tags (e.g., checksum, history) remain hidden.</span>
@@ -5142,9 +5216,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the main window class (MainWindow).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - test_check_database: checks if the database has changed since the</span>
 <span class="sd">              scans were first imported</span>
 <span class="sd">            - test_create_project_pop_up: tries to create a new project with a</span>
@@ -5222,18 +5294,27 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_create_project_pop_up">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_create_project_pop_up</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test project creation popup behavior under various conditions.</span>
+<span class="sd">        Test the project creation workflow.</span>
 
-<span class="sd">        Verifies the MainWindow.create_project_pop_up method handles:</span>
-<span class="sd">            - Project creation with unsaved modifications (triggers quit popup)</span>
-<span class="sd">            - Project creation without configured projects folder (shows error)</span>
-<span class="sd">            - Normal project creation flow with proper configuration</span>
+<span class="sd">        Verifies that</span>
+<span class="sd">        :meth:`~populse_mia.user_interface.main_window.MainWindow.create_project_pop_up`</span>
+<span class="sd">        correctly handles the following situations:</span>
 
-<span class="sd">        Components tested:</span>
-<span class="sd">            MainWindow.create_project_pop_up, PopUpNewProject</span>
+<span class="sd">        - Unsaved project modifications, prompting the user before creating a</span>
+<span class="sd">          new project.</span>
+<span class="sd">        - Missing project directory configuration, displaying an error message.</span>
+<span class="sd">        - Normal project creation when the application is correctly configured.</span>
 
-<span class="sd">        Mocked components:</span>
-<span class="sd">            PopUpQuit.exec, QMessageBox.exec, PopUpNewProject.exec</span>
+<span class="sd">        Collaborating dialogs:</span>
+
+<span class="sd">        - :class:`~populse_mia.user_interface.pop_ups.PopUpQuit`</span>
+<span class="sd">        - :class:`~populse_mia.user_interface.pop_ups.PopUpNewProject`</span>
+<span class="sd">        - ``QMessageBox`` from ``PyQt5.QtWidgets``</span>
+
+<span class="sd">        Mocks:</span>
+
+<span class="sd">        - Dialog ``exec()`` methods are patched to prevent modal execution and</span>
+<span class="sd">          allow automated interaction during the test.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Creates a new project folder</span>
         <span class="n">new_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">(</span><span class="n">light</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -5573,21 +5654,24 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_add_pkg">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_dialog_add_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test adding and installing packages through the PackageLibraryDialog.</span>
+<span class="sd">        Test adding and installing packages through the package library dialog.</span>
 
-<span class="sd">        This test verifies the following:</span>
-<span class="sd">            - Opening the package library dialog and adding a standard package.</span>
-<span class="sd">            - Handling invalid or non-existent packages.</span>
-<span class="sd">            - Installing a process package from a directory.</span>
-<span class="sd">            - Validating error handling for invalid directories and import</span>
-<span class="sd">              errors.</span>
-<span class="sd">            - Saving and reloading a new pipeline using the installed process.</span>
+<span class="sd">        This test verifies that the package library dialog correctly handles:</span>
 
-<span class="sd">        Mocks:</span>
-<span class="sd">            - QMessageBox.exec and exec_ (to suppress dialogs)</span>
-<span class="sd">            - QFileDialog.exec_ (to simulate dialog acceptance)</span>
+<span class="sd">        - Adding a standard Python package.</span>
+<span class="sd">        - Rejecting non-existent packages.</span>
+<span class="sd">        - Installing a process package from a directory.</span>
+<span class="sd">        - Reporting errors for invalid directories and import failures.</span>
+<span class="sd">        - Saving and reloading a pipeline that uses the newly installed</span>
+<span class="sd">          process.</span>
+
+<span class="sd">        To prevent blocking user interaction during the test, the following</span>
+<span class="sd">        dialog methods are mocked:</span>
+
+<span class="sd">            - ``QMessageBox.exec()`` and ``QMessageBox.exec_()`` (to suppress</span>
+<span class="sd">              dialogs).</span>
+<span class="sd">            - ``QFileDialog.exec_()`` (to simulate dialog acceptance).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">pkg_name</span> <span class="o">=</span> <span class="s2">&quot;nipype.interfaces.DataGrabber&quot;</span>
 
         <span class="c1"># Creates a new project folder and switches to it</span>
@@ -6059,21 +6143,27 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.tests.run_mia_test.html#populse_mia.tests.run_mia_test.TestMIAMainWindow.test_package_library_dialog_rmv_pkg">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_package_library_dialog_rmv_pkg</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Test removing a package from the package library dialog.</span>
+<span class="sd">        Test removing packages through the package library dialog.</span>
 
-<span class="sd">        This test:</span>
-<span class="sd">            - Creates a new project.</span>
-<span class="sd">            - Opens the process library and ensures a test package is</span>
-<span class="sd">              installed.</span>
-<span class="sd">            - Attempts to remove nonexistent and unspecified packages.</span>
-<span class="sd">            - Removes a real package through the UI simulation.</span>
-<span class="sd">            - Resets the library state and saves the configuration.</span>
+<span class="sd">        This test verifies that the package library dialog correctly handles:</span>
 
-<span class="sd">        :mocks:</span>
-<span class="sd">            - QMessageBox.exec</span>
-<span class="sd">            - QMessageBox.exec_</span>
+<span class="sd">            - Removing a package when no package name is specified.</span>
+<span class="sd">            - Rejecting requests to remove non-existent packages.</span>
+<span class="sd">            - Removing an installed package through the graphical interface.</span>
+<span class="sd">            - Cancelling a pending removal operation.</span>
+<span class="sd">            - Updating the internal package management state.</span>
+<span class="sd">            - Saving the resulting package library configuration.</span>
+
+<span class="sd">        If the required test package is not already installed, it is first</span>
+<span class="sd">        added to the process library. At the end of the test, the initial</span>
+<span class="sd">        library state is restored if it was modified.</span>
+
+<span class="sd">        The following dialog methods are mocked to prevent modal dialogs from</span>
+<span class="sd">        blocking the test execution:</span>
+
+<span class="sd">            - ``QMessageBox.exec()``</span>
+<span class="sd">            - ``QMessageBox.exec_()``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">package_name</span> <span class="o">=</span> <span class="s2">&quot;nipype.interfaces.DataGrabber&quot;</span>
 
         <span class="c1"># Setup: create and switch to a new lightweight project</span>
@@ -6298,7 +6388,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - MainWindow.delete_project</span>
 <span class="sd">            - PopUpDeleteProject</span>
 
-<span class="sd">        **Notes**: Not to be confused with `test_popUpDeletedProject`.</span>
+<span class="sd">        Note:</span>
+<span class="sd">            Not to be confused with `test_popUpDeletedProject`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create and switch to a new test project</span>
         <span class="n">test_proj_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
@@ -6722,7 +6813,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            &#39;user_mode: true&#39; in the PopUpPreferences config editor, mimicking</span>
 <span class="sd">            user input.</span>
 
-<span class="sd">            :Returns: (bool) Always returns True to simulate user acceptance.</span>
+<span class="sd">            :returns: Always returns True to simulate user acceptance.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">editor</span> <span class="o">=</span> <span class="n">main_wnd</span><span class="o">.</span><span class="n">pop_up_preferences</span><span class="o">.</span><span class="n">editConf</span>
             <span class="n">content</span> <span class="o">=</span> <span class="n">editor</span><span class="o">.</span><span class="n">txt</span><span class="o">.</span><span class="n">toPlainText</span><span class="p">()</span>
@@ -6804,6 +6896,29 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        tests: PopUpPreferences.validate_and_save</span>
 
 <span class="sd">        mocks: QMessageBox.show</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - mock_executable: Creates a mock executable in a specified</span>
+<span class="sd">                  directory, simulating the behavior of external software</span>
+<span class="sd">                  modules for testing purposes.</span>
+<span class="sd">                - test_module: Tests the configuration of a specific software</span>
+<span class="sd">                  module, including setting valid and invalid paths, and</span>
+<span class="sd">                  verifying the resulting configuration state.</span>
+<span class="sd">                - test_fsl: Tests the configuration of the FSL module,</span>
+<span class="sd">                  including setting valid and invalid paths, and verifying the</span>
+<span class="sd">                  resulting configuration state.</span>
+<span class="sd">                - test_spm_matlab: Tests the configuration of the SPM module</span>
+<span class="sd">                  when using MATLAB, including setting valid and invalid paths,</span>
+<span class="sd">                  and verifying the resulting configuration state.</span>
+<span class="sd">                - test_matlab_only: Tests the configuration of the MATLAB</span>
+<span class="sd">                  module when used in isolation, including setting valid and</span>
+<span class="sd">                  invalid paths, and verifying the resulting configuration</span>
+<span class="sd">                  state.</span>
+<span class="sd">                - test_matlab_mcr_spm_standalone: Tests the configuration of</span>
+<span class="sd">                  the MATLAB MCR module when used with SPM standalone,</span>
+<span class="sd">                  including setting valid and invalid paths, and verifying the</span>
+<span class="sd">                  resulting configuration state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Mocks executables to be used for the modules tested</span>
@@ -6815,122 +6930,143 @@ window.runMermaid = runMermaid;</script>
             <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;mock_error&quot;</span><span class="p">,</span>
         <span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Creates a mocked executable in the specified directory.</span>
+<span class="sd">            Create a mock executable in *directory*.</span>
 
-<span class="sd">            :param directory: (str) Path where the mock executable should be</span>
-<span class="sd">             placed.</span>
-<span class="sd">            :param name: (str) Name of the executable.</span>
-<span class="sd">            :param failing: (bool) Whether the mock executable should simulate</span>
-<span class="sd">             failure.</span>
-<span class="sd">            :param output: (str) Output message to be printed.</span>
-<span class="sd">            :param err_msg: (str) Error message to be printed on stderr.</span>
+<span class="sd">            The generated executable prints *output* to stdout. When *failing*</span>
+<span class="sd">            is ``True``, it also prints *err_msg* to stderr and exits with a</span>
+<span class="sd">            non-zero status. MATLAB executables receive a dedicated Python</span>
+<span class="sd">            implementation that emulates the subset of MATLAB behavior required</span>
+<span class="sd">            by the tests.</span>
+
+<span class="sd">            :param directory: Directory where the executable is created.</span>
+<span class="sd">            :type directory: str</span>
+<span class="sd">            :param name: Executable name.</span>
+<span class="sd">            :type name: str</span>
+<span class="sd">            :param failing: If ``True``, simulate a failing executable.</span>
+<span class="sd">            :type failing: bool</span>
+<span class="sd">            :param output: Standard output message.</span>
+<span class="sd">            :type output: str</span>
+<span class="sd">            :param err_msg: Standard error message.</span>
+<span class="sd">            :type err_msg: str</span>
+
+<span class="sd">            Contains:</span>
+<span class="sd">                Inner functions:</span>
+<span class="sd">                    - _matlab_mock_script: Generates the source code of a</span>
+<span class="sd">                      mocked MATLAB executable, simulating the required subse</span>
+<span class="sd">                      of MATLAB behavior for testing.</span>
 <span class="sd">            &quot;&quot;&quot;</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
-            <span class="n">system</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span>
 
-            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;matlab&quot;</span><span class="p">,</span> <span class="s2">&quot;matlab.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;run_spm12.sh&quot;</span><span class="p">]:</span>
-                <span class="c1"># Use the specific MATLAB mock script</span>
-                <span class="n">python_path</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span>
-                <span class="c1"># Check if we should print to stderr for this specific output</span>
-                <span class="n">should_print_stderr</span> <span class="o">=</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;_ _ version (standalone)&quot;</span>
-                <span class="n">mock_matlab_script</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;#!/usr/bin/env </span><span class="si">{</span><span class="n">python_path</span><span class="si">}</span>
-<span class="s2">import sys</span>
-<span class="s2">import os</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">_matlab_mock_script</span><span class="p">(</span>
+                <span class="n">python_path</span><span class="p">,</span>
+                <span class="n">output</span><span class="p">,</span>
+                <span class="n">failing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                <span class="n">err_msg</span><span class="o">=</span><span class="s2">&quot;mock_error&quot;</span><span class="p">,</span>
+            <span class="p">):</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Generate the source code of a mocked MATLAB executable.</span>
 
-<span class="s2">def mock_matlab():</span>
-<span class="s2">    # Simulate MATLAB command processing</span>
-<span class="s2">    args = sys.argv[1:]</span>
+<span class="sd">                The generated Python script simulates the subset of MATLAB</span>
+<span class="sd">                behavior required by the tests. It recognizes the ``-r`` and</span>
+<span class="sd">                ``--version`` command-line options, emulates a few SPM-related</span>
+<span class="sd">                commands, prints the requested output, and can optionally fail</span>
+<span class="sd">                by writing an error message to stderr and exiting with a</span>
+<span class="sd">                non-zero status.</span>
 
-<span class="s2">    # Check for specific MATLAB flags</span>
-<span class="s2">    if &quot;-r&quot; in args:</span>
-<span class="s2">        idx = args.index(&quot;-r&quot;)</span>
+<span class="sd">                :param python_path: Path to the Python interpreter used in the</span>
+<span class="sd">                 script shebang.</span>
+<span class="sd">                :type python_path: str</span>
+<span class="sd">                :param output: Message printed to the standard output.</span>
+<span class="sd">                :type output: str</span>
+<span class="sd">                :param failing: If ``True``, the generated script prints</span>
+<span class="sd">                 *err_msg* to stderr and exits with status code 1.</span>
+<span class="sd">                :type failing: bool</span>
+<span class="sd">                :param err_msg: Message printed to the standard error stream</span>
+<span class="sd">                 when *failing* is ``True``.</span>
+<span class="sd">                :type err_msg: str</span>
 
-<span class="s2">        if idx + 1 &lt; len(args):</span>
-<span class="s2">            matlab_cmd = args[idx + 1]</span>
+<span class="sd">                :returns: The source code of the mocked MATLAB executable.</span>
+<span class="sd">                :rtype: str</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="n">version_stderr</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="s1">&#39;print(&quot;Version check completed&quot;, file=sys.stderr)&#39;</span>
+                    <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;_ _ version (standalone)&quot;</span>
+                    <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="p">)</span>
+                <span class="n">error_output</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;print(&quot;</span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s1">&quot;, file=sys.stderr)&#39;</span> <span class="k">if</span> <span class="n">failing</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+                <span class="p">)</span>
+                <span class="n">exit_command</span> <span class="o">=</span> <span class="s2">&quot;sys.exit(1)&quot;</span> <span class="k">if</span> <span class="n">failing</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
 
-<span class="s2">            # Simulate MATLAB commands</span>
-<span class="s2">            if &quot;restoredefaultpath&quot; in matlab_cmd:</span>
-<span class="s2">                print(&quot;Default path restored.&quot;)</span>
+                <span class="k">return</span> <span class="n">dedent</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">                    #!/usr/bin/env </span><span class="si">{</span><span class="n">python_path</span><span class="si">}</span>
+<span class="s2">                    import sys</span>
 
-<span class="s2">            if &quot;addpath&quot; in matlab_cmd:</span>
-<span class="s2">                print(&quot;Path added.&quot;)</span>
+<span class="s2">                    def mock_matlab():</span>
+<span class="s2">                        &#39;&#39;&#39;Simulate a minimal subset of MATLAB behavior.&#39;&#39;&#39;</span>
 
-<span class="s2">            if &quot;spm(&#39;Ver&#39;)&quot; in matlab_cmd:</span>
-<span class="s2">                print(&quot;SPM version: SPM12 (simulated)&quot;)</span>
+<span class="s2">                        args = sys.argv[1:]</span>
 
-<span class="s2">    if &quot;--version&quot; in args:</span>
-<span class="s2">        # Only print to stderr if output is the special version string</span>
-<span class="s2">        </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;print(&quot;Version check completed&quot;, file=sys.stderr)&#39;</span>
-<span class="w">         </span><span class="k">if</span><span class="w"> </span><span class="n">should_print_stderr</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span>
-<span class="s2">        return</span>
+<span class="s2">                        if &quot;-r&quot; in args:</span>
+<span class="s2">                            idx = args.index(&quot;-r&quot;)</span>
+<span class="s2">                            if idx + 1 &lt; len(args):</span>
+<span class="s2">                                matlab_cmd = args[idx + 1]</span>
 
-<span class="s2">    # Simulate MATLAB exit</span>
-<span class="s2">    print(&quot;MATLAB simulation completed.&quot;)</span>
+<span class="s2">                                if &quot;restoredefaultpath&quot; in matlab_cmd:</span>
+<span class="s2">                                    print(&quot;Default path restored.&quot;)</span>
 
-<span class="s2">if __name__ == &quot;__main__&quot;:</span>
-<span class="s2">    mock_matlab()</span>
-<span class="s2">    </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;print(&quot;</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">&quot;)&#39;</span><span class="si">}</span>
-<span class="s2">    </span><span class="si">{</span><span class="sa">f</span><span class="s1">&#39;print(&quot;</span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s1">&quot;, file=sys.stderr)&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">failing</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span>
-<span class="s2">    </span><span class="si">{</span><span class="s1">&#39;sys.exit(1)&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">failing</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">                                if &quot;addpath&quot; in matlab_cmd:</span>
+<span class="s2">                                    print(&quot;Path added.&quot;)</span>
 
+<span class="s2">                                if &quot;spm(&#39;Ver&#39;)&quot; in matlab_cmd:</span>
+<span class="s2">                                    print(&quot;SPM version: SPM12 (simulated)&quot;)</span>
+
+<span class="s2">                        if &quot;--version&quot; in args:</span>
+<span class="s2">                            </span><span class="si">{</span><span class="n">version_stderr</span><span class="si">}</span>
+<span class="s2">                            return</span>
+
+<span class="s2">                        print(&quot;MATLAB simulation completed.&quot;)</span>
+
+<span class="s2">                    if __name__ == &quot;__main__&quot;:</span>
+<span class="s2">                        mock_matlab()</span>
+<span class="s2">                        print(&quot;</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;)</span>
+<span class="s2">                        </span><span class="si">{</span><span class="n">error_output</span><span class="si">}</span>
+<span class="s2">                        </span><span class="si">{</span><span class="n">exit_command</span><span class="si">}</span>
+<span class="s2">                    &quot;&quot;&quot;</span><span class="p">)</span>
+
+            <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span> <span class="o">/</span> <span class="n">name</span>
+
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">&quot;matlab&quot;</span><span class="p">,</span> <span class="s2">&quot;matlab.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;run_spm12.sh&quot;</span><span class="p">}:</span>
                 <span class="c1"># Write the script to the file</span>
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
-                    <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">mock_matlab_script</span><span class="p">)</span>
-
-                <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mo">0o755</span><span class="p">)</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span>
+                    <span class="n">_matlab_mock_script</span><span class="p">(</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
+                        <span class="n">output</span><span class="p">,</span>
+                        <span class="n">failing</span><span class="p">,</span>
+                        <span class="n">err_msg</span><span class="p">,</span>
+                    <span class="p">),</span>
+                    <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o755</span><span class="p">)</span>
                 <span class="k">return</span>
 
             <span class="c1"># --- Windows-specific behavior ---</span>
-            <span class="k">elif</span> <span class="n">system</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
-                <span class="n">bat_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.bat&quot;</span>
-                <span class="c1"># exe_path = f&quot;{path}.exe&quot;  # what the tested code expects</span>
-
-                <span class="n">bat_script</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;@echo off</span>
-<span class="s2">echo </span><span class="si">{</span><span class="n">output</span><span class="si">}</span>
-<span class="s2">&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Windows&quot;</span><span class="p">:</span>
+                <span class="n">script</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;@echo off</span><span class="se">\n</span><span class="s2">echo </span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
 
                 <span class="k">if</span> <span class="n">failing</span><span class="p">:</span>
-                    <span class="n">bat_script</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s2"> 1&gt;&amp;2</span><span class="se">\n</span><span class="s2">exit /b 1</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="n">script</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;echo </span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s2"> 1&gt;&amp;2</span><span class="se">\n</span><span class="s2">exit /b 1</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bat_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">bat_script</span><span class="p">)</span>
-
-                <span class="c1"># Fake .exe by copying .bat (needed for glob to find .exe)</span>
-                <span class="c1"># shutil.copyfile(bat_path, exe_path)</span>
+                <span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">with_suffix</span><span class="p">(</span><span class="s2">&quot;.bat&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
 
             <span class="c1"># --- Linux/macOS behavior ---</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">script</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#!/bin/bash</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
+            <span class="n">script</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#!/bin/bash</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s1">&quot;&#39;</span>
 
-                <span class="k">if</span> <span class="n">failing</span><span class="p">:</span>
-                    <span class="n">script</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s1">&quot; 1&gt;&amp;2</span><span class="se">\n</span><span class="s1">exit 1&#39;</span>
+            <span class="k">if</span> <span class="n">failing</span><span class="p">:</span>
+                <span class="n">script</span> <span class="o">+=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">echo &quot;</span><span class="si">{</span><span class="n">err_msg</span><span class="si">}</span><span class="s1">&quot; 1&gt;&amp;2</span><span class="se">\n</span><span class="s1">exit 1&#39;</span>
 
-                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-
-                <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mo">0o755</span><span class="p">)</span>
-
-                <span class="c1"># uncomment for 2 OS (macos, linux)</span>
-                <span class="c1"># system = platform.system()</span>
-
-                <span class="c1"># if system == &quot;Linux&quot;:</span>
-                <span class="c1">#     script = f&#39;#!/bin/bash\necho &quot;{output}&quot;&#39;</span>
-
-                <span class="c1"># elif system == &quot;Darwin&quot;:</span>
-                <span class="c1">#     script = &#39;#!/usr/bin/env bash\necho &quot;mock executable&quot;&#39;</span>
-
-                <span class="c1"># elif system == &quot;Windows&quot;:</span>
-                <span class="c1">#     pass</span>
-                <span class="c1">#     # TODO: build mocked executable for Windows</span>
-
-                <span class="c1"># if failing:</span>
-                <span class="c1">#     script += f&#39;\necho &quot;{err_msg}&quot; 1&gt;&amp;2\nexit 1&#39;</span>
-
-                <span class="c1"># with open(path, &quot;w&quot;) as f:</span>
-                <span class="c1">#     f.write(script)</span>
-
-                <span class="c1"># subprocess.run([&quot;chmod&quot;, &quot;+x&quot;, path])</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="n">path</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="mo">0o755</span><span class="p">)</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">main_wnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span>
@@ -6968,20 +7104,27 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                    - Verify correct behavior of the corresponding `Config`</span>
 <span class="sd">                      object methods.</span>
 
-<span class="sd">                :param module_name: (str) The display name of the module</span>
-<span class="sd">                 (used for logging).</span>
-<span class="sd">                :param checkbox_attr: (str) Name of the checkbox attribute</span>
-<span class="sd">                 in the preferences popup.</span>
-<span class="sd">                :param path_attr: (str) Name of the line edit widget used to</span>
-<span class="sd">                 specify the module path.</span>
-<span class="sd">                :param executable_name: (str) Name of the module&#39;s expected</span>
+<span class="sd">                :param module_name: The display name of the module (used for</span>
+<span class="sd">                 logging).</span>
+<span class="sd">                :type module_name: str</span>
+<span class="sd">                :param checkbox_attr: Name of the checkbox attribute in the</span>
+<span class="sd">                 preferences popup.</span>
+<span class="sd">                :type checkbox_attr: str</span>
+<span class="sd">                :param path_attr: Name of the line edit widget used to specify</span>
+<span class="sd">                 the module path.</span>
+<span class="sd">                :type path_attr: str</span>
+<span class="sd">                :param executable_name: Name of the module&#39;s expected</span>
 <span class="sd">                 executable (for mocking).</span>
-<span class="sd">                :param config_getter: (str) Name of the `Config` method to</span>
-<span class="sd">                 check if the module is enabled.</span>
-<span class="sd">                :param config_setter: (str) Name of the `Config` method to</span>
-<span class="sd">                 disable the module.</span>
-<span class="sd">                :param config_path_setter: (str) Name of the `Config` method</span>
-<span class="sd">                 to reset the module path.</span>
+<span class="sd">                :type executable_name: str</span>
+<span class="sd">                :param config_getter: Name of the `Config` method to check if</span>
+<span class="sd">                 the module is enabled.</span>
+<span class="sd">                :type config_getter: str</span>
+<span class="sd">                :param config_setter: Name of the `Config` method to disable</span>
+<span class="sd">                 the module.</span>
+<span class="sd">                 :type config_setter: str</span>
+<span class="sd">                :param config_path_setter: Name of the `Config` method to</span>
+<span class="sd">                 reset the module path.</span>
+<span class="sd">                :type config_path_setter: str</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Testing </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2"> configuration...&quot;</span><span class="p">)</span>
 
@@ -7612,10 +7755,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This test simulates user interactions in the software preferences</span>
 <span class="sd">        window without and with confirming via the &#39;OK&#39; button. It verifies</span>
 <span class="sd">        correct saving of settings related to:</span>
+
 <span class="sd">            - Standalone modules (AFNI, ANTS, FSL, SPM, MRtrix, MATLAB,</span>
-<span class="sd">              freesurfer)</span>
-<span class="sd">            - UI and behavioral options (auto-save, radio view,</span>
-<span class="sd">              admin/clinical mode)</span>
+<span class="sd">              freesurfer).</span>
+<span class="sd">            - UI and behavioral options (auto-save, radio view, admin/clinical</span>
+<span class="sd">              mode).</span>
 
 <span class="sd">        Tests:</span>
 <span class="sd">            - PopUpPreferences.validate_and_save</span>
@@ -7783,13 +7927,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        `MainWindow.switch_project`.</span>
 
 <span class="sd">        This test covers:</span>
-<span class="sd">            - Switching to a valid Mia project</span>
-<span class="sd">            - Handling non-existent project paths</span>
-<span class="sd">            - Preventing switching to already-open projects</span>
-<span class="sd">            - Ignoring invalid or malformed Mia projects</span>
+<span class="sd">            - Switching to a valid Mia project.</span>
+<span class="sd">            - Handling non-existent project paths.</span>
+<span class="sd">            - Preventing switching to already-open projects.</span>
+<span class="sd">            - Ignoring invalid or malformed Mia projects.</span>
 
-<span class="sd">        - Tests: MainWindow.switch_project</span>
-<span class="sd">        - Mocks: QMessageBox.exec (to bypass dialog confirmations)</span>
+<span class="sd">        - Tests: MainWindow.switch_project.</span>
+<span class="sd">        - Mocks: QMessageBox.exec (to bypass dialog confirmations).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Mocks the execution of a dialog window</span>
@@ -7885,9 +8029,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the node controller, part of the pipeline manager tab.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - create_mock_exec: create a mock function for</span>
 <span class="sd">              PopUpSelectTagCountTable.exec_() that simulates user tag</span>
 <span class="sd">              selection behavior.</span>
@@ -7917,11 +8059,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        the OK action, simulating the user workflow without requiring</span>
 <span class="sd">        actual UI interaction.</span>
 
-<span class="sd">        :param tag_name: (str) The name of the tag to select from the list.</span>
-<span class="sd">         This should match the text of one of the items in the popup&#39;s list</span>
-<span class="sd">         widget.</span>
+<span class="sd">        :param tag_name: The name of the tag to select from the list. This</span>
+<span class="sd">         should match the text of one of the items in the popup&#39;s list widget.</span>
+<span class="sd">        :type tag_name: str</span>
 
-<span class="sd">        :Returns: A mock function that can be used to replace exec_() method.</span>
+<span class="sd">        :returns: A function with the same signature as</span>
+<span class="sd">         `PopUpSelectTagCountTable.exec_``.</span>
+<span class="sd">        :rtype: function</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - mock_exec: The actual implementation of exec_() that selects</span>
+<span class="sd">                  a tag from the list.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -7933,8 +8082,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            to simulate the user confirming their selection.</span>
 
 <span class="sd">            :param self: The PopUpSelectTagCountTable instance.</span>
+<span class="sd">            :type self: PopUpSelectTagCountTable</span>
 
-<span class="sd">            :Returns: True to simulate successful dialog execution.</span>
+<span class="sd">            :returns: True to simulate successful dialog execution.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="c1"># Find and select the specific tag</span>
@@ -8019,20 +8170,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This test simulates a realistic sequence of user interactions and</span>
 <span class="sd">        verifies the following capabilities:</span>
+
 <span class="sd">            - Adding two &#39;Rename&#39; nodes to the pipeline (&#39;rename_1&#39; and</span>
-<span class="sd">              &#39;rename_2&#39;)</span>
-<span class="sd">            - Displaying and interacting with node parameters</span>
-<span class="sd">            - Attempting to rename &#39;rename_2&#39; to an existing name (should fail)</span>
+<span class="sd">              &#39;rename_2&#39;).</span>
+<span class="sd">            - Displaying and interacting with node parameters.</span>
+<span class="sd">            - Attempting to rename &#39;rename_2&#39; to an existing name (should</span>
+<span class="sd">              fail).</span>
 <span class="sd">            - Renaming &#39;rename_2&#39; to a new unique name (&#39;rename_3&#39;)</span>
-<span class="sd">              successfully</span>
-<span class="sd">            - Deleting an existing node (&#39;rename_3&#39;)</span>
-<span class="sd">            - Exporting unconnected mandatory input plugs for a node</span>
-<span class="sd">            - Setting input plug values using a test document</span>
+<span class="sd">              successfully.</span>
+<span class="sd">            - Deleting an existing node (&#39;rename_3&#39;).</span>
+<span class="sd">            - Exporting unconnected mandatory input plugs for a node.</span>
+<span class="sd">            - Setting input plug values using a test document.</span>
 <span class="sd">            - Executing the pipeline and expecting an error due to unexported</span>
-<span class="sd">              output</span>
+<span class="sd">              output.</span>
 <span class="sd">            - Opening the attributes filter dialog, selecting a row, and</span>
-<span class="sd">              confirming</span>
-<span class="sd">            - Releasing and updating the process associated with the controller</span>
+<span class="sd">              confirming.</span>
+<span class="sd">            - Releasing and updating the process associated with the</span>
+<span class="sd">              controller.</span>
 
 <span class="sd">        Methods tested:</span>
 <span class="sd">            - CapsulNodeController.update_node_name</span>
@@ -8043,7 +8197,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - PipelineEditor.export_unconnected_mandatory_inputs</span>
 <span class="sd">            - PipelineManager.runPipeline</span>
 
-<span class="sd">        Notes:</span>
+<span class="sd">        Note:</span>
 <span class="sd">            - The test assumes that running the pipeline raises an error</span>
 <span class="sd">              because the output plug is not exported, which is intentional.</span>
 <span class="sd">            - A QDialog.exec() mock is used to simulate dialog confirmation</span>
@@ -8215,14 +8369,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Capsul pipeline node.</span>
 
 <span class="sd">        This test:</span>
-<span class="sd">            - Switches to the V1 node controller (if not already active)</span>
-<span class="sd">            - Adds an `Input_Filter` process to the pipeline</span>
-<span class="sd">            - Feeds in documents from a test project</span>
-<span class="sd">            - Opens the filter widget for the added node</span>
+<span class="sd">            - Switches to the V1 node controller (if not already active).</span>
+<span class="sd">            - Adds an `Input_Filter` process to the pipeline.</span>
+<span class="sd">            - Feeds in documents from a test project.</span>
+<span class="sd">            - Opens the filter widget for the added node.</span>
 <span class="sd">            - Performs various filtering actions:</span>
-<span class="sd">                - Searching for documents by name</span>
-<span class="sd">                - Toggling tag visibility</span>
-<span class="sd">                - Filtering by a specific tag (mocking user interaction)</span>
+<span class="sd">                - Searching for documents by name.</span>
+<span class="sd">                - Toggling tag visibility.</span>
+<span class="sd">                - Filtering by a specific tag (mocking user interaction).</span>
 
 <span class="sd">        The `FilterWidget` is GUI-independent and works in both V1 and V2 node</span>
 <span class="sd">        controller UIs. Only the V1 GUI is exercised here.</span>
@@ -8374,22 +8528,22 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">test_node_controller</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Tests the behavior of the V1 `NodeController` interface for:</span>
-<span class="sd">            - Adding, renaming, and deleting nodes</span>
-<span class="sd">            - Displaying and updating process parameters</span>
-<span class="sd">            - Interacting with plug filters and values</span>
+<span class="sd">            - Adding, renaming, and deleting nodes.</span>
+<span class="sd">            - Displaying and updating process parameters.</span>
+<span class="sd">            - Interacting with plug filters and values.</span>
 
 <span class="sd">        Workflow:</span>
-<span class="sd">            - Switches to V1 node controller mode if not already enabled</span>
+<span class="sd">            - Switches to V1 node controller mode if not already enabled.</span>
 <span class="sd">            - Opens a test project and adds two Rename processes as</span>
-<span class="sd">              &quot;rename_1&quot; and &quot;rename_2&quot;</span>
+<span class="sd">              &quot;rename_1&quot; and &quot;rename_2&quot;.</span>
 <span class="sd">            - Attempts renaming &quot;rename_2&quot; to an existing name (fails)</span>
-<span class="sd">              then to a unique one</span>
-<span class="sd">            - Deletes the renamed node</span>
-<span class="sd">            - Exports input/output plugs and tests plug interaction</span>
-<span class="sd">            - Displays parameters and plug filters</span>
-<span class="sd">            - Updates plug values with and without providing new values</span>
-<span class="sd">            - Releases and refreshes the process</span>
-<span class="sd">            - Restores the original node controller mode after testing</span>
+<span class="sd">              then to a unique one.</span>
+<span class="sd">            - Deletes the renamed node.</span>
+<span class="sd">            - Exports input/output plugs and tests plug interaction.</span>
+<span class="sd">            - Displays parameters and plug filters.</span>
+<span class="sd">            - Updates plug values with and without providing new values.</span>
+<span class="sd">            - Releases and refreshes the process.</span>
+<span class="sd">            - Restores the original node controller mode after testing.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">properties_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_path</span><span class="p">)</span>
@@ -8510,13 +8664,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Tests plug filtering in the Node Controller V1 interface.</span>
 
 <span class="sd">        This test covers:</span>
-<span class="sd">            - Switching to Node Controller V1 if not already enabled</span>
-<span class="sd">            - Opening a test project and retrieving documents</span>
-<span class="sd">            - Adding and configuring a &#39;Smooth&#39; node in the pipeline</span>
-<span class="sd">            - Displaying and modifying a plug filter</span>
-<span class="sd">            - Searching and filtering table rows</span>
-<span class="sd">            - Modifying visible tag columns</span>
-<span class="sd">            - Verifying plug value assignment from filtered selections</span>
+<span class="sd">            - Switching to Node Controller V1 if not already enabled.</span>
+<span class="sd">            - Opening a test project and retrieving documents.</span>
+<span class="sd">            - Adding and configuring a &#39;Smooth&#39; node in the pipeline.</span>
+<span class="sd">            - Displaying and modifying a plug filter.</span>
+<span class="sd">            - Searching and filtering table rows.</span>
+<span class="sd">            - Modifying visible tag columns.</span>
+<span class="sd">            - Verifying plug value assignment from filtered selections.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">properties_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_path</span><span class="p">)</span>
         <span class="n">controlV1_ver</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">isControlV1</span><span class="p">()</span>
@@ -8672,6 +8826,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - A node name can be changed via the NodeController interface.</span>
 <span class="sd">            - Duplicate names are not accepted.</span>
 <span class="sd">            - Node renaming preserves the connections (links) between nodes.</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - simulate_rename: Simulates renaming a node via the GUI line</span>
+<span class="sd">                  edit.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">simulate_rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -8681,6 +8840,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            This simulates the user typing a new name and pressing Enter.</span>
 
 <span class="sd">            :param new_name: The new name to set for the node.</span>
+<span class="sd">            :type new_name: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="c1"># Ensure the line edit has focus</span>
             <span class="n">node_controller</span><span class="o">.</span><span class="n">line_edit_node_name</span><span class="o">.</span><span class="n">setFocus</span><span class="p">()</span>
@@ -8797,9 +8957,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests for the pipeline editor, part of the pipeline manager tab.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - test_add_tab: Adds tabs to the PipelineEditorTabs.</span>
 <span class="sd">            - test_close_tab: Closes a tab in the PipelineEditorTabs.</span>
 <span class="sd">            - test_drop_process: Adds a Nipype SPM Smooth process to the</span>
@@ -8862,11 +9020,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        modified.</span>
 
 <span class="sd">        Scenarios covered:</span>
-<span class="sd">            - Closing an unmodified tab (no dialog shown)</span>
+<span class="sd">            - Closing an unmodified tab (no dialog shown).</span>
 <span class="sd">            - Closing a modified tab and choosing:</span>
-<span class="sd">                - &quot;Save As&quot;</span>
-<span class="sd">                - &quot;Do Not Save&quot;</span>
-<span class="sd">                - &quot;Cancel&quot;</span>
+<span class="sd">                - &quot;Save As&quot;.</span>
+<span class="sd">                - &quot;Do Not Save&quot;.</span>
+<span class="sd">                - &quot;Cancel&quot;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Sets shortcuts for objects that are often used</span>
@@ -9278,7 +9436,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - PipelineEditor.export_node_all_unconnected_inputs</span>
 <span class="sd">            - ProcessNode.get_plug_value</span>
 
-<span class="sd">        Notes: This test specifically targets NodeController V1 behavior.</span>
+<span class="sd">        Note:</span>
+<span class="sd">            This test specifically targets NodeController V1 behavior.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">properties_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">properties_path</span><span class="p">)</span>
@@ -9380,11 +9539,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              &quot;test_pipeline_1_1&quot;.</span>
 
 <span class="sd">        Tested features:</span>
-<span class="sd">            - Pipeline loading</span>
-<span class="sd">            - Process instantiation from library</span>
-<span class="sd">            - Node linking</span>
-<span class="sd">            - Plug export and save</span>
-<span class="sd">            - Detection of modifications in sub-pipeline processes</span>
+<span class="sd">            - Pipeline loading.</span>
+<span class="sd">            - Process instantiation from library.</span>
+<span class="sd">            - Node linking.</span>
+<span class="sd">            - Plug export and save.</span>
+<span class="sd">            - Detection of modifications in sub-pipeline processes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">pipeline_editor_tabs</span> <span class="o">=</span> <span class="p">(</span>
@@ -9645,9 +9804,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            1. Loads a saved pipeline file into a new tab.</span>
 <span class="sd">            2. Creates an additional empty pipeline in a second tab.</span>
 <span class="sd">            3. Retrieves and checks tab indices using:</span>
-<span class="sd">                - the tab name</span>
-<span class="sd">                - the full file path</span>
-<span class="sd">                - the editor instance</span>
+<span class="sd">                - the tab name.</span>
+<span class="sd">                - the full file path.</span>
+<span class="sd">                - the editor instance.</span>
 <span class="sd">            4. Confirms that querying with an invalid name, path, or editor</span>
 <span class="sd">               returns None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -9822,9 +9981,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Tests setting the current editor using different criteria.</span>
 
 <span class="sd">        Validates that the active tab can be correctly switched using:</span>
-<span class="sd">            - Tab name</span>
-<span class="sd">            - Pipeline file name</span>
-<span class="sd">            - Editor instance</span>
+<span class="sd">            - Tab name.</span>
+<span class="sd">            - Pipeline file name.</span>
+<span class="sd">            - Editor instance.</span>
 
 <span class="sd">        Targets the following methods:</span>
 <span class="sd">            - PipelineEditorTabs.set_current_editor_by_tab_name</span>
@@ -9908,9 +10067,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Tests the pipeline manager tab class, part of the homonym tab.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - test_add_plug_value_to_database_list_type: Adds a list type plug</span>
 <span class="sd">              value to the database.</span>
 <span class="sd">            - test_add_plug_value_to_database_non_list_type: Adds a non list</span>
@@ -10095,13 +10252,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Scenarios covered:</span>
 <span class="sd">            - Plug value is outside the project directory (should not be</span>
-<span class="sd">              indexed)</span>
-<span class="sd">            - Plug value is inside the project directory (should be indexed)</span>
-<span class="sd">            - Plug value is already in the database (logs an info message)</span>
-<span class="sd">            - Plug values with different file extensions (.nii.gz, .mat, .txt)</span>
+<span class="sd">              indexed).</span>
+<span class="sd">            - Plug value is inside the project directory (should be indexed).</span>
+<span class="sd">            - Plug value is already in the database (logs an info message).</span>
+<span class="sd">            - Plug values with different file extensions (.nii.gz, .mat, .txt).</span>
 <span class="sd">            - Handling of `parent_files` via `auto_inheritance_dict` and</span>
-<span class="sd">              `inheritance_dict`</span>
-<span class="sd">            - Adding and removing tags based on the inheritance information</span>
+<span class="sd">              `inheritance_dict`.</span>
+<span class="sd">            - Adding and removing tags based on the inheritance information.</span>
 
 <span class="sd">        Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -10453,14 +10610,27 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Also validates `PopUpInheritanceDict` interactive behavior across all</span>
 <span class="sd">        buttons.</span>
 
-<span class="sd">        tested:</span>
+<span class="sd">        Tested:</span>
 <span class="sd">            - PipelineManagerTab.add_plug_value_to_database</span>
 <span class="sd">            - PopUpInheritanceDict interaction</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - mock_exec: Mock execution function for PopUpInheritanceDict.</span>
+<span class="sd">                - mock_get_document: Mock function to fetch documents from the</span>
+<span class="sd">                  database.</span>
+<span class="sd">                - reset_collections: Reset collections to ensure consistent</span>
+<span class="sd">                  state.</span>
+<span class="sd">                - reset_inheritance_dicts: Reset inheritance dictionaries to</span>
+<span class="sd">                  ensure consistent state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">mock_exec</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Mock `exec` of PopUpInheritanceDict to simulate user selection.</span>
+
+<span class="sd">            :param self: Instance of PopUpInheritanceDict.</span>
+<span class="sd">            :type self: PopUpInheritanceDict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s2">&quot;mock_key_2&quot;</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;mock_key_2&quot;</span>
@@ -10480,15 +10650,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                - &quot;mock_val_1&quot;: sets &#39;Exp Type&#39; to &quot;Exp Type 1&quot;</span>
 <span class="sd">                - &quot;mock_val_2&quot;: sets &#39;Exp Type&#39; to &quot;Exp Type 2&quot;</span>
 
-<span class="sd">            :param collection_name: (str) Name of the database collection being</span>
+<span class="sd">            :param collection_name: Name of the database collection being</span>
 <span class="sd">             queried. This parameter is unused but kept for signature</span>
 <span class="sd">             compatibility.</span>
-<span class="sd">            :param primary_keys (str): The primary key identifying which mock</span>
+<span class="sd">            :type collection_name: str</span>
+<span class="sd">            :param primary_keys: The primary key identifying which mock</span>
 <span class="sd">             variant to return, affecting the &#39;Exp Type&#39; field of the first</span>
 <span class="sd">             record.</span>
+<span class="sd">            :type primary_keys: str</span>
 
-<span class="sd">            :Returns: (list[dict]) A deep copy of the `scan_mock` data with</span>
-<span class="sd">             the &#39;Exp Type&#39; field updated if applicable.</span>
+<span class="sd">            :Return: A deep copy of the `scan_mock` data with the &#39;Exp Type&#39;</span>
+<span class="sd">             field updated if applicable.</span>
+<span class="sd">            rtype: list[dict]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">scan_copy</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">scan_mock</span><span class="p">)</span>
 
@@ -10819,12 +10992,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Verifies that the resulting pipeline is correctly built and</span>
 <span class="sd">              mocks are invoked as expected.</span>
 
+<span class="sd">        The test allows an expected exception message to be printed during</span>
+<span class="sd">        execution.</span>
+
 <span class="sd">        Note:</span>
 <span class="sd">            update_nodes_and_plugs_activation&#39; may not exist on the process,</span>
 <span class="sd">            hence &#39;create=True&#39; is used to safely mock it.</span>
-
-<span class="sd">        The test allows an expected exception message to be printed during</span>
-<span class="sd">        execution.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
         <span class="n">ppl_edt_tabs</span> <span class="o">=</span> <span class="n">ppl_manager</span><span class="o">.</span><span class="n">pipelineEditorTabs</span>
@@ -10985,10 +11158,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This test creates a pipeline with three connected &#39;Smooth&#39; processes</span>
 <span class="sd">        (smooth_1 -&gt; smooth_2 -&gt; smooth_3), deletes the middle node, and</span>
 <span class="sd">        verifies:</span>
-<span class="sd">            - The node is properly removed from the pipeline</span>
-<span class="sd">            - Connected links are cleaned up</span>
-<span class="sd">            - Undo operation restores the node and its connections</span>
-<span class="sd">            - Redo operation removes the node again</span>
+
+<span class="sd">            - The node is properly removed from the pipeline.</span>
+<span class="sd">            - Connected links are cleaned up.</span>
+<span class="sd">            - Undo operation restores the node and its connections.</span>
+<span class="sd">            - Redo operation removes the node again.</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - _assert_connection_counts: Assert that connection counts</span>
+<span class="sd">                  match expected values.</span>
+<span class="sd">                - _assert_nodes_exist: Assert that nodes exist as expected.</span>
+<span class="sd">                - _assert_nodes_not_exist: Assert that nodes do not exist as</span>
+<span class="sd">                  expected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_assert_connection_counts</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">expected_counts</span><span class="p">):</span>
@@ -10996,8 +11178,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Assert that connection counts match expected values.</span>
 
 <span class="sd">            :param pipeline: The pipeline object to check.</span>
+<span class="sd">            :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">            :param expected_counts: Dict mapping (node_name, plug_name,</span>
 <span class="sd">             link_type) to expected count.</span>
+<span class="sd">            :type expected_counts: dict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="p">(</span>
@@ -11023,8 +11207,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Assert that all specified nodes exist within the given pipeline.</span>
 
 <span class="sd">            :param pipeline: The pipeline object containing nodes.</span>
-<span class="sd">            :param node_names: A list of node names (str) to check for</span>
-<span class="sd">             existence.</span>
+<span class="sd">            :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
+<span class="sd">            :param node_names: A list of node names to check for existence.</span>
+<span class="sd">            :type node_names: list[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="n">node_names</span><span class="p">:</span>
@@ -11040,8 +11225,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            pipeline.</span>
 
 <span class="sd">            :param pipeline: The pipeline object containing nodes.</span>
+<span class="sd">            :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">            :param node_names: A list of node names (str) expected to be</span>
 <span class="sd">             absent.</span>
+<span class="sd">            :type node_names: list[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">node_name</span> <span class="ow">in</span> <span class="n">node_names</span><span class="p">:</span>
@@ -11198,8 +11385,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Isolated test: In addition to the &#39;initialized&#39; reset, verifies that</span>
 <span class="sd">        dependent methods are called exactly once:</span>
-<span class="sd">            - postprocess_pipeline_execution</span>
-<span class="sd">            - update_user_buttons_states</span>
+
+<span class="sd">            - postprocess_pipeline_execution.</span>
+<span class="sd">            - update_user_buttons_states.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -11466,6 +11654,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method tests the behavior of the pipeline manager when</span>
 <span class="sd">        registering completion attributes with and without provided</span>
 <span class="sd">        attributes. It performs the following steps:</span>
+
 <span class="sd">            1. Adds a Select process to the current pipeline.</span>
 <span class="sd">            2. Exports mandatory input and output plugs.</span>
 <span class="sd">            3. Sets plug values for input and output files.</span>
@@ -11575,11 +11764,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            4. Sets plug values for the process and output nodes.</span>
 <span class="sd">            5. Creates a workflow and job for the pipeline.</span>
 <span class="sd">            6. Tests `_register_node_io_in_database` with:</span>
-<span class="sd">                - NipypeProcess instance</span>
-<span class="sd">                - ProcessNode instance</span>
-<span class="sd">                - PipelineNode instance</span>
-<span class="sd">                - Switch instance</span>
-<span class="sd">                - Process with no outputs</span>
+<span class="sd">                - NipypeProcess instance.</span>
+<span class="sd">                - ProcessNode instance.</span>
+<span class="sd">                - PipelineNode instance.</span>
+<span class="sd">                - Switch instance.</span>
+<span class="sd">                - Process with no outputs.</span>
 
 <span class="sd">        Verifies:</span>
 <span class="sd">            - Output file is correctly added to `COLLECTION_CURRENT`.</span>
@@ -11744,6 +11933,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            3. Interruption: Ensures interruption is logged correctly.</span>
 
 <span class="sd">        tests: RunWorker.run</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - fake_start: Simulates the start of a worker.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Setup: Shortcuts and test file</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -11817,14 +12010,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            fixed workflow identifier together with the provided pipeline.</span>
 
 <span class="sd">            :param pipeline: Pipeline instance passed to ``engine.start``.</span>
+<span class="sd">            :type pipeline: capsul.process.process.NipypeProcess</span>
 <span class="sd">            :param workflow: Optional workflow object. Included for signature</span>
 <span class="sd">             compatibility with ``engine.start``.</span>
+<span class="sd">            :type workflow: None</span>
 <span class="sd">            :param get_pipeline: Whether the pipeline should be returned.</span>
 <span class="sd">             Included for signature compatibility with ``engine.start``.</span>
+<span class="sd">            :type get_pipeline: bool</span>
 
-<span class="sd">            :Returns: A tuple ``(workflow_id, pipeline)``, where</span>
+<span class="sd">            :returns: A tuple ``(workflow_id, pipeline)``, where</span>
 <span class="sd">             ``workflow_id`` is always ``500`` and ``pipeline`` is the input</span>
 <span class="sd">             pipeline.</span>
+<span class="sd">            :rtype: tuple</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span>
                 <span class="s2">&quot;populse_mia.user_interface.pipeline_manager.&quot;</span>
@@ -12010,7 +12207,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              handles the renamed pipeline and the status bar confirms success.</span>
 
 <span class="sd">        :raises AssertionError: If the displayed status bar messages do not</span>
-<span class="sd">                                match the expected content.</span>
+<span class="sd">         match the expected content.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set shortcuts for objects that are often used</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -12208,10 +12405,11 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This test verifies that the pipeline editor&#39;s undo/redo stack correctly</span>
 <span class="sd">        handles:</span>
-<span class="sd">            - Node creation, deletion, and renaming</span>
-<span class="sd">            - Plug export, removal, and value updates</span>
-<span class="sd">            - Link creation, deletion, and restoration</span>
-<span class="sd">            - Document deletion (in-memory only; disk behavior is not tested)</span>
+
+<span class="sd">            - Node creation, deletion, and renaming.</span>
+<span class="sd">            - Plug export, removal, and value updates.</span>
+<span class="sd">            - Link creation, deletion, and restoration.</span>
+<span class="sd">            - Document deletion (in-memory only; disk behavior is not tested).</span>
 
 <span class="sd">        The test is robust and designed to prevent random crashes. It ensures</span>
 <span class="sd">        that all operations are reversible and that the editor’s state remains</span>
@@ -12247,13 +12445,13 @@ window.runMermaid = runMermaid;</script>
         <span class="n">pop_up_add_path</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[&#39;</span><span class="si">{</span><span class="n">document</span><span class="si">}</span><span class="s2">&#39;]&quot;</span><span class="p">)</span>
         <span class="n">pop_up_add_path</span><span class="o">.</span><span class="n">save_path</span><span class="p">()</span>
 
-        <span class="c1"># We are keeping the following tests for now, although it no longer</span>
-        <span class="c1"># really makes sense. Indeed, there is, among other things, a point of</span>
-        <span class="c1"># discussion in populse_mia that is still ongoing: what should we do</span>
-        <span class="c1"># if we delete a document from the DataBrowser? Currently, if we</span>
+        <span class="c1"># FIXME: We are keeping the following tests for now, although it no</span>
+        <span class="c1"># longer really makes sense. Indeed, there is, among other things, a</span>
+        <span class="c1"># point of discussion in populse_mia that is still ongoing: what should</span>
+        <span class="c1"># we do if we delete a document from the DataBrowser? Currently, if we</span>
         <span class="c1"># delete a document from the DataBrowser, it is removed both from the</span>
         <span class="c1"># database and physically from the hard drive. This prevents, after an</span>
-        <span class="c1"># undo(), from performing a redo() for the physical part on the disk.</span>
+        <span class="c1"># undo(), from performing a redo() for the physical partt on he disk.</span>
         <span class="c1"># However, things are a bit complicated for various reasons outside the</span>
         <span class="c1"># scope of this comment. The result is that the undo and redo</span>
         <span class="c1"># functions are quite permissive on this subject (there is no specific</span>
@@ -12536,8 +12734,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Behavior when the node is not a valid Process (the attribute</span>
 <span class="sd">              should not exist).</span>
 
-<span class="sd">        :raises AssertionError: If expectations about the existence, type,</span>
-<span class="sd">         or contents of `auto_inheritance_dict` are not met.</span>
+<span class="sd">        :raises AssertionError: If expectations about the existence, type, or</span>
+<span class="sd">         contents of `auto_inheritance_dict` are not met.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project_8_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_new_test_project</span><span class="p">()</span>
         <span class="n">raw_data_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -12725,7 +12923,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This test covers multiple scenarios of inheritance updating:</span>
 <span class="sd">            - Ensures that jobs do not initially have `inheritance_dict`</span>
-<span class="sd">              attribute</span>
+<span class="sd">              attribute.</span>
 <span class="sd">            - Validates update when the node name does not contain &quot;Pipeline&quot;.</span>
 <span class="sd">            - Validates update when the node name contains &quot;Pipeline&quot;.</span>
 <span class="sd">            - Validates update when the node&#39;s inheritance history is recorded</span>
@@ -12855,8 +13053,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Simulating a ``ValueError`` raised</span>
 <span class="sd">              by ``workflow_from_pipeline``.</span>
 
-<span class="sd">        Target:</span>
-<span class="sd">            ``PipelineManagerTab.init_pipeline``</span>
+<span class="sd">        Target: ``PipelineManagerTab.init_pipeline``</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># --- Setup pipeline and test document ---</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -13125,9 +13322,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    other classes.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _mock_mouse_event: Mocks QMouseEvent for a right-click at</span>
 <span class="sd">              position (0, 0).</span>
 <span class="sd">            - test_check_setup: Checks that Mia&#39;s configuration control is</span>
@@ -13295,11 +13490,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        processes and packages.</span>
 
 <span class="sd">        The following behaviors are verified:</span>
-<span class="sd">            - insertion of a new package node,</span>
-<span class="sd">            - MIME data generation for drag-and-drop,</span>
-<span class="sd">            - renaming of a package,</span>
-<span class="sd">            - deletion via the Delete key,</span>
-<span class="sd">            - context-menu action: remove package,</span>
+<span class="sd">            - insertion of a new package node.</span>
+<span class="sd">            - MIME data generation for drag-and-drop.</span>
+<span class="sd">            - renaming of a package.</span>
+<span class="sd">            - deletion via the Delete key.</span>
+<span class="sd">            - context-menu action: remove package.</span>
 <span class="sd">            - context-menu action: delete package with confirmation dialog.</span>
 
 <span class="sd">        All user interactions involving Qt dialogs or menus are mocked to</span>
@@ -13307,10 +13502,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param mock_msgbox_exec: Mock for QMessageBox.exec to prevent actual</span>
 <span class="sd">         execution of modal dialogs.</span>
+<span class="sd">        :type mock_msgbox_exec: unittest.mock.MagicMock</span>
 <span class="sd">        :param mock_msgbox_question: Mock for QMessageBox.question used to</span>
 <span class="sd">         simulate user confirmation (returns QMessageBox.Yes).</span>
-<span class="sd">        :param mock_menu_exec: Mock for QMenu.exec_ to simulate context menu</span>
-<span class="sd">         selection without displaying a GUI menu.</span>
+<span class="sd">        :type mock_msgbox_question: unittest.mock.MagicMock</span>
+<span class="sd">        :param mock_menu_exec: Mock for ``QMenu.exec_`` to simulate context</span>
+<span class="sd">         menu selection without displaying a GUI menu.</span>
+<span class="sd">        :type mock_menu_exec: unittest.mock.MagicMock</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Sets shortcuts for objects that are often used</span>
         <span class="n">ppl_manager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">pipeline_manager</span>
@@ -13425,10 +13623,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        QtConsole with an IPython kernel.</span>
 
 <span class="sd">        This test verifies:</span>
-<span class="sd">            - A RichJupyterWidget is returned</span>
-<span class="sd">            - The in-process kernel can execute code</span>
-<span class="sd">            - Application internals are available in the kernel namespace</span>
-<span class="sd">            - Multiple consoles can coexist safely</span>
+<span class="sd">            - A RichJupyterWidget is returned.</span>
+<span class="sd">            - The in-process kernel can execute code.</span>
+<span class="sd">            - Application internals are available in the kernel namespace.</span>
+<span class="sd">            - Multiple consoles can coexist safely.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Open the first in-process console</span>
         <span class="n">console</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">open_shell</span><span class="p">()</span>
