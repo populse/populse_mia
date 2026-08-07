@@ -85,60 +85,61 @@ class MainWindow(QMainWindow):
     """Initialize software appearance and define interactions with the user.
 
     Contains:
-
         Methods:
-
-        - add_clinical_tags: Add the clinical tags to the database and the data
-          browser.
-        - check_database: Check if files in database have been modified or
-          removed since they have been converted for the first time.
-        - check_unsaved_modifications: Check if there are differences between
-          the current project and the database.
-        - closeEvent: Override the closing event to check if there are unsaved
-          modifications.
-        - create_project_pop_up: Create a new project.
-        - create_view_actions: Create the actions in each menu.
-        - create_view_menus: Create the menu-bar.
-        - create_view_window: Create the main window view.
-        - create_tabs: Create the tabs.
-        - credits: Open the credits in a web browser.
-        - del_clinical_tags: Remove the clinical tags to the database and the
-          data browser.
-        - delete_project: Open a project and updates the recent projects list.
-        - documentation: Open the documentation in a web browser.
-        - get_controller_version: Returns controller_version_changed attribute.
-        - import_data: Call the import software (MRI File Manager).
-        - install_processes_pop_up: Open the install processes pop-up.
-        - last_window_closed: Force exit the event loop after ipython console
-          is closed.
-        - open_project_pop_up: Open a pop-up to open a project and updates
-          the recent projects.
-        - open_recent_project: Open a recent project.
-        - open_shell: Open a Qt console shell with an IPython kernel seeing
-          the program internals.
-        - package_library_pop_up: Open the package library pop-up.
-        - project_properties_pop_up: Open the project properties pop-up.
-        - redo: Redo the last action made by the user.
-        - remove_raw_files_useless: Remove the useless raw files of the
-          current project.
-        - save: Save either the current project or the current pipeline.
-        - save_as: Save either the current project or the current pipeline
-          under a new name.
-        - save_project_as: Open a pop-up to save the current project as.
-        - saveChoice: Checks if the project needs to be saved as or just saved.
-        - see_all_projects: Open a pop-up to show the recent projects.
-        - set_controller_version: Reverses controller_version_changed
-          attribute.
-        - setup_menu_actions: Initialize menu actions.
-        - setup_window_size: Set the window size and maximize if needed.
-        - software_preferences_pop_up: Open the Mia preferences pop-up.
-        - switch_project: Switches project if it's possible.
-        - tab_changed: Method called when the tab is changed.
-        - undo: Undoes the last action made by the user.
-        - update_project: Update the project once the database has been
-          updated.
-        - update_recent_projects_actions: Update the list of recent projects.
-
+            - add_clinical_tags: Add the clinical tags to the database and the
+              data browser.
+            - check_database: Check if files in database have been modified or
+              removed since they have been converted for the first time.
+            - check_unsaved_modifications: Check if there are differences
+              between the current project and the database.
+            - closeEvent: Override the closing event to check if there are
+              unsaved modifications.
+            - create_project_pop_up: Create a new project.
+            - create_view_actions: Create the actions in each menu.
+            - create_view_menus: Create the menu-bar.
+            - create_view_window: Create the main window view.
+            - create_tabs: Create the tabs.
+            - credits: Open the credits in a web browser.
+            - del_clinical_tags: Remove the clinical tags to the database and
+              the data browser.
+            - delete_project: Open a project and updates the recent projects
+              list.
+            - documentation: Open the documentation in a web browser.
+            - get_controller_version: Returns controller_version_changed
+              attribute.
+            - import_data: Call the import software (MRI File Manager).
+            - install_processes_pop_up: Open the install processes pop-up.
+            - last_window_closed: Force exit the event loop after ipython
+              console is closed.
+            - open_project_pop_up: Open a pop-up to open a project and updates
+              the recent projects.
+            - open_recent_project: Open a recent project.
+            - open_shell: Open a Qt console shell with an IPython kernel seeing
+              the program internals.
+            - package_library_pop_up: Open the package library pop-up.
+            - project_properties_pop_up: Open the project properties pop-up.
+            - redo: Redo the last action made by the user.
+            - remove_raw_files_useless: Remove the useless raw files of the
+              current project.
+            - save: Save either the current project or the current pipeline.
+            - save_as: Save either the current project or the current pipeline
+              under a new name.
+            - save_project_as: Open a pop-up to save the current project as.
+            - saveChoice: Checks if the project needs to be saved as or just
+              saved.
+            - see_all_projects: Open a pop-up to show the recent projects.
+            - set_controller_version: Reverses controller_version_changed
+              attribute.
+            - setup_menu_actions: Initialize menu actions.
+            - setup_window_size: Set the window size and maximize if needed.
+            - software_preferences_pop_up: Open the Mia preferences pop-up.
+            - switch_project: Switches project if it's possible.
+            - tab_changed: Method called when the tab is changed.
+            - undo: Undoes the last action made by the user.
+            - update_project: Update the project once the database has been
+              updated.
+            - update_recent_projects_actions: Update the list of recent
+              projects.
     """
 
     def __init__(self, project, test=False, deleted_projects=None):
@@ -147,9 +148,12 @@ class MainWindow(QMainWindow):
         interactions with the user.
 
         :param project: Current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param test: Boolean indicating if the widget is launched from unit
          tests or not.
+        :type test: bool
         :param deleted_projects: Projects that have been deleted.
+        :type deleted_projects: list
 
         """
         super().__init__()
@@ -248,8 +252,8 @@ class MainWindow(QMainWindow):
         Check if there are differences between the current project and the
         database.
 
-        :Returns (bool) True if there are unsaved modifications,
-         False otherwise
+        :returns: True if there are unsaved modifications, False otherwise.
+        :rtype: bool
         """
 
         if self.project is None:
@@ -270,6 +274,7 @@ class MainWindow(QMainWindow):
         modifications.
 
         :param event: Closing event.
+        :type event: QCloseEvent
         """
         if not self.check_unsaved_modifications() or self.test:
             can_exit = True
@@ -596,7 +601,8 @@ class MainWindow(QMainWindow):
     def get_controller_version(self):
         """Gives the value of the controller_version_changed attribute.
 
-        :Returns: A boolean.
+        :returns: The value of the controller_version_changed attribute.
+        :rtype: bool
         """
         return self.controller_version_changed
 
@@ -727,7 +733,8 @@ class MainWindow(QMainWindow):
     def install_processes_pop_up(self, folder=False):
         """Open the install processes pop-up.
 
-        :param folder: (boolean) True if installing from a folder.
+        :param folder: True if installing from a folder.
+        :type folder: bool
 
         """
         self.pop_up_install_processes = InstallProcesses(self, folder=folder)
@@ -913,17 +920,15 @@ class MainWindow(QMainWindow):
         :raises RuntimeError: If QApplication instance does not exist when
          calling this method.
 
-        :Returns: (RichJupyterWidget) the created QtConsole widget instance.
+        :returns: The created QtConsole widget instance.
+        :rtype: RichJupyterWidget
 
         Contains:
-
             Inner functions:
-
                 - cleanup_console: Safely clean up an in-process Jupyter
                   kernel and its communication channels.
 
             Inner classes:
-
                 - SafeRichJupyterWidget: A safer QtConsole widget for
                   in-process IPython shells.
         """
@@ -996,6 +1001,7 @@ class MainWindow(QMainWindow):
                 on deleted Qt objects.
 
                 :param event: The Qt close event.
+                :type event: QCloseEvent
                 """
                 self._closing = True
 
@@ -1027,6 +1033,7 @@ class MainWindow(QMainWindow):
                 destroyed.
 
                 :param msg: The Jupyter message received from the kernel.
+                :type msg: dict
                 """
 
                 if self._closing:
@@ -1407,6 +1414,7 @@ class MainWindow(QMainWindow):
 
         :param sources_images_dir: Directory containing source images
          for icons.
+        :type sources_images_dir: str
         """
         self.action_save_project = self.menu_file.addAction("Save project")
         self.action_save_project_as = self.menu_file.addAction(
@@ -1473,9 +1481,13 @@ class MainWindow(QMainWindow):
         current one.
 
         :param file_path: Raw file_path.
+        :type file_path: str
         :param name: Project name.
+        :type name: str
 
-        :Returns: A boolean.
+        :returns: True if the project was successfully switched. False
+         otherwise.
+        :rtype: bool
         """
         # /!\ file_path and path are the same param
 
@@ -1755,9 +1767,11 @@ class MainWindow(QMainWindow):
         This method updates the database, the window title, and the recent
         and saved projects menus.
 
-        :param file_path: (str) The file path of the new project.
-        :param call_update_table: (bool) Whether to update the table data,
-         Defaults to True.
+        :param file_path: The file path of the new project.
+        :type file_path: str
+        :param call_update_table: Whether to update the table data. Defaults to
+         True.
+        :type call_update_table: bool
         """
 
         self.data_browser.update_database(self.project)
