@@ -5773,7 +5773,8 @@ class TestMIAMainWindow(TestMIACase):
             - MainWindow.delete_project
             - PopUpDeleteProject
 
-        **Notes**: Not to be confused with `test_popUpDeletedProject`.
+        Note:
+            Not to be confused with `test_popUpDeletedProject`.
         """
         # Create and switch to a new test project
         test_proj_path = self.get_new_test_project()
@@ -7416,12 +7417,18 @@ class TestMIANodeController(TestMIACase):
         the OK action, simulating the user workflow without requiring
         actual UI interaction.
 
-        :param tag_name: (str) The name of the tag to select from the list.
-         This should match the text of one of the items in the popup's list
-         widget.
+        :param tag_name: The name of the tag to select from the list. This
+         should match the text of one of the items in the popup's list widget.
+        :type tag_name: str
 
+        :returns: A function with the same signature as
+         `PopUpSelectTagCountTable.exec_``.
+        :rtype: function
 
-        :Returns: A mock function that can be used to replace exec_() method.
+        Contains:
+            Inner functions:
+                - mock_exec: The actual implementation of exec_() that selects
+                  a tag from the list.
         """
 
         def mock_exec(self):
@@ -7433,8 +7440,10 @@ class TestMIANodeController(TestMIACase):
             to simulate the user confirming their selection.
 
             :param self: The PopUpSelectTagCountTable instance.
+            :type self: PopUpSelectTagCountTable
 
-            :Returns: True to simulate successful dialog execution.
+            :returns: True to simulate successful dialog execution.
+            :rtype: bool
             """
 
             # Find and select the specific tag
@@ -7513,20 +7522,23 @@ class TestMIANodeController(TestMIACase):
 
         This test simulates a realistic sequence of user interactions and
         verifies the following capabilities:
+
             - Adding two 'Rename' nodes to the pipeline ('rename_1' and
-              'rename_2')
-            - Displaying and interacting with node parameters
-            - Attempting to rename 'rename_2' to an existing name (should fail)
+              'rename_2').
+            - Displaying and interacting with node parameters.
+            - Attempting to rename 'rename_2' to an existing name (should
+              fail).
             - Renaming 'rename_2' to a new unique name ('rename_3')
-              successfully
-            - Deleting an existing node ('rename_3')
-            - Exporting unconnected mandatory input plugs for a node
-            - Setting input plug values using a test document
+              successfully.
+            - Deleting an existing node ('rename_3').
+            - Exporting unconnected mandatory input plugs for a node.
+            - Setting input plug values using a test document.
             - Executing the pipeline and expecting an error due to unexported
-              output
+              output.
             - Opening the attributes filter dialog, selecting a row, and
-              confirming
-            - Releasing and updating the process associated with the controller
+              confirming.
+            - Releasing and updating the process associated with the
+              controller.
 
         Methods tested:
             - CapsulNodeController.update_node_name
@@ -7537,7 +7549,7 @@ class TestMIANodeController(TestMIACase):
             - PipelineEditor.export_unconnected_mandatory_inputs
             - PipelineManager.runPipeline
 
-        Notes:
+        Note:
             - The test assumes that running the pipeline raises an error
               because the output plug is not exported, which is intentional.
             - A QDialog.exec() mock is used to simulate dialog confirmation
@@ -7703,14 +7715,14 @@ class TestMIANodeController(TestMIACase):
         Capsul pipeline node.
 
         This test:
-            - Switches to the V1 node controller (if not already active)
-            - Adds an `Input_Filter` process to the pipeline
-            - Feeds in documents from a test project
-            - Opens the filter widget for the added node
+            - Switches to the V1 node controller (if not already active).
+            - Adds an `Input_Filter` process to the pipeline.
+            - Feeds in documents from a test project.
+            - Opens the filter widget for the added node.
             - Performs various filtering actions:
-                - Searching for documents by name
-                - Toggling tag visibility
-                - Filtering by a specific tag (mocking user interaction)
+                - Searching for documents by name.
+                - Toggling tag visibility.
+                - Filtering by a specific tag (mocking user interaction).
 
         The `FilterWidget` is GUI-independent and works in both V1 and V2 node
         controller UIs. Only the V1 GUI is exercised here.
@@ -7859,22 +7871,22 @@ class TestMIANodeController(TestMIACase):
     def test_node_controller(self):
         """
         Tests the behavior of the V1 `NodeController` interface for:
-            - Adding, renaming, and deleting nodes
-            - Displaying and updating process parameters
-            - Interacting with plug filters and values
+            - Adding, renaming, and deleting nodes.
+            - Displaying and updating process parameters.
+            - Interacting with plug filters and values.
 
         Workflow:
-            - Switches to V1 node controller mode if not already enabled
+            - Switches to V1 node controller mode if not already enabled.
             - Opens a test project and adds two Rename processes as
-              "rename_1" and "rename_2"
+              "rename_1" and "rename_2".
             - Attempts renaming "rename_2" to an existing name (fails)
-              then to a unique one
-            - Deletes the renamed node
-            - Exports input/output plugs and tests plug interaction
-            - Displays parameters and plug filters
-            - Updates plug values with and without providing new values
-            - Releases and refreshes the process
-            - Restores the original node controller mode after testing
+              then to a unique one.
+            - Deletes the renamed node.
+            - Exports input/output plugs and tests plug interaction.
+            - Displays parameters and plug filters.
+            - Updates plug values with and without providing new values.
+            - Releases and refreshes the process.
+            - Restores the original node controller mode after testing.
         """
 
         config = Config(properties_path=self.properties_path)
@@ -7992,13 +8004,13 @@ class TestMIANodeController(TestMIACase):
         Tests plug filtering in the Node Controller V1 interface.
 
         This test covers:
-            - Switching to Node Controller V1 if not already enabled
-            - Opening a test project and retrieving documents
-            - Adding and configuring a 'Smooth' node in the pipeline
-            - Displaying and modifying a plug filter
-            - Searching and filtering table rows
-            - Modifying visible tag columns
-            - Verifying plug value assignment from filtered selections
+            - Switching to Node Controller V1 if not already enabled.
+            - Opening a test project and retrieving documents.
+            - Adding and configuring a 'Smooth' node in the pipeline.
+            - Displaying and modifying a plug filter.
+            - Searching and filtering table rows.
+            - Modifying visible tag columns.
+            - Verifying plug value assignment from filtered selections.
         """
         config = Config(properties_path=self.properties_path)
         controlV1_ver = config.isControlV1()
@@ -8151,6 +8163,11 @@ class TestMIANodeController(TestMIACase):
             - A node name can be changed via the NodeController interface.
             - Duplicate names are not accepted.
             - Node renaming preserves the connections (links) between nodes.
+
+        Contains:
+            Inner functions:
+                - simulate_rename: Simulates renaming a node via the GUI line
+                  edit.
         """
 
         def simulate_rename(new_name: str):
@@ -8160,6 +8177,7 @@ class TestMIANodeController(TestMIACase):
             This simulates the user typing a new name and pressing Enter.
 
             :param new_name: The new name to set for the node.
+            :type new_name: str
             """
             # Ensure the line edit has focus
             node_controller.line_edit_node_name.setFocus()
@@ -8272,9 +8290,7 @@ class TestMIAPipelineEditor(TestMIACase):
     """Tests for the pipeline editor, part of the pipeline manager tab.
 
     Contains:
-
         Methods:
-
             - test_add_tab: Adds tabs to the PipelineEditorTabs.
             - test_close_tab: Closes a tab in the PipelineEditorTabs.
             - test_drop_process: Adds a Nipype SPM Smooth process to the
@@ -8332,11 +8348,11 @@ class TestMIAPipelineEditor(TestMIACase):
         modified.
 
         Scenarios covered:
-            - Closing an unmodified tab (no dialog shown)
+            - Closing an unmodified tab (no dialog shown).
             - Closing a modified tab and choosing:
-                - "Save As"
-                - "Do Not Save"
-                - "Cancel"
+                - "Save As".
+                - "Do Not Save".
+                - "Cancel".
         """
 
         # Sets shortcuts for objects that are often used
@@ -8736,7 +8752,8 @@ class TestMIAPipelineEditor(TestMIACase):
             - PipelineEditor.export_node_all_unconnected_inputs
             - ProcessNode.get_plug_value
 
-        Notes: This test specifically targets NodeController V1 behavior.
+        Note:
+            This test specifically targets NodeController V1 behavior.
         """
 
         config = Config(properties_path=self.properties_path)
@@ -8835,11 +8852,11 @@ class TestMIAPipelineEditor(TestMIACase):
               "test_pipeline_1_1".
 
         Tested features:
-            - Pipeline loading
-            - Process instantiation from library
-            - Node linking
-            - Plug export and save
-            - Detection of modifications in sub-pipeline processes
+            - Pipeline loading.
+            - Process instantiation from library.
+            - Node linking.
+            - Plug export and save.
+            - Detection of modifications in sub-pipeline processes.
         """
 
         pipeline_editor_tabs = (
@@ -9091,9 +9108,9 @@ class TestMIAPipelineEditor(TestMIACase):
             1. Loads a saved pipeline file into a new tab.
             2. Creates an additional empty pipeline in a second tab.
             3. Retrieves and checks tab indices using:
-                - the tab name
-                - the full file path
-                - the editor instance
+                - the tab name.
+                - the full file path.
+                - the editor instance.
             4. Confirms that querying with an invalid name, path, or editor
                returns None.
         """
@@ -9256,9 +9273,9 @@ class TestMIAPipelineEditor(TestMIACase):
         Tests setting the current editor using different criteria.
 
         Validates that the active tab can be correctly switched using:
-            - Tab name
-            - Pipeline file name
-            - Editor instance
+            - Tab name.
+            - Pipeline file name.
+            - Editor instance.
 
         Targets the following methods:
             - PipelineEditorTabs.set_current_editor_by_tab_name
@@ -9335,9 +9352,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
     """Tests the pipeline manager tab class, part of the homonym tab.
 
     Contains:
-
         Methods:
-
             - test_add_plug_value_to_database_list_type: Adds a list type plug
               value to the database.
             - test_add_plug_value_to_database_non_list_type: Adds a non list
@@ -9517,13 +9532,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         Scenarios covered:
             - Plug value is outside the project directory (should not be
-              indexed)
-            - Plug value is inside the project directory (should be indexed)
-            - Plug value is already in the database (logs an info message)
-            - Plug values with different file extensions (.nii.gz, .mat, .txt)
+              indexed).
+            - Plug value is inside the project directory (should be indexed).
+            - Plug value is already in the database (logs an info message).
+            - Plug values with different file extensions (.nii.gz, .mat, .txt).
             - Handling of `parent_files` via `auto_inheritance_dict` and
-              `inheritance_dict`
-            - Adding and removing tags based on the inheritance information
+              `inheritance_dict`.
+            - Adding and removing tags based on the inheritance information.
 
         Tests: PipelineManagerTab(QWidget).add_plug_value_to_database()
         """
@@ -9872,14 +9887,27 @@ class TestMIAPipelineManagerTab(TestMIACase):
         Also validates `PopUpInheritanceDict` interactive behavior across all
         buttons.
 
-        tested:
+        Tested:
             - PipelineManagerTab.add_plug_value_to_database
             - PopUpInheritanceDict interaction
+
+        Contains:
+            Inner functions:
+                - mock_exec: Mock execution function for PopUpInheritanceDict.
+                - mock_get_document: Mock function to fetch documents from the
+                  database.
+                - reset_collections: Reset collections to ensure consistent
+                  state.
+                - reset_inheritance_dicts: Reset inheritance dictionaries to
+                  ensure consistent state.
         """
 
         def mock_exec(self):
             """
             Mock `exec` of PopUpInheritanceDict to simulate user selection.
+
+            :param self: Instance of PopUpInheritanceDict.
+            :type self: PopUpInheritanceDict
             """
             self.value = "mock_key_2"
             self.key = "mock_key_2"
@@ -9899,15 +9927,18 @@ class TestMIAPipelineManagerTab(TestMIACase):
                 - "mock_val_1": sets 'Exp Type' to "Exp Type 1"
                 - "mock_val_2": sets 'Exp Type' to "Exp Type 2"
 
-            :param collection_name: (str) Name of the database collection being
+            :param collection_name: Name of the database collection being
              queried. This parameter is unused but kept for signature
              compatibility.
-            :param primary_keys (str): The primary key identifying which mock
+            :type collection_name: str
+            :param primary_keys: The primary key identifying which mock
              variant to return, affecting the 'Exp Type' field of the first
              record.
+            :type primary_keys: str
 
-            :Returns: (list[dict]) A deep copy of the `scan_mock` data with
-             the 'Exp Type' field updated if applicable.
+            :Return: A deep copy of the `scan_mock` data with the 'Exp Type'
+             field updated if applicable.
+            rtype: list[dict]
             """
             scan_copy = copy.deepcopy(scan_mock)
 
@@ -10232,12 +10263,12 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Verifies that the resulting pipeline is correctly built and
               mocks are invoked as expected.
 
+        The test allows an expected exception message to be printed during
+        execution.
+
         Note:
             update_nodes_and_plugs_activation' may not exist on the process,
             hence 'create=True' is used to safely mock it.
-
-        The test allows an expected exception message to be printed during
-        execution.
         """
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
@@ -10386,10 +10417,19 @@ class TestMIAPipelineManagerTab(TestMIACase):
         This test creates a pipeline with three connected 'Smooth' processes
         (smooth_1 -> smooth_2 -> smooth_3), deletes the middle node, and
         verifies:
-            - The node is properly removed from the pipeline
-            - Connected links are cleaned up
-            - Undo operation restores the node and its connections
-            - Redo operation removes the node again
+
+            - The node is properly removed from the pipeline.
+            - Connected links are cleaned up.
+            - Undo operation restores the node and its connections.
+            - Redo operation removes the node again.
+
+        Contains:
+            Inner functions:
+                - _assert_connection_counts: Assert that connection counts
+                  match expected values.
+                - _assert_nodes_exist: Assert that nodes exist as expected.
+                - _assert_nodes_not_exist: Assert that nodes do not exist as
+                  expected.
         """
 
         def _assert_connection_counts(pipeline, expected_counts):
@@ -10397,8 +10437,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
             Assert that connection counts match expected values.
 
             :param pipeline: The pipeline object to check.
+            :type pipeline: capsul.pipeline.pipeline.Pipeline
             :param expected_counts: Dict mapping (node_name, plug_name,
              link_type) to expected count.
+            :type expected_counts: dict
             """
 
             for (
@@ -10424,8 +10466,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
             Assert that all specified nodes exist within the given pipeline.
 
             :param pipeline: The pipeline object containing nodes.
-            :param node_names: A list of node names (str) to check for
-             existence.
+            :type pipeline: capsul.pipeline.pipeline.Pipeline
+            :param node_names: A list of node names to check for existence.
+            :type node_names: list[str]
             """
 
             for node_name in node_names:
@@ -10441,8 +10484,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
             pipeline.
 
             :param pipeline: The pipeline object containing nodes.
+            :type pipeline: capsul.pipeline.pipeline.Pipeline
             :param node_names: A list of node names (str) expected to be
              absent.
+            :type node_names: list[str]
             """
 
             for node_name in node_names:
@@ -10593,8 +10638,9 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         Isolated test: In addition to the 'initialized' reset, verifies that
         dependent methods are called exactly once:
-            - postprocess_pipeline_execution
-            - update_user_buttons_states
+
+            - postprocess_pipeline_execution.
+            - update_user_buttons_states.
         """
 
         ppl_manager = self.main_window.pipeline_manager
@@ -10846,6 +10892,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
         This method tests the behavior of the pipeline manager when
         registering completion attributes with and without provided
         attributes. It performs the following steps:
+
             1. Adds a Select process to the current pipeline.
             2. Exports mandatory input and output plugs.
             3. Sets plug values for input and output files.
@@ -10952,11 +10999,11 @@ class TestMIAPipelineManagerTab(TestMIACase):
             4. Sets plug values for the process and output nodes.
             5. Creates a workflow and job for the pipeline.
             6. Tests `_register_node_io_in_database` with:
-                - NipypeProcess instance
-                - ProcessNode instance
-                - PipelineNode instance
-                - Switch instance
-                - Process with no outputs
+                - NipypeProcess instance.
+                - ProcessNode instance.
+                - PipelineNode instance.
+                - Switch instance.
+                - Process with no outputs.
 
         Verifies:
             - Output file is correctly added to `COLLECTION_CURRENT`.
@@ -11115,6 +11162,10 @@ class TestMIAPipelineManagerTab(TestMIACase):
             3. Interruption: Ensures interruption is logged correctly.
 
         tests: RunWorker.run
+
+        Contains:
+            Inner functions:
+                - fake_start: Simulates the start of a worker.
         """
         # Setup: Shortcuts and test file
         ppl_manager = self.main_window.pipeline_manager
@@ -11188,14 +11239,18 @@ class TestMIAPipelineManagerTab(TestMIACase):
             fixed workflow identifier together with the provided pipeline.
 
             :param pipeline: Pipeline instance passed to ``engine.start``.
+            :type pipeline: capsul.process.process.NipypeProcess
             :param workflow: Optional workflow object. Included for signature
              compatibility with ``engine.start``.
+            :type workflow: None
             :param get_pipeline: Whether the pipeline should be returned.
              Included for signature compatibility with ``engine.start``.
+            :type get_pipeline: bool
 
-            :Returns: A tuple ``(workflow_id, pipeline)``, where
+            :returns: A tuple ``(workflow_id, pipeline)``, where
              ``workflow_id`` is always ``500`` and ``pipeline`` is the input
              pipeline.
+            :rtype: tuple
             """
             logger = logging.getLogger(
                 "populse_mia.user_interface.pipeline_manager."
@@ -11375,7 +11430,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
               handles the renamed pipeline and the status bar confirms success.
 
         :raises AssertionError: If the displayed status bar messages do not
-                                match the expected content.
+         match the expected content.
         """
         # Set shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
@@ -11561,10 +11616,11 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         This test verifies that the pipeline editor's undo/redo stack correctly
         handles:
-            - Node creation, deletion, and renaming
-            - Plug export, removal, and value updates
-            - Link creation, deletion, and restoration
-            - Document deletion (in-memory only; disk behavior is not tested)
+
+            - Node creation, deletion, and renaming.
+            - Plug export, removal, and value updates.
+            - Link creation, deletion, and restoration.
+            - Document deletion (in-memory only; disk behavior is not tested).
 
         The test is robust and designed to prevent random crashes. It ensures
         that all operations are reversible and that the editor’s state remains
@@ -11600,13 +11656,13 @@ class TestMIAPipelineManagerTab(TestMIACase):
         pop_up_add_path.file_line_edit.setText(f"['{document}']")
         pop_up_add_path.save_path()
 
-        # We are keeping the following tests for now, although it no longer
-        # really makes sense. Indeed, there is, among other things, a point of
-        # discussion in populse_mia that is still ongoing: what should we do
-        # if we delete a document from the DataBrowser? Currently, if we
+        # FIXME: We are keeping the following tests for now, although it no
+        # longer really makes sense. Indeed, there is, among other things, a
+        # point of discussion in populse_mia that is still ongoing: what should
+        # we do if we delete a document from the DataBrowser? Currently, if we
         # delete a document from the DataBrowser, it is removed both from the
         # database and physically from the hard drive. This prevents, after an
-        # undo(), from performing a redo() for the physical part on the disk.
+        # undo(), from performing a redo() for the physical partt on he disk.
         # However, things are a bit complicated for various reasons outside the
         # scope of this comment. The result is that the undo and redo
         # functions are quite permissive on this subject (there is no specific
@@ -11886,8 +11942,8 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Behavior when the node is not a valid Process (the attribute
               should not exist).
 
-        :raises AssertionError: If expectations about the existence, type,
-         or contents of `auto_inheritance_dict` are not met.
+        :raises AssertionError: If expectations about the existence, type, or
+         contents of `auto_inheritance_dict` are not met.
         """
         project_8_path = self.get_new_test_project()
         raw_data_folder = os.path.join(
@@ -12072,7 +12128,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         This test covers multiple scenarios of inheritance updating:
             - Ensures that jobs do not initially have `inheritance_dict`
-              attribute
+              attribute.
             - Validates update when the node name does not contain "Pipeline".
             - Validates update when the node name contains "Pipeline".
             - Validates update when the node's inheritance history is recorded
@@ -12196,8 +12252,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
             - Simulating a ``ValueError`` raised
               by ``workflow_from_pipeline``.
 
-        Target:
-            ``PipelineManagerTab.init_pipeline``
+        Target: ``PipelineManagerTab.init_pipeline``
         """
         # --- Setup pipeline and test document ---
         ppl_manager = self.main_window.pipeline_manager
@@ -12456,9 +12511,7 @@ class Test_Z_MIAOthers(TestMIACase):
     other classes.
 
     Contains:
-
         Methods:
-
             - _mock_mouse_event: Mocks QMouseEvent for a right-click at
               position (0, 0).
             - test_check_setup: Checks that Mia's configuration control is
@@ -12615,11 +12668,11 @@ class Test_Z_MIAOthers(TestMIACase):
         processes and packages.
 
         The following behaviors are verified:
-            - insertion of a new package node,
-            - MIME data generation for drag-and-drop,
-            - renaming of a package,
-            - deletion via the Delete key,
-            - context-menu action: remove package,
+            - insertion of a new package node.
+            - MIME data generation for drag-and-drop.
+            - renaming of a package.
+            - deletion via the Delete key.
+            - context-menu action: remove package.
             - context-menu action: delete package with confirmation dialog.
 
         All user interactions involving Qt dialogs or menus are mocked to
@@ -12627,10 +12680,13 @@ class Test_Z_MIAOthers(TestMIACase):
 
         :param mock_msgbox_exec: Mock for QMessageBox.exec to prevent actual
          execution of modal dialogs.
+        :type mock_msgbox_exec: unittest.mock.MagicMock
         :param mock_msgbox_question: Mock for QMessageBox.question used to
          simulate user confirmation (returns QMessageBox.Yes).
-        :param mock_menu_exec: Mock for QMenu.exec_ to simulate context menu
-         selection without displaying a GUI menu.
+        :type mock_msgbox_question: unittest.mock.MagicMock
+        :param mock_menu_exec: Mock for ``QMenu.exec_`` to simulate context
+         menu selection without displaying a GUI menu.
+        :type mock_menu_exec: unittest.mock.MagicMock
         """
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
@@ -12739,10 +12795,10 @@ class Test_Z_MIAOthers(TestMIACase):
         QtConsole with an IPython kernel.
 
         This test verifies:
-            - A RichJupyterWidget is returned
-            - The in-process kernel can execute code
-            - Application internals are available in the kernel namespace
-            - Multiple consoles can coexist safely
+            - A RichJupyterWidget is returned.
+            - The in-process kernel can execute code.
+            - Application internals are available in the kernel namespace.
+            - Multiple consoles can coexist safely.
         """
         # Open the first in-process console
         console = self.main_window.open_shell()
