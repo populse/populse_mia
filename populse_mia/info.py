@@ -137,6 +137,7 @@ REQUIRES = [
     "snakeviz",
     "soma-base >= 5.0",
     "soma-workflow >= 3.2",
+    "sphinx-qt-documentation",
     "six >= 1.13",
     "traits",
 ]

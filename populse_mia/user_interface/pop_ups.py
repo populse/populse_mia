@@ -166,14 +166,11 @@ class ClickableLabel(QLabel):
     A QLabel subclass that emits a signal when clicked.
 
     Contains:
-
         Methods:
-
             - mousePressEvent: Overrides the mousePressEvent method by emitting
               the clicked signal.
 
     Signals:
-
         - clicked: Emitted when the label is clicked.
     """
 
@@ -187,8 +184,8 @@ class ClickableLabel(QLabel):
         """
         Handles the mouse press event by emitting the `clicked` signal.
 
-        :param event: (QMouseEvent) The mouse event triggering the signal
-         (unused)
+        :param event: The mouse event triggering the signal (unused).
+        :type event: QMouseEvent
         """
         self.clicked.emit()
 
@@ -201,9 +198,7 @@ class DefaultValueListCreation(QDialog):
     specified type (e.g., integers, floats, booleans, etc.).
 
     Contains:
-
         Methods:
-
             - add_element(): Adds one more element to the list.
             - default_init_table(): Initializes the table with a default value
               when no previous value exists.
@@ -219,9 +214,10 @@ class DefaultValueListCreation(QDialog):
         """
         Initializes the DefaultValueListCreation dialog.
 
-        :param parent: (DefaultValueQLineEdit) The parent object.
-        :param type: (Type) The type of the list elements (e.g., int, float,
-         str).
+        :param parent: The parent object.
+        :type parent: DefaultValueQLineEdit
+        :param type: The type of the list elements (e.g., int, float, str).
+        :type type: str
 
         """
         super().__init__()
@@ -414,11 +410,8 @@ class DefaultValueQLineEdit(QLineEdit):
     displaying a popup when clicked.
 
     Contains:
-
         Methods:
-
             - mousePressEvent: Mouse pressed on the QLineEdit.
-
     """
 
     def __init__(self, parent):
@@ -434,8 +427,8 @@ class DefaultValueQLineEdit(QLineEdit):
 
         If the parent's type is a list, displays a popup for list creation.
 
-        :param event: (QMouseEvent) The mouse press event (unused).
-
+        :param event: The mouse press event (unused).
+        :type event: QMouseEvent
         """
         if get_origin(self.parent.type) is list:
             # We display the pop up to create the list if the checkbox is
@@ -452,9 +445,7 @@ class PopUpAddPath(QDialog):
     Manager (File > Import).
 
     Contains:
-
         Methods:
-
             - file_to_choose: Opens a file dialog to choose a document.
             - find_type: Determines the document type when the file path
               changes.
@@ -465,8 +456,11 @@ class PopUpAddPath(QDialog):
         """
         Initializes the pop-up for adding a document.
 
-        :param project: (Project) The current project instance.
-        :param databrowser: (DataBrowser) The application's data browser.
+        :param project: The current project instance.
+        :type project: populse_mia.data_manager.project.Project
+        :param databrowser: The application's data browser.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         """
         super().__init__()
         self.project = project
@@ -675,9 +669,7 @@ class PopUpAddTag(QDialog):
     default value, description, unit, and type.
 
     Contains:
-
         Methods:
-
             - _connect_signals: Connect signals to slots.
             - _setup_layouts: Set up the layout of UI elements.
             - _setup_ui: Set up the dialog UI elements.
@@ -686,7 +678,6 @@ class PopUpAddTag(QDialog):
             - on_activated: Updates form fields when tag type is changed.
 
     Signals:
-
         - signal_add_tag: Signal emitted when a new tag is successfully added.
     """
 
@@ -698,7 +689,10 @@ class PopUpAddTag(QDialog):
         Initialize the dialog for adding a new tag.
 
         :param databrowser: The data browser instance
-        :param project: The current project in the software
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
+        :param project: The current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.project = project
@@ -833,7 +827,9 @@ class PopUpAddTag(QDialog):
         Display an error message box.
 
         :param text: The main error message text.
+        :type param text: str
         :param informative_text: The additional informative text.
+        :type informative_text: str
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
@@ -921,7 +917,8 @@ class PopUpAddTag(QDialog):
         """
         Update the default value when the tag type changes.
 
-        :param text: The new type selected from combo box
+        :param text: The new type selected from combo box.
+        :type text: str
         """
         type_mapping = {
             "String": (FIELD_TYPE_STRING, "Undefined"),
@@ -982,9 +979,7 @@ class PopUpCloneTag(QDialog):
     clone it with a new name.
 
     Contains:
-
         Methods:
-
             - _connect_signals: Connect signals to slots.
             - _populate_tag_list: Populate the tag list with available tags.
             - _setup_ui: Set up the dialog UI elements.
@@ -994,7 +989,6 @@ class PopUpCloneTag(QDialog):
             - search_str: Filters the tag list based on a search string.
 
     Signals:
-
         - signal_clone_tag: Signal emitted when a tag is successfully cloned.
 
     """
@@ -1007,7 +1001,10 @@ class PopUpCloneTag(QDialog):
         Initialize the dialog for cloning a tag.
 
         :param databrowser: The data browser instance
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         :param project: The current project in the software
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.databrowser = databrowser
@@ -1023,6 +1020,7 @@ class PopUpCloneTag(QDialog):
         """Connect signals to slots.
 
         :param project: The current project.
+        :type project: populse_mia.data_manager.project.Project
         """
         self.push_button_ok.clicked.connect(lambda: self.ok_action(project))
         self.search_bar.textChanged.connect(partial(self.search_str, project))
@@ -1032,6 +1030,7 @@ class PopUpCloneTag(QDialog):
         Populate the tag list with available tags from the project.
 
         :param project: The current project.
+        :type project: populse_mia.data_manager.project.Project
         """
         _translate = QtCore.QCoreApplication.translate
 
@@ -1102,7 +1101,9 @@ class PopUpCloneTag(QDialog):
         """Display an error message box.
 
         :param text: The main error message text.
+        :type text: str
         :param informative_text: The additional informative text.
+        :type informative_text: str
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
@@ -1118,6 +1119,7 @@ class PopUpCloneTag(QDialog):
         Validate new tag name and clone the selected tag if valid.
 
         :param project: The current project.
+        :type project: populse_mia.data_manager.project.Project
         """
         new_tag_name = self.line_edit_new_tag_name.text()
         selected_items = self.list_widget_tags.selectedItems()
@@ -1161,7 +1163,9 @@ class PopUpCloneTag(QDialog):
         """Filter the tag list based on the search string.
 
         :param project: The current project.
+        :type project: populse_mia.data_manager.project.Project
         :param search_text: The search string to filter by.
+        :type search_text: str
         """
         _translate = QtCore.QCoreApplication.translate
 
@@ -1202,9 +1206,7 @@ class PopUpClosePipeline(QDialog):
     save, or cancel.
 
     Contains:
-
         Methods:
-
             - _connect_signals: Connect button signals to their respective
               slots.
             - _setup_ui: Set up the dialog's user interface.
@@ -1214,7 +1216,6 @@ class PopUpClosePipeline(QDialog):
             - save_as_clicked: Makes the actions to save the pipeline.
 
     Signals:
-
         - save_as_signal: Emitted when the user chooses to save the pipeline.
         - do_not_save_signal: Emitted when the user chooses not to save the
           pipeline.
@@ -1230,8 +1231,8 @@ class PopUpClosePipeline(QDialog):
         """
         Initialize the dialog with the pipeline name.
 
-        :param pipeline_name: (str)  Name of the pipeline (basename).
-
+        :param pipeline_name: Name of the pipeline (basename).
+        :type pipeline_name: str
         """
         super().__init__()
         # Name of the pipeline being edited
@@ -1325,13 +1326,10 @@ class PopUpDataBrowserCurrentSelection(QDialog):
     main window.
 
     Contains:
-
         Methods:
-
             - _set_dialog_size: Set the dialog size based on screen resolution.
             - _setup_ui: Set up the dialog's user interface.
             - ok_clicked: Updates the "scan_list" attribute of several widgets.
-
     """
 
     def __init__(
@@ -1341,12 +1339,16 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         Initialize the dialog with the current project and selection data.
 
         :param project: Current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param databrowser: Data browser instance of the software.
-        :param filter (list): List of the current documents in the data
-         browser.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
+        :param filter: List of the current documents in the data browser.
+        :type filter: list[str]
         :param main_window: Main window of the software.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         :param TableDataBrowser: Class for displaying data in a table format.
-
+        :type TableDataBrowser: sip.wrappertype
         """
         super().__init__()
         self.project = project
@@ -1367,6 +1369,7 @@ class PopUpDataBrowserCurrentSelection(QDialog):
         Set up the dialog's user interface.
 
         :param TableDataBrowser: Class for displaying data in a table format.
+        :type TableDataBrowser: sip.wrappertype
         """
         self.setWindowTitle("Confirm the selection")
         self.setModal(True)
@@ -1426,7 +1429,6 @@ class PopUpDeletedProject(QMessageBox):
     Contains:
 
         Methods:
-
             - _connect_signals: Connect button signals to their respective
               slots.
             - _setup_message_box: Configure the message box appearance and
@@ -1437,8 +1439,9 @@ class PopUpDeletedProject(QMessageBox):
         """
         Initialize the message box with a list of inaccessible projects.
 
-        :param deleted_projects: (list) List of project names that are no
+        :param deleted_projects: List of project names that are no
          longer accessible (deleted, renamed, or moved).
+        :type deleted_projects: list[str]
         """
         super().__init__()
         self.deleted_projects = deleted_projects
@@ -1476,7 +1479,6 @@ class PopUpDeleteProject(QDialog):
     directory after confirmation.
 
     Contains:
-
         Methods:
 
             - _delete_project: Handles project deletion.
@@ -1491,7 +1493,8 @@ class PopUpDeleteProject(QDialog):
         """
         Initializes the delete project dialog.
 
-        :param main_window: (QMainWindow) The main application window.
+        :param main_window: The main application window.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         self.setWindowTitle("Delete project")
@@ -1504,8 +1507,10 @@ class PopUpDeleteProject(QDialog):
         """
         Handles project deletion, updating application state accordingly.
 
-        :param project_path: (str) The path of the project to delete.
-        :param opened_projects: (list) The list of currently opened projects.
+        :param project_path: The path of the project to delete.
+        :type project_path: str
+        :param opened_projects: The list of currently opened projects.
+        :type opened_projects: str
         """
 
         if os.path.abspath(self.main_window.project.folder) == os.path.abspath(
@@ -1614,9 +1619,7 @@ class PopUpFilterSelection(QDialog):
     Dialog for selecting a previously saved filter.
 
     Contains:
-
         Methods:
-
             - cancel_clicked: Closes the pop-up.
             - ok_clicked: Handles actions when the "OK" button is clicked.
             - search_str: Filters the list based on the search input.
@@ -1626,7 +1629,8 @@ class PopUpFilterSelection(QDialog):
         """
         Initializes the pop-up dialog.
 
-        :param project: (object) The current project containing saved filters.
+        :param project: The current project containing saved filters.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.project = project
@@ -1689,8 +1693,8 @@ class PopUpFilterSelection(QDialog):
         """
         Filters the list of saved filters based on the search input.
 
-        :param search_text: (str) The text pattern to search for.
-
+        :param search_text: The text pattern to search for.
+        :type search_text: str
         """
         search_text = search_text.strip().upper()
 
@@ -1718,7 +1722,8 @@ class PopUpInformation(QWidget):
         """
         Initializes the popup window with project details.
 
-        :param project: (Project) The current project instance.
+        :param project: The current project instance.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         # UI Elements
@@ -1747,9 +1752,7 @@ class PopUpInheritanceDict(QDialog):
     altogether.
 
     Contains:
-
         Methods:
-
             - _setup_buttons: Set up action buttons for the dialog.
             - _setup_radio_buttons: Set up radio buttons for each input option.
             - ok_clicked: Event when ok button is clicked.
@@ -1765,12 +1768,14 @@ class PopUpInheritanceDict(QDialog):
         """
         Initialize the inheritance selection dialog.
 
-        :param values: (dict) Dict mapping input names (keys) to their paths
-         (values).
-        :param node_name: (str) Name of the current node.
-        :param plug_name: (str) Name of the current output plug.
-        :param iterate: (bool) Boolean indicating if the choice applies to
-         iterations.
+        :param values: Dict mapping input names (keys) to their paths (values).
+        :type values: dict
+        :param node_name: Name of the current node.
+        :type node_name: str
+        :param plug_name: Name of the current output plug.
+        :type plug_name: str
+        :param iterate: Boolean indicating if the choice applies to iterations.
+        :type iterate: bool
         """
         super().__init__()
         self.setModal(True)
@@ -1815,8 +1820,11 @@ class PopUpInheritanceDict(QDialog):
         """Set up action buttons for the dialog.
 
         :param node_name: Name of the current node.
+        :type node_name: str
         :param plug_name: Name of the current output plug.
+        :type plug_name: str
         :param layout: Layout to add the buttons to.
+        :type layout: :class:`PyQt5.QtWidgets.QHBoxLayout`
         """
         # OK button
         self.push_button_ok = QPushButton("OK", self)
@@ -1855,7 +1863,9 @@ class PopUpInheritanceDict(QDialog):
         """Set up radio buttons for each input option.
 
         :param values: Dict mapping input names to their paths.
+        :type values: dict
         :param layout: Layout to add the radio buttons to.
+        :type layout: :class:`PyQt5.QtWidgets.QVBoxLayout`
         """
         first_button = True
 
@@ -1950,9 +1960,7 @@ class PopUpMultipleSort(QDialog):
     add or remove sort criteria.
 
     Contains:
-
         Methods:
-
             - _setup_ui_elements: Create and configure all UI elements.
             - add_tag: Adds a push button.
             - fill_values: Fills the values list when a tag is added or
@@ -1971,8 +1979,10 @@ class PopUpMultipleSort(QDialog):
         Initialize the multiple sort dialog.
 
         :param project: Current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param table_data_browser: Data browser's table to be sorted.
-
+        :type table_data_browser:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
         """
         super().__init__()
         self.project = project
@@ -2040,7 +2050,7 @@ class PopUpMultipleSort(QDialog):
         Collect unique values for the selected tag.
 
         :param idx: Index of the tag button in the push_buttons list.
-
+        :type idx: int
         """
         tag_name = self.push_buttons[idx].text()
 
@@ -2118,6 +2128,7 @@ class PopUpMultipleSort(QDialog):
         Open a pop-up dialog to choose a tag for the specified button.
 
         :param idx: Index of the button in the push_buttons list.
+        :type idx: int
         """
 
         with self.project.database.data() as database_data:
@@ -2160,14 +2171,11 @@ class PopUpNewProject(QFileDialog):
     manages file selection and handles the creation process.
 
     Contains:
-
         Methods:
-
             - get_filename: Sets the widget's attributes depending on the
               selected file name.
 
     Signals:
-
         - signal_create_project: Emitted when a project has been successfully
           created.
     """
@@ -2187,8 +2195,9 @@ class PopUpNewProject(QFileDialog):
         """
         Process the selected filename and set up project attributes.
 
-        :param file_name_tuple: (tuple) Tuple containing the selected
-         filename(s), obtained from the selectedFiles method.
+        :param file_name_tuple: Tuple containing the selected filename(s),
+         which is obtained from the selectedFiles method.
+        :type file_name_tuple: tuple[str]
 
         Note:
             If the file already exists, displays an error message. Otherwise,
@@ -2230,14 +2239,11 @@ class PopUpOpenProject(QFileDialog):
     location and emits a signal when a valid project is selected.
 
     Contains:
-
         Methods:
-
             - get_filename: Sets the widget's attributes depending on the
               selected file name.
 
     Signals:
-
         - signal_create_project: Signal emitted when a valid project is
           selected.
     """
@@ -2267,8 +2273,9 @@ class PopUpOpenProject(QFileDialog):
         Sets the path, name, and relative_path attributes based on the selected
         directory. If the directory exists, emits signal_create_project.
 
-        :param file_name_tuple: (tuple) Tuple containing selected directory
+        :param file_name_tuple: Tuple containing selected directory
          path(s). Typically obtained from selectedFiles() method.
+        :type file_name_tuple: tuple[str]
         """
 
         if not file_name_tuple:
@@ -2300,9 +2307,7 @@ class PopUpPreferences(QDialog):
     to configure various settings related to tools, projects, and appearance.
 
     Contains:
-
         Methods:
-
             - admin_mode_switch: Called when the admin mode checkbox
               is clicked.
             - browse_afni: Called when afni browse button is clicked.
@@ -2388,9 +2393,7 @@ class PopUpPreferences(QDialog):
             - validate_tool_path: Validate the tool path.
             - wrong_path: Show a wrong path message.
 
-
     Signals:
-
         - signal_preferences_change: Signal emitted when the preferences are
           successfully validated and saved.
         - use_clinical_mode_signal: Signal emitted when the clinical mode is
@@ -2408,6 +2411,7 @@ class PopUpPreferences(QDialog):
         Initialize the preferences dialog.
 
         :param main_window: The main window object of the software.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         self.setModal(True)
@@ -2599,7 +2603,8 @@ class PopUpPreferences(QDialog):
         """
         Open a dialog to change the admin password with validation checks.
 
-        :param status: (str) Initial status message to display in the dialog.
+        :param status: Initial status message to display in the dialog.
+        :type status: str
         """
         change = QDialog()
         change.old_psswd = QLineEdit()
@@ -2754,8 +2759,9 @@ class PopUpPreferences(QDialog):
         Create and configure the 'Appearance' tab with color and display
         settings.
 
-        :param _translate: (callable): Function used to translate UI text
-         (translate method of QCoreApplication in the Qt framework).
+        :param _translate: Function used to translate UI text (translate method
+         of QCoreApplication in the Qt framework).
+        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`
         """
         self.tab_appearance = QWidget()
         self.tab_appearance.setObjectName("tab_appearance")
@@ -2817,8 +2823,9 @@ class PopUpPreferences(QDialog):
         Create and configure the CAPSUL group box with a configuration
         button.
 
-        :param groupbox_capsul: (QGroupBox) The group box to be configured for
-         CAPSUL settings.
+        :param groupbox_capsul: The group box to be configured for CAPSUL
+         settings.
+        :type groupbox_capsul: PyQt5.QtWidgets.QGroupBox
         """
         capsul_config_button = QPushButton(
             "Edit CAPSUL config", default=False, autoDefault=False
@@ -2956,12 +2963,15 @@ class PopUpPreferences(QDialog):
         """
         Create a horizontal box layout containing the specified widgets.
 
-        :param widgets: (tuple[QtWidgets.QWidget, ...]) The widgets to add to
-         the layout.
-        :param add_stretch: (bool) Whether to add stretch at the end to push
-         the widgets to the left. Defaults to True.
+        :param widgets: Tuple of :class:`PyQt5.QtWidgets.QWidget` objects to
+         add to the layout.
+        :type widgets: tuple
+        :param add_stretch: Whether to add stretch at the end to push the
+         widgets to the left. Defaults to True.
+        :type add_stretch: bool
 
-        :Returns (QHBoxLayout) The created horizontal box layout.
+        :Returns: The created horizontal box layout.
+        :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         h_box = QHBoxLayout()
 
@@ -3056,8 +3066,9 @@ class PopUpPreferences(QDialog):
         This tab allows configuring various neuroimaging tool settings,
         including Matlab, SPM, FSL, AFNI, ANTS, FreeSurfer, MRtrix, and CAPSUL.
 
-        :param _translate: (Callable) Function used to translate UI text
-         (translate method of QCoreApplication in the Qt framework).
+        :param _translate: Function used to translate UI text (translate method
+         of QCoreApplication in the Qt framework).
+         :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`
         """
         self.tab_pipeline = QWidget()
         self.tab_pipeline.setObjectName("tab_pipeline")
@@ -3227,8 +3238,9 @@ class PopUpPreferences(QDialog):
         project-specific settings, third-party tool integration, and external
         resources.
 
-        :param _translate: (Callable) Function used to translate UI text
-         (translate method of QCoreApplication in the Qt framework).
+        :param _translate: Function used to translate UI text (translate method
+         of QCoreApplication in the Qt framework).
+        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`
         """
         self.tab_tools = QWidget()
         self.tab_tools.setObjectName("tab_tools")
@@ -3500,10 +3512,12 @@ class PopUpPreferences(QDialog):
         """
         Saves the full configuration and validates settings.
 
-        :param config: (Config) The configuration object to update and save.
+        :param config: The configuration object to update and save.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns: (bool) True if the configuration is valid and successfully
-         saved, False otherwise.
+        :Returns: True if the configuration is valid and successfully saved,
+         False otherwise.
+        :rtype: bool
         """
         config.setAutoSave(self.save_checkbox.isChecked())
         config.set_radioView(self.radioView_checkbox.isChecked())
@@ -3569,7 +3583,8 @@ class PopUpPreferences(QDialog):
         """
         Saves a minimal configuration for CAPSUL config synchronization.
 
-        :param config: (Config) The configuration object to update and save.
+        :param config: The configuration object to update and save.
+        :type config: populse_mia.software_properties.Config
         """
         config.set_afni_path(self.afni_choice.text())
         config.set_use_afni(self.use_afni_checkbox.isChecked())
@@ -3635,8 +3650,10 @@ class PopUpPreferences(QDialog):
         """
         Displays an error message dialog.
 
-        :param title: (str) The title of the error message dialog.
-        :param message: (str) The detailed error message to display.
+        :param title: The title of the error message dialog.
+        :type title: str
+        :param message: The detailed error message to display.
+        :type message: str
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Critical)
@@ -3651,8 +3668,10 @@ class PopUpPreferences(QDialog):
         """
         Displays a warning message dialog.
 
-        :param title: (str) The title of the warning message dialog.
-        :param message: (str): The detailed warning message to display.
+        :param title: The title of the warning message dialog.
+        :type title: str
+        :param message: The detailed warning message to display.
+        :param message: str
         """
         self.msg = QMessageBox()
         self.msg.setIcon(QMessageBox.Warning)
@@ -3672,8 +3691,9 @@ class PopUpPreferences(QDialog):
         etc.) and updates the corresponding GUI fields, including checkboxes
         and text fields.
 
-        :param conf: (software_properties.Config: The Mia configuration object
-         containing the paths and usage states of different tools.
+        :param conf: The Mia configuration object containing the paths and
+         usage states of different tools.
+        :type conf: populse_mia.software_properties.Config
         """
         # afni
         use_afni = conf.get_use_afni()
@@ -3851,13 +3871,12 @@ class PopUpPreferences(QDialog):
         """
         Validate and save the preferences.
 
-        :param ok_clicked: (bool) Whether the OK button was clicked (True)
+        :param ok_clicked: Whether the OK button was clicked (True)
          when this method was launched.
+        :type ok_clicked: bool
 
         Contains:
-
             Inner functions:
-
                 - remove_capsul_config: Helper function to remove a module's
                   configuration
                 - clean_spm_config: Cleans the SPM configuration based on
@@ -3885,8 +3904,10 @@ class PopUpPreferences(QDialog):
             """
             Helper function to remove a module's configuration.
 
-            :param module: (str) The name of the module to remove.
-            :param key: (str) The specific configuration key to remove.
+            :param module: The name of the module to remove.
+            :type module: str
+            :param key: The specific configuration key to remove.
+            :type key: str
 
             """
             # TODO: We only deal here with the global environment
@@ -3918,8 +3939,9 @@ class PopUpPreferences(QDialog):
             """
             Cleans the SPM configuration based on standalone mode.
 
-            :param standalone_check: (bool) Indicates whether to clean based
-             on standalone mode.
+            :param standalone_check: Indicates whether to clean based on
+             standalone mode.
+            :type standalone_check: bool
             """
 
             try:
@@ -3963,8 +3985,8 @@ class PopUpPreferences(QDialog):
             """
             Removes MATLAB-related configuration keys.
 
-            :param key: (str) The configuration key to remove from the MATLAB
-             module.
+            :param key: The configuration key to remove from the MATLAB module.
+            :type key: str
             """
 
             try:
@@ -4003,11 +4025,14 @@ class PopUpPreferences(QDialog):
         """
         Validates the given Matlab executable path.
 
-        :param path: (str) The path to the Matlab executable.
-        :param config: (Config) The configuration object to update.
+        :param path: The path to the Matlab executable.
+        :type path: str
+        :param config: The configuration object to update.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns (bool) True if the path is valid and updated in the
-         configuration, False otherwise.
+        :Returns: True if the path is valid and updated in the configuration,
+         False otherwise.
+        :rtype: bool
         """
 
         if not os.path.isfile(path):
@@ -4080,11 +4105,14 @@ class PopUpPreferences(QDialog):
         MCR alone (without SPM standalone) due to the lack of a concrete
         example.
 
-        :param path: (str) The path to the Matlab standalone directory.
-        :param config: (Config) The configuration object to update.
+        :param path: The path to the Matlab standalone directory.
+        :type path: str
+        :param config: The configuration object to update.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns (bool) True if the path is valid and updated in the
-         configuration, False otherwise.
+        :Returns: True if the path is valid and updated in the configuration,
+         False otherwise.
+        :rtype: bool
         """
 
         if not os.path.isdir(path):
@@ -4128,11 +4156,12 @@ class PopUpPreferences(QDialog):
         paths such as the projects folder, MRIFileManager.jar path, and
         resources folder.
 
-        :param config: (Config) The configuration object where validated paths
-         and settings will be stored.
+        :param config: The configuration object where validated paths and
+         settings will be stored.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns (bool) True if all paths and settings are valid, False
-         otherwise.
+        :Returns: True if all paths and settings are valid, False otherwise.
+        :rtype: bool
         """
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
         self.status_label.setText("Testing configuration ...")
@@ -4304,12 +4333,15 @@ class PopUpPreferences(QDialog):
         usage without further checks. Otherwise, it attempts to run an SPM
         command via Matlab to confirm the setup.
 
-        :param path: (str) The file path to the SPM installation.
-        :param config: (Config) The configuration object where validated paths
-         and settings will be stored.
+        :param path: The file path to the SPM installation.
+        :type path: str
+        :param config: The configuration object where validated paths and
+         settings will be stored.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns (bool) True if the SPM path and Matlab path are valid, False
+        :Returns: True if the SPM path and Matlab path are valid, False
          otherwise.
+        :rtype: bool
         """
         matlab_path = self.matlab_choice.text()
 
@@ -4394,12 +4426,15 @@ class PopUpPreferences(QDialog):
         architecture compatibility and attempts to execute SPM standalone to
         confirm its functionality.
 
-        :param path: (str) The file path to the SPM standalone installation.
-        :param config: (Config) The configuration object where validated paths
-         and settings will be stored.
+        :param path: The file path to the SPM standalone installation.
+        :type path: str
+        :param config: The configuration object where validated paths and
+         settings will be stored.
+        :type config: populse_mia.software_properties.Config
 
-        :Returns (bool) True if the SPM standalone and Matlab standalone paths
-         are valid, False otherwise.
+        :Returns: True if the SPM standalone and Matlab standalone paths are
+         valid, False otherwise.
+        :rtype: bool
         """
         matlab_path = self.matlab_standalone_choice.text()
         archi = platform.architecture()
@@ -4541,22 +4576,29 @@ class PopUpPreferences(QDialog):
         handles tool-specific setup for FreeSurfer and FSL by setting
         environment variables and adjusting paths as necessary.
 
-        :param tool_name: (str) The name of the tool to validate (e.g.,
-         "FreeSurfer", "FSL", "Matlab", etc.).
-        :param path: (str) The file path to the tool's installation directory.
-        :param cmd: (str) The command to execute within the tool's directory
-         to check its version.
-        :param config: (Config) The configuration object where validated paths
-         and settings will be stored.
-        :param config_name: (str) The name of the configuration setting for the
-         tool.
-        :param set_in_use: (Callable) A function to set the tool's "in use"
-         status in the configuration.
-        :param set_path: (Callable) A function to set the tool's path in the
-         configuration.
+        :param tool_name: The name of the tool to validate (e.g., "FreeSurfer",
+         "FSL", "Matlab", etc.).
+        :type tool_name: str
+        :param path: The file path to the tool's installation directory.
+        :type path: str
+        :param cmd: The command to execute within the tool's directory to check
+         its version.
+        :type cmd: str
+        :param config: The configuration object where validated paths and
+         settings will be stored.
+        :type config: populse_mia.software_properties.Config
+        :param config_name: The name of the configuration setting for the tool.
+        :type config_name: str
+        :param set_in_use: A method (from populse_mia.software_properties.
+         Config) to set the tool's "in use" status in the configuration.
+        :type set_in_use: callable
+        :param set_path: A method (from populse_mia.software_properties.Config)
+         to set the tool's path in the configuration.
+        :type set_path: callable
 
-        :Returns: (bool) True if the tool's path is valid and functional, False
+        :Returns: True if the tool's path is valid and functional, False
          otherwise.
+        :rtype: bool
         """
         extra = ""
         option = "--version"
@@ -4662,11 +4704,14 @@ class PopUpPreferences(QDialog):
         and shows a QMessageBox with an error message indicating
         that the provided path for a specified tool is invalid.
 
-        :param path: (str) The invalid path entered by the user.
-        :param tool: (str) The name of the tool for which the path is being
+        :param path: The invalid path entered by the user.
+        :type path: str
+        :param tool: The name of the tool for which the path is being
          validated.
-        :param extra_mess: (str, optional) Additional context for the error
-         message, such as specifying a configuration file.
+        :type tool: str
+        :param extra_mess: Additional context for the error message, such as
+         specifying a configuration file.
+        :type extra_mess: str
         """
         QApplication.restoreOverrideCursor()
         self.status_label.setText("")
@@ -4692,16 +4737,13 @@ class PopUpProperties(QDialog):
 
     Allows users to change project settings, including visualized tags
     and information. Is called when the user wants to change the current
-    project's properties (File > properties).
+    project's properties (File > Project properties).
 
     Contains:
-
         Methods:
-
             - ok_clicked: saves the modifications and updates the data browser.
 
     Signals:
-
         - signal_settings_change: Qt signal emitted when project settings are
           modified.
 
@@ -4716,8 +4758,12 @@ class PopUpProperties(QDialog):
         Initialize the project properties dialog.
 
         :param project: current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param databrowser: data browser instance of the software.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         :param old_tags: visualized tags before opening this dialog.
+        :type old_tags: tuple[str]
         """
         super().__init__()
         # Dialog setup
@@ -4806,16 +4852,13 @@ class PopUpQuit(QDialog):
     modified.
 
     Contains:
-
         Methods:
-
             - can_exit: returns the value of _bool_exit.
             - cancel_clicked: makes the actions to cancel the action.
             - do_not_save_clicked: makes the actions not to save the project.
             - save_as_clicked: makes the actions to save the project.
 
     Signals:
-
         - save_as_signal: Signal emitted when user chooses to save the
           project.
         - do_not_save_signal: Signal emitted when user chooses to exit without
@@ -4832,6 +4875,7 @@ class PopUpQuit(QDialog):
          Initialize the quit confirmation dialog.
 
         :param project: Current project with unsaved modifications.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.project = project
@@ -4905,9 +4949,7 @@ class PopUpRemoveScan(QDialog):
     wants to remove a scan that was previously sent to the pipeline manager.
 
     Contains:
-
         Methods:
-
             - cancel_clicked: Handle 'Cancel' action.
             - no_all_clicked: Handle 'No to All' action.
             - yes_all_clicked: Handle 'Yes to All' action.
@@ -4919,7 +4961,9 @@ class PopUpRemoveScan(QDialog):
         Initialize the remove scan confirmation dialog.
 
         :param scan: Identifier of the scan to be potentially removed.
+        :type scan: str
         :param size: Total number of scans in the removal process.
+        :type size: int
         """
         super().__init__()
         self.setWindowTitle("Document exists in Pipeline Manager")
@@ -5010,18 +5054,14 @@ class PopUpRemoveTag(QDialog):
     Allows users to select and remove custom tags from the project's database.
 
     Contains:
-
         Methods:
-
             - ok_action: Verifies the selected tags and send the information to
               the data browser.
             - search_str: Matches the searched pattern with the tags of the
               project.
 
     Signals:
-
         - signal_remove_tag: Qt signal emitted when tags are removed.
-
     """
 
     # Signal that will be emitted at the end to tell that
@@ -5033,7 +5073,10 @@ class PopUpRemoveTag(QDialog):
         Initialize the remove tag dialog.
 
         :param databrowser: Data browser instance managing project data.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         :param project: Current project containing tags to be removed.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.databrowser = databrowser
@@ -5117,6 +5160,7 @@ class PopUpRemoveTag(QDialog):
         Filter tags based on search pattern.
 
         :param search_pattern: String to match against tag names.
+        :type search_pattern: str
         """
 
         with self.project.database.data() as database_data:
@@ -5154,15 +5198,12 @@ class PopUpSaveProjectAs(QDialog):
     with options to browse existing projects and validate the new project name.
 
     Contains:
-
         Methods:
-
             - fill_input: Fills the input field when a project is clicked on.
             - return_value: Sets the widget's attributes depending on the
               selected file name.
 
     Signals:
-
         - signal_saved_project: Qt signal emitted when a new project name is
           selected.
 
@@ -5242,6 +5283,7 @@ class PopUpSaveProjectAs(QDialog):
         Fill the project name input field with the selected project name.
 
         :param name: Name of the project to fill in the input field.
+        :type name: str
         """
         self.new_project.setText(name)
 
@@ -5252,8 +5294,8 @@ class PopUpSaveProjectAs(QDialog):
         Checks project name validity, handles potential naming conflicts,
         and emits a signal when a valid project name is selected.
 
-        :Returns: (str) Full path of the new project if successful, None
-         otherwise.
+        :Returns: Full path of the new project if successful, None otherwise.
+        :rtype: str | None
         """
         file_name = self.new_project.text().strip()
 
@@ -5311,9 +5353,7 @@ class PopUpSeeAllProjects(QDialog):
     existence, and open a selected project.
 
     Contains:
-
         Methods:
-
             - checkState: Checks if the project still exists and returns the
               corresponding icon.
             - item_to_path: Returns the path of the first selected item.
@@ -5325,8 +5365,10 @@ class PopUpSeeAllProjects(QDialog):
         Initialize the PopUpSeeAllProjects dialog.
 
         :param saved_projects: Container with a list of project paths.
+        :type saved_projects:
+         populse_mia.data_manager.project_properties.SavedProjects
         :param main_window: MainWindow instance.
-
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         self.mainWindow = main_window
@@ -5370,9 +5412,11 @@ class PopUpSeeAllProjects(QDialog):
         """
         Determine the icon based on project existence.
 
-        :param path: (str) Path to the project directory.
+        :param path: Path to the project directory.
+        :type path: str
 
-        :Returns: (QIcon) Green checkmark if project exists, red cross if not.
+        :Returns: Green checkmark if project exists, red cross if not.
+        :rtype: PyQt5.QtGui.QIcon
         """
         sources_images_dir = Config().getSourceImageDir()
         icon_name = "green_v.png" if os.path.exists(path) else "red_cross.png"
@@ -5423,9 +5467,7 @@ class PopUpSelectFilter(PopUpFilterSelection):
     Popup window for selecting and opening a previously saved filter.
 
     Contains:
-
         Methods:
-
             - ok_clicked: Saves the modifications and updates the data browser.
     """
 
@@ -5434,7 +5476,10 @@ class PopUpSelectFilter(PopUpFilterSelection):
         Initializes the PopUpSelectFilter dialog
 
         :param project: (Project) The current project instance.
+        :type project: populse_mia.data_manager.project.Project
         :param databrowser: (DataBrowser) The data browser instance.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         """
         super().__init__(project)
         self.project = project
@@ -5470,9 +5515,7 @@ class PopUpSelectIteration(QDialog):
 
 
     Contains:
-
         Methods:
-
             - ok_clicked: Stores selected values and closes the dialog.
     """
 
@@ -5480,11 +5523,13 @@ class PopUpSelectIteration(QDialog):
         """
         Initializes the selection popup.
 
-        :param iterated_tag: (str) Name of the tag whose values can be
-         iterated.
-        :param tag_values: (list[str]) Available values for the tag.
-        :selected_values: (list[str]) Values initially selected when the
-         dialog opens.
+        :param iterated_tag: Name of the tag whose values can be iterated.
+        :type iterated_tag: str
+        :param tag_values: Available values for the tag.
+        :type tag_values: list[str]
+        :param selected_values: Values initially selected when the dialog
+         opens.
+        :type selected_values: list[str]
         """
         super().__init__()
         self.iterated_tag = iterated_tag
@@ -5548,9 +5593,7 @@ class PopUpTagSelection(QDialog):
     the data browser.
 
     Contains:
-
         Methods:
-
             - _create_button: Create a standard button with text and click
               handler.
             - _setup_ui: Set up the user interface components.
@@ -5568,6 +5611,7 @@ class PopUpTagSelection(QDialog):
 
         :param project: The current project containing the database with
          available tags.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.setWindowTitle("Select tag")
@@ -5580,7 +5624,9 @@ class PopUpTagSelection(QDialog):
         """
         Set up the user interface components.
 
-        :param_translate: (callable) Localization translation function.
+        :param _translate: Function used to translate UI text (translate method
+         of QCoreApplication in the Qt framework).
+        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`
         """
         # The "Tag list" label
         self.label_tag_list = QLabel(self)
@@ -5629,11 +5675,14 @@ class PopUpTagSelection(QDialog):
         """
         Create a standard button with text and click handler.
 
-        :param text: (str) Button text.
-        :param clicked_handler: (callable) Function to call when button is
-         clicked.
+        :param text: Button text.
+        :type text: str
+        :param clicked_handler: Function to call when button is clicked.
+        :type clicked_handler:
+         :meth:`populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked`
 
-        :Returns: (QPushButton) Configured button.
+        :Returns: Configured button.
+        :rtype: PyQt5.QtWidgets.QPushButton
         """
         button = QPushButton(self)
         button.setObjectName(f"pushButton_{text}")
@@ -5649,7 +5698,8 @@ class PopUpTagSelection(QDialog):
         """
         Handle item selection by checking/unchecking tags.
 
-        :param item: (QListWidgetItem) The clicked list item.
+        :param item: The clicked list item.
+        :type item: :class:`PyQt5.QtWidgets.QListWidgetItem`
         """
 
         for idx in range(self.list_widget_tags.count()):
@@ -5671,9 +5721,8 @@ class PopUpTagSelection(QDialog):
         """
         Filter tags based on search term.
 
-
-        :param str_search: (str) Text to search for in tag names.
-
+        :param str_search: Text to search for in tag names.
+        :type str_search: str
         """
 
         with self.project.database.data() as database_data:
@@ -5704,9 +5753,7 @@ class PopUpSelectTag(PopUpTagSelection):
     tags and allows selecting a single tag to be used as the thumbnail.
 
     Contains:
-
         Methods:
-
             - _populate_tag_list: Populate the list widget with tags from
               the database.
             - ok_clicked: Saves the modifications and updates the mini viewer.
@@ -5717,6 +5764,7 @@ class PopUpSelectTag(PopUpTagSelection):
         Initialize the tag selection dialog.
 
         :param project: The current project in the software context.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__(project)
         self.project = project
@@ -5731,7 +5779,8 @@ class PopUpSelectTag(PopUpTagSelection):
         """
         Populate the list widget with tags from the database.
 
-        :param field_names: (list) List of available field names/tags.
+        :param field_names: List of available field names/tags.
+        :type field_names: list[str]
         """
         # Filter out special tags and create checkable list items
         filtered_tags = [
@@ -5784,9 +5833,7 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
     option to pre-select a specific tag.
 
     Contains:
-
         Methods:
-
             - ok_clicked: updates the selected tag and closes the pop-up.
     """
 
@@ -5795,10 +5842,13 @@ class PopUpSelectTagCountTable(PopUpTagSelection):
         Initialize the tag selection pop-up.
 
         :param project: The current project context.
-        :param tags_to_display: (list) List of tags to be displayed for
+        :type project: populse_mia.data_manager.project.Project
+        :param tags_to_display: List of tags to be displayed for
          selection.
-        :param tag_name_checked: (str) Optional tag to be pre-checked on
+        :type tags_to_display: list[str]
+        :param tag_name_checked: Optional tag to be pre-checked at
          initialization.
+        :type tag_name_checked: str | None
         """
         super().__init__(project)
         self.selected_tag = None
@@ -5850,6 +5900,7 @@ class PopUpShowHistory(QDialog):
 
     This class creates a popup window that provides comprehensive information
     about a specific brick (processing node) in a pipeline, including:
+
         - Pipeline visualization
         - Input and output parameters
         - Initialization and execution details
@@ -5861,9 +5912,7 @@ class PopUpShowHistory(QDialog):
         - Select and highlight specific files
 
     Contains:
-
         Methods:
-
             - _updateio_table: Fill in the input and output sections of the
               table.
             - adjust_size: Adjust the size of the dialog based on screen
@@ -5900,10 +5949,16 @@ class PopUpShowHistory(QDialog):
         Initialize the document history popup.
 
         :param project: Current project in the software.
-        :param brick_uuid: (str) Unique identifier of the brick.
-        :param scan (str) Filename of the scan.
+        :type project: populse_mia.data_manager.project.Project
+        :param brick_uuid: Unique identifier of the brick.
+        :type brick_uuid: str
+        :param scan: Filename of the scan.
+        :type scan: str
         :param databrowser: Data browser instance.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         :param main_window: Main window of the software.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         # We do not want few parameters in the outputs parameters display
@@ -5928,14 +5983,15 @@ class PopUpShowHistory(QDialog):
         the input dictionary, handling nested lists and detecting scanned file
         paths.
 
-        :param io_dict: (dict) Dictionary containing input or output data to be
+        :param io_dict: Dictionary containing input or output data to be
          displayed. Keys represent column headers, and values can be strings,
-        lists, or nested lists.
-        :param item_idx: (int) The starting column index for populating the
-         table.
+         lists, or nested lists.
+        :type io_dict: dict
+        :param item_idx: The starting column index for populating the table.
+        :type item_idx: int
 
-        :Returns: (int) The updated column index after processing the
-         dictionary.
+        :Returns: The updated column index after processing the dictionary.
+        :rtype: int
         """
 
         for key, value in sorted(io_dict.items()):
@@ -6070,11 +6126,12 @@ class PopUpShowHistory(QDialog):
         """
         Find bricks associated with a given node name.
 
-        :param node_name: (str) The name of the node to find associated bricks
-         for.
+        :param node_name: The name of the node to find associated bricks for.
+        :type node_name: str
 
-        :Returns: (dict) A dictionary where the keys are the full brick names
-         and the values are lists of associated UUIDs.
+        :Returns: A dictionary where the keys are the full brick names and the
+         values are lists of associated UUIDs.
+        :rtype: dict
         """
         bricks = {}
 
@@ -6101,11 +6158,12 @@ class PopUpShowHistory(QDialog):
         """
         Find the process and plug name from a given plug.
 
-        :param plug: (Plug) The plug object to find the process and plug name
-         from.
+        :param plug: The plug object to find the process and plug name from.
+        :type plug: capsul.pipeline.pipeline_nodes.Plug
 
-        :Returns: (tuple) A tuple containing the process name (str) and plug
-         name (str).
+        :Returns: A tuple containing the process name (str) and plug name
+         (str).
+        :rtype: tuple[str]
         """
         process_name = ""
         plug_name = ""
@@ -6129,10 +6187,10 @@ class PopUpShowHistory(QDialog):
         Handle pipeline nodes, set up the view, and initialize the pipeline
         visualization.
 
-        :param pipeline: (Pipeline): The pipeline object containing the nodes
-         to handle.
-        :param full_brick_name: (list) The full name of the brick, split into
-         parts.
+        :param pipeline: The pipeline object containing the nodes to handle.
+        :type pipeline: capsul.study_config.process_instance.CustomPipeline
+        :param full_brick_name: The full name of the brick, split into parts.
+        :type full_brick_name: list
         """
 
         # handle case of pipeline node alone --> exploded view
@@ -6167,7 +6225,8 @@ class PopUpShowHistory(QDialog):
         """
         Highlight the selected node in the pipeline view.
 
-        :param node_name: (str) The name of the node to highlight.
+        :param node_name: The name of the node to highlight.
+        :type node_name: str
         """
 
         for name, gnode in self.pipeline_view.scene.gnodes.items():
@@ -6177,8 +6236,8 @@ class PopUpShowHistory(QDialog):
         """
         Initialize the pipeline view using the given pipeline XML.
 
-        :param full_brick_name: (list) The full name of the brick, split into
-         parts.
+        :param full_brick_name: The full name of the brick, split into parts.
+        :type full_brick_name: list[str]
         """
         engine = Config.get_capsul_engine()
 
@@ -6196,10 +6255,11 @@ class PopUpShowHistory(QDialog):
         Check if the I/O value is a scan.
 
         :param value: I/O value.
+        :type value: str
 
         :Returns: The scan corresponding to the value if it exists, None
          otherwise.
-
+        :rtype: str | None
         """
 
         with self.project.database.data() as database_data:
@@ -6216,9 +6276,10 @@ class PopUpShowHistory(QDialog):
         Load data from the project database and update the table with brick
         data.
 
-        :param brick_uuid: (str) The UUID of the brick to load.
-        :param scan: (str) The identifier of the scan associated with the
-         brick.
+        :param brick_uuid: The UUID of the brick to load.
+        :type brick_uuid: str
+        :param scan: The identifier of the scan associated with the brick.
+        :type scan: str
         """
 
         with self.project.database.data() as database_data:
@@ -6245,10 +6306,11 @@ class PopUpShowHistory(QDialog):
         Load pipeline data from the database based on the provided
         history UUID.
 
-        :param history_uuid: (str) The UUID of the history record to load
-         pipeline data from.
-        :param full_brick_name: (list) The full name of the brick, split into
-         parts.
+        :param history_uuid: The UUID of the history record to load pipeline
+         data from.
+        :type history_uuid: str
+        :param full_brick_name: The full name of the brick, split into parts.
+        :type full_brick_name: list[s]tr]
         """
 
         with self.project.database.data() as database_data:
@@ -6271,7 +6333,9 @@ class PopUpShowHistory(QDialog):
         Handle node selection and update the table.
 
         :param node_name: Node name.
+        :type node_name: str
         :param process: Process of the corresponding node.
+        :type process: capsul.pipeline.pipeline_nodes.PipelineNode
         """
 
         if hasattr(process, "pipeline_node"):
@@ -6301,11 +6365,12 @@ class PopUpShowHistory(QDialog):
         """
         Select the node in the pipeline view based on the provided brick UUID.
 
-        :param pipeline: (Pipeline) The pipeline object containing the nodes to
-         handle.
-        :param bricks: (dict) A dictionary of bricks with UUIDs as values.
-        :param full_brick_name: (list) The full name of the brick, split into
-         parts.
+        :param pipeline: The pipeline object containing the nodes to handle.
+        :type pipeline: A class coding for the pipeline.
+        :param bricks: A dictionary of bricks with UUIDs as values.
+        :type bricks: dict
+        :param full_brick_name: The full name of the brick, split into parts.
+        :type full_brick_name: list[str]
         """
 
         for bricks_uuids in bricks.values():
@@ -6348,18 +6413,23 @@ class PopUpShowHistory(QDialog):
         """
         Updates the table with information about a brick's execution state.
 
-        :param inputs: (dict) Dictionary containing input data.
-        :param outputs: (dict) Dictionary containing output data.
-        :param brick_name: (str) Name of the brick.
-        :param init: (str, optional) Initialization status.
-        :param init_time: (Any, optional) Initialization timestamp.
-        :param exec: (str, optional) Execution status.
-        :param exec_time: (Any, optional) Execution timestamp.
+        :param inputs: Dictionary containing input data.
+        :type inputs: dict
+        :param outputs: Dictionary containing output data.
+        :type outputs: dict
+        :param brick_name: Name of the brick.
+        :type brick_name: str
+        :param init: Initialization status.
+        :type init: str
+        :param init_time: Initialization timestamp.
+        :type init_time: datetime.datetime
+        :param exec: Execution status.
+        :type exec: str
+        :param exec_time: Execution timestamp.
+        :type exec_time: datetime.datetime
 
         Contains:
-
             Inner functions:
-
                 - create_cell_widget: Creates a QWidget containing a vertically
                   aligned QLabel
         """
@@ -6379,10 +6449,12 @@ class PopUpShowHistory(QDialog):
             Creates a QWidget containing a vertically aligned QLabel with
             the given text.
 
-            :param text: (str) The text to display in the QLabel.
+            :param text: The text to display in the QLabel.
+            :type text: str
 
-            :Returns: (QWidget) A QWidget containing a QLabel with the
-             specified text, aligned to the top within a vertical layout.
+            :Returns: A QWidget containing a QLabel with the specified text,
+             aligned to the top within a vertical layout.
+            :rtype: PyQt5.QtWidgets.QWidget
             """
             widget = QWidget()
             layout = QVBoxLayout()
@@ -6445,11 +6517,12 @@ class PopUpShowHistory(QDialog):
         """
         Update the table for a single brick, using the provided brick data.
 
-        :param bricks: (dict) A dictionary of bricks with UUIDs as values.
-        :param node_name: (str) The name of the node associated with the
-         brick.
-        :param full_node_name: (list) The full name of the node, split into
-         parts.
+        :param bricks: A dictionary of bricks with UUIDs as values.
+        :type bricks: dict
+        :param node_name: The name of the node associated with the brick.
+        :type node_name: str
+        :param full_node_name: The full name of the node.
+        :type full_node_name: str
         """
 
         with self.project.database.data() as database_data:
@@ -6479,11 +6552,12 @@ class PopUpShowHistory(QDialog):
         Update the table for a subpipeline based on the given process and
         brick data.
 
-        :param bricks: (dict) A dictionary of bricks with UUIDs as values.
-        :param process: (PipelineNode) The process node associated with the
-         subpipeline.
-        :param full_node_name: (list) The full name of the node, split into
-         parts.
+        :param bricks: A dictionary of bricks with UUIDs as values.
+        :type bricks: dict
+        :param process: The process node associated with the subpipeline.
+        :type process: capsul.pipeline.pipeline_nodes.PipelineNode
+        :param full_node_name: The full name of the node.
+        :type full_node_name: str
         """
         inputs_dict = {}
         outputs_dict = {}
@@ -6533,10 +6607,11 @@ class PopUpShowHistory(QDialog):
         Update the table with the brick's input and output data after
         processing.
 
-        :param brick_row: (list) A list containing the brick data to update
-         the table with.
-        :param full_brick_name: (list) The full name of the brick, split into
-         parts.
+        :param brick_row: A list containing the brick data to update the table
+         with.
+        :type brick_row: list
+        :param full_brick_name: The full name of the brick, split into parts.
+        :type full_brick_name: list[str]
         """
         inputs = brick_row[0][BRICK_INPUTS]
         outputs = brick_row[0][BRICK_OUTPUTS]
@@ -6565,9 +6640,7 @@ class PopUpVisualizedTags(QWidget):
     and moving them between available and visualized lists.
 
     Contains:
-
         Methods:
-
             - _create_button: Create a customized QPushButton with specified
               properties.
             - _create_button_layout: Create the layout for selection buttons.
@@ -6589,7 +6662,6 @@ class PopUpVisualizedTags(QWidget):
               "selected tag" table.
 
     Signals:
-
         - signal_preferences_change: (QtCore.pyqtSignal) Emitted when tag
           visualization preferences are modified.
     """
@@ -6602,8 +6674,10 @@ class PopUpVisualizedTags(QWidget):
         Initialize the tag visualization management widget.
 
         :param project: The current project in the software.
-        :param visualized_tags: Tags currently being visualized before
-         opening this widget.
+        :type project: populse_mia.data_manager.project.Project
+        :param visualized_tags: Tags currently being visualized before opening
+         this widget.
+        :type visualized_tags: list[str]
         """
         super().__init__()
         self.project = project
@@ -6622,17 +6696,18 @@ class PopUpVisualizedTags(QWidget):
         This method instantiates a QPushButton, sets its object name,
         translates and sets its text, and connects a click event handler.
 
-        :param object_name: (str) The unique identifier name for the button.
-        :param text: (str) The text to be displayed on the button, will
-         be translated.
-        :param click_handler: (callable) The function to be called when the
-         button is clicked.
+        :param object_name: The unique identifier name for the button.
+        :type object_name: str
+        :param text: The text to be displayed on the button, will be
+         translated.
+        :param click_handler: The function to be called when the button is
+         clicked.
+        :type click_handler: A callable method
 
-        :Returns: (QPushButton) A configured button with the specified
-         properties.
+        :Returns: A configured button with the specified properties.
+        :rtype: PyQt5.QtWidgets.QPushButton
         """
         button = QPushButton(self)
-        button.setObjectName(object_name)
         button.setText(self._translate("main_window", text))
         button.clicked.connect(click_handler)
         return button
@@ -6651,11 +6726,13 @@ class PopUpVisualizedTags(QWidget):
         This method instantiates a QLabel, sets its text format,
         object name, and translates its text.
 
-        :param object_name: (str) The unique identifier name for the label.
-        :param text: (str) The text to be displayed on the label, will be
-         translated.
+        :param object_name: The unique identifier name for the label.
+        :type object_name: str
+        :param text: The text to be displayed on the label, will be translated.
+        :type text: str
 
-        :Returns: (QLabel) A configured label with the specified properties.
+        :Returns: A configured label with the specified properties.
+        :rtype: PyQt5.QtWidgets.QLabel
         """
         label = QLabel(self)
         label.setTextFormat(QtCore.Qt.AutoText)
@@ -6697,11 +6774,12 @@ class PopUpVisualizedTags(QWidget):
         list widget is assigned a unique object name based on the optional
         text parameter.
 
-        :param text: (str) A prefix used to create a unique object name for
-         the QListWidget.
+        :param text: A prefix used to create a unique object name for the
+         QListWidget.
+        :type text: str
 
-        :Returns (QListWidget) A configured QListWidget with multi-selection
-         mode enabled.
+        :Returns: A configured QListWidget with multi-selection mode enabled.
+        :rtype: PyQt5.QtWidgets.QListWidget
         """
         tag_list = QListWidget(self)
         tag_list.setObjectName(f"listWidget_{text}tags")
@@ -6760,7 +6838,8 @@ class PopUpVisualizedTags(QWidget):
         """
         Filter tags based on search string.
 
-        :param str_search: (str) Search pattern to match against tags.
+        :param str_search: Search pattern to match against tags.
+        :type str_search: str
         """
 
         # Find matching tags, case-insensitive
@@ -6843,14 +6922,11 @@ class QLabel_clickable(QLabel):
     interactive label behaviors.
 
     Contains:
-
         Methods:
-
             - mousePressEvent: Override the default mouse press event to emit
               the clicked signal.
 
     Signals:
-
         - clicked: (pyqtSignal) Signal emitted when the label is clicked.
     """
 
@@ -6860,7 +6936,8 @@ class QLabel_clickable(QLabel):
         """
         Initialize the clickable label.
 
-        :param parent: (QWidget) Parent widget.
+        :param parent: A project name.
+        :type parent: str
         """
         super().__init__(parent)
 
@@ -6868,7 +6945,8 @@ class QLabel_clickable(QLabel):
         """
         Override the default mouse press event to emit the clicked signal.
 
-        :param event: (QMouseEvent) Mouse press event details.
+        :param event: Mouse press event details.
+        :type event: PyQt5.QtGui.QMouseEvent
         """
         self.clicked.emit()
         super().mousePressEvent(event)

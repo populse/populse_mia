@@ -67,6 +67,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.extlinks",
     "sphinx.ext.napoleon",
+    "sphinx_qt_documentation",
     "myst_parser",
 ]
 
@@ -239,6 +240,10 @@ epub_exclude_files = ["search.html"]
 
 # -- Extension configuration -------------------------------------------------
 
+# For PyQt5 documentation (poor documentation!)
+qt_documentation = "PyQt5"
+# For Qt5 documentation (seems better!)
+qt_documentation = "Qt5"
 
 autodoc_default_options = {
     "members": True,
@@ -305,6 +310,8 @@ intersphinx_mapping = {
     "somaworkflow": ("https://populse.github.io/soma-workflow", None),
     "python": ("https://docs.python.org/%s" % pyversion, None),
     "traits": ("https://docs.enthought.com/traits", None),
+    # We choose Qt5 documentation: See Extension configuration
+    # "PyQt5": ("https://www.riverbankcomputing.com/static/Docs/PyQt5", None),
 }
 
 
