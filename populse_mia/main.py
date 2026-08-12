@@ -438,15 +438,22 @@ def qt_message_handler(msg_type, context, message):
 
 
 if __name__ == "__main__":
-
     args = parse_args()
     configure_logging(
         log_in_stdout=args.log_in_stdout,
         keep_log_files=args.keep_log_files,
         log_level=args.log_level,
     )
+    msg = "Starting Mia..."
+    print(msg)
+    logger.info(msg)
     logger.info("Python version: %s", sys.version)
     logger.info("Python executable: %s", sys.executable)
+    logger.info(f"--multi_instance is set to: {args.multi_instance}")
+    logger.info(f"--log_level is set to: {args.log_level}")
+    logger.info(f"--log_in_stdout is set to: {args.log_in_stdout}")
+    logger.info(f"--keep_log_files is set to: {args.keep_log_files}")
+    logger.info(f"--install is set to: {args.install}")
 
     if args.install:
         msg = (
@@ -458,12 +465,6 @@ if __name__ == "__main__":
         print(msg)
         logger.warning(msg)
 
-    msg = "Starting Populse Mia..."
-    print(msg)
-    logger.info(msg)
-    # Print the multi_instance argument value
-    logger.info(f"--multi_instance is set to: {args.multi_instance}")
-    # This will only be executed when this module is run directly
     # list of unwanted messages to filter out in stdout
     unwanted_messages = [
         "QPixmap::scaleHeight: Pixmap is a null pixmap",

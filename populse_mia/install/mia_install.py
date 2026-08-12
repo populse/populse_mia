@@ -5,6 +5,17 @@ This module provides the first stage of the Mia installation process.
 It verifies that the Python packages required by the installer are available,
 installs any missing dependencies, and then launches the graphical installer.
 
+In fact, this module exists for historical reasons. Originally, the
+installation of Mia was handled separately from populse_mia, so we needed to
+make sure that PyQt5 and other required dependencies were properly installed
+and available on the system. Today, this module is part of populse_mia, and
+since PyQt5 and the other required packages are dependencies of populse_mia,
+they should normally be installed automatically when populse_mia is installed
+via pip. We are keeping the module because it only adds a few additional
+checks, with little to no significant impact on execution time. It can also
+still be useful for detecting and fixing certain configuration or installation
+issues.
+
 The module is intended to run only in user mode.
 """
 
@@ -61,7 +72,7 @@ def install_and_import(module_name):
 
     except ImportError:
         # Module not found, install it
-        logger.info(f"{module_name} not found. Installing...")
+        logger.warning(f"{module_name} not found. Installing...")
         command = [
             sys.executable,
             "-m",
@@ -100,8 +111,8 @@ def run_installer():
     process terminates with an error message describing how to retry the
     installation.
     """
-    msg = "Please wait, installation in progress...\n"
-    print(msg)
+    msg = "Please wait, Install & Repair mode in progress..."
+    print("\n" + msg + "\n")
     logger.info(msg)
     # List of required packages
     packages = ("PyQt5", "pyyaml", "packaging", "cryptography")
@@ -115,7 +126,7 @@ def run_installer():
 
         except subprocess.CalledProcessError:
             logger.warning(
-                f"Failed to install {package}. Please check your pip "
+                f"Failed to install {package}. Please check the pip "
                 f"installation."
             )
 
@@ -152,8 +163,8 @@ def run_installer():
             f"\n{e}...\n\nPython package environment was not correctly "
             "updated!\n\nPlease retry by running:\n"
             "    python3 -m populse_mia -i\n\n"
-            "If the issue persists, try manually installing the problematic "
-            "module.\n"
+            "If the issue persists, try installing the module manually "
+            "(python3 -m pip install module).\n"
         )
 
     # Initialize and display Mia installation widget
