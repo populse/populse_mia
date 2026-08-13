@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=a8471e47"></script>
+    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -132,24 +132,22 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.ClickableLabel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">ClickableLabel</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#ClickableLabel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.ClickableLabel" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QLabel</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QLabel</span></code></a></p>
 <p>A QLabel subclass that emits a signal when clicked.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>mousePressEvent: Overrides the mousePressEvent method by emitting
 the clicked signal.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>clicked: Emitted when the label is clicked.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.ClickableLabel.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#ClickableLabel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.ClickableLabel.__init__" title="Link to this definition">¶</a></dt>
@@ -162,8 +160,7 @@ the clicked signal.</p></li>
 <dd><p>Handles the mouse press event by emitting the <cite>clicked</cite> signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) The mouse event triggering the signal
-(unused)</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – The mouse event triggering the signal (unused).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,15 +170,13 @@ the clicked signal.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.DefaultValueListCreation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">DefaultValueListCreation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#DefaultValueListCreation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueListCreation" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>A dialog for creating or editing a list’s default value.</p>
 <p>This widget allows users to input and manage a list of values based on a
 specified type (e.g., integers, floats, booleans, etc.).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_element(): Adds one more element to the list.</p></li>
 <li><p>default_init_table(): Initializes the table with a default value
 when no previous value exists.</p></li>
@@ -191,8 +186,10 @@ content.</p></li>
 <li><p>update_default_value(): Validates user input and updates the
 parent’s default value.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.DefaultValueListCreation.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#DefaultValueListCreation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueListCreation.__init__" title="Link to this definition">¶</a></dt>
@@ -200,9 +197,8 @@ parent’s default value.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – (DefaultValueQLineEdit) The parent object.</p></li>
-<li><p><strong>type</strong> – (Type) The type of the list elements (e.g., int, float,
-str).</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit" title="populse_mia.user_interface.pop_ups.DefaultValueQLineEdit"><em>DefaultValueQLineEdit</em></a>) – The parent object.</p></li>
+<li><p><strong>type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The type of the list elements (e.g., int, float, str).</p></li>
 </ul>
 </dd>
 </dl>
@@ -256,19 +252,19 @@ dialog is closed.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.DefaultValueQLineEdit">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">DefaultValueQLineEdit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#DefaultValueQLineEdit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QLineEdit</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qlineedit.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QLineEdit</span></code></a></p>
 <p>A QLineEdit override for handling default values.</p>
 <p>This class customizes QLineEdit to handle list-type default values by
 displaying a popup when clicked.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>mousePressEvent: Mouse pressed on the QLineEdit.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#DefaultValueQLineEdit.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.DefaultValueQLineEdit.__init__" title="Link to this definition">¶</a></dt>
@@ -286,7 +282,7 @@ displaying a popup when clicked.</p>
 <p>If the parent’s type is a list, displays a popup for list creation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) The mouse press event (unused).</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – The mouse press event (unused).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -296,21 +292,21 @@ displaying a popup when clicked.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpAddPath">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpAddPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpAddPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpAddPath" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for adding a document to the project without using the MRI Files
 Manager (File &gt; Import).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>file_to_choose: Opens a file dialog to choose a document.</p></li>
 <li><p>find_type: Determines the document type when the file path
 changes.</p></li>
 <li><p>save_path: Adds the file path to the database and updates the UI.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpAddPath.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpAddPath.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpAddPath.__init__" title="Link to this definition">¶</a></dt>
@@ -318,8 +314,8 @@ changes.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance.</p></li>
-<li><p><strong>databrowser</strong> – (DataBrowser) The application’s data browser.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – The application’s data browser.</p></li>
 </ul>
 </dd>
 </dl>
@@ -348,15 +344,13 @@ changes.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpAddTag">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpAddTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpAddTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpAddTag" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for adding a new tag to the project.</p>
 <p>This dialog allows users to create a new tag by specifying its name,
 default value, description, unit, and type.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_connect_signals: Connect signals to slots.</p></li>
 <li><p>_setup_layouts: Set up the layout of UI elements.</p></li>
 <li><p>_setup_ui: Set up the dialog UI elements.</p></li>
@@ -364,14 +358,14 @@ default value, description, unit, and type.</p>
 <li><p>ok_action: Validates input fields and adds the new tag if valid.</p></li>
 <li><p>on_activated: Updates form fields when tag type is changed.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_add_tag: Signal emitted when a new tag is successfully added.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpAddTag.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpAddTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpAddTag.__init__" title="Link to this definition">¶</a></dt>
@@ -379,8 +373,8 @@ default value, description, unit, and type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>databrowser</strong> – The data browser instance</p></li>
-<li><p><strong>project</strong> – The current project in the software</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – The data browser instance</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project in the software.</p></li>
 </ul>
 </dd>
 </dl>
@@ -412,7 +406,7 @@ default value, description, unit, and type.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>text</strong> – The main error message text.</p></li>
-<li><p><strong>informative_text</strong> – The additional informative text.</p></li>
+<li><p><strong>informative_text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The additional informative text.</p></li>
 </ul>
 </dd>
 </dl>
@@ -432,7 +426,7 @@ they are valid before adding the tag to the project.</p>
 <dd><p>Update the default value when the tag type changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>text</strong> – The new type selected from combo box</p>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The new type selected from combo box.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -442,15 +436,13 @@ they are valid before adding the tag to the project.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpCloneTag">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpCloneTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpCloneTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpCloneTag" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for cloning an existing tag with a new name.</p>
 <p>This dialog allows users to select an existing tag from the project and
 clone it with a new name.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_connect_signals: Connect signals to slots.</p></li>
 <li><p>_populate_tag_list: Populate the tag list with available tags.</p></li>
 <li><p>_setup_ui: Set up the dialog UI elements.</p></li>
@@ -459,14 +451,14 @@ clone it with a new name.</p>
 tag.</p></li>
 <li><p>search_str: Filters the tag list based on a search string.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_clone_tag: Signal emitted when a tag is successfully cloned.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpCloneTag.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpCloneTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpCloneTag.__init__" title="Link to this definition">¶</a></dt>
@@ -474,8 +466,8 @@ tag.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>databrowser</strong> – The data browser instance</p></li>
-<li><p><strong>project</strong> – The current project in the software</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – The data browser instance</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project in the software</p></li>
 </ul>
 </dd>
 </dl>
@@ -487,7 +479,7 @@ tag.</p></li>
 <dd><p>Connect signals to slots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -498,7 +490,7 @@ tag.</p></li>
 <dd><p>Populate the tag list with available tags from the project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -516,8 +508,8 @@ tag.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – The main error message text.</p></li>
-<li><p><strong>informative_text</strong> – The additional informative text.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The main error message text.</p></li>
+<li><p><strong>informative_text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The additional informative text.</p></li>
 </ul>
 </dd>
 </dl>
@@ -529,7 +521,7 @@ tag.</p></li>
 <dd><p>Validate new tag name and clone the selected tag if valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -541,8 +533,8 @@ tag.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project.</p></li>
-<li><p><strong>search_text</strong> – The search string to filter by.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project.</p></li>
+<li><p><strong>search_text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The search string to filter by.</p></li>
 </ul>
 </dd>
 </dl>
@@ -553,16 +545,14 @@ tag.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpClosePipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpClosePipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpClosePipeline" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog displayed when closing a modified pipeline editor.</p>
 <p>This dialog asks the user whether they want to save changes before
 closing the pipeline editor. It provides three options: save, don’t
 save, or cancel.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_connect_signals: Connect button signals to their respective
 slots.</p></li>
 <li><p>_setup_ui: Set up the dialog’s user interface.</p></li>
@@ -571,24 +561,24 @@ slots.</p></li>
 <li><p>do_not_save_clicked: Makes the actions not to save the pipeline.</p></li>
 <li><p>save_as_clicked: Makes the actions to save the pipeline.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>save_as_signal: Emitted when the user chooses to save the pipeline.</p></li>
 <li><p>do_not_save_signal: Emitted when the user chooses not to save the
 pipeline.</p></li>
 <li><p>cancel_signal: Emitted when the user cancels the closing action.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpClosePipeline.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpClosePipeline.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpClosePipeline.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the dialog with the pipeline name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline_name</strong> – (str)  Name of the pipeline (basename).</p>
+<dd class="field-odd"><p><strong>pipeline_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the pipeline (basename).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -640,23 +630,23 @@ closes the dialog.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpDataBrowserCurrentSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TableDataBrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpDataBrowserCurrentSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog to display and confirm the current data browser selection.</p>
 <p>This dialog shows a table of the currently selected document from the data
 browser and allows the user to confirm or cancel the selection. When
 confirmed, it updates the scan_list attribute of relevant components in the
 main window.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_set_dialog_size: Set the dialog size based on screen resolution.</p></li>
 <li><p>_setup_ui: Set up the dialog’s user interface.</p></li>
 <li><p>ok_clicked: Updates the “scan_list” attribute of several widgets.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TableDataBrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpDataBrowserCurrentSelection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpDataBrowserCurrentSelection.__init__" title="Link to this definition">¶</a></dt>
@@ -664,12 +654,11 @@ main window.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project in the software.</p></li>
-<li><p><strong>databrowser</strong> – Data browser instance of the software.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>)</strong> (<em>filter</em>) – List of the current documents in the data
-browser.</p></li>
-<li><p><strong>main_window</strong> – Main window of the software.</p></li>
-<li><p><strong>TableDataBrowser</strong> – Class for displaying data in a table format.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project in the software.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – Data browser instance of the software.</p></li>
+<li><p><strong>filter</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of the current documents in the data browser.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main window of the software.</p></li>
+<li><p><strong>TableDataBrowser</strong> (<em>sip.wrappertype</em>) – Class for displaying data in a table format.</p></li>
 </ul>
 </dd>
 </dl>
@@ -687,7 +676,7 @@ browser.</p></li>
 <dd><p>Set up the dialog’s user interface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>TableDataBrowser</strong> – Class for displaying data in a table format.</p>
+<dd class="field-odd"><p><strong>TableDataBrowser</strong> (<em>sip.wrappertype</em>) – Class for displaying data in a table format.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -706,21 +695,21 @@ data as sent in the data browser before closing the dialog.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDeletedProject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpDeletedProject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deleted_projects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpDeletedProject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpDeletedProject" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMessageBox</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qmessagebox.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QMessageBox</span></code></a></p>
 <p>Message box that displays a list of deleted, renamed, or moved projects.</p>
 <p>This dialog appears when the software starts and detects that previously
 available projects are no longer accessible at their expected locations.</p>
 <p>Contains:</p>
 <blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<div><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_connect_signals: Connect button signals to their respective
 slots.</p></li>
 <li><p>_setup_message_box: Configure the message box appearance and
 content.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 </div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDeletedProject.__init__">
@@ -728,7 +717,7 @@ content.</p></li>
 <dd><p>Initialize the message box with a list of inaccessible projects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>deleted_projects</strong> – (list) List of project names that are no
+<dd class="field-odd"><p><strong>deleted_projects</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of project names that are no
 longer accessible (deleted, renamed, or moved).</p>
 </dd>
 </dl>
@@ -751,13 +740,12 @@ longer accessible (deleted, renamed, or moved).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDeleteProject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpDeleteProject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpDeleteProject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpDeleteProject" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for deleting selected projects.</p>
 <p>Allows the user to select and delete one or more projects from the projects
 directory after confirmation.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
+<dl>
+<dt>Contains:</dt><dd><p>Methods:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>_delete_project: Handles project deletion.</p></li>
@@ -767,14 +755,15 @@ directory after confirmation.</p>
 <li><p>ok_clicked: delete the selected projects after confirmation.</p></li>
 </ul>
 </div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpDeleteProject.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpDeleteProject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpDeleteProject.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the delete project dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>main_window</strong> – (QMainWindow) The main application window.</p>
+<dd class="field-odd"><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main application window.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -786,8 +775,8 @@ directory after confirmation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project_path</strong> – (str) The path of the project to delete.</p></li>
-<li><p><strong>opened_projects</strong> – (list) The list of currently opened projects.</p></li>
+<li><p><strong>project_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path of the project to delete.</p></li>
+<li><p><strong>opened_projects</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The list of currently opened projects.</p></li>
 </ul>
 </dd>
 </dl>
@@ -822,26 +811,26 @@ directory after confirmation.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpFilterSelection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpFilterSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpFilterSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpFilterSelection" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for selecting a previously saved filter.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>cancel_clicked: Closes the pop-up.</p></li>
 <li><p>ok_clicked: Handles actions when the “OK” button is clicked.</p></li>
 <li><p>search_str: Filters the list based on the search input.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpFilterSelection.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpFilterSelection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpFilterSelection.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes the pop-up dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – (object) The current project containing saved filters.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project containing saved filters.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -866,7 +855,7 @@ behavior.</p>
 <dd><p>Filters the list of saved filters based on the search input.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>search_text</strong> – (str) The text pattern to search for.</p>
+<dd class="field-odd"><p><strong>search_text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text pattern to search for.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -876,7 +865,7 @@ behavior.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpInformation">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpInformation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInformation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpInformation" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>Popup window displaying the current project’s information.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpInformation.__init__">
@@ -884,7 +873,7 @@ behavior.</p>
 <dd><p>Initializes the popup window with project details.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – (Project) The current project instance.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -894,16 +883,14 @@ behavior.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpInheritanceDict">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpInheritanceDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpInheritanceDict" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for selecting tag inheritance between input and output plugs.</p>
 <p>This dialog allows users to select which input plug should pass its tags
 to a specific output plug, or to choose to ignore tag inheritance
 altogether.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_setup_buttons: Set up action buttons for the dialog.</p></li>
 <li><p>_setup_radio_buttons: Set up radio buttons for each input option.</p></li>
 <li><p>ok_clicked: Event when ok button is clicked.</p></li>
@@ -914,8 +901,10 @@ altogether.</p>
 <li><p>ignore_node_clicked: Event when ignore all nodes button is
 clicked.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpInheritanceDict.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpInheritanceDict.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpInheritanceDict.__init__" title="Link to this definition">¶</a></dt>
@@ -923,12 +912,10 @@ clicked.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> – (dict) Dict mapping input names (keys) to their paths
-(values).</p></li>
-<li><p><strong>node_name</strong> – (str) Name of the current node.</p></li>
-<li><p><strong>plug_name</strong> – (str) Name of the current output plug.</p></li>
-<li><p><strong>iterate</strong> – (bool) Boolean indicating if the choice applies to
-iterations.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dict mapping input names (keys) to their paths (values).</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the current node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the current output plug.</p></li>
+<li><p><strong>iterate</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Boolean indicating if the choice applies to iterations.</p></li>
 </ul>
 </dd>
 </dl>
@@ -941,9 +928,9 @@ iterations.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – Name of the current node.</p></li>
-<li><p><strong>plug_name</strong> – Name of the current output plug.</p></li>
-<li><p><strong>layout</strong> – Layout to add the buttons to.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the current node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the current output plug.</p></li>
+<li><p><strong>layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QHBoxLayout</span></code></a>) – Layout to add the buttons to.</p></li>
 </ul>
 </dd>
 </dl>
@@ -956,8 +943,8 @@ iterations.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>values</strong> – Dict mapping input names to their paths.</p></li>
-<li><p><strong>layout</strong> – Layout to add the radio buttons to.</p></li>
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dict mapping input names to their paths.</p></li>
+<li><p><strong>layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qvboxlayout.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QVBoxLayout</span></code></a>) – Layout to add the radio buttons to.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1011,16 +998,14 @@ pipeline.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpMultipleSort">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpMultipleSort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_data_browser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpMultipleSort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpMultipleSort" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for sorting the data browser’s table based on multiple tags.</p>
 <p>This dialog allows users to select multiple tags (columns) for sorting
 table data in either ascending or descending order. Users can dynamically
 add or remove sort criteria.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_setup_ui_elements: Create and configure all UI elements.</p></li>
 <li><p>add_tag: Adds a push button.</p></li>
 <li><p>fill_values: Fills the values list when a tag is added or
@@ -1033,8 +1018,10 @@ list of values.</p></li>
 <li><p>sort_scans: Collects the information and send them to the data
 browser.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpMultipleSort.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_data_browser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpMultipleSort.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpMultipleSort.__init__" title="Link to this definition">¶</a></dt>
@@ -1042,8 +1029,8 @@ browser.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project in the software.</p></li>
-<li><p><strong>table_data_browser</strong> – Data browser’s table to be sorted.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project in the software.</p></li>
+<li><p><strong>table_data_browser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – Data browser’s table to be sorted.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1067,7 +1054,7 @@ browser.</p></li>
 <dd><p>Collect unique values for the selected tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Index of the tag button in the push_buttons list.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the tag button in the push_buttons list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1090,7 +1077,7 @@ browser.</p></li>
 <dd><p>Open a pop-up dialog to choose a tag for the specified button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Index of the button in the push_buttons list.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the button in the push_buttons list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1106,27 +1093,25 @@ browser.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpNewProject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpNewProject</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpNewProject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpNewProject" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFileDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qfiledialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QFileDialog</span></code></a></p>
 <p>Dialog for creating a new project.</p>
 <p>This dialog is displayed when the user wants to create a new project. It
 manages file selection and handles the creation process.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>get_filename: Sets the widget’s attributes depending on the
 selected file name.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_create_project: Emitted when a project has been successfully
 created.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpNewProject.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpNewProject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpNewProject.__init__" title="Link to this definition">¶</a></dt>
@@ -1139,8 +1124,8 @@ created.</p></li>
 <dd><p>Process the selected filename and set up project attributes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_name_tuple</strong> – (tuple) Tuple containing the selected
-filename(s), obtained from the selectedFiles method.</p>
+<dd class="field-odd"><p><strong>file_name_tuple</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Tuple containing the selected filename(s),
+which is obtained from the selectedFiles method.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1155,28 +1140,26 @@ closes the dialog and emits <cite>signal_create_project</cite>.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpOpenProject">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpOpenProject</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpOpenProject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpOpenProject" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFileDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qfiledialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QFileDialog</span></code></a></p>
 <p>Dialog for opening an existing Mia project.</p>
 <p>This dialog allows users to select an existing project directory from
 the filesystem. It uses the default projects directory as the starting
 location and emits a signal when a valid project is selected.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>get_filename: Sets the widget’s attributes depending on the
 selected file name.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_create_project: Signal emitted when a valid project is
 selected.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpOpenProject.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpOpenProject.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpOpenProject.__init__" title="Link to this definition">¶</a></dt>
@@ -1195,7 +1178,7 @@ of the platform-native file dialog.</p>
 directory. If the directory exists, emits signal_create_project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_name_tuple</strong> – (tuple) Tuple containing selected directory
+<dd class="field-odd"><p><strong>file_name_tuple</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Tuple containing selected directory
 path(s). Typically obtained from selectedFiles() method.</p>
 </dd>
 </dl>
@@ -1206,15 +1189,13 @@ path(s). Typically obtained from selectedFiles() method.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpPreferences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for changing software preferences.</p>
 <p>This class manages the preferences dialog for the software, allowing users
 to configure various settings related to tools, projects, and appearance.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>admin_mode_switch: Called when the admin mode checkbox
 is clicked.</p></li>
 <li><p>browse_afni: Called when afni browse button is clicked.</p></li>
@@ -1300,11 +1281,10 @@ path.</p></li>
 <li><p>validate_tool_path: Validate the tool path.</p></li>
 <li><p>wrong_path: Show a wrong path message.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_preferences_change: Signal emitted when the preferences are
 successfully validated and saved.</p></li>
 <li><p>use_clinical_mode_signal: Signal emitted when the clinical mode is
@@ -1312,14 +1292,15 @@ enabled.</p></li>
 <li><p>not_use_clinical_mode_signal: Signal emitted when the clinical mode
 is disabled.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpPreferences.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpPreferences.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpPreferences.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the preferences dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>main_window</strong> – The main window object of the software.</p>
+<dd class="field-odd"><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main window object of the software.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1408,7 +1389,7 @@ is disabled.</p></li>
 <dd><p>Open a dialog to change the admin password with validation checks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>status</strong> – (str) Initial status message to display in the dialog.</p>
+<dd class="field-odd"><p><strong>status</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Initial status message to display in the dialog.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1438,8 +1419,8 @@ is disabled.</p></li>
 settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>_translate</strong> – (callable): Function used to translate UI text
-(translate method of QCoreApplication in the Qt framework).</p>
+<dd class="field-odd"><p><strong>_translate</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcoreapplication.html#translate" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">translate</span></code></a>) – Function used to translate UI text (translate method
+of QCoreApplication in the Qt framework).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1451,8 +1432,8 @@ settings.</p>
 button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>groupbox_capsul</strong> – (QGroupBox) The group box to be configured for
-CAPSUL settings.</p>
+<dd class="field-odd"><p><strong>groupbox_capsul</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qgroupbox.html" title="(in Qt5 v5.15)"><em>QGroupBox</em></a>) – The group box to be configured for CAPSUL
+settings.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1482,14 +1463,19 @@ CAPSUL settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widgets</strong> – (tuple[QtWidgets.QWidget, …]) The widgets to add to
-the layout.</p></li>
-<li><p><strong>add_stretch</strong> – (bool) Whether to add stretch at the end to push
-the widgets to the left. Defaults to True.</p></li>
+<li><p><strong>widgets</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – Tuple of <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a> objects to
+add to the layout.</p></li>
+<li><p><strong>add_stretch</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to add stretch at the end to push the
+widgets to the left. Defaults to True.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created horizontal box layout.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qhboxlayout.html" title="(in Qt5 v5.15)">QHBoxLayout</a></p>
+</dd>
 </dl>
-<p>:Returns (QHBoxLayout) The created horizontal box layout.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1512,8 +1498,9 @@ the widgets to the left. Defaults to True.</p></li>
 including Matlab, SPM, FSL, AFNI, ANTS, FreeSurfer, MRtrix, and CAPSUL.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>_translate</strong> – (Callable) Function used to translate UI text
-(translate method of QCoreApplication in the Qt framework).</p>
+<dd class="field-odd"><p><strong>_translate</strong> – Function used to translate UI text (translate method
+of QCoreApplication in the Qt framework).
+:type _translate: <a class="reference external" href="https://doc.qt.io/qt-5/qcoreapplication.html#translate" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">translate</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1551,8 +1538,8 @@ project-specific settings, third-party tool integration, and external
 resources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>_translate</strong> – (Callable) Function used to translate UI text
-(translate method of QCoreApplication in the Qt framework).</p>
+<dd class="field-odd"><p><strong>_translate</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcoreapplication.html#translate" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">translate</span></code></a>) – Function used to translate UI text (translate method
+of QCoreApplication in the Qt framework).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1598,11 +1585,14 @@ highlights all matching occurrences in the text editor.</p>
 <dd><p>Saves the full configuration and validates settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> – (Config) The configuration object to update and save.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object to update and save.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the configuration is valid and successfully
-saved, False otherwise.</p>
+<dd class="field-even"><p>True if the configuration is valid and successfully saved,
+False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1613,7 +1603,7 @@ saved, False otherwise.</p>
 <dd><p>Saves a minimal configuration for CAPSUL config synchronization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> – (Config) The configuration object to update and save.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object to update and save.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1631,8 +1621,8 @@ saved, False otherwise.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>title</strong> – (str) The title of the error message dialog.</p></li>
-<li><p><strong>message</strong> – (str) The detailed error message to display.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The title of the error message dialog.</p></li>
+<li><p><strong>message</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The detailed error message to display.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1645,8 +1635,9 @@ saved, False otherwise.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>title</strong> – (str) The title of the warning message dialog.</p></li>
-<li><p><strong>message</strong> – (str): The detailed warning message to display.</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The title of the warning message dialog.</p></li>
+<li><p><strong>message</strong> – The detailed warning message to display.</p></li>
+<li><p><strong>message</strong> – str</p></li>
 </ul>
 </dd>
 </dl>
@@ -1662,8 +1653,8 @@ etc.) and updates the corresponding GUI fields, including checkboxes
 and text fields.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>conf</strong> – (software_properties.Config: The Mia configuration object
-containing the paths and usage states of different tools.</p>
+<dd class="field-odd"><p><strong>conf</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The Mia configuration object containing the paths and
+usage states of different tools.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1734,15 +1725,13 @@ containing the paths and usage states of different tools.</p>
 <dd><p>Validate and save the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ok_clicked</strong> – (bool) Whether the OK button was clicked (True)
+<dd class="field-odd"><p><strong>ok_clicked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the OK button was clicked (True)
 when this method was launched.</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>remove_capsul_config: Helper function to remove a module’s
 configuration</p></li>
 <li><p>clean_spm_config: Cleans the SPM configuration based on
@@ -1750,8 +1739,10 @@ standalone mode</p></li>
 <li><p>clean_matlab_config: Removes MATLAB-related configuration
 keys</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1761,13 +1752,16 @@ keys</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) The path to the Matlab executable.</p></li>
-<li><p><strong>config</strong> – (Config) The configuration object to update.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the Matlab executable.</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object to update.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (bool) True if the path is valid and updated in the</dt><dd><p>configuration, False otherwise.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the path is valid and updated in the configuration,
+False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1782,13 +1776,16 @@ example.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) The path to the Matlab standalone directory.</p></li>
-<li><p><strong>config</strong> – (Config) The configuration object to update.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to the Matlab standalone directory.</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object to update.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (bool) True if the path is valid and updated in the</dt><dd><p>configuration, False otherwise.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the path is valid and updated in the configuration,
+False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1804,12 +1801,14 @@ paths such as the projects folder, MRIFileManager.jar path, and
 resources folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> – (Config) The configuration object where validated paths
-and settings will be stored.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object where validated paths and
+settings will be stored.</p>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (bool) True if all paths and settings are valid, False</dt><dd><p>otherwise.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if all paths and settings are valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1825,14 +1824,17 @@ command via Matlab to confirm the setup.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) The file path to the SPM installation.</p></li>
-<li><p><strong>config</strong> – (Config) The configuration object where validated paths
-and settings will be stored.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file path to the SPM installation.</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object where validated paths and
+settings will be stored.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (bool) True if the SPM path and Matlab path are valid, False</dt><dd><p>otherwise.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the SPM path and Matlab path are valid, False
+otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1849,14 +1851,17 @@ confirm its functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) The file path to the SPM standalone installation.</p></li>
-<li><p><strong>config</strong> – (Config) The configuration object where validated paths
-and settings will be stored.</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file path to the SPM standalone installation.</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object where validated paths and
+settings will be stored.</p></li>
 </ul>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (bool) True if the SPM standalone and Matlab standalone paths</dt><dd><p>are valid, False otherwise.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the SPM standalone and Matlab standalone paths are
+valid, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1872,24 +1877,26 @@ environment variables and adjusting paths as necessary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tool_name</strong> – (str) The name of the tool to validate (e.g.,
-“FreeSurfer”, “FSL”, “Matlab”, etc.).</p></li>
-<li><p><strong>path</strong> – (str) The file path to the tool’s installation directory.</p></li>
-<li><p><strong>cmd</strong> – (str) The command to execute within the tool’s directory
-to check its version.</p></li>
-<li><p><strong>config</strong> – (Config) The configuration object where validated paths
-and settings will be stored.</p></li>
-<li><p><strong>config_name</strong> – (str) The name of the configuration setting for the
-tool.</p></li>
-<li><p><strong>set_in_use</strong> – (Callable) A function to set the tool’s “in use”
-status in the configuration.</p></li>
-<li><p><strong>set_path</strong> – (Callable) A function to set the tool’s path in the
-configuration.</p></li>
+<li><p><strong>tool_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tool to validate (e.g., “FreeSurfer”,
+“FSL”, “Matlab”, etc.).</p></li>
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file path to the tool’s installation directory.</p></li>
+<li><p><strong>cmd</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The command to execute within the tool’s directory to check
+its version.</p></li>
+<li><p><strong>config</strong> (<a class="reference internal" href="populse_mia.software_properties.html#populse_mia.software_properties.Config" title="populse_mia.software_properties.Config"><em>populse_mia.software_properties.Config</em></a>) – The configuration object where validated paths and
+settings will be stored.</p></li>
+<li><p><strong>config_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the configuration setting for the tool.</p></li>
+<li><p><strong>set_in_use</strong> (<em>callable</em>) – A method (from populse_mia.software_properties.
+Config) to set the tool’s “in use” status in the configuration.</p></li>
+<li><p><strong>set_path</strong> (<em>callable</em>) – A method (from populse_mia.software_properties.Config)
+to set the tool’s path in the configuration.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the tool’s path is valid and functional, False
+<dd class="field-even"><p>True if the tool’s path is valid and functional, False
 otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1904,11 +1911,11 @@ that the provided path for a specified tool is invalid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> – (str) The invalid path entered by the user.</p></li>
-<li><p><strong>tool</strong> – (str) The name of the tool for which the path is being
+<li><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The invalid path entered by the user.</p></li>
+<li><p><strong>tool</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tool for which the path is being
 validated.</p></li>
-<li><p><strong>extra_mess</strong> – (str, optional) Additional context for the error
-message, such as specifying a configuration file.</p></li>
+<li><p><strong>extra_mess</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Additional context for the error message, such as
+specifying a configuration file.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1919,27 +1926,25 @@ message, such as specifying a configuration file.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpProperties">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpProperties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpProperties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpProperties" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for modifying project properties.</p>
 <p>Allows users to change project settings, including visualized tags
 and information. Is called when the user wants to change the current
-project’s properties (File &gt; properties).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+project’s properties (File &gt; Project properties).</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: saves the modifications and updates the data browser.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_settings_change: Qt signal emitted when project settings are
 modified.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpProperties.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpProperties.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpProperties.__init__" title="Link to this definition">¶</a></dt>
@@ -1947,9 +1952,9 @@ modified.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – current project in the software.</p></li>
-<li><p><strong>databrowser</strong> – data browser instance of the software.</p></li>
-<li><p><strong>old_tags</strong> – visualized tags before opening this dialog.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – current project in the software.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – data browser instance of the software.</p></li>
+<li><p><strong>old_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – visualized tags before opening this dialog.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1966,35 +1971,33 @@ modified.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpQuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpQuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpQuit" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <blockquote>
 <div><p>Dialog to handle unsaved project modifications when closing the software.</p>
 </div></blockquote>
 <p>Provides options to save, discard, or cancel the exit process. Is called
 when the user closes the software and the current project has been
 modified.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>can_exit: returns the value of _bool_exit.</p></li>
 <li><p>cancel_clicked: makes the actions to cancel the action.</p></li>
 <li><p>do_not_save_clicked: makes the actions not to save the project.</p></li>
 <li><p>save_as_clicked: makes the actions to save the project.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>save_as_signal: Signal emitted when user chooses to save the
 project.</p></li>
 <li><p>do_not_save_signal: Signal emitted when user chooses to exit without
 saving.</p></li>
 <li><p>cancel_signal: Signal emitted when user cancels the exit process.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpQuit.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpQuit.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpQuit.__init__" title="Link to this definition">¶</a></dt>
@@ -2003,7 +2006,7 @@ saving.</p></li>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – Current project with unsaved modifications.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project with unsaved modifications.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2042,24 +2045,24 @@ saving.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpRemoveScan">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpRemoveScan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpRemoveScan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpRemoveScan" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog to confirm removal of a scan previously sent to the pipeline
 manager.</p>
 <p>Provides options to remove or keep a scan, with additional ‘apply to all’
 functionality when multiple scans are involved. Is called when the user
 wants to remove a scan that was previously sent to the pipeline manager.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>cancel_clicked: Handle ‘Cancel’ action.</p></li>
 <li><p>no_all_clicked: Handle ‘No to All’ action.</p></li>
 <li><p>yes_all_clicked: Handle ‘Yes to All’ action.</p></li>
 <li><p>yes_clicked: Handle ‘Yes’ action.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpRemoveScan.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpRemoveScan.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpRemoveScan.__init__" title="Link to this definition">¶</a></dt>
@@ -2067,8 +2070,8 @@ wants to remove a scan that was previously sent to the pipeline manager.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scan</strong> – Identifier of the scan to be potentially removed.</p></li>
-<li><p><strong>size</strong> – Total number of scans in the removal process.</p></li>
+<li><p><strong>scan</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Identifier of the scan to be potentially removed.</p></li>
+<li><p><strong>size</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Total number of scans in the removal process.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2107,27 +2110,25 @@ wants to remove a scan that was previously sent to the pipeline manager.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpRemoveTag">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpRemoveTag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpRemoveTag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpRemoveTag" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for removing user-defined tags from a Populse Mia project.</p>
 <p>Allows users to select and remove custom tags from the project’s database.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_action: Verifies the selected tags and send the information to
 the data browser.</p></li>
 <li><p>search_str: Matches the searched pattern with the tags of the
 project.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_remove_tag: Qt signal emitted when tags are removed.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpRemoveTag.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpRemoveTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpRemoveTag.__init__" title="Link to this definition">¶</a></dt>
@@ -2135,8 +2136,8 @@ project.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>databrowser</strong> – Data browser instance managing project data.</p></li>
-<li><p><strong>project</strong> – Current project containing tags to be removed.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – Data browser instance managing project data.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project containing tags to be removed.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2156,7 +2157,7 @@ removal. Closes the dialog after processing.</p>
 <dd><p>Filter tags based on search pattern.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>search_pattern</strong> – String to match against tag names.</p>
+<dd class="field-odd"><p><strong>search_pattern</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – String to match against tag names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2166,28 +2167,26 @@ removal. Closes the dialog after processing.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSaveProjectAs">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpSaveProjectAs</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSaveProjectAs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog for saving a project under a new name.</p>
 <p>Provides a user interface to select and save a project with a new name,
 with options to browse existing projects and validate the new project name.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>fill_input: Fills the input field when a project is clicked on.</p></li>
 <li><p>return_value: Sets the widget’s attributes depending on the
 selected file name.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_saved_project: Qt signal emitted when a new project name is
 selected.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSaveProjectAs.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSaveProjectAs.__init__" title="Link to this definition">¶</a></dt>
@@ -2202,7 +2201,7 @@ projects, input field for new project name, and save/cancel buttons.</p>
 <dd><p>Fill the project name input field with the selected project name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> – Name of the project to fill in the input field.</p>
+<dd class="field-odd"><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the project to fill in the input field.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2215,8 +2214,10 @@ projects, input field for new project name, and save/cancel buttons.</p>
 and emits a signal when a valid project name is selected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) Full path of the new project if successful, None
-otherwise.</p>
+<dd class="field-odd"><p>Full path of the new project if successful, None otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2226,22 +2227,22 @@ otherwise.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSeeAllProjects">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpSeeAllProjects</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_projects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSeeAllProjects"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>A dialog window for displaying and managing saved projects.</p>
 <p>This dialog allows users to view a list of saved projects, check their
 existence, and open a selected project.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>checkState: Checks if the project still exists and returns the
 corresponding icon.</p></li>
 <li><p>item_to_path: Returns the path of the first selected item.</p></li>
 <li><p>open_project: Switches to the selected project.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSeeAllProjects.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_projects</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSeeAllProjects.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSeeAllProjects.__init__" title="Link to this definition">¶</a></dt>
@@ -2249,8 +2250,8 @@ corresponding icon.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>saved_projects</strong> – Container with a list of project paths.</p></li>
-<li><p><strong>main_window</strong> – MainWindow instance.</p></li>
+<li><p><strong>saved_projects</strong> (<a class="reference internal" href="populse_mia.data_manager.project_properties.html#populse_mia.data_manager.project_properties.SavedProjects" title="populse_mia.data_manager.project_properties.SavedProjects"><em>populse_mia.data_manager.project_properties.SavedProjects</em></a>) – Container with a list of project paths.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – MainWindow instance.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2262,10 +2263,13 @@ corresponding icon.</p></li>
 <dd><p>Determine the icon based on project existence.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – (str) Path to the project directory.</p>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the project directory.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QIcon) Green checkmark if project exists, red cross if not.</p>
+<dd class="field-even"><p>Green checkmark if project exists, red cross if not.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qicon.html" title="(in Qt5 v5.15)">QIcon</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2297,15 +2301,15 @@ chosen. Closes the dialog upon successful project switch.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpSelectFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectFilter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#populse_mia.user_interface.pop_ups.PopUpFilterSelection" title="populse_mia.user_interface.pop_ups.PopUpFilterSelection"><code class="xref py py-class docutils literal notranslate"><span class="pre">PopUpFilterSelection</span></code></a></p>
 <p>Popup window for selecting and opening a previously saved filter.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: Saves the modifications and updates the data browser.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSelectFilter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectFilter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectFilter.__init__" title="Link to this definition">¶</a></dt>
@@ -2313,8 +2317,8 @@ chosen. Closes the dialog upon successful project switch.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance.</p></li>
-<li><p><strong>databrowser</strong> – (DataBrowser) The data browser instance.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – (Project) The current project instance.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – (DataBrowser) The data browser instance.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2332,18 +2336,18 @@ data browser.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSelectIteration">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpSelectIteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterated_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectIteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectIteration" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>Dialog allowing the user to choose which values of a tag should be used
 during an iterated pipeline run.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: Stores selected values and closes the dialog.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSelectIteration.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterated_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selected_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectIteration.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectIteration.__init__" title="Link to this definition">¶</a></dt>
@@ -2351,14 +2355,11 @@ during an iterated pipeline run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>iterated_tag</strong> – (str) Name of the tag whose values can be
-iterated.</p></li>
-<li><p><strong>tag_values</strong> – (list[str]) Available values for the tag.</p></li>
+<li><p><strong>iterated_tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the tag whose values can be iterated.</p></li>
+<li><p><strong>tag_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Available values for the tag.</p></li>
+<li><p><strong>selected_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Values initially selected when the dialog
+opens.</p></li>
 </ul>
-</dd>
-<dt class="field-even">Selected_values<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) Values initially selected when the
-dialog opens.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2374,7 +2375,7 @@ dialog opens.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpTagSelection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpTagSelection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpTagSelection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpTagSelection" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>A dialog for selecting and filtering tags in a data browser.</p>
 <dl class="simple">
 <dt>This class provides a user interface for:</dt><dd><ul class="simple">
@@ -2386,11 +2387,9 @@ dialog opens.</p>
 </dl>
 <p>Is called when the user wants to update the tags that are visualized in
 the data browser.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_button: Create a standard button with text and click
 handler.</p></li>
 <li><p>_setup_ui: Set up the user interface components.</p></li>
@@ -2401,15 +2400,17 @@ is clicked.</p></li>
 <li><p>search_str: Matches the searched pattern with the tags of the
 project.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpTagSelection.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpTagSelection.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpTagSelection.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the tag selection dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project containing the database with
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project containing the database with
 available tags.</p>
 </dd>
 </dl>
@@ -2420,8 +2421,9 @@ available tags.</p>
 <span class="sig-name descname"><span class="pre">_setup_ui</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_translate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpTagSelection._setup_ui"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpTagSelection._setup_ui" title="Link to this definition">¶</a></dt>
 <dd><p>Set up the user interface components.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Param_translate<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(callable) Localization translation function.</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_translate</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcoreapplication.html#translate" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">translate</span></code></a>) – Function used to translate UI text (translate method
+of QCoreApplication in the Qt framework).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2433,13 +2435,15 @@ available tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – (str) Button text.</p></li>
-<li><p><strong>clicked_handler</strong> – (callable) Function to call when button is
-clicked.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Button text.</p></li>
+<li><p><strong>clicked_handler</strong> (<a class="reference internal" href="#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked" title="populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked"><code class="xref py py-meth docutils literal notranslate"><span class="pre">populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked()</span></code></a>) – Function to call when button is clicked.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QPushButton) Configured button.</p>
+<dd class="field-even"><p>Configured button.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qpushbutton.html" title="(in Qt5 v5.15)">QPushButton</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2456,7 +2460,7 @@ clicked.</p></li>
 <dd><p>Handle item selection by checking/unchecking tags.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item</strong> – (QListWidgetItem) The clicked list item.</p>
+<dd class="field-odd"><p><strong>item</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlistwidgetitem.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QListWidgetItem</span></code></a>) – The clicked list item.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2474,7 +2478,7 @@ clicked.</p></li>
 <dd><p>Filter tags based on search term.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>str_search</strong> – (str) Text to search for in tag names.</p>
+<dd class="field-odd"><p><strong>str_search</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Text to search for in tag names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2489,24 +2493,24 @@ clicked.</p></li>
 <p>This class allows users to choose which tag will be displayed as the
 thumbnail in the application’s mini viewer. It presents a list of available
 tags and allows selecting a single tag to be used as the thumbnail.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_populate_tag_list: Populate the list widget with tags from
 the database.</p></li>
 <li><p>ok_clicked: Saves the modifications and updates the mini viewer.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSelectTag.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectTag.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectTag.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the tag selection dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project in the software context.</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project in the software context.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2517,7 +2521,7 @@ the database.</p></li>
 <dd><p>Populate the list widget with tags from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>field_names</strong> – (list) List of available field names/tags.</p>
+<dd class="field-odd"><p><strong>field_names</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of available field names/tags.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2539,15 +2543,15 @@ dialog after selection.</p>
 <p>A pop-up dialog for selecting a tag from a count table.</p>
 <p>Allows users to choose a single tag from a list of available tags, with an
 option to pre-select a specific tag.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: updates the selected tag and closes the pop-up.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag_name_checked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpSelectTagCountTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.__init__" title="Link to this definition">¶</a></dt>
@@ -2555,10 +2559,10 @@ option to pre-select a specific tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project context.</p></li>
-<li><p><strong>tags_to_display</strong> – (list) List of tags to be displayed for
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project context.</p></li>
+<li><p><strong>tags_to_display</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of tags to be displayed for
 selection.</p></li>
-<li><p><strong>tag_name_checked</strong> – (str) Optional tag to be pre-checked on
+<li><p><strong>tag_name_checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Optional tag to be pre-checked at
 initialization.</p></li>
 </ul>
 </dd>
@@ -2578,7 +2582,7 @@ closes the dialog.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpShowHistory">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpShowHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brick_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpShowHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpShowHistory" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QDialog</span></code></a></p>
 <p>A dialog for displaying the history of a document in a software pipeline.</p>
 <p>This class creates a popup window that provides comprehensive information
 about a specific brick (processing node) in a pipeline, including:</p>
@@ -2597,12 +2601,8 @@ about a specific brick (processing node) in a pipeline, including:</p>
 <li><p>Select and highlight specific files</p></li>
 </ul>
 </dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_updateio_table: Fill in the input and output sections of the
 table.</p></li>
 <li><p>adjust_size: Adjust the size of the dialog based on screen
@@ -2633,8 +2633,10 @@ brick.</p></li>
 <li><p>update_table_with_brick_data: Update the table with the brick’s
 input and output data after processing.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpShowHistory.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">brick_uuid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">databrowser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpShowHistory.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpShowHistory.__init__" title="Link to this definition">¶</a></dt>
@@ -2642,14 +2644,14 @@ input and output data after processing.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project in the software.</p></li>
-<li><p><strong>brick_uuid</strong> – (str) Unique identifier of the brick.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project in the software.</p></li>
+<li><p><strong>brick_uuid</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Unique identifier of the brick.</p></li>
+<li><p><strong>scan</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Filename of the scan.</p></li>
+<li><p><strong>databrowser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – Data browser instance.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main window of the software.</p></li>
 </ul>
 </dd>
 </dl>
-<p>:param scan (str) Filename of the scan.
-:param databrowser: Data browser instance.
-:param main_window: Main window of the software.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -2662,19 +2664,18 @@ the input dictionary, handling nested lists and detecting scanned file
 paths.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>io_dict</strong> – (dict) Dictionary containing input or output data to be
-displayed. Keys represent column headers, and values can be strings,</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>io_dict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing input or output data to be
+displayed. Keys represent column headers, and values can be strings,
+lists, or nested lists.</p></li>
+<li><p><strong>item_idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The starting column index for populating the table.</p></li>
+</ul>
 </dd>
-</dl>
-<p>lists, or nested lists.
-:param item_idx: (int) The starting column index for populating the</p>
-<blockquote>
-<div><p>table.</p>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(int) The updated column index after processing the
-dictionary.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The updated column index after processing the dictionary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2697,12 +2698,14 @@ dictionary.</p>
 <dd><p>Find bricks associated with a given node name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node_name</strong> – (str) The name of the node to find associated bricks
-for.</p>
+<dd class="field-odd"><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node to find associated bricks for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(dict) A dictionary where the keys are the full brick names
-and the values are lists of associated UUIDs.</p>
+<dd class="field-even"><p>A dictionary where the keys are the full brick names and the
+values are lists of associated UUIDs.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)">dict</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -2713,12 +2716,14 @@ and the values are lists of associated UUIDs.</p>
 <dd><p>Find the process and plug name from a given plug.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>plug</strong> – (Plug) The plug object to find the process and plug name
-from.</p>
+<dd class="field-odd"><p><strong>plug</strong> (<em>capsul.pipeline.pipeline_nodes.Plug</em>) – The plug object to find the process and plug name from.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple) A tuple containing the process name (str) and plug
-name (str).</p>
+<dd class="field-even"><p>A tuple containing the process name (str) and plug name
+(str).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2731,10 +2736,8 @@ visualization.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> – (Pipeline): The pipeline object containing the nodes
-to handle.</p></li>
-<li><p><strong>full_brick_name</strong> – (list) The full name of the brick, split into
-parts.</p></li>
+<li><p><strong>pipeline</strong> (<em>capsul.study_config.process_instance.CustomPipeline</em>) – The pipeline object containing the nodes to handle.</p></li>
+<li><p><strong>full_brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The full name of the brick, split into parts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2746,7 +2749,7 @@ parts.</p></li>
 <dd><p>Highlight the selected node in the pipeline view.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node_name</strong> – (str) The name of the node to highlight.</p>
+<dd class="field-odd"><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node to highlight.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2757,8 +2760,7 @@ parts.</p></li>
 <dd><p>Initialize the pipeline view using the given pipeline XML.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>full_brick_name</strong> – (list) The full name of the brick, split into
-parts.</p>
+<dd class="field-odd"><p><strong>full_brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The full name of the brick, split into parts.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2769,11 +2771,14 @@ parts.</p>
 <dd><p>Check if the I/O value is a scan.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> – I/O value.</p>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – I/O value.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The scan corresponding to the value if it exists, None
 otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2786,9 +2791,8 @@ data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>brick_uuid</strong> – (str) The UUID of the brick to load.</p></li>
-<li><p><strong>scan</strong> – (str) The identifier of the scan associated with the
-brick.</p></li>
+<li><p><strong>brick_uuid</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The UUID of the brick to load.</p></li>
+<li><p><strong>scan</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The identifier of the scan associated with the brick.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2802,10 +2806,9 @@ history UUID.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>history_uuid</strong> – (str) The UUID of the history record to load
-pipeline data from.</p></li>
-<li><p><strong>full_brick_name</strong> – (list) The full name of the brick, split into
-parts.</p></li>
+<li><p><strong>history_uuid</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The UUID of the history record to load pipeline
+data from.</p></li>
+<li><p><strong>full_brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><em>s</em><em>]</em><em>tr</em><em>]</em>) – The full name of the brick, split into parts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2818,8 +2821,8 @@ parts.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – Node name.</p></li>
-<li><p><strong>process</strong> – Process of the corresponding node.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Node name.</p></li>
+<li><p><strong>process</strong> (<em>capsul.pipeline.pipeline_nodes.PipelineNode</em>) – Process of the corresponding node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2832,11 +2835,9 @@ parts.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> – (Pipeline) The pipeline object containing the nodes to
-handle.</p></li>
-<li><p><strong>bricks</strong> – (dict) A dictionary of bricks with UUIDs as values.</p></li>
-<li><p><strong>full_brick_name</strong> – (list) The full name of the brick, split into
-parts.</p></li>
+<li><p><strong>pipeline</strong> (<em>A class coding for the pipeline.</em>) – The pipeline object containing the nodes to handle.</p></li>
+<li><p><strong>bricks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of bricks with UUIDs as values.</p></li>
+<li><p><strong>full_brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The full name of the brick, split into parts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2855,26 +2856,26 @@ parts.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>inputs</strong> – (dict) Dictionary containing input data.</p></li>
-<li><p><strong>outputs</strong> – (dict) Dictionary containing output data.</p></li>
-<li><p><strong>brick_name</strong> – (str) Name of the brick.</p></li>
-<li><p><strong>init</strong> – (str, optional) Initialization status.</p></li>
-<li><p><strong>init_time</strong> – (Any, optional) Initialization timestamp.</p></li>
-<li><p><strong>exec</strong> – (str, optional) Execution status.</p></li>
-<li><p><strong>exec_time</strong> – (Any, optional) Execution timestamp.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing input data.</p></li>
+<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing output data.</p></li>
+<li><p><strong>brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the brick.</p></li>
+<li><p><strong>init</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Initialization status.</p></li>
+<li><p><strong>init_time</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/datetime.html#datetime.datetime" title="(in Python v3.10)"><em>datetime.datetime</em></a>) – Initialization timestamp.</p></li>
+<li><p><strong>exec</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Execution status.</p></li>
+<li><p><strong>exec_time</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/datetime.html#datetime.datetime" title="(in Python v3.10)"><em>datetime.datetime</em></a>) – Execution timestamp.</p></li>
 </ul>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>create_cell_widget: Creates a QWidget containing a vertically
 aligned QLabel</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -2884,11 +2885,9 @@ aligned QLabel</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bricks</strong> – (dict) A dictionary of bricks with UUIDs as values.</p></li>
-<li><p><strong>node_name</strong> – (str) The name of the node associated with the
-brick.</p></li>
-<li><p><strong>full_node_name</strong> – (list) The full name of the node, split into
-parts.</p></li>
+<li><p><strong>bricks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of bricks with UUIDs as values.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node associated with the brick.</p></li>
+<li><p><strong>full_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The full name of the node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2902,11 +2901,9 @@ brick data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bricks</strong> – (dict) A dictionary of bricks with UUIDs as values.</p></li>
-<li><p><strong>process</strong> – (PipelineNode) The process node associated with the
-subpipeline.</p></li>
-<li><p><strong>full_node_name</strong> – (list) The full name of the node, split into
-parts.</p></li>
+<li><p><strong>bricks</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of bricks with UUIDs as values.</p></li>
+<li><p><strong>process</strong> (<em>capsul.pipeline.pipeline_nodes.PipelineNode</em>) – The process node associated with the subpipeline.</p></li>
+<li><p><strong>full_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The full name of the node.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2920,10 +2917,9 @@ processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>brick_row</strong> – (list) A list containing the brick data to update
-the table with.</p></li>
-<li><p><strong>full_brick_name</strong> – (list) The full name of the brick, split into
-parts.</p></li>
+<li><p><strong>brick_row</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list containing the brick data to update the table
+with.</p></li>
+<li><p><strong>full_brick_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The full name of the brick, split into parts.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2934,16 +2930,14 @@ parts.</p></li>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpVisualizedTags">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">PopUpVisualizedTags</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualized_tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpVisualizedTags"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpVisualizedTags" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QWidget</span></code></a></p>
 <p>A widget for managing tag visualization preferences in a project.</p>
 <p>This class provides an interface for users to select and unselect tags
 to be displayed in the project. It allows searching through available tags
 and moving them between available and visualized lists.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_button: Create a customized QPushButton with specified
 properties.</p></li>
 <li><p>_create_button_layout: Create the layout for selection buttons.</p></li>
@@ -2964,15 +2958,15 @@ table.</p></li>
 <li><p>click_unselect_tag: removes the unselected tags from populse_mia
 “selected tag” table.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>signal_preferences_change: (QtCore.pyqtSignal) Emitted when tag
 visualization preferences are modified.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.PopUpVisualizedTags.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visualized_tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#PopUpVisualizedTags.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.PopUpVisualizedTags.__init__" title="Link to this definition">¶</a></dt>
@@ -2980,9 +2974,9 @@ visualization preferences are modified.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project in the software.</p></li>
-<li><p><strong>visualized_tags</strong> – Tags currently being visualized before
-opening this widget.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project in the software.</p></li>
+<li><p><strong>visualized_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Tags currently being visualized before opening
+this widget.</p></li>
 </ul>
 </dd>
 </dl>
@@ -2997,16 +2991,18 @@ translates and sets its text, and connects a click event handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object_name</strong> – (str) The unique identifier name for the button.</p></li>
-<li><p><strong>text</strong> – (str) The text to be displayed on the button, will
-be translated.</p></li>
-<li><p><strong>click_handler</strong> – (callable) The function to be called when the
-button is clicked.</p></li>
+<li><p><strong>object_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier name for the button.</p></li>
+<li><p><strong>text</strong> – The text to be displayed on the button, will be
+translated.</p></li>
+<li><p><strong>click_handler</strong> (<em>A callable method</em>) – The function to be called when the button is
+clicked.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QPushButton) A configured button with the specified
-properties.</p>
+<dd class="field-even"><p>A configured button with the specified properties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qpushbutton.html" title="(in Qt5 v5.15)">QPushButton</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3026,13 +3022,15 @@ object name, and translates its text.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>object_name</strong> – (str) The unique identifier name for the label.</p></li>
-<li><p><strong>text</strong> – (str) The text to be displayed on the label, will be
-translated.</p></li>
+<li><p><strong>object_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier name for the label.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to be displayed on the label, will be translated.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QLabel) A configured label with the specified properties.</p>
+<dd class="field-even"><p>A configured label with the specified properties.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)">QLabel</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3065,12 +3063,14 @@ list widget is assigned a unique object name based on the optional
 text parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>text</strong> – (str) A prefix used to create a unique object name for
-the QListWidget.</p>
+<dd class="field-odd"><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A prefix used to create a unique object name for the
+QListWidget.</p>
 </dd>
-</dl>
-<dl class="simple">
-<dt>:Returns (QListWidget) A configured QListWidget with multi-selection</dt><dd><p>mode enabled.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A configured QListWidget with multi-selection mode enabled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qlistwidget.html" title="(in Qt5 v5.15)">QListWidget</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -3093,7 +3093,7 @@ the QListWidget.</p>
 <dd><p>Filter tags based on search string.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>str_search</strong> – (str) Search pattern to match against tags.</p>
+<dd class="field-odd"><p><strong>str_search</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Search pattern to match against tags.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3120,34 +3120,32 @@ available tags list.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.QLabel_clickable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pop_ups.</span></span><span class="sig-name descname"><span class="pre">QLabel_clickable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#QLabel_clickable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.QLabel_clickable" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">QLabel</span></code></p>
+<dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QLabel</span></code></a></p>
 <p>A custom QLabel that emits a clicked signal when mouse pressed.</p>
 <p>This class extends the standard QLabel to provide a signal that can be
 connected to other methods when the label is clicked, enabling more
 interactive label behaviors.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>mousePressEvent: Override the default mouse press event to emit
 the clicked signal.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>clicked: (pyqtSignal) Signal emitted when the label is clicked.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pop_ups.QLabel_clickable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pop_ups.html#QLabel_clickable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pop_ups.QLabel_clickable.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the clickable label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – (QWidget) Parent widget.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A project name.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -3158,7 +3156,7 @@ the clicked signal.</p></li>
 <dd><p>Override the default mouse press event to emit the clicked signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) Mouse press event details.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – Mouse press event details.</p>
 </dd>
 </dl>
 </dd></dl>

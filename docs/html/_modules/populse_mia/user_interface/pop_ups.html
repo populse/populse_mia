@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=a8471e47"></script>
+    <script src="../../../_static/documentation_options.js?v=75ec3ca5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -554,14 +554,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    A QLabel subclass that emits a signal when clicked.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - mousePressEvent: Overrides the mousePressEvent method by emitting</span>
 <span class="sd">              the clicked signal.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - clicked: Emitted when the label is clicked.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -580,8 +577,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles the mouse press event by emitting the `clicked` signal.</span>
 
-<span class="sd">        :param event: (QMouseEvent) The mouse event triggering the signal</span>
-<span class="sd">         (unused)</span>
+<span class="sd">        :param event: The mouse event triggering the signal (unused).</span>
+<span class="sd">        :type event: QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span></div>
 </div>
@@ -598,9 +595,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    specified type (e.g., integers, floats, booleans, etc.).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - add_element(): Adds one more element to the list.</span>
 <span class="sd">            - default_init_table(): Initializes the table with a default value</span>
 <span class="sd">              when no previous value exists.</span>
@@ -618,9 +613,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the DefaultValueListCreation dialog.</span>
 
-<span class="sd">        :param parent: (DefaultValueQLineEdit) The parent object.</span>
-<span class="sd">        :param type: (Type) The type of the list elements (e.g., int, float,</span>
-<span class="sd">         str).</span>
+<span class="sd">        :param parent: The parent object.</span>
+<span class="sd">        :type parent: DefaultValueQLineEdit</span>
+<span class="sd">        :param type: The type of the list elements (e.g., int, float, str).</span>
+<span class="sd">        :type type: str</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -832,11 +828,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    displaying a popup when clicked.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - mousePressEvent: Mouse pressed on the QLineEdit.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="DefaultValueQLineEdit.__init__">
@@ -857,8 +850,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        If the parent&#39;s type is a list, displays a popup for list creation.</span>
 
-<span class="sd">        :param event: (QMouseEvent) The mouse press event (unused).</span>
-
+<span class="sd">        :param event: The mouse press event (unused).</span>
+<span class="sd">        :type event: QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">get_origin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
             <span class="c1"># We display the pop up to create the list if the checkbox is</span>
@@ -879,9 +872,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Manager (File &gt; Import).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - file_to_choose: Opens a file dialog to choose a document.</span>
 <span class="sd">            - find_type: Determines the document type when the file path</span>
 <span class="sd">              changes.</span>
@@ -894,8 +885,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the pop-up for adding a document.</span>
 
-<span class="sd">        :param project: (Project) The current project instance.</span>
-<span class="sd">        :param databrowser: (DataBrowser) The application&#39;s data browser.</span>
+<span class="sd">        :param project: The current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param databrowser: The application&#39;s data browser.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -1117,9 +1111,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    default value, description, unit, and type.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _connect_signals: Connect signals to slots.</span>
 <span class="sd">            - _setup_layouts: Set up the layout of UI elements.</span>
 <span class="sd">            - _setup_ui: Set up the dialog UI elements.</span>
@@ -1128,7 +1120,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - on_activated: Updates form fields when tag type is changed.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_add_tag: Signal emitted when a new tag is successfully added.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1142,7 +1133,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the dialog for adding a new tag.</span>
 
 <span class="sd">        :param databrowser: The data browser instance</span>
-<span class="sd">        :param project: The current project in the software</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
+<span class="sd">        :param project: The current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -1289,7 +1283,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Display an error message box.</span>
 
 <span class="sd">        :param text: The main error message text.</span>
+<span class="sd">        :type param text: str</span>
 <span class="sd">        :param informative_text: The additional informative text.</span>
+<span class="sd">        :type informative_text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
@@ -1383,7 +1379,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the default value when the tag type changes.</span>
 
-<span class="sd">        :param text: The new type selected from combo box</span>
+<span class="sd">        :param text: The new type selected from combo box.</span>
+<span class="sd">        :type text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">type_mapping</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;String&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">FIELD_TYPE_STRING</span><span class="p">,</span> <span class="s2">&quot;Undefined&quot;</span><span class="p">),</span>
@@ -1448,9 +1445,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    clone it with a new name.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _connect_signals: Connect signals to slots.</span>
 <span class="sd">            - _populate_tag_list: Populate the tag list with available tags.</span>
 <span class="sd">            - _setup_ui: Set up the dialog UI elements.</span>
@@ -1460,7 +1455,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - search_str: Filters the tag list based on a search string.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_clone_tag: Signal emitted when a tag is successfully cloned.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1475,7 +1469,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the dialog for cloning a tag.</span>
 
 <span class="sd">        :param databrowser: The data browser instance</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        :param project: The current project in the software</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
@@ -1494,6 +1491,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Connect signals to slots.</span>
 
 <span class="sd">        :param project: The current project.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ok_action</span><span class="p">(</span><span class="n">project</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">search_bar</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">search_str</span><span class="p">,</span> <span class="n">project</span><span class="p">))</span></div>
@@ -1506,6 +1504,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Populate the tag list with available tags from the project.</span>
 
 <span class="sd">        :param project: The current project.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_translate</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span>
 
@@ -1582,7 +1581,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Display an error message box.</span>
 
 <span class="sd">        :param text: The main error message text.</span>
+<span class="sd">        :type text: str</span>
 <span class="sd">        :param informative_text: The additional informative text.</span>
+<span class="sd">        :type informative_text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
@@ -1601,6 +1602,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Validate new tag name and clone the selected tag if valid.</span>
 
 <span class="sd">        :param project: The current project.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">new_tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">line_edit_new_tag_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">selected_items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">selectedItems</span><span class="p">()</span>
@@ -1647,7 +1649,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter the tag list based on the search string.</span>
 
 <span class="sd">        :param project: The current project.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param search_text: The search string to filter by.</span>
+<span class="sd">        :type search_text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">_translate</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">QCoreApplication</span><span class="o">.</span><span class="n">translate</span>
 
@@ -1692,9 +1696,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    save, or cancel.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _connect_signals: Connect button signals to their respective</span>
 <span class="sd">              slots.</span>
 <span class="sd">            - _setup_ui: Set up the dialog&#39;s user interface.</span>
@@ -1704,7 +1706,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - save_as_clicked: Makes the actions to save the pipeline.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - save_as_signal: Emitted when the user chooses to save the pipeline.</span>
 <span class="sd">        - do_not_save_signal: Emitted when the user chooses not to save the</span>
 <span class="sd">          pipeline.</span>
@@ -1722,8 +1723,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the dialog with the pipeline name.</span>
 
-<span class="sd">        :param pipeline_name: (str)  Name of the pipeline (basename).</span>
-
+<span class="sd">        :param pipeline_name: Name of the pipeline (basename).</span>
+<span class="sd">        :type pipeline_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Name of the pipeline being edited</span>
@@ -1839,13 +1840,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    main window.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _set_dialog_size: Set the dialog size based on screen resolution.</span>
 <span class="sd">            - _setup_ui: Set up the dialog&#39;s user interface.</span>
 <span class="sd">            - ok_clicked: Updates the &quot;scan_list&quot; attribute of several widgets.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="PopUpDataBrowserCurrentSelection.__init__">
@@ -1857,12 +1855,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the dialog with the current project and selection data.</span>
 
 <span class="sd">        :param project: Current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param databrowser: Data browser instance of the software.</span>
-<span class="sd">        :param filter (list): List of the current documents in the data</span>
-<span class="sd">         browser.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
+<span class="sd">        :param filter: List of the current documents in the data browser.</span>
+<span class="sd">        :type filter: list[str]</span>
 <span class="sd">        :param main_window: Main window of the software.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        :param TableDataBrowser: Class for displaying data in a table format.</span>
-
+<span class="sd">        :type TableDataBrowser: sip.wrappertype</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -1889,6 +1891,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Set up the dialog&#39;s user interface.</span>
 
 <span class="sd">        :param TableDataBrowser: Class for displaying data in a table format.</span>
+<span class="sd">        :type TableDataBrowser: sip.wrappertype</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Confirm the selection&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -1955,7 +1958,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Contains:</span>
 
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _connect_signals: Connect button signals to their respective</span>
 <span class="sd">              slots.</span>
 <span class="sd">            - _setup_message_box: Configure the message box appearance and</span>
@@ -1968,8 +1970,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the message box with a list of inaccessible projects.</span>
 
-<span class="sd">        :param deleted_projects: (list) List of project names that are no</span>
+<span class="sd">        :param deleted_projects: List of project names that are no</span>
 <span class="sd">         longer accessible (deleted, renamed, or moved).</span>
+<span class="sd">        :type deleted_projects: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deleted_projects</span> <span class="o">=</span> <span class="n">deleted_projects</span>
@@ -2017,7 +2020,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    directory after confirmation.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
 
 <span class="sd">            - _delete_project: Handles project deletion.</span>
@@ -2034,7 +2036,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the delete project dialog.</span>
 
-<span class="sd">        :param main_window: (QMainWindow) The main application window.</span>
+<span class="sd">        :param main_window: The main application window.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Delete project&quot;</span><span class="p">)</span>
@@ -2050,8 +2053,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handles project deletion, updating application state accordingly.</span>
 
-<span class="sd">        :param project_path: (str) The path of the project to delete.</span>
-<span class="sd">        :param opened_projects: (list) The list of currently opened projects.</span>
+<span class="sd">        :param project_path: The path of the project to delete.</span>
+<span class="sd">        :type project_path: str</span>
+<span class="sd">        :param opened_projects: The list of currently opened projects.</span>
+<span class="sd">        :type opened_projects: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_window</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">folder</span><span class="p">)</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span>
@@ -2176,9 +2181,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Dialog for selecting a previously saved filter.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - cancel_clicked: Closes the pop-up.</span>
 <span class="sd">            - ok_clicked: Handles actions when the &quot;OK&quot; button is clicked.</span>
 <span class="sd">            - search_str: Filters the list based on the search input.</span>
@@ -2190,7 +2193,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the pop-up dialog.</span>
 
-<span class="sd">        :param project: (object) The current project containing saved filters.</span>
+<span class="sd">        :param project: The current project containing saved filters.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -2262,8 +2266,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filters the list of saved filters based on the search input.</span>
 
-<span class="sd">        :param search_text: (str) The text pattern to search for.</span>
-
+<span class="sd">        :param search_text: The text pattern to search for.</span>
+<span class="sd">        :type search_text: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">search_text</span> <span class="o">=</span> <span class="n">search_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
@@ -2297,7 +2301,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the popup window with project details.</span>
 
-<span class="sd">        :param project: (Project) The current project instance.</span>
+<span class="sd">        :param project: The current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># UI Elements</span>
@@ -2330,9 +2335,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    altogether.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _setup_buttons: Set up action buttons for the dialog.</span>
 <span class="sd">            - _setup_radio_buttons: Set up radio buttons for each input option.</span>
 <span class="sd">            - ok_clicked: Event when ok button is clicked.</span>
@@ -2350,12 +2353,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the inheritance selection dialog.</span>
 
-<span class="sd">        :param values: (dict) Dict mapping input names (keys) to their paths</span>
-<span class="sd">         (values).</span>
-<span class="sd">        :param node_name: (str) Name of the current node.</span>
-<span class="sd">        :param plug_name: (str) Name of the current output plug.</span>
-<span class="sd">        :param iterate: (bool) Boolean indicating if the choice applies to</span>
-<span class="sd">         iterations.</span>
+<span class="sd">        :param values: Dict mapping input names (keys) to their paths (values).</span>
+<span class="sd">        :type values: dict</span>
+<span class="sd">        :param node_name: Name of the current node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: Name of the current output plug.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param iterate: Boolean indicating if the choice applies to iterations.</span>
+<span class="sd">        :type iterate: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2403,8 +2408,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up action buttons for the dialog.</span>
 
 <span class="sd">        :param node_name: Name of the current node.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param plug_name: Name of the current output plug.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param layout: Layout to add the buttons to.</span>
+<span class="sd">        :type layout: :class:`PyQt5.QtWidgets.QHBoxLayout`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># OK button</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">push_button_ok</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
@@ -2446,7 +2454,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set up radio buttons for each input option.</span>
 
 <span class="sd">        :param values: Dict mapping input names to their paths.</span>
+<span class="sd">        :type values: dict</span>
 <span class="sd">        :param layout: Layout to add the radio buttons to.</span>
+<span class="sd">        :type layout: :class:`PyQt5.QtWidgets.QVBoxLayout`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">first_button</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -2563,9 +2573,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    add or remove sort criteria.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _setup_ui_elements: Create and configure all UI elements.</span>
 <span class="sd">            - add_tag: Adds a push button.</span>
 <span class="sd">            - fill_values: Fills the values list when a tag is added or</span>
@@ -2586,8 +2594,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the multiple sort dialog.</span>
 
 <span class="sd">        :param project: Current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param table_data_browser: Data browser&#39;s table to be sorted.</span>
-
+<span class="sd">        :type table_data_browser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -2664,7 +2674,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Collect unique values for the selected tag.</span>
 
 <span class="sd">        :param idx: Index of the tag button in the push_buttons list.</span>
-
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
@@ -2751,6 +2761,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Open a pop-up dialog to choose a tag for the specified button.</span>
 
 <span class="sd">        :param idx: Index of the button in the push_buttons list.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -2800,14 +2811,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    manages file selection and handles the creation process.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - get_filename: Sets the widget&#39;s attributes depending on the</span>
 <span class="sd">              selected file name.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_create_project: Emitted when a project has been successfully</span>
 <span class="sd">          created.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2832,8 +2840,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process the selected filename and set up project attributes.</span>
 
-<span class="sd">        :param file_name_tuple: (tuple) Tuple containing the selected</span>
-<span class="sd">         filename(s), obtained from the selectedFiles method.</span>
+<span class="sd">        :param file_name_tuple: Tuple containing the selected filename(s),</span>
+<span class="sd">         which is obtained from the selectedFiles method.</span>
+<span class="sd">        :type file_name_tuple: tuple[str]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            If the file already exists, displays an error message. Otherwise,</span>
@@ -2879,14 +2888,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    location and emits a signal when a valid project is selected.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - get_filename: Sets the widget&#39;s attributes depending on the</span>
 <span class="sd">              selected file name.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_create_project: Signal emitted when a valid project is</span>
 <span class="sd">          selected.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2921,8 +2927,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Sets the path, name, and relative_path attributes based on the selected</span>
 <span class="sd">        directory. If the directory exists, emits signal_create_project.</span>
 
-<span class="sd">        :param file_name_tuple: (tuple) Tuple containing selected directory</span>
+<span class="sd">        :param file_name_tuple: Tuple containing selected directory</span>
 <span class="sd">         path(s). Typically obtained from selectedFiles() method.</span>
+<span class="sd">        :type file_name_tuple: tuple[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">file_name_tuple</span><span class="p">:</span>
@@ -2958,9 +2965,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    to configure various settings related to tools, projects, and appearance.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - admin_mode_switch: Called when the admin mode checkbox</span>
 <span class="sd">              is clicked.</span>
 <span class="sd">            - browse_afni: Called when afni browse button is clicked.</span>
@@ -3046,9 +3051,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - validate_tool_path: Validate the tool path.</span>
 <span class="sd">            - wrong_path: Show a wrong path message.</span>
 
-
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_preferences_change: Signal emitted when the preferences are</span>
 <span class="sd">          successfully validated and saved.</span>
 <span class="sd">        - use_clinical_mode_signal: Signal emitted when the clinical mode is</span>
@@ -3068,6 +3071,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the preferences dialog.</span>
 
 <span class="sd">        :param main_window: The main window object of the software.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setModal</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -3301,7 +3305,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to change the admin password with validation checks.</span>
 
-<span class="sd">        :param status: (str) Initial status message to display in the dialog.</span>
+<span class="sd">        :param status: Initial status message to display in the dialog.</span>
+<span class="sd">        :type status: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">change</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
         <span class="n">change</span><span class="o">.</span><span class="n">old_psswd</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
@@ -3468,8 +3473,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create and configure the &#39;Appearance&#39; tab with color and display</span>
 <span class="sd">        settings.</span>
 
-<span class="sd">        :param _translate: (callable): Function used to translate UI text</span>
-<span class="sd">         (translate method of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :param _translate: Function used to translate UI text (translate method</span>
+<span class="sd">         of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_appearance</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_appearance</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_appearance&quot;</span><span class="p">)</span>
@@ -3534,8 +3540,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create and configure the CAPSUL group box with a configuration</span>
 <span class="sd">        button.</span>
 
-<span class="sd">        :param groupbox_capsul: (QGroupBox) The group box to be configured for</span>
-<span class="sd">         CAPSUL settings.</span>
+<span class="sd">        :param groupbox_capsul: The group box to be configured for CAPSUL</span>
+<span class="sd">         settings.</span>
+<span class="sd">        :type groupbox_capsul: PyQt5.QtWidgets.QGroupBox</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">capsul_config_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span>
             <span class="s2">&quot;Edit CAPSUL config&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autoDefault</span><span class="o">=</span><span class="kc">False</span>
@@ -3685,12 +3692,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a horizontal box layout containing the specified widgets.</span>
 
-<span class="sd">        :param widgets: (tuple[QtWidgets.QWidget, ...]) The widgets to add to</span>
-<span class="sd">         the layout.</span>
-<span class="sd">        :param add_stretch: (bool) Whether to add stretch at the end to push</span>
-<span class="sd">         the widgets to the left. Defaults to True.</span>
+<span class="sd">        :param widgets: Tuple of :class:`PyQt5.QtWidgets.QWidget` objects to</span>
+<span class="sd">         add to the layout.</span>
+<span class="sd">        :type widgets: tuple</span>
+<span class="sd">        :param add_stretch: Whether to add stretch at the end to push the</span>
+<span class="sd">         widgets to the left. Defaults to True.</span>
+<span class="sd">        :type add_stretch: bool</span>
 
-<span class="sd">        :Returns (QHBoxLayout) The created horizontal box layout.</span>
+<span class="sd">        :Returns: The created horizontal box layout.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">h_box</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
 
@@ -3794,8 +3804,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This tab allows configuring various neuroimaging tool settings,</span>
 <span class="sd">        including Matlab, SPM, FSL, AFNI, ANTS, FreeSurfer, MRtrix, and CAPSUL.</span>
 
-<span class="sd">        :param _translate: (Callable) Function used to translate UI text</span>
-<span class="sd">         (translate method of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :param _translate: Function used to translate UI text (translate method</span>
+<span class="sd">         of QCoreApplication in the Qt framework).</span>
+<span class="sd">         :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_pipeline</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_pipeline&quot;</span><span class="p">)</span>
@@ -3980,8 +3991,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        project-specific settings, third-party tool integration, and external</span>
 <span class="sd">        resources.</span>
 
-<span class="sd">        :param _translate: (Callable) Function used to translate UI text</span>
-<span class="sd">         (translate method of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :param _translate: Function used to translate UI text (translate method</span>
+<span class="sd">         of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_tools</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tab_tools</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;tab_tools&quot;</span><span class="p">)</span>
@@ -4271,10 +4283,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves the full configuration and validates settings.</span>
 
-<span class="sd">        :param config: (Config) The configuration object to update and save.</span>
+<span class="sd">        :param config: The configuration object to update and save.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: (bool) True if the configuration is valid and successfully</span>
-<span class="sd">         saved, False otherwise.</span>
+<span class="sd">        :Returns: True if the configuration is valid and successfully saved,</span>
+<span class="sd">         False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span><span class="o">.</span><span class="n">setAutoSave</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_radioView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radioView_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
@@ -4343,7 +4357,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Saves a minimal configuration for CAPSUL config synchronization.</span>
 
-<span class="sd">        :param config: (Config) The configuration object to update and save.</span>
+<span class="sd">        :param config: The configuration object to update and save.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">afni_choice</span><span class="o">.</span><span class="n">text</span><span class="p">())</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set_use_afni</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">use_afni_checkbox</span><span class="o">.</span><span class="n">isChecked</span><span class="p">())</span>
@@ -4415,8 +4430,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays an error message dialog.</span>
 
-<span class="sd">        :param title: (str) The title of the error message dialog.</span>
-<span class="sd">        :param message: (str) The detailed error message to display.</span>
+<span class="sd">        :param title: The title of the error message dialog.</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        :param message: The detailed error message to display.</span>
+<span class="sd">        :type message: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Critical</span><span class="p">)</span>
@@ -4434,8 +4451,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a warning message dialog.</span>
 
-<span class="sd">        :param title: (str) The title of the warning message dialog.</span>
-<span class="sd">        :param message: (str): The detailed warning message to display.</span>
+<span class="sd">        :param title: The title of the warning message dialog.</span>
+<span class="sd">        :type title: str</span>
+<span class="sd">        :param message: The detailed warning message to display.</span>
+<span class="sd">        :param message: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -4458,8 +4477,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        etc.) and updates the corresponding GUI fields, including checkboxes</span>
 <span class="sd">        and text fields.</span>
 
-<span class="sd">        :param conf: (software_properties.Config: The Mia configuration object</span>
-<span class="sd">         containing the paths and usage states of different tools.</span>
+<span class="sd">        :param conf: The Mia configuration object containing the paths and</span>
+<span class="sd">         usage states of different tools.</span>
+<span class="sd">        :type conf: populse_mia.software_properties.Config</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># afni</span>
         <span class="n">use_afni</span> <span class="o">=</span> <span class="n">conf</span><span class="o">.</span><span class="n">get_use_afni</span><span class="p">()</span>
@@ -4670,13 +4690,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate and save the preferences.</span>
 
-<span class="sd">        :param ok_clicked: (bool) Whether the OK button was clicked (True)</span>
+<span class="sd">        :param ok_clicked: Whether the OK button was clicked (True)</span>
 <span class="sd">         when this method was launched.</span>
+<span class="sd">        :type ok_clicked: bool</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - remove_capsul_config: Helper function to remove a module&#39;s</span>
 <span class="sd">                  configuration</span>
 <span class="sd">                - clean_spm_config: Cleans the SPM configuration based on</span>
@@ -4704,8 +4723,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Helper function to remove a module&#39;s configuration.</span>
 
-<span class="sd">            :param module: (str) The name of the module to remove.</span>
-<span class="sd">            :param key: (str) The specific configuration key to remove.</span>
+<span class="sd">            :param module: The name of the module to remove.</span>
+<span class="sd">            :type module: str</span>
+<span class="sd">            :param key: The specific configuration key to remove.</span>
+<span class="sd">            :type key: str</span>
 
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="c1"># TODO: We only deal here with the global environment</span>
@@ -4737,8 +4758,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Cleans the SPM configuration based on standalone mode.</span>
 
-<span class="sd">            :param standalone_check: (bool) Indicates whether to clean based</span>
-<span class="sd">             on standalone mode.</span>
+<span class="sd">            :param standalone_check: Indicates whether to clean based on</span>
+<span class="sd">             standalone mode.</span>
+<span class="sd">            :type standalone_check: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -4782,8 +4804,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Removes MATLAB-related configuration keys.</span>
 
-<span class="sd">            :param key: (str) The configuration key to remove from the MATLAB</span>
-<span class="sd">             module.</span>
+<span class="sd">            :param key: The configuration key to remove from the MATLAB module.</span>
+<span class="sd">            :type key: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -4825,11 +4847,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validates the given Matlab executable path.</span>
 
-<span class="sd">        :param path: (str) The path to the Matlab executable.</span>
-<span class="sd">        :param config: (Config) The configuration object to update.</span>
+<span class="sd">        :param path: The path to the Matlab executable.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param config: The configuration object to update.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns (bool) True if the path is valid and updated in the</span>
-<span class="sd">         configuration, False otherwise.</span>
+<span class="sd">        :Returns: True if the path is valid and updated in the configuration,</span>
+<span class="sd">         False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -4905,11 +4930,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        MCR alone (without SPM standalone) due to the lack of a concrete</span>
 <span class="sd">        example.</span>
 
-<span class="sd">        :param path: (str) The path to the Matlab standalone directory.</span>
-<span class="sd">        :param config: (Config) The configuration object to update.</span>
+<span class="sd">        :param path: The path to the Matlab standalone directory.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param config: The configuration object to update.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns (bool) True if the path is valid and updated in the</span>
-<span class="sd">         configuration, False otherwise.</span>
+<span class="sd">        :Returns: True if the path is valid and updated in the configuration,</span>
+<span class="sd">         False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
@@ -4956,11 +4984,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        paths such as the projects folder, MRIFileManager.jar path, and</span>
 <span class="sd">        resources folder.</span>
 
-<span class="sd">        :param config: (Config) The configuration object where validated paths</span>
-<span class="sd">         and settings will be stored.</span>
+<span class="sd">        :param config: The configuration object where validated paths and</span>
+<span class="sd">         settings will be stored.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns (bool) True if all paths and settings are valid, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :Returns: True if all paths and settings are valid, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Testing configuration ...&quot;</span><span class="p">)</span>
@@ -5135,12 +5164,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        usage without further checks. Otherwise, it attempts to run an SPM</span>
 <span class="sd">        command via Matlab to confirm the setup.</span>
 
-<span class="sd">        :param path: (str) The file path to the SPM installation.</span>
-<span class="sd">        :param config: (Config) The configuration object where validated paths</span>
-<span class="sd">         and settings will be stored.</span>
+<span class="sd">        :param path: The file path to the SPM installation.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param config: The configuration object where validated paths and</span>
+<span class="sd">         settings will be stored.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns (bool) True if the SPM path and Matlab path are valid, False</span>
+<span class="sd">        :Returns: True if the SPM path and Matlab path are valid, False</span>
 <span class="sd">         otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matlab_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
 
@@ -5228,12 +5260,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        architecture compatibility and attempts to execute SPM standalone to</span>
 <span class="sd">        confirm its functionality.</span>
 
-<span class="sd">        :param path: (str) The file path to the SPM standalone installation.</span>
-<span class="sd">        :param config: (Config) The configuration object where validated paths</span>
-<span class="sd">         and settings will be stored.</span>
+<span class="sd">        :param path: The file path to the SPM standalone installation.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param config: The configuration object where validated paths and</span>
+<span class="sd">         settings will be stored.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns (bool) True if the SPM standalone and Matlab standalone paths</span>
-<span class="sd">         are valid, False otherwise.</span>
+<span class="sd">        :Returns: True if the SPM standalone and Matlab standalone paths are</span>
+<span class="sd">         valid, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">matlab_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matlab_standalone_choice</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">archi</span> <span class="o">=</span> <span class="n">platform</span><span class="o">.</span><span class="n">architecture</span><span class="p">()</span>
@@ -5378,22 +5413,29 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        handles tool-specific setup for FreeSurfer and FSL by setting</span>
 <span class="sd">        environment variables and adjusting paths as necessary.</span>
 
-<span class="sd">        :param tool_name: (str) The name of the tool to validate (e.g.,</span>
-<span class="sd">         &quot;FreeSurfer&quot;, &quot;FSL&quot;, &quot;Matlab&quot;, etc.).</span>
-<span class="sd">        :param path: (str) The file path to the tool&#39;s installation directory.</span>
-<span class="sd">        :param cmd: (str) The command to execute within the tool&#39;s directory</span>
-<span class="sd">         to check its version.</span>
-<span class="sd">        :param config: (Config) The configuration object where validated paths</span>
-<span class="sd">         and settings will be stored.</span>
-<span class="sd">        :param config_name: (str) The name of the configuration setting for the</span>
-<span class="sd">         tool.</span>
-<span class="sd">        :param set_in_use: (Callable) A function to set the tool&#39;s &quot;in use&quot;</span>
-<span class="sd">         status in the configuration.</span>
-<span class="sd">        :param set_path: (Callable) A function to set the tool&#39;s path in the</span>
-<span class="sd">         configuration.</span>
+<span class="sd">        :param tool_name: The name of the tool to validate (e.g., &quot;FreeSurfer&quot;,</span>
+<span class="sd">         &quot;FSL&quot;, &quot;Matlab&quot;, etc.).</span>
+<span class="sd">        :type tool_name: str</span>
+<span class="sd">        :param path: The file path to the tool&#39;s installation directory.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param cmd: The command to execute within the tool&#39;s directory to check</span>
+<span class="sd">         its version.</span>
+<span class="sd">        :type cmd: str</span>
+<span class="sd">        :param config: The configuration object where validated paths and</span>
+<span class="sd">         settings will be stored.</span>
+<span class="sd">        :type config: populse_mia.software_properties.Config</span>
+<span class="sd">        :param config_name: The name of the configuration setting for the tool.</span>
+<span class="sd">        :type config_name: str</span>
+<span class="sd">        :param set_in_use: A method (from populse_mia.software_properties.</span>
+<span class="sd">         Config) to set the tool&#39;s &quot;in use&quot; status in the configuration.</span>
+<span class="sd">        :type set_in_use: callable</span>
+<span class="sd">        :param set_path: A method (from populse_mia.software_properties.Config)</span>
+<span class="sd">         to set the tool&#39;s path in the configuration.</span>
+<span class="sd">        :type set_path: callable</span>
 
-<span class="sd">        :Returns: (bool) True if the tool&#39;s path is valid and functional, False</span>
+<span class="sd">        :Returns: True if the tool&#39;s path is valid and functional, False</span>
 <span class="sd">         otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">option</span> <span class="o">=</span> <span class="s2">&quot;--version&quot;</span>
@@ -5502,11 +5544,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and shows a QMessageBox with an error message indicating</span>
 <span class="sd">        that the provided path for a specified tool is invalid.</span>
 
-<span class="sd">        :param path: (str) The invalid path entered by the user.</span>
-<span class="sd">        :param tool: (str) The name of the tool for which the path is being</span>
+<span class="sd">        :param path: The invalid path entered by the user.</span>
+<span class="sd">        :type path: str</span>
+<span class="sd">        :param tool: The name of the tool for which the path is being</span>
 <span class="sd">         validated.</span>
-<span class="sd">        :param extra_mess: (str, optional) Additional context for the error</span>
-<span class="sd">         message, such as specifying a configuration file.</span>
+<span class="sd">        :type tool: str</span>
+<span class="sd">        :param extra_mess: Additional context for the error message, such as</span>
+<span class="sd">         specifying a configuration file.</span>
+<span class="sd">        :type extra_mess: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">restoreOverrideCursor</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">status_label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -5536,16 +5581,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    Allows users to change project settings, including visualized tags</span>
 <span class="sd">    and information. Is called when the user wants to change the current</span>
-<span class="sd">    project&#39;s properties (File &gt; properties).</span>
+<span class="sd">    project&#39;s properties (File &gt; Project properties).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_clicked: saves the modifications and updates the data browser.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_settings_change: Qt signal emitted when project settings are</span>
 <span class="sd">          modified.</span>
 
@@ -5562,8 +5604,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the project properties dialog.</span>
 
 <span class="sd">        :param project: current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param databrowser: data browser instance of the software.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        :param old_tags: visualized tags before opening this dialog.</span>
+<span class="sd">        :type old_tags: tuple[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Dialog setup</span>
@@ -5659,16 +5705,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    modified.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - can_exit: returns the value of _bool_exit.</span>
 <span class="sd">            - cancel_clicked: makes the actions to cancel the action.</span>
 <span class="sd">            - do_not_save_clicked: makes the actions not to save the project.</span>
 <span class="sd">            - save_as_clicked: makes the actions to save the project.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - save_as_signal: Signal emitted when user chooses to save the</span>
 <span class="sd">          project.</span>
 <span class="sd">        - do_not_save_signal: Signal emitted when user chooses to exit without</span>
@@ -5687,6 +5730,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         Initialize the quit confirmation dialog.</span>
 
 <span class="sd">        :param project: Current project with unsaved modifications.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -5776,9 +5820,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    wants to remove a scan that was previously sent to the pipeline manager.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - cancel_clicked: Handle &#39;Cancel&#39; action.</span>
 <span class="sd">            - no_all_clicked: Handle &#39;No to All&#39; action.</span>
 <span class="sd">            - yes_all_clicked: Handle &#39;Yes to All&#39; action.</span>
@@ -5792,7 +5834,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the remove scan confirmation dialog.</span>
 
 <span class="sd">        :param scan: Identifier of the scan to be potentially removed.</span>
+<span class="sd">        :type scan: str</span>
 <span class="sd">        :param size: Total number of scans in the removal process.</span>
+<span class="sd">        :type size: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Document exists in Pipeline Manager&quot;</span><span class="p">)</span>
@@ -5899,18 +5943,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Allows users to select and remove custom tags from the project&#39;s database.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_action: Verifies the selected tags and send the information to</span>
 <span class="sd">              the data browser.</span>
 <span class="sd">            - search_str: Matches the searched pattern with the tags of the</span>
 <span class="sd">              project.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_remove_tag: Qt signal emitted when tags are removed.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Signal that will be emitted at the end to tell that</span>
@@ -5924,7 +5964,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the remove tag dialog.</span>
 
 <span class="sd">        :param databrowser: Data browser instance managing project data.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        :param project: Current project containing tags to be removed.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">databrowser</span> <span class="o">=</span> <span class="n">databrowser</span>
@@ -6014,6 +6057,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Filter tags based on search pattern.</span>
 
 <span class="sd">        :param search_pattern: String to match against tag names.</span>
+<span class="sd">        :type search_pattern: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -6055,15 +6099,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    with options to browse existing projects and validate the new project name.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - fill_input: Fills the input field when a project is clicked on.</span>
 <span class="sd">            - return_value: Sets the widget&#39;s attributes depending on the</span>
 <span class="sd">              selected file name.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_saved_project: Qt signal emitted when a new project name is</span>
 <span class="sd">          selected.</span>
 
@@ -6148,6 +6189,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Fill the project name input field with the selected project name.</span>
 
 <span class="sd">        :param name: Name of the project to fill in the input field.</span>
+<span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">name</span><span class="p">)</span></div>
 
@@ -6161,8 +6203,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Checks project name validity, handles potential naming conflicts,</span>
 <span class="sd">        and emits a signal when a valid project name is selected.</span>
 
-<span class="sd">        :Returns: (str) Full path of the new project if successful, None</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :Returns: Full path of the new project if successful, None otherwise.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 
@@ -6224,9 +6266,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    existence, and open a selected project.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - checkState: Checks if the project still exists and returns the</span>
 <span class="sd">              corresponding icon.</span>
 <span class="sd">            - item_to_path: Returns the path of the first selected item.</span>
@@ -6240,8 +6280,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the PopUpSeeAllProjects dialog.</span>
 
 <span class="sd">        :param saved_projects: Container with a list of project paths.</span>
+<span class="sd">        :type saved_projects:</span>
+<span class="sd">         populse_mia.data_manager.project_properties.SavedProjects</span>
 <span class="sd">        :param main_window: MainWindow instance.</span>
-
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mainWindow</span> <span class="o">=</span> <span class="n">main_window</span>
@@ -6288,9 +6330,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determine the icon based on project existence.</span>
 
-<span class="sd">        :param path: (str) Path to the project directory.</span>
+<span class="sd">        :param path: Path to the project directory.</span>
+<span class="sd">        :type path: str</span>
 
-<span class="sd">        :Returns: (QIcon) Green checkmark if project exists, red cross if not.</span>
+<span class="sd">        :Returns: Green checkmark if project exists, red cross if not.</span>
+<span class="sd">        :rtype: PyQt5.QtGui.QIcon</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
         <span class="n">icon_name</span> <span class="o">=</span> <span class="s2">&quot;green_v.png&quot;</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;red_cross.png&quot;</span>
@@ -6351,9 +6395,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Popup window for selecting and opening a previously saved filter.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_clicked: Saves the modifications and updates the data browser.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -6364,7 +6406,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initializes the PopUpSelectFilter dialog</span>
 
 <span class="sd">        :param project: (Project) The current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param databrowser: (DataBrowser) The data browser instance.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -6407,9 +6452,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_clicked: Stores selected values and closes the dialog.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -6419,11 +6462,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the selection popup.</span>
 
-<span class="sd">        :param iterated_tag: (str) Name of the tag whose values can be</span>
-<span class="sd">         iterated.</span>
-<span class="sd">        :param tag_values: (list[str]) Available values for the tag.</span>
-<span class="sd">        :selected_values: (list[str]) Values initially selected when the</span>
-<span class="sd">         dialog opens.</span>
+<span class="sd">        :param iterated_tag: Name of the tag whose values can be iterated.</span>
+<span class="sd">        :type iterated_tag: str</span>
+<span class="sd">        :param tag_values: Available values for the tag.</span>
+<span class="sd">        :type tag_values: list[str]</span>
+<span class="sd">        :param selected_values: Values initially selected when the dialog</span>
+<span class="sd">         opens.</span>
+<span class="sd">        :type selected_values: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iterated_tag</span> <span class="o">=</span> <span class="n">iterated_tag</span>
@@ -6494,9 +6539,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    the data browser.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_button: Create a standard button with text and click</span>
 <span class="sd">              handler.</span>
 <span class="sd">            - _setup_ui: Set up the user interface components.</span>
@@ -6516,6 +6559,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: The current project containing the database with</span>
 <span class="sd">         available tags.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Select tag&quot;</span><span class="p">)</span>
@@ -6531,7 +6575,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the user interface components.</span>
 
-<span class="sd">        :param_translate: (callable) Localization translation function.</span>
+<span class="sd">        :param _translate: Function used to translate UI text (translate method</span>
+<span class="sd">         of QCoreApplication in the Qt framework).</span>
+<span class="sd">        :type _translate: :meth:`PyQt5.QtCore.QCoreApplication.translate`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># The &quot;Tag list&quot; label</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_tag_list</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -6583,11 +6629,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a standard button with text and click handler.</span>
 
-<span class="sd">        :param text: (str) Button text.</span>
-<span class="sd">        :param clicked_handler: (callable) Function to call when button is</span>
-<span class="sd">         clicked.</span>
+<span class="sd">        :param text: Button text.</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param clicked_handler: Function to call when button is clicked.</span>
+<span class="sd">        :type clicked_handler:</span>
+<span class="sd">         :meth:`populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked`</span>
 
-<span class="sd">        :Returns: (QPushButton) Configured button.</span>
+<span class="sd">        :Returns: Configured button.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">button</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pushButton_</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -6609,7 +6658,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Handle item selection by checking/unchecking tags.</span>
 
-<span class="sd">        :param item: (QListWidgetItem) The clicked list item.</span>
+<span class="sd">        :param item: The clicked list item.</span>
+<span class="sd">        :type item: :class:`PyQt5.QtWidgets.QListWidgetItem`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_widget_tags</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
@@ -6637,9 +6687,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter tags based on search term.</span>
 
-
-<span class="sd">        :param str_search: (str) Text to search for in tag names.</span>
-
+<span class="sd">        :param str_search: Text to search for in tag names.</span>
+<span class="sd">        :type str_search: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -6674,9 +6723,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    tags and allows selecting a single tag to be used as the thumbnail.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _populate_tag_list: Populate the list widget with tags from</span>
 <span class="sd">              the database.</span>
 <span class="sd">            - ok_clicked: Saves the modifications and updates the mini viewer.</span>
@@ -6689,6 +6736,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the tag selection dialog.</span>
 
 <span class="sd">        :param project: The current project in the software context.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -6706,7 +6754,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Populate the list widget with tags from the database.</span>
 
-<span class="sd">        :param field_names: (list) List of available field names/tags.</span>
+<span class="sd">        :param field_names: List of available field names/tags.</span>
+<span class="sd">        :type field_names: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Filter out special tags and create checkable list items</span>
         <span class="n">filtered_tags</span> <span class="o">=</span> <span class="p">[</span>
@@ -6766,9 +6815,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    option to pre-select a specific tag.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_clicked: updates the selected tag and closes the pop-up.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -6779,10 +6826,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the tag selection pop-up.</span>
 
 <span class="sd">        :param project: The current project context.</span>
-<span class="sd">        :param tags_to_display: (list) List of tags to be displayed for</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param tags_to_display: List of tags to be displayed for</span>
 <span class="sd">         selection.</span>
-<span class="sd">        :param tag_name_checked: (str) Optional tag to be pre-checked on</span>
+<span class="sd">        :type tags_to_display: list[str]</span>
+<span class="sd">        :param tag_name_checked: Optional tag to be pre-checked at</span>
 <span class="sd">         initialization.</span>
+<span class="sd">        :type tag_name_checked: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">project</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selected_tag</span> <span class="o">=</span> <span class="kc">None</span>
@@ -6841,6 +6891,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    This class creates a popup window that provides comprehensive information</span>
 <span class="sd">    about a specific brick (processing node) in a pipeline, including:</span>
+
 <span class="sd">        - Pipeline visualization</span>
 <span class="sd">        - Input and output parameters</span>
 <span class="sd">        - Initialization and execution details</span>
@@ -6852,9 +6903,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        - Select and highlight specific files</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _updateio_table: Fill in the input and output sections of the</span>
 <span class="sd">              table.</span>
 <span class="sd">            - adjust_size: Adjust the size of the dialog based on screen</span>
@@ -6893,10 +6942,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the document history popup.</span>
 
 <span class="sd">        :param project: Current project in the software.</span>
-<span class="sd">        :param brick_uuid: (str) Unique identifier of the brick.</span>
-<span class="sd">        :param scan (str) Filename of the scan.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param brick_uuid: Unique identifier of the brick.</span>
+<span class="sd">        :type brick_uuid: str</span>
+<span class="sd">        :param scan: Filename of the scan.</span>
+<span class="sd">        :type scan: str</span>
 <span class="sd">        :param databrowser: Data browser instance.</span>
+<span class="sd">        :type databrowser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        :param main_window: Main window of the software.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># We do not want few parameters in the outputs parameters display</span>
@@ -6924,14 +6979,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        the input dictionary, handling nested lists and detecting scanned file</span>
 <span class="sd">        paths.</span>
 
-<span class="sd">        :param io_dict: (dict) Dictionary containing input or output data to be</span>
+<span class="sd">        :param io_dict: Dictionary containing input or output data to be</span>
 <span class="sd">         displayed. Keys represent column headers, and values can be strings,</span>
-<span class="sd">        lists, or nested lists.</span>
-<span class="sd">        :param item_idx: (int) The starting column index for populating the</span>
-<span class="sd">         table.</span>
+<span class="sd">         lists, or nested lists.</span>
+<span class="sd">        :type io_dict: dict</span>
+<span class="sd">        :param item_idx: The starting column index for populating the table.</span>
+<span class="sd">        :type item_idx: int</span>
 
-<span class="sd">        :Returns: (int) The updated column index after processing the</span>
-<span class="sd">         dictionary.</span>
+<span class="sd">        :Returns: The updated column index after processing the dictionary.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">io_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -7075,11 +7131,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find bricks associated with a given node name.</span>
 
-<span class="sd">        :param node_name: (str) The name of the node to find associated bricks</span>
-<span class="sd">         for.</span>
+<span class="sd">        :param node_name: The name of the node to find associated bricks for.</span>
+<span class="sd">        :type node_name: str</span>
 
-<span class="sd">        :Returns: (dict) A dictionary where the keys are the full brick names</span>
-<span class="sd">         and the values are lists of associated UUIDs.</span>
+<span class="sd">        :Returns: A dictionary where the keys are the full brick names and the</span>
+<span class="sd">         values are lists of associated UUIDs.</span>
+<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">bricks</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -7109,11 +7166,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the process and plug name from a given plug.</span>
 
-<span class="sd">        :param plug: (Plug) The plug object to find the process and plug name</span>
-<span class="sd">         from.</span>
+<span class="sd">        :param plug: The plug object to find the process and plug name from.</span>
+<span class="sd">        :type plug: capsul.pipeline.pipeline_nodes.Plug</span>
 
-<span class="sd">        :Returns: (tuple) A tuple containing the process name (str) and plug</span>
-<span class="sd">         name (str).</span>
+<span class="sd">        :Returns: A tuple containing the process name (str) and plug name</span>
+<span class="sd">         (str).</span>
+<span class="sd">        :rtype: tuple[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="n">plug_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
@@ -7140,10 +7198,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Handle pipeline nodes, set up the view, and initialize the pipeline</span>
 <span class="sd">        visualization.</span>
 
-<span class="sd">        :param pipeline: (Pipeline): The pipeline object containing the nodes</span>
-<span class="sd">         to handle.</span>
-<span class="sd">        :param full_brick_name: (list) The full name of the brick, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param pipeline: The pipeline object containing the nodes to handle.</span>
+<span class="sd">        :type pipeline: capsul.study_config.process_instance.CustomPipeline</span>
+<span class="sd">        :param full_brick_name: The full name of the brick, split into parts.</span>
+<span class="sd">        :type full_brick_name: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># handle case of pipeline node alone --&gt; exploded view</span>
@@ -7181,7 +7239,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Highlight the selected node in the pipeline view.</span>
 
-<span class="sd">        :param node_name: (str) The name of the node to highlight.</span>
+<span class="sd">        :param node_name: The name of the node to highlight.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">gnode</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_view</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">gnodes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -7194,8 +7253,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the pipeline view using the given pipeline XML.</span>
 
-<span class="sd">        :param full_brick_name: (list) The full name of the brick, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param full_brick_name: The full name of the brick, split into parts.</span>
+<span class="sd">        :type full_brick_name: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">engine</span> <span class="o">=</span> <span class="n">Config</span><span class="o">.</span><span class="n">get_capsul_engine</span><span class="p">()</span>
 
@@ -7216,10 +7275,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Check if the I/O value is a scan.</span>
 
 <span class="sd">        :param value: I/O value.</span>
+<span class="sd">        :type value: str</span>
 
 <span class="sd">        :Returns: The scan corresponding to the value if it exists, None</span>
 <span class="sd">         otherwise.</span>
-
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -7239,9 +7299,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Load data from the project database and update the table with brick</span>
 <span class="sd">        data.</span>
 
-<span class="sd">        :param brick_uuid: (str) The UUID of the brick to load.</span>
-<span class="sd">        :param scan: (str) The identifier of the scan associated with the</span>
-<span class="sd">         brick.</span>
+<span class="sd">        :param brick_uuid: The UUID of the brick to load.</span>
+<span class="sd">        :type brick_uuid: str</span>
+<span class="sd">        :param scan: The identifier of the scan associated with the brick.</span>
+<span class="sd">        :type scan: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -7271,10 +7332,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Load pipeline data from the database based on the provided</span>
 <span class="sd">        history UUID.</span>
 
-<span class="sd">        :param history_uuid: (str) The UUID of the history record to load</span>
-<span class="sd">         pipeline data from.</span>
-<span class="sd">        :param full_brick_name: (list) The full name of the brick, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param history_uuid: The UUID of the history record to load pipeline</span>
+<span class="sd">         data from.</span>
+<span class="sd">        :type history_uuid: str</span>
+<span class="sd">        :param full_brick_name: The full name of the brick, split into parts.</span>
+<span class="sd">        :type full_brick_name: list[s]tr]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -7300,7 +7362,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Handle node selection and update the table.</span>
 
 <span class="sd">        :param node_name: Node name.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param process: Process of the corresponding node.</span>
+<span class="sd">        :type process: capsul.pipeline.pipeline_nodes.PipelineNode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;pipeline_node&quot;</span><span class="p">):</span>
@@ -7333,11 +7397,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Select the node in the pipeline view based on the provided brick UUID.</span>
 
-<span class="sd">        :param pipeline: (Pipeline) The pipeline object containing the nodes to</span>
-<span class="sd">         handle.</span>
-<span class="sd">        :param bricks: (dict) A dictionary of bricks with UUIDs as values.</span>
-<span class="sd">        :param full_brick_name: (list) The full name of the brick, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param pipeline: The pipeline object containing the nodes to handle.</span>
+<span class="sd">        :type pipeline: A class coding for the pipeline.</span>
+<span class="sd">        :param bricks: A dictionary of bricks with UUIDs as values.</span>
+<span class="sd">        :type bricks: dict</span>
+<span class="sd">        :param full_brick_name: The full name of the brick, split into parts.</span>
+<span class="sd">        :type full_brick_name: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">bricks_uuids</span> <span class="ow">in</span> <span class="n">bricks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
@@ -7386,18 +7451,23 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the table with information about a brick&#39;s execution state.</span>
 
-<span class="sd">        :param inputs: (dict) Dictionary containing input data.</span>
-<span class="sd">        :param outputs: (dict) Dictionary containing output data.</span>
-<span class="sd">        :param brick_name: (str) Name of the brick.</span>
-<span class="sd">        :param init: (str, optional) Initialization status.</span>
-<span class="sd">        :param init_time: (Any, optional) Initialization timestamp.</span>
-<span class="sd">        :param exec: (str, optional) Execution status.</span>
-<span class="sd">        :param exec_time: (Any, optional) Execution timestamp.</span>
+<span class="sd">        :param inputs: Dictionary containing input data.</span>
+<span class="sd">        :type inputs: dict</span>
+<span class="sd">        :param outputs: Dictionary containing output data.</span>
+<span class="sd">        :type outputs: dict</span>
+<span class="sd">        :param brick_name: Name of the brick.</span>
+<span class="sd">        :type brick_name: str</span>
+<span class="sd">        :param init: Initialization status.</span>
+<span class="sd">        :type init: str</span>
+<span class="sd">        :param init_time: Initialization timestamp.</span>
+<span class="sd">        :type init_time: datetime.datetime</span>
+<span class="sd">        :param exec: Execution status.</span>
+<span class="sd">        :type exec: str</span>
+<span class="sd">        :param exec_time: Execution timestamp.</span>
+<span class="sd">        :type exec_time: datetime.datetime</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - create_cell_widget: Creates a QWidget containing a vertically</span>
 <span class="sd">                  aligned QLabel</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -7417,10 +7487,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Creates a QWidget containing a vertically aligned QLabel with</span>
 <span class="sd">            the given text.</span>
 
-<span class="sd">            :param text: (str) The text to display in the QLabel.</span>
+<span class="sd">            :param text: The text to display in the QLabel.</span>
+<span class="sd">            :type text: str</span>
 
-<span class="sd">            :Returns: (QWidget) A QWidget containing a QLabel with the</span>
-<span class="sd">             specified text, aligned to the top within a vertical layout.</span>
+<span class="sd">            :Returns: A QWidget containing a QLabel with the specified text,</span>
+<span class="sd">             aligned to the top within a vertical layout.</span>
+<span class="sd">            :rtype: PyQt5.QtWidgets.QWidget</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
             <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
@@ -7486,11 +7558,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the table for a single brick, using the provided brick data.</span>
 
-<span class="sd">        :param bricks: (dict) A dictionary of bricks with UUIDs as values.</span>
-<span class="sd">        :param node_name: (str) The name of the node associated with the</span>
-<span class="sd">         brick.</span>
-<span class="sd">        :param full_node_name: (list) The full name of the node, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param bricks: A dictionary of bricks with UUIDs as values.</span>
+<span class="sd">        :type bricks: dict</span>
+<span class="sd">        :param node_name: The name of the node associated with the brick.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param full_node_name: The full name of the node.</span>
+<span class="sd">        :type full_node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -7523,11 +7596,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Update the table for a subpipeline based on the given process and</span>
 <span class="sd">        brick data.</span>
 
-<span class="sd">        :param bricks: (dict) A dictionary of bricks with UUIDs as values.</span>
-<span class="sd">        :param process: (PipelineNode) The process node associated with the</span>
-<span class="sd">         subpipeline.</span>
-<span class="sd">        :param full_node_name: (list) The full name of the node, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param bricks: A dictionary of bricks with UUIDs as values.</span>
+<span class="sd">        :type bricks: dict</span>
+<span class="sd">        :param process: The process node associated with the subpipeline.</span>
+<span class="sd">        :type process: capsul.pipeline.pipeline_nodes.PipelineNode</span>
+<span class="sd">        :param full_node_name: The full name of the node.</span>
+<span class="sd">        :type full_node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inputs_dict</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">outputs_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -7580,10 +7654,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Update the table with the brick&#39;s input and output data after</span>
 <span class="sd">        processing.</span>
 
-<span class="sd">        :param brick_row: (list) A list containing the brick data to update</span>
-<span class="sd">         the table with.</span>
-<span class="sd">        :param full_brick_name: (list) The full name of the brick, split into</span>
-<span class="sd">         parts.</span>
+<span class="sd">        :param brick_row: A list containing the brick data to update the table</span>
+<span class="sd">         with.</span>
+<span class="sd">        :type brick_row: list</span>
+<span class="sd">        :param full_brick_name: The full name of the brick, split into parts.</span>
+<span class="sd">        :type full_brick_name: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">inputs</span> <span class="o">=</span> <span class="n">brick_row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">BRICK_INPUTS</span><span class="p">]</span>
         <span class="n">outputs</span> <span class="o">=</span> <span class="n">brick_row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">BRICK_OUTPUTS</span><span class="p">]</span>
@@ -7616,9 +7691,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    and moving them between available and visualized lists.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_button: Create a customized QPushButton with specified</span>
 <span class="sd">              properties.</span>
 <span class="sd">            - _create_button_layout: Create the layout for selection buttons.</span>
@@ -7640,7 +7713,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              &quot;selected tag&quot; table.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - signal_preferences_change: (QtCore.pyqtSignal) Emitted when tag</span>
 <span class="sd">          visualization preferences are modified.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -7655,8 +7727,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the tag visualization management widget.</span>
 
 <span class="sd">        :param project: The current project in the software.</span>
-<span class="sd">        :param visualized_tags: Tags currently being visualized before</span>
-<span class="sd">         opening this widget.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param visualized_tags: Tags currently being visualized before opening</span>
+<span class="sd">         this widget.</span>
+<span class="sd">        :type visualized_tags: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -7678,17 +7752,18 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method instantiates a QPushButton, sets its object name,</span>
 <span class="sd">        translates and sets its text, and connects a click event handler.</span>
 
-<span class="sd">        :param object_name: (str) The unique identifier name for the button.</span>
-<span class="sd">        :param text: (str) The text to be displayed on the button, will</span>
-<span class="sd">         be translated.</span>
-<span class="sd">        :param click_handler: (callable) The function to be called when the</span>
-<span class="sd">         button is clicked.</span>
+<span class="sd">        :param object_name: The unique identifier name for the button.</span>
+<span class="sd">        :type object_name: str</span>
+<span class="sd">        :param text: The text to be displayed on the button, will be</span>
+<span class="sd">         translated.</span>
+<span class="sd">        :param click_handler: The function to be called when the button is</span>
+<span class="sd">         clicked.</span>
+<span class="sd">        :type click_handler: A callable method</span>
 
-<span class="sd">        :Returns: (QPushButton) A configured button with the specified</span>
-<span class="sd">         properties.</span>
+<span class="sd">        :Returns: A configured button with the specified properties.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">button</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="n">object_name</span><span class="p">)</span>
         <span class="n">button</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_translate</span><span class="p">(</span><span class="s2">&quot;main_window&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">))</span>
         <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">click_handler</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">button</span></div>
@@ -7713,11 +7788,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method instantiates a QLabel, sets its text format,</span>
 <span class="sd">        object name, and translates its text.</span>
 
-<span class="sd">        :param object_name: (str) The unique identifier name for the label.</span>
-<span class="sd">        :param text: (str) The text to be displayed on the label, will be</span>
-<span class="sd">         translated.</span>
+<span class="sd">        :param object_name: The unique identifier name for the label.</span>
+<span class="sd">        :type object_name: str</span>
+<span class="sd">        :param text: The text to be displayed on the label, will be translated.</span>
+<span class="sd">        :type text: str</span>
 
-<span class="sd">        :Returns: (QLabel) A configured label with the specified properties.</span>
+<span class="sd">        :Returns: A configured label with the specified properties.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QLabel</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">label</span><span class="o">.</span><span class="n">setTextFormat</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">AutoText</span><span class="p">)</span>
@@ -7771,11 +7848,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        list widget is assigned a unique object name based on the optional</span>
 <span class="sd">        text parameter.</span>
 
-<span class="sd">        :param text: (str) A prefix used to create a unique object name for</span>
-<span class="sd">         the QListWidget.</span>
+<span class="sd">        :param text: A prefix used to create a unique object name for the</span>
+<span class="sd">         QListWidget.</span>
+<span class="sd">        :type text: str</span>
 
-<span class="sd">        :Returns (QListWidget) A configured QListWidget with multi-selection</span>
-<span class="sd">         mode enabled.</span>
+<span class="sd">        :Returns: A configured QListWidget with multi-selection mode enabled.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QListWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tag_list</span> <span class="o">=</span> <span class="n">QListWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">tag_list</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;listWidget_</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">tags&quot;</span><span class="p">)</span>
@@ -7843,7 +7921,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter tags based on search string.</span>
 
-<span class="sd">        :param str_search: (str) Search pattern to match against tags.</span>
+<span class="sd">        :param str_search: Search pattern to match against tags.</span>
+<span class="sd">        :type str_search: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Find matching tags, case-insensitive</span>
@@ -7936,14 +8015,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    interactive label behaviors.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - mousePressEvent: Override the default mouse press event to emit</span>
 <span class="sd">              the clicked signal.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - clicked: (pyqtSignal) Signal emitted when the label is clicked.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -7955,7 +8031,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the clickable label.</span>
 
-<span class="sd">        :param parent: (QWidget) Parent widget.</span>
+<span class="sd">        :param parent: A project name.</span>
+<span class="sd">        :type parent: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
@@ -7966,7 +8043,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override the default mouse press event to emit the clicked signal.</span>
 
-<span class="sd">        :param event: (QMouseEvent) Mouse press event details.</span>
+<span class="sd">        :param event: Mouse press event details.</span>
+<span class="sd">        :type event: PyQt5.QtGui.QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mousePressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>

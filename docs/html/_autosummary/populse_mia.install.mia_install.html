@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
+    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=a8471e47"></script>
+    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.install.mia_install</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -34,6 +34,16 @@
 <p>This module provides the first stage of the Mia installation process.
 It verifies that the Python packages required by the installer are available,
 installs any missing dependencies, and then launches the graphical installer.</p>
+<p>In fact, this module exists for historical reasons. Originally, the
+installation of Mia was handled separately from populse_mia, so we needed to
+make sure that PyQt5 and other required dependencies were properly installed
+and available on the system. Today, this module is part of populse_mia, and
+since PyQt5 and the other required packages are dependencies of populse_mia,
+they should normally be installed automatically when populse_mia is installed
+via pip. We are keeping the module because it only adds a few additional
+checks, with little to no significant impact on execution time. It can also
+still be useful for detecting and fixing certain configuration or installation
+issues.</p>
 <p>The module is intended to run only in user mode.</p>
 <p class="rubric">Functions</p>
 <table class="autosummary longtable docutils align-default">

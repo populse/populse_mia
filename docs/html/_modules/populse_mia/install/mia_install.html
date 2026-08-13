@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
+    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=a8471e47"></script>
+    <script src="../../../_static/documentation_options.js?v=75ec3ca5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.install.mia_install</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -390,6 +390,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">This module provides the first stage of the Mia installation process.</span>
 <span class="sd">It verifies that the Python packages required by the installer are available,</span>
 <span class="sd">installs any missing dependencies, and then launches the graphical installer.</span>
+
+<span class="sd">In fact, this module exists for historical reasons. Originally, the</span>
+<span class="sd">installation of Mia was handled separately from populse_mia, so we needed to</span>
+<span class="sd">make sure that PyQt5 and other required dependencies were properly installed</span>
+<span class="sd">and available on the system. Today, this module is part of populse_mia, and</span>
+<span class="sd">since PyQt5 and the other required packages are dependencies of populse_mia,</span>
+<span class="sd">they should normally be installed automatically when populse_mia is installed</span>
+<span class="sd">via pip. We are keeping the module because it only adds a few additional</span>
+<span class="sd">checks, with little to no significant impact on execution time. It can also</span>
+<span class="sd">still be useful for detecting and fixing certain configuration or installation</span>
+<span class="sd">issues.</span>
 
 <span class="sd">The module is intended to run only in user mode.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -449,7 +460,7 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="c1"># Module not found, install it</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2"> not found. Installing...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2"> not found. Installing...&quot;</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
             <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
@@ -491,8 +502,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    process terminates with an error message describing how to retry the</span>
 <span class="sd">    installation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Please wait, installation in progress...</span><span class="se">\n</span><span class="s2">&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Please wait, Install &amp; Repair mode in progress...&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="c1"># List of required packages</span>
     <span class="n">packages</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;PyQt5&quot;</span><span class="p">,</span> <span class="s2">&quot;pyyaml&quot;</span><span class="p">,</span> <span class="s2">&quot;packaging&quot;</span><span class="p">,</span> <span class="s2">&quot;cryptography&quot;</span><span class="p">)</span>
@@ -506,7 +517,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Failed to install </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">. Please check your pip &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Failed to install </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">. Please check the pip &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;installation.&quot;</span>
             <span class="p">)</span>
 
@@ -543,8 +554,8 @@ window.runMermaid = runMermaid;</script>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">...</span><span class="se">\n\n</span><span class="s2">Python package environment was not correctly &quot;</span>
             <span class="s2">&quot;updated!</span><span class="se">\n\n</span><span class="s2">Please retry by running:</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;    python3 -m populse_mia -i</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;If the issue persists, try manually installing the problematic &quot;</span>
-            <span class="s2">&quot;module.</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;If the issue persists, try installing the module manually &quot;</span>
+            <span class="s2">&quot;(python3 -m pip install module).</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="p">)</span>
 
     <span class="c1"># Initialize and display Mia installation widget</span>

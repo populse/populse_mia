@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+a2790c0c documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=fce32b03" />
-    <script src="../../_static/documentation_options.js?v=a8471e47"></script>
+    <script src="../../_static/documentation_options.js?v=75ec3ca5"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 3.0.0-dev+a2790c0c documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -836,15 +836,22 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     <span class="n">configure_logging</span><span class="p">(</span>
         <span class="n">log_in_stdout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_in_stdout</span><span class="p">,</span>
         <span class="n">keep_log_files</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">keep_log_files</span><span class="p">,</span>
         <span class="n">log_level</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">log_level</span><span class="p">,</span>
     <span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Starting Mia...&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Python version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Python executable: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--multi_instance is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--log_level is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--log_in_stdout is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_in_stdout</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--keep_log_files is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">keep_log_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--install is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">install</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">install</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
@@ -856,12 +863,6 @@ window.runMermaid = runMermaid;</script>
         <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Starting Populse Mia...&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="c1"># Print the multi_instance argument value</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--multi_instance is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># This will only be executed when this module is run directly</span>
     <span class="c1"># list of unwanted messages to filter out in stdout</span>
     <span class="n">unwanted_messages</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s2">&quot;QPixmap::scaleHeight: Pixmap is a null pixmap&quot;</span><span class="p">,</span>
