@@ -620,9 +620,9 @@ class PipelineManagerTab(QWidget):
                     json_str = json.dumps(value, default=_serialize_for_json)
                     serialized[key] = json.loads(json_str)
 
-                except (TypeError, ValueError) as e:
+                except (TypeError, ValueError) as exc:
                     # Log warning and skip problematic values
-                    logger.warning(f"Warning: Could not serialize {key}: {e}")
+                    logger.warning("Could not serialize %s: %s", key, exc)
                     serialized[key] = "<serialization_error>"
 
             return serialized
@@ -1034,8 +1034,6 @@ class PipelineManagerTab(QWidget):
                         elif not attributes and not already_exists:
                             # If there are attributes from completion, use
                             # them without asking.
-                            # Using %s defers string formatting until needed.
-                            # (better than f-string for logger)
                             logger.info(
                                 "no attributes for: %s %s %s %s",
                                 node_name,
@@ -2146,8 +2144,8 @@ class PipelineManagerTab(QWidget):
                 pipeline_name = pipeline_name.removesuffix(".py")
 
                 logger.warning(
-                    f"Error during initialization of "
-                    f"the '{pipeline_name}' pipeline",
+                    "Error during initialization of the '%s' pipeline!",
+                    pipeline_name,
                     exc_info=True,
                 )
                 self.test_init = False
@@ -2206,26 +2204,27 @@ class PipelineManagerTab(QWidget):
 
         def _calculate_duration(t0: float) -> float:
             """
-            Calculate the elapsed time since `t0`, rounded to the nearest
-            significant digit of the fractional part of the duration.
+            Calculate the elapsed time since `t0`.
 
-            :param t0: (float) The starting time.
+            The duration is rounded based on the magnitude of its fractional
+            part. If the fractional part is zero, the unrounded duration is
+            returned.
 
-            :Returns: (float) The elapsed duration since `t0`, rounded to the
-             nearest significant digit.
+            :param t0: The starting time.
+            :type t0: float
+            :returns: The elapsed duration since `t0`, rounded according to
+             the magnitude of its fractional part.
+            :rtype: float
             """
+            duration = time.time() - t0
+            fractional = abs(math.modf(duration)[0])
 
-            try:
-                duration = time.time() - t0
+            if fractional == 0:
+                return duration
 
-                return round(
-                    duration,
-                    -int(math.floor(math.log10(abs(math.modf(duration)[0]))))
-                    + 1,
-                )
+            decimals = -int(math.floor(math.log10(fractional))) + 1
 
-            except ValueError:
-                return time.time() - t0
+            return round(duration, decimals)
 
         def _get_node_name(node) -> str:
             """
@@ -2296,8 +2295,8 @@ class PipelineManagerTab(QWidget):
         # Generate workflow from pipeline
         try:
             logger.info(
-                f"Workflow generation / completion for the "
-                f"'{name}' pipeline..."
+                "Workflow generation / completion for the '%s' pipeline...",
+                name,
             )
             self.workflow = workflow_from_pipeline(
                 pipeline, check_requirements=False, complete_parameters=True
@@ -2315,10 +2314,10 @@ class PipelineManagerTab(QWidget):
         # Fail if workflow is invalid
         if getattr(self.workflow, "jobs", []) == [] or not init_result:
             logger.warning(
-                f"'{name}' pipeline was not successfully initialised..."
+                "'%s' pipeline was not successfully initialised...", name
             )
             duration = _calculate_duration(start_time)
-            logger.info(f"Initialisation phase completed in {duration}s!")
+            logger.info("Initialisation phase completed in %s s", duration)
 
             self.msg = QMessageBox()
             self.msg.setWindowTitle("Pipeline initialization warning!")
@@ -2817,7 +2816,7 @@ class PipelineManagerTab(QWidget):
             # FIXME: I don't understand when main_pipeline can be False.
             #        So in this case, we are instancing the duration here.
 
-        logger.info(f"Initialisation phase completed in {duration}s!")
+        logger.info("Initialisation phase completed in %s s!", duration)
         return init_result
 
     def layout_view(self):
@@ -2967,8 +2966,10 @@ class PipelineManagerTab(QWidget):
                 if swf_status:
                     exec_date = swf_status[4][2]
                     logger.info(
-                        f"Setting execution status for brick {brick_id} "
-                        f"(executed at: {exec_date})"
+                        "Setting execution status for brick %s (executed "
+                        "at: %s)",
+                        brick_id,
+                        exec_date,
                     )
                     database_data.set_value(
                         collection_name=COLLECTION_BRICK,
@@ -3293,7 +3294,7 @@ class PipelineManagerTab(QWidget):
                             resource, password, rsa_key
                         )
 
-                    logger.info(f"Connecting to resource: {resource}")
+                    logger.info("Connecting to resource: %s", resource)
                     engine.connect(resource)
 
             # Setup progress widget and animation
@@ -3321,7 +3322,7 @@ class PipelineManagerTab(QWidget):
             self.progress.start()
 
         except Exception:
-            logger.exception("Error while starting pipeline execution")
+            logger.exception("Error while starting pipeline execution!")
             raise
 
         finally:
@@ -3476,7 +3477,7 @@ class PipelineManagerTab(QWidget):
         diagnostic information. The widget is stored as an instance attribute
         for potential future reference.
         """
-        logger.info("Open Execution Status Window")
+        logger.info("Opening the 'Execution Status' window...")
         self.status_widget = StatusWidget(self)
         self.status_widget.show()
 
@@ -3489,7 +3490,7 @@ class PipelineManagerTab(QWidget):
         tracker, allowing any in-flight operations to complete safely before
         termination.
         """
-        logger.info("Pipeline execution interrupted")
+        logger.info("Pipeline execution interrupted...")
         self.progress.stop_execution()
 
     def undo(self):
@@ -3639,7 +3640,7 @@ class PipelineManagerTab(QWidget):
 
         else:
             # Log warning for unknown action types
-            logger.warning(f"Warning: Unknown undo action type: {action_type}")
+            logger.warning("Unknown undo action type: %s", action_type)
             return
 
         # Update pipeline state after successful undo operation
@@ -4136,8 +4137,8 @@ class RunProgress(QWidget):
                 "text": "Pipeline execution completed successfully.",
             }
 
-        except WorkflowExecutionError as e:
-            logger.error(f"Pipeline execution failed: {e}")
+        except WorkflowExecutionError as exc:
+            logger.error("Pipeline execution failed: %s", exc)
 
             return {
                 "icon": QMessageBox.Critical,
@@ -4215,7 +4216,7 @@ class RunProgress(QWidget):
         This method initiates the worker thread by calling its `start` method,
         which in turn triggers the execution of the pipeline.
         """
-        logger.info("Starting pipeline execution")
+        logger.info("Starting pipeline execution...")
         self.worker.start()
 
     def stop_execution(self):
@@ -4402,10 +4403,8 @@ class RunWorker(QThread):
             with protected_logging():
                 self.pipeline_manager.postprocess_pipeline_execution(pipeline)
 
-        except Exception as e:
-            logger.warning(
-                f"{pipeline.name} has not run correctly: {e}", exc_info=True
-            )
+        except Exception:
+            logger.exception("%s has not run correctly", pipeline.name)
 
         finally:
             del self.pipeline_manager

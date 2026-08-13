@@ -3315,8 +3315,8 @@ class PopUpPreferences(QDialog):
         try:
             result = dialog.exec()
 
-        except Exception as e:
-            logger.warning(e)
+        except Exception as exc:
+            logger.warning("Error executing dialog: %s", exc)
             return
 
         if result:
@@ -3327,8 +3327,8 @@ class PopUpPreferences(QDialog):
             try:
                 config.set_capsul_config(capsul_config)
 
-            except Exception as e:
-                logger.warning(e)
+            except Exception as exc:
+                logger.warning("Failed to set CAPSUL configuration: %s", exc)
                 return
 
             # Update Mia preferences GUI which might have changed
@@ -4075,8 +4075,8 @@ class PopUpPreferences(QDialog):
                 self.wrong_path(path, "Matlab")
                 return False
 
-            except Exception as e:  # Catch any other unexpected errors
-                logger.warning(f"❌ Unexpected error: {e}")
+            except Exception:  # Catch any other unexpected errors
+                logger.exception("❌ Unexpected error")
                 self.wrong_path(path, "Matlab")
                 return False
 
@@ -4394,8 +4394,8 @@ class PopUpPreferences(QDialog):
                 self.wrong_path(matlab_path, "Matlab")
                 return False
 
-            except Exception as e:  # Catch any other unexpected errors
-                logger.warning(f"❌ Unexpected error: {e}")
+            except Exception:  # Catch any other unexpected errors
+                logger.exception("❌ Unexpected error")
                 self.wrong_path(matlab_path, "Matlab")
                 return False
 
@@ -4505,8 +4505,8 @@ class PopUpPreferences(QDialog):
                     self.wrong_path(path, "SPM standalone")
                     return False
 
-                except Exception as e:  # Catch any other unexpected errors
-                    logger.warning(f"❌ Unexpected error: {e}")
+                except Exception:  # Catch any other unexpected errors
+                    logger.exception("❌ Unexpected error")
                     self.wrong_path(path, "SPM standalone")
                     return False
 
@@ -4536,14 +4536,11 @@ class PopUpPreferences(QDialog):
                         config.set_use_matlab_standalone(True)
 
                     logger.warning(
-                        "The configuration for Matlab MCR and SPM "
-                        "standalone as defined in Mia's preferences "
-                        "seems to be valid, but the following issue has "
-                        "been detected:"
-                    )
-                    logger.warning(f"{err}")
-                    logger.warning(
-                        "Please fix this issue to avoid a malfunction..."
+                        "The configuration for Matlab MCR and SPM standalone "
+                        "as defined in Mia's preferences seems to be valid, "
+                        "but the following issue has been detected: %s. "
+                        "Please fix this issue to avoid a malfunction...",
+                        err,
                     )
                     return True
 
@@ -4646,8 +4643,8 @@ class PopUpPreferences(QDialog):
                 self.wrong_path(path, tool_name, "config file")
                 return False
 
-            except Exception as e:  # Catch any other unexpected errors
-                logger.warning(f"❌ Unexpected error: {e}")
+            except Exception:  # Catch any other unexpected errors
+                logger.exception("❌ Unexpected error")
                 self.wrong_path(path, tool_name)
                 return False
 
@@ -6383,10 +6380,11 @@ class PopUpShowHistory(QDialog):
         try:
             self.node_selected(selected_name, pipeline.nodes[selected_name])
 
-        except Exception as e:
+        except Exception as exc:
             logger.warning(
-                f"Error in naming association brick/pipeline, "
-                f"cannot select node: {e}"
+                "Error in naming association between brick and pipeline; "
+                "cannot select node: %s",
+                exc,
             )
 
     def setup_ui(self):

@@ -228,8 +228,8 @@ class ImportWorker(QThread):
             documents, tags_added, values_added, historyMaker
         )
         logger.info(
-            f"Data export duration in the database: "
-            f"{round(time_time() - begin, 2)} s"
+            "Data export duration in the database: %.2f s",
+            time_time() - begin,
         )
 
     @property
@@ -1148,9 +1148,9 @@ def verify_scans(project):
                         actual_md5 = hashlib.md5(scan_file.read()).hexdigest()
 
                 except Exception:
-                    logger.warning(
-                        f"Error reading file: '{os.path.abspath(file_path)}'",
-                        exc_info=True,
+                    logger.exception(
+                        "Error reading file: '%s'",
+                        os.path.abspath(file_path),
                     )
                     actual_md5 = None
 

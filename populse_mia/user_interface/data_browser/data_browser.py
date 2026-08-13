@@ -2167,8 +2167,10 @@ class TableDataBrowser(QTableWidget):
             self.update_colors()
             safe_connect(self.itemChanged, self.on_cell_changed)
 
-        except Exception as e:
-            logger.warning(e)
+        except Exception as exc:
+            logger.warning(
+                "An error occurred while editing the table: %s", exc
+            )
 
         finally:
             self.setMouseTracking(True)
@@ -3713,10 +3715,9 @@ class TableDataBrowser(QTableWidget):
                 break
 
             except Exception:
-                logger.warning(
+                logger.exception(
                     "Unexpected exception while updating DataBrowser colors. "
-                    "Display may be in degraded state.",
-                    exc_info=True,
+                    "Display may be in degraded state."
                 )
                 break
 

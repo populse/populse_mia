@@ -336,12 +336,14 @@ class PipelineEditor(PipelineDeveloperView):
 
         except TraitError:
             logger.warning(
-                f"Cannot export {temp_plug_name[0]}.{plug_name} plug."
+                "Cannot export %s.%s plug.",
+                temp_plug_name[0],
+                plug_name,
             )
             return None
 
-        except ValueError as e:
-            logger.warning(f"\n{e}")
+        except ValueError as exc:
+            logger.warning("\n%s", exc)
             return None
 
         # If multiple exports, only return plug name
@@ -640,7 +642,7 @@ class PipelineEditor(PipelineDeveloperView):
                     process_config = yaml.load(stream)
 
         except yaml.YAMLError as exc:
-            logger.warning(f"Failed to load process config: {exc}")
+            logger.warning("Failed to load process config: %s", exc)
             process_config = {}
 
         for node_name, node in pipeline.nodes.items():
@@ -2107,7 +2109,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
                     process_config = yaml.load(stream)
 
         except yaml.YAMLError as exc:
-            logger.warning(f"Failed to load process configuration: {exc}")
+            logger.warning("Failed to load process configuration: %s", exc)
             process_config = {}
 
         # Determine pipeline source package
@@ -2266,7 +2268,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             self.set_tab_index(index)
 
         else:
-            logger.warning(f"No tab found with name: {tab_name}")
+            logger.warning("No tab found with name: %s", tab_name)
 
     def set_tab_index(self, index):
         """
@@ -2391,10 +2393,12 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             try:
                 pipeline.database_scans = self.scan_list
 
-            except Exception as e:
+            except Exception as exc:
                 logger.warning(
-                    f"Failed to update database_scans for "
-                    f"pipeline at index {i}: {e}",
+                    "Failed to update database_scans for pipeline at "
+                    "index %s: %s",
+                    i,
+                    exc,
                     exc_info=True,
                 )
 

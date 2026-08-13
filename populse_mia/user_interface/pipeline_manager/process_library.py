@@ -489,7 +489,7 @@ class InstallProcesses(QDialog):
                 continue
 
             try:
-                logger.info(f"Installing {module_name}.{v.__name__}...")
+                logger.info("Installing %s.%s...", module_name, v.__name__)
                 get_process_instance(f"{module_name}.{v.__name__}")
                 # Update the tree dictionary
                 path_list = module_name.split(".")
@@ -511,10 +511,9 @@ class InstallProcesses(QDialog):
                             pkg_iter = pkg_iter[element]
 
             except Exception:
-                logger.warning(
-                    f"Error during installation of "
-                    f"the '{module_name}' module ...!",
-                    exc_info=True,
+                logger.exception(
+                    "Error during installation of the '%s' module.",
+                    module_name,
                 )
                 self.result_add_package = False
 
@@ -597,7 +596,7 @@ class InstallProcesses(QDialog):
             return process_dic or {}
 
         except yaml.YAMLError as exc:
-            logger.warning(f"Error loading process config: {exc}")
+            logger.warning("Error loading process config: %s", exc)
             return {}
 
     def _rollback_changes(
@@ -917,10 +916,9 @@ class InstallProcesses(QDialog):
 
         except Exception:
             # Handle installation failure
-            logger.warning(
-                f"Error during installation of "
-                f"the '{package_name}' library...!",
-                exc_info=True,
+            logger.exception(
+                "Error during installation of the '%s' library.",
+                package_name,
             )
             self.result_add_package = False
             self._show_status_message(
@@ -1467,7 +1465,7 @@ class PackageLibrary(QTreeWidget):
                 pkg_iter = pkg_iter[element]
 
             else:
-                logger.info(f"Package '{element}' not found in tree")
+                logger.info("Package '%s' not found in tree", element)
                 return
 
         # Update the value of the target node
@@ -1475,7 +1473,7 @@ class PackageLibrary(QTreeWidget):
             pkg_iter[path[-1]] = val
 
         else:
-            logger.info(f"Module '{path[-1]}' not found in package")
+            logger.info("Module '%s' not found in package", path[-1])
 
     def update_checks(self, item, column):
         """
@@ -1889,10 +1887,9 @@ class PackageLibraryDialog(QDialog):
                     get_process_instance(fully_qualified_name)
 
                 except Exception:
-                    logger.warning(
-                        f"Error during installation of "
-                        f"the '{module_name}' module...!",
-                        exc_info=True,
+                    logger.exception(
+                        "Error during installation of the '%s' module...!",
+                        module_name,
                     )
 
                 else:
@@ -1911,8 +1908,9 @@ class PackageLibraryDialog(QDialog):
 
                             if element == class_name or recursion_flag:
                                 logger.info(
-                                    f"Adding {module_name}."
-                                    f"{obj.__name__}..."
+                                    "Adding %s.%s...",
+                                    module_name,
+                                    obj.__name__,
                                 )
                                 pkg_iter[element] = "process_enabled"
 
@@ -2250,7 +2248,7 @@ class PackageLibraryDialog(QDialog):
                         path_split = path.split(os.sep)
                         proc_idx = path_split.index("processes") + 1
                         logger.info(
-                            f"Deleting {'.'.join(path_split[proc_idx:])}..."
+                            "Deleting %s...", ".".join(path_split[proc_idx:])
                         )
 
                         if index > 0 and remove:
@@ -2326,8 +2324,9 @@ class PackageLibraryDialog(QDialog):
 
                         if not imports_in_init:
                             logger.info(
-                                f"The {to_delete} brick seems to be corrupted "
-                                f"and is not accessible..."
+                                "The %s brick seems to be corrupted and is "
+                                "not accessible...",
+                                to_delete,
                             )
 
                         for key in imports_in_init:
@@ -2394,7 +2393,7 @@ class PackageLibraryDialog(QDialog):
                                             )
 
                                         for pkg in deleted_packages:
-                                            logger.info(f"Deleting {pkg}...")
+                                            logger.info("Deleting %s...", pkg)
 
                                         os.remove(file2del)
                                         brick = ", ".join(imports_in_init[key])
@@ -2563,7 +2562,7 @@ class PackageLibraryDialog(QDialog):
                     return yaml.load(stream) or {}
 
         except (yaml.YAMLError, OSError) as exc:
-            logger.warning(f"Failed to load config: {exc}")
+            logger.warning("Failed to load config: %s", exc)
             return {}
 
     def load_packages(self):
@@ -2676,7 +2675,7 @@ class PackageLibraryDialog(QDialog):
 
             if index == len(path_list) - 1:  # Last element
                 del pkg_iter[element]
-                logger.info(f"Removing {'.'.join(path_list)}...")
+                logger.info("Removing %s...", ".".join(path_list))
 
             else:
                 pkg_iter = pkg_iter[element]
@@ -3098,7 +3097,9 @@ class ProcessLibraryWidget(QWidget):
                     return yaml.load(stream) or {}
 
             except yaml.YAMLError as exc:
-                logger.warning(exc)
+                logger.warning(
+                    "Failed to parse configuration YAML file: %s", exc
+                )
                 return {}
 
     def load_packages(self):

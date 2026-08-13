@@ -90,7 +90,7 @@ class DataViewerTab(Qt.QWidget):
         if self.viewer_current and list(self.viewer_current)[0] == viewer_name:
             return
 
-        logger.info(f"- Activate viewer: {viewer_name}")
+        logger.info("- Activate viewer: %s", viewer_name)
         viewer = self.viewers_loaded.get(viewer_name)
 
         if viewer:
@@ -196,7 +196,8 @@ class DataViewerTab(Qt.QWidget):
 
                 except Exception:
                     logger.warning(
-                        f"{name} viewer is not available or not working...!",
+                        "%s viewer is not available or not working...",
+                        name,
                         exc_info=True,
                     )
 

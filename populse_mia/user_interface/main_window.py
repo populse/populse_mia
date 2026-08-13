@@ -229,7 +229,7 @@ class MainWindow(QMainWindow):
         logger.info("Verify scans...")
         t0 = time.time()
         problem_list = data_loader.verify_scans(self.project)
-        logger.info(f"check time: {time.time() - t0}")
+        logger.info("Check time: %.3f s", time.time() - t0)
         QApplication.restoreOverrideCursor()
 
         # Message if invalid files
@@ -363,8 +363,8 @@ class MainWindow(QMainWindow):
             try:
                 self.exPopup = PopUpNewProject()
 
-            except Exception as e:
-                logger.warning(f"Create_project_pop_up: {e}")
+            except Exception as exc:
+                logger.warning("Create_project_pop_up: %s", exc)
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid projects folder path")
@@ -568,8 +568,8 @@ class MainWindow(QMainWindow):
         try:
             self.exPopup = PopUpDeleteProject(self)
 
-        except Exception as e:
-            logger.warning(f"Delete_project: {e}")
+        except Exception as exc:
+            logger.warning("Delete_project: %s", exc)
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid projects folder path")
@@ -699,10 +699,10 @@ class MainWindow(QMainWindow):
 
         else:
             logger.warning(
-                "Mri_conv, did not work properly. Current absolute"
-                " path to MRIManager.jar defined in File > Mia Preferences:"
+                "Mri_conv, did not work properly. Current absolute "
+                "path to MRIManager.jar defined in File > Mia Preferences:"
             )
-            logger.warning(f"{config.get_mri_conv_path}")
+            logger.warning("%s", config.get_mri_conv_path())
 
             if not os.path.isfile(config.get_mri_conv_path()):
                 mssgText = (
@@ -792,8 +792,8 @@ class MainWindow(QMainWindow):
             try:
                 self.exPopup = PopUpOpenProject()
 
-            except Exception as e:
-                logger.warning(f"Open_project_pop_up: {e}")
+            except Exception as exc:
+                logger.warning("Open_project_pop_up: %s", exc)
                 self.msg = QMessageBox()
                 self.msg.setIcon(QMessageBox.Critical)
                 self.msg.setText("Invalid projects folder path")
@@ -1191,8 +1191,8 @@ class MainWindow(QMainWindow):
         try:
             self.exPopup = PopUpSaveProjectAs()
 
-        except Exception as e:
-            logger.warning(f"Save_project_as: {e}")
+        except Exception as exc:
+            logger.warning("Save_project_as: %s", exc)
             self.msg = QMessageBox()
             self.msg.setIcon(QMessageBox.Critical)
             self.msg.setText("Invalid projects folder path")

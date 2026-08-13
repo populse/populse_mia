@@ -741,7 +741,7 @@ class AnaSimpleViewer2(Qt.QObject):
         :param close_ana: (bool) If True, closes the Anatomist instance.
          Defaults to True.
         """
-        logger.info("Exiting Ana2 viewer.")
+        logger.info("Exiting Ana2 viewer...")
         self.newWindow.close()
 
         for window in self.awindows:
@@ -752,7 +752,7 @@ class AnaSimpleViewer2(Qt.QObject):
                 window.setParent(None)
 
             except Exception:
-                logger.exception(f"Error closing window: {window}")
+                logger.exception("Error closing window: %s", window)
 
         self.awindows = []
         self.displayedObjects = []
@@ -841,8 +841,8 @@ class AnaSimpleViewer2(Qt.QObject):
                 position=position + [time],
             )
 
-        except (ValueError, AttributeError) as e:
-            logger.error(f"Error setting cursor position: {e}")
+        except (ValueError, AttributeError) as exc:
+            logger.error("Error setting cursor position: %s", exc)
 
     def createWindow(self, wintype="Axial"):
         """
@@ -896,7 +896,7 @@ class AnaSimpleViewer2(Qt.QObject):
             # (there should be a better way to do so...)
             if wintype == "Axial":
                 w.muteAxial()
-                logger.info(f"MUTEAXIAL {w.muteAxial}")
+                logger.info("MUTEAXIAL %s", w.muteAxial)
 
             elif wintype == "Coronal":
                 w.muteCoronal()
@@ -1209,7 +1209,7 @@ class AnaSimpleViewer2(Qt.QObject):
 
             for file_path in selected_files:
                 file_path_str = str(file_path)
-                logger.info(f"Selected file: {file_path_str}")
+                logger.info("Selected file: %s", file_path_str)
                 file_paths.append(file_path_str)
 
             self.load_object(file_paths)

@@ -558,8 +558,10 @@ class CapsulNodeController(QWidget):
         # Check for name conflicts
         if new_node_name in self.pipeline.nodes:
             logger.info(
-                f"Cannot rename node '{old_node_name}' to '{new_node_name}': "
-                f"node '{new_node_name}' already exists"
+                "Cannot rename node '%s' to '%s': node '%s' already exists",
+                old_node_name,
+                new_node_name,
+                new_node_name,
             )
             self.line_edit_node_name.setModified(False)
             return
@@ -1408,7 +1410,7 @@ class NodeController(QWidget):
         # Check for name conflicts
         if new_node_name in self.pipeline.nodes:
             logger.info(
-                f"Node name '{new_node_name}' already exists in pipeline"
+                "Node name '%s' already exists in pipeline", new_node_name
             )
             return
 
@@ -1587,9 +1589,7 @@ class NodeController(QWidget):
                     new_value = eval(new_value)
 
                 except Exception:
-                    logger.warning(
-                        f"Problem reading the {plug_name} value", exc_info=True
-                    )
+                    logger.exception("Problem reading the %s value", plug_name)
 
             except NameError:
                 # Keep the original value if evaluation fails due to undefined
@@ -1597,9 +1597,7 @@ class NodeController(QWidget):
                 pass
 
             except Exception:
-                logger.warning(
-                    f"Problem reading the {plug_name} value", exc_info=True
-                )
+                logger.exception("Problem reading the %s value", plug_name)
 
             if value_type not in (float, int, str, list):
                 value_type = str

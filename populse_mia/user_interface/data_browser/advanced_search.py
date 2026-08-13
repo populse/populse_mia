@@ -305,9 +305,8 @@ class AdvancedSearch(QWidget):
                     ]
 
                 except Exception:
-                    logger.warning(
-                        "Exception in AdvancedSearch.apply_filter()",
-                        exc_info=True,
+                    logger.exception(
+                        "Exception in AdvancedSearch.apply_filter()"
                     )
                     # Display an error dialog when filter execution fails
                     msg = QMessageBox()
@@ -596,10 +595,9 @@ class AdvancedSearch(QWidget):
                 current_filter.conditions = conditions
 
         except Exception:
-            logger.warning(
+            logger.exception(
                 "Exception in populse_mia.user_interface.data_browser."
-                "advanced_search.AdvancedSearch.launch_search():",
-                exc_info=True,
+                "advanced_search.AdvancedSearch.launch_search():"
             )
             # Display error dialog when search fails.
             msg = QMessageBox()

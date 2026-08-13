@@ -824,11 +824,10 @@ class Config:
                 else:
                     mia_home_properties_path = yaml.load(stream)
 
-        except yaml.YAMLError as e:
-            logger.warning(f"{e}")
-            logger.warning(
-                "~/.populse_mia/configuration_path.yml cannot be read, the "
-                "path to the properties folder has not been found.."
+        except yaml.YAMLError:
+            logger.exception(
+                "Failed to parse ~/.populse_mia/configuration_path.yml; "
+                "the path to the properties folder could not be determined."
             )
             raise
 
@@ -868,9 +867,8 @@ class Config:
             )
             return self.properties_path
 
-        except KeyError as e:
-            logger.warning(f"{e}")
-            logger.warning(
+        except KeyError:
+            logger.exception(
                 "Key not found in ~/.populse_mia/configuration_path.yml!"
             )
             raise
@@ -1123,7 +1121,9 @@ class Config:
                 return yaml.load(decrypted_data)
 
         except yaml.YAMLError as exc:
-            logger.warning(f"Error loading '{config_path}' file: {exc}")
+            logger.warning(
+                "Failed to load configuration file '%s': %s", config_path, exc
+            )
             return {}
 
     def saveConfig(self):
@@ -1310,9 +1310,10 @@ class Config:
 
             else:
                 logger.warning(
-                    f"Could not determine FSL configuration file from "
-                    f"directory {fsl_dir_path}. FSL is not correctly defined "
-                    f"in preferences (see File > Mia Preferences)."
+                    "Could not determine FSL configuration file from "
+                    "directory %s. FSL is not correctly defined in "
+                    "preferences (see File > Mia Preferences).",
+                    fsl_dir_path,
                 )
 
         self.set_use_fsl(use_fsl)
@@ -1806,12 +1807,11 @@ class Config:
                     environment, config_copy, cont_on_error=True
                 )
 
-            except Exception as exc:
-                logger.warning("An issue was detected in Mia's configuration:")
-                logger.warning(f"{exc}")
-                logger.warning(
-                    "Please check the settings in File > "
-                    "Mia Preferences > Pipeline ..."
+            except Exception:
+                logger.exception(
+                    "An issue was detected in Mia's configuration. Please "
+                    "check the settings in File > Mia Preferences > Pipeline "
+                    "..."
                 )
 
         return engine

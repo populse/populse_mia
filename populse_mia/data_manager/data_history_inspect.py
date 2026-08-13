@@ -261,8 +261,10 @@ def data_history_pipeline(filename, project):
             try:
                 pipeline.add_link(f"{src}->{dst}")
 
-            except ValueError as e:
-                logger.warning(e)
+            except ValueError as exc:
+                logger.warning(
+                    "Could not add pipeline link '%s->%s': %s", src, dst, exc
+                )
 
     return pipeline
 
@@ -491,7 +493,9 @@ def get_data_history_processes(filename, project):
             keep_procs[uuid] = proc
 
         else:
-            logger.info(f"Drop earlier run: {proc.brick[BRICK_NAME]} {uuid}")
+            logger.info(
+                "Drop earlier run: %s %s", proc.brick[BRICK_NAME], uuid
+            )
 
     todo = list(keep_procs.values())
 
@@ -504,8 +508,10 @@ def get_data_history_processes(filename, project):
         done_procs.add(proc)
         proc.used = True
         logger.info(
-            f"-- ancestors for: {proc.brick[BRICK_ID]} "
-            f"{proc.brick[BRICK_NAME]} {proc.brick[BRICK_EXEC_TIME]}"
+            "-- ancestors for: %s %s %s",
+            proc.brick[BRICK_ID],
+            proc.brick[BRICK_NAME],
+            proc.brick[BRICK_EXEC_TIME],
         )
         values_w_files = {}
 
@@ -514,7 +520,7 @@ def get_data_history_processes(filename, project):
 
             # Record inputs referencing database files
             if filenames:
-                logger.info(f"{filenames} will be parsed.")
+                logger.info("%s will be parsed.", filenames)
                 values_w_files[name] = (value, filenames)
 
         for name, (value, filenames) in values_w_files.items():
@@ -543,11 +549,11 @@ def get_data_history_processes(filename, project):
                         p for p in prev_procs.values() if p not in done_procs
                     ]
                     logger.info(
-                        f"Looking for value {value} " f"in {prev_procs.keys()}"
+                        "Looking for value %s in %s", value, prev_procs.keys()
                     )
 
                     for pproc in prev_procs.values():
-                        logger.info(f"- in {pproc.brick[BRICK_NAME]}")
+                        logger.info("- in %s", pproc.brick[BRICK_NAME])
 
                         for pname, pval in pproc.brick[BRICK_OUTPUTS].items():
 
@@ -572,9 +578,10 @@ def get_data_history_processes(filename, project):
                 links.add((proc, name, None, name))
 
     logger.info(
-        f"History of {filename}: "
-        f"{len([p for p in procs.values() if p.used])} processes, "
-        f"{len(links)} links"
+        "History of %s: %s processes, %s links",
+        filename,
+        len([p for p in procs.values() if p.used]),
+        len(links),
     )
 
     return procs, links
@@ -625,7 +632,7 @@ def get_direct_proc_ancestors(
             field=TAG_BRICKS,
         )
 
-    logger.info(f"Bricks for: {filename} : {bricks}")
+    logger.info("Bricks for: %s : %s", filename, bricks)
     new_procs = {}
     # new_links = set()
 
@@ -677,7 +684,7 @@ def get_direct_proc_ancestors(
                 keep_procs[uuid] = proc
 
             else:
-                logger.info(f"Drop earlier run: {proc.brick[BRICK_NAME]}")
+                logger.info("Drop earlier run: %s", proc.brick[BRICK_NAME])
 
         if org_proc and org_proc.brick[BRICK_ID] in new_procs:
             # set back origin process, if it's in the list
@@ -776,14 +783,18 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
 
     exec_time = brick_data[BRICK_EXEC_TIME]
     logger.info(
-        f"{brick_id} exec_time: {exec_time} before: {before_exec_time}"
+        "%s exec_time: %s before: %s",
+        brick_id,
+        exec_time,
+        before_exec_time,
     )
 
     if before_exec_time and exec_time > before_exec_time:
         # Ignore bricks executed after the specified time
         return None
 
-    logger.info(f"{brick_id} : {brick_data[BRICK_NAME]}")
+    logger.info("%s: %s", brick_id, brick_data[BRICK_NAME])
+
     return ProtoProcess(brick_data)
 
 
@@ -930,7 +941,7 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
                     dlink = _get_tmp_param(proc)
 
                 links.add((hproc, name, *dlink))
-                logger.info(f"found: {hproc.brick[BRICK_NAME]} {name}")
+                logger.info("found: %s %s", hproc.brick[BRICK_NAME], name)
                 break
 
             break

@@ -659,12 +659,12 @@ class Project:
         :type bricks: list[str] | None
         """
         obsolete_bricks, orphan_files = self.get_orphan_bricks(bricks)
-        logger.info(f"Identified obsolete bricks: {obsolete_bricks}")
+        logger.info("Identified obsolete bricks: %s", obsolete_bricks)
 
         with self.database.data(write=True) as database_data:
 
             for brick in obsolete_bricks:
-                logger.info(f"Removing obsolete brick: {brick}")
+                logger.info("Removing obsolete brick: %s", brick)
 
                 try:
                     database_data.remove_document(COLLECTION_BRICK, brick)
@@ -673,7 +673,7 @@ class Project:
                     pass  # malformed database, the brick doesn't exist
 
             for file_path in orphan_files:
-                logger.info(f"Removing orphan file: {file_path}")
+                logger.info("Removing orphan file: %s", file_path)
 
                 try:
                     database_data.remove_document(
@@ -706,14 +706,14 @@ class Project:
         obsolete_histories, obsolete_bricks, orphan_files = (
             self.get_orphan_history()
         )
-        logger.info(f"Orphan histories: {obsolete_histories}")
-        logger.info(f"Orphan bricks: {obsolete_bricks}")
-        logger.info(f"Orphan files: {orphan_files}")
+        logger.info("Orphan histories: %s", obsolete_histories)
+        logger.info("Orphan bricks: %s", obsolete_bricks)
+        logger.info("Orphan files: %s", orphan_files)
 
         with self.database.data(write=True) as database_data:
 
             for hist in obsolete_histories:
-                logger.info(f"Removing obsolete history: {hist}")
+                logger.info("Removing obsolete history: %s", hist)
 
                 try:
                     database_data.remove_document(
@@ -724,7 +724,7 @@ class Project:
                     pass  # malformed database, the brick doesn't exist
 
             for brick in obsolete_bricks:
-                logger.info(f"Removing obsolete brick: {brick}")
+                logger.info("Removing obsolete brick: %s", brick)
 
                 try:
                     database_data.remove_document(
@@ -735,7 +735,7 @@ class Project:
                     pass  # malformed database, the brick doesn't exist
 
             for file_path in orphan_files:
-                logger.info(f"Removing orphan file: {file_path}")
+                logger.info("Removing orphan file: %s", file_path)
 
                 for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
 
@@ -775,7 +775,7 @@ class Project:
         with self.database.data(write=True) as database_data:
 
             for file_path in orphan_files:
-                logger.info(f"Removing orphan file: {file_path}")
+                logger.info("Removing orphan file: %s", file_path)
 
                 for collection in (COLLECTION_CURRENT, COLLECTION_INITIAL):
 
@@ -1624,8 +1624,9 @@ class Project:
 
             except yaml.YAMLError as exc:
                 logger.warning(
-                    f"Error loading YAML properties "
-                    f"from {properties_path}: {exc}"
+                    "Error loading YAML properties from %s: %s",
+                    properties_path,
+                    exc,
                 )
                 return None
 
@@ -2267,8 +2268,10 @@ class Project:
                     values_dict={field: new_data},
                 )
 
-            except (TypeError, json.JSONDecodeError) as e:
-                logger.warning(f"Failed to update {field} for {doc_id}: {e}")
+            except (TypeError, json.JSONDecodeError) as exc:
+                logger.warning(
+                    "Failed to update %s for %s: %s", field, doc_id, exc
+                )
 
         with self.database.data(write=True) as database_data:
             history_docs = database_data.get_document(
@@ -2383,7 +2386,8 @@ class Project:
 
             else:
                 logger.info(
-                    f"Updating the paths in the database when renaming "
-                    f"the project: Changing {old_path} with "
-                    f"{current_project_path}...!"
+                    "Updating database paths when renaming the project: "
+                    "changing %s to %s...",
+                    old_path,
+                    current_project_path,
                 )

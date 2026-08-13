@@ -1003,16 +1003,16 @@ class MiniViewer(QWidget):
 
             except nib.filebasedimages.ImageFileError:
                 logger.warning(
-                    f"MiniViewer: Error while trying to display "
-                    f"{os.path.abspath(file_path)} image",
+                    "MiniViewer: Error while trying to display %s image",
+                    os.path.abspath(file_path),
                     exc_info=True,
                 )
                 self.file_paths.remove(file_path)
 
             except FileNotFoundError:
                 logger.warning(
-                    f"MiniViewer: File "
-                    f"{os.path.abspath(file_path)} does not exist"
+                    "MiniViewer: File %s does not exist!",
+                    os.path.abspath(file_path),
                 )
                 self.file_paths.remove(file_path)
 
@@ -1023,10 +1023,9 @@ class MiniViewer(QWidget):
                     np.asarray(chk.dataobj)
 
                 except Exception:
-                    logger.warning(
-                        f"MiniViewer: Error while trying to display "
-                        f"{os.path.abspath(file_path)} image",
-                        exc_info=True,
+                    logger.exception(
+                        "MiniViewer: Error while trying to display %s image",
+                        os.path.abspath(file_path),
                     )
                     self.file_paths.remove(file_path)
 

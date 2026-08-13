@@ -165,7 +165,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     ]
                 )
                 logger.info(
-                    f"\n. {node_name} ({interface_path}) nipype brick ..."
+                    "\n. %s (%s) nipype brick ...",
+                    node_name,
+                    interface_path,
                 )
 
             else:
@@ -173,7 +175,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
                     [process.__module__, process.__class__.__name__]
                 )
                 logger.info(
-                    f"\n. {node_name} ({process_path}) regular brick ..."
+                    "\n. %s (%s) regular brick ...",
+                    node_name,
+                    process_path,
                 )
 
         # Use fallback engine to complete parameters
@@ -246,7 +250,11 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         process_path = ".".join(
             [process.__module__, process.__class__.__name__]
         )
-        logger.info(f"\n. {node_name} ({process_path}) Mia brick ...")
+        logger.info(
+            "\n. %s (%s) Mia brick ...",
+            node_name,
+            process_path,
+        )
         # Complete parameters using MIA-specific method
         self.complete_parameters_mia(
             process_inputs, iteration=complete_iterations
@@ -489,8 +497,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         else:
             logger.warning(
-                f"The output_directory trait does not exist for the "
-                f"{process.context_name} process!"
+                "The output_directory trait does not exist for "
+                "the %s process!",
+                process.context_name,
             )
             out_dir = None
 
@@ -651,7 +660,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
             )
 
         except Exception:
-            logger.warning("Error during initialisation ...!", exc_info=True)
+            logger.exception("Error during initialisation...")
             initResult_dict = {}
 
         # Check if initialization was successful
@@ -682,7 +691,9 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
                 if verbose:
                     logger.warning(
-                        f"Issue with {parameter} and {repr(value)}",
+                        "Issue with %s and %r",
+                        parameter,
+                        value,
                         exc_info=True,
                     )
 
@@ -1183,8 +1194,10 @@ class ProcessMIA(Process):
         #        iterations, may ask many many questions to users.
         #        These should be worked on earlier.
         logger.info(
-            f"Ambiguity in tag inheritance for: {node_name} - "
-            f"{plug_name} - {out_file}"
+            "Ambiguity in tag inheritance for: %s - %s - %s",
+            node_name,
+            plug_name,
+            out_file,
         )
         pop_up = PopUpInheritanceDict(
             in_files,
@@ -1386,13 +1399,12 @@ class ProcessMIA(Process):
             missing = [k for k, v in data.items() if not v]
             context_name = getattr(self, "context_name", self.name)
             logger.warning(
-                f"Issues detected during "
-                f"{context_name.rsplit('.', 1)[-1]}"
-                f" initialization:"
+                "Issues detected during %s initialization:",
+                context_name.rsplit(".", 1)[-1],
             )
 
             for issue in missing:
-                logger.warning(f"- {issue} attribute is missing...")
+                logger.warning("- %s attribute is missing...", issue)
 
         if self.outputs and "spm" in (self.requirement or []):
             self.outputs["notInDb"] = ["spm_script_file"]
@@ -1595,10 +1607,13 @@ class ProcessMIA(Process):
 
                 else:
                     logger.warning(
-                        f"{self.context_name} brick initialization warning: "
-                        f"{parent_file} has no tags registered yet. "
-                        f"Therefore, {out_file} cannot inherit its tags. "
-                        f"This may cause subsequent initialization issues..."
+                        "%s brick initialization warning: %s has no tags "
+                        "registered yet. Therefore, %s cannot inherit its "
+                        "tags. This may cause subsequent initialization "
+                        "issues...",
+                        self.context_name,
+                        parent_file,
+                        out_file,
                     )
                     initial_values = {}
                     current_values = {}

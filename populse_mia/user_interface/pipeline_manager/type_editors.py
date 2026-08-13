@@ -458,8 +458,12 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         try:
             setattr(controller, plug_name, filter_res_list)
 
-        except Exception as e:
-            logger.warning(e)
+        except Exception as exc:
+            logger.warning(
+                "Failed to update plug '%s' from filter results: %s",
+                plug_name,
+                exc,
+            )
 
 
 class PopulseUndefinedControlWidget:
