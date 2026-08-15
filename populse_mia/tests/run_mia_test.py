@@ -11334,20 +11334,20 @@ class TestMIAPipelineManagerTab(TestMIACase):
                         "'- Pipeline running' not found in info_messages",
                     )
 
-                    # Assert postprocessing exception warning is logged
-                    warning_messages = [
+                    # Assert postprocessing exception error is logged
+                    error_messages = [
                         record.getMessage()
                         for record in log_handler.records
-                        if record.levelname == "WARNING"
+                        if record.levelname == "ERROR"
                     ]
-                    failure_warning_found = any(
+                    failure_error_found = any(
                         "has not run correctly" in msg
-                        for msg in warning_messages
+                        for msg in error_messages
                     )
 
                     self.assertTrue(
-                        failure_warning_found,
-                        "Expected warning about pipeline failure not found",
+                        failure_error_found,
+                        "Expected error about pipeline failure not found",
                     )
 
         # --- Case 3: Simulate interruption
