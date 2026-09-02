@@ -187,7 +187,7 @@ class PackagesInstall:
                             vname = f"{v.__package__}.{v.__name__}"
 
                         else:
-                            logger.warning(f"No module nor package for {v}")
+                            logger.warning("No module nor package for %s", v)
                             vname = v.__name__
 
                         if vname in self._already_loaded:
@@ -221,7 +221,7 @@ class PackagesInstall:
                                     if element is path_list[-1]:
                                         pkg_iter[element] = "process_enabled"
                                         logger.info(
-                                            f"Detected brick: {element}"
+                                            "Detected brick: %s", element
                                         )
 
                                     else:
@@ -249,20 +249,21 @@ class PackagesInstall:
                             continue  # skip main
 
                         logger.info(
-                            f"Exploring subpackages of {module_name}: "
-                            f"{module_name}.{modname} ..."
+                            "Exploring subpackages of %s: %s.%s ...",
+                            module_name,
+                            module_name,
+                            modname,
                         )
                         self.add_package(
                             f"{module_name}.{modname}", class_name
                         )
 
-            except Exception as e:
-                logger.warning(
-                    f"When attempting to add a package ({module_name}) or "
-                    f"its modules to the package tree, the following "
-                    f"exception was caught:"
+            except Exception:
+                logger.exception(
+                    "When attempting to add package %s or its modules to the "
+                    "package tree, an exception was caught:",
+                    module_name,
                 )
-                logger.warning(f"{e}")
 
             return self.packages
 
@@ -615,9 +616,8 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
                 main_window.remove_raw_files_useless()
 
         except Exception:
-            logger.warning(
-                "Failed to remove useless raw files during shutdown",
-                exc_info=True,
+            logger.exception(
+                "Failed to remove useless raw files during shutdown"
             )
 
         _clean_up()
@@ -646,7 +646,7 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         :param tback: Traceback object.
         :type tback: types.TracebackType
         """
-        logger.exception(
+        logger.error(
             "Unhandled exception occurred",
             exc_info=(etype, evalue, tback),
         )
@@ -1528,7 +1528,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             except ImportError as e:
 
-                # Attempt to update sys.path, for the processes/ directory
+                # Attempt to update sys.path, for the processes / directory
                 # currently used, and re-import
                 processes_path = os.path.join(
                     config.get_properties_path(), "processes"
@@ -1569,15 +1569,15 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
                     # If an exception is raised, ask the user to remove the
                     # package from the pipeline library or reload it
-                    except ImportError as e:
-                        logger.warning(f"{e}")
+                    except ImportError as exc:
+                        logger.warning("%s", exc)
                         msg = QMessageBox()
                         msg.setIcon(QMessageBox.Warning)
-                        msg.setWindowTitle(f"populse_mia - warning: {e}")
+                        msg.setWindowTitle(f"populse_mia - warning: {exc}")
                         msg_path = os.path.join(processes_path, pckg)
                         msg.setText(
-                            f"At least, {e.msg.split()[-1]} has not been "
-                            f"found in {msg_path}."
+                            f"At least, {exc.name} has not been found "
+                            f"in {msg_path}."
                             f"\nTo prevent mia crash when using it, "
                             f"please remove (see File > Package "
                             f"library manager) or load again (see More"
@@ -1597,7 +1597,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
                 # package is certainly not properly installed in the processes
                 # directory
                 else:
-                    logger.warning(f"No module named '{pckg}'")
+                    logger.warning("No module named '%s'", pckg)
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
                     msg.setWindowTitle(f"populse_mia - warning: {e}")
@@ -1618,20 +1618,20 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
                     msg.exec()
 
             except SyntaxError as e:
-                logger.warning(
-                    f"A problem is detected with the '{pckg}' "
-                    f"package...\nTraceback:"
+                logger.exception(
+                    "A problem is detected with the '%s' package...",
+                    pckg,
                 )
-                logger.warning("".join(traceback.format_tb(e.__traceback__)))
-                logger.warning(f"{e.__class__.__name__}: {e}")
                 trabck = "".join(traceback.format_tb(e.__traceback__))
                 txt = (
                     f"A problem is detected with the '{pckg}' package...\n\n"
-                    f"Traceback:\n{trabck} {e.__class__.__name__} {e} \n\n"
+                    f"Traceback:\n{trabck}"
+                    f"{type(e).__name__}: {e}\n\n"
                     f"This may lead to a later crash of Mia ...\n"
-                    f"Do you want Mia tries to fix this issue "
-                    f"automatically?\nBe careful, risk of destruction of "
-                    f"the '{e.filename}' module!"
+                    f"Do you want Mia to try to fix this issue "
+                    f"automatically?\n"
+                    f"Be careful, risk of destruction of the '{e.filename}' "
+                    f"module!"
                 )
                 lineCnt = txt.count("\n")
                 msg = QMessageBox()
@@ -1673,18 +1673,17 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
                         file.write(filedata)
 
             except ValueError as e:
-                logger.warning(
-                    f"A problem is detected with the '{pckg}' "
-                    "package...\nTraceback:"
+                logger.exception(
+                    "A problem is detected with the '%s' package...",
+                    pckg,
                 )
-                logger.warning("".join(traceback.format_tb(e.__traceback__)))
-                logger.warning(f"{e.__class__.__name__}: {e}")
                 trabck = "".join(traceback.format_tb(e.__traceback__))
                 txt = (
                     f"A problem is detected with the '{pckg}' package...\n\n"
-                    f"Traceback:\n{trabck} {e.__class__.__name__} \n{e}\n\n"
-                    f"This may lead to a later crash of Mia ...\nPlease, "
-                    f"try to fix it !..."
+                    f"Traceback:\n{trabck}"
+                    f"{type(e).__name__}: {e}\n\n"
+                    f"This may lead to a later crash of Mia ...\n"
+                    f"Please, try to fix it !..."
                 )
                 msg = QMessageBox()
                 msg.setWindowTitle(f"populse_mia - warning: {e}")
@@ -1876,14 +1875,19 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             if old_nipypeVer is None:
                 logger.info(
-                    f"** Installation in Mia of the {pckg} processes "
-                    f"library, {nipypeVer} version ..."
+                    "** Installation in Mia of the %s processes "
+                    "library, %s version ...",
+                    pckg,
+                    nipypeVer,
                 )
 
             else:
                 logger.info(
-                    f"** Upgrading of the {pckg} processes library, "
-                    f"from {old_nipypeVer} to {nipypeVer} version ..."
+                    "** Upgrading of the %s processes library, "
+                    "from %s to %s version ...",
+                    pckg,
+                    old_nipypeVer,
+                    nipypeVer,
                 )
 
         if "mia_processes" in pckg:
@@ -1891,14 +1895,19 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             if old_miaProcVer is None:
                 logger.info(
-                    f"** Installation in Mia of the {pckg} processes "
-                    f"library, {miaProcVer} version ..."
+                    "** Installation in Mia of the %s processes "
+                    "library, %s version ...",
+                    pckg,
+                    miaProcVer,
                 )
 
             else:
                 logger.info(
-                    f"** Upgrading of the {pckg} processes library, "
-                    f"from {old_miaProcVer} to {miaProcVer} version ..."
+                    "** Upgrading of the %s processes library, "
+                    "from %s to %s version ...",
+                    pckg,
+                    old_miaProcVer,
+                    miaProcVer,
                 )
 
         if "capsul" in pckg:
@@ -1906,17 +1915,22 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             if old_capsulVer is None:
                 logger.info(
-                    f"** Installation in Mia of the {pckg} processes "
-                    f"library, {capsulVer} version ..."
+                    "** Installing the %s processes library (version %s) "
+                    "in Mia  ...",
+                    pckg,
+                    capsulVer,
                 )
 
             else:
                 logger.info(
-                    f"** Upgrading of the {pckg} processes library, "
-                    f"from {old_capsulVer} to {capsulVer} version ..."
+                    "** Upgrading of the %s processes library, from %s to %s "
+                    "version ...",
+                    pckg,
+                    old_capsulVer,
+                    capsulVer,
                 )
 
-        logger.info(f"\nExploring {pckg} ...")
+        logger.info("\nExploring %s ...", pckg)
         pckg_dic = package.add_package(pckg)
         # pckg_dic: a dic of dic representation of a package and its
         #           subpackages/modules
@@ -1931,49 +1945,52 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
             if not any("nipype" in s for s in pack2install):
                 logger.info(
-                    f"** The nipype processes library in Mia is already "
-                    f"using the current installed version ({nipypeVer}) "
-                    f"for this station."
+                    "** The nipype processes library in Mia is already using "
+                    "the installed version %s on this station.",
+                    nipypeVer,
                 )
 
             elif not any("mia_processes" in s for s in pack2install):
                 logger.info(
-                    f"** The mia_processes library in Mia is already "
-                    f"using the current installed version ({miaProcVer}) "
-                    f"for this station."
+                    "** The mia_processes processes library in Mia is already "
+                    "using the installed version %s on this station.",
+                    miaProcVer,
                 )
 
             elif not any("capsul" in s for s in pack2install):
                 logger.info(
-                    f"** The capsul library in Mia is already "
-                    f"using the current installed version ({capsulVer}) "
-                    f"for this station."
+                    "** The capsul processes library in Mia is already "
+                    "using the installed version %s on this station.",
+                    capsulVer,
                 )
 
         elif len(pack2install) == 1:
 
             if any("nipype" in s for s in pack2install):
                 logger.info(
-                    f"** The mia_processes and capsul processes libraries "
-                    f"are already using in Mia the current installed "
-                    f"version ({miaProcVer} and {capsulVer} respectively) "
-                    f"for this station."
+                    "** The mia_processes and capsul processes libraries are "
+                    "already using the installed versions %s and %s, "
+                    "respectively, in Mia on this station.",
+                    miaProcVer,
+                    capsulVer,
                 )
 
             elif any("mia_processes" in s for s in pack2install):
                 logger.info(
-                    f"** The nipype and capsul processes libraries are "
-                    f"already using in Mia the current installed "
-                    f"version ({nipypeVer} and {capsulVer} respectively) for "
-                    f"this station."
+                    "** The nipype and capsul processes libraries are already "
+                    "using the installed versions %s and %s, respectively, in "
+                    "Mia on this station.",
+                    nipypeVer,
+                    capsulVer,
                 )
 
             elif any("capsul" in s for s in pack2install):
                 logger.info(
-                    f"** The mia_processes and nipype processes libraries "
-                    f"are already using in Mia the current installed "
-                    f"version ({miaProcVer} and {nipypeVer} respectively) "
-                    f"for this station."
+                    "** The mia_processes and nipype processes libraries are "
+                    "already using the installed versions %s and %s, "
+                    "respectively, in Mia on this station.",
+                    miaProcVer,
+                    nipypeVer,
                 )
 
         if (isinstance(proc_content, dict)) and ("Paths" in proc_content):
@@ -2020,9 +2037,12 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
 
     else:
         logger.info(
-            f"** Mia is already using the current installed version of nipype"
-            f", mia_processes and capsul for this station "
-            f"({nipypeVer}, {miaProcVer} and {capsulVer}, respectively)"
+            "** Mia is already using the installed versions of nipype, "
+            "mia_processes, and capsul on this station: %s, %s, and %s, "
+            "respectively.",
+            nipypeVer,
+            miaProcVer,
+            capsulVer,
         )
 
 
@@ -2158,7 +2178,7 @@ def verify_setup(
 
         if not os.path.exists(properties_dir):
             os.makedirs(properties_dir, exist_ok=True)
-            logger.info(f"The {properties_dir} directory is created...")
+            logger.info("The %s directory is created...", properties_dir)
 
         config_files = [
             ("saved_projects.yml", {"paths": []}),
@@ -2182,7 +2202,7 @@ def verify_setup(
 
             if not os.path.exists(file_path):
                 _save_yml_file(content, file_path)
-                logger.info(f"The {file_path} file is created...")
+                logger.info("The %s file is created...", file_path)
 
         # processes/User_processes folder management / initialisation:
         user_processes_dir = os.path.join(
@@ -2191,13 +2211,13 @@ def verify_setup(
 
         if not os.path.exists(user_processes_dir):
             os.makedirs(user_processes_dir, exist_ok=True)
-            logger.info(f"The {user_processes_dir} directory is created...")
+            logger.info("The %s directory is created...", user_processes_dir)
 
         init_file = os.path.join(user_processes_dir, "__init__.py")
 
         if not os.path.exists(init_file):
             Path(init_file).touch()
-            logger.info(f"The {init_file} file is created...")
+            logger.info("The %s file is created...", init_file)
 
         logger.info("Default configuration checked!")
 
@@ -2287,8 +2307,9 @@ def verify_setup(
 
                 except yaml.YAMLError:
                     logger.warning(
-                        f"\n {dot_mia_config} cannot be read, the path "
-                        f"to the properties has not been found..."
+                        "\n %s cannot be read, the path to the properties has "
+                        "not been found...",
+                        dot_mia_config,
                     )
                     mia_home_properties_path = dict()
 
@@ -2297,12 +2318,12 @@ def verify_setup(
             try:
                 _make_default_config(dialog)
 
-            except Exception as e:
-                logger.warning(f"Automatic configuration fails: {e} ...")
+            except Exception:
+                logger.exception("Automatic configuration failed.")
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
                 msg.setWindowTitle("Mia configuration Error")
-                msg.setText("Automatic configuration fails...")
+                msg.setText("Automatic configuration failed.")
                 msg.exec()
                 return
 
@@ -2329,10 +2350,10 @@ def verify_setup(
             for k in key_to_del:
                 del mia_home_properties_path[k]
 
-            logger.info(f"New values in {dot_mia_config}: ")
+            logger.info("New values in %s: ", dot_mia_config)
 
             for key, value in mia_home_properties_path_new.items():
-                logger.info(f"- {key}: {value}")
+                logger.info("- %s: %s", key, value)
 
             print()
             _save_yml_file(mia_home_properties_path, dot_mia_config)
@@ -2351,10 +2372,9 @@ def verify_setup(
                 if not config.get_admin_hash():
                     config.set_admin_hash(ph.hash(default_password))
 
-            except Exception as e:
-                logger.warning(
-                    f"Could not fetch the "
-                    f"properties/config.yml file: {e} ..."
+            except Exception:
+                logger.exception(
+                    "Could not load the properties/config.yml file."
                 )
                 msg = QMessageBox()
                 msg.setIcon(QMessageBox.Warning)
@@ -2406,8 +2426,8 @@ def verify_setup(
     if not os.path.exists(os.path.dirname(dot_mia_config)):
         os.mkdir(os.path.dirname(dot_mia_config))
         logger.info(
-            f"The {os.path.dirname(dot_mia_config)} directory is "
-            f"created..."
+            "The %s directory has been created.",
+            os.path.dirname(dot_mia_config),
         )
         Path(dot_mia_config).touch()
 
@@ -2450,26 +2470,24 @@ def verify_setup(
         _save_yml_file(mia_home_properties_path, dot_mia_config)
         _verify_miaConfig()
 
-    except Exception as e:
-        # the ~/.populse_mia/configuration_path.yml or the
-        # properties/config.yml file does not exist or has not been
-        # correctly read...
-
-        # FIXME: We may be need a more precise Exception class to catch ?
-        logger.warning(
-            f"An issue has been detected when opening "
-            f"the {dot_mia_config} file or with the parameters returned "
-            f"from this file:{e}"
+    except Exception:
+        # The ~/.populse_mia/configuration_path.yml or the
+        # properties/config.yml file does not exist or could not be
+        # read correctly.
+        #
+        # FIXME: We may need a more specific exception class to catch here.
+        logger.exception(
+            "Failed to load %s or process its configuration parameters.",
+            dot_mia_config,
         )
-
-        # open popup, we choose the properties path dir
+        # Open a popup to select the properties root directory.
         msg = QDialog()
-        msg.setWindowTitle("populse_mia - properties path selection")
+        msg.setWindowTitle("populse_mia - Properties Path Selection")
         vbox_layout = QVBoxLayout()
         hbox_layout = QHBoxLayout()
         file_label = QLabel(
-            "No configuration parameters found. Please select a root "
-            "directory for configuration."
+            "No configuration parameters were found. Please select a root "
+            "directory for the configuration."
         )
         msg.file_line_edit = QLineEdit()
         msg.file_line_edit.setText(os.path.dirname(dot_mia_config))
@@ -2481,7 +2499,7 @@ def verify_setup(
         hbox_layout.addWidget(file_button)
         vbox_layout.addLayout(hbox_layout)
         hbox_layout = QHBoxLayout()
-        msg.ok_button = QPushButton("Ok")
+        msg.ok_button = QPushButton("OK")
         msg.ok_button.clicked.connect(partial(_verify_miaConfig, msg))
         msg.cancel_button = QPushButton("Cancel")
         msg.cancel_button.clicked.connect(partial(_cancel_clicked, msg))
@@ -2505,7 +2523,9 @@ def verify_setup(
             pypath.append(user_proc)
 
             for elt in user_proc_dir:
-                logger.info(f"  . Using {elt} package from {user_proc}...")
+                logger.info(
+                    "  . Using the %s package from %s ...", elt, user_proc
+                )
 
         del user_proc_dir
 
@@ -2550,6 +2570,6 @@ def verify_setup(
                     pypath.append(i)
 
         pc["path"] = pypath
-        logger.info(f"Changed python conf: {pc}")
+        logger.info("Changed python conf: %s", pc)
         config.update_capsul_config()
         config.saveConfig()

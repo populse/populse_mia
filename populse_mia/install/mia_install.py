@@ -72,7 +72,7 @@ def install_and_import(module_name):
 
     except ImportError:
         # Module not found, install it
-        logger.warning(f"{module_name} not found. Installing...")
+        logger.warning("%s not found. Installing...", module_name)
         command = [
             sys.executable,
             "-m",
@@ -126,14 +126,15 @@ def run_installer():
 
         except subprocess.CalledProcessError:
             logger.warning(
-                f"Failed to install {package}. Please check the pip "
-                f"installation."
+                "Failed to install %s. Please check the pip installation.",
+                package,
             )
 
         except ImportError:
             logger.warning(
-                f"Could not import {package} after installation. Please "
-                f"check compatibility or try reinstalling manually."
+                "Could not import %s after installation. Please check "
+                "compatibility or try reinstalling it manually.",
+                package,
             )
 
     # Clear specific packages from sys.modules to avoid conflicts

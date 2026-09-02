@@ -576,25 +576,30 @@ class MIAInstallWidget(QtWidgets.QWidget):
             )
             return True
 
-        except subprocess.CalledProcessError as e:
+        except subprocess.CalledProcessError as exc:
             # Handle errors related to the git clone process
             logger.warning(
-                f"Git clone failed with error code {e.returncode}."
-                f"\nError message: {e}"
+                "Git clone failed with error code %s.\nError message: %s",
+                exc.returncode,
+                exc,
             )
             return False
 
-        except FileNotFoundError as e:
+        except FileNotFoundError as exc:
             # Handle cases where 'git' is not installed or not found in PATH
             logger.warning(
-                f"Error: 'git' command not found. Please ensure Git is "
-                f"installed and available in your PATH ({e})."
+                "The 'git' command was not found. Please ensure that Git is "
+                "installed and available in your PATH.\n%s",
+                exc,
             )
             return False
 
-        except Exception as e:
+        except Exception:
             # Catch any other unforeseen errors
-            logger.warning(f"An unexpected error occurred: {e}")
+            logger.exception(
+                "An unexpected error occurred while cloning the mia_resources "
+                "repository."
+            )
             return False
 
     def find_matlab_path(self):
@@ -655,12 +660,11 @@ class MIAInstallWidget(QtWidgets.QWidget):
                     self.matlab_path = matlab_p
                     return_value = return_v_windows
 
-        except Exception as e:
+        except Exception as exc:
             logger.warning(
-                f"{e}\nThe matlab path could not be determined "
-                f"automatically ...\n"
+                "The MATLAB path could not be determined automatically:\n%s",
+                exc,
             )
-
         return return_value
 
     def install(self):
@@ -775,8 +779,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if not os.path.exists(os.path.dirname(dot_mia_config)):
             os.mkdir(os.path.dirname(dot_mia_config))
             logger.info(
-                "\nThe {} directory is created "
-                "...".format(os.path.dirname(dot_mia_config))
+                "\nThe %s directory has been created.",
+                os.path.dirname(dot_mia_config),
             )
             Path(os.path.join(dot_mia_config)).touch()
 
@@ -817,7 +821,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         if not os.path.exists(properties_dir):
             os.makedirs(properties_dir, exist_ok=True)
-            logger.info(f"\nThe {properties_dir} directory is created...")
+            logger.info("\nThe %s directory has been created", properties_dir)
 
         if not os.path.exists(
             os.path.join(properties_dir, "saved_projects.yml")
@@ -836,9 +840,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
                 )
 
             logger.info(
-                "\nThe {} file is created...".format(
-                    os.path.join(properties_dir, "saved_projects.yml")
-                )
+                "\nThe %s file has been created.",
+                os.path.join(properties_dir, "saved_projects.yml"),
             )
 
         if not os.path.exists(os.path.join(properties_dir, "config.yml")):
@@ -865,9 +868,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
                 )
 
             logger.info(
-                "\nThe {} file is created...".format(
-                    os.path.join(properties_dir, "config.yml")
-                )
+                "\nThe %s file has been created.",
+                os.path.join(properties_dir, "config.yml"),
             )
             # processes/User_processes folder management / initialisation:
             user_processes_dir = os.path.join(
@@ -877,9 +879,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
             if not os.path.exists(user_processes_dir):
                 os.makedirs(user_processes_dir, exist_ok=True)
                 logger.info(
-                    "\nThe {} directory is created...".format(
-                        user_processes_dir
-                    )
+                    "\nThe %s directory has been created.",
+                    user_processes_dir,
                 )
 
             if not os.path.exists(
@@ -892,9 +893,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
                     )
                 ).touch()
                 logger.info(
-                    "\nThe {} file is created...".format(
-                        os.path.join(properties_dir, "config.yml")
-                    )
+                    "\nThe %s file has been created.",
+                    os.path.join(user_processes_dir, "__init__.py"),
                 )
 
         # project folder management / initialisation:
@@ -904,7 +904,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
 
         if not os.path.isdir(projects_path):
             os.makedirs(projects_path, exist_ok=True)
-            logger.info(f"\nThe {projects_path} directory is created...")
+            logger.info("\nThe %s directory has been created.", projects_path)
 
             if len(os.listdir(projects_path)) != 0:
                 message = "The {} folder already contains data!".format(
@@ -944,11 +944,11 @@ class MIAInstallWidget(QtWidgets.QWidget):
                         elif os.path.isdir(elmt_path):
                             shutil.rmtree(elmt_path)
 
-                    except Exception as e:
+                    except Exception as exc:
                         logger.warning(
-                            "Failed to delete {}. Reason: {}".format(
-                                elmt_path, e
-                            )
+                            "Failed to delete %s.\nReason: %s",
+                            elmt_path,
+                            exc,
                         )
 
         # MRIFileManager folder management / initialisation:
@@ -1137,8 +1137,8 @@ class MIAInstallWidget(QtWidgets.QWidget):
             )
             return True
 
-        except subprocess.CalledProcessError as e:
-            logger.warning(f"Installation failed: {e}")
+        except subprocess.CalledProcessError as exc:
+            logger.warning("MATLAB Engine API installation failed: %s", exc)
             return False
 
         finally:
@@ -1282,25 +1282,30 @@ class MIAInstallWidget(QtWidgets.QWidget):
             )
             return True
 
-        except subprocess.CalledProcessError as e:
-            # Handle errors related to the git clone process
+        except subprocess.CalledProcessError as exc:
+            # Handle errors related to the git clone process.
             logger.warning(
-                f"Git clone failed with error code {e.returncode}."
-                f"\nError message: {e}"
+                "Git clone failed with error code %s.\nError message: %s",
+                exc.returncode,
+                exc,
             )
             return False
 
-        except FileNotFoundError as e:
-            # Handle cases where 'git' is not installed or not found in PATH
+        except FileNotFoundError as exc:
+            # Handle cases where 'git' is not installed or not found in PATH.
             logger.warning(
-                f"Error: 'git' command not found. Please ensure Git is "
-                f"installed and available in your PATH ({e})."
+                "The 'git' command was not found. Please ensure that Git is "
+                "installed and available in your PATH.\n%s",
+                exc,
             )
             return False
 
-        except Exception as e:
+        except Exception:
             # Catch any other unforeseen errors
-            logger.warning(f"An unexpected error occurred: {e}")
+            logger.exception(
+                "An unexpected error occurred while cloning the mri_conv "
+                "repository."
+            )
             return False
 
     def ok_or_abort(self, button):
@@ -1399,7 +1404,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             subprocess.check_call(["pip3", "uninstall", "--yes", package])
 
         except subprocess.CalledProcessError:
-            logger.warning(f"Failed to uninstall {package}.")
+            logger.warning("Failed to uninstall %s.", package)
 
     def upgrade_soma_capsul(self):
         """
@@ -1434,27 +1439,30 @@ class MIAInstallWidget(QtWidgets.QWidget):
         if not self.is_venv:
             pip_install_command.append("--user")
 
-        try:
+        for repo_url, package_name in repos:
 
-            for repo_url, package_name in repos:
+            try:
                 clone_dir = os.path.join(temp_dir, package_name)
                 self.uninstall_package(package_name)
                 subprocess.check_call(["git", "clone", repo_url, clone_dir])
                 os.chdir(clone_dir)
                 subprocess.check_call(pip_install_command)
 
-        except Exception as e:
-            logger.warning(f"Error while upgrading {package_name}: {e}")
+            except Exception:
+                logger.exception(
+                    "Error while upgrading %s.",
+                    package_name,
+                )
 
-            """if not os.name == 'nt':  # if not on windows
-                   self.uninstall_package('capsul')
-                   os.chmod('upgrade_capsul.sh', 0o777)
-                   subprocess.call('./upgrade_capsul.sh', shell=True)
+        """if not os.name == 'nt':  # if not on windows
+                self.uninstall_package('capsul')
+                os.chmod('upgrade_capsul.sh', 0o777)
+                subprocess.call('./upgrade_capsul.sh', shell=True)
 
-                    self.uninstall_package('soma-base')
-                    os.chmod('upgrade_soma.sh', 0o777)
-                    subprocess.call('./upgrade_soma.sh', shell=True)
-            """
+                self.uninstall_package('soma-base')
+                os.chmod('upgrade_soma.sh', 0o777)
+                subprocess.call('./upgrade_soma.sh', shell=True)
+        """
 
         os.chdir(cwd)
         shutil.rmtree(temp_dir, ignore_errors=True)

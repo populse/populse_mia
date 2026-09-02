@@ -78,11 +78,11 @@ def add_to_sys_path(path, name, index=0):
 
     if path.is_dir():
         sys.path.insert(index, str(path))
-        logger.info(f"  . Using {name} package from {path}")
+        logger.info("  . Using %s package from %s", name, path)
         return True
 
     else:
-        logger.info(f"    {name} package was not found from {path}!")
+        logger.info("    Package %s was not found at %s!", name, path)
         return False
 
 
@@ -102,15 +102,15 @@ def check_package(name):
     try:
         mod = importlib.import_module(name)
         mod_dir = Path(mod.__file__).resolve().parents[1]
-        logger.info(f"  . Using {name} package from {mod_dir}")
+        logger.info("  . Using %s package from %s", name, mod_dir)
         return True
 
     except ImportError:
-        logger.error(f"Failed to import {name} package!")
+        logger.error("Failed to import %s package!", name)
         return None
 
     except AttributeError:
-        logger.warning(f"{name} package has no __file__ attribute!")
+        logger.warning("Package %s has no __file__ attribute!", name)
         return True
 
 
@@ -178,11 +178,11 @@ def main(args):
                 populse_bdir = "populse"
                 soma_bdir = "soma"
 
-            logger.info(f"root_dev_dir: {root_dev_dir}")
+            logger.info("root_dev_dir: %s", root_dev_dir)
             branch = os.path.basename(
                 os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
             )
-            logger.info(f"branch: {branch}")
+            logger.info("branch: %s", branch)
             # TODO stop
 
         # populse packages
@@ -243,8 +243,9 @@ def main(args):
                         raise AttributeError
 
                     logger.info(
-                        f"    {name} version: "
-                        f"{sys.modules[name].__version__}"
+                        "    %s version: %s",
+                        name,
+                        sys.modules[name].__version__,
                     )
 
                 except (ModuleNotFoundError, AttributeError):
@@ -254,8 +255,9 @@ def main(args):
                     try:
                         importlib.import_module(f"{name}.version")
                         logger.info(
-                            f"    {name} version: "
-                            f"{sys.modules[name + '.version'].fullVersion}"
+                            "    %s version: %s",
+                            name,
+                            sys.modules[name + ".version"].fullVersion,
                         )
 
                     except (ModuleNotFoundError, AttributeError):
@@ -276,18 +278,16 @@ def main(args):
                                 ) == name.replace("-", "_"):
                                     version = pyproject["project"]["version"]
                                     logger.info(
-                                        f"    {name} version: {version}"
+                                        "    %s version: %s", name, version
                                     )
 
                                 else:
                                     raise AttributeError
 
-                        except Exception as e:
+                        except Exception:
                             # Version is not found.
-                            logger.warning(
-                                f"Version was not found for {name} package!: "
-                                f"{e}",
-                                exc_info=True,
+                            logger.exception(
+                                "Version was not found for %s package!", name
                             )
 
         if package_not_found:
@@ -329,14 +329,16 @@ def main(args):
                 mod = importlib.import_module(module)
 
             logger.info(
-                f"  . Using {mod.__name__} package "
-                f"from {mod.__path__[0]} ..."
+                "  . Using %s package from %s ...",
+                mod.__name__,
+                mod.__path__[0],
             )
 
             try:
                 logger.info(
-                    f"    {mod.__name__} version: "
-                    f"{sys.modules[module].__version__}"
+                    "    %s version: %s",
+                    mod.__name__,
+                    sys.modules[module].__version__,
                 )
 
             except (ModuleNotFoundError, AttributeError):
@@ -346,15 +348,15 @@ def main(args):
                 try:
                     importlib.import_module(f"{module}.version")
                     logger.info(
-                        f"    {module} version: "
-                        f"{sys.modules[module + '.version'].fullVersion}"
+                        "    %s version: %s",
+                        module,
+                        sys.modules[module + ".version"].fullVersion,
                     )
 
-                except Exception as e:
+                except Exception:
                     # Version is not found.
-                    logger.warning(
-                        f"Version was not found for {name} package!: " f"{e}",
-                        exc_info=True,
+                    logger.exception(
+                        "Version was not found for %s package!", name
                     )
 
     # Check if nipype is available on the station.
@@ -362,8 +364,8 @@ def main(args):
     try:
         importlib.import_module("nipype")
 
-    except (ImportError, AttributeError) as e:
-        logger.error(f"Mia warning {e.__class__}: {e}")
+    except (ImportError, AttributeError) as exc:
+        logger.error("Mia warning %s: %s", type(exc).__name__, exc)
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
         msg.setWindowTitle("populse_mia -  warning: ImportError!")
@@ -449,11 +451,11 @@ if __name__ == "__main__":
     logger.info(msg)
     logger.info("Python version: %s", sys.version)
     logger.info("Python executable: %s", sys.executable)
-    logger.info(f"--multi_instance is set to: {args.multi_instance}")
-    logger.info(f"--log_level is set to: {args.log_level}")
-    logger.info(f"--log_in_stdout is set to: {args.log_in_stdout}")
-    logger.info(f"--keep_log_files is set to: {args.keep_log_files}")
-    logger.info(f"--install is set to: {args.install}")
+    logger.info("--multi_instance is set to: %s", args.multi_instance)
+    logger.info("--log_level is set to: %s", args.log_level)
+    logger.info("--log_in_stdout is set to: %s", args.log_in_stdout)
+    logger.info("--keep_log_files is set to: %s", args.keep_log_files)
+    logger.info("--install is set to: %s", args.install)
 
     if args.install:
         msg = (
