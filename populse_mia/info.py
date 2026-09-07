@@ -120,30 +120,31 @@ PLATFORMS = "OS Independent"
 
 REQUIRES = [
     "argon2-cffi==25.1.0",
-    "capsul >= 2.6.0, < 3.0.0",
+    "capsul>=2.6.0,<3.0.0",
     "cryptography",
     "matplotlib",
-    "mia-processes >= 2.7.0, < 3.0.0",
+    "mia-processes>=2.7.0,<3.0.0",
     "nibabel",
     "nipype",
     "pillow",
-    "populse-db >= 3.0.0, < 4.0.0",
-    "pre-commit",
+    "populse-db>=3.0.0,<4.0.0",
     "pyqt5",
     "python-dateutil",
     "pyyaml",
     "scikit-image",
     "scipy",
     "snakeviz",
-    "soma-base >= 5.0",
-    "soma-workflow >= 3.2",
-    "sphinx-qt-documentation",
-    "six >= 1.13",
+    "soma-base>=5.0",
+    "soma-workflow>=3.2",
+    "six>=1.13",
     "traits",
 ]
 
 EXTRA_REQUIRES = {
     "doc": [
+        "pre-commit",
         "sphinx>=1.0",
+        "sphinx-qt-documentation",
+        "unittest",
     ],
 }

@@ -44,18 +44,18 @@ class Config:
 
     Contains:
         Methods:
-            - _configure_matlab_only: Configures MATLAB without SPM
-            - _configure_matlab_spm: Configures SPM and MATLAB
-            - _configure_mcr_only: Configures MCR without SPM
-            - _configure_standalone_spm: Configures standalone SPM and MCR
-            - _disable_matlab_spm: Disables all MATLAB and SPM configurations
-            - get_admin_hash: Get the value of the hash of the admin password
-            - get_afni_path: Returns the path of AFNI
-            - get_ants_path: Returns the path of ANTS
-            - getBackgroundColor: Get background color
-            - get_capsul_config: Get CAPSUL config dictionary
+            - _configure_matlab_only: Configures MATLAB without SPM.
+            - _configure_matlab_spm: Configures SPM and MATLAB.
+            - _configure_mcr_only: Configures MCR without SPM.
+            - _configure_standalone_spm: Configures standalone SPM and MCR.
+            - _disable_matlab_spm: Disables all MATLAB and SPM configurations.
+            - get_admin_hash: Get the value of the hash of the admin password.
+            - get_afni_path: Returns the path of AFNI.
+            - get_ants_path: Returns the path of ANTS.
+            - getBackgroundColor: Get background color.
+            - get_capsul_config: Get CAPSUL config dictionary.
             - get_capsul_engine: Get a global CapsulEngine object used for all
-              operations in Mia application
+              operations in Mia application.
             - getChainCursors: Returns the value of the checkbox 'chain cursor'
               in miniviewer.
             - get_freesurfer_setup: Get freesurfer path.

@@ -43,9 +43,7 @@ class NewWindowViewer(QtGui.QMainWindow):
     sagittal, coronal, or 3D) for visualizing the selected object.
 
     Contains:
-
         Methods:
-
             - changeDisplay: Changes display on user's demand.
             - close: Close properly objects before exiting Mia.
             - createNewWindow: Opens a new window in the vertical layout.
@@ -101,9 +99,11 @@ class NewWindowViewer(QtGui.QMainWindow):
         """
          Changes the display based on user's selection.
 
-        :param index: (int) Index of the view to display (0: Axial,
-         1: Sagittal, 2: Coronal, 3: 3D).
+        :param index: Index of the view to display (0: Axial, 1: Sagittal,
+         2: Coronal, 3: 3D).
+        :type index: int
         :param obj: The object to display.
+        :type obj: anatomist.cpp.anatomist.AObject
         """
         a = ana.Anatomist("-b")
         views = ["Axial", "Sagittal", "Coronal", "3D"]
@@ -127,7 +127,8 @@ class NewWindowViewer(QtGui.QMainWindow):
         """
         Opens a new window in the vertical layout.
 
-        :param wintype: (str) Type of the view to create (default is 'Axial').
+        :param wintype: Type of the view to create (default is 'Axial').
+        :type wintype: str
         """
         a = ana.Anatomist("-b")
         w = a.createWindow(wintype, no_decoration=True, options={"hidden": 1})
@@ -188,7 +189,8 @@ class NewWindowViewer(QtGui.QMainWindow):
         Manages button availability and checked state depending on the
         displayed view.
 
-        :param index: (int) Index of the view to enable.
+        :param index: Index of the view to enable.
+        :type index: int
         """
 
         for i, button in enumerate(self.viewButtons):
@@ -199,6 +201,7 @@ class NewWindowViewer(QtGui.QMainWindow):
         Stores the object to be displayed.
 
         :param obj: The object to display.
+        :type obj: anatomist.cpp.anatomist.AObject
         """
         self.object = obj
 
@@ -210,6 +213,7 @@ class NewWindowViewer(QtGui.QMainWindow):
         able to replace the object inside.
 
         :param obj: The object to display in the popup.
+        :type obj: anatomist.cpp.anatomist.AObject
         """
         a = ana.Anatomist("-b")
         self.layout.addWidget(self.window)

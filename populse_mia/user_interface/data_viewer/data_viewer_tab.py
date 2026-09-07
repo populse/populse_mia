@@ -37,14 +37,11 @@ class DataViewerTab(Qt.QWidget):
         - Centralized document and project management across viewers
 
     Contains:
-
         Methods:
-
             - activate_viewer: Activates viewer which was selected
               in the combobox.
             - change_viewer: Switches to viewer selected in the combobox.
             - clear: Clears all loaded viewers before closing Mia.
-            - closeEvent: Clears and closes all events before closing Mia.
             - current_viewer: Return current viewer (selected viewer in
               combobox).
             - load_viewer: Load a viewer.
@@ -55,8 +52,9 @@ class DataViewerTab(Qt.QWidget):
         """
         Initialize the DataViewerTab with a reference to the main window.
 
-        :param main_window: (Qt.QMainWindow) The main application window
-         providing context and potential shared resources.
+        :param main_window: The main application windowp providing context and
+         potential shared resources.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         # Initialize state tracking attributes
@@ -84,7 +82,8 @@ class DataViewerTab(Qt.QWidget):
         """
         Activate a specific viewer by name.
 
-        :param viewer_name: (str) Name of the viewer to activate.
+        :param viewer_name: Name of the viewer to activate.
+        :type viewer_name: str
         """
 
         if self.viewer_current and list(self.viewer_current)[0] == viewer_name:
@@ -122,15 +121,6 @@ class DataViewerTab(Qt.QWidget):
 
         self.viewers_loaded.clear()
 
-    def closeEvent(self, event):
-        """
-        Override close event to ensure proper cleanup.
-
-        :param event: (QCloseEvent) Close event triggered by the window system.
-        """
-        self.clear()
-        super().closeEvent(event)
-
     def current_viewer(self):
         """
         Retrieve the name of the currently active viewer.
@@ -151,8 +141,9 @@ class DataViewerTab(Qt.QWidget):
         Attempts to import and initialize viewers, handling import failures
         gracefully.
 
-        :param viewer_name: (str) Specific viewer to load. If None, discovers
-         all viewers.
+        :param viewer_name: Specific viewer to load. If None, discovers all
+         viewers.
+        :type viewer_name: str | None
         """
         # Determine viewers to load
         script_dir = os.path.dirname(__file__)
@@ -205,8 +196,10 @@ class DataViewerTab(Qt.QWidget):
         """
         Distribute project and document information to the current viewer.
 
-        :param project: The entire project context.
-        :param documents: (list) List of document/image objects in the project.
+        :param project: The project object.
+        :type project: populse_mia.data_manager.project.Project
+        :param documents: The list of document objects in the project.
+        :type documents: list[str]
         """
         if self.viewer_current:
             current_viewer_name = list(self.viewer_current)[0]

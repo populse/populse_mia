@@ -60,9 +60,7 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
     use cases while ensuring a consistent basic functionality.
 
     Contains:
-
         Methods:
-
             - clear: Remove all currently displayed files.
             - close: Close the viewer by clearing all displayed files.
             - display_files: Display the specified document files.
@@ -98,7 +96,8 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         This method must be implemented by subclasses to define how files are
         visually presented or loaded.
 
-        :param files: (List) A list of files to be displayed.
+        :param files: A list of files to be displayed.
+        :type files: list[str]
 
         :raises NotImplementedError: If not overridden by a subclass.
         """
@@ -112,7 +111,8 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Retrieve the list of currently displayed files.
 
-        :Returns: (list) A list of files currently being displayed.
+        :returns: A list of files currently being displayed.
+        :rtype: list[str]
 
         :raises NotImplementedError: If not overridden by a subclass.
         """
@@ -126,7 +126,8 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Remove specified files from the display.
 
-        :param files: (list) A list of files to be removed from display.
+        :param files: A list of files to be removed from display.
+        :type files: list[str]
 
         :raises NotImplementedError: If not overridden by a subclass.
         """
@@ -141,7 +142,9 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         Set the project context and available documents.
 
         :param project: The project associated with the documents.
-        :param documents: (list) The list of available documents.
+        :type project: populse_mia.data_manager.project.Project
+        :param documents: The list of available documents.
+        :type documents: list[str]
 
         :raises NotImplementedError: If not overridden by a subclass.
         """

@@ -293,6 +293,7 @@ class MainWindow(QMainWindow):
                     self.project.unsaveModifications()
 
                 for brick in self.pipeline_manager.brick_list:
+
                     if self.project is not None:
                         self.data_browser.table_data.delete_from_brick(brick)
 
@@ -332,17 +333,17 @@ class MainWindow(QMainWindow):
             if self.project is not None:
                 self.remove_raw_files_useless()
 
+            if self.data_browser.viewer is not None:
+                self.data_browser.viewer.clear()
+                self.data_browser.viewer = None
+
+            if self.data_viewer:
+                self.data_viewer.clear()
+
             event.accept()
 
         else:
             event.ignore()
-
-        if self.data_browser.viewer is not None:
-            self.data_browser.viewer.clear()
-            self.data_browser.viewer = None
-
-        if self.data_viewer:
-            self.data_viewer.clear()
 
     def create_project_pop_up(self):
         """Create a new project."""

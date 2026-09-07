@@ -60,7 +60,6 @@ class MiaViewer(DataViewer):
     Contains:
 
         Methods:
-
             - _add_dialog_buttons: Add action buttons to the filter dialog.
             - _apply_preferences: Apply the settings from the preferences
               dialog.
@@ -91,8 +90,9 @@ class MiaViewer(DataViewer):
         """
         Initialize the Mia viewer widget.
 
-        :param init_global_handlers: Handlers to initialize the PyAnatomist
-         viewer.
+        :param init_global_handlers: Determines if global handlers should be
+         initialized.
+        :type init_global_handlers: bool
         """
         super().__init__()
         self.anaviewer = AnaSimpleViewer2(init_global_handlers)
@@ -111,7 +111,9 @@ class MiaViewer(DataViewer):
         Add action buttons to the filter dialog.
 
         :param dialog: Parent dialog.
-        :param layout: Layout to add buttons to.
+        :type dialog: PyQt5.QtWidgets.QDialog
+        :param layout: Layout to which the buttons are added.
+        :type layout: PyQt5.QtWidgets.QLayout
         """
         hlay = Qt.QHBoxLayout()
         layout.addLayout(hlay)
@@ -131,6 +133,7 @@ class MiaViewer(DataViewer):
         Apply the settings from the preferences dialog.
 
         :param dialog: Preferences dialog containing the user selections.
+        :type dialog: PyQt5.QtWidgets.QDialog
         """
         # Get new values
         new_config = dialog.config_box.currentText().lower()
@@ -158,10 +161,14 @@ class MiaViewer(DataViewer):
         Create the preferences dialog with all settings controls.
 
         :param current_framerate: Current animation frame rate.
+        :type current_framerate: int
         :param current_config: Current display configuration (neuro/radio).
+        :type current_config: str
         :param current_ref: Current referential setting.
+        :type current_ref: int
 
-        :Returns: (QDialog) Configured preferences dialog.
+        :returns: (QDialog) Configured preferences dialog.
+        :rtype: PyQt5.QtWidgets.QDialog
         """
         dialog = Qt.QDialog()
         dialog.setWindowTitle("Preferences")
@@ -243,7 +250,9 @@ class MiaViewer(DataViewer):
         Set up the search bar and related UI elements.
 
         :param dialog: Parent dialog for the search interface.
+        :type dialog: PyQt5.QtWidgets.QDialog
         :param layout: Layout to add search components to.
+        :type layout: PyQt5.QtWidgets.QLayout
         """
         # Title label
         title = Qt.QLabel("Search by FileName: ")
@@ -309,7 +318,8 @@ class MiaViewer(DataViewer):
         """
         Load and display the specified files in the viewer.
 
-        :param files: (list) List of file paths to display.
+        :param files: List of file paths to display.
+        :type files: list
         """
         self.displayed.extend(files)
         self.anaviewer.loadObject(files)
@@ -385,7 +395,8 @@ class MiaViewer(DataViewer):
         """
         Remove specified files from the viewer.
 
-        :param files: (list) List of file paths to remove from display.
+        :param files: List of file paths to remove from display.
+        :type files: list
         """
         self.anaviewer.deleteObjectsFromFiles(files)
         self.displayed = [doc for doc in self.displayed if doc not in files]
@@ -415,7 +426,8 @@ class MiaViewer(DataViewer):
         Handles special case for NOT_DEFINED_VALUE as well as normal text
         search. Updates the table to show only matching documents.
 
-        :param search_term: (str) Text to search for in documents.
+        :param search_term: Text to search for in documents.
+        :type search_term: str
         """
         old_scan_list = self.table_data.scans_to_visualize
         matching_documents = []
@@ -463,7 +475,9 @@ class MiaViewer(DataViewer):
         Initialize the viewer with a set of documents from a project.
 
         :param project: Project containing the documents.
-        :param documents: (list) List of document filenames to make available.
+        :type project: populse_mia.data_manager.project.Project
+        :param documents: List of document filenames to make available.
+        :type documents: list
         """
 
         if self.project is not project:

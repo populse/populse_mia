@@ -70,39 +70,41 @@ If you'd like to contribute to the project please read our [developer documentat
 # Tests
 
 * Unit tests written thanks to the python module unittest
-* Continuous integration made with Travis (Linux, OSX), and AppVeyor (Windows)
+* Continuous integration made with AppVeyor (Windows, Linux, OSX)
 * Code coverage calculated by the python module codecov
-* The module is ensured to work with Python >= 3.9
+* The module is ensured to work with Python >= 3.10
 * The module is ensured to work on the platforms Linux, OSX and Windows
-* The script of tests is populse_mia/test.py, so the following command launches the tests:
+* The script of tests is populse_mia/tests/run_mia_test.py so the following command launches the tests:
 
-      python3 populse_mia/test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
+      python3 populse_mia/tests/run_mia_test.py (from populse_mia root folder, for example [populse_install_dir]/populse_mia)
 
 # Requirements
 
-* capsul >= 2.5.0, < 3.0.0
+* argon2-cffi==25.1.0
+* capsul>=2.6.0,<3.0.0
 * cryptography
 * matplotlib
-* mia-processes >= 2.5.0, < 3.0.0
+* mia-processes>=2.7.0,<3.0.0
 * nibabel
 * nipype
 * pillow
-* populse-db >= 2.5.0, < 3.0.0
-* pre-commit
+* populse-db>=3.0.0,<4.0.0
 * pyqt5
 * python-dateutil
 * pyyaml
 * scikit-image
 * scipy
 * snakeviz
-* soma-base >= 5.2.0, < 6.0.0
-* soma-workflow >= 3.2.2
-* six >= 1.13
+* soma-base>=5.0
+* soma-workflow>=3.2
+* six>=1.13
 * traits
 
 # Other packages used
 
-* sphinx
+* pre-commit
+* sphinx>=1.0
+* sphinx-qt-documentation
 * unittest
 
 # License

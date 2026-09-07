@@ -56,9 +56,7 @@ class MiaViewer(DataViewer):
     capabilities.
 
     Contains:
-
         Methods:
-
             - _find_child: Find a child widget by name.
             - _setup_ui: Set up the user interface components for the viewer.
             - close: Close the viewer and manage Anatomist viewer resources.
@@ -78,8 +76,9 @@ class MiaViewer(DataViewer):
         """
         Initialize the MiaViewer.
 
-        :param init_global_handlers: Initial global handlers for Anatomist
-         viewer.
+        :param init_global_handlers: Determines if global handlers should be
+         initialized.
+        :type init_global_handlers: bool
         """
         super().__init__()
         # Initialize Anatomist viewer
@@ -98,12 +97,15 @@ class MiaViewer(DataViewer):
     @staticmethod
     def _find_child(parent, name):
         """
-        Find a child widget by name.
+        Find a child QObject by name.
 
-        :param parent: (Qt.QObject) Parent widget to search in.
-        :param name: (str) Name of the child widget to find.
+        :param parent: Parent QObject to search in.
+        :type parent: Qt.QObject
+        :param name: Name of the child QObject to find.
+        :type name: str
 
-        :Returns: (Qt.QObject) The found child widget.
+        :returns: The found child QObject, or None if not found.
+        :rtype: Qt.QObject or None
         """
         return parent.findChild(Qt.QObject, name)
 
@@ -141,7 +143,8 @@ class MiaViewer(DataViewer):
         """
         Display the given files in the Anatomist viewer.
 
-        :param files: (list) List of file paths to display.
+        :param files: List of file paths to display.
+        :type files: list
         """
         self.displayed.extend(files)
 
@@ -152,7 +155,8 @@ class MiaViewer(DataViewer):
         """
         Get the list of currently displayed files.
 
-        :Returns: (List) List of displayed file paths.
+        :returns: List of displayed file paths.
+        :rtype: list
         """
         return self.displayed
 
@@ -217,7 +221,8 @@ class MiaViewer(DataViewer):
         """
         Remove specified files from the viewer.
 
-        :param files: (list) List of file paths to remove.
+        :param files: List of file paths to remove.
+        :type files: list
         """
         self.anaviewer.deleteObjectsFromFiles(files)
         self.displayed = [doc for doc in self.displayed if doc not in files]
@@ -227,7 +232,9 @@ class MiaViewer(DataViewer):
         Set the current project and documents for the viewer.
 
         :param project: The project to set.
-        :param documents: (List) List of documents in the project.
+        :type project: populse_mia.data_manager.project.Project
+        :param documents: List of documents in the project.
+        :type documents: list
         """
 
         if self.project is not project:
