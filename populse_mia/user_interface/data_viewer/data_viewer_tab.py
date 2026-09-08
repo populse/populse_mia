@@ -31,6 +31,7 @@ class DataViewerTab(Qt.QWidget):
 
     This widget provides a dynamic interface for loading and switching between
     different data viewers. Key features include:
+
         - Automatic discovery of viewers in the data_viewer directory
         - Graceful handling of viewer import failures
         - Ability to dynamically add new viewers

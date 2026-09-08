@@ -51,15 +51,14 @@ class AdvancedSearch(QWidget):
     The advanced search creates a complex query to the database and is a
     combination of several "query lines" which are linked with AND or OR and
     all composed of:
+
         - A negation or not.
         - A tag name or all visible tags.
         - A condition (==, !=, >, <, >=, <=, CONTAINS, IN, BETWEEN).
         - A value.
 
     Contains:
-
         Methods:
-
             - add_search_bar: Create and define the advanced research bar.
             - apply_filter: Apply an opened filter to update the table.
             - displayConditionRules: Set the list of condition choices,
@@ -90,15 +89,20 @@ class AdvancedSearch(QWidget):
         Initialize the AdvancedSearch widget.
 
         :param project: The current project instance.
+        :type project: populse_mia.data_manager.project.Project
         :param data_browser: The parent DataBrowser widget that contains this
          search.
+        :type data_browser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         :param scans_list: List of document scans to search within. Defaults
          to empty list.
+        :type scans_list: list | None
         :param tags_list: List of tags to display in the search interface.
          Defaults to empty list.
-        :param from_pipeline: (bool) Whether the widget is instantiated from
-         the pipeline manager. Defaults to False.
-
+        :type tags_list: list | None
+        :param from_pipeline: Whether the widget is instantiated from the
+         pipeline manager. Defaults to False.
+        :type from_pipeline: bool
         """
         super().__init__()
         self.project = project
@@ -125,9 +129,7 @@ class AdvancedSearch(QWidget):
         based on field type and selected condition.
 
         Contains:
-
             Inner functions:
-
                 - _create_combo_box: Create and return a QComboBox populated
                   with the given items.
                 - _get_shown_tags_from_db: Retrieve the tags currently marked
@@ -138,11 +140,13 @@ class AdvancedSearch(QWidget):
             """
             Create and return a QComboBox populated with the given items.
 
-            :param name: (str) Object name assigned to the QComboBox.
-            :param items: (iterable of str) Items to add to the combo box, in
-             order.
+            :param name: Object name assigned to the QComboBox.
+            :type name: str
+            :param items: Items to add to the combo box, in order.
+            :type items: list[str]
 
-            :Returns: (QComboBox) The initialized combo box.
+            :returns: The initialized combo box.
+            :rtype: PyQt5.QtWidgets.QComboBox
             """
             combo = QComboBox()
             combo.setObjectName(name)
@@ -157,8 +161,8 @@ class AdvancedSearch(QWidget):
             Retrieve the tags currently marked as visible from the project
             database.
 
-            :Returns: (list) A list of tags configured to be shown in the
-             project.
+            :returns: A list of tags configured to be shown in the project.
+            :rtype: list[str]
             """
 
             with self.project.database.data() as database_data:
@@ -237,12 +241,14 @@ class AdvancedSearch(QWidget):
 
         :param filter: Filter object containing the query criteria with
          attributes:
+
             - nots (list): Negation flags for each condition.
             - values (list): Values to match against.
             - conditions (list): Comparison operators (e.g., '==', '>', '<').
             - links (list): Logical operators connecting conditions
               ('AND', 'OR').
             - fields (list): Database fields to query.
+        :type filter: populse_mia.data_manager.filter.Filter
 
         Side effects:
             - Updates self.rows with filter parameters.
@@ -344,8 +350,10 @@ class AdvancedSearch(QWidget):
         fields include it.
 
         :param field: QComboBox widget containing the selected tag name.
+        :type field: PyQt5.QtWidgets.QComboBox
         :param condition: QComboBox widget whose items will be updated based
          on the field's type.
+        :type condition: PyQt5.QtWidgets.QComboBox
 
         Behavior:
             - Numeric types: Include <, >, <=, >=, BETWEEN operators.
@@ -355,9 +363,7 @@ class AdvancedSearch(QWidget):
             - Special case "All visualized tags": Treated as non-numeric.
 
         Contains:
-
             Inner functions:
-
                 - _update_operators: Add or remove operators from the condition
                   widget.
         """
@@ -367,9 +373,12 @@ class AdvancedSearch(QWidget):
             Add or remove operators from the condition widget.
 
             :param condition_widget: QComboBox to modify.
+            :type condition_widget: PyQt5.QtWidgets.QComboBox
             :param operators: List of operator strings to add or remove.
+            :type operators: list[str]
             :param should_add: If True, add missing operators; if False, remove
-                               existing ones.
+             existing ones.
+            :type should_add: bool
             """
 
             for operator in operators:
@@ -419,7 +428,9 @@ class AdvancedSearch(QWidget):
         match the requirements of the selected condition operator.
 
         :param choice: QComboBox containing the selected condition operator.
+        :type choice: PyQt5.QtWidgets.QComboBox
         :param value: QLineEdit widget that will be configured.
+        :type value: PyQt5.QtWidgets.QLineEdit
 
         Behavior:
             - BETWEEN: Enabled with placeholder "value1; value2".
@@ -466,14 +477,16 @@ class AdvancedSearch(QWidget):
         :param replace_all_by_fields: If True, replaces "All visualized tags"
          with the actual list of visible fields. If False, keeps the literal
          "All visualized tags" text.
+        :type replace_all_by_fields: bool
 
-        :Returns: (tuple) A 5-tuple containing:
+        :returns: A 5-tuple containing:
 
-            - fields (list): Field names to filter on
-            - conditions (list): Comparison operators (e.g., '=', 'BETWEEN')
-            - values (list): Filter values (strings or lists for BETWEEN/IN)
-            - links (list): Logical operators connecting filters (AND/OR)
-            - nots (list): Negation flags for each filter
+            - fields: Field names to filter on
+            - conditions: Comparison operators (e.g., '=', 'BETWEEN')
+            - values: Filter values (strings or lists for BETWEEN/IN)
+            - links: Logical operators connecting filters (AND/OR)
+            - nots: Negation flags for each filter
+        :rtype: tuple[list, list, list, list, list]
 
         Note:
             - BETWEEN and IN conditions have their values split into lists.
@@ -563,9 +576,9 @@ class AdvancedSearch(QWidget):
         all available scans.
 
         Side Effects:
-            - Updates self.data_browser.table_data.scans_to_visualize.
-            - Updates self.data_browser.table_data.scans_to_search.
-            - Updates self.project.currentFilter (if not from_pipeline).
+            - Updates ``self.data_browser.table_data.scans_to_visualize``.
+            - Updates ``self.data_browser.table_data.scans_to_search``.
+            - Updates ``self.project.currentFilter (if not from_pipeline)``.
             - Displays error dialog on search failure.
         """
         # Retrieve filter parameters
@@ -627,25 +640,30 @@ class AdvancedSearch(QWidget):
         optional negation.
 
         :param links: Logical operators joining filter rows
-         (e.g. ['AND', 'OR']). Length should be len(fields) - 1.
+         (e.g. ['AND', 'OR']). Length should be ``len(fields)`` - 1.
+        :type links: list[str]
         :param fields: Nested list where each sublist contains field names to
          filter on. Fields within a row are OR-combined.
+        :type fields: list[list[str]]
         :param conditions: Filter operators for each row. Supported values:
          '==', '!=', '<', '>', '<=', '>=', 'IN', 'BETWEEN', 'CONTAINS',
          'HAS VALUE', 'HAS NO VALUE'.
+        :type conditions: list[str]
         :param values: Filter values corresponding to each condition. For
          'BETWEEN', provide a two-element sequence [min, max].
+        :type values: list
         :param nots: Negation flags for each row ('NOT' to negate, empty
          string otherwise).
+        :type nots: list[str]
         :param scans: List of scan identifiers to restrict the search scope.
+        :type scans: list[str]
 
-        :Returns: Complete filter query string with all conditions and scan
+        :returns: Complete filter query string with all conditions and scan
          restrictions.
+        :rtype: str
 
         Contains:
-
             Inner functions:
-
                 - _format_value: Convert a Python value into a string safe for
                   use in queries.
         """
@@ -659,10 +677,12 @@ class AdvancedSearch(QWidget):
             breaking query syntax.
 
             :param value: The Python value to format (e.g., int, float,
-                          str, bool).
+             str, bool, list).
+            :type value: Any
 
-            :return (str): A string representation of the value with single
-                           quotes replaced by double quotes.
+            :return: A string representation of the value with single quotes
+             replaced by double quotes.
+            :rtype: str
             """
             return str(value).replace("'", '"')
 
@@ -766,6 +786,7 @@ class AdvancedSearch(QWidget):
         from the internal `rows` list, and refreshes the view.
 
         :param row_layout: The row (list of widgets) to remove.
+        :type row_layout: list
         """
 
         # Remove the row only if more than one exists
@@ -801,6 +822,7 @@ class AdvancedSearch(QWidget):
 
         :param links: List of previously selected link operators ('AND'/'OR')
          to restore when rebuilding the UI.
+        :type links: list[str]
         """
         # Add plus button to the last row for adding new search bars
         sources_images_dir = Config().getSourceImageDir()
@@ -834,9 +856,7 @@ class AdvancedSearch(QWidget):
         and scheduled for deletion, preventing memory leaks.
 
         Contains:
-
             Inner functions:
-
                 - _remove_widget: Safely removes a QWidget from its parent and
                   schedules it for deletion.
         """
@@ -852,8 +872,10 @@ class AdvancedSearch(QWidget):
             nothing.
 
             :param widget_ref: The QWidget instance to remove, or `None`.
+            :type widget_ref: PyQt5.QtWidgets.QWidget | None
 
-            :return: Always returns `None` after removing the widget.
+            :returns: Always returns `None` after removing the widget.
+            :rtype: None
             """
 
             if widget_ref is not None:
