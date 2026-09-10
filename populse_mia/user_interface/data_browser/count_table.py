@@ -142,9 +142,7 @@ class CountTable(QDialog):
         - Automatic table resizing.
 
     Contains:
-
         Methods:
-
             - _create_clickable_label: Create a clickable label with an image.
             - _create_push_button: Create and configure a push button for tag
               selection.
@@ -175,7 +173,8 @@ class CountTable(QDialog):
         Initialize the CountTable with the given project.
 
         :param project: The current medical imaging project, which includes a
-         scan database
+         scan database.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.project = project
@@ -194,18 +193,20 @@ class CountTable(QDialog):
         self._setup_layout()
 
     def _create_clickable_label(
-        self, image_name: str, click_handler: Callable
+        self, image_name: str, click_handler: Callable[[], None]
     ) -> "ClickableLabel":
         """
         Create a clickable label with an image.
 
-        :param image_name: (str) The filename of the image to display on the
-         label.
-        :param click_handler: (Callable) The function to be called when the
-         label is clicked.
+        :param image_name: The filename of the image to display on the label.
+        :type image_name: str
+        :param click_handler: The method to be called when the label is
+         clicked.
+        :type click_handler: Callable[[], None]
 
-        :Returns: (ClickableLabel) A label displaying the specified image,
-         which triggers the click handler when clicked.
+        :returns: A label displaying the specified image which triggers the
+         click handler when clicked.
+        :rtype: ClickableLabel
         """
         sources_images_dir = Config().getSourceImageDir()
         label = ClickableLabel()
@@ -225,12 +226,14 @@ class CountTable(QDialog):
         """
         Create and configure a tag selection button.
 
-        :param text: (str) The text to display on the button.
-        :param idx: (int) The index associated with the button for tag
-         selection.
+        :param text: The text to display on the button.
+        :type text: str
+        :param idx: The index associated with the button for tag selection.
+        :type idx: int
 
-        :Returns: (QPushButton) A configured QPushButton that triggers the tag
-         selection when clicked.
+        :returns: A configured QPushButton that triggers the tag selection when
+         clicked.
+        :rtype: QPushButton
         """
         button = QPushButton(text)
         button.clicked.connect(lambda: self.select_tag(idx))
@@ -538,7 +541,8 @@ class CountTable(QDialog):
         Extracts all unique values for the selected tag from the database and
         stores them for table generation.
 
-        :param idx: (Int) Index of the select tag.
+        :param idx: Index of the selected tag.
+        :type idx: int
         """
 
         tag_name = self.push_buttons[idx].text()
@@ -562,13 +566,15 @@ class CountTable(QDialog):
         self.values_list[idx] = sorted(unique_values)
 
     @staticmethod
-    def prepare_filter(tag_value_pairs: list[tuple[str, Any]]) -> str:
+    def prepare_filter(tag_value_pairs: list[list[str, Any]]) -> str:
         """
         Build database query string from tag-value pairs.
 
-        :param tag_value_pairs: List of (tag_name, value) tuples.
+        :param tag_value_pairs: List of (tag_name, value) lists.
+        :type tag_value_pairs: list[list[str, Any]]
 
-        :Returns: Query string for database filtering.
+        :returns: Query string for database filtering.
+        :rtype: str
         """
         conditions = []
 
@@ -636,7 +642,8 @@ class CountTable(QDialog):
         """
         Open tag selection dialog for the specified button.
 
-        :param idx: (Int) The index of the button/tag to configure.
+        :param idx: The index of the button/tag to configure.
+        :type idx: int
         """
 
         with self.project.database.data() as database_data:
