@@ -130,9 +130,7 @@ class DataBrowser(QWidget):
     advanced search, tag management, and visual inspection of loaded data.
 
     Contains:
-
         Methods:
-
             - add_tag_infos: Add the tag after add tag pop-up.
             - add_tag_pop_up: Display the add tag pop-up.
             - clone_tag_infos: Clone the tag after the clone tag pop-up.
@@ -165,7 +163,9 @@ class DataBrowser(QWidget):
         Initialization of the data_browser class.
 
         :param project: Current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param main_window: Main window of the software.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         # Store references
@@ -241,14 +241,19 @@ class DataBrowser(QWidget):
         populates it with default values for all existing scans. The operation
         is tracked in the project's undo/redo history.
 
-        :param new_tag_name: (str) Name of the new tag to create.
+        :param new_tag_name: Name of the new tag to create.
+        :type new_tag_name: str
         :param new_default_value: Default value to assign to all existing
          scans.
-        :param tag_type: (str) Data type of the tag (e.g., FIELD_TYPE_STRING,
+        :type new_default_value: Any
+        :param tag_type: Data type of the tag (e.g., FIELD_TYPE_STRING,
          FIELD_TYPE_FLOAT).
-        :param new_tag_description: (str) Human-readable description of the
+        :type tag_type: str
+        :param new_tag_description: Human-readable description of the
          tag.
-        :param new_tag_unit: (str) Unit of measurement for the tag value.
+        :type new_tag_description: str
+        :param new_tag_unit: Unit of measurement for the tag value.
+        :type new_tag_unit: str
 
         Note:
             - Marks the project as having unsaved modifications
@@ -345,8 +350,10 @@ class DataBrowser(QWidget):
         to the new tag. The operation is recorded in the project's undo
         history.
 
-        :param tag_to_clone: (str) Name of the tag to clone.
-        :param new_tag_name: (str) Name of the new tag to create.
+        :param tag_to_clone: Name of the tag to clone.
+        :type tag_to_clone: str
+        :param new_tag_name: Name of the new tag to create.
+        :type new_tag_name: str
 
         Note:
             - The new tag is added to the database schema and data for both
@@ -675,8 +682,9 @@ class DataBrowser(QWidget):
         collections, preserving tag attributes and values in the undo history.
         The table display is updated to reflect the changes.
 
-        :param tag_names_to_remove: Iterable of tag names (str) to remove from
-         the database and table display.
+        :param tag_names_to_remove: Iterable of tag names to remove from the
+         database and table display.
+        :type tag_names_to_remove: list[str]
 
         Side Effects:
             - Marks project as having unsaved modifications.
@@ -783,6 +791,7 @@ class DataBrowser(QWidget):
         :param str_search: The search string to filter documents. Empty string
          returns all searchable scans. NOT_DEFINED_VALUE returns scans with
          undefined values.
+        :type str_search: str
         """
         old_scan_list = self.table_data.scans_to_visualize
 
@@ -907,6 +916,7 @@ class DataBrowser(QWidget):
 
         :param database: The new Database instance to use across the
          application.
+        :type database: populse_mia.data_manager.project.Project
         """
 
         # Propagate database to all dependent components
@@ -932,9 +942,7 @@ class DateFormatDelegate(QItemDelegate):
     data validation.
 
     Contains:
-
         Methods:
-
             - createEditor: Create and return a QDateEdit widget for editing
               dates.
     """
@@ -944,6 +952,8 @@ class DateFormatDelegate(QItemDelegate):
         Initialize the DateFormatDelegate.
 
         :param parent: Optional parent QObject. Defaults to None.
+        :type parent:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
         """
         super().__init__(parent)
 
@@ -955,10 +965,14 @@ class DateFormatDelegate(QItemDelegate):
         creates a date editor with DD/MM/YYYY format.
 
         :param parent: The parent widget for the editor.
-        :param option: Style options for rendering the item.
-        :param index: The model index of the item being edited.
+        :type parent: PyQt5.QtWidgets.QWidget
+        :param option: Style options for rendering the item (unused).
+        :type option: PyQt5.QtWidgets.QStyleOptionViewItem
+        :param index: The model index of the item being edited (unused).
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :Returns: (QDateEdit) A configured date editor widget.
+        :return: A configured date editor widget.
+        :rtype: PyQt5.QtWidgets.QDateEdit
         """
         editor = QDateEdit(parent)
         editor.setDisplayFormat("dd/MM/yyyy")
@@ -976,9 +990,7 @@ class DateTimeFormatDelegate(QItemDelegate):
     formatted as DD/MM/YYYY HH:MM:SS.mmm (day/month/year with milliseconds).
 
     Contains:
-
         Methods:
-
             - createEditor: Create and return a QDateTimeEdit widget for
               editing datetimes.
     """
@@ -990,6 +1002,8 @@ class DateTimeFormatDelegate(QItemDelegate):
         Initialize the datetime delegate.
 
         :param parent: Optional parent QWidget. Defaults to None.
+        :type parent:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
         """
         super().__init__(parent)
 
@@ -998,10 +1012,14 @@ class DateTimeFormatDelegate(QItemDelegate):
         Create and configure a datetime editor widget.
 
         :param parent: Parent widget for the editor.
-        :param option: Style options for the item.
-        :param index: Model index of the item being edited.
+        :type parent: PyQt5.QtWidgets.QWidget
+        :param option: Style options for rendering the item (unused).
+        :type option: PyQt5.QtWidgets.QStyleOptionViewItem
+        :param index: The model index of the item being edited (unused).
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :Returns: (QDateTimeEdit) Configured datetime editor widget.
+        :return: Configured datetime editor widget.
+        :rtype: PyQt5.QtWidgets.QDateTimeEdit
         """
         editor = QDateTimeEdit(parent)
         editor.setDisplayFormat(self.DATETIME_FORMAT)
@@ -1016,9 +1034,7 @@ class NumberFormatDelegate(QItemDelegate):
     cell value, ensuring consistent formatting of numeric inputs.
 
     Contains:
-
         Methods:
-
             - createEditor: Create and return a QDoubleSpinBox widget for
               editing numbers.
     """
@@ -1027,7 +1043,9 @@ class NumberFormatDelegate(QItemDelegate):
         """
         Initialize the NumberFormatDelegate.
 
-        :param parent: (QWidget) The parent widget. Defaults to None.
+        :param parent: The parent widget. Defaults to None.
+        :type parent:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
         """
         super().__init__(parent)
 
@@ -1039,13 +1057,16 @@ class NumberFormatDelegate(QItemDelegate):
         cell value.
 
         :param parent: Parent widget for the editor.
-        :param option: Style options for the item.
-        :paramindex: Model index of the item being edited.
+        :type parent: PyQt5.QtWidgets.QWidget
+        :param option: Style options for rendering the item (unused).
+        :type option: PyQt5.QtWidgets.QStyleOptionViewItem
+        :param index: The model index of the item being edited (unused).
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :Returns: (QDoubleSpinBox) A spin box editor configured with the
-         appropriate decimal precision.
+        :return: A spin box editor configured with the appropriate decimal
+         precision.
+        :rtype: PyQt5.QtWidgets.QDoubleSpinBox
         """
-
         editor = QDoubleSpinBox(parent)
         editor.setMaximum(1e10)
         # Determine decimal places from the current value
@@ -1063,9 +1084,7 @@ class TableDataBrowser(QTableWidget):
     their associated tags.
 
     Contains:
-
         Methods:
-
             - add_column: Add a column to the table.
             - add_columns: Add columns to the table.
             - add_path: Call a pop-up to add any document to the project.
@@ -1128,18 +1147,24 @@ class TableDataBrowser(QTableWidget):
         """
         Initialize the data table widget with project data and browser context.
 
-        :param project: (Project) The current project instance containing data
-         and configuration.
-        :param data_browser: (DataBrowser) Parent DataBrowser widget that
-         contains this table.
-        :param tags_to_display: (list[str]) List of metadata tags to show as
-         table columns.
-        :param update_values: (bool) If True, enables cell editing; if False,
-         table is read-only.
-        :param activate_selection: (bool) True to enable the selection feature,
-         False otherwise.
-        :param link_viewer(bool): If True, links table selection to external
-         viewer widget. Defaults to True.
+        :param project: The current project instance containing data and
+         configuration.
+        :type project: populse_mia.data_manager.project.Project
+        :param data_browser: Parent DataBrowser widget that contains this
+         table.
+        :type data_browser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
+        :param tags_to_display: List of metadata tags to show as table columns.
+        :type tags_to_display: list[str]
+        :param update_values: If True, enables cell editing; if False, table is
+         read-only.
+        :type update_values: bool
+        :param activate_selection: True to enable the selection feature, False
+         otherwise.
+        :type activate_selection: bool
+        :param link_viewer: If True, links table selection to external viewer
+         widget. Defaults to True.
+        :type link_viewer: bool
 
         Note:
             - Column sorting and reordering are enabled by default
@@ -1211,10 +1236,10 @@ class TableDataBrowser(QTableWidget):
         metadata from the database, sets the appropriate delegate based on
         field type, and populates cells with current values from the database.
 
-        :param column: (int) Zero-based index where the column should be
-         inserted.
-        :param tag: (str) Tag name identifying the field to add from the
-         database.
+        :param column: Zero-based index where the column should be inserted.
+        :type column: int
+        :param tag: Tag name identifying the field to add from the database.
+        :type tag: str
 
         Note:
             Temporarily disconnects item change signals during insertion to
@@ -1448,6 +1473,7 @@ class TableDataBrowser(QTableWidget):
         custom widgets.
 
         :param rows: An iterable of scan identifiers to be added to the table.
+        :type rows: list[str]
 
         Note:
             - Duplicate scans (already present in the table) are automatically
@@ -1625,8 +1651,9 @@ class TableDataBrowser(QTableWidget):
         without triggering unnecessary redraws or signal handling. All previous
         widget states are restored upon exit, even if an exception occurs.
 
-        :param disable_sorting: (bool) If True (default), temporarily disables
+        :param disable_sorting: If True (default), temporarily disables
          sorting during the batch update to prevent rearrangements.
+        :type disable_sorting: bool
         """
         prev_sorting = self.isSortingEnabled()
 
