@@ -1,7 +1,12 @@
 codecov:
   repository: "populse/populse_mia"
+
 coverage:
   status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
     patch:
       default:
         target: auto
