@@ -305,73 +305,60 @@ def check_python_version():
 
 def check_value_type(value, value_type, is_subvalue=False):
     """
-    Checks the type of new value in a table cell (QTableWidget).
+    Check whether a value is valid for the specified type.
 
-    :param value: Value of the cell (always a str, can be a string
-        representation of a list)
-    :type value: str
-    :param value_type: Expected Python type of ``value`` (for example, int,
-        str, float, bool, list[int], list[str], etc.)
+    Values entered in a ``QTableWidget`` are normally provided as strings,
+    but actual Python or Qt values may also be passed when validating
+    elements of a list. For list types, a string representation of a Python
+    list is parsed and each element is validated recursively.
+
+    :param value: Value to validate. This is typically a string when the
+     value comes from a table cell, but may also be a Python or Qt value.
+    :type value: object
+    :param value_type: Expected type of the value, including supported
+     parameterized list types such as ``list[int]`` or ``list[str]``.
     :type value_type: type | types.GenericAlias
-    :param is_subvalue: Whether the value is a subvalue of a list.
+    :param is_subvalue: Whether ``value`` is an element of a list being
+     validated.
     :type is_subvalue: bool
 
-    :returns: True if the value is valid to replace the old one, False
-        otherwise.
+    :returns: ``True`` if the value is valid for ``value_type``, ``False``
+     otherwise.
     :rtype: bool
     """
+    origin_type = typing.get_origin(value_type)
 
-    # Convert string to a list if it appears to be list-like
-    if isinstance(value, str) and (
-        value.startswith("[") and value.endswith("]")
-    ):
+    # Check list types.
+    if origin_type is list:
+
+        if is_subvalue:
+            element_type = typing.get_args(value_type)[0]
+            return check_value_type(value, element_type)
+
+        # Convert the textual representation to a Python list.
+        if not isinstance(value, str):
+            return False
+
+        if not (value.startswith("[") and value.endswith("]")):
+            return False
 
         try:
-            # safely evaluate the string as a list
             value = ast.literal_eval(value)
 
         except (ValueError, SyntaxError):
-            # If it's not a valid list, return False
             return False
 
-    # Check if value_type is a list (e.g., list[int], list[str], etc.)
-    origin_type = typing.get_origin(value_type)
+        if not isinstance(value, list):
+            return False
 
-    if origin_type is list:
-        # Extract the element type from the list (e.g., int for list[int])
         element_type = typing.get_args(value_type)[0]
 
-        if is_subvalue:
-            # Check for a single element against the list's element
-            # type (e.g., "10" against list[int])
-            return check_value_type(value, element_type)
-
-        # Otherwise, validate if value is a list and all elements
-        # match the element type
-        return isinstance(value, list) and all(
-            isinstance(v, element_type) for v in value
+        return all(
+            check_value_type(element, element_type, is_subvalue=True)
+            for element in value
         )
 
-    # Mapping for basic types
-    # type_validators = {
-    #     FIELD_TYPE_INTEGER: lambda v: v.lstrip("-").isdigit(),
-    #     FIELD_TYPE_FLOAT: lambda v: (
-    #         v.replace(".", "", 1).lstrip("-").isdigit()
-    #     ),
-    #     FIELD_TYPE_BOOLEAN: lambda v: str(v) in {"True", "False"},
-    #     FIELD_TYPE_STRING: lambda v: isinstance(v, str),
-    #     FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)
-    #     or (isinstance(v, str) and _is_valid_date(v, "%d/%m/%Y")),
-    #     FIELD_TYPE_DATETIME: lambda v: (
-    #         isinstance(v, QDateTime)
-    #         or (
-    #             isinstance(v, str)
-    #             and _is_valid_date(v, "%d/%m/%Y %H:%M:%S.%f")
-    #         )
-    #     ),
-    #     FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)
-    #     or (isinstance(v, str) and _is_valid_date(v, "%H:%M:%S.%f")),
-    # }
+    # Mapping for basic types.
     type_validators = {
         FIELD_TYPE_INTEGER: lambda v: isinstance(v, int)
         or (isinstance(v, str) and v.lstrip("-").isdigit()),
@@ -914,26 +901,34 @@ def set_filters_directory_as_default(dialog):
 
 def set_item_data(item, value, value_type):
     """
-    Set the data of a browser item according to the expected value type.
+    Convert and store a value in a browser item according to its type.
 
-    This function converts ``value`` according to ``value_type`` before
-    storing it in ``item`` using ``setData()``. It supports primitive Python
-    types (e.g., ``int``, ``str``, ``float`` and ``bool``) as well as
-    ``datetime``, ``date``, ``time`` and lists of these types.
+    The value is prepared according to ``value_type`` and stored in ``item``
+    using its ``setData()`` method. Supported types include basic Python
+    types, date and time types, and parameterized list types.
 
-    :param item: The item to update (expected to support `setData` method).
+    For list types, the prepared list is converted to its string
+    representation before being stored in the item.
+
+    :param item: Browser item to update. It must provide a ``setData()``
+     method.
     :type item: QStandardItem
-    :param value: The new value to set for the item.
+    :param value: Value to store in the item.
     :type value: Any
-    :param value_type: The expected type of the value, which can be a
-        standard Python type (e.g., `str`, `int`, `float`, `bool`) or a
-        `typing`-based list type (e.g., `list[int]`, `list[datetime]`).
+    :param value_type: Expected type of the value. This can be a basic Python
+     type or a parameterized list type, such as ``list[int]`` or
+     ``list[datetime]``.
     :type value_type: type | types.GenericAlias
+
+    :raises ValueError: If the value cannot be prepared or stored in the
+     item.
 
     Contains:
         Inner functions:
-            - prepare_value: Prepares the input value according to its expected
-              type.
+            - prepare_value: Prepares a value according to its expected type,
+              including handling
+            - prepare_list_value: Prepares a list element according to its
+              expected type.
     """
     conversion_map = {
         FIELD_TYPE_DATETIME: lambda v: (
@@ -983,27 +978,79 @@ def set_item_data(item, value, value_type):
         FIELD_TYPE_INTEGER: lambda v: FIELD_TYPE_INTEGER(v),
         FIELD_TYPE_BOOLEAN: lambda v: FIELD_TYPE_BOOLEAN(v),
         FIELD_TYPE_STRING: lambda v: FIELD_TYPE_STRING(v),
-        FIELD_TYPE_JSON: lambda v: v,  # Assume valid JSON-like dict
+        FIELD_TYPE_JSON: lambda v: v,
     }
 
-    def prepare_value(value, expected_type):
+    def prepare_list_value(value, element_type):
         """
-        Prepares the input value according to its expected type.
+        Prepare a list element according to its expected type.
 
-        :param value: The value to prepare.
+        Python date and time objects are formatted as strings so that they can
+        be stored as list elements. Other supported element types are converted
+        using the corresponding converter from ``conversion_map``.
+
+        :param value: List element to prepare.
         :type value: Any
-        :param expected_type: The expected type of the value.
-        :type expected_type: type
+        :param element_type: Expected type of the list element.
+        :type element_type: type
 
-        :returns: The prepared value suitable for use in a PyQt item.
+        :returns: The prepared value suitable for storing in a PyQt item.
         :rtype: Any
+
+        :raises TypeError: If ``element_type`` is not supported.
         """
 
-        if expected_type in conversion_map:
-            converted_value = conversion_map[expected_type](value)
+        if element_type == FIELD_TYPE_DATETIME:
+
+            if isinstance(value, FIELD_TYPE_DATETIME):
+                return value.strftime("%d/%m/%Y %H:%M:%S.%f")
+
+            return value
+
+        if element_type == FIELD_TYPE_DATE:
+
+            if isinstance(value, FIELD_TYPE_DATE):
+                return value.strftime("%d/%m/%Y")
+
+            return value
+
+        if element_type == FIELD_TYPE_TIME:
+
+            if isinstance(value, FIELD_TYPE_TIME):
+                return value.strftime("%H:%M:%S.%f")
+
+            return value
+
+        if element_type in conversion_map:
+            converted_value = conversion_map[element_type](value)
 
             if converted_value is not None:
                 return converted_value
+
+        raise TypeError(f"Unsupported list element type: {element_type}")
+
+    def prepare_value(value, expected_type):
+        """
+        Prepare a value according to its expected type.
+
+        For list types, a string representation of a Python list is first
+        converted to a list using ``ast.literal_eval()``. Each list element is
+        then prepared according to the list's element type. For other supported
+        types, the corresponding converter from ``conversion_map`` is applied.
+
+        :param value: Value to prepare. For list types, this may be either a
+         Python list or its string representation.
+        :type value: Any
+        :param expected_type: Expected type of the value. This can be a basic
+         Python type or a parameterized list type, such as ``list[int]`` or
+         ``list[datetime]``.
+        :type expected_type: type | types.GenericAlias
+
+        :returns: The prepared value suitable for storing in a PyQt item.
+        :rtype: Any
+
+        :raises TypeError: If ``expected_type`` is not supported.
+        """
 
         if get_origin(expected_type) is list:
             sub_value_type = get_args(expected_type)[0]
@@ -1011,20 +1058,22 @@ def set_item_data(item, value, value_type):
             if isinstance(value, FIELD_TYPE_STRING):
                 value = ast.literal_eval(value)
 
-            return [prepare_value(v, sub_value_type) for v in value]
+            return [prepare_list_value(v, sub_value_type) for v in value]
+
+        if expected_type in conversion_map:
+            converted_value = conversion_map[expected_type](value)
+
+            if converted_value is not None:
+                return converted_value
 
         raise TypeError(f"Unsupported type: {expected_type}")
 
     try:
-        # Prepare the value according to its type
         value_prepared = prepare_value(value, value_type)
 
-        # If the value is a list, convert it to a string for
-        # PyQt compatibility
         if get_origin(value_type) is list:
             value_prepared = FIELD_TYPE_STRING(value_prepared)
 
-        # Set the prepared value in the item
         item.setData(Qt.EditRole, QVariant(value_prepared))
 
     except Exception as e:

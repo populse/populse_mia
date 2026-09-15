@@ -351,54 +351,55 @@ class DefaultValueListCreation(QDialog):
 
     def update_default_value(self):
         """
-        Validates user input and updates the parent's default value.
+        Validate the table values and update the parent's default value.
 
-        Converts table values to the specified list type, ensuring that each
-        entry is valid. If any value is invalid, a warning message is
-        displayed, and the update is aborted.
+        Each value entered in the table is validated against the list type
+        selected for the field. The original textual representation of each
+        value is preserved when updating the parent's default value.
 
-        If all values are valid, they are stored in the parent widget, and the
-        dialog is closed.
+        If a value is invalid, a warning message is displayed and the update
+        is aborted. If all values are valid, the parent's default value is
+        updated and the dialog is closed.
         """
-        type_parsers = {
-            FIELD_TYPE_LIST_INTEGER: int,
-            FIELD_TYPE_LIST_FLOAT: float,
-            FIELD_TYPE_LIST_BOOLEAN: lambda x: {"True": True, "False": False}[
-                x
-            ],
+        type_validators = {
+            FIELD_TYPE_LIST_INTEGER: lambda value: int(value),
+            FIELD_TYPE_LIST_FLOAT: lambda value: float(value),
+            FIELD_TYPE_LIST_BOOLEAN: lambda value: {
+                "True": True,
+                "False": False,
+            }[value],
             FIELD_TYPE_LIST_STRING: str,
-            FIELD_TYPE_LIST_DATE: lambda x: datetime.strptime(
-                x, "%d/%m/%Y"
-            ).date(),
-            FIELD_TYPE_LIST_DATETIME: lambda x: datetime.strptime(
-                x, "%d/%m/%Y %H:%M:%S.%f"
+            FIELD_TYPE_LIST_DATE: lambda value: datetime.strptime(
+                value, "%d/%m/%Y"
             ),
-            FIELD_TYPE_LIST_TIME: lambda x: datetime.strptime(
-                x, "%H:%M:%S.%f"
-            ).time(),
+            FIELD_TYPE_LIST_DATETIME: lambda value: datetime.strptime(
+                value, "%d/%m/%Y %H:%M:%S.%f"
+            ),
+            FIELD_TYPE_LIST_TIME: lambda value: datetime.strptime(
+                value, "%H:%M:%S.%f"
+            ),
         }
-        database_value = []
+        values = []
 
-        for i in range(self.table.columnCount()):
-            item = self.table.item(0, i)
-            text = item.text() if item else ""
+        for column in range(self.table.columnCount()):
+            item = self.table.item(0, column)
+            text = item.text().strip() if item else ""
 
             try:
-                database_value.append(type_parsers[self.type](text))
+                # Validate the value, but preserve its textual representation.
+                type_validators[self.type](text)
 
             except (ValueError, KeyError):
-                msg = QMessageBox(self)
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle("Warning")
-                msg.setText("Invalid value")
-                msg.setInformativeText(
-                    f"The value '{text}' is invalid for type {self.type}."
+                QMessageBox.warning(
+                    self,
+                    "Invalid value",
+                    f"Invalid value: {text}",
                 )
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec()
                 return
 
-        self.parent.setText(str(database_value))
+            values.append(text)
+
+        self.parent.setText(repr(values))
         self.close()
 
 
