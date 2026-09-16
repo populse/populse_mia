@@ -390,11 +390,15 @@ class DefaultValueListCreation(QDialog):
                 type_validators[self.type](text)
 
             except (ValueError, KeyError):
-                QMessageBox.warning(
-                    self,
-                    "Invalid value",
-                    f"Invalid value: {text}",
+                msg = QMessageBox(self)
+                msg.setIcon(QMessageBox.Warning)
+                msg.setWindowTitle("Warning")
+                msg.setText("Invalid value")
+                msg.setInformativeText(
+                    f"The value '{text}' is invalid for type {self.type}."
                 )
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
                 return
 
             values.append(text)

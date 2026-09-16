@@ -1390,7 +1390,7 @@ class TestMIADataBrowser(TestMIACase):
                 Qt.LeftButton,
             )
             self.assertEqual(
-                add_tag.text_edit_default_value.text(), "[1, 2, 3]"
+                add_tag.text_edit_default_value.text(), "['1', '2', '3']"
             )
             # Confirm tag creation
             QTest.mouseClick(add_tag.push_button_ok, Qt.LeftButton)
