@@ -1,6 +1,3 @@
-codecov:
-  repository: "populse/populse_mia"
-
 coverage:
   status:
     project:
