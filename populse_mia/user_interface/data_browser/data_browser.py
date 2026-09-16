@@ -1325,6 +1325,7 @@ class TableDataBrowser(QTableWidget):
 
         This method synchronizes the table's columns with the current database
         schema by:
+
             - Adding columns for new database fields that don't exist in the
               table.
             - Populating new columns with values from the database.
@@ -3043,6 +3044,7 @@ class TableDataBrowser(QTableWidget):
         This method handles the removal of scan documents from both the
         current and initial collections in the project database. It performs
         the following:
+
             - Prompts user for confirmation if scans are in the active scan
               list.
             - Preserves modification history for removed scan values.

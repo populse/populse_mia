@@ -108,6 +108,7 @@ class AttributesFilter(PlugFilter):
     This widget extends `PlugFilter` to provide a user-friendly interface for
     filtering files using both rapid and advanced search tools. It allows
     users to:
+
         - Filter database entries based on customizable criteria.
         - Select specific rows or use the entire filtered dataset.
         - Collect attributes from the selected or filtered entries.
@@ -119,16 +120,13 @@ class AttributesFilter(PlugFilter):
     values for that attribute across the selected or filtered entries.
 
     Contains:
-
         Methods:
-
             - ok_clicked: Closes the widget and emits the collected attributes.
               If rows are selected, only those rows' attributes are collected;
               otherwise, attributes are collected from all entries matching the
               current filter.
 
     Signals:
-
         - attributes_selected: Signal emitted when the user validates the
           selection.
     """
@@ -185,6 +183,7 @@ class CapsulNodeController(QWidget):
 
     This controller provides a user interface for interacting with pipeline
     nodes, enabling users to:
+
         - View and modify node parameters using Capsul's
           AttributedProcessWidget.
         - Rename nodes and update the pipeline accordingly.
@@ -197,9 +196,7 @@ class CapsulNodeController(QWidget):
     pipeline state.
 
     Contains:
-
         Methods:
-
             - display_parameters: Displays the parameters of the selected node
               and configures the UI.
             - filter_attributes: Opens a dialog for filtering node attributes.
@@ -218,7 +215,6 @@ class CapsulNodeController(QWidget):
               operation).
 
     Signals:
-
         - value_changed: Signal emitted when a node or parameter value is
           changed.
     """
@@ -627,6 +623,7 @@ class FilterWidget(QWidget):
 
     This widget provides a user-friendly interface for filtering database files
     using both rapid and advanced search functionalities. It allows users to:
+
         - Browse and select files from the project database.
         - Perform rapid searches using a text-based search bar.
         - Apply advanced filters using a customizable search interface.
@@ -638,23 +635,21 @@ class FilterWidget(QWidget):
     providing real-time feedback and updates as filters are applied.
 
     Contains:
-
         Methods:
-
-        - layout_view: Configures and initializes the main widget layout,
-          including search bars, data tables, and action buttons.
-        - normalize_scan_path: Normalize a scan path to a logical
-          project-relative path.
-        - ok_clicked: Applies the configured filter to the process and closes
-          the widget.
-        - reset_search_bar: Resets the search interface to its default state,
-          clearing all filters.
-        - search_str: Filters and updates the displayed scans based on the
-          provided search string.
-        - update_tag_to_filter: Opens a dialog for selecting tags to filter and
-          updates the filter button text.
-        - update_tags: Updates the list of visualized tags through a user
-          dialog and refreshes the table view.
+            - layout_view: Configures and initializes the main widget layout,
+              including search bars, data tables, and action buttons.
+            - normalize_scan_path: Normalize a scan path to a logical
+              project-relative path.
+            - ok_clicked: Applies the configured filter to the process and
+              closes the widget.
+            - reset_search_bar: Resets the search interface to its default
+              state, clearing all filters.
+            - search_str: Filters and updates the displayed scans based on the
+              provided search string.
+            - update_tag_to_filter: Opens a dialog for selecting tags to filter
+              and updates the filter button text.
+            - update_tags: Updates the list of visualized tags through a user
+              dialog and refreshes the table view.
     """
 
     def __init__(self, project, node_name, node, main_window):
@@ -974,6 +969,7 @@ class FilterWidget(QWidget):
 
         Opens a modal dialog that allows users to select which tags should be
         displayed in the table view. Upon confirmation, the method:
+
             - Updates table columns to show only selected tags
             - Refreshes advanced search field options
             - Ensures TAG_FILENAME is always included in visible tags
@@ -1048,6 +1044,7 @@ class NodeController(QWidget):
 
     This controller provides a user interface to interact with pipeline nodes,
     allowing users to:
+
         - View and edit node names and parameters.
         - Filter and update plug values.
         - Handle undo/redo operations for parameter changes.
@@ -1058,29 +1055,27 @@ class NodeController(QWidget):
     pipeline state.
 
     Contains:
-
         Methods:
-
-        - clearLayout: Clears and deletes all items from a widget's layout,
-          including nested layouts.
-        - display_filter: Displays a filter dialog for a plug.
-        - display_parameters: Renders the parameters UI for a selected node.
-        - get_index_from_plug_name: Returns the index of a plug label in the
-          UI.
-        - update_node_name: Updates the name of the selected node in the
-          pipeline.
-        - rename_subprocesses: Recursively updates context names for
-          subprocesses.
-        - update_parameters: Synchronizes UI parameter values with the process
-          traits.
-        - update_plug_value: Updates a plug value.
-        - update_plug_value_from_filter: Updates a plug value from filter
-          results.
-        - release_process: Placeholder for process release logic (to be
-          overridden by subclasses).
+            - clearLayout: Clears and deletes all items from a widget's layout,
+              including nested layouts.
+            - display_filter: Displays a filter dialog for a plug.
+            - display_parameters: Renders the parameters UI for a selected
+              node.
+            - get_index_from_plug_name: Returns the index of a plug label in
+              the UI.
+            - update_node_name: Updates the name of the selected node in the
+              pipeline.
+            - rename_subprocesses: Recursively updates context names for
+              subprocesses.
+            - update_parameters: Synchronizes UI parameter values with the
+              process traits.
+            - update_plug_value: Updates a plug value.
+            - update_plug_value_from_filter: Updates a plug value from filter
+              results.
+            - release_process: Placeholder for process release logic (to be
+              overridden by subclasses).
 
     Signals:
-
         - value_changed: Signal emitted when a node or parameter value is
           changed.
     """
@@ -1385,13 +1380,13 @@ class NodeController(QWidget):
 
         Renames a node in the pipeline dictionary, preserving all its
         properties and connections. If the pipeline contains a
-        ProcessIteration, ensures the name is prefixed with 'iterated_'.
+        ProcessIteration, ensures the name is prefixed with ``iterated_``.
 
         :param new_node_name: The new name for the node. If None, retrieves the
          name from the UI line edit widget. Is not None only when this method
          is called from an "undo/redo")
 
-        :Emits value_changed: Signal with node rename details for undo/redo
+        :emits value_changed: Signal with node rename details for undo/redo
          tracking.
 
         Note:

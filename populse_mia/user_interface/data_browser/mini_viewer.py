@@ -202,6 +202,7 @@ class MiniViewer(QWidget):
 
         This method initializes a persistent horizontal container holding the
         main interactive controls of the viewer, including:
+
             - A checkbox to enable/disable cursor display.
             - An orientation label centered in the layout.
             - A checkbox to switch to "all slices" display mode.
