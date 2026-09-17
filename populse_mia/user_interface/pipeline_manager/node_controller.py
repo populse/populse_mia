@@ -1063,10 +1063,10 @@ class NodeController(QWidget):
               node.
             - get_index_from_plug_name: Returns the index of a plug label in
               the UI.
-            - update_node_name: Updates the name of the selected node in the
-              pipeline.
             - rename_subprocesses: Recursively updates context names for
               subprocesses.
+            - update_node_name: Updates the name of the selected node in the
+              pipeline.
             - update_parameters: Synchronizes UI parameter values with the
               process traits.
             - update_plug_value: Updates a plug value.
@@ -1374,6 +1374,52 @@ class NodeController(QWidget):
             None,
         )
 
+    def rename_subprocesses(self, node, parent_node_name):
+        """
+        Recursively update context names for a node and its subprocesses.
+
+        This method updates the `context_name` attribute throughout a node
+        hierarchy, ensuring consistent naming based on the parent context. For
+        pipeline processes, it preserves the hierarchical structure while
+        incorporating the parent node name.
+
+        The context name follows these rules:
+            - Pipeline processes:
+              "Pipeline.{parent_node_name}.{additional_parts}".
+            - Non-pipeline processes: "{parent_node_name}".
+            - Nested subprocesses are updated recursively.
+
+        :param node: (Node) The node whose context name will be updated, along
+         with all its subprocesses.
+        :param parent_node_name: (str) The parent node's name to incorporate
+         into the context naming hierarchy.
+        """
+
+        if not isinstance(node, PipelineNode):
+            return
+
+        # Get the current context name, falling back to process name if not set
+        context_name = getattr(node.process, "context_name", node.process.name)
+        context_parts = context_name.split(".")
+
+        # Update context name based on whether it's a pipeline process
+        if context_parts[0] == "Pipeline":
+            # Preserve nested structure beyond the parent level
+            additional_parts = (
+                context_parts[2:] if len(context_parts) >= 3 else []
+            )
+            node.process.context_name = ".".join(
+                ["Pipeline", parent_node_name, *additional_parts]
+            )
+
+        else:
+            node.process.context_name = parent_node_name
+
+        for name, subnode in node.process.nodes.items():
+
+            if name:  # Skip empty names
+                self.rename_subprocesses(subnode, parent_node_name)
+
     def update_node_name(self, new_node_name=None):
         """
         Update the name of the currently selected node in the pipeline.
@@ -1423,52 +1469,6 @@ class NodeController(QWidget):
             f"Brick name '{old_node_name}' has been "
             f"changed to '{new_node_name}'."
         )
-
-    def rename_subprocesses(self, node, parent_node_name):
-        """
-        Recursively update context names for a node and its subprocesses.
-
-        This method updates the `context_name` attribute throughout a node
-        hierarchy, ensuring consistent naming based on the parent context. For
-        pipeline processes, it preserves the hierarchical structure while
-        incorporating the parent node name.
-
-        The context name follows these rules:
-            - Pipeline processes:
-              "Pipeline.{parent_node_name}.{additional_parts}".
-            - Non-pipeline processes: "{parent_node_name}".
-            - Nested subprocesses are updated recursively.
-
-        :param node: (Node) The node whose context name will be updated, along
-         with all its subprocesses.
-        :param parent_node_name: (str) The parent node's name to incorporate
-         into the context naming hierarchy.
-        """
-
-        if not isinstance(node, PipelineNode):
-            return
-
-        # Get the current context name, falling back to process name if not set
-        context_name = getattr(node.process, "context_name", node.process.name)
-        context_parts = context_name.split(".")
-
-        # Update context name based on whether it's a pipeline process
-        if context_parts[0] == "Pipeline":
-            # Preserve nested structure beyond the parent level
-            additional_parts = (
-                context_parts[2:] if len(context_parts) >= 3 else []
-            )
-            node.process.context_name = ".".join(
-                ["Pipeline", parent_node_name, *additional_parts]
-            )
-
-        else:
-            node.process.context_name = parent_node_name
-
-        for name, subnode in node.process.nodes.items():
-
-            if name:  # Skip empty names
-                self.rename_subprocesses(subnode, parent_node_name)
 
     def update_parameters(self, process=None):
         """

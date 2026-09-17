@@ -1740,13 +1740,11 @@ class TableDataBrowser(QTableWidget):
         Create and display the context menu for the table, and perform
         the corresponding action based on the user's selection.
 
-        :param position: (QPoint) The mouse cursor position relative to the
-         widget.
+        :param position: The mouse cursor position relative to the widget.
+        :type position: PyQt5.QtCore.QPoint
 
         Contains:
-
             Inner functions:
-
                 - _confirm_action: Display a warning message box with an
                   OK/Cancel choice and connect the OK button to a callback
                   function.
@@ -1755,17 +1753,15 @@ class TableDataBrowser(QTableWidget):
 
         def _confirm_action(text: str, callback: callable) -> None:
             """
-            Display a warning message box with an OK/Cancel choice and connect
-            the OK button to a callback function.
+            Display a warning message box with OK/Cancel buttons.
 
-            The dialog shows a warning icon and the provided message. If the
-            user confirms the action by clicking OK, the specified callback is
-            invoked. Cancel simply closes the dialog without side effects.
+            If the user clicks OK, execute the provided callback. If the user
+            clicks Cancel, close the dialog without executing the callback.
 
-            :param text (str): The warning message text to display in the
-                                dialog.
-            :param callback (callable): The function to execute if the user
-                                        clicks OK.
+            :param text: The warning message to display.
+            :type text: str
+            :param callback: The function to execute when the user clicks OK.
+            :type callback: callable
             """
             msg = QMessageBox(self)
             msg.setIcon(QMessageBox.Warning)
@@ -1865,16 +1861,13 @@ class TableDataBrowser(QTableWidget):
         and any orphaned output documents that are not used as inputs
         elsewhere.
 
-        :param brick_id: (str) The unique identifier of the brick to be
-         deleted.
+        :param brick_id: The unique identifier of the brick to be deleted.
+        :type brick_id: str
 
         Contains:
-
             Inner functions:
-
                 - extract_document_ids: Extracts all string values from a
                   nested dictionary structure.
-
         """
 
         with self.project.database.data(write=True) as database_data:
@@ -1899,11 +1892,13 @@ class TableDataBrowser(QTableWidget):
                     - a list: Its elements are recursively traversed and
                       processed. Non-string, non-list values are ignored.
 
-                :param data: (dict) Dictionary that may contain nested strings
-                 or lists as values.
+                :param data: Dictionary that may contain nested strings or
+                 lists as values.
+                :type data: dict
 
-                :Returns: (set[str]) A set containing all unique string values
-                 found within the dictionary.
+                :return: A set containing all unique string values found within
+                 the dictionary.
+                :rtype: set[str]
                 """
                 document_ids = set()
                 stack = list(data.values())
@@ -2429,6 +2424,7 @@ class TableDataBrowser(QTableWidget):
         :param take_tags_to_update: If True, use tags_to_display for
          visibility. If False, use field visibility attributes. Defaults to
          False.
+        :type take_tags_to_update: bool
         """
 
         # Get field names and prepare sorted list with FileName first
@@ -2489,8 +2485,9 @@ class TableDataBrowser(QTableWidget):
         Returns the list of selected scan paths if a selection is active,
         otherwise returns all visible scan paths in the data browser.
 
-        :Returns: (list) List of scan paths from either the current selection
-         or all visible scans in the data browser.
+        :returns: List of scan paths from either the current selection or all
+         visible scans in the data browser.
+        :rtype: list[str]
         """
 
         if self.activate_selection and self.scans:
@@ -2507,10 +2504,12 @@ class TableDataBrowser(QTableWidget):
         inserting a column header while preserving the existing alphabetical
         sort order.
 
-        :param to_insert: (str) The column header text to insert.
+        :param to_insert: The column header text to insert.
+        :type to_insert: str
 
-        :Returns: (int) The column index where the new column should be
-         inserted. Returns columnCount() if it should be appended at the end.
+        :returns: The column index where the new column should be inserted.
+         Returns columnCount() if it should be appended at the end.
+        :rtype: int
 
         Note:
             Assumes that column 0 is reserved (TAG_FILENAME must always be
@@ -2532,10 +2531,11 @@ class TableDataBrowser(QTableWidget):
         Find the row index for a given scan filename.
 
         :param scan: The scan filename to search for.
+        :type scan: str
 
-        :Returns: (int) The zero-based row index if the scan is found, None
+        :returns: The zero-based row index if the scan is found, None
          otherwise.
-
+        :rtype: int | None
         """
 
         return next(
@@ -2554,10 +2554,12 @@ class TableDataBrowser(QTableWidget):
         Searches through the table's horizontal headers to locate the column
         corresponding to the specified tag.
 
-        :param tag: (str) The name of the tag to search for.
+        :param tag: The name of the tag to search for.
+        :type tag: str
 
-        :Returns: (int) The zero-based column index if the tag is found, None
+        :returns: The zero-based column index if the tag is found, None
          otherwise.
+        :rtype: int | None
         """
 
         for column in range(self.columnCount()):
@@ -2577,8 +2579,9 @@ class TableDataBrowser(QTableWidget):
         It delegates to the parent class handler and then updates the table
         data values.
 
-        :param event: (QMouseEvent) The mouse event containing information
-         about the button released, position, and modifiers.
+        :param event: The mouse event containing information about the button
+         released, position, and modifiers.
+        :type event: PyQt5.QtGui.QMouseEvent
         """
         super().mouseReleaseEvent(event)
         self.edit_table_data_values()
@@ -2591,9 +2594,10 @@ class TableDataBrowser(QTableWidget):
         reorganizes the table rows to reflect the new order. Handles both
         regular items and special brick widgets during the reordering.
 
-        :param list_tags: (list) List of tag names to sort by (primary to
-         secondary).
-        :param order: (str) Sort direction, either "Ascending" or "Descending".
+        :param list_tags: List of tag names to sort by (primary to secondary).
+        :type list_tags: list[str]
+        :param order: Sort direction, either "Ascending" or "Descending".
+        :type order: str
 
         Note:
             Temporarily disables item change signals during sorting to prevent
@@ -2601,29 +2605,11 @@ class TableDataBrowser(QTableWidget):
             relative order of items with equal sort keys.
 
         Contains:
-
             Inner functions:
-
-                - _clear_cell: clears the specified cell.
                 - _create_brick_widget: Create and set a brick widget for the
                   specified table cell.
+                - _clear_cell: clears the specified cell.
         """
-
-        def _clear_cell(row, column, item):
-            """
-            Clears the specified cell and sets an optional non-editable item.
-
-            :param row: (int) The row index of the cell to clear.
-            :param column: (int) The column index of the cell to clear.
-            :param item: (QTableWidgetItem) The item to set in the cleared
-             cell. If None, the cell remains empty.
-            """
-            self.setCellWidget(row, column, None)
-
-            if item:
-                set_item_data(item, "", FIELD_TYPE_STRING)
-                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
-                self.setItem(row, column, item)
 
         def _create_brick_widget(
             row,
@@ -2641,15 +2627,23 @@ class TableDataBrowser(QTableWidget):
             clickable button. Clicking the button shows the brick's history.
             Existing brick references are updated if necessary.
 
-            :param row :(int) Row index of the cell to fill.
-            :param column: (int) Column index of the cell to fill.
-            :param scan: (str) Primary key of the scan linked to the brick.
-            :param db: (Database) Active database connection.
-            :param old_widget: (QWidget) Existing widget previously in the
-             same cell (if any).
-            :param item: (QTableWidgetItem) The table item for this cell.
-            :param clicked_scan: (str) The scan ID to use when connecting the
-             brick button’s clicked signal. If None, defaults to `scan`.
+            :param row : Row index of the cell to fill.
+            :type row: int
+            :param column: Column index of the cell to fill.
+            :type column: int
+            :param scan: Primary key of the scan linked to the brick.
+            :type scan: str
+            :param database_data: Active database connection.
+            :type database_data:
+             populse_mia.data_manager.database_mia.DatabaseMiaData
+            :param old_widget: Existing widget previously in the same cell (if
+             any).
+            :type old_widget: PyQt5.QtWidgets.QWidget | None
+            :param item: The table item for this cell.
+            :type item: PyQt5.QtWidgets.QTableWidgetItem | None
+            :param clicked_scan: The scan ID to use when connecting the brick
+             button’s clicked signal. If None, defaults to `scan`.
+            :type clicked_scan: str | None
             """
             app_thread = QApplication.instance().thread()
             widget = QWidget()
@@ -2699,6 +2693,25 @@ class TableDataBrowser(QTableWidget):
             layout.addWidget(brick_name_button)
             self.setCellWidget(row, column, widget)
             self.setItem(row, column, item)
+
+        def _clear_cell(row, column, item):
+            """
+            Clears the specified cell and sets an optional non-editable item.
+
+            :param row: The row index of the cell to clear.
+            :type row: int
+            :param column: The column index of the cell to clear.
+            :type column: int
+            :param item: The item to set in the cleared cell. If None, the cell
+             remains empty.
+            :type item: PyQt5.QtWidgets.QTableWidgetItem | None
+            """
+            self.setCellWidget(row, column, None)
+
+            if item:
+                set_item_data(item, "", FIELD_TYPE_STRING)
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                self.setItem(row, column, item)
 
         safe_disconnect(self.itemChanged, self.on_cell_changed)
 
@@ -2840,6 +2853,7 @@ class TableDataBrowser(QTableWidget):
               lists.
 
         :param item_origin: QTableWidgetItem from which the edit originated.
+        :type item_origin: PyQt5.QtWidgets.QTableWidgetItem
 
         Side effects:
             - Modifies database values for selected cells.
@@ -2847,6 +2861,11 @@ class TableDataBrowser(QTableWidget):
             - Adds entry to project undo history.
             - Clears redo history.
             - Resizes columns to fit content.
+
+        Contains:
+            Inner functions:
+                - _show_error_and_revert: Displays an error dialog and reverts
+                  selected cells to their original database values.
         """
 
         def _show_error_and_revert(
@@ -2857,10 +2876,15 @@ class TableDataBrowser(QTableWidget):
             values.
 
             :param title: Dialog title text.
+            :type title: str
             :param message: Dialog message text.
+            :type message: str
             :param selected_items: List of QTableWidgetItem objects to revert.
+            :type selected_items: list
             :param database_data: Database context for retrieving original
              values.
+            :type database_data:
+             populse_mia.data_manager.database_mia.DatabaseMiaData
             """
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
@@ -3451,8 +3475,11 @@ class TableDataBrowser(QTableWidget):
         leftmost visual position, regardless of user drag-and-drop actions.
 
         :param logical_index: The logical index of the moved column (unused).
+        :type logical_index: int
         :param old_index: The previous visual position of the column (unused).
+        :type old_index: int
         :param new_index: The new visual position of the column (unused).
+        :type new_index: int
 
         Note:
             Parameters are required by the Qt signal signature but not used in
@@ -3486,7 +3513,8 @@ class TableDataBrowser(QTableWidget):
         This method clears any existing selection before selecting the entire
         column, ensuring only the specified column is highlighted.
 
-        :param col: (int) The zero-based index of the column to select.
+        :param col: The zero-based index of the column to select.
+        :type col: int
         """
         self.clearSelection()
         self.selectColumn(col)
@@ -3570,6 +3598,7 @@ class TableDataBrowser(QTableWidget):
         sender, creates a history popup dialog, and displays it to the user.
 
         :param scan: The scan data to display in the history popup.
+        :type scan: str
 
         Note:
             The sender (typically a UI widget) must be registered in
@@ -3589,14 +3618,15 @@ class TableDataBrowser(QTableWidget):
         """
         Sort the currently selected column.
 
-        :param order: (Qt.SortOrder or int) Sort order to apply:
-
-            - Qt.AscendingOrder (0): Sort from lowest to highest.
-            - Qt.DescendingOrder (1): Sort from highest to lowest.
+        :param order: Sort order to apply. Accepts either ``Qt.AscendingOrder``
+         (0) or ``Qt.DescendingOrder`` (1).
+        :type order: Qt.SortOrder | int
 
         Note:
-            Temporarily disconnects signals during sorting to prevent
-            unwanted side effects, then reconnects them afterward.
+            Temporarily connects the ``itemChanged`` signal to
+            :meth:`on_cell_changed` while sorting, then disconnects it
+            afterward. The disconnection is ensured even if sorting raises an
+            exception.
         """
         current_item = self.currentItem()
 
@@ -3623,7 +3653,9 @@ class TableDataBrowser(QTableWidget):
 
         :param column: The column index to sort by. Use -1 to indicate no
          sorting.
+        :type column: int
         :param order: The sort order (Qt.AscendingOrder or Qt.DescendingOrder).
+        :type order: Qt.SortOrder | int
 
         Note:
             This method is a no-op when column is -1, allowing safe calls with
@@ -3827,6 +3859,7 @@ class TableDataBrowser(QTableWidget):
 
         :param take_tags_to_update: If True, updates tags during the header
          fill operation. Defaults to False.
+        :type take_tags_to_update: bool
 
         Side Effects:
             - Clears current table selection.
@@ -3885,8 +3918,10 @@ class TableDataBrowser(QTableWidget):
             - Updating advanced search dropdowns if the search panel is open.
             - Refreshing column sizing and colors.
 
-        :param old_tags: (list) Previously visualized tags.
-        :param showed: (list) Tags to currently display in the table.
+        :param old_tags: Previously visualized tags.
+        :type old_tags: list
+        :param showed: Tags to currently display in the table.
+        :type showed: list
         """
         # Disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -3943,6 +3978,7 @@ class TableDataBrowser(QTableWidget):
 
         :param old_scans: Collection of scans from the previous state, used to
          determine which rows need to be hidden.
+        :type old_scans: list
         """
         # Disconnect signals
         safe_disconnect(self.itemChanged, self.on_cell_changed)
@@ -4016,9 +4052,7 @@ class TimeFormatDelegate(QItemDelegate):
     (hh:mm:ss.zzz format) for editing time values in a TableDataBrowser.
 
     Contains:
-
         Methods:
-
             - createEditor: Create and return a QDateEdit widget for editing
               times.
     """
@@ -4028,6 +4062,8 @@ class TimeFormatDelegate(QItemDelegate):
         Initialize the time format delegate.
 
         :param parent: Parent QWidget, if any. Defaults to None.
+        :type parent:
+         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser
         """
         super().__init__(parent)
 
@@ -4036,12 +4072,15 @@ class TimeFormatDelegate(QItemDelegate):
         Create and configure the editor widget for time values.
 
         :param parent: Parent widget for the editor.
+        :type parent: PyQt5.QtWidgets.QWidget
         :param option: Style options for the item (unused, required by Qt API).
+        :type option: PyQt5.QtWidgets.QStyleOptionViewItem
         :param index: Model index of the item being edited (unused, required
          by Qt API).
+        :type index: PyQt5.QtCore.QModelIndex
 
-        :Returns: (QTimeEdit) Configured time editor widget with
-         hh:mm:ss.zzz format.
+        :return: Configured time editor widget with hh:mm:ss.zzz format.
+        :rtype: PyQt5.QtWidgets.QTimeEdit
         """
         editor = QTimeEdit(parent)
         editor.setDisplayFormat("hh:mm:ss.zzz")
