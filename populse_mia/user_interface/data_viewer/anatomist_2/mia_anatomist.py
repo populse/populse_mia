@@ -52,13 +52,11 @@ class MiaViewer(DataViewer):
     to visualize and interact with medical imaging data through the PyAnatomist
     visualization library.
 
-    :class:`Mia data viewer
-           <populse_mia.user_interface.data_viewer.data_viewer.DataViewer>`
-           implementation based on
-           `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_
+    A :class:`~populse_mia.user_interface.data_viewer.data_viewer.DataViewer`
+    implementation based on
+    `PyAnatomist <http://brainvisa.info/pyanatomist/sphinx/index.html>`_.
 
     Contains:
-
         Methods:
             - _add_dialog_buttons: Add action buttons to the filter dialog.
             - _apply_preferences: Apply the settings from the preferences
@@ -167,7 +165,7 @@ class MiaViewer(DataViewer):
         :param current_ref: Current referential setting.
         :type current_ref: int
 
-        :returns: (QDialog) Configured preferences dialog.
+        :returns: Configured preferences dialog.
         :rtype: PyQt5.QtWidgets.QDialog
         """
         dialog = Qt.QDialog()
@@ -328,7 +326,8 @@ class MiaViewer(DataViewer):
         """
         Get the list of currently displayed files.
 
-        :Returns (list) File paths currently displayed in the viewer.
+        :return: File paths currently displayed in the viewer.
+        :rtype: list[str]
         """
         return self.displayed
 
@@ -396,7 +395,7 @@ class MiaViewer(DataViewer):
         Remove specified files from the viewer.
 
         :param files: List of file paths to remove from display.
-        :type files: list
+        :type files: list[str]
         """
         self.anaviewer.deleteObjectsFromFiles(files)
         self.displayed = [doc for doc in self.displayed if doc not in files]
@@ -477,7 +476,7 @@ class MiaViewer(DataViewer):
         :param project: Project containing the documents.
         :type project: populse_mia.data_manager.project.Project
         :param documents: List of document filenames to make available.
-        :type documents: list
+        :type documents: list[str]
         """
 
         if self.project is not project:
