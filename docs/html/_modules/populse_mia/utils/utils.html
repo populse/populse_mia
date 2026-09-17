@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -580,7 +580,7 @@ window.runMermaid = runMermaid;</script>
                             <span class="n">vname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">__package__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
 
                         <span class="k">else</span><span class="p">:</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No module nor package for </span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No module nor package for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
                             <span class="n">vname</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="vm">__name__</span>
 
                         <span class="k">if</span> <span class="n">vname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_already_loaded</span><span class="p">:</span>
@@ -614,7 +614,7 @@ window.runMermaid = runMermaid;</script>
                                     <span class="k">if</span> <span class="n">element</span> <span class="ow">is</span> <span class="n">path_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
                                         <span class="n">pkg_iter</span><span class="p">[</span><span class="n">element</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;process_enabled&quot;</span>
                                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                            <span class="sa">f</span><span class="s2">&quot;Detected brick: </span><span class="si">{</span><span class="n">element</span><span class="si">}</span><span class="s2">&quot;</span>
+                                            <span class="s2">&quot;Detected brick: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">element</span>
                                         <span class="p">)</span>
 
                                     <span class="k">else</span><span class="p">:</span>
@@ -642,20 +642,21 @@ window.runMermaid = runMermaid;</script>
                             <span class="k">continue</span>  <span class="c1"># skip main</span>
 
                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;Exploring subpackages of </span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">: &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2"> ...&quot;</span>
+                            <span class="s2">&quot;Exploring subpackages of </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">.</span><span class="si">%s</span><span class="s2"> ...&quot;</span><span class="p">,</span>
+                            <span class="n">module_name</span><span class="p">,</span>
+                            <span class="n">module_name</span><span class="p">,</span>
+                            <span class="n">modname</span><span class="p">,</span>
                         <span class="p">)</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_package</span><span class="p">(</span>
                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">modname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">class_name</span>
                         <span class="p">)</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;When attempting to add a package (</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2">) or &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;its modules to the package tree, the following &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;exception was caught:&quot;</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                    <span class="s2">&quot;When attempting to add package </span><span class="si">%s</span><span class="s2"> or its modules to the &quot;</span>
+                    <span class="s2">&quot;package tree, an exception was caught:&quot;</span><span class="p">,</span>
+                    <span class="n">module_name</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">packages</span></div>
 </div>
@@ -707,73 +708,60 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.check_value_type">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks the type of new value in a table cell (QTableWidget).</span>
+<span class="sd">    Check whether a value is valid for the specified type.</span>
 
-<span class="sd">    :param value: Value of the cell (always a str, can be a string</span>
-<span class="sd">        representation of a list)</span>
-<span class="sd">    :type value: str</span>
-<span class="sd">    :param value_type: Expected Python type of ``value`` (for example, int,</span>
-<span class="sd">        str, float, bool, list[int], list[str], etc.)</span>
+<span class="sd">    Values entered in a ``QTableWidget`` are normally provided as strings,</span>
+<span class="sd">    but actual Python or Qt values may also be passed when validating</span>
+<span class="sd">    elements of a list. For list types, a string representation of a Python</span>
+<span class="sd">    list is parsed and each element is validated recursively.</span>
+
+<span class="sd">    :param value: Value to validate. This is typically a string when the</span>
+<span class="sd">     value comes from a table cell, but may also be a Python or Qt value.</span>
+<span class="sd">    :type value: object</span>
+<span class="sd">    :param value_type: Expected type of the value, including supported</span>
+<span class="sd">     parameterized list types such as ``list[int]`` or ``list[str]``.</span>
 <span class="sd">    :type value_type: type | types.GenericAlias</span>
-<span class="sd">    :param is_subvalue: Whether the value is a subvalue of a list.</span>
+<span class="sd">    :param is_subvalue: Whether ``value`` is an element of a list being</span>
+<span class="sd">     validated.</span>
 <span class="sd">    :type is_subvalue: bool</span>
 
-<span class="sd">    :returns: True if the value is valid to replace the old one, False</span>
-<span class="sd">        otherwise.</span>
+<span class="sd">    :returns: ``True`` if the value is valid for ``value_type``, ``False``</span>
+<span class="sd">     otherwise.</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">origin_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_origin</span><span class="p">(</span><span class="n">value_type</span><span class="p">)</span>
 
-    <span class="c1"># Convert string to a list if it appears to be list-like</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
-        <span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
-    <span class="p">):</span>
+    <span class="c1"># Check list types.</span>
+    <span class="k">if</span> <span class="n">origin_type</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">is_subvalue</span><span class="p">:</span>
+            <span class="n">element_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_args</span><span class="p">(</span><span class="n">value_type</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">element_type</span><span class="p">)</span>
+
+        <span class="c1"># Convert the textual representation to a Python list.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="c1"># safely evaluate the string as a list</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">SyntaxError</span><span class="p">):</span>
-            <span class="c1"># If it&#39;s not a valid list, return False</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="c1"># Check if value_type is a list (e.g., list[int], list[str], etc.)</span>
-    <span class="n">origin_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_origin</span><span class="p">(</span><span class="n">value_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="n">origin_type</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
-        <span class="c1"># Extract the element type from the list (e.g., int for list[int])</span>
         <span class="n">element_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_args</span><span class="p">(</span><span class="n">value_type</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">is_subvalue</span><span class="p">:</span>
-            <span class="c1"># Check for a single element against the list&#39;s element</span>
-            <span class="c1"># type (e.g., &quot;10&quot; against list[int])</span>
-            <span class="k">return</span> <span class="n">check_value_type</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">element_type</span><span class="p">)</span>
-
-        <span class="c1"># Otherwise, validate if value is a list and all elements</span>
-        <span class="c1"># match the element type</span>
-        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">element_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">check_value_type</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">element_type</span><span class="p">,</span> <span class="n">is_subvalue</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">value</span>
         <span class="p">)</span>
 
-    <span class="c1"># Mapping for basic types</span>
-    <span class="c1"># type_validators = {</span>
-    <span class="c1">#     FIELD_TYPE_INTEGER: lambda v: v.lstrip(&quot;-&quot;).isdigit(),</span>
-    <span class="c1">#     FIELD_TYPE_FLOAT: lambda v: (</span>
-    <span class="c1">#         v.replace(&quot;.&quot;, &quot;&quot;, 1).lstrip(&quot;-&quot;).isdigit()</span>
-    <span class="c1">#     ),</span>
-    <span class="c1">#     FIELD_TYPE_BOOLEAN: lambda v: str(v) in {&quot;True&quot;, &quot;False&quot;},</span>
-    <span class="c1">#     FIELD_TYPE_STRING: lambda v: isinstance(v, str),</span>
-    <span class="c1">#     FIELD_TYPE_DATE: lambda v: isinstance(v, QDate)</span>
-    <span class="c1">#     or (isinstance(v, str) and _is_valid_date(v, &quot;%d/%m/%Y&quot;)),</span>
-    <span class="c1">#     FIELD_TYPE_DATETIME: lambda v: (</span>
-    <span class="c1">#         isinstance(v, QDateTime)</span>
-    <span class="c1">#         or (</span>
-    <span class="c1">#             isinstance(v, str)</span>
-    <span class="c1">#             and _is_valid_date(v, &quot;%d/%m/%Y %H:%M:%S.%f&quot;)</span>
-    <span class="c1">#         )</span>
-    <span class="c1">#     ),</span>
-    <span class="c1">#     FIELD_TYPE_TIME: lambda v: isinstance(v, QTime)</span>
-    <span class="c1">#     or (isinstance(v, str) and _is_valid_date(v, &quot;%H:%M:%S.%f&quot;)),</span>
-    <span class="c1"># }</span>
+    <span class="c1"># Mapping for basic types.</span>
     <span class="n">type_validators</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">FIELD_TYPE_INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
         <span class="ow">or</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">v</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()),</span>
@@ -1039,9 +1027,8 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">main_window</span><span class="o">.</span><span class="n">remove_raw_files_useless</span><span class="p">()</span>
 
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="s2">&quot;Failed to remove useless raw files during shutdown&quot;</span><span class="p">,</span>
-                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                <span class="s2">&quot;Failed to remove useless raw files during shutdown&quot;</span>
             <span class="p">)</span>
 
         <span class="n">_clean_up</span><span class="p">()</span>
@@ -1070,7 +1057,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param tback: Traceback object.</span>
 <span class="sd">        :type tback: types.TracebackType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
             <span class="s2">&quot;Unhandled exception occurred&quot;</span><span class="p">,</span>
             <span class="n">exc_info</span><span class="o">=</span><span class="p">(</span><span class="n">etype</span><span class="p">,</span> <span class="n">evalue</span><span class="p">,</span> <span class="n">tback</span><span class="p">),</span>
         <span class="p">)</span>
@@ -1359,26 +1346,34 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../_autosummary/populse_mia.utils.utils.html#populse_mia.utils.utils.set_item_data">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Set the data of a browser item according to the expected value type.</span>
+<span class="sd">    Convert and store a value in a browser item according to its type.</span>
 
-<span class="sd">    This function converts ``value`` according to ``value_type`` before</span>
-<span class="sd">    storing it in ``item`` using ``setData()``. It supports primitive Python</span>
-<span class="sd">    types (e.g., ``int``, ``str``, ``float`` and ``bool``) as well as</span>
-<span class="sd">    ``datetime``, ``date``, ``time`` and lists of these types.</span>
+<span class="sd">    The value is prepared according to ``value_type`` and stored in ``item``</span>
+<span class="sd">    using its ``setData()`` method. Supported types include basic Python</span>
+<span class="sd">    types, date and time types, and parameterized list types.</span>
 
-<span class="sd">    :param item: The item to update (expected to support `setData` method).</span>
+<span class="sd">    For list types, the prepared list is converted to its string</span>
+<span class="sd">    representation before being stored in the item.</span>
+
+<span class="sd">    :param item: Browser item to update. It must provide a ``setData()``</span>
+<span class="sd">     method.</span>
 <span class="sd">    :type item: QStandardItem</span>
-<span class="sd">    :param value: The new value to set for the item.</span>
+<span class="sd">    :param value: Value to store in the item.</span>
 <span class="sd">    :type value: Any</span>
-<span class="sd">    :param value_type: The expected type of the value, which can be a</span>
-<span class="sd">        standard Python type (e.g., `str`, `int`, `float`, `bool`) or a</span>
-<span class="sd">        `typing`-based list type (e.g., `list[int]`, `list[datetime]`).</span>
+<span class="sd">    :param value_type: Expected type of the value. This can be a basic Python</span>
+<span class="sd">     type or a parameterized list type, such as ``list[int]`` or</span>
+<span class="sd">     ``list[datetime]``.</span>
 <span class="sd">    :type value_type: type | types.GenericAlias</span>
+
+<span class="sd">    :raises ValueError: If the value cannot be prepared or stored in the</span>
+<span class="sd">     item.</span>
 
 <span class="sd">    Contains:</span>
 <span class="sd">        Inner functions:</span>
-<span class="sd">            - prepare_value: Prepares the input value according to its expected</span>
-<span class="sd">              type.</span>
+<span class="sd">            - prepare_value: Prepares a value according to its expected type,</span>
+<span class="sd">              including handling</span>
+<span class="sd">            - prepare_list_value: Prepares a list element according to its</span>
+<span class="sd">              expected type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">conversion_map</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">FIELD_TYPE_DATETIME</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="p">(</span>
@@ -1428,27 +1423,79 @@ window.runMermaid = runMermaid;</script>
         <span class="n">FIELD_TYPE_INTEGER</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">FIELD_TYPE_INTEGER</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
         <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">FIELD_TYPE_BOOLEAN</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
         <span class="n">FIELD_TYPE_STRING</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
-        <span class="n">FIELD_TYPE_JSON</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>  <span class="c1"># Assume valid JSON-like dict</span>
+        <span class="n">FIELD_TYPE_JSON</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_list_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">element_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Prepares the input value according to its expected type.</span>
+<span class="sd">        Prepare a list element according to its expected type.</span>
 
-<span class="sd">        :param value: The value to prepare.</span>
+<span class="sd">        Python date and time objects are formatted as strings so that they can</span>
+<span class="sd">        be stored as list elements. Other supported element types are converted</span>
+<span class="sd">        using the corresponding converter from ``conversion_map``.</span>
+
+<span class="sd">        :param value: List element to prepare.</span>
 <span class="sd">        :type value: Any</span>
-<span class="sd">        :param expected_type: The expected type of the value.</span>
-<span class="sd">        :type expected_type: type</span>
+<span class="sd">        :param element_type: Expected type of the list element.</span>
+<span class="sd">        :type element_type: type</span>
 
-<span class="sd">        :returns: The prepared value suitable for use in a PyQt item.</span>
+<span class="sd">        :returns: The prepared value suitable for storing in a PyQt item.</span>
 <span class="sd">        :rtype: Any</span>
+
+<span class="sd">        :raises TypeError: If ``element_type`` is not supported.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="n">expected_type</span> <span class="ow">in</span> <span class="n">conversion_map</span><span class="p">:</span>
-            <span class="n">converted_value</span> <span class="o">=</span> <span class="n">conversion_map</span><span class="p">[</span><span class="n">expected_type</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">element_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATETIME</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y %H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">element_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_DATE</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FIELD_TYPE_DATE</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">/%m/%Y&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">element_type</span> <span class="o">==</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FIELD_TYPE_TIME</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H:%M:%S.</span><span class="si">%f</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">element_type</span> <span class="ow">in</span> <span class="n">conversion_map</span><span class="p">:</span>
+            <span class="n">converted_value</span> <span class="o">=</span> <span class="n">conversion_map</span><span class="p">[</span><span class="n">element_type</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">converted_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">converted_value</span>
+
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported list element type: </span><span class="si">{</span><span class="n">element_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare a value according to its expected type.</span>
+
+<span class="sd">        For list types, a string representation of a Python list is first</span>
+<span class="sd">        converted to a list using ``ast.literal_eval()``. Each list element is</span>
+<span class="sd">        then prepared according to the list&#39;s element type. For other supported</span>
+<span class="sd">        types, the corresponding converter from ``conversion_map`` is applied.</span>
+
+<span class="sd">        :param value: Value to prepare. For list types, this may be either a</span>
+<span class="sd">         Python list or its string representation.</span>
+<span class="sd">        :type value: Any</span>
+<span class="sd">        :param expected_type: Expected type of the value. This can be a basic</span>
+<span class="sd">         Python type or a parameterized list type, such as ``list[int]`` or</span>
+<span class="sd">         ``list[datetime]``.</span>
+<span class="sd">        :type expected_type: type | types.GenericAlias</span>
+
+<span class="sd">        :returns: The prepared value suitable for storing in a PyQt item.</span>
+<span class="sd">        :rtype: Any</span>
+
+<span class="sd">        :raises TypeError: If ``expected_type`` is not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">sub_value_type</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">expected_type</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1456,20 +1503,22 @@ window.runMermaid = runMermaid;</script>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">):</span>
                 <span class="n">value</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
 
-            <span class="k">return</span> <span class="p">[</span><span class="n">prepare_value</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">sub_value_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">prepare_list_value</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">sub_value_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">expected_type</span> <span class="ow">in</span> <span class="n">conversion_map</span><span class="p">:</span>
+            <span class="n">converted_value</span> <span class="o">=</span> <span class="n">conversion_map</span><span class="p">[</span><span class="n">expected_type</span><span class="p">](</span><span class="n">value</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">converted_value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">converted_value</span>
 
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported type: </span><span class="si">{</span><span class="n">expected_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="c1"># Prepare the value according to its type</span>
         <span class="n">value_prepared</span> <span class="o">=</span> <span class="n">prepare_value</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">value_type</span><span class="p">)</span>
 
-        <span class="c1"># If the value is a list, convert it to a string for</span>
-        <span class="c1"># PyQt compatibility</span>
         <span class="k">if</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">value_type</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">list</span><span class="p">:</span>
             <span class="n">value_prepared</span> <span class="o">=</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">(</span><span class="n">value_prepared</span><span class="p">)</span>
 
-        <span class="c1"># Set the prepared value in the item</span>
         <span class="n">item</span><span class="o">.</span><span class="n">setData</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">EditRole</span><span class="p">,</span> <span class="n">QVariant</span><span class="p">(</span><span class="n">value_prepared</span><span class="p">))</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1991,7 +2040,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 
-                <span class="c1"># Attempt to update sys.path, for the processes/ directory</span>
+                <span class="c1"># Attempt to update sys.path, for the processes / directory</span>
                 <span class="c1"># currently used, and re-import</span>
                 <span class="n">processes_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">get_properties_path</span><span class="p">(),</span> <span class="s2">&quot;processes&quot;</span>
@@ -2032,15 +2081,15 @@ window.runMermaid = runMermaid;</script>
 
                     <span class="c1"># If an exception is raised, ask the user to remove the</span>
                     <span class="c1"># package from the pipeline library or reload it</span>
-                    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
                         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                         <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
-                        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;populse_mia - warning: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;populse_mia - warning: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                         <span class="n">msg_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">processes_path</span><span class="p">,</span> <span class="n">pckg</span><span class="p">)</span>
                         <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;At least, </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">msg</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> has not been &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;found in </span><span class="si">{</span><span class="n">msg_path</span><span class="si">}</span><span class="s2">.&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;At least, </span><span class="si">{</span><span class="n">exc</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> has not been found &quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;in </span><span class="si">{</span><span class="n">msg_path</span><span class="si">}</span><span class="s2">.&quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">To prevent mia crash when using it, &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;please remove (see File &gt; Package &quot;</span>
                             <span class="sa">f</span><span class="s2">&quot;library manager) or load again (see More&quot;</span>
@@ -2060,7 +2109,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="c1"># package is certainly not properly installed in the processes</span>
                 <span class="c1"># directory</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No module named &#39;</span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No module named &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span><span class="p">,</span> <span class="n">pckg</span><span class="p">)</span>
                     <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                     <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                     <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;populse_mia - warning: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2081,20 +2130,20 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
 
             <span class="k">except</span> <span class="ne">SyntaxError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;package...</span><span class="se">\n</span><span class="s2">Traceback:&quot;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                    <span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">%s</span><span class="s2">&#39; package...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)))</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">trabck</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">))</span>
                 <span class="n">txt</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2">&#39; package...</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">trabck</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> </span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">trabck</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;This may lead to a later crash of Mia ...</span><span class="se">\n</span><span class="s2">&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Do you want Mia tries to fix this issue &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;automatically?</span><span class="se">\n</span><span class="s2">Be careful, risk of destruction of &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;the &#39;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; module!&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Do you want Mia to try to fix this issue &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;automatically?</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Be careful, risk of destruction of the &#39;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">filename</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;module!&quot;</span>
                 <span class="p">)</span>
                 <span class="n">lineCnt</span> <span class="o">=</span> <span class="n">txt</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
@@ -2136,18 +2185,17 @@ window.runMermaid = runMermaid;</script>
                         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filedata</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2">&#39; &quot;</span>
-                    <span class="s2">&quot;package...</span><span class="se">\n</span><span class="s2">Traceback:&quot;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                    <span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">%s</span><span class="s2">&#39; package...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
                 <span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">)))</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">trabck</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">traceback</span><span class="o">.</span><span class="n">format_tb</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">__traceback__</span><span class="p">))</span>
                 <span class="n">txt</span> <span class="o">=</span> <span class="p">(</span>
                     <span class="sa">f</span><span class="s2">&quot;A problem is detected with the &#39;</span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2">&#39; package...</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;Traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">trabck</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> </span><span class="se">\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;This may lead to a later crash of Mia ...</span><span class="se">\n</span><span class="s2">Please, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;try to fix it !...&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Traceback:</span><span class="se">\n</span><span class="si">{</span><span class="n">trabck</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;This may lead to a later crash of Mia ...</span><span class="se">\n</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Please, try to fix it !...&quot;</span>
                 <span class="p">)</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;populse_mia - warning: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2339,14 +2387,19 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">if</span> <span class="n">old_nipypeVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Installation in Mia of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;library, </span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Installation in Mia of the </span><span class="si">%s</span><span class="s2"> processes &quot;</span>
+                    <span class="s2">&quot;library, </span><span class="si">%s</span><span class="s2"> version ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">nipypeVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Upgrading of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes library, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">old_nipypeVer</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Upgrading of the </span><span class="si">%s</span><span class="s2"> processes library, &quot;</span>
+                    <span class="s2">&quot;from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2"> version ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">old_nipypeVer</span><span class="p">,</span>
+                    <span class="n">nipypeVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;mia_processes&quot;</span> <span class="ow">in</span> <span class="n">pckg</span><span class="p">:</span>
@@ -2354,14 +2407,19 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">if</span> <span class="n">old_miaProcVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Installation in Mia of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;library, </span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Installation in Mia of the </span><span class="si">%s</span><span class="s2"> processes &quot;</span>
+                    <span class="s2">&quot;library, </span><span class="si">%s</span><span class="s2"> version ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">miaProcVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Upgrading of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes library, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">old_miaProcVer</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Upgrading of the </span><span class="si">%s</span><span class="s2"> processes library, &quot;</span>
+                    <span class="s2">&quot;from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2"> version ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">old_miaProcVer</span><span class="p">,</span>
+                    <span class="n">miaProcVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="k">if</span> <span class="s2">&quot;capsul&quot;</span> <span class="ow">in</span> <span class="n">pckg</span><span class="p">:</span>
@@ -2369,17 +2427,22 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">if</span> <span class="n">old_capsulVer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Installation in Mia of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;library, </span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Installing the </span><span class="si">%s</span><span class="s2"> processes library (version </span><span class="si">%s</span><span class="s2">) &quot;</span>
+                    <span class="s2">&quot;in Mia  ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">capsulVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** Upgrading of the </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> processes library, &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">old_capsulVer</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2"> version ...&quot;</span>
+                    <span class="s2">&quot;** Upgrading of the </span><span class="si">%s</span><span class="s2"> processes library, from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2"> &quot;</span>
+                    <span class="s2">&quot;version ...&quot;</span><span class="p">,</span>
+                    <span class="n">pckg</span><span class="p">,</span>
+                    <span class="n">old_capsulVer</span><span class="p">,</span>
+                    <span class="n">capsulVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Exploring </span><span class="si">{</span><span class="n">pckg</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Exploring </span><span class="si">%s</span><span class="s2"> ...&quot;</span><span class="p">,</span> <span class="n">pckg</span><span class="p">)</span>
         <span class="n">pckg_dic</span> <span class="o">=</span> <span class="n">package</span><span class="o">.</span><span class="n">add_package</span><span class="p">(</span><span class="n">pckg</span><span class="p">)</span>
         <span class="c1"># pckg_dic: a dic of dic representation of a package and its</span>
         <span class="c1">#           subpackages/modules</span>
@@ -2394,49 +2457,52 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The nipype processes library in Mia is already &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;using the current installed version (</span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2">) &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for this station.&quot;</span>
+                    <span class="s2">&quot;** The nipype processes library in Mia is already using &quot;</span>
+                    <span class="s2">&quot;the installed version </span><span class="si">%s</span><span class="s2"> on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">nipypeVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The mia_processes library in Mia is already &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;using the current installed version (</span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2">) &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for this station.&quot;</span>
+                    <span class="s2">&quot;** The mia_processes processes library in Mia is already &quot;</span>
+                    <span class="s2">&quot;using the installed version </span><span class="si">%s</span><span class="s2"> on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">miaProcVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">elif</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;capsul&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The capsul library in Mia is already &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;using the current installed version (</span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2">) &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for this station.&quot;</span>
+                    <span class="s2">&quot;** The capsul processes library in Mia is already &quot;</span>
+                    <span class="s2">&quot;using the installed version </span><span class="si">%s</span><span class="s2"> on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">capsulVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">pack2install</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
 
             <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The mia_processes and capsul processes libraries &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;are already using in Mia the current installed &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;version (</span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2"> respectively) &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for this station.&quot;</span>
+                    <span class="s2">&quot;** The mia_processes and capsul processes libraries are &quot;</span>
+                    <span class="s2">&quot;already using the installed versions </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">, &quot;</span>
+                    <span class="s2">&quot;respectively, in Mia on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">miaProcVer</span><span class="p">,</span>
+                    <span class="n">capsulVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;mia_processes&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The nipype and capsul processes libraries are &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;already using in Mia the current installed &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;version (</span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2"> respectively) for &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;this station.&quot;</span>
+                    <span class="s2">&quot;** The nipype and capsul processes libraries are already &quot;</span>
+                    <span class="s2">&quot;using the installed versions </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">, respectively, in &quot;</span>
+                    <span class="s2">&quot;Mia on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">nipypeVer</span><span class="p">,</span>
+                    <span class="n">capsulVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="s2">&quot;capsul&quot;</span> <span class="ow">in</span> <span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">pack2install</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;** The mia_processes and nipype processes libraries &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;are already using in Mia the current installed &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;version (</span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2"> respectively) &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;for this station.&quot;</span>
+                    <span class="s2">&quot;** The mia_processes and nipype processes libraries are &quot;</span>
+                    <span class="s2">&quot;already using the installed versions </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%s</span><span class="s2">, &quot;</span>
+                    <span class="s2">&quot;respectively, in Mia on this station.&quot;</span><span class="p">,</span>
+                    <span class="n">miaProcVer</span><span class="p">,</span>
+                    <span class="n">nipypeVer</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">proc_content</span><span class="p">,</span> <span class="nb">dict</span><span class="p">))</span> <span class="ow">and</span> <span class="p">(</span><span class="s2">&quot;Paths&quot;</span> <span class="ow">in</span> <span class="n">proc_content</span><span class="p">):</span>
@@ -2483,9 +2549,12 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;** Mia is already using the current installed version of nipype&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;, mia_processes and capsul for this station &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">nipypeVer</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">miaProcVer</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">capsulVer</span><span class="si">}</span><span class="s2">, respectively)&quot;</span>
+            <span class="s2">&quot;** Mia is already using the installed versions of nipype, &quot;</span>
+            <span class="s2">&quot;mia_processes, and capsul on this station: </span><span class="si">%s</span><span class="s2">, </span><span class="si">%s</span><span class="s2">, and </span><span class="si">%s</span><span class="s2">, &quot;</span>
+            <span class="s2">&quot;respectively.&quot;</span><span class="p">,</span>
+            <span class="n">nipypeVer</span><span class="p">,</span>
+            <span class="n">miaProcVer</span><span class="p">,</span>
+            <span class="n">capsulVer</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
@@ -2624,7 +2693,7 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">properties_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">properties_dir</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> directory is created...&quot;</span><span class="p">,</span> <span class="n">properties_dir</span><span class="p">)</span>
 
         <span class="n">config_files</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="s2">&quot;saved_projects.yml&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;paths&quot;</span><span class="p">:</span> <span class="p">[]}),</span>
@@ -2648,7 +2717,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
                 <span class="n">_save_yml_file</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> file is created...&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> file is created...&quot;</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
 
         <span class="c1"># processes/User_processes folder management / initialisation:</span>
         <span class="n">user_processes_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -2657,13 +2726,13 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">):</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">user_processes_dir</span><span class="si">}</span><span class="s2"> directory is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> directory is created...&quot;</span><span class="p">,</span> <span class="n">user_processes_dir</span><span class="p">)</span>
 
         <span class="n">init_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">user_processes_dir</span><span class="p">,</span> <span class="s2">&quot;__init__.py&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">init_file</span><span class="p">):</span>
             <span class="n">Path</span><span class="p">(</span><span class="n">init_file</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">init_file</span><span class="si">}</span><span class="s2"> file is created...&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> file is created...&quot;</span><span class="p">,</span> <span class="n">init_file</span><span class="p">)</span>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Default configuration checked!&quot;</span><span class="p">)</span>
 
@@ -2753,8 +2822,9 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">{</span><span class="n">dot_mia_config</span><span class="si">}</span><span class="s2"> cannot be read, the path &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;to the properties has not been found...&quot;</span>
+                        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> cannot be read, the path to the properties has &quot;</span>
+                        <span class="s2">&quot;not been found...&quot;</span><span class="p">,</span>
+                        <span class="n">dot_mia_config</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">mia_home_properties_path</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 
@@ -2763,12 +2833,12 @@ window.runMermaid = runMermaid;</script>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">_make_default_config</span><span class="p">(</span><span class="n">dialog</span><span class="p">)</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Automatic configuration fails: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Automatic configuration failed.&quot;</span><span class="p">)</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;Mia configuration Error&quot;</span><span class="p">)</span>
-                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Automatic configuration fails...&quot;</span><span class="p">)</span>
+                <span class="n">msg</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;Automatic configuration failed.&quot;</span><span class="p">)</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
                 <span class="k">return</span>
 
@@ -2795,10 +2865,10 @@ window.runMermaid = runMermaid;</script>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">key_to_del</span><span class="p">:</span>
                 <span class="k">del</span> <span class="n">mia_home_properties_path</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;New values in </span><span class="si">{</span><span class="n">dot_mia_config</span><span class="si">}</span><span class="s2">: &quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;New values in </span><span class="si">%s</span><span class="s2">: &quot;</span><span class="p">,</span> <span class="n">dot_mia_config</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mia_home_properties_path_new</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;- </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
             <span class="nb">print</span><span class="p">()</span>
             <span class="n">_save_yml_file</span><span class="p">(</span><span class="n">mia_home_properties_path</span><span class="p">,</span> <span class="n">dot_mia_config</span><span class="p">)</span>
@@ -2817,10 +2887,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">get_admin_hash</span><span class="p">():</span>
                     <span class="n">config</span><span class="o">.</span><span class="n">set_admin_hash</span><span class="p">(</span><span class="n">ph</span><span class="o">.</span><span class="n">hash</span><span class="p">(</span><span class="n">default_password</span><span class="p">))</span>
 
-            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;Could not fetch the &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;properties/config.yml file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2"> ...&quot;</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                    <span class="s2">&quot;Could not load the properties/config.yml file.&quot;</span>
                 <span class="p">)</span>
                 <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
                 <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -2872,8 +2941,8 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)):</span>
         <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;The </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span><span class="si">}</span><span class="s2"> directory is &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;created...&quot;</span>
+            <span class="s2">&quot;The </span><span class="si">%s</span><span class="s2"> directory has been created.&quot;</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">Path</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
 
@@ -2916,26 +2985,24 @@ window.runMermaid = runMermaid;</script>
         <span class="n">_save_yml_file</span><span class="p">(</span><span class="n">mia_home_properties_path</span><span class="p">,</span> <span class="n">dot_mia_config</span><span class="p">)</span>
         <span class="n">_verify_miaConfig</span><span class="p">()</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="c1"># the ~/.populse_mia/configuration_path.yml or the</span>
-        <span class="c1"># properties/config.yml file does not exist or has not been</span>
-        <span class="c1"># correctly read...</span>
-
-        <span class="c1"># FIXME: We may be need a more precise Exception class to catch ?</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;An issue has been detected when opening &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;the </span><span class="si">{</span><span class="n">dot_mia_config</span><span class="si">}</span><span class="s2"> file or with the parameters returned &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;from this file:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="c1"># The ~/.populse_mia/configuration_path.yml or the</span>
+        <span class="c1"># properties/config.yml file does not exist or could not be</span>
+        <span class="c1"># read correctly.</span>
+        <span class="c1">#</span>
+        <span class="c1"># FIXME: We may need a more specific exception class to catch here.</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+            <span class="s2">&quot;Failed to load </span><span class="si">%s</span><span class="s2"> or process its configuration parameters.&quot;</span><span class="p">,</span>
+            <span class="n">dot_mia_config</span><span class="p">,</span>
         <span class="p">)</span>
-
-        <span class="c1"># open popup, we choose the properties path dir</span>
+        <span class="c1"># Open a popup to select the properties root directory.</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">QDialog</span><span class="p">()</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - properties path selection&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia - Properties Path Selection&quot;</span><span class="p">)</span>
         <span class="n">vbox_layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
         <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">file_label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span>
-            <span class="s2">&quot;No configuration parameters found. Please select a root &quot;</span>
-            <span class="s2">&quot;directory for configuration.&quot;</span>
+            <span class="s2">&quot;No configuration parameters were found. Please select a root &quot;</span>
+            <span class="s2">&quot;directory for the configuration.&quot;</span>
         <span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">file_line_edit</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">dot_mia_config</span><span class="p">))</span>
@@ -2947,7 +3014,7 @@ window.runMermaid = runMermaid;</script>
         <span class="n">hbox_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">file_button</span><span class="p">)</span>
         <span class="n">vbox_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">hbox_layout</span><span class="p">)</span>
         <span class="n">hbox_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
-        <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Ok&quot;</span><span class="p">)</span>
+        <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;OK&quot;</span><span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">ok_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_verify_miaConfig</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">cancel_button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">_cancel_clicked</span><span class="p">,</span> <span class="n">msg</span><span class="p">))</span>
@@ -2971,7 +3038,9 @@ window.runMermaid = runMermaid;</script>
             <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user_proc</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">user_proc_dir</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  . Using </span><span class="si">{</span><span class="n">elt</span><span class="si">}</span><span class="s2"> package from </span><span class="si">{</span><span class="n">user_proc</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot;  . Using the </span><span class="si">%s</span><span class="s2"> package from </span><span class="si">%s</span><span class="s2"> ...&quot;</span><span class="p">,</span> <span class="n">elt</span><span class="p">,</span> <span class="n">user_proc</span>
+                <span class="p">)</span>
 
         <span class="k">del</span> <span class="n">user_proc_dir</span>
 
@@ -3016,7 +3085,7 @@ window.runMermaid = runMermaid;</script>
                     <span class="n">pypath</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
 
         <span class="n">pc</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pypath</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Changed python conf: </span><span class="si">{</span><span class="n">pc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Changed python conf: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pc</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">update_capsul_config</span><span class="p">()</span>
         <span class="n">config</span><span class="o">.</span><span class="n">saveConfig</span><span class="p">()</span></div>
 

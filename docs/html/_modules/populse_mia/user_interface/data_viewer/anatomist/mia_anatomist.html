@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist.mia_anatomist</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -444,9 +444,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    capabilities.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _find_child: Find a child widget by name.</span>
 <span class="sd">            - _setup_ui: Set up the user interface components for the viewer.</span>
 <span class="sd">            - close: Close the viewer and manage Anatomist viewer resources.</span>
@@ -468,8 +466,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the MiaViewer.</span>
 
-<span class="sd">        :param init_global_handlers: Initial global handlers for Anatomist</span>
-<span class="sd">         viewer.</span>
+<span class="sd">        :param init_global_handlers: Determines if global handlers should be</span>
+<span class="sd">         initialized.</span>
+<span class="sd">        :type init_global_handlers: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Initialize Anatomist viewer</span>
@@ -491,12 +490,15 @@ window.runMermaid = runMermaid;</script>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_find_child</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Find a child widget by name.</span>
+<span class="sd">        Find a child QObject by name.</span>
 
-<span class="sd">        :param parent: (Qt.QObject) Parent widget to search in.</span>
-<span class="sd">        :param name: (str) Name of the child widget to find.</span>
+<span class="sd">        :param parent: Parent QObject to search in.</span>
+<span class="sd">        :type parent: Qt.QObject</span>
+<span class="sd">        :param name: Name of the child QObject to find.</span>
+<span class="sd">        :type name: str</span>
 
-<span class="sd">        :Returns: (Qt.QObject) The found child widget.</span>
+<span class="sd">        :returns: The found child QObject, or None if not found.</span>
+<span class="sd">        :rtype: Qt.QObject or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">parent</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
@@ -543,7 +545,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display the given files in the Anatomist viewer.</span>
 
-<span class="sd">        :param files: (list) List of file paths to display.</span>
+<span class="sd">        :param files: List of file paths to display.</span>
+<span class="sd">        :type files: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
 
@@ -557,7 +560,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the list of currently displayed files.</span>
 
-<span class="sd">        :Returns: (List) List of displayed file paths.</span>
+<span class="sd">        :returns: List of displayed file paths.</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span></div>
 
@@ -628,7 +632,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified files from the viewer.</span>
 
-<span class="sd">        :param files: (list) List of file paths to remove.</span>
+<span class="sd">        :param files: List of file paths to remove.</span>
+<span class="sd">        :type files: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">anaviewer</span><span class="o">.</span><span class="n">deleteObjectsFromFiles</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="o">=</span> <span class="p">[</span><span class="n">doc</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">displayed</span> <span class="k">if</span> <span class="n">doc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span></div>
@@ -641,7 +646,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Set the current project and documents for the viewer.</span>
 
 <span class="sd">        :param project: The project to set.</span>
-<span class="sd">        :param documents: (List) List of documents in the project.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param documents: List of documents in the project.</span>
+<span class="sd">        :type documents: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">project</span><span class="p">:</span>

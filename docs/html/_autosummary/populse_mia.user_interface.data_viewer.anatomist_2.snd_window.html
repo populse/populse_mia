@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.snd_window &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.snd_window &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.snd_window</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -47,11 +47,9 @@
 <p>This class creates a window that remains on top of other windows and
 allows the user to choose between different anatomical views (axial,
 sagittal, coronal, or 3D) for visualizing the selected object.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>changeDisplay: Changes display on user’s demand.</p></li>
 <li><p>close: Close properly objects before exiting Mia.</p></li>
 <li><p>createNewWindow: Opens a new window in the vertical layout.</p></li>
@@ -61,8 +59,10 @@ should be checked or not depending on which view is displayed.</p></li>
 <li><p>showPopup: Defines the dimensions of the popup which is a
 QWidget.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/snd_window.html#NewWindowViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.snd_window.NewWindowViewer.__init__" title="Link to this definition">¶</a></dt>
@@ -79,9 +79,9 @@ connections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>index</strong> – (int) Index of the view to display (0: Axial,
-1: Sagittal, 2: Coronal, 3: 3D).</p></li>
-<li><p><strong>obj</strong> – The object to display.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the view to display (0: Axial, 1: Sagittal,
+2: Coronal, 3: 3D).</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to display.</p></li>
 </ul>
 </dd>
 </dl>
@@ -99,7 +99,7 @@ connections.</p>
 <dd><p>Opens a new window in the vertical layout.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wintype</strong> – (str) Type of the view to create (default is ‘Axial’).</p>
+<dd class="field-odd"><p><strong>wintype</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Type of the view to create (default is ‘Axial’).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -111,7 +111,7 @@ connections.</p>
 displayed view.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – (int) Index of the view to enable.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the view to enable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -122,7 +122,7 @@ displayed view.</p>
 <dd><p>Stores the object to be displayed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to display.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -137,7 +137,7 @@ displayed view.</p>
 able to replace the object inside.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to display in the popup.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to display in the popup.</p>
 </dd>
 </dl>
 </dd></dl>

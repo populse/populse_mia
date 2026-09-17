@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.count_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -530,9 +530,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        - Automatic table resizing.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_clickable_label: Create a clickable label with an image.</span>
 <span class="sd">            - _create_push_button: Create and configure a push button for tag</span>
 <span class="sd">              selection.</span>
@@ -565,7 +563,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the CountTable with the given project.</span>
 
 <span class="sd">        :param project: The current medical imaging project, which includes a</span>
-<span class="sd">         scan database</span>
+<span class="sd">         scan database.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -587,18 +586,20 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CountTable._create_clickable_label">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.count_table.html#populse_mia.user_interface.data_browser.count_table.CountTable._create_clickable_label">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_clickable_label</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">click_handler</span><span class="p">:</span> <span class="n">Callable</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">image_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">click_handler</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[],</span> <span class="kc">None</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ClickableLabel&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a clickable label with an image.</span>
 
-<span class="sd">        :param image_name: (str) The filename of the image to display on the</span>
-<span class="sd">         label.</span>
-<span class="sd">        :param click_handler: (Callable) The function to be called when the</span>
-<span class="sd">         label is clicked.</span>
+<span class="sd">        :param image_name: The filename of the image to display on the label.</span>
+<span class="sd">        :type image_name: str</span>
+<span class="sd">        :param click_handler: The method to be called when the label is</span>
+<span class="sd">         clicked.</span>
+<span class="sd">        :type click_handler: Callable[[], None]</span>
 
-<span class="sd">        :Returns: (ClickableLabel) A label displaying the specified image,</span>
-<span class="sd">         which triggers the click handler when clicked.</span>
+<span class="sd">        :returns: A label displaying the specified image which triggers the</span>
+<span class="sd">         click handler when clicked.</span>
+<span class="sd">        :rtype: ClickableLabel</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">ClickableLabel</span><span class="p">()</span>
@@ -621,12 +622,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure a tag selection button.</span>
 
-<span class="sd">        :param text: (str) The text to display on the button.</span>
-<span class="sd">        :param idx: (int) The index associated with the button for tag</span>
-<span class="sd">         selection.</span>
+<span class="sd">        :param text: The text to display on the button.</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param idx: The index associated with the button for tag selection.</span>
+<span class="sd">        :type idx: int</span>
 
-<span class="sd">        :Returns: (QPushButton) A configured QPushButton that triggers the tag</span>
-<span class="sd">         selection when clicked.</span>
+<span class="sd">        :returns: A configured QPushButton that triggers the tag selection when</span>
+<span class="sd">         clicked.</span>
+<span class="sd">        :rtype: QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">select_tag</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
@@ -964,7 +967,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Extracts all unique values for the selected tag from the database and</span>
 <span class="sd">        stores them for table generation.</span>
 
-<span class="sd">        :param idx: (Int) Index of the select tag.</span>
+<span class="sd">        :param idx: Index of the selected tag.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
@@ -991,13 +995,15 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="CountTable.prepare_filter">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_browser.count_table.html#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_filter</span><span class="p">(</span><span class="n">tag_value_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prepare_filter</span><span class="p">(</span><span class="n">tag_value_pairs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Build database query string from tag-value pairs.</span>
 
-<span class="sd">        :param tag_value_pairs: List of (tag_name, value) tuples.</span>
+<span class="sd">        :param tag_value_pairs: List of (tag_name, value) lists.</span>
+<span class="sd">        :type tag_value_pairs: list[list[str, Any]]</span>
 
-<span class="sd">        :Returns: Query string for database filtering.</span>
+<span class="sd">        :returns: Query string for database filtering.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">conditions</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1074,7 +1080,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open tag selection dialog for the specified button.</span>
 
-<span class="sd">        :param idx: (Int) The index of the button/tag to configure.</span>
+<span class="sd">        :param idx: The index of the button/tag to configure.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>

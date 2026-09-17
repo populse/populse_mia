@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.count_table &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.count_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -191,12 +191,8 @@ FLASH):</p>
 <li><p>Automatic table resizing.</p></li>
 </ul>
 </dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_clickable_label: Create a clickable label with an image.</p></li>
 <li><p>_create_push_button: Create and configure a push button for tag
 selection.</p></li>
@@ -221,36 +217,40 @@ table.</p></li>
 <li><p>select_tag: Opens a pop-up to select which tag to visualize in
 the count table.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the CountTable with the given project.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current medical imaging project, which includes a
-scan database</p>
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current medical imaging project, which includes a
+scan database.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable._create_clickable_label">
-<span class="sig-name descname"><span class="pre">_create_clickable_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">click_handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.ClickableLabel" title="populse_mia.user_interface.pop_ups.ClickableLabel"><span class="pre">ClickableLabel</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable._create_clickable_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable._create_clickable_label" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_create_clickable_label</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">click_handler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Callable" title="(in Python v3.10)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/constants.html#None" title="(in Python v3.10)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.ClickableLabel" title="populse_mia.user_interface.pop_ups.ClickableLabel"><span class="pre">ClickableLabel</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable._create_clickable_label"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable._create_clickable_label" title="Link to this definition">¶</a></dt>
 <dd><p>Create a clickable label with an image.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>image_name</strong> – (str) The filename of the image to display on the
-label.</p></li>
-<li><p><strong>click_handler</strong> – (Callable) The function to be called when the
-label is clicked.</p></li>
+<li><p><strong>image_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The filename of the image to display on the label.</p></li>
+<li><p><strong>click_handler</strong> (<em>Callable</em><em>[</em><em>[</em><em>]</em><em>, </em><em>None</em><em>]</em>) – The method to be called when the label is
+clicked.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(ClickableLabel) A label displaying the specified image,
-which triggers the click handler when clicked.</p>
+<dd class="field-even"><p>A label displaying the specified image which triggers the
+click handler when clicked.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="populse_mia.user_interface.pop_ups.html#populse_mia.user_interface.pop_ups.ClickableLabel" title="populse_mia.user_interface.pop_ups.ClickableLabel">ClickableLabel</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -262,14 +262,16 @@ which triggers the click handler when clicked.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – (str) The text to display on the button.</p></li>
-<li><p><strong>idx</strong> – (int) The index associated with the button for tag
-selection.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to display on the button.</p></li>
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index associated with the button for tag selection.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QPushButton) A configured QPushButton that triggers the tag
-selection when clicked.</p>
+<dd class="field-even"><p>A configured QPushButton that triggers the tag selection when
+clicked.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qpushbutton.html" title="(in Qt5 v5.15)">QPushButton</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -361,21 +363,24 @@ indicators.</p>
 stores them for table generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (Int) Index of the select tag.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the selected tag.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_value_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.prepare_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">prepare_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag_value_pairs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3.10/library/typing.html#typing.Any" title="(in Python v3.10)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/count_table.html#CountTable.prepare_filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.count_table.CountTable.prepare_filter" title="Link to this definition">¶</a></dt>
 <dd><p>Build database query string from tag-value pairs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_value_pairs</strong> – List of (tag_name, value) tuples.</p>
+<dd class="field-odd"><p><strong>tag_value_pairs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>Any</em><em>]</em><em>]</em>) – List of (tag_name, value) lists.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Query string for database filtering.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -398,7 +403,7 @@ stores them for table generation.</p>
 <dd><p>Open tag selection dialog for the specified button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (Int) The index of the button/tag to configure.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index of the button/tag to configure.</p>
 </dd>
 </dl>
 </dd></dl>

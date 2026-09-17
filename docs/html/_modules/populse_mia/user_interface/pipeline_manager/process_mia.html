@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -558,7 +558,9 @@ window.runMermaid = runMermaid;</script>
                     <span class="p">]</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">interface_path</span><span class="si">}</span><span class="s2">) nipype brick ...&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) nipype brick ...&quot;</span><span class="p">,</span>
+                    <span class="n">node_name</span><span class="p">,</span>
+                    <span class="n">interface_path</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">else</span><span class="p">:</span>
@@ -566,7 +568,9 @@ window.runMermaid = runMermaid;</script>
                     <span class="p">[</span><span class="n">process</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">process</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">process_path</span><span class="si">}</span><span class="s2">) regular brick ...&quot;</span>
+                    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) regular brick ...&quot;</span><span class="p">,</span>
+                    <span class="n">node_name</span><span class="p">,</span>
+                    <span class="n">process_path</span><span class="p">,</span>
                 <span class="p">)</span>
 
         <span class="c1"># Use fallback engine to complete parameters</span>
@@ -642,7 +646,11 @@ window.runMermaid = runMermaid;</script>
         <span class="n">process_path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="p">[</span><span class="n">process</span><span class="o">.</span><span class="vm">__module__</span><span class="p">,</span> <span class="n">process</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span>
         <span class="p">)</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">process_path</span><span class="si">}</span><span class="s2">) Mia brick ...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">. </span><span class="si">%s</span><span class="s2"> (</span><span class="si">%s</span><span class="s2">) Mia brick ...&quot;</span><span class="p">,</span>
+            <span class="n">node_name</span><span class="p">,</span>
+            <span class="n">process_path</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="c1"># Complete parameters using MIA-specific method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">complete_parameters_mia</span><span class="p">(</span>
             <span class="n">process_inputs</span><span class="p">,</span> <span class="n">iteration</span><span class="o">=</span><span class="n">complete_iterations</span>
@@ -891,8 +899,9 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;The output_directory trait does not exist for the &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">process</span><span class="o">.</span><span class="n">context_name</span><span class="si">}</span><span class="s2"> process!&quot;</span>
+                <span class="s2">&quot;The output_directory trait does not exist for &quot;</span>
+                <span class="s2">&quot;the </span><span class="si">%s</span><span class="s2"> process!&quot;</span><span class="p">,</span>
+                <span class="n">process</span><span class="o">.</span><span class="n">context_name</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">out_dir</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1059,7 +1068,7 @@ window.runMermaid = runMermaid;</script>
             <span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Error during initialisation ...!&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error during initialisation...&quot;</span><span class="p">)</span>
             <span class="n">initResult_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># Check if initialization was successful</span>
@@ -1090,7 +1099,9 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Issue with </span><span class="si">{</span><span class="n">parameter</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="nb">repr</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;Issue with </span><span class="si">%s</span><span class="s2"> and </span><span class="si">%r</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">parameter</span><span class="p">,</span>
+                        <span class="n">value</span><span class="p">,</span>
                         <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span></div>
 
@@ -1642,8 +1653,10 @@ window.runMermaid = runMermaid;</script>
         <span class="c1">#        iterations, may ask many many questions to users.</span>
         <span class="c1">#        These should be worked on earlier.</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Ambiguity in tag inheritance for: </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2"> - &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">plug_name</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">out_file</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Ambiguity in tag inheritance for: </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2"> - </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">node_name</span><span class="p">,</span>
+            <span class="n">plug_name</span><span class="p">,</span>
+            <span class="n">out_file</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">pop_up</span> <span class="o">=</span> <span class="n">PopUpInheritanceDict</span><span class="p">(</span>
             <span class="n">in_files</span><span class="p">,</span>
@@ -1866,13 +1879,12 @@ window.runMermaid = runMermaid;</script>
             <span class="n">missing</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">v</span><span class="p">]</span>
             <span class="n">context_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;context_name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Issues detected during &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">context_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                <span class="sa">f</span><span class="s2">&quot; initialization:&quot;</span>
+                <span class="s2">&quot;Issues detected during </span><span class="si">%s</span><span class="s2"> initialization:&quot;</span><span class="p">,</span>
+                <span class="n">context_name</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
             <span class="p">)</span>
 
             <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">missing</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">issue</span><span class="si">}</span><span class="s2"> attribute is missing...&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;- </span><span class="si">%s</span><span class="s2"> attribute is missing...&quot;</span><span class="p">,</span> <span class="n">issue</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="ow">and</span> <span class="s2">&quot;spm&quot;</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="ow">or</span> <span class="p">[]):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;notInDb&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;spm_script_file&quot;</span><span class="p">]</span>
@@ -2087,10 +2099,13 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">context_name</span><span class="si">}</span><span class="s2"> brick initialization warning: &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">parent_file</span><span class="si">}</span><span class="s2"> has no tags registered yet. &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;Therefore, </span><span class="si">{</span><span class="n">out_file</span><span class="si">}</span><span class="s2"> cannot inherit its tags. &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;This may cause subsequent initialization issues...&quot;</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> brick initialization warning: </span><span class="si">%s</span><span class="s2"> has no tags &quot;</span>
+                        <span class="s2">&quot;registered yet. Therefore, </span><span class="si">%s</span><span class="s2"> cannot inherit its &quot;</span>
+                        <span class="s2">&quot;tags. This may cause subsequent initialization &quot;</span>
+                        <span class="s2">&quot;issues...&quot;</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">context_name</span><span class="p">,</span>
+                        <span class="n">parent_file</span><span class="p">,</span>
+                        <span class="n">out_file</span><span class="p">,</span>
                     <span class="p">)</span>
                     <span class="n">initial_values</span> <span class="o">=</span> <span class="p">{}</span>
                     <span class="n">current_values</span> <span class="o">=</span> <span class="p">{}</span>

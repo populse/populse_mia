@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -86,25 +86,23 @@ processing.</p></li>
 <p>The collected attributes are organized into a dictionary where each key
 represents an attribute name, and the corresponding value is a list of all
 values for that attribute across the selected or filtered entries.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: Closes the widget and emits the collected attributes.
 If rows are selected, only those rows’ attributes are collected;
 otherwise, attributes are collected from all entries matching the
 current filter.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>attributes_selected: Signal emitted when the user validates the
 selection.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked">
 <span class="sig-name descname"><span class="pre">ok_clicked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#AttributesFilter.ok_clicked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.AttributesFilter.ok_clicked" title="Link to this definition">¶</a></dt>
@@ -138,11 +136,9 @@ AttributedProcessWidget.</p></li>
 <p>The widget is designed to integrate with a pipeline editor, providing
 real-time updates and synchronization between the UI and the underlying
 pipeline state.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>display_parameters: Displays the parameters of the selected node
 and configures the UI.</p></li>
 <li><p>filter_attributes: Opens a dialog for filtering node attributes.</p></li>
@@ -160,15 +156,15 @@ pipeline.</p></li>
 <li><p>update_parameters: Placeholder for backward compatibility (no
 operation).</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>value_changed: Signal emitted when a node or parameter value is
 changed.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_manager_tab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#CapsulNodeController.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.CapsulNodeController.__init__" title="Link to this definition">¶</a></dt>
@@ -341,26 +337,28 @@ pipeline.</p></li>
 </div></blockquote>
 <p>The widget is designed to integrate seamlessly with the pipeline editor,
 providing real-time feedback and updates as filters are applied.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>layout_view: Configures and initializes the main widget layout,
 including search bars, data tables, and action buttons.</p></li>
 <li><p>normalize_scan_path: Normalize a scan path to a logical
 project-relative path.</p></li>
-<li><p>ok_clicked: Applies the configured filter to the process and closes
-the widget.</p></li>
-<li><p>reset_search_bar: Resets the search interface to its default state,
-clearing all filters.</p></li>
+<li><p>ok_clicked: Applies the configured filter to the process and
+closes the widget.</p></li>
+<li><p>reset_search_bar: Resets the search interface to its default
+state, clearing all filters.</p></li>
 <li><p>search_str: Filters and updates the displayed scans based on the
 provided search string.</p></li>
-<li><p>update_tag_to_filter: Opens a dialog for selecting tags to filter and
-updates the filter button text.</p></li>
+<li><p>update_tag_to_filter: Opens a dialog for selecting tags to filter
+and updates the filter button text.</p></li>
 <li><p>update_tags: Updates the list of visualized tags through a user
 dialog and refreshes the table view.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#FilterWidget.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.FilterWidget.__init__" title="Link to this definition">¶</a></dt>
@@ -533,36 +531,37 @@ allowing users to:</p>
 <p>The widget is designed to integrate with a pipeline editor, providing
 real-time updates and synchronization between the UI and the underlying
 pipeline state.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>clearLayout: Clears and deletes all items from a widget’s layout,
 including nested layouts.</p></li>
 <li><p>display_filter: Displays a filter dialog for a plug.</p></li>
-<li><p>display_parameters: Renders the parameters UI for a selected node.</p></li>
-<li><p>get_index_from_plug_name: Returns the index of a plug label in the
-UI.</p></li>
-<li><p>update_node_name: Updates the name of the selected node in the
-pipeline.</p></li>
+<li><p>display_parameters: Renders the parameters UI for a selected
+node.</p></li>
+<li><p>get_index_from_plug_name: Returns the index of a plug label in
+the UI.</p></li>
 <li><p>rename_subprocesses: Recursively updates context names for
 subprocesses.</p></li>
-<li><p>update_parameters: Synchronizes UI parameter values with the process
-traits.</p></li>
+<li><p>update_node_name: Updates the name of the selected node in the
+pipeline.</p></li>
+<li><p>update_parameters: Synchronizes UI parameter values with the
+process traits.</p></li>
 <li><p>update_plug_value: Updates a plug value.</p></li>
 <li><p>update_plug_value_from_filter: Updates a plug value from filter
 results.</p></li>
 <li><p>release_process: Placeholder for process release logic (to be
 overridden by subclasses).</p></li>
 </ul>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>value_changed: Signal emitted when a node or parameter value is
 changed.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline_manager_tab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.__init__" title="Link to this definition">¶</a></dt>
@@ -686,30 +685,6 @@ values.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">
-<span class="sig-name descname"><span class="pre">update_node_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_node_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.update_node_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name" title="Link to this definition">¶</a></dt>
-<dd><p>Update the name of the currently selected node in the pipeline.</p>
-<p>Renames a node in the pipeline dictionary, preserving all its
-properties and connections. If the pipeline contains a
-ProcessIteration, ensures the name is prefixed with ‘<a href="#id3"><span class="problematic" id="id4">iterated_</span></a>’.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_node_name</strong> – The new name for the node. If None, retrieves the
-name from the UI line edit widget. Is not None only when this method
-is called from an “undo/redo”)</p>
-</dd>
-<dt class="field-even">Emits value_changed<span class="colon">:</span></dt>
-<dd class="field-even"><p>Signal with node rename details for undo/redo
-tracking.</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Does nothing if the new name already exists in the pipeline.</p>
-</div>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses">
 <span class="sig-name descname"><span class="pre">rename_subprocesses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_node_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.rename_subprocesses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.rename_subprocesses" title="Link to this definition">¶</a></dt>
 <dd><p>Recursively update context names for a node and its subprocesses.</p>
@@ -736,6 +711,30 @@ into the context naming hierarchy.</p></li>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name">
+<span class="sig-name descname"><span class="pre">update_node_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_node_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/node_controller.html#NodeController.update_node_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.node_controller.NodeController.update_node_name" title="Link to this definition">¶</a></dt>
+<dd><p>Update the name of the currently selected node in the pipeline.</p>
+<p>Renames a node in the pipeline dictionary, preserving all its
+properties and connections. If the pipeline contains a
+ProcessIteration, ensures the name is prefixed with <code class="docutils literal notranslate"><span class="pre">iterated_</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>new_node_name</strong> – The new name for the node. If None, retrieves the
+name from the UI line edit widget. Is not None only when this method
+is called from an “undo/redo”)</p>
+</dd>
+<dt class="field-even">Emits value_changed<span class="colon">:</span></dt>
+<dd class="field-even"><p>Signal with node rename details for undo/redo
+tracking.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Does nothing if the new name already exists in the pipeline.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">

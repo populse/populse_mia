@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.advanced_search</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -439,15 +439,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    The advanced search creates a complex query to the database and is a</span>
 <span class="sd">    combination of several &quot;query lines&quot; which are linked with AND or OR and</span>
 <span class="sd">    all composed of:</span>
+
 <span class="sd">        - A negation or not.</span>
 <span class="sd">        - A tag name or all visible tags.</span>
 <span class="sd">        - A condition (==, !=, &gt;, &lt;, &gt;=, &lt;=, CONTAINS, IN, BETWEEN).</span>
 <span class="sd">        - A value.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - add_search_bar: Create and define the advanced research bar.</span>
 <span class="sd">            - apply_filter: Apply an opened filter to update the table.</span>
 <span class="sd">            - displayConditionRules: Set the list of condition choices,</span>
@@ -480,15 +479,20 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the AdvancedSearch widget.</span>
 
 <span class="sd">        :param project: The current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param data_browser: The parent DataBrowser widget that contains this</span>
 <span class="sd">         search.</span>
+<span class="sd">        :type data_browser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
 <span class="sd">        :param scans_list: List of document scans to search within. Defaults</span>
 <span class="sd">         to empty list.</span>
+<span class="sd">        :type scans_list: list | None</span>
 <span class="sd">        :param tags_list: List of tags to display in the search interface.</span>
 <span class="sd">         Defaults to empty list.</span>
-<span class="sd">        :param from_pipeline: (bool) Whether the widget is instantiated from</span>
-<span class="sd">         the pipeline manager. Defaults to False.</span>
-
+<span class="sd">        :type tags_list: list | None</span>
+<span class="sd">        :param from_pipeline: Whether the widget is instantiated from the</span>
+<span class="sd">         pipeline manager. Defaults to False.</span>
+<span class="sd">        :type from_pipeline: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -518,9 +522,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        based on field type and selected condition.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _create_combo_box: Create and return a QComboBox populated</span>
 <span class="sd">                  with the given items.</span>
 <span class="sd">                - _get_shown_tags_from_db: Retrieve the tags currently marked</span>
@@ -531,11 +533,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Create and return a QComboBox populated with the given items.</span>
 
-<span class="sd">            :param name: (str) Object name assigned to the QComboBox.</span>
-<span class="sd">            :param items: (iterable of str) Items to add to the combo box, in</span>
-<span class="sd">             order.</span>
+<span class="sd">            :param name: Object name assigned to the QComboBox.</span>
+<span class="sd">            :type name: str</span>
+<span class="sd">            :param items: Items to add to the combo box, in order.</span>
+<span class="sd">            :type items: list[str]</span>
 
-<span class="sd">            :Returns: (QComboBox) The initialized combo box.</span>
+<span class="sd">            :returns: The initialized combo box.</span>
+<span class="sd">            :rtype: PyQt5.QtWidgets.QComboBox</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">combo</span> <span class="o">=</span> <span class="n">QComboBox</span><span class="p">()</span>
             <span class="n">combo</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
@@ -550,8 +554,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Retrieve the tags currently marked as visible from the project</span>
 <span class="sd">            database.</span>
 
-<span class="sd">            :Returns: (list) A list of tags configured to be shown in the</span>
-<span class="sd">             project.</span>
+<span class="sd">            :returns: A list of tags configured to be shown in the project.</span>
+<span class="sd">            :rtype: list[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -633,12 +637,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param filter: Filter object containing the query criteria with</span>
 <span class="sd">         attributes:</span>
+
 <span class="sd">            - nots (list): Negation flags for each condition.</span>
 <span class="sd">            - values (list): Values to match against.</span>
 <span class="sd">            - conditions (list): Comparison operators (e.g., &#39;==&#39;, &#39;&gt;&#39;, &#39;&lt;&#39;).</span>
 <span class="sd">            - links (list): Logical operators connecting conditions</span>
 <span class="sd">              (&#39;AND&#39;, &#39;OR&#39;).</span>
 <span class="sd">            - fields (list): Database fields to query.</span>
+<span class="sd">        :type filter: populse_mia.data_manager.filter.Filter</span>
 
 <span class="sd">        Side effects:</span>
 <span class="sd">            - Updates self.rows with filter parameters.</span>
@@ -701,9 +707,8 @@ window.runMermaid = runMermaid;</script>
                     <span class="p">]</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="s2">&quot;Exception in AdvancedSearch.apply_filter()&quot;</span><span class="p">,</span>
-                        <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                        <span class="s2">&quot;Exception in AdvancedSearch.apply_filter()&quot;</span>
                     <span class="p">)</span>
                     <span class="c1"># Display an error dialog when filter execution fails</span>
                     <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
@@ -744,8 +749,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        fields include it.</span>
 
 <span class="sd">        :param field: QComboBox widget containing the selected tag name.</span>
+<span class="sd">        :type field: PyQt5.QtWidgets.QComboBox</span>
 <span class="sd">        :param condition: QComboBox widget whose items will be updated based</span>
 <span class="sd">         on the field&#39;s type.</span>
+<span class="sd">        :type condition: PyQt5.QtWidgets.QComboBox</span>
 
 <span class="sd">        Behavior:</span>
 <span class="sd">            - Numeric types: Include &lt;, &gt;, &lt;=, &gt;=, BETWEEN operators.</span>
@@ -755,9 +762,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Special case &quot;All visualized tags&quot;: Treated as non-numeric.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _update_operators: Add or remove operators from the condition</span>
 <span class="sd">                  widget.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -767,9 +772,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Add or remove operators from the condition widget.</span>
 
 <span class="sd">            :param condition_widget: QComboBox to modify.</span>
+<span class="sd">            :type condition_widget: PyQt5.QtWidgets.QComboBox</span>
 <span class="sd">            :param operators: List of operator strings to add or remove.</span>
+<span class="sd">            :type operators: list[str]</span>
 <span class="sd">            :param should_add: If True, add missing operators; if False, remove</span>
-<span class="sd">                               existing ones.</span>
+<span class="sd">             existing ones.</span>
+<span class="sd">            :type should_add: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">for</span> <span class="n">operator</span> <span class="ow">in</span> <span class="n">operators</span><span class="p">:</span>
@@ -822,7 +830,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        match the requirements of the selected condition operator.</span>
 
 <span class="sd">        :param choice: QComboBox containing the selected condition operator.</span>
+<span class="sd">        :type choice: PyQt5.QtWidgets.QComboBox</span>
 <span class="sd">        :param value: QLineEdit widget that will be configured.</span>
+<span class="sd">        :type value: PyQt5.QtWidgets.QLineEdit</span>
 
 <span class="sd">        Behavior:</span>
 <span class="sd">            - BETWEEN: Enabled with placeholder &quot;value1; value2&quot;.</span>
@@ -872,14 +882,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param replace_all_by_fields: If True, replaces &quot;All visualized tags&quot;</span>
 <span class="sd">         with the actual list of visible fields. If False, keeps the literal</span>
 <span class="sd">         &quot;All visualized tags&quot; text.</span>
+<span class="sd">        :type replace_all_by_fields: bool</span>
 
-<span class="sd">        :Returns: (tuple) A 5-tuple containing:</span>
+<span class="sd">        :returns: A 5-tuple containing:</span>
 
-<span class="sd">            - fields (list): Field names to filter on</span>
-<span class="sd">            - conditions (list): Comparison operators (e.g., &#39;=&#39;, &#39;BETWEEN&#39;)</span>
-<span class="sd">            - values (list): Filter values (strings or lists for BETWEEN/IN)</span>
-<span class="sd">            - links (list): Logical operators connecting filters (AND/OR)</span>
-<span class="sd">            - nots (list): Negation flags for each filter</span>
+<span class="sd">            - fields: Field names to filter on</span>
+<span class="sd">            - conditions: Comparison operators (e.g., &#39;=&#39;, &#39;BETWEEN&#39;)</span>
+<span class="sd">            - values: Filter values (strings or lists for BETWEEN/IN)</span>
+<span class="sd">            - links: Logical operators connecting filters (AND/OR)</span>
+<span class="sd">            - nots: Negation flags for each filter</span>
+<span class="sd">        :rtype: tuple[list, list, list, list, list]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - BETWEEN and IN conditions have their values split into lists.</span>
@@ -972,9 +984,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        all available scans.</span>
 
 <span class="sd">        Side Effects:</span>
-<span class="sd">            - Updates self.data_browser.table_data.scans_to_visualize.</span>
-<span class="sd">            - Updates self.data_browser.table_data.scans_to_search.</span>
-<span class="sd">            - Updates self.project.currentFilter (if not from_pipeline).</span>
+<span class="sd">            - Updates ``self.data_browser.table_data.scans_to_visualize``.</span>
+<span class="sd">            - Updates ``self.data_browser.table_data.scans_to_search``.</span>
+<span class="sd">            - Updates ``self.project.currentFilter (if not from_pipeline)``.</span>
 <span class="sd">            - Displays error dialog on search failure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Retrieve filter parameters</span>
@@ -1004,10 +1016,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">current_filter</span><span class="o">.</span><span class="n">conditions</span> <span class="o">=</span> <span class="n">conditions</span>
 
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
                 <span class="s2">&quot;Exception in populse_mia.user_interface.data_browser.&quot;</span>
-                <span class="s2">&quot;advanced_search.AdvancedSearch.launch_search():&quot;</span><span class="p">,</span>
-                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;advanced_search.AdvancedSearch.launch_search():&quot;</span>
             <span class="p">)</span>
             <span class="c1"># Display error dialog when search fails.</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
@@ -1040,25 +1051,30 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        optional negation.</span>
 
 <span class="sd">        :param links: Logical operators joining filter rows</span>
-<span class="sd">         (e.g. [&#39;AND&#39;, &#39;OR&#39;]). Length should be len(fields) - 1.</span>
+<span class="sd">         (e.g. [&#39;AND&#39;, &#39;OR&#39;]). Length should be ``len(fields)`` - 1.</span>
+<span class="sd">        :type links: list[str]</span>
 <span class="sd">        :param fields: Nested list where each sublist contains field names to</span>
 <span class="sd">         filter on. Fields within a row are OR-combined.</span>
+<span class="sd">        :type fields: list[list[str]]</span>
 <span class="sd">        :param conditions: Filter operators for each row. Supported values:</span>
 <span class="sd">         &#39;==&#39;, &#39;!=&#39;, &#39;&lt;&#39;, &#39;&gt;&#39;, &#39;&lt;=&#39;, &#39;&gt;=&#39;, &#39;IN&#39;, &#39;BETWEEN&#39;, &#39;CONTAINS&#39;,</span>
 <span class="sd">         &#39;HAS VALUE&#39;, &#39;HAS NO VALUE&#39;.</span>
+<span class="sd">        :type conditions: list[str]</span>
 <span class="sd">        :param values: Filter values corresponding to each condition. For</span>
 <span class="sd">         &#39;BETWEEN&#39;, provide a two-element sequence [min, max].</span>
+<span class="sd">        :type values: list</span>
 <span class="sd">        :param nots: Negation flags for each row (&#39;NOT&#39; to negate, empty</span>
 <span class="sd">         string otherwise).</span>
+<span class="sd">        :type nots: list[str]</span>
 <span class="sd">        :param scans: List of scan identifiers to restrict the search scope.</span>
+<span class="sd">        :type scans: list[str]</span>
 
-<span class="sd">        :Returns: Complete filter query string with all conditions and scan</span>
+<span class="sd">        :returns: Complete filter query string with all conditions and scan</span>
 <span class="sd">         restrictions.</span>
+<span class="sd">        :rtype: str</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _format_value: Convert a Python value into a string safe for</span>
 <span class="sd">                  use in queries.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1072,10 +1088,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            breaking query syntax.</span>
 
 <span class="sd">            :param value: The Python value to format (e.g., int, float,</span>
-<span class="sd">                          str, bool).</span>
+<span class="sd">             str, bool, list).</span>
+<span class="sd">            :type value: Any</span>
 
-<span class="sd">            :return (str): A string representation of the value with single</span>
-<span class="sd">                           quotes replaced by double quotes.</span>
+<span class="sd">            :return: A string representation of the value with single quotes</span>
+<span class="sd">             replaced by double quotes.</span>
+<span class="sd">            :rtype: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
 
@@ -1185,6 +1203,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        from the internal `rows` list, and refreshes the view.</span>
 
 <span class="sd">        :param row_layout: The row (list of widgets) to remove.</span>
+<span class="sd">        :type row_layout: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Remove the row only if more than one exists</span>
@@ -1223,6 +1242,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param links: List of previously selected link operators (&#39;AND&#39;/&#39;OR&#39;)</span>
 <span class="sd">         to restore when rebuilding the UI.</span>
+<span class="sd">        :type links: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Add plus button to the last row for adding new search bars</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
@@ -1259,9 +1279,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and scheduled for deletion, preventing memory leaks.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _remove_widget: Safely removes a QWidget from its parent and</span>
 <span class="sd">                  schedules it for deletion.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1277,8 +1295,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            nothing.</span>
 
 <span class="sd">            :param widget_ref: The QWidget instance to remove, or `None`.</span>
+<span class="sd">            :type widget_ref: PyQt5.QtWidgets.QWidget | None</span>
 
-<span class="sd">            :return: Always returns `None` after removing the widget.</span>
+<span class="sd">            :returns: Always returns `None` after removing the widget.</span>
+<span class="sd">            :rtype: None</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">if</span> <span class="n">widget_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>

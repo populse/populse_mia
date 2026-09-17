@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -518,9 +518,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    advanced search, tag management, and visual inspection of loaded data.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - add_tag_infos: Add the tag after add tag pop-up.</span>
 <span class="sd">            - add_tag_pop_up: Display the add tag pop-up.</span>
 <span class="sd">            - clone_tag_infos: Clone the tag after the clone tag pop-up.</span>
@@ -555,7 +553,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialization of the data_browser class.</span>
 
 <span class="sd">        :param project: Current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param main_window: Main window of the software.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Store references</span>
@@ -634,14 +634,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        populates it with default values for all existing scans. The operation</span>
 <span class="sd">        is tracked in the project&#39;s undo/redo history.</span>
 
-<span class="sd">        :param new_tag_name: (str) Name of the new tag to create.</span>
+<span class="sd">        :param new_tag_name: Name of the new tag to create.</span>
+<span class="sd">        :type new_tag_name: str</span>
 <span class="sd">        :param new_default_value: Default value to assign to all existing</span>
 <span class="sd">         scans.</span>
-<span class="sd">        :param tag_type: (str) Data type of the tag (e.g., FIELD_TYPE_STRING,</span>
+<span class="sd">        :type new_default_value: Any</span>
+<span class="sd">        :param tag_type: Data type of the tag (e.g., FIELD_TYPE_STRING,</span>
 <span class="sd">         FIELD_TYPE_FLOAT).</span>
-<span class="sd">        :param new_tag_description: (str) Human-readable description of the</span>
+<span class="sd">        :type tag_type: str</span>
+<span class="sd">        :param new_tag_description: Human-readable description of the</span>
 <span class="sd">         tag.</span>
-<span class="sd">        :param new_tag_unit: (str) Unit of measurement for the tag value.</span>
+<span class="sd">        :type new_tag_description: str</span>
+<span class="sd">        :param new_tag_unit: Unit of measurement for the tag value.</span>
+<span class="sd">        :type new_tag_unit: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Marks the project as having unsaved modifications</span>
@@ -744,8 +749,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        to the new tag. The operation is recorded in the project&#39;s undo</span>
 <span class="sd">        history.</span>
 
-<span class="sd">        :param tag_to_clone: (str) Name of the tag to clone.</span>
-<span class="sd">        :param new_tag_name: (str) Name of the new tag to create.</span>
+<span class="sd">        :param tag_to_clone: Name of the tag to clone.</span>
+<span class="sd">        :type tag_to_clone: str</span>
+<span class="sd">        :param new_tag_name: Name of the new tag to create.</span>
+<span class="sd">        :type new_tag_name: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - The new tag is added to the database schema and data for both</span>
@@ -1104,8 +1111,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        collections, preserving tag attributes and values in the undo history.</span>
 <span class="sd">        The table display is updated to reflect the changes.</span>
 
-<span class="sd">        :param tag_names_to_remove: Iterable of tag names (str) to remove from</span>
-<span class="sd">         the database and table display.</span>
+<span class="sd">        :param tag_names_to_remove: Iterable of tag names to remove from the</span>
+<span class="sd">         database and table display.</span>
+<span class="sd">        :type tag_names_to_remove: list[str]</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Marks project as having unsaved modifications.</span>
@@ -1221,6 +1229,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param str_search: The search string to filter documents. Empty string</span>
 <span class="sd">         returns all searchable scans. NOT_DEFINED_VALUE returns scans with</span>
 <span class="sd">         undefined values.</span>
+<span class="sd">        :type str_search: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_scan_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table_data</span><span class="o">.</span><span class="n">scans_to_visualize</span>
 
@@ -1357,6 +1366,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param database: The new Database instance to use across the</span>
 <span class="sd">         application.</span>
+<span class="sd">        :type database: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Propagate database to all dependent components</span>
@@ -1386,9 +1396,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    data validation.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - createEditor: Create and return a QDateEdit widget for editing</span>
 <span class="sd">              dates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1400,6 +1408,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the DateFormatDelegate.</span>
 
 <span class="sd">        :param parent: Optional parent QObject. Defaults to None.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
@@ -1414,10 +1424,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        creates a date editor with DD/MM/YYYY format.</span>
 
 <span class="sd">        :param parent: The parent widget for the editor.</span>
-<span class="sd">        :param option: Style options for rendering the item.</span>
-<span class="sd">        :param index: The model index of the item being edited.</span>
+<span class="sd">        :type parent: PyQt5.QtWidgets.QWidget</span>
+<span class="sd">        :param option: Style options for rendering the item (unused).</span>
+<span class="sd">        :type option: PyQt5.QtWidgets.QStyleOptionViewItem</span>
+<span class="sd">        :param index: The model index of the item being edited (unused).</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :Returns: (QDateEdit) A configured date editor widget.</span>
+<span class="sd">        :return: A configured date editor widget.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QDateEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="n">QDateEdit</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">editor</span><span class="o">.</span><span class="n">setDisplayFormat</span><span class="p">(</span><span class="s2">&quot;dd/MM/yyyy&quot;</span><span class="p">)</span>
@@ -1439,9 +1453,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    formatted as DD/MM/YYYY HH:MM:SS.mmm (day/month/year with milliseconds).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - createEditor: Create and return a QDateTimeEdit widget for</span>
 <span class="sd">              editing datetimes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1455,6 +1467,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the datetime delegate.</span>
 
 <span class="sd">        :param parent: Optional parent QWidget. Defaults to None.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
@@ -1466,10 +1480,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create and configure a datetime editor widget.</span>
 
 <span class="sd">        :param parent: Parent widget for the editor.</span>
-<span class="sd">        :param option: Style options for the item.</span>
-<span class="sd">        :param index: Model index of the item being edited.</span>
+<span class="sd">        :type parent: PyQt5.QtWidgets.QWidget</span>
+<span class="sd">        :param option: Style options for rendering the item (unused).</span>
+<span class="sd">        :type option: PyQt5.QtWidgets.QStyleOptionViewItem</span>
+<span class="sd">        :param index: The model index of the item being edited (unused).</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :Returns: (QDateTimeEdit) Configured datetime editor widget.</span>
+<span class="sd">        :return: Configured datetime editor widget.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QDateTimeEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="n">QDateTimeEdit</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">editor</span><span class="o">.</span><span class="n">setDisplayFormat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DATETIME_FORMAT</span><span class="p">)</span>
@@ -1488,9 +1506,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    cell value, ensuring consistent formatting of numeric inputs.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - createEditor: Create and return a QDoubleSpinBox widget for</span>
 <span class="sd">              editing numbers.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1501,7 +1517,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the NumberFormatDelegate.</span>
 
-<span class="sd">        :param parent: (QWidget) The parent widget. Defaults to None.</span>
+<span class="sd">        :param parent: The parent widget. Defaults to None.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
@@ -1516,13 +1534,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        cell value.</span>
 
 <span class="sd">        :param parent: Parent widget for the editor.</span>
-<span class="sd">        :param option: Style options for the item.</span>
-<span class="sd">        :paramindex: Model index of the item being edited.</span>
+<span class="sd">        :type parent: PyQt5.QtWidgets.QWidget</span>
+<span class="sd">        :param option: Style options for rendering the item (unused).</span>
+<span class="sd">        :type option: PyQt5.QtWidgets.QStyleOptionViewItem</span>
+<span class="sd">        :param index: The model index of the item being edited (unused).</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :Returns: (QDoubleSpinBox) A spin box editor configured with the</span>
-<span class="sd">         appropriate decimal precision.</span>
+<span class="sd">        :return: A spin box editor configured with the appropriate decimal</span>
+<span class="sd">         precision.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QDoubleSpinBox</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="n">editor</span> <span class="o">=</span> <span class="n">QDoubleSpinBox</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">editor</span><span class="o">.</span><span class="n">setMaximum</span><span class="p">(</span><span class="mf">1e10</span><span class="p">)</span>
         <span class="c1"># Determine decimal places from the current value</span>
@@ -1544,9 +1565,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    their associated tags.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - add_column: Add a column to the table.</span>
 <span class="sd">            - add_columns: Add columns to the table.</span>
 <span class="sd">            - add_path: Call a pop-up to add any document to the project.</span>
@@ -1611,18 +1630,24 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the data table widget with project data and browser context.</span>
 
-<span class="sd">        :param project: (Project) The current project instance containing data</span>
-<span class="sd">         and configuration.</span>
-<span class="sd">        :param data_browser: (DataBrowser) Parent DataBrowser widget that</span>
-<span class="sd">         contains this table.</span>
-<span class="sd">        :param tags_to_display: (list[str]) List of metadata tags to show as</span>
-<span class="sd">         table columns.</span>
-<span class="sd">        :param update_values: (bool) If True, enables cell editing; if False,</span>
-<span class="sd">         table is read-only.</span>
-<span class="sd">        :param activate_selection: (bool) True to enable the selection feature,</span>
-<span class="sd">         False otherwise.</span>
-<span class="sd">        :param link_viewer(bool): If True, links table selection to external</span>
-<span class="sd">         viewer widget. Defaults to True.</span>
+<span class="sd">        :param project: The current project instance containing data and</span>
+<span class="sd">         configuration.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param data_browser: Parent DataBrowser widget that contains this</span>
+<span class="sd">         table.</span>
+<span class="sd">        :type data_browser:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.DataBrowser</span>
+<span class="sd">        :param tags_to_display: List of metadata tags to show as table columns.</span>
+<span class="sd">        :type tags_to_display: list[str]</span>
+<span class="sd">        :param update_values: If True, enables cell editing; if False, table is</span>
+<span class="sd">         read-only.</span>
+<span class="sd">        :type update_values: bool</span>
+<span class="sd">        :param activate_selection: True to enable the selection feature, False</span>
+<span class="sd">         otherwise.</span>
+<span class="sd">        :type activate_selection: bool</span>
+<span class="sd">        :param link_viewer: If True, links table selection to external viewer</span>
+<span class="sd">         widget. Defaults to True.</span>
+<span class="sd">        :type link_viewer: bool</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Column sorting and reordering are enabled by default</span>
@@ -1697,10 +1722,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        metadata from the database, sets the appropriate delegate based on</span>
 <span class="sd">        field type, and populates cells with current values from the database.</span>
 
-<span class="sd">        :param column: (int) Zero-based index where the column should be</span>
-<span class="sd">         inserted.</span>
-<span class="sd">        :param tag: (str) Tag name identifying the field to add from the</span>
-<span class="sd">         database.</span>
+<span class="sd">        :param column: Zero-based index where the column should be inserted.</span>
+<span class="sd">        :type column: int</span>
+<span class="sd">        :param tag: Tag name identifying the field to add from the database.</span>
+<span class="sd">        :type tag: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Temporarily disconnects item change signals during insertion to</span>
@@ -1789,6 +1814,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This method synchronizes the table&#39;s columns with the current database</span>
 <span class="sd">        schema by:</span>
+
 <span class="sd">            - Adding columns for new database fields that don&#39;t exist in the</span>
 <span class="sd">              table.</span>
 <span class="sd">            - Populating new columns with values from the database.</span>
@@ -1943,6 +1969,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        custom widgets.</span>
 
 <span class="sd">        :param rows: An iterable of scan identifiers to be added to the table.</span>
+<span class="sd">        :type rows: list[str]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Duplicate scans (already present in the table) are automatically</span>
@@ -2123,8 +2150,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        without triggering unnecessary redraws or signal handling. All previous</span>
 <span class="sd">        widget states are restored upon exit, even if an exception occurs.</span>
 
-<span class="sd">        :param disable_sorting: (bool) If True (default), temporarily disables</span>
+<span class="sd">        :param disable_sorting: If True (default), temporarily disables</span>
 <span class="sd">         sorting during the batch update to prevent rearrangements.</span>
+<span class="sd">        :type disable_sorting: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">prev_sorting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">isSortingEnabled</span><span class="p">()</span>
 
@@ -2216,13 +2244,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create and display the context menu for the table, and perform</span>
 <span class="sd">        the corresponding action based on the user&#39;s selection.</span>
 
-<span class="sd">        :param position: (QPoint) The mouse cursor position relative to the</span>
-<span class="sd">         widget.</span>
+<span class="sd">        :param position: The mouse cursor position relative to the widget.</span>
+<span class="sd">        :type position: PyQt5.QtCore.QPoint</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _confirm_action: Display a warning message box with an</span>
 <span class="sd">                  OK/Cancel choice and connect the OK button to a callback</span>
 <span class="sd">                  function.</span>
@@ -2231,17 +2257,15 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_confirm_action</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="nb">callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Display a warning message box with an OK/Cancel choice and connect</span>
-<span class="sd">            the OK button to a callback function.</span>
+<span class="sd">            Display a warning message box with OK/Cancel buttons.</span>
 
-<span class="sd">            The dialog shows a warning icon and the provided message. If the</span>
-<span class="sd">            user confirms the action by clicking OK, the specified callback is</span>
-<span class="sd">            invoked. Cancel simply closes the dialog without side effects.</span>
+<span class="sd">            If the user clicks OK, execute the provided callback. If the user</span>
+<span class="sd">            clicks Cancel, close the dialog without executing the callback.</span>
 
-<span class="sd">            :param text (str): The warning message text to display in the</span>
-<span class="sd">                                dialog.</span>
-<span class="sd">            :param callback (callable): The function to execute if the user</span>
-<span class="sd">                                        clicks OK.</span>
+<span class="sd">            :param text: The warning message to display.</span>
+<span class="sd">            :type text: str</span>
+<span class="sd">            :param callback: The function to execute when the user clicks OK.</span>
+<span class="sd">            :type callback: callable</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -2344,16 +2368,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and any orphaned output documents that are not used as inputs</span>
 <span class="sd">        elsewhere.</span>
 
-<span class="sd">        :param brick_id: (str) The unique identifier of the brick to be</span>
-<span class="sd">         deleted.</span>
+<span class="sd">        :param brick_id: The unique identifier of the brick to be deleted.</span>
+<span class="sd">        :type brick_id: str</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - extract_document_ids: Extracts all string values from a</span>
 <span class="sd">                  nested dictionary structure.</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -2378,11 +2399,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                    - a list: Its elements are recursively traversed and</span>
 <span class="sd">                      processed. Non-string, non-list values are ignored.</span>
 
-<span class="sd">                :param data: (dict) Dictionary that may contain nested strings</span>
-<span class="sd">                 or lists as values.</span>
+<span class="sd">                :param data: Dictionary that may contain nested strings or</span>
+<span class="sd">                 lists as values.</span>
+<span class="sd">                :type data: dict</span>
 
-<span class="sd">                :Returns: (set[str]) A set containing all unique string values</span>
-<span class="sd">                 found within the dictionary.</span>
+<span class="sd">                :return: A set containing all unique string values found within</span>
+<span class="sd">                 the dictionary.</span>
+<span class="sd">                :rtype: set[str]</span>
 <span class="sd">                &quot;&quot;&quot;</span>
                 <span class="n">document_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
                 <span class="n">stack</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
@@ -2683,8 +2706,10 @@ window.runMermaid = runMermaid;</script>
             <span class="bp">self</span><span class="o">.</span><span class="n">update_colors</span><span class="p">()</span>
             <span class="n">safe_connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s2">&quot;An error occurred while editing the table: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span>
+            <span class="p">)</span>
 
         <span class="k">finally</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setMouseTracking</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -2921,6 +2946,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param take_tags_to_update: If True, use tags_to_display for</span>
 <span class="sd">         visibility. If False, use field visibility attributes. Defaults to</span>
 <span class="sd">         False.</span>
+<span class="sd">        :type take_tags_to_update: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get field names and prepare sorted list with FileName first</span>
@@ -2984,8 +3010,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Returns the list of selected scan paths if a selection is active,</span>
 <span class="sd">        otherwise returns all visible scan paths in the data browser.</span>
 
-<span class="sd">        :Returns: (list) List of scan paths from either the current selection</span>
-<span class="sd">         or all visible scans in the data browser.</span>
+<span class="sd">        :returns: List of scan paths from either the current selection or all</span>
+<span class="sd">         visible scans in the data browser.</span>
+<span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">activate_selection</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">scans</span><span class="p">:</span>
@@ -3005,10 +3032,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        inserting a column header while preserving the existing alphabetical</span>
 <span class="sd">        sort order.</span>
 
-<span class="sd">        :param to_insert: (str) The column header text to insert.</span>
+<span class="sd">        :param to_insert: The column header text to insert.</span>
+<span class="sd">        :type to_insert: str</span>
 
-<span class="sd">        :Returns: (int) The column index where the new column should be</span>
-<span class="sd">         inserted. Returns columnCount() if it should be appended at the end.</span>
+<span class="sd">        :returns: The column index where the new column should be inserted.</span>
+<span class="sd">         Returns columnCount() if it should be appended at the end.</span>
+<span class="sd">        :rtype: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Assumes that column 0 is reserved (TAG_FILENAME must always be</span>
@@ -3033,10 +3062,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Find the row index for a given scan filename.</span>
 
 <span class="sd">        :param scan: The scan filename to search for.</span>
+<span class="sd">        :type scan: str</span>
 
-<span class="sd">        :Returns: (int) The zero-based row index if the scan is found, None</span>
+<span class="sd">        :returns: The zero-based row index if the scan is found, None</span>
 <span class="sd">         otherwise.</span>
-
+<span class="sd">        :rtype: int | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
@@ -3058,10 +3088,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Searches through the table&#39;s horizontal headers to locate the column</span>
 <span class="sd">        corresponding to the specified tag.</span>
 
-<span class="sd">        :param tag: (str) The name of the tag to search for.</span>
+<span class="sd">        :param tag: The name of the tag to search for.</span>
+<span class="sd">        :type tag: str</span>
 
-<span class="sd">        :Returns: (int) The zero-based column index if the tag is found, None</span>
+<span class="sd">        :returns: The zero-based column index if the tag is found, None</span>
 <span class="sd">         otherwise.</span>
+<span class="sd">        :rtype: int | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">columnCount</span><span class="p">()):</span>
@@ -3084,8 +3116,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        It delegates to the parent class handler and then updates the table</span>
 <span class="sd">        data values.</span>
 
-<span class="sd">        :param event: (QMouseEvent) The mouse event containing information</span>
-<span class="sd">         about the button released, position, and modifiers.</span>
+<span class="sd">        :param event: The mouse event containing information about the button</span>
+<span class="sd">         released, position, and modifiers.</span>
+<span class="sd">        :type event: PyQt5.QtGui.QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseReleaseEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edit_table_data_values</span><span class="p">()</span></div>
@@ -3101,9 +3134,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        reorganizes the table rows to reflect the new order. Handles both</span>
 <span class="sd">        regular items and special brick widgets during the reordering.</span>
 
-<span class="sd">        :param list_tags: (list) List of tag names to sort by (primary to</span>
-<span class="sd">         secondary).</span>
-<span class="sd">        :param order: (str) Sort direction, either &quot;Ascending&quot; or &quot;Descending&quot;.</span>
+<span class="sd">        :param list_tags: List of tag names to sort by (primary to secondary).</span>
+<span class="sd">        :type list_tags: list[str]</span>
+<span class="sd">        :param order: Sort direction, either &quot;Ascending&quot; or &quot;Descending&quot;.</span>
+<span class="sd">        :type order: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Temporarily disables item change signals during sorting to prevent</span>
@@ -3111,29 +3145,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            relative order of items with equal sort keys.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
-<span class="sd">                - _clear_cell: clears the specified cell.</span>
 <span class="sd">                - _create_brick_widget: Create and set a brick widget for the</span>
 <span class="sd">                  specified table cell.</span>
+<span class="sd">                - _clear_cell: clears the specified cell.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">def</span><span class="w"> </span><span class="nf">_clear_cell</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">            Clears the specified cell and sets an optional non-editable item.</span>
-
-<span class="sd">            :param row: (int) The row index of the cell to clear.</span>
-<span class="sd">            :param column: (int) The column index of the cell to clear.</span>
-<span class="sd">            :param item: (QTableWidgetItem) The item to set in the cleared</span>
-<span class="sd">             cell. If None, the cell remains empty.</span>
-<span class="sd">            &quot;&quot;&quot;</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
-                <span class="n">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">)</span>
-                <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_create_brick_widget</span><span class="p">(</span>
             <span class="n">row</span><span class="p">,</span>
@@ -3151,15 +3167,23 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            clickable button. Clicking the button shows the brick&#39;s history.</span>
 <span class="sd">            Existing brick references are updated if necessary.</span>
 
-<span class="sd">            :param row :(int) Row index of the cell to fill.</span>
-<span class="sd">            :param column: (int) Column index of the cell to fill.</span>
-<span class="sd">            :param scan: (str) Primary key of the scan linked to the brick.</span>
-<span class="sd">            :param db: (Database) Active database connection.</span>
-<span class="sd">            :param old_widget: (QWidget) Existing widget previously in the</span>
-<span class="sd">             same cell (if any).</span>
-<span class="sd">            :param item: (QTableWidgetItem) The table item for this cell.</span>
-<span class="sd">            :param clicked_scan: (str) The scan ID to use when connecting the</span>
-<span class="sd">             brick button’s clicked signal. If None, defaults to `scan`.</span>
+<span class="sd">            :param row : Row index of the cell to fill.</span>
+<span class="sd">            :type row: int</span>
+<span class="sd">            :param column: Column index of the cell to fill.</span>
+<span class="sd">            :type column: int</span>
+<span class="sd">            :param scan: Primary key of the scan linked to the brick.</span>
+<span class="sd">            :type scan: str</span>
+<span class="sd">            :param database_data: Active database connection.</span>
+<span class="sd">            :type database_data:</span>
+<span class="sd">             populse_mia.data_manager.database_mia.DatabaseMiaData</span>
+<span class="sd">            :param old_widget: Existing widget previously in the same cell (if</span>
+<span class="sd">             any).</span>
+<span class="sd">            :type old_widget: PyQt5.QtWidgets.QWidget | None</span>
+<span class="sd">            :param item: The table item for this cell.</span>
+<span class="sd">            :type item: PyQt5.QtWidgets.QTableWidgetItem | None</span>
+<span class="sd">            :param clicked_scan: The scan ID to use when connecting the brick</span>
+<span class="sd">             button’s clicked signal. If None, defaults to `scan`.</span>
+<span class="sd">            :type clicked_scan: str | None</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">app_thread</span> <span class="o">=</span> <span class="n">QApplication</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">thread</span><span class="p">()</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
@@ -3209,6 +3233,25 @@ window.runMermaid = runMermaid;</script>
             <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">brick_name_button</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">widget</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">_clear_cell</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Clears the specified cell and sets an optional non-editable item.</span>
+
+<span class="sd">            :param row: The row index of the cell to clear.</span>
+<span class="sd">            :type row: int</span>
+<span class="sd">            :param column: The column index of the cell to clear.</span>
+<span class="sd">            :type column: int</span>
+<span class="sd">            :param item: The item to set in the cleared cell. If None, the cell</span>
+<span class="sd">             remains empty.</span>
+<span class="sd">            :type item: PyQt5.QtWidgets.QTableWidgetItem | None</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
+                <span class="n">set_item_data</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">FIELD_TYPE_STRING</span><span class="p">)</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">flags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEditable</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
 
         <span class="n">safe_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
 
@@ -3356,6 +3399,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              lists.</span>
 
 <span class="sd">        :param item_origin: QTableWidgetItem from which the edit originated.</span>
+<span class="sd">        :type item_origin: PyQt5.QtWidgets.QTableWidgetItem</span>
 
 <span class="sd">        Side effects:</span>
 <span class="sd">            - Modifies database values for selected cells.</span>
@@ -3363,6 +3407,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Adds entry to project undo history.</span>
 <span class="sd">            - Clears redo history.</span>
 <span class="sd">            - Resizes columns to fit content.</span>
+
+<span class="sd">        Contains:</span>
+<span class="sd">            Inner functions:</span>
+<span class="sd">                - _show_error_and_revert: Displays an error dialog and reverts</span>
+<span class="sd">                  selected cells to their original database values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">def</span><span class="w"> </span><span class="nf">_show_error_and_revert</span><span class="p">(</span>
@@ -3373,10 +3422,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            values.</span>
 
 <span class="sd">            :param title: Dialog title text.</span>
+<span class="sd">            :type title: str</span>
 <span class="sd">            :param message: Dialog message text.</span>
+<span class="sd">            :type message: str</span>
 <span class="sd">            :param selected_items: List of QTableWidgetItem objects to revert.</span>
+<span class="sd">            :type selected_items: list</span>
 <span class="sd">            :param database_data: Database context for retrieving original</span>
 <span class="sd">             values.</span>
+<span class="sd">            :type database_data:</span>
+<span class="sd">             populse_mia.data_manager.database_mia.DatabaseMiaData</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -3563,6 +3617,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method handles the removal of scan documents from both the</span>
 <span class="sd">        current and initial collections in the project database. It performs</span>
 <span class="sd">        the following:</span>
+
 <span class="sd">            - Prompts user for confirmation if scans are in the active scan</span>
 <span class="sd">              list.</span>
 <span class="sd">            - Preserves modification history for removed scan values.</span>
@@ -3981,8 +4036,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        leftmost visual position, regardless of user drag-and-drop actions.</span>
 
 <span class="sd">        :param logical_index: The logical index of the moved column (unused).</span>
+<span class="sd">        :type logical_index: int</span>
 <span class="sd">        :param old_index: The previous visual position of the column (unused).</span>
+<span class="sd">        :type old_index: int</span>
 <span class="sd">        :param new_index: The new visual position of the column (unused).</span>
+<span class="sd">        :type new_index: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Parameters are required by the Qt signal signature but not used in</span>
@@ -4019,7 +4077,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method clears any existing selection before selecting the entire</span>
 <span class="sd">        column, ensuring only the specified column is highlighted.</span>
 
-<span class="sd">        :param col: (int) The zero-based index of the column to select.</span>
+<span class="sd">        :param col: The zero-based index of the column to select.</span>
+<span class="sd">        :type col: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">clearSelection</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">selectColumn</span><span class="p">(</span><span class="n">col</span><span class="p">)</span></div>
@@ -4112,6 +4171,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        sender, creates a history popup dialog, and displays it to the user.</span>
 
 <span class="sd">        :param scan: The scan data to display in the history popup.</span>
+<span class="sd">        :type scan: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The sender (typically a UI widget) must be registered in</span>
@@ -4134,14 +4194,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sort the currently selected column.</span>
 
-<span class="sd">        :param order: (Qt.SortOrder or int) Sort order to apply:</span>
-
-<span class="sd">            - Qt.AscendingOrder (0): Sort from lowest to highest.</span>
-<span class="sd">            - Qt.DescendingOrder (1): Sort from highest to lowest.</span>
+<span class="sd">        :param order: Sort order to apply. Accepts either ``Qt.AscendingOrder``</span>
+<span class="sd">         (0) or ``Qt.DescendingOrder`` (1).</span>
+<span class="sd">        :type order: Qt.SortOrder | int</span>
 
 <span class="sd">        Note:</span>
-<span class="sd">            Temporarily disconnects signals during sorting to prevent</span>
-<span class="sd">            unwanted side effects, then reconnects them afterward.</span>
+<span class="sd">            Temporarily connects the ``itemChanged`` signal to</span>
+<span class="sd">            :meth:`on_cell_changed` while sorting, then disconnects it</span>
+<span class="sd">            afterward. The disconnection is ensured even if sorting raises an</span>
+<span class="sd">            exception.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">current_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentItem</span><span class="p">()</span>
 
@@ -4171,7 +4232,9 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param column: The column index to sort by. Use -1 to indicate no</span>
 <span class="sd">         sorting.</span>
+<span class="sd">        :type column: int</span>
 <span class="sd">        :param order: The sort order (Qt.AscendingOrder or Qt.DescendingOrder).</span>
+<span class="sd">        :type order: Qt.SortOrder | int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method is a no-op when column is -1, allowing safe calls with</span>
@@ -4295,10 +4358,9 @@ window.runMermaid = runMermaid;</script>
                 <span class="k">break</span>
 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
                     <span class="s2">&quot;Unexpected exception while updating DataBrowser colors. &quot;</span>
-                    <span class="s2">&quot;Display may be in degraded state.&quot;</span><span class="p">,</span>
-                    <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="s2">&quot;Display may be in degraded state.&quot;</span>
                 <span class="p">)</span>
                 <span class="k">break</span>
 
@@ -4385,6 +4447,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param take_tags_to_update: If True, updates tags during the header</span>
 <span class="sd">         fill operation. Defaults to False.</span>
+<span class="sd">        :type take_tags_to_update: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Clears current table selection.</span>
@@ -4446,8 +4509,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Updating advanced search dropdowns if the search panel is open.</span>
 <span class="sd">            - Refreshing column sizing and colors.</span>
 
-<span class="sd">        :param old_tags: (list) Previously visualized tags.</span>
-<span class="sd">        :param showed: (list) Tags to currently display in the table.</span>
+<span class="sd">        :param old_tags: Previously visualized tags.</span>
+<span class="sd">        :type old_tags: list</span>
+<span class="sd">        :param showed: Tags to currently display in the table.</span>
+<span class="sd">        :type showed: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Disconnect signals</span>
         <span class="n">safe_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
@@ -4507,6 +4572,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param old_scans: Collection of scans from the previous state, used to</span>
 <span class="sd">         determine which rows need to be hidden.</span>
+<span class="sd">        :type old_scans: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Disconnect signals</span>
         <span class="n">safe_disconnect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">itemChanged</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_cell_changed</span><span class="p">)</span>
@@ -4587,9 +4653,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    (hh:mm:ss.zzz format) for editing time values in a TableDataBrowser.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - createEditor: Create and return a QDateEdit widget for editing</span>
 <span class="sd">              times.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -4601,6 +4665,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the time format delegate.</span>
 
 <span class="sd">        :param parent: Parent QWidget, if any. Defaults to None.</span>
+<span class="sd">        :type parent:</span>
+<span class="sd">         populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span></div>
 
@@ -4612,12 +4678,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create and configure the editor widget for time values.</span>
 
 <span class="sd">        :param parent: Parent widget for the editor.</span>
+<span class="sd">        :type parent: PyQt5.QtWidgets.QWidget</span>
 <span class="sd">        :param option: Style options for the item (unused, required by Qt API).</span>
+<span class="sd">        :type option: PyQt5.QtWidgets.QStyleOptionViewItem</span>
 <span class="sd">        :param index: Model index of the item being edited (unused, required</span>
 <span class="sd">         by Qt API).</span>
+<span class="sd">        :type index: PyQt5.QtCore.QModelIndex</span>
 
-<span class="sd">        :Returns: (QTimeEdit) Configured time editor widget with</span>
-<span class="sd">         hh:mm:ss.zzz format.</span>
+<span class="sd">        :return: Configured time editor widget with hh:mm:ss.zzz format.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QTimeEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="n">QTimeEdit</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">editor</span><span class="o">.</span><span class="n">setDisplayFormat</span><span class="p">(</span><span class="s2">&quot;hh:mm:ss.zzz&quot;</span><span class="p">)</span>

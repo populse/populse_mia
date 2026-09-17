@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.data_browser &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.data_browser</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -62,11 +62,9 @@
 <p>The Data Browser provides an interface for viewing, filtering, tagging,
 and sending documents to the pipeline manager. It integrates tools for
 advanced search, tag management, and visual inspection of loaded data.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_tag_infos: Add the tag after add tag pop-up.</p></li>
 <li><p>add_tag_pop_up: Display the add tag pop-up.</p></li>
 <li><p>clone_tag_infos: Clone the tag after the clone tag pop-up.</p></li>
@@ -93,8 +91,10 @@ the Pipeline Manager.</p></li>
 search interface.</p></li>
 <li><p>update_database: Update the database in the software.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#DataBrowser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser.__init__" title="Link to this definition">¶</a></dt>
@@ -102,8 +102,8 @@ search interface.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project in the software.</p></li>
-<li><p><strong>main_window</strong> – Main window of the software.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project in the software.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main window of the software.</p></li>
 </ul>
 </dd>
 </dl>
@@ -119,14 +119,14 @@ is tracked in the project’s undo/redo history.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>new_tag_name</strong> – (str) Name of the new tag to create.</p></li>
-<li><p><strong>new_default_value</strong> – Default value to assign to all existing
+<li><p><strong>new_tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the new tag to create.</p></li>
+<li><p><strong>new_default_value</strong> (<em>Any</em>) – Default value to assign to all existing
 scans.</p></li>
-<li><p><strong>tag_type</strong> – (str) Data type of the tag (e.g., FIELD_TYPE_STRING,
+<li><p><strong>tag_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Data type of the tag (e.g., FIELD_TYPE_STRING,
 FIELD_TYPE_FLOAT).</p></li>
-<li><p><strong>new_tag_description</strong> – (str) Human-readable description of the
+<li><p><strong>new_tag_description</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Human-readable description of the
 tag.</p></li>
-<li><p><strong>new_tag_unit</strong> – (str) Unit of measurement for the tag value.</p></li>
+<li><p><strong>new_tag_unit</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Unit of measurement for the tag value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -162,8 +162,8 @@ history.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tag_to_clone</strong> – (str) Name of the tag to clone.</p></li>
-<li><p><strong>new_tag_name</strong> – (str) Name of the new tag to create.</p></li>
+<li><p><strong>tag_to_clone</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the tag to clone.</p></li>
+<li><p><strong>new_tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the new tag to create.</p></li>
 </ul>
 </dd>
 </dl>
@@ -264,8 +264,8 @@ collections, preserving tag attributes and values in the undo history.
 The table display is updated to reflect the changes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_names_to_remove</strong> – Iterable of tag names (str) to remove from
-the database and table display.</p>
+<dd class="field-odd"><p><strong>tag_names_to_remove</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Iterable of tag names to remove from the
+database and table display.</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -305,7 +305,7 @@ An empty string shows all searchable scans. The special value
 NOT_DEFINED_VALUE filters for documents with undefined field values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>str_search</strong> – The search string to filter documents. Empty string
+<dd class="field-odd"><p><strong>str_search</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The search string to filter documents. Empty string
 returns all searchable scans. NOT_DEFINED_VALUE returns scans with
 undefined values.</p>
 </dd>
@@ -354,7 +354,7 @@ need it and resets UI elements to their default state. It’s called
 during project lifecycle events (new, open, save as).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>database</strong> – The new Database instance to use across the
+<dd class="field-odd"><p><strong>database</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The new Database instance to use across the
 application.</p>
 </dd>
 </dl>
@@ -371,23 +371,23 @@ application.</p>
 cells, with dates formatted as DD/MM/YYYY. It replaces the default text
 editor with a calendar-based date picker for improved user experience and
 data validation.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>createEditor: Create and return a QDateEdit widget for editing
 dates.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#DateFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the DateFormatDelegate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – Optional parent QObject. Defaults to None.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – Optional parent QObject. Defaults to None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -401,13 +401,16 @@ creates a date editor with DD/MM/YYYY format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – The parent widget for the editor.</p></li>
-<li><p><strong>option</strong> – Style options for rendering the item.</p></li>
-<li><p><strong>index</strong> – The model index of the item being edited.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The parent widget for the editor.</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qstyleoptionviewitem.html" title="(in Qt5 v5.15)"><em>QStyleOptionViewItem</em></a>) – Style options for rendering the item (unused).</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The model index of the item being edited (unused).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QDateEdit) A configured date editor widget.</p>
+<dd class="field-even"><p>A configured date editor widget.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qdateedit.html" title="(in Qt5 v5.15)">QDateEdit</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -421,16 +424,16 @@ creates a date editor with DD/MM/YYYY format.</p>
 <p>Custom delegate for displaying and editing datetime values in table views.</p>
 <p>This delegate provides a QDateTimeEdit widget for editing datetime cells,
 formatted as DD/MM/YYYY HH:MM:SS.mmm (day/month/year with milliseconds).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>createEditor: Create and return a QDateTimeEdit widget for
 editing datetimes.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.DATETIME_FORMAT">
 <span class="sig-name descname"><span class="pre">DATETIME_FORMAT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'dd/MM/yyyy</span> <span class="pre">hh:mm:ss.zzz'</span></em><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.DateTimeFormatDelegate.DATETIME_FORMAT" title="Link to this definition">¶</a></dt>
@@ -442,7 +445,7 @@ editing datetimes.</p></li>
 <dd><p>Initialize the datetime delegate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – Optional parent QWidget. Defaults to None.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – Optional parent QWidget. Defaults to None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -454,13 +457,16 @@ editing datetimes.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – Parent widget for the editor.</p></li>
-<li><p><strong>option</strong> – Style options for the item.</p></li>
-<li><p><strong>index</strong> – Model index of the item being edited.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – Parent widget for the editor.</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qstyleoptionviewitem.html" title="(in Qt5 v5.15)"><em>QStyleOptionViewItem</em></a>) – Style options for rendering the item (unused).</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The model index of the item being edited (unused).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QDateTimeEdit) Configured datetime editor widget.</p>
+<dd class="field-even"><p>Configured datetime editor widget.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qdatetimeedit.html" title="(in Qt5 v5.15)">QDateTimeEdit</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -474,23 +480,23 @@ editing datetimes.</p></li>
 <p>Delegate for handling numeric input in table cells.</p>
 <p>The number of decimal places is automatically inferred from the existing
 cell value, ensuring consistent formatting of numeric inputs.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>createEditor: Create and return a QDoubleSpinBox widget for
 editing numbers.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#NumberFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.NumberFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the NumberFormatDelegate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – (QWidget) The parent widget. Defaults to None.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – The parent widget. Defaults to None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -504,16 +510,17 @@ cell value.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – Parent widget for the editor.</p></li>
-<li><p><strong>option</strong> – Style options for the item.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – Parent widget for the editor.</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qstyleoptionviewitem.html" title="(in Qt5 v5.15)"><em>QStyleOptionViewItem</em></a>) – Style options for rendering the item (unused).</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – The model index of the item being edited (unused).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Paramindex<span class="colon">:</span></dt>
-<dd class="field-even"><p>Model index of the item being edited.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A spin box editor configured with the appropriate decimal
+precision.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QDoubleSpinBox) A spin box editor configured with the
-appropriate decimal precision.</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qdoublespinbox.html" title="(in Qt5 v5.15)">QDoubleSpinBox</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -526,11 +533,9 @@ appropriate decimal precision.</p>
 <dd><p>Bases: <a class="reference external" href="https://doc.qt.io/qt-5/qtablewidget.html" title="(in Qt5 v5.15)"><code class="docutils literal notranslate"><span class="pre">QTableWidget</span></code></a></p>
 <p>Table widget that displays the documents contained in the database and
 their associated tags.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_column: Add a column to the table.</p></li>
 <li><p>add_columns: Add columns to the table.</p></li>
 <li><p>add_path: Call a pop-up to add any document to the project.</p></li>
@@ -580,8 +585,10 @@ columns.</p></li>
 the table.</p></li>
 <li><p>visualized_tags_pop_up: Display the visualized tags pop-up.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_to_display</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activate_selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link_viewer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TableDataBrowser.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.__init__" title="Link to this definition">¶</a></dt>
@@ -589,18 +596,17 @@ the table.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – (Project) The current project instance containing data
-and configuration.</p></li>
-<li><p><strong>data_browser</strong> – (DataBrowser) Parent DataBrowser widget that
-contains this table.</p></li>
-<li><p><strong>tags_to_display</strong> – (list[str]) List of metadata tags to show as
-table columns.</p></li>
-<li><p><strong>update_values</strong> – (bool) If True, enables cell editing; if False,
-table is read-only.</p></li>
-<li><p><strong>activate_selection</strong> – (bool) True to enable the selection feature,
-False otherwise.</p></li>
-<li><p><strong>link_viewer</strong><strong>(</strong><strong>bool</strong><strong>)</strong> – If True, links table selection to external
-viewer widget. Defaults to True.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance containing data and
+configuration.</p></li>
+<li><p><strong>data_browser</strong> (<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – Parent DataBrowser widget that contains this
+table.</p></li>
+<li><p><strong>tags_to_display</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of metadata tags to show as table columns.</p></li>
+<li><p><strong>update_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, enables cell editing; if False, table is
+read-only.</p></li>
+<li><p><strong>activate_selection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True to enable the selection feature, False
+otherwise.</p></li>
+<li><p><strong>link_viewer</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, links table selection to external viewer
+widget. Defaults to True.</p></li>
 </ul>
 </dd>
 </dl>
@@ -627,10 +633,8 @@ field type, and populates cells with current values from the database.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – (int) Zero-based index where the column should be
-inserted.</p></li>
-<li><p><strong>tag</strong> – (str) Tag name identifying the field to add from the
-database.</p></li>
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Zero-based index where the column should be inserted.</p></li>
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Tag name identifying the field to add from the database.</p></li>
 </ul>
 </dd>
 </dl>
@@ -689,7 +693,7 @@ operation and handles special cases like the TAG_BRICKS column with
 custom widgets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>rows</strong> – An iterable of scan identifiers to be added to the table.</p>
+<dd class="field-odd"><p><strong>rows</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – An iterable of scan identifiers to be added to the table.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -714,7 +718,7 @@ without triggering unnecessary redraws or signal handling. All previous
 widget states are restored upon exit, even if an exception occurs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>disable_sorting</strong> – (bool) If True (default), temporarily disables
+<dd class="field-odd"><p><strong>disable_sorting</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True (default), temporarily disables
 sorting during the batch update to prevent rearrangements.</p>
 </dd>
 </dl>
@@ -752,22 +756,21 @@ is recorded in the project’s undo history for potential reversal.</p>
 the corresponding action based on the user’s selection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>position</strong> – (QPoint) The mouse cursor position relative to the
-widget.</p>
+<dd class="field-odd"><p><strong>position</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qpoint.html" title="(in Qt5 v5.15)"><em>QPoint</em></a>) – The mouse cursor position relative to the widget.</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_confirm_action: Display a warning message box with an
 OK/Cancel choice and connect the OK button to a callback
 function.</p></li>
 <li><p>_do_add_document: Safely add a new document to the table.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -781,20 +784,19 @@ and any orphaned output documents that are not used as inputs
 elsewhere.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>brick_id</strong> – (str) The unique identifier of the brick to be
-deleted.</p>
+<dd class="field-odd"><p><strong>brick_id</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The unique identifier of the brick to be deleted.</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>extract_document_ids: Extracts all string values from a
 nested dictionary structure.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -891,7 +893,7 @@ database.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>take_tags_to_update</strong> – If True, use tags_to_display for
+<dd class="field-odd"><p><strong>take_tags_to_update</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, use tags_to_display for
 visibility. If False, use field visibility attributes. Defaults to
 False.</p>
 </dd>
@@ -906,8 +908,11 @@ False.</p>
 otherwise returns all visible scan paths in the data browser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) List of scan paths from either the current selection
-or all visible scans in the data browser.</p>
+<dd class="field-odd"><p>List of scan paths from either the current selection or all
+visible scans in the data browser.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -922,11 +927,14 @@ inserting a column header while preserving the existing alphabetical
 sort order.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>to_insert</strong> – (str) The column header text to insert.</p>
+<dd class="field-odd"><p><strong>to_insert</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The column header text to insert.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The column index where the new column should be
-inserted. Returns columnCount() if it should be appended at the end.</p>
+<dd class="field-even"><p>The column index where the new column should be inserted.
+Returns columnCount() if it should be appended at the end.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -942,11 +950,14 @@ the first tag on the left) and start the search from column 1.</p>
 <dd><p>Find the row index for a given scan filename.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scan</strong> – The scan filename to search for.</p>
+<dd class="field-odd"><p><strong>scan</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The scan filename to search for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based row index if the scan is found, None
+<dd class="field-even"><p>The zero-based row index if the scan is found, None
 otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -959,11 +970,14 @@ otherwise.</p>
 corresponding to the specified tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag</strong> – (str) The name of the tag to search for.</p>
+<dd class="field-odd"><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tag to search for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based column index if the tag is found, None
+<dd class="field-even"><p>The zero-based column index if the tag is found, None
 otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -977,8 +991,8 @@ It delegates to the parent class handler and then updates the table
 data values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QMouseEvent) The mouse event containing information
-about the button released, position, and modifiers.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – The mouse event containing information about the button
+released, position, and modifiers.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -993,9 +1007,8 @@ regular items and special brick widgets during the reordering.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>list_tags</strong> – (list) List of tag names to sort by (primary to
-secondary).</p></li>
-<li><p><strong>order</strong> – (str) Sort direction, either “Ascending” or “Descending”.</p></li>
+<li><p><strong>list_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of tag names to sort by (primary to secondary).</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Sort direction, either “Ascending” or “Descending”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1005,17 +1018,17 @@ secondary).</p></li>
 triggering update handlers. The sort is stable and preserves the
 relative order of items with equal sort keys.</p>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>_clear_cell: clears the specified cell.</p></li>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_create_brick_widget: Create and set a brick widget for the
 specified table cell.</p></li>
+<li><p>_clear_cell: clears the specified cell.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -1056,7 +1069,7 @@ lists.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item_origin</strong> – QTableWidgetItem from which the edit originated.</p>
+<dd class="field-odd"><p><strong>item_origin</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qtablewidgetitem.html" title="(in Qt5 v5.15)"><em>QTableWidgetItem</em></a>) – QTableWidgetItem from which the edit originated.</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -1067,6 +1080,14 @@ lists.</p></li>
 <li><p>Clears redo history.</p></li>
 <li><p>Resizes columns to fit content.</p></li>
 </ul>
+</dd>
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>_show_error_and_revert: Displays an error dialog and reverts
+selected cells to their original database values.</p></li>
+</ul>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd></dl>
@@ -1183,9 +1204,9 @@ leftmost visual position, regardless of user drag-and-drop actions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>logical_index</strong> – The logical index of the moved column (unused).</p></li>
-<li><p><strong>old_index</strong> – The previous visual position of the column (unused).</p></li>
-<li><p><strong>new_index</strong> – The new visual position of the column (unused).</p></li>
+<li><p><strong>logical_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The logical index of the moved column (unused).</p></li>
+<li><p><strong>old_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The previous visual position of the column (unused).</p></li>
+<li><p><strong>new_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The new visual position of the column (unused).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1205,7 +1226,7 @@ when programmatically repositioning the FileName column.</p>
 column, ensuring only the specified column is highlighted.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>col</strong> – (int) The zero-based index of the column to select.</p>
+<dd class="field-odd"><p><strong>col</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The zero-based index of the column to select.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1250,7 +1271,7 @@ True.</p></li>
 sender, creates a history popup dialog, and displays it to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scan</strong> – The scan data to display in the history popup.</p>
+<dd class="field-odd"><p><strong>scan</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The scan data to display in the history popup.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1266,18 +1287,16 @@ self.bricks to retrieve the corresponding brick UUID.</p>
 <dd><p>Sort the currently selected column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>order</strong> – <p>(Qt.SortOrder or int) Sort order to apply:</p>
-<ul class="simple">
-<li><p>Qt.AscendingOrder (0): Sort from lowest to highest.</p></li>
-<li><p>Qt.DescendingOrder (1): Sort from highest to lowest.</p></li>
-</ul>
-</p>
+<dd class="field-odd"><p><strong>order</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qt.html#SortOrder-enum" title="(in Qt5 v5.15)"><em>SortOrder</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Sort order to apply. Accepts either <code class="docutils literal notranslate"><span class="pre">Qt.AscendingOrder</span></code>
+(0) or <code class="docutils literal notranslate"><span class="pre">Qt.DescendingOrder</span></code> (1).</p>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Temporarily disconnects signals during sorting to prevent
-unwanted side effects, then reconnects them afterward.</p>
+<p>Temporarily connects the <code class="docutils literal notranslate"><span class="pre">itemChanged</span></code> signal to
+<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.on_cell_changed" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser.on_cell_changed"><code class="xref py py-meth docutils literal notranslate"><span class="pre">on_cell_changed()</span></code></a> while sorting, then disconnects it
+afterward. The disconnection is ensured even if sorting raises an
+exception.</p>
 </div>
 </dd></dl>
 
@@ -1291,9 +1310,9 @@ elements, and reconnects signals.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>column</strong> – The column index to sort by. Use -1 to indicate no
+<li><p><strong>column</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The column index to sort by. Use -1 to indicate no
 sorting.</p></li>
-<li><p><strong>order</strong> – The sort order (Qt.AscendingOrder or Qt.DescendingOrder).</p></li>
+<li><p><strong>order</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qt.html#SortOrder-enum" title="(in Qt5 v5.15)"><em>SortOrder</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The sort order (Qt.AscendingOrder or Qt.DescendingOrder).</p></li>
 </ul>
 </dd>
 </dl>
@@ -1344,7 +1363,7 @@ refilling headers and cells, resizing columns/rows, and updating
 the visual appearance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>take_tags_to_update</strong> – If True, updates tags during the header
+<dd class="field-odd"><p><strong>take_tags_to_update</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, updates tags during the header
 fill operation. Defaults to False.</p>
 </dd>
 </dl>
@@ -1376,8 +1395,8 @@ fill operation. Defaults to False.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>old_tags</strong> – (list) Previously visualized tags.</p></li>
-<li><p><strong>showed</strong> – (list) Tags to currently display in the table.</p></li>
+<li><p><strong>old_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Previously visualized tags.</p></li>
+<li><p><strong>showed</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Tags to currently display in the table.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1392,7 +1411,7 @@ longer in the visualization list, shows rows for newly visualized
 scans, and updates the table appearance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>old_scans</strong> – Collection of scans from the previous state, used to
+<dd class="field-odd"><p><strong>old_scans</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Collection of scans from the previous state, used to
 determine which rows need to be hidden.</p>
 </dd>
 </dl>
@@ -1416,23 +1435,23 @@ popup is sized to 50% of screen width and 80% of screen height.</p>
 <p>Delegate for handling time data display and editing in table views.</p>
 <p>This delegate creates a QTimeEdit widget with millisecond precision
 (hh:mm:ss.zzz format) for editing time values in a TableDataBrowser.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>createEditor: Create and return a QDateEdit widget for editing
 times.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/data_browser.html#TimeFormatDelegate.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.data_browser.TimeFormatDelegate.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initialize the time format delegate.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>parent</strong> – Parent QWidget, if any. Defaults to None.</p>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="#populse_mia.user_interface.data_browser.data_browser.TableDataBrowser" title="populse_mia.user_interface.data_browser.data_browser.TableDataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.TableDataBrowser</em></a>) – Parent QWidget, if any. Defaults to None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1444,15 +1463,17 @@ times.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – Parent widget for the editor.</p></li>
-<li><p><strong>option</strong> – Style options for the item (unused, required by Qt API).</p></li>
-<li><p><strong>index</strong> – Model index of the item being edited (unused, required
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – Parent widget for the editor.</p></li>
+<li><p><strong>option</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qstyleoptionviewitem.html" title="(in Qt5 v5.15)"><em>QStyleOptionViewItem</em></a>) – Style options for the item (unused, required by Qt API).</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmodelindex.html" title="(in Qt5 v5.15)"><em>QModelIndex</em></a>) – Model index of the item being edited (unused, required
 by Qt API).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QTimeEdit) Configured time editor widget with
-hh:mm:ss.zzz format.</p>
+<dd class="field-even"><p>Configured time editor widget with hh:mm:ss.zzz format.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qtimeedit.html" title="(in Qt5 v5.15)">QTimeEdit</a></p>
 </dd>
 </dl>
 </dd></dl>

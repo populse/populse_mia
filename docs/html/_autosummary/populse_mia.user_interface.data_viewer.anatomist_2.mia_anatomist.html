@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -48,17 +48,12 @@
 <p>This class implements a DataViewer interface and provides functionality
 to visualize and interact with medical imaging data through the PyAnatomist
 visualization library.</p>
-<dl class="simple">
-<dt>:class:<a href="#id1"><span class="problematic" id="id2">`</span></a>Mia data viewer</dt><dd><p>&lt;populse_mia.user_interface.data_viewer.data_viewer.DataViewer&gt;`
+<p>A <a class="reference internal" href="populse_mia.user_interface.data_viewer.data_viewer.html#populse_mia.user_interface.data_viewer.data_viewer.DataViewer" title="populse_mia.user_interface.data_viewer.data_viewer.DataViewer"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataViewer</span></code></a>
 implementation based on
-<a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a></p>
-</dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<a class="reference external" href="http://brainvisa.info/pyanatomist/sphinx/index.html">PyAnatomist</a>.</p>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_add_dialog_buttons: Add action buttons to the filter dialog.</p></li>
 <li><p>_apply_preferences: Apply the settings from the preferences
 dialog.</p></li>
@@ -81,8 +76,10 @@ Databrowser.</p></li>
 documents.</p></li>
 <li><p>set_documents: Initialise current documents in the viewer.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._mia_viewers_count">
 <span class="sig-name descname"><span class="pre">_mia_viewers_count</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer._mia_viewers_count" title="Link to this definition">¶</a></dt>
@@ -94,8 +91,8 @@ documents.</p></li>
 <dd><p>Initialize the Mia viewer widget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>init_global_handlers</strong> – Handlers to initialize the PyAnatomist
-viewer.</p>
+<dd class="field-odd"><p><strong>init_global_handlers</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Determines if global handlers should be
+initialized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -107,8 +104,8 @@ viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dialog</strong> – Parent dialog.</p></li>
-<li><p><strong>layout</strong> – Layout to add buttons to.</p></li>
+<li><p><strong>dialog</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><em>QDialog</em></a>) – Parent dialog.</p></li>
+<li><p><strong>layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlayout.html" title="(in Qt5 v5.15)"><em>QLayout</em></a>) – Layout to which the buttons are added.</p></li>
 </ul>
 </dd>
 </dl>
@@ -120,7 +117,7 @@ viewer.</p>
 <dd><p>Apply the settings from the preferences dialog.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dialog</strong> – Preferences dialog containing the user selections.</p>
+<dd class="field-odd"><p><strong>dialog</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><em>QDialog</em></a>) – Preferences dialog containing the user selections.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -132,13 +129,16 @@ viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>current_framerate</strong> – Current animation frame rate.</p></li>
-<li><p><strong>current_config</strong> – Current display configuration (neuro/radio).</p></li>
-<li><p><strong>current_ref</strong> – Current referential setting.</p></li>
+<li><p><strong>current_framerate</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Current animation frame rate.</p></li>
+<li><p><strong>current_config</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Current display configuration (neuro/radio).</p></li>
+<li><p><strong>current_ref</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Current referential setting.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QDialog) Configured preferences dialog.</p>
+<dd class="field-even"><p>Configured preferences dialog.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)">QDialog</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -156,8 +156,8 @@ viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dialog</strong> – Parent dialog for the search interface.</p></li>
-<li><p><strong>layout</strong> – Layout to add search components to.</p></li>
+<li><p><strong>dialog</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qdialog.html" title="(in Qt5 v5.15)"><em>QDialog</em></a>) – Parent dialog for the search interface.</p></li>
+<li><p><strong>layout</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlayout.html" title="(in Qt5 v5.15)"><em>QLayout</em></a>) – Layout to add search components to.</p></li>
 </ul>
 </dd>
 </dl>
@@ -182,7 +182,7 @@ viewer.</p>
 <dd><p>Load and display the specified files in the viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>files</strong> – (list) List of file paths to display.</p>
+<dd class="field-odd"><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of file paths to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -191,7 +191,14 @@ viewer.</p>
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.displayed_files">
 <span class="sig-name descname"><span class="pre">displayed_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/mia_anatomist.html#MiaViewer.displayed_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.mia_anatomist.MiaViewer.displayed_files" title="Link to this definition">¶</a></dt>
 <dd><p>Get the list of currently displayed files.</p>
-<p>:Returns (list) File paths currently displayed in the viewer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>File paths currently displayed in the viewer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -216,7 +223,7 @@ coordinate system referential.</p>
 <dd><p>Remove specified files from the viewer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>files</strong> – (list) List of file paths to remove from display.</p>
+<dd class="field-odd"><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of file paths to remove from display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -242,7 +249,7 @@ coordinate system referential.</p>
 search. Updates the table to show only matching documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>search_term</strong> – (str) Text to search for in documents.</p>
+<dd class="field-odd"><p><strong>search_term</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Text to search for in documents.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -254,8 +261,8 @@ search. Updates the table to show only matching documents.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Project containing the documents.</p></li>
-<li><p><strong>documents</strong> – (list) List of document filenames to make available.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Project containing the documents.</p></li>
+<li><p><strong>documents</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of document filenames to make available.</p></li>
 </ul>
 </dd>
 </dl>

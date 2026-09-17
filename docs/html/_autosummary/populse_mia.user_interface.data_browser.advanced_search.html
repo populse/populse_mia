@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_browser.advanced_search &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.advanced_search</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -55,11 +55,9 @@ all composed of:</p>
 <li><p>A value.</p></li>
 </ul>
 </div></blockquote>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>add_search_bar: Create and define the advanced research bar.</p></li>
 <li><p>apply_filter: Apply an opened filter to update the table.</p></li>
 <li><p>displayConditionRules: Set the list of condition choices,
@@ -77,8 +75,10 @@ rows.</p></li>
 <li><p>show_search: Reset the rows when the Advanced Search button is
 clicked.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_browser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_pipeline</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/advanced_search.html#AdvancedSearch.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.advanced_search.AdvancedSearch.__init__" title="Link to this definition">¶</a></dt>
@@ -86,15 +86,15 @@ clicked.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project instance.</p></li>
-<li><p><strong>data_browser</strong> – The parent DataBrowser widget that contains this
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance.</p></li>
+<li><p><strong>data_browser</strong> (<a class="reference internal" href="populse_mia.user_interface.data_browser.data_browser.html#populse_mia.user_interface.data_browser.data_browser.DataBrowser" title="populse_mia.user_interface.data_browser.data_browser.DataBrowser"><em>populse_mia.user_interface.data_browser.data_browser.DataBrowser</em></a>) – The parent DataBrowser widget that contains this
 search.</p></li>
-<li><p><strong>scans_list</strong> – List of document scans to search within. Defaults
+<li><p><strong>scans_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><em>None</em>) – List of document scans to search within. Defaults
 to empty list.</p></li>
-<li><p><strong>tags_list</strong> – List of tags to display in the search interface.
+<li><p><strong>tags_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><em>None</em>) – List of tags to display in the search interface.
 Defaults to empty list.</p></li>
-<li><p><strong>from_pipeline</strong> – (bool) Whether the widget is instantiated from
-the pipeline manager. Defaults to False.</p></li>
+<li><p><strong>from_pipeline</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the widget is instantiated from the
+pipeline manager. Defaults to False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -116,18 +116,18 @@ the pipeline manager. Defaults to False.</p></li>
 </dl>
 <p>The row components are connected with signals to update dynamically
 based on field type and selected condition.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_create_combo_box: Create and return a QComboBox populated
 with the given items.</p></li>
 <li><p>_get_shown_tags_from_db: Retrieve the tags currently marked
 as visible from the project database.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -140,7 +140,7 @@ is invalid or an error occurs, displays a warning and reverts to
 showing all scans.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filter</strong> – <p>Filter object containing the query criteria with
+<dd class="field-odd"><p><strong>filter</strong> (<a class="reference internal" href="populse_mia.data_manager.filter.html#populse_mia.data_manager.filter.Filter" title="populse_mia.data_manager.filter.Filter"><em>populse_mia.data_manager.filter.Filter</em></a>) – <p>Filter object containing the query criteria with
 attributes:</p>
 <blockquote>
 <div><ul class="simple">
@@ -179,8 +179,8 @@ fields include it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>field</strong> – QComboBox widget containing the selected tag name.</p></li>
-<li><p><strong>condition</strong> – QComboBox widget whose items will be updated based
+<li><p><strong>field</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcombobox.html" title="(in Qt5 v5.15)"><em>QComboBox</em></a>) – QComboBox widget containing the selected tag name.</p></li>
+<li><p><strong>condition</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcombobox.html" title="(in Qt5 v5.15)"><em>QComboBox</em></a>) – QComboBox widget whose items will be updated based
 on the field’s type.</p></li>
 </ul>
 </dd>
@@ -194,17 +194,15 @@ on the field’s type.</p></li>
 <li><p>Special case “All visualized tags”: Treated as non-numeric.</p></li>
 </ul>
 </dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_update_operators: Add or remove operators from the condition
 widget.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -217,8 +215,8 @@ match the requirements of the selected condition operator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>choice</strong> – QComboBox containing the selected condition operator.</p></li>
-<li><p><strong>value</strong> – QLineEdit widget that will be configured.</p></li>
+<li><p><strong>choice</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qcombobox.html" title="(in Qt5 v5.15)"><em>QComboBox</em></a>) – QComboBox containing the selected condition operator.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlineedit.html" title="(in Qt5 v5.15)"><em>QLineEdit</em></a>) – QLineEdit widget that will be configured.</p></li>
 </ul>
 </dd>
 </dl>
@@ -243,19 +241,23 @@ special cases like “All visualized tags” expansion and operator
 compatibility validation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>replace_all_by_fields</strong> – If True, replaces “All visualized tags”
+<dd class="field-odd"><p><strong>replace_all_by_fields</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, replaces “All visualized tags”
 with the actual list of visible fields. If False, keeps the literal
 “All visualized tags” text.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple) A 5-tuple containing:</p>
+<dd class="field-even"><p><p>A 5-tuple containing:</p>
 <ul class="simple">
-<li><p>fields (list): Field names to filter on</p></li>
-<li><p>conditions (list): Comparison operators (e.g., ‘=’, ‘BETWEEN’)</p></li>
-<li><p>values (list): Filter values (strings or lists for BETWEEN/IN)</p></li>
-<li><p>links (list): Logical operators connecting filters (AND/OR)</p></li>
-<li><p>nots (list): Negation flags for each filter</p></li>
+<li><p>fields: Field names to filter on</p></li>
+<li><p>conditions: Comparison operators (e.g., ‘=’, ‘BETWEEN’)</p></li>
+<li><p>values: Filter values (strings or lists for BETWEEN/IN)</p></li>
+<li><p>links: Logical operators connecting filters (AND/OR)</p></li>
+<li><p>nots: Negation flags for each filter</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>, <a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>]</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -277,9 +279,9 @@ If the search fails, displays an error dialog and reverts to showing
 all available scans.</p>
 <dl class="simple">
 <dt>Side Effects:</dt><dd><ul class="simple">
-<li><p>Updates self.data_browser.table_data.scans_to_visualize.</p></li>
-<li><p>Updates self.data_browser.table_data.scans_to_search.</p></li>
-<li><p>Updates self.project.currentFilter (if not from_pipeline).</p></li>
+<li><p>Updates <code class="docutils literal notranslate"><span class="pre">self.data_browser.table_data.scans_to_visualize</span></code>.</p></li>
+<li><p>Updates <code class="docutils literal notranslate"><span class="pre">self.data_browser.table_data.scans_to_search</span></code>.</p></li>
+<li><p>Updates <code class="docutils literal notranslate"><span class="pre">self.project.currentFilter</span> <span class="pre">(if</span> <span class="pre">not</span> <span class="pre">from_pipeline)</span></code>.</p></li>
 <li><p>Displays error dialog on search failure.</p></li>
 </ul>
 </dd>
@@ -296,35 +298,38 @@ optional negation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>links</strong> – Logical operators joining filter rows
-(e.g. [‘AND’, ‘OR’]). Length should be len(fields) - 1.</p></li>
-<li><p><strong>fields</strong> – Nested list where each sublist contains field names to
+<li><p><strong>links</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Logical operators joining filter rows
+(e.g. [‘AND’, ‘OR’]). Length should be <code class="docutils literal notranslate"><span class="pre">len(fields)</span></code> - 1.</p></li>
+<li><p><strong>fields</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em><em>]</em>) – Nested list where each sublist contains field names to
 filter on. Fields within a row are OR-combined.</p></li>
-<li><p><strong>conditions</strong> – Filter operators for each row. Supported values:
+<li><p><strong>conditions</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Filter operators for each row. Supported values:
 ‘==’, ‘!=’, ‘&lt;’, ‘&gt;’, ‘&lt;=’, ‘&gt;=’, ‘IN’, ‘BETWEEN’, ‘CONTAINS’,
 ‘HAS VALUE’, ‘HAS NO VALUE’.</p></li>
-<li><p><strong>values</strong> – Filter values corresponding to each condition. For
+<li><p><strong>values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – Filter values corresponding to each condition. For
 ‘BETWEEN’, provide a two-element sequence [min, max].</p></li>
-<li><p><strong>nots</strong> – Negation flags for each row (‘NOT’ to negate, empty
+<li><p><strong>nots</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Negation flags for each row (‘NOT’ to negate, empty
 string otherwise).</p></li>
-<li><p><strong>scans</strong> – List of scan identifiers to restrict the search scope.</p></li>
+<li><p><strong>scans</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of scan identifiers to restrict the search scope.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Complete filter query string with all conditions and scan
 restrictions.</p>
 </dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_format_value: Convert a Python value into a string safe for
 use in queries.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -355,7 +360,7 @@ remains.</p>
 from the internal <cite>rows</cite> list, and refreshes the view.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>row_layout</strong> – The row (list of widgets) to remove.</p>
+<dd class="field-odd"><p><strong>row_layout</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The row (list of widgets) to remove.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -369,7 +374,7 @@ and adds AND/OR combo boxes to all rows except the first one for
 linking query conditions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>links</strong> – List of previously selected link operators (‘AND’/’OR’)
+<dd class="field-odd"><p><strong>links</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of previously selected link operators (‘AND’/’OR’)
 to restore when rebuilding the UI.</p>
 </dd>
 </dl>
@@ -381,16 +386,16 @@ to restore when rebuilding the UI.</p>
 <dd><p>Remove the link widget and the “add row” widget from every row.</p>
 <p>This ensures that these widgets are properly removed from the layout
 and scheduled for deletion, preventing memory leaks.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_remove_widget: Safely removes a QWidget from its parent and
 schedules it for deletion.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

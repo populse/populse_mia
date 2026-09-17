@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.data_viewer_tab &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -419,20 +419,18 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    This widget provides a dynamic interface for loading and switching between</span>
 <span class="sd">    different data viewers. Key features include:</span>
+
 <span class="sd">        - Automatic discovery of viewers in the data_viewer directory</span>
 <span class="sd">        - Graceful handling of viewer import failures</span>
 <span class="sd">        - Ability to dynamically add new viewers</span>
 <span class="sd">        - Centralized document and project management across viewers</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - activate_viewer: Activates viewer which was selected</span>
 <span class="sd">              in the combobox.</span>
 <span class="sd">            - change_viewer: Switches to viewer selected in the combobox.</span>
 <span class="sd">            - clear: Clears all loaded viewers before closing Mia.</span>
-<span class="sd">            - closeEvent: Clears and closes all events before closing Mia.</span>
 <span class="sd">            - current_viewer: Return current viewer (selected viewer in</span>
 <span class="sd">              combobox).</span>
 <span class="sd">            - load_viewer: Load a viewer.</span>
@@ -445,8 +443,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize the DataViewerTab with a reference to the main window.</span>
 
-<span class="sd">        :param main_window: (Qt.QMainWindow) The main application window</span>
-<span class="sd">         providing context and potential shared resources.</span>
+<span class="sd">        :param main_window: The main application windowp providing context and</span>
+<span class="sd">         potential shared resources.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Initialize state tracking attributes</span>
@@ -477,13 +476,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Activate a specific viewer by name.</span>
 
-<span class="sd">        :param viewer_name: (str) Name of the viewer to activate.</span>
+<span class="sd">        :param viewer_name: Name of the viewer to activate.</span>
+<span class="sd">        :type viewer_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span> <span class="ow">and</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">viewer_name</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;- Activate viewer: </span><span class="si">{</span><span class="n">viewer_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;- Activate viewer: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">viewer_name</span><span class="p">)</span>
         <span class="n">viewer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">viewer_name</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">viewer</span><span class="p">:</span>
@@ -522,18 +522,6 @@ window.runMermaid = runMermaid;</script>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewers_loaded</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="DataViewerTab.closeEvent">
-<a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.closeEvent">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">closeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Override close event to ensure proper cleanup.</span>
-
-<span class="sd">        :param event: (QCloseEvent) Close event triggered by the window system.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">closeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
-
-
 <div class="viewcode-block" id="DataViewerTab.current_viewer">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.data_viewer.data_viewer_tab.html#populse_mia.user_interface.data_viewer.data_viewer_tab.DataViewerTab.current_viewer">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">current_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -559,8 +547,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Attempts to import and initialize viewers, handling import failures</span>
 <span class="sd">        gracefully.</span>
 
-<span class="sd">        :param viewer_name: (str) Specific viewer to load. If None, discovers</span>
-<span class="sd">         all viewers.</span>
+<span class="sd">        :param viewer_name: Specific viewer to load. If None, discovers all</span>
+<span class="sd">         viewers.</span>
+<span class="sd">        :type viewer_name: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Determine viewers to load</span>
         <span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
@@ -604,7 +593,8 @@ window.runMermaid = runMermaid;</script>
 
                 <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> viewer is not available or not working...!&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> viewer is not available or not working...&quot;</span><span class="p">,</span>
+                        <span class="n">name</span><span class="p">,</span>
                         <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                     <span class="p">)</span></div>
 
@@ -615,8 +605,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Distribute project and document information to the current viewer.</span>
 
-<span class="sd">        :param project: The entire project context.</span>
-<span class="sd">        :param documents: (list) List of document/image objects in the project.</span>
+<span class="sd">        :param project: The project object.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param documents: The list of document objects in the project.</span>
+<span class="sd">        :type documents: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">:</span>
             <span class="n">current_viewer_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewer_current</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>

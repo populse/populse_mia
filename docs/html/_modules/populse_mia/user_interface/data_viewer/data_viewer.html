@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.data_viewer &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.data_viewer &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.data_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -451,9 +451,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    use cases while ensuring a consistent basic functionality.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - clear: Remove all currently displayed files.</span>
 <span class="sd">            - close: Close the viewer by clearing all displayed files.</span>
 <span class="sd">            - display_files: Display the specified document files.</span>
@@ -497,7 +495,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method must be implemented by subclasses to define how files are</span>
 <span class="sd">        visually presented or loaded.</span>
 
-<span class="sd">        :param files: (List) A list of files to be displayed.</span>
+<span class="sd">        :param files: A list of files to be displayed.</span>
+<span class="sd">        :type files: list[str]</span>
 
 <span class="sd">        :raises NotImplementedError: If not overridden by a subclass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -514,7 +513,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the list of currently displayed files.</span>
 
-<span class="sd">        :Returns: (list) A list of files currently being displayed.</span>
+<span class="sd">        :returns: A list of files currently being displayed.</span>
+<span class="sd">        :rtype: list[str]</span>
 
 <span class="sd">        :raises NotImplementedError: If not overridden by a subclass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -531,7 +531,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified files from the display.</span>
 
-<span class="sd">        :param files: (list) A list of files to be removed from display.</span>
+<span class="sd">        :param files: A list of files to be removed from display.</span>
+<span class="sd">        :type files: list[str]</span>
 
 <span class="sd">        :raises NotImplementedError: If not overridden by a subclass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -549,7 +550,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Set the project context and available documents.</span>
 
 <span class="sd">        :param project: The project associated with the documents.</span>
-<span class="sd">        :param documents: (list) The list of available documents.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
+<span class="sd">        :param documents: The list of available documents.</span>
+<span class="sd">        :type documents: list[str]</span>
 
 <span class="sd">        :raises NotImplementedError: If not overridden by a subclass.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

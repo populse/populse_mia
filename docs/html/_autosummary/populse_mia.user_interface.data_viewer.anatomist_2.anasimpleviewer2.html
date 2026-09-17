@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -56,16 +56,16 @@ anasimpleviewer.py)</p>
 <p>Control for 3D navigation using the left mouse button.</p>
 <p>This control is particularly useful for touch devices where rotation can
 be achieved by pressing and holding the left mouse button.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>eventAutoSubscription: Auto-subscribes to mouse and keyboard
 events relevant for 3D controls.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LeftSimple3DControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#LeftSimple3DControl.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.LeftSimple3DControl.__init__" title="Link to this definition">¶</a></dt>
@@ -73,8 +73,8 @@ events relevant for 3D controls.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prio</strong> – (int) The priority level for the control (default is 25).</p></li>
-<li><p><strong>name</strong> – (str) The name of the control (default is
+<li><p><strong>prio</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The priority level for the control (default is 25).</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control (default is
 “LeftSimple3DControl”).</p></li>
 </ul>
 </dd>
@@ -89,7 +89,8 @@ events relevant for 3D controls.</p></li>
 keyboard shortcuts to control the trackball actions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pool</strong> – The event pool to which the subscriptions will be made.</p>
+<dd class="field-odd"><p><strong>pool</strong> (<em>anatomist.cpp.anatomist.ActionPool</em>) – The action pool used to retrieve the actions associated
+with the event subscriptions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -103,16 +104,16 @@ keyboard shortcuts to control the trackball actions.</p>
 <p>Control for volume rendering navigation using the middle mouse button.</p>
 <p>This control allows users to rotate the cut slice of the volume rendering
 by holding down the middle mouse button.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>eventAutoSubscription: Auto-subscribes to mouse events for cut
 slice rotation.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'VolRenderControl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#VolRenderControl.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.VolRenderControl.__init__" title="Link to this definition">¶</a></dt>
@@ -120,9 +121,9 @@ slice rotation.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prio</strong> – (int) The priority level for the control (default is 25).</p></li>
-<li><p><strong>name</strong> – (str) The name of the control (default is
-“VolRenderControl”).</p></li>
+<li><p><strong>prio</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The priority level for the control (default is 25).</p></li>
+<li><p><strong>name</strong> – The name of the control (default is “VolRenderControl”).
+:type name: str</p></li>
 </ul>
 </dd>
 </dl>
@@ -137,7 +138,8 @@ triggered by the middle mouse button for controlling the track cut
 action.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pool</strong> – The event pool to which the subscriptions will be made.</p>
+<dd class="field-odd"><p><strong>pool</strong> (<em>anatomist.cpp.anatomist.ActionPool</em>) – The action pool used to retrieve the actions associated
+with the event subscriptions.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -165,11 +167,9 @@ be accessed through the <cite>awidget</cite> attribute of the instance.</p>
 AnaSimpleViewer, initiated optionally via the <cite>init_global_handlers</cite>
 method called by the constructor unless <cite>init_global_handlers</cite> is set to
 False.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_displayVolume: Displays a volume or Fusion2D object in all
 available windows.</p></li>
 <li><p>addMesh: Adds a 2D mesh representation of a volume object to the
@@ -264,8 +264,10 @@ the cursor position.</p></li>
 <li><p>viewReferential: Centers the view on the specified object and
 sets the referential.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2._global_handlers_initialized">
 <span class="sig-name descname"><span class="pre">_global_handlers_initialized</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2._global_handlers_initialized" title="Link to this definition">¶</a></dt>
@@ -277,8 +279,8 @@ sets the referential.</p></li>
 <dd><p>Initializes the AnaSimpleViewer2 instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>init_global_handlers</strong> – (bool) Determines if global handlers
-should be initialized (default is True).</p>
+<dd class="field-odd"><p><strong>init_global_handlers</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Determines if global handlers should be
+initialized.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -292,8 +294,8 @@ rendering of the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – (AObject) The volume or Fusion2D object to display.</p></li>
-<li><p><strong>opts</strong> – (dict) Additional options for rendering.</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The volume or Fusion2D object to display.</p></li>
+<li><p><strong>opts</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>) – Additional options for rendering.</p></li>
 </ul>
 </dd>
 </dl>
@@ -308,7 +310,7 @@ unique color. It then displays the mesh in the appropriate 2D windows
 and the original object in the 3D windows.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The volume object from which to create the mesh.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The volume object from which to create the mesh.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -319,7 +321,7 @@ and the original object in the 3D windows.</p>
 <dd><p>Open a popup window displaying the given object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to display. The default view is axial but may be
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to display. The default view is axial but may be
 changed by the user.</p>
 </dd>
 </dl>
@@ -331,7 +333,7 @@ changed by the user.</p>
 <dd><p>Displays an object in all Anatomist windows based on its type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to be displayed. Its <cite>objectType</cite> must be one of
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to be displayed. Its <cite>objectType</cite> must be one of
 ‘VOLUME’, ‘SURFACE’, or ‘GRAPH’.</p>
 </dd>
 </dl>
@@ -348,8 +350,8 @@ present) or the 2D fusion.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – The volume object to be displayed.</p></li>
-<li><p><strong>opts</strong> – (dict) Additional options for rendering.</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The volume object to be displayed.</p></li>
+<li><p><strong>opts</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>) – Additional options for rendering.</p></li>
 </ul>
 </dd>
 </dl>
@@ -358,12 +360,12 @@ present) or the 2D fusion.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning">
 <span class="sig-name descname"><span class="pre">automaticRunning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.automaticRunning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning" title="Link to this definition">¶</a></dt>
-<dd><p>Enables the automatic running of functional images.</p>
-<p>The frame rate can be changed in preferences by the user.</p>
+<dd><p>Enables automatic playback of functional images.</p>
+<p>The frame rate can be configured by the user in the preferences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Unused parameter required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal signature.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -374,7 +376,7 @@ QAction.triggered signal.</p>
 <dd><p>Changes the configuration based on user settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> – (str) “neuro” or “radio”.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – “neuro” or “radio”.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -389,10 +391,10 @@ blank icon.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>item</strong> – (QListWidgetItem) The item to update in the list widget.</p></li>
-<li><p><strong>index</strong> – (int) Index of the object in self.aobjects to retrieve
+<li><p><strong>item</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlistwidgetitem.html" title="(in Qt5 v5.15)"><em>QListWidgetItem</em></a>) – The item to update in the list widget.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the object in self.aobjects to retrieve
 its name.</p></li>
-<li><p><strong>icon_type</strong> – (str) Type of icon to use. Set to “check” for a
+<li><p><strong>icon_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Type of icon to use. Set to “check” for a
 checkmark; any other value results in a blank icon.</p></li>
 </ul>
 </dd>
@@ -436,9 +438,9 @@ and updates the volume values view.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eventName</strong> – (str) The name of the event (unused).</p></li>
-<li><p><strong>params</strong> – (dict) Parameters related to the event, including
-position and window.</p></li>
+<li><p><strong>eventName</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the event (unused).</p></li>
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters related to the event, including position and
+window.</p></li>
 </ul>
 </dd>
 </dl>
@@ -450,7 +452,7 @@ position and window.</p></li>
 <dd><p>Closes all open Anatomist windows and cleans up resources.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>close_ana</strong> – (bool) If True, closes the Anatomist instance.
+<dd class="field-odd"><p><strong>close_ana</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True, closes the Anatomist instance.
 Defaults to True.</p>
 </dd>
 </dl>
@@ -486,8 +488,8 @@ moment, due to a problem with rendering volumes in direct reference)
 and assigned the custom control without menus/toolbars.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>wintype</strong> – (str) The type of window to create (“Axial”,
-“Sagittal”, “Coronal” or “3D”).</p>
+<dd class="field-odd"><p><strong>wintype</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The type of window to create (“Axial”, “Sagittal”,
+“Coronal” or “3D”).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -500,9 +502,8 @@ and assigned the custom control without menus/toolbars.</p>
 the appropriate view buttons upon creation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>views</strong> – (list[str]) A list of strings specifying the view types
-to create. Acceptable values include “axial”, “sagittal”, “coronal”,
-and “3D”.</p>
+<dd class="field-odd"><p><strong>views</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of strings specifying the view types to create.
+Acceptable values include “axial”, “sagittal”, “coronal”, and “3D”.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -514,7 +515,7 @@ and “3D”.</p>
 and the internal object list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>objects_to_delete</strong> – (list) A list of objects to be deleted.</p>
+<dd class="field-odd"><p><strong>objects_to_delete</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><em>anatomist.cpp.anatomist.AObject</em><em>]</em>) – A list of objects to be deleted.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -525,8 +526,7 @@ and the internal object list.</p>
 <dd><p>Deletes objects from the scene based on their filenames.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>files</strong> – (list) Filenames corresponding to the objects to be
-deleted.</p>
+<dd class="field-odd"><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Filenames corresponding to the objects to be deleted.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -554,13 +554,13 @@ object is urrently displayed or selected, it enables the add button.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent">
 <span class="sig-name descname"><span class="pre">dragEnterEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_viewer/anatomist_2/anasimpleviewer2.html#AnaSimpleViewer2.dragEnterEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent" title="Link to this definition">¶</a></dt>
-<dd><p>Handles the drag enter event to determine if the dragged data can be
-decoded.</p>
+<dd><p>Handles a drag enter event and determines whether the dragged data can
+be decoded.</p>
 <p>Accepts the event if it contains a decodable object or URI; otherwise,
 rejects it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QDragEnterEvent) The drag enter event instance.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qdragenterevent.html" title="(in Qt5 v5.15)"><em>QDragEnterEvent</em></a>) – The drag enter event.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -575,8 +575,7 @@ is already present, it is re-added. Otherwise, it is loaded or
 registered accordingly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – (QDropEvent) The drop event containing the data
-to handle.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qdropevent.html" title="(in Qt5 v5.15)"><em>QDropEvent</em></a>) – The drop event containing the data to handle.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -590,8 +589,8 @@ display. Updates the background colors in the list to reflect the new
 display state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -603,8 +602,8 @@ QAction.triggered signal.</p>
 object list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -616,8 +615,8 @@ QAction.triggered signal.</p>
 background color list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -628,7 +627,7 @@ QAction.triggered signal.</p>
 <dd><p>Enables or disables volume rendering in 3D views.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>on</strong> – (bool) True to enable volume rendering, False to disable.</p>
+<dd class="field-odd"><p><strong>on</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True to enable volume rendering, False to disable.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -642,8 +641,8 @@ files. After selection, passes the files to the load_object method
 for processing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -658,7 +657,10 @@ colors have been used, it returns a color based on the total count
 of existing 2D meshes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(tuple[float, float, float, float]) The RGBA color.</p>
+<dd class="field-odd"><p>The RGBA color.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)">float</a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)">float</a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)">float</a>, <a class="reference external" href="https://docs.python.org/3.10/library/functions.html#float" title="(in Python v3.10)">float</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -670,8 +672,11 @@ of existing 2D meshes.</p>
 view buttons.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list[str]) The views to be displayed. Possible values are
-“Axial”, “Sagittal”, “Coronal”, and “3D”.</p>
+<dd class="field-odd"><p>The views to be displayed. Possible values are “Axial”,
+“Sagittal”, “Coronal”, and “3D”.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -688,7 +693,7 @@ view buttons.</p>
 <dd><p>Initializes the component attributes and user interface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>awin</strong> – The main window widget.</p>
+<dd class="field-odd"><p><strong>awin</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmainwindow.html" title="(in Qt5 v5.15)"><em>QMainWindow</em></a>) – The main window widget.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -703,10 +708,10 @@ already been imported, a warning message is shown.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>files</strong> – (list[str]) A list of file names to load objects from.</p></li>
-<li><p><strong>config_changed</strong> – (bool) Indicates whether the configuration has
-changed. If True, the method will return early if an object has
-already been imported.</p></li>
+<li><p><strong>files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – A list of file names to load objects from.</p></li>
+<li><p><strong>config_changed</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>) – Indicates whether the configuration has changed.
+If True, the method will return early if an object has already been
+imported.</p></li>
 </ul>
 </dd>
 </dl>
@@ -721,8 +726,8 @@ windows and displayed objects, initializes new views based on the state
 of the view buttons, and adds existing objects to the new display.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -743,9 +748,9 @@ and manages processing execution state.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – (AObject) The loaded object to be registered.</p></li>
-<li><p><strong>filename</strong> – (str) The name of the file from which the object was
-loaded (unused).</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – (AObject) The loaded object to be registered.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the file from which the object was loaded
+(unused).</p></li>
 </ul>
 </dd>
 </dl>
@@ -761,8 +766,8 @@ is created. Otherwise, the existing browser is cleared and updated with
 the current selection.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to connect properly to
-the QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to connect properly to the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -774,8 +779,8 @@ the QAction.triggered signal.</p>
 if available.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>checked</strong> – (bool) Not used, but required to match the
-QAction.triggered signal.</p>
+<dd class="field-odd"><p><strong>checked</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Not used, but required to match the
+<code class="docutils literal notranslate"><span class="pre">QAction.triggered</span></code> signal.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -794,9 +799,9 @@ it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – The object to register and display.</p></li>
-<li><p><strong>views</strong> – (list[str]) A list of view types to create if windows do
-not already exist.</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to register and display.</p></li>
+<li><p><strong>views</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>| </em><em>None</em>) – A list of view types to create if windows do not already
+exist.</p></li>
 </ul>
 </dd>
 </dl>
@@ -811,7 +816,7 @@ removes both the object and its mesh from the displayed windows, and
 updates the internal structures accordingly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The volume object whose mesh is to be removed.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The volume object whose mesh is to be removed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -824,7 +829,7 @@ updates the internal structures accordingly.</p>
 performs additional cleanup based on the object type.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to be removed from display.</p>
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to be removed from display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -840,8 +845,8 @@ handles the cleanup of the rendered objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obj</strong> – The volume object to be removed.</p></li>
-<li><p><strong>opts</strong> – (dict) Additional options for rendering.</p></li>
+<li><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The volume object to be removed.</p></li>
+<li><p><strong>opts</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em> | </em><em>None</em>) – Additional options for rendering.</p></li>
 </ul>
 </dd>
 </dl>
@@ -855,8 +860,11 @@ handles the cleanup of the rendered objects.</p>
 returns the corresponding anatomical objects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(list) List of anatomical objects that are currently selected
-in the UI. Empty list if no objects are selected.</p>
+<dd class="field-odd"><p>List of anatomical objects that are currently selected in
+the UI. Empty list if no objects are selected.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -892,7 +900,7 @@ palettes.</p>
 <dd><p>Registers the Anatomist controls and options.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>a</strong> – The Anatomist instance.</p>
+<dd class="field-odd"><p><strong>a</strong> (<em>anatomist.direct.api.Anatomist</em>) – The Anatomist instance.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -909,7 +917,7 @@ palettes.</p>
 <dd><p>Connects GUI actions to their respective callbacks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>awin</strong> – (Qt.QWidget) The main window widget to connect actions to.</p>
+<dd class="field-odd"><p><strong>awin</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmainwindow.html" title="(in Qt5 v5.15)"><em>QMainWindow</em></a>) – The main window widget to connect actions to.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -933,9 +941,9 @@ palettes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>win</strong> – The current window instance.</p></li>
-<li><p><strong>a</strong> – The Anatomist instance.</p></li>
-<li><p><strong>pos</strong> – The current cursor position.</p></li>
+<li><p><strong>win</strong> (<em>anatomist.cpp.AWindow3D</em>) – The current window instance.</p></li>
+<li><p><strong>a</strong> (<em>anatomist.direct.api.Anatomist</em>) – The Anatomist instance.</p></li>
+<li><p><strong>pos</strong> (<em>soma.aims.vector_FLOAT</em>) – The current cursor position.</p></li>
 </ul>
 </dd>
 </dl>
@@ -950,9 +958,9 @@ positions depending on the object type and context.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>win</strong> – The current window instance for transformations.</p></li>
-<li><p><strong>a</strong> – The Anatomist instance for transformation.</p></li>
-<li><p><strong>pos</strong> – The current position of the cursor.</p></li>
+<li><p><strong>win</strong> (<em>anatomist.cpp.AWindow3D</em>) – The current window instance for transformations.</p></li>
+<li><p><strong>a</strong> (<em>anatomist.direct.api.Anatomist</em>) – The Anatomist instance for transformation.</p></li>
+<li><p><strong>pos</strong> (<em>soma.aims.vector_FLOAT</em>) – The current position of the cursor.</p></li>
 </ul>
 </dd>
 </dl>
@@ -964,7 +972,7 @@ positions depending on the object type and context.</p>
 <dd><p>Centers the view on the specified object and sets the referential.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>obj</strong> – The object to visualize. The object’s bounding box is used
+<dd class="field-odd"><p><strong>obj</strong> (<em>anatomist.cpp.anatomist.AObject</em>) – The object to visualize. The object’s bounding box is used
 to determine the center position for visualization.</p>
 </dd>
 </dl>

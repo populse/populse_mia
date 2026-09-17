@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2 &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -472,9 +472,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    be achieved by pressing and holding the left mouse button.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - eventAutoSubscription: Auto-subscribes to mouse and keyboard</span>
 <span class="sd">              events relevant for 3D controls.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -485,9 +483,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the LeftSimple3DControl instance.</span>
 
-<span class="sd">        :param prio: (int) The priority level for the control (default is 25).</span>
-<span class="sd">        :param name: (str) The name of the control (default is</span>
+<span class="sd">        :param prio: The priority level for the control (default is 25).</span>
+<span class="sd">        :type prio: int</span>
+<span class="sd">        :param name: The name of the control (default is</span>
 <span class="sd">         &quot;LeftSimple3DControl&quot;).</span>
+<span class="sd">        :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prio</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
@@ -501,7 +501,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method sets up event subscriptions for mouse button actions and</span>
 <span class="sd">        keyboard shortcuts to control the trackball actions.</span>
 
-<span class="sd">        :param pool: The event pool to which the subscriptions will be made.</span>
+<span class="sd">        :param pool: The action pool used to retrieve the actions associated</span>
+<span class="sd">         with the event subscriptions.</span>
+<span class="sd">        :type pool: anatomist.cpp.anatomist.ActionPool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key</span> <span class="o">=</span> <span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span>
         <span class="n">NoModifier</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">NoModifier</span>
@@ -542,9 +544,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    by holding down the middle mouse button.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - eventAutoSubscription: Auto-subscribes to mouse events for cut</span>
 <span class="sd">              slice rotation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -555,9 +555,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the VolRenderControl instance.</span>
 
-<span class="sd">        :param prio: (int) The priority level for the control (default is 25).</span>
-<span class="sd">        :param name: (str) The name of the control (default is</span>
-<span class="sd">         &quot;VolRenderControl&quot;).</span>
+<span class="sd">        :param prio: The priority level for the control (default is 25).</span>
+<span class="sd">        :type prio: int</span>
+<span class="sd">        :param name: The name of the control (default is &quot;VolRenderControl&quot;).</span>
+<span class="sd">         :type name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">prio</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
@@ -572,7 +573,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        triggered by the middle mouse button for controlling the track cut</span>
 <span class="sd">        action.</span>
 
-<span class="sd">        :param pool: The event pool to which the subscriptions will be made.</span>
+<span class="sd">        :param pool: The action pool used to retrieve the actions associated</span>
+<span class="sd">         with the event subscriptions.</span>
+<span class="sd">        :type pool: anatomist.cpp.anatomist.ActionPool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">eventAutoSubscription</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
         <span class="c1"># Unsubscribe from any previous middle button long events</span>
@@ -616,9 +619,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    False.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _displayVolume: Displays a volume or Fusion2D object in all</span>
 <span class="sd">              available windows.</span>
 <span class="sd">            - addMesh: Adds a 2D mesh representation of a volume object to the</span>
@@ -722,8 +723,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the AnaSimpleViewer2 instance.</span>
 
-<span class="sd">        :param init_global_handlers: (bool) Determines if global handlers</span>
-<span class="sd">         should be initialized (default is True).</span>
+<span class="sd">        :param init_global_handlers: Determines if global handlers should be</span>
+<span class="sd">         initialized.</span>
+<span class="sd">        :type init_global_handlers: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
@@ -759,8 +761,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If volume rendering is enabled, 3D views will display a clipped volume</span>
 <span class="sd">        rendering of the object.</span>
 
-<span class="sd">        :param obj: (AObject) The volume or Fusion2D object to display.</span>
-<span class="sd">        :param opts: (dict) Additional options for rendering.</span>
+<span class="sd">        :param obj: The volume or Fusion2D object to display.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
+<span class="sd">        :param opts: Additional options for rendering.</span>
+<span class="sd">        :type opts: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">opts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -803,6 +807,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and the original object in the 3D windows.</span>
 
 <span class="sd">        :param obj: The volume object from which to create the mesh.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="c1"># Create a 2D mesh from the object&#39;s internal representation</span>
@@ -835,6 +840,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param obj: The object to display. The default view is axial but may be</span>
 <span class="sd">         changed by the user.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">newWindow</span><span class="o">.</span><span class="n">showPopup</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
@@ -847,6 +853,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param obj: The object to be displayed. Its `objectType` must be one of</span>
 <span class="sd">         &#39;VOLUME&#39;, &#39;SURFACE&#39;, or &#39;GRAPH&#39;.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
 
@@ -885,7 +892,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        present) or the 2D fusion.</span>
 
 <span class="sd">        :param obj: The volume object to be displayed.</span>
-<span class="sd">        :param opts: (dict) Additional options for rendering.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
+<span class="sd">        :param opts: Additional options for rendering.</span>
+<span class="sd">        :type opts: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">opts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -953,12 +962,13 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.automaticRunning">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">automaticRunning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Enables the automatic running of functional images.</span>
+<span class="sd">        Enables automatic playback of functional images.</span>
 
-<span class="sd">        The frame rate can be changed in preferences by the user.</span>
+<span class="sd">        The frame rate can be configured by the user in the preferences.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Unused parameter required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal signature.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1026,7 +1036,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Changes the configuration based on user settings.</span>
 
-<span class="sd">        :param config: (str) &quot;neuro&quot; or &quot;radio&quot;.</span>
+<span class="sd">        :param config: &quot;neuro&quot; or &quot;radio&quot;.</span>
+<span class="sd">        :type config: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">a</span><span class="o">.</span><span class="n">config</span><span class="p">()[</span><span class="s2">&quot;axialConvention&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span>
@@ -1043,11 +1054,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        item at the same row, using either a check icon (if displayed) or a</span>
 <span class="sd">        blank icon.</span>
 
-<span class="sd">        :param item: (QListWidgetItem) The item to update in the list widget.</span>
-<span class="sd">        :param index: (int) Index of the object in self.aobjects to retrieve</span>
+<span class="sd">        :param item: The item to update in the list widget.</span>
+<span class="sd">        :type item: PyQt5.QtWidgets.QListWidgetItem</span>
+<span class="sd">        :param index: Index of the object in self.aobjects to retrieve</span>
 <span class="sd">         its name.</span>
-<span class="sd">        :param icon_type: (str) Type of icon to use. Set to &quot;check&quot; for a</span>
+<span class="sd">        :type index: int</span>
+<span class="sd">        :param icon_type: Type of icon to use. Set to &quot;check&quot; for a</span>
 <span class="sd">         checkmark; any other value results in a blank icon.</span>
+<span class="sd">        :type icon_type: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">object_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;objectslist&quot;</span><span class="p">)</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">object_list</span><span class="o">.</span><span class="n">row</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
@@ -1149,9 +1163,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        In volume rendering mode, it syncs the VR slice to the linked cursor</span>
 <span class="sd">        and updates the volume values view.</span>
 
-<span class="sd">        :param eventName: (str) The name of the event (unused).</span>
-<span class="sd">        :param params: (dict) Parameters related to the event, including</span>
-<span class="sd">         position and window.</span>
+<span class="sd">        :param eventName: The name of the event (unused).</span>
+<span class="sd">        :type eventName: str</span>
+<span class="sd">        :param params: Parameters related to the event, including position and</span>
+<span class="sd">         window.</span>
+<span class="sd">        :type params: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">pos</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;position&quot;</span><span class="p">]</span>
@@ -1185,10 +1201,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Closes all open Anatomist windows and cleans up resources.</span>
 
-<span class="sd">        :param close_ana: (bool) If True, closes the Anatomist instance.</span>
+<span class="sd">        :param close_ana: If True, closes the Anatomist instance.</span>
 <span class="sd">         Defaults to True.</span>
+<span class="sd">        :type close_ana: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exiting Ana2 viewer.&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Exiting Ana2 viewer...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">newWindow</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
         <span class="k">for</span> <span class="n">window</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">awindows</span><span class="p">:</span>
@@ -1199,7 +1216,7 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">window</span><span class="o">.</span><span class="n">setParent</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error closing window: </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Error closing window: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">awindows</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">displayedObjects</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1294,8 +1311,8 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">position</span><span class="o">=</span><span class="n">position</span> <span class="o">+</span> <span class="p">[</span><span class="n">time</span><span class="p">],</span>
             <span class="p">)</span>
 
-        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error setting cursor position: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error setting cursor position: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AnaSimpleViewer2.createWindow">
@@ -1308,8 +1325,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        moment, due to a problem with rendering volumes in direct reference)</span>
 <span class="sd">        and assigned the custom control without menus/toolbars.</span>
 
-<span class="sd">        :param wintype: (str) The type of window to create (&quot;Axial&quot;,</span>
-<span class="sd">         &quot;Sagittal&quot;, &quot;Coronal&quot; or &quot;3D&quot;).</span>
+<span class="sd">        :param wintype: The type of window to create (&quot;Axial&quot;, &quot;Sagittal&quot;,</span>
+<span class="sd">         &quot;Coronal&quot; or &quot;3D&quot;).</span>
+<span class="sd">        :type wintype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">createWindow</span><span class="p">(</span><span class="n">wintype</span><span class="p">,</span> <span class="n">no_decoration</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hidden&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
@@ -1352,7 +1370,7 @@ window.runMermaid = runMermaid;</script>
             <span class="c1"># (there should be a better way to do so...)</span>
             <span class="k">if</span> <span class="n">wintype</span> <span class="o">==</span> <span class="s2">&quot;Axial&quot;</span><span class="p">:</span>
                 <span class="n">w</span><span class="o">.</span><span class="n">muteAxial</span><span class="p">()</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MUTEAXIAL </span><span class="si">{</span><span class="n">w</span><span class="o">.</span><span class="n">muteAxial</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;MUTEAXIAL </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">w</span><span class="o">.</span><span class="n">muteAxial</span><span class="p">)</span>
 
             <span class="k">elif</span> <span class="n">wintype</span> <span class="o">==</span> <span class="s2">&quot;Coronal&quot;</span><span class="p">:</span>
                 <span class="n">w</span><span class="o">.</span><span class="n">muteCoronal</span><span class="p">()</span>
@@ -1381,9 +1399,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method sets a predefined camera angle for the 3D view and checks</span>
 <span class="sd">        the appropriate view buttons upon creation.</span>
 
-<span class="sd">        :param views: (list[str]) A list of strings specifying the view types</span>
-<span class="sd">         to create. Acceptable values include &quot;axial&quot;, &quot;sagittal&quot;, &quot;coronal&quot;,</span>
-<span class="sd">         and &quot;3D&quot;.</span>
+<span class="sd">        :param views: A list of strings specifying the view types to create.</span>
+<span class="sd">         Acceptable values include &quot;axial&quot;, &quot;sagittal&quot;, &quot;coronal&quot;, and &quot;3D&quot;.</span>
+<span class="sd">        :type views: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">view</span> <span class="ow">in</span> <span class="n">views</span><span class="p">:</span>
@@ -1413,7 +1431,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Deletes the specified objects from the scene, the object list widget,</span>
 <span class="sd">        and the internal object list.</span>
 
-<span class="sd">        :param objects_to_delete: (list) A list of objects to be deleted.</span>
+<span class="sd">        :param objects_to_delete: A list of objects to be deleted.</span>
+<span class="sd">        :type objects_to_delete: list[anatomist.cpp.anatomist.AObject]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">objects_to_delete</span><span class="p">:</span>
@@ -1452,8 +1471,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Deletes objects from the scene based on their filenames.</span>
 
-<span class="sd">        :param files: (list) Filenames corresponding to the objects to be</span>
-<span class="sd">         deleted.</span>
+<span class="sd">        :param files: Filenames corresponding to the objects to be deleted.</span>
+<span class="sd">        :type files: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">objects_to_delete</span> <span class="o">=</span> <span class="p">[</span>
@@ -1521,13 +1540,14 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../../_autosummary/populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.html#populse_mia.user_interface.data_viewer.anatomist_2.anasimpleviewer2.AnaSimpleViewer2.dragEnterEvent">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dragEnterEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Handles the drag enter event to determine if the dragged data can be</span>
-<span class="sd">        decoded.</span>
+<span class="sd">        Handles a drag enter event and determines whether the dragged data can</span>
+<span class="sd">        be decoded.</span>
 
 <span class="sd">        Accepts the event if it contains a decodable object or URI; otherwise,</span>
 <span class="sd">        rejects it.</span>
 
-<span class="sd">        :param event: (QDragEnterEvent) The drag enter event instance.</span>
+<span class="sd">        :param event: The drag enter event.</span>
+<span class="sd">        :type event: QDragEnterEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">ana</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">QAObjectDrag</span><span class="o">.</span><span class="n">canDecode</span><span class="p">(</span>
@@ -1550,8 +1570,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        is already present, it is re-added. Otherwise, it is loaded or</span>
 <span class="sd">        registered accordingly.</span>
 
-<span class="sd">        :param event: (QDropEvent) The drop event containing the data</span>
-<span class="sd">         to handle.</span>
+<span class="sd">        :param event: The drop event containing the data to handle.</span>
+<span class="sd">        :type event: QDropEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">objects</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">cpp</span><span class="o">.</span><span class="n">set_AObjectPtr</span><span class="p">()</span>
@@ -1604,8 +1624,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        display. Updates the background colors in the list to reflect the new</span>
 <span class="sd">        display state.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get currently selected objects and display each one</span>
@@ -1623,8 +1644,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Deletes the currently selected objects from the scene and updates the</span>
 <span class="sd">        object list.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">objects_to_delete</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectedObjects</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deleteObjects</span><span class="p">(</span><span class="n">objects_to_delete</span><span class="p">)</span></div>
@@ -1637,8 +1659,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Removes the currently selected objects from the scene and updates the</span>
 <span class="sd">        background color list.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">selectedObjects</span><span class="p">():</span>
@@ -1653,7 +1676,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Enables or disables volume rendering in 3D views.</span>
 
-<span class="sd">        :param on: (bool) True to enable volume rendering, False to disable.</span>
+<span class="sd">        :param on: True to enable volume rendering, False to disable.</span>
+<span class="sd">        :type on: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_vrenabled</span> <span class="o">=</span> <span class="n">on</span>
 
@@ -1674,8 +1698,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        files. After selection, passes the files to the load_object method</span>
 <span class="sd">        for processing.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Create or reconfigure the file dialog</span>
@@ -1701,7 +1726,7 @@ window.runMermaid = runMermaid;</script>
 
             <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">selected_files</span><span class="p">:</span>
                 <span class="n">file_path_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Selected file: </span><span class="si">{</span><span class="n">file_path_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Selected file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">file_path_str</span><span class="p">)</span>
                 <span class="n">file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">file_path_str</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">load_object</span><span class="p">(</span><span class="n">file_paths</span><span class="p">)</span></div>
@@ -1718,7 +1743,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        colors have been used, it returns a color based on the total count</span>
 <span class="sd">        of existing 2D meshes.</span>
 
-<span class="sd">        :Returns: (tuple[float, float, float, float]) The RGBA color.</span>
+<span class="sd">        :returns: The RGBA color.</span>
+<span class="sd">        :rtype: tuple[float, float, float, float]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span>
             <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
@@ -1760,8 +1786,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Determines which views need to be displayed based on the state of the</span>
 <span class="sd">        view buttons.</span>
 
-<span class="sd">        :Returns: (list[str]) The views to be displayed. Possible values are</span>
-<span class="sd">         &quot;Axial&quot;, &quot;Sagittal&quot;, &quot;Coronal&quot;, and &quot;3D&quot;.</span>
+<span class="sd">        :returns: The views to be displayed. Possible values are &quot;Axial&quot;,</span>
+<span class="sd">         &quot;Sagittal&quot;, &quot;Coronal&quot;, and &quot;3D&quot;.</span>
+<span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">view_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Axial&quot;</span><span class="p">,</span> <span class="s2">&quot;Sagittal&quot;</span><span class="p">,</span> <span class="s2">&quot;Coronal&quot;</span><span class="p">,</span> <span class="s2">&quot;3D&quot;</span><span class="p">]</span>
         <span class="n">views</span> <span class="o">=</span> <span class="p">[</span>
@@ -1813,6 +1840,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initializes the component attributes and user interface.</span>
 
 <span class="sd">        :param awin: The main window widget.</span>
+<span class="sd">        :type awin: PyQt5.QtWidgets.QMainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">viewgridlay</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QHBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">viewWindow</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">combobox</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QComboBox</span><span class="p">()</span>
@@ -1859,10 +1887,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        are added to the object list but not displayed. If an object has</span>
 <span class="sd">        already been imported, a warning message is shown.</span>
 
-<span class="sd">        :param files: (list[str]) A list of file names to load objects from.</span>
-<span class="sd">        :param config_changed: (bool) Indicates whether the configuration has</span>
-<span class="sd">         changed. If True, the method will return early if an object has</span>
-<span class="sd">         already been imported.</span>
+<span class="sd">        :param files: A list of file names to load objects from.</span>
+<span class="sd">        :type files: list[str]</span>
+<span class="sd">        :param config_changed: Indicates whether the configuration has changed.</span>
+<span class="sd">         If True, the method will return early if an object has already been</span>
+<span class="sd">         imported.</span>
+<span class="sd">        :type config_changed: bool | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">a</span><span class="o">.</span><span class="n">config</span><span class="p">()[</span><span class="s2">&quot;setAutomaticReferential&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">get_referential</span><span class="p">()</span>
@@ -1932,8 +1962,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        windows and displayed objects, initializes new views based on the state</span>
 <span class="sd">        of the view buttons, and adds existing objects to the new display.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">checkviews</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">deleteTotalWindow</span><span class="p">()</span>
@@ -1971,8 +2002,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and manages processing execution state.</span>
 
 <span class="sd">        :param obj: (AObject) The loaded object to be registered.</span>
-<span class="sd">        :param filename: (str) The name of the file from which the object was</span>
-<span class="sd">         loaded (unused).</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
+<span class="sd">        :param filename: The name of the file from which the object was loaded</span>
+<span class="sd">         (unused).</span>
+<span class="sd">        :type filename: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
 
@@ -2006,8 +2039,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        is created. Otherwise, the existing browser is cleared and updated with</span>
 <span class="sd">        the current selection.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to connect properly to</span>
-<span class="sd">         the QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to connect properly to the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
 
@@ -2031,8 +2065,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Opens the main Anatomist control window and adds GUI menus</span>
 <span class="sd">        if available.</span>
 
-<span class="sd">        :param checked: (bool) Not used, but required to match the</span>
-<span class="sd">         QAction.triggered signal.</span>
+<span class="sd">        :param checked: Not used, but required to match the</span>
+<span class="sd">         ``QAction.triggered`` signal.</span>
+<span class="sd">        :type checked: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">()</span>
         <span class="n">control_window</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">getControlWindow</span><span class="p">()</span>
@@ -2076,8 +2111,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        it.</span>
 
 <span class="sd">        :param obj: The object to register and display.</span>
-<span class="sd">        :param views: (list[str]) A list of view types to create if windows do</span>
-<span class="sd">         not already exist.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
+<span class="sd">        :param views: A list of view types to create if windows do not already</span>
+<span class="sd">         exist.</span>
+<span class="sd">        :type views: list[str] | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ojectlist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;objectslist&quot;</span><span class="p">)</span>
         <span class="n">ojectlist</span><span class="o">.</span><span class="n">addItem</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -2122,6 +2159,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        updates the internal structures accordingly.</span>
 
 <span class="sd">        :param obj: The volume object whose mesh is to be removed.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">internal_rep</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">getInternalRep</span><span class="p">()</span>
@@ -2143,6 +2181,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        performs additional cleanup based on the object type.</span>
 
 <span class="sd">        :param obj: The object to be removed from display.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
 
@@ -2173,7 +2212,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        handles the cleanup of the rendered objects.</span>
 
 <span class="sd">        :param obj: The volume object to be removed.</span>
-<span class="sd">        :param opts: (dict) Additional options for rendering.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
+<span class="sd">        :param opts: Additional options for rendering.</span>
+<span class="sd">        :type opts: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">opts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -2234,8 +2275,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Finds selected items in the UI list box on the upper left panel and</span>
 <span class="sd">        returns the corresponding anatomical objects.</span>
 
-<span class="sd">        :Returns: (list) List of anatomical objects that are currently selected</span>
-<span class="sd">         in the UI. Empty list if no objects are selected.</span>
+<span class="sd">        :returns: List of anatomical objects that are currently selected in</span>
+<span class="sd">         the UI. Empty list if no objects are selected.</span>
+<span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Find the object list widget in the UI</span>
         <span class="n">object_list_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span>
@@ -2348,6 +2390,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Registers the Anatomist controls and options.</span>
 
 <span class="sd">        :param a: The Anatomist instance.</span>
+<span class="sd">        :type a: anatomist.direct.api.Anatomist</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Register the function on the cursor notifier of anatomist.</span>
         <span class="c1"># It will be called when the user clicks on a window.</span>
@@ -2374,7 +2417,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Connects GUI actions to their respective callbacks.</span>
 
-<span class="sd">        :param awin: (Qt.QWidget) The main window widget to connect actions to.</span>
+<span class="sd">        :param awin: The main window widget to connect actions to.</span>
+<span class="sd">        :type awin: PyQt5.QtWidgets.QMainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Connect actions to their slots</span>
         <span class="n">awin</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;actionTimeRunning&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">triggered</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span>
@@ -2500,8 +2544,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Updates volume rendering based on the current cursor position.</span>
 
 <span class="sd">        :param win: The current window instance.</span>
+<span class="sd">        :type win: anatomist.cpp.AWindow3D</span>
 <span class="sd">        :param a: The Anatomist instance.</span>
+<span class="sd">        :type a: anatomist.direct.api.Anatomist</span>
 <span class="sd">        :param pos: The current cursor position.</span>
+<span class="sd">        :type pos: soma.aims.vector_FLOAT</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">clip</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">volrender</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">t</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">getTransformation</span><span class="p">(</span><span class="n">win</span><span class="o">.</span><span class="n">getReferential</span><span class="p">(),</span> <span class="n">clip</span><span class="o">.</span><span class="n">getReferential</span><span class="p">())</span>
@@ -2523,8 +2570,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        positions depending on the object type and context.</span>
 
 <span class="sd">        :param win: The current window instance for transformations.</span>
+<span class="sd">        :type win: anatomist.cpp.AWindow3D</span>
 <span class="sd">        :param a: The Anatomist instance for transformation.</span>
+<span class="sd">        :type a: anatomist.direct.api.Anatomist</span>
 <span class="sd">        :param pos: The current position of the cursor.</span>
+<span class="sd">        :type pos: soma.aims.vector_FLOAT</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">valbox</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">awidget</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">QObject</span><span class="p">,</span> <span class="s2">&quot;volumesBox&quot;</span><span class="p">)</span>
         <span class="n">valbox</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
@@ -2587,6 +2637,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param obj: The object to visualize. The object&#39;s bounding box is used</span>
 <span class="sd">         to determine the center position for visualization.</span>
+<span class="sd">        :type obj: anatomist.cpp.anatomist.AObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">ana</span><span class="o">.</span><span class="n">Anatomist</span><span class="p">(</span><span class="s2">&quot;-b&quot;</span><span class="p">)</span>
         <span class="n">bb</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">boundingbox</span><span class="p">()</span>

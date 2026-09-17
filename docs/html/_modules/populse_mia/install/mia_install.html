@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.install.mia_install &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.install.mia_install</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -460,7 +460,7 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
         <span class="c1"># Module not found, install it</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module_name</span><span class="si">}</span><span class="s2"> not found. Installing...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> not found. Installing...&quot;</span><span class="p">,</span> <span class="n">module_name</span><span class="p">)</span>
         <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">,</span>
             <span class="s2">&quot;-m&quot;</span><span class="p">,</span>
@@ -517,14 +517,15 @@ window.runMermaid = runMermaid;</script>
 
         <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Failed to install </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2">. Please check the pip &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;installation.&quot;</span>
+                <span class="s2">&quot;Failed to install </span><span class="si">%s</span><span class="s2">. Please check the pip installation.&quot;</span><span class="p">,</span>
+                <span class="n">package</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Could not import </span><span class="si">{</span><span class="n">package</span><span class="si">}</span><span class="s2"> after installation. Please &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;check compatibility or try reinstalling manually.&quot;</span>
+                <span class="s2">&quot;Could not import </span><span class="si">%s</span><span class="s2"> after installation. Please check &quot;</span>
+                <span class="s2">&quot;compatibility or try reinstalling it manually.&quot;</span><span class="p">,</span>
+                <span class="n">package</span><span class="p">,</span>
             <span class="p">)</span>
 
     <span class="c1"># Clear specific packages from sys.modules to avoid conflicts</span>

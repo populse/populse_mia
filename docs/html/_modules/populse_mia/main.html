@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+e60b565d documentation</title>
+    <title>populse_mia.main &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=fce32b03" />
-    <script src="../../_static/documentation_options.js?v=75ec3ca5"></script>
+    <script src="../../_static/documentation_options.js?v=f773bb81"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 3.0.0-dev+e60b565d documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.main</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -466,11 +466,11 @@ window.runMermaid = runMermaid;</script>
 
     <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  . Using </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package from </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  . Using </span><span class="si">%s</span><span class="s2"> package from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package was not found from </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;    Package </span><span class="si">%s</span><span class="s2"> was not found at </span><span class="si">%s</span><span class="s2">!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
@@ -493,15 +493,15 @@ window.runMermaid = runMermaid;</script>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
         <span class="n">mod_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">mod</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  . Using </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package from </span><span class="si">{</span><span class="n">mod_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;  . Using </span><span class="si">%s</span><span class="s2"> package from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">mod_dir</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to import </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to import </span><span class="si">%s</span><span class="s2"> package!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package has no __file__ attribute!&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Package </span><span class="si">%s</span><span class="s2"> has no __file__ attribute!&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
 
@@ -572,11 +572,11 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">populse_bdir</span> <span class="o">=</span> <span class="s2">&quot;populse&quot;</span>
                 <span class="n">soma_bdir</span> <span class="o">=</span> <span class="s2">&quot;soma&quot;</span>
 
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;root_dev_dir: </span><span class="si">{</span><span class="n">root_dev_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;root_dev_dir: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">root_dev_dir</span><span class="p">)</span>
             <span class="n">branch</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
                 <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
             <span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;branch: </span><span class="si">{</span><span class="n">branch</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;branch: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">branch</span><span class="p">)</span>
             <span class="c1"># TODO stop</span>
 
         <span class="c1"># populse packages</span>
@@ -637,8 +637,9 @@ window.runMermaid = runMermaid;</script>
                         <span class="k">raise</span> <span class="ne">AttributeError</span>
 
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> version: &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;    </span><span class="si">%s</span><span class="s2"> version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">name</span><span class="p">,</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
                     <span class="p">)</span>
 
                 <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
@@ -648,8 +649,9 @@ window.runMermaid = runMermaid;</script>
                     <span class="k">try</span><span class="p">:</span>
                         <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.version&quot;</span><span class="p">)</span>
                         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                            <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> version: &quot;</span>
-                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;.version&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fullVersion</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="s2">&quot;    </span><span class="si">%s</span><span class="s2"> version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">name</span><span class="p">,</span>
+                            <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fullVersion</span><span class="p">,</span>
                         <span class="p">)</span>
 
                     <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
@@ -670,18 +672,16 @@ window.runMermaid = runMermaid;</script>
                                 <span class="p">)</span> <span class="o">==</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">):</span>
                                     <span class="n">version</span> <span class="o">=</span> <span class="n">pyproject</span><span class="p">[</span><span class="s2">&quot;project&quot;</span><span class="p">][</span><span class="s2">&quot;version&quot;</span><span class="p">]</span>
                                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                                        <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> version: </span><span class="si">{</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span>
+                                        <span class="s2">&quot;    </span><span class="si">%s</span><span class="s2"> version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">version</span>
                                     <span class="p">)</span>
 
                                 <span class="k">else</span><span class="p">:</span>
                                     <span class="k">raise</span> <span class="ne">AttributeError</span>
 
-                        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                             <span class="c1"># Version is not found.</span>
-                            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                                <span class="sa">f</span><span class="s2">&quot;Version was not found for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package!: &quot;</span>
-                                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                                <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                                <span class="s2">&quot;Version was not found for </span><span class="si">%s</span><span class="s2"> package!&quot;</span><span class="p">,</span> <span class="n">name</span>
                             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">package_not_found</span><span class="p">:</span>
@@ -723,14 +723,16 @@ window.runMermaid = runMermaid;</script>
                 <span class="n">mod</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;  . Using </span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> package &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;from </span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> ...&quot;</span>
+                <span class="s2">&quot;  . Using </span><span class="si">%s</span><span class="s2"> package from </span><span class="si">%s</span><span class="s2"> ...&quot;</span><span class="p">,</span>
+                <span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">mod</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="p">)</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> version: &quot;</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="s2">&quot;    </span><span class="si">%s</span><span class="s2"> version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="n">mod</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="k">except</span> <span class="p">(</span><span class="ne">ModuleNotFoundError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">):</span>
@@ -740,15 +742,15 @@ window.runMermaid = runMermaid;</script>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">.version&quot;</span><span class="p">)</span>
                     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;    </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2"> version: &quot;</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39;.version&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">fullVersion</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="s2">&quot;    </span><span class="si">%s</span><span class="s2"> version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">module</span><span class="p">,</span>
+                        <span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">module</span> <span class="o">+</span> <span class="s2">&quot;.version&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">fullVersion</span><span class="p">,</span>
                     <span class="p">)</span>
 
-                <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
                     <span class="c1"># Version is not found.</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                        <span class="sa">f</span><span class="s2">&quot;Version was not found for </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> package!: &quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-                        <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span>
+                        <span class="s2">&quot;Version was not found for </span><span class="si">%s</span><span class="s2"> package!&quot;</span><span class="p">,</span> <span class="n">name</span>
                     <span class="p">)</span>
 
     <span class="c1"># Check if nipype is available on the station.</span>
@@ -756,8 +758,8 @@ window.runMermaid = runMermaid;</script>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="s2">&quot;nipype&quot;</span><span class="p">)</span>
 
-    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mia warning </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">AttributeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Mia warning </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">exc</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">QMessageBox</span><span class="p">()</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
         <span class="n">msg</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="s2">&quot;populse_mia -  warning: ImportError!&quot;</span><span class="p">)</span>
@@ -847,11 +849,11 @@ window.runMermaid = runMermaid;</script>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Python version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Python executable: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--multi_instance is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--log_level is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_level</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--log_in_stdout is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">log_in_stdout</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--keep_log_files is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">keep_log_files</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--install is set to: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">install</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--multi_instance is set to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">multi_instance</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--log_level is set to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">log_level</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--log_in_stdout is set to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">log_in_stdout</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--keep_log_files is set to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">keep_log_files</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;--install is set to: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">install</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">install</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
