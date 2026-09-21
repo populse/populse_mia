@@ -81,9 +81,7 @@ class MiniViewer(QWidget):
           elements.
 
     Contains:
-
         Methods:
-
             - _create_layouts: Create the layouts for the MiniViewer.
             - _create_top_bar: Create the top bar with the checkboxes and the
               orientation label.
@@ -133,6 +131,7 @@ class MiniViewer(QWidget):
 
         :param project: The current project instance containing scan data and
          project-specific configuration.
+        :type project: populse_mia.data_manager.project.Project
         """
         super().__init__()
         self.project = project
@@ -241,9 +240,7 @@ class MiniViewer(QWidget):
         config and connected to their respective event handlers.
 
         Contains:
-
             Inner functions:
-
                 - _create_checkbox: Create a configured checkbox.
         """
 
@@ -252,11 +249,16 @@ class MiniViewer(QWidget):
             Create a configured checkbox with consistent styling.
 
             :param text: Label text for the checkbox.
+            :type text: str
             :param checked: Initial checked state.
-            :param callback: Function to call when state changes.
+            :type checked: bool
+            :param callback: Function to call when the checkbox state changes.
+            :type callback: callable
             :param tooltip: Optional tooltip text.
+            :type tooltip: str
 
-            :Returns: Configured QCheckBox instance.
+            :returns: Configured QCheckBox instance.
+            :rtype: PyQt5.QtWidgets.QCheckBox
             """
             checkbox = QCheckBox(text)
             checkbox.setCheckState(Qt.Checked if checked else Qt.Unchecked)
@@ -339,7 +341,8 @@ class MiniViewer(QWidget):
         and connects each slider's valueChanged signal to the appropriate
         position update handler.
 
-        :param idx: (int) The index position where sliders should be inserted.
+        :param idx: The index position where sliders should be inserted.
+        :type param: int
 
         Note:
             Each slider is connected to changePosValue with dimension offsets:
@@ -380,8 +383,10 @@ class MiniViewer(QWidget):
         scaling the value proportionally to account for different cursor
         ranges.
 
-        :param idx: (int) Index of the viewer whose cursor was changed.
-        :param cursor_to_change: (int) Cursor identifier (1=3D, 2=4D, 3=5D).
+        :param idx: Index of the viewer whose cursor was changed.
+        :type idx: int
+        :param cursor_to_change: Cursor identifier (1=3D, 2=4D, 3=5D).
+        :type cursor_to_change: int
 
         Notes:
             - If chain mode is disabled, only updates the image for the given
@@ -494,6 +499,7 @@ class MiniViewer(QWidget):
         labels.
 
         :param idx: The index position where the labels should be inserted.
+        :type idx: int
         """
         font = QFont()
         font.setPointSize(9)
@@ -533,12 +539,15 @@ class MiniViewer(QWidget):
         Create a horizontal slider widget.
 
         :param minimum: The minimum value of the slider. Defaults to 0.
+        :type minimum: int
         :param maximum: The maximum value of the slider. Defaults to 0.
+        :type maximum: int
         :param position: The initial position/value of the slider. Defaults to
          0.
+        :type position: int
 
-        :Returns: (QSlider) A configured horizontal slider widget, initially
-         disabled.
+        :return: A configured horizontal slider widget, initially disabled.
+        :rtype: PyQt5.QtWidgets.QSlider
 
         Note:
             The slider is created with strong focus policy and a tick interval
@@ -563,6 +572,7 @@ class MiniViewer(QWidget):
         position (1-indexed) and maximum value in the format "current / max".
 
         :param idx: Index of the slider group to update (0-based).
+        :type idx: int
         """
 
         for slider, text_widget in [
@@ -580,6 +590,7 @@ class MiniViewer(QWidget):
 
         :param idx: Index of the sliders to enable across 3D, 4D, and 5D slider
          collections.
+        :type idx: int
         """
 
         for slider_collection in (
@@ -600,17 +611,17 @@ class MiniViewer(QWidget):
             4. Applying orientation rotation (radiological/neurological).
 
         :param idx: Index of the image slice in the internal array.
+        :type idx: int
         :param im2D: Optional 2D numpy array to modify. If None, uses
          self.im_2D[idx].
+        :type im2D: numpy.ndarray
 
         Note:
             When im2D is not provided, the modified image is stored in
             self.im_2D[idx].
 
         Contains:
-
             Inner functions:
-
                 - _resize_image: Resize image with anti-aliasing handling.
                 - _rescale_intensities: Rescale image intensities using
                   percentile-based normalization.
@@ -622,9 +633,12 @@ class MiniViewer(QWidget):
             """Resize image with version-aware anti-aliasing handling.
 
             :param image: 2D numpy array to resize.
+            :type image: numpy.ndarray
             :param target_size: Tuple of (height, width) for output dimensions.
+            :type target_size: tuple
 
-            :Returns: (numpy.ndarray) Resized image.
+            :Returns: Resized image.
+            :rtype: numpy.ndarray
             """
             resize_kwargs = {"output_shape": target_size, "mode": "constant"}
 
@@ -647,12 +661,16 @@ class MiniViewer(QWidget):
             during percentile calculations.
 
             :param image: 2D numpy array to rescale (modified in-place).
+            :type image: numpy.ndarray
             :param min_val: Minimum value for output range.
+            :type min_val: int
             :param max_val: Maximum value for output range.
+            :type max_val: int
             :param pctl: Percentile for clipping at both ends.
+            :type pctl: float
 
-            :Returns: (numpy.ndarray) Rescaled image with values in [min_val,
-             max_val]
+            :returns: Rescaled image with values in [min_val, max_val]
+            :rtype: numpy.ndarray
             """
             finite_mask = np.isfinite(image)
 
@@ -680,9 +698,10 @@ class MiniViewer(QWidget):
             """Apply orientation-specific rotation to image.
 
             :param image: 2D numpy array to rotate.
+            :type image: numpy.ndarray
 
-            :Returns: (numpy.ndarray) Rotated image with contiguous memory
-             layout.
+            :returns: Rotated image with contiguous memory layout.
+            :rtype: numpy.ndarray
 
             Note:
                 Copy is made to ensure contiguous memory (Qt compatibility).
@@ -747,12 +766,15 @@ class MiniViewer(QWidget):
             - 5D images: Extract middle z-slice from the 3D volume at time
               index 1 of the 4D volume at the 5th dimension index i.
 
-        :param im: NIfTI image object with a dataobj attribute.
+        :param im: NIfTI image object with a ``dataobj`` attribute.
+        :type im: nibabel.nifti1.Nifti1Image
         :param i: Index for slice/volume selection along the outermost
          variable dimension.
+        :type i: int
 
-        :Returns: (QPixmap) Qt pixmap ready for display, or pixmap from empty
-         array if dimensionality is unsupported.
+        :returns: Qt pixmap ready for display, or pixmap from empty array if
+         dimensionality is unsupported.
+        :rtype: PyQt5.QtGui.QPixmap
         """
         ndim = len(im.shape)
 
@@ -795,6 +817,7 @@ class MiniViewer(QWidget):
         image dimensionality are reset to a maximum value of 0.
 
         :param idx: Index of the selected image.
+        :type idx: int
         """
         # Reading the image data
         img = self.img[idx]
@@ -862,7 +885,8 @@ class MiniViewer(QWidget):
         modifications, converts the image to a Qt pixmap, and displays it in
         the associated label.
 
-        :param idx: (int) Index of the image to display.
+        :param idx: Index of the image to display.
+        :type idx: int
         """
         # Update navigation and position
         self.indexImage(idx)
