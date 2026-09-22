@@ -222,7 +222,7 @@ class IterationTable(QWidget):
         This property provides convenient access to the current editor from the
         pipeline manager without repeating the full attribute chain.
 
-        :Returns: The active pipeline editor instance.
+        :return: The active pipeline editor instance.
         """
         # fmt: off
         return (
@@ -322,7 +322,7 @@ class IterationTable(QWidget):
 
         :param value: (Any) The value to serialize.
 
-        :Returns: (str) The JSON representation of the resulting value.
+        :return: (str) The JSON representation of the resulting value.
         """
 
         if isinstance(value, str):

@@ -2485,7 +2485,7 @@ class TableDataBrowser(QTableWidget):
         Returns the list of selected scan paths if a selection is active,
         otherwise returns all visible scan paths in the data browser.
 
-        :returns: List of scan paths from either the current selection or all
+        :return: List of scan paths from either the current selection or all
          visible scans in the data browser.
         :rtype: list[str]
         """
@@ -2507,7 +2507,7 @@ class TableDataBrowser(QTableWidget):
         :param to_insert: The column header text to insert.
         :type to_insert: str
 
-        :returns: The column index where the new column should be inserted.
+        :return: The column index where the new column should be inserted.
          Returns columnCount() if it should be appended at the end.
         :rtype: int
 
@@ -2533,7 +2533,7 @@ class TableDataBrowser(QTableWidget):
         :param scan: The scan filename to search for.
         :type scan: str
 
-        :returns: The zero-based row index if the scan is found, None
+        :return: The zero-based row index if the scan is found, None
          otherwise.
         :rtype: int | None
         """
@@ -2557,7 +2557,7 @@ class TableDataBrowser(QTableWidget):
         :param tag: The name of the tag to search for.
         :type tag: str
 
-        :returns: The zero-based column index if the tag is found, None
+        :return: The zero-based column index if the tag is found, None
          otherwise.
         :rtype: int | None
         """

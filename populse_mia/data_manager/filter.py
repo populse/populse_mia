@@ -95,7 +95,7 @@ class Filter:
         :param tags: List of tags to search in.
         :type tags: list
 
-        :returns: The list of scans matching the filter.
+        :return: The list of scans matching the filter.
         :rtype: list
         """
 
@@ -130,7 +130,7 @@ class Filter:
         """
         Return the filter as a dictionary.
 
-        :returns: The filter as a dictionary.
+        :return: The filter as a dictionary.
         :rtype: dict
         """
         # Filter dictionary

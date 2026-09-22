@@ -111,7 +111,7 @@ class DataViewer(ABC, Qt.QWidget, metaclass=MetaDataViewer):
         """
         Retrieve the list of currently displayed files.
 
-        :returns: A list of files currently being displayed.
+        :return: A list of files currently being displayed.
         :rtype: list[str]
 
         :raises NotImplementedError: If not overridden by a subclass.

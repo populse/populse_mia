@@ -357,7 +357,7 @@ class PlugFilter(QWidget):
             :param scan_name: Primary key identifying the scan.
             :param tag_name: Field name to retrieve.
 
-            :Returns: The field value, with absolute path conversion for
+            :return: The field value, with absolute path conversion for
              filename tags.
             """
             value = database_data.get_value(

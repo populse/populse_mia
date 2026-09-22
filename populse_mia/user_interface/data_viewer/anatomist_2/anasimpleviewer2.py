@@ -1248,7 +1248,7 @@ class AnaSimpleViewer2(Qt.QObject):
         colors have been used, it returns a color based on the total count
         of existing 2D meshes.
 
-        :returns: The RGBA color.
+        :return: The RGBA color.
         :rtype: tuple[float, float, float, float]
         """
         colors = [
@@ -1288,7 +1288,7 @@ class AnaSimpleViewer2(Qt.QObject):
         Determines which views need to be displayed based on the state of the
         view buttons.
 
-        :returns: The views to be displayed. Possible values are "Axial",
+        :return: The views to be displayed. Possible values are "Axial",
          "Sagittal", "Coronal", and "3D".
         :rtype: list[str]
         """
@@ -1735,7 +1735,7 @@ class AnaSimpleViewer2(Qt.QObject):
         Finds selected items in the UI list box on the upper left panel and
         returns the corresponding anatomical objects.
 
-        :returns: List of anatomical objects that are currently selected in
+        :return: List of anatomical objects that are currently selected in
          the UI. Empty list if no objects are selected.
         :rtype: list
         """

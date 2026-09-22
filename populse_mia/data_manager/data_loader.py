@@ -317,7 +317,7 @@ class ImportWorker(QThread):
         :param tag_info: Tag information dictionary.
         :type tag_info: dict
 
-        :returns: Updated tag information dictionary.
+        :return: Updated tag information dictionary.
         :rtype: dict
 
         """
@@ -381,7 +381,7 @@ class ImportWorker(QThread):
         :param properties: Properties of the tag.
         :type properties: any
 
-        :returns: Dictionary containing tag information.
+        :return: Dictionary containing tag information.
         :rtype: dict
         """
         tag_info = {
@@ -442,7 +442,7 @@ class ImportWorker(QThread):
         :param raw_data_folder: Path to the raw data folder.
         :type raw_data_folder: str
 
-        :returns: List of log entries.
+        :return: List of log entries.
         :rtype: list
         """
         # Find all export logs
@@ -596,7 +596,7 @@ class ImportWorker(QThread):
         :param tag_info: Tag information dictionary.
         :type tag_info: dict
 
-        :returns: Updated tag information dictionary.
+        :return: Updated tag information dictionary.
         :rtype: dict
         """
         format_str = tag_info["format"]
@@ -771,7 +771,7 @@ class ImportWorker(QThread):
         :param tag_info: Tag information dictionary.
         :type tag_info: dict
 
-        :returns: Updated tag information dictionary.
+        :return: Updated tag information dictionary.
         :rtype: dict
         """
         value = tag_info["value"]
@@ -1072,7 +1072,7 @@ def read_log(project, main_window):
      progress bar.
     :type main_window: MainWindow
 
-    :returns: A list of paths to the data files (scans) that were successfully
+    :return: A list of paths to the data files (scans) that were successfully
      added.
     :rtype: list
     """
@@ -1096,7 +1096,7 @@ def tags_from_file(file_path, path):
     :param path: Project path.
     :type path: str
 
-    :returns: A list of the Json tags of the file.
+    :return: A list of the Json tags of the file.
     :rtype: list[list[Union[str, dict]]]
     """
     json_tags = []
@@ -1128,7 +1128,7 @@ def verify_scans(project):
     :param project: Current project in the software.
     :type project: Project
 
-    :returns: The list of scans that have been modifiedor are missing.
+    :return: The list of scans that have been modifiedor are missing.
     :rtype: list[str]
     """
     # Returning the files that are problematic

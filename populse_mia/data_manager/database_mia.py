@@ -170,7 +170,7 @@ class DatabaseMIA:
             with DatabaseMIA(...) as database:
                 ...
 
-        :returns: The current instance, allowing database operations within the
+        :return: The current instance, allowing database operations within the
          context block.
         :rtype: DatabaseMIA
         """
@@ -662,7 +662,7 @@ class DatabaseMiaData:
         :param filter_query: The filter query to apply.
         :type filter_query: str
 
-        :returns: A list of rows matching the filter criteria.
+        :return: A list of rows matching the filter criteria.
         :rtype: list
         """
 
@@ -686,7 +686,7 @@ class DatabaseMiaData:
         """
         Retrieves a list of all collection names in the database.
 
-        :returns: All collection names in the database.
+        :return: All collection names in the database.
         :rtype: list
         """
         return self.storage_data.collection_names()
@@ -711,7 +711,7 @@ class DatabaseMiaData:
          result. If None, all fields are included.
         :type fields: str | list[str]
 
-        :returns: A list of documents matching the specified criteria, or an
+        :return: A list of documents matching the specified criteria, or an
          empty list if the collection does not exist.
         :rtype: list
         """
@@ -753,7 +753,7 @@ class DatabaseMiaData:
          names from. The collection must already exist.
         :type collection_name: str
 
-        :returns: A list of document names if the collection exists, otherwise
+        :return: A list of document names if the collection exists, otherwise
          an empty list.
         :rtype: list[str]
         """
@@ -779,7 +779,7 @@ class DatabaseMiaData:
          retrieved.
         :type field_name: str | None
 
-        :returns: Attributes of the specified field as a dictionary, or a list
+        :return: Attributes of the specified field as a dictionary, or a list
          of dictionaries with attributes for all fields if `field_name` is not
          provided.
         :rtype: dict | list[dict] | None
@@ -824,7 +824,7 @@ class DatabaseMiaData:
          names from. The collection must exist in the database.
         :type collection_name: str
 
-        :returns: A list of all field names in the collection if it exists, or
+        :return: A list of all field names in the collection if it exists, or
          `None` if the collection has no fields or does not exist.
         :rtype: list | None
         """
@@ -842,7 +842,7 @@ class DatabaseMiaData:
          primary key from.
         :type collection_name: str
 
-        :returns: The first key in the collection, representing the primary
+        :return: The first key in the collection, representing the primary
          key.
         :rtype: str
         """
@@ -852,7 +852,7 @@ class DatabaseMiaData:
         """
         Give the list of visible tags.
 
-        :returns: The list of visible tags.
+        :return: The list of visible tags.
         :rtype: list
         """
         visible_names = []
@@ -894,7 +894,7 @@ class DatabaseMiaData:
         :param field: The name of the field within the document to retrieve.
         :type field: str
 
-        :returns: The current value of the specified field.
+        :return: The current value of the specified field.
         :rtype: Any
         """
         return self.storage_data[collection_name][primary_key][field].get()
@@ -906,7 +906,7 @@ class DatabaseMiaData:
         :param collection_name: The name of the collection to check.
         :type collection_name: str
 
-        :returns: `True` if the collection exists, otherwise `False`.
+        :return: `True` if the collection exists, otherwise `False`.
         :rtype: bool
         """
         return self.storage_data.has_collection(collection_name)
@@ -921,7 +921,7 @@ class DatabaseMiaData:
         :param primary_key: The primary key of the document to check.
         :type primary_key: str
 
-        :returns: `True` if the document exists, `False` otherwise.
+        :return: `True` if the document exists, `False` otherwise.
         :rtype: bool
         """
         documents = self.get_document_names(collection_name)

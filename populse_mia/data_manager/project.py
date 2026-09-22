@@ -577,7 +577,7 @@ class Project:
     def add_clinical_tags(self):
         """Add new clinical tags to the project.
 
-        :returns: List of clinical tags that were added.
+        :return: List of clinical tags that were added.
         :rtype: list
         """
         return_tags = []
@@ -798,7 +798,7 @@ class Project:
         Iterates through predefined clinical tags and removes them from both
         collections if they exist in the current collection's field names.
 
-        :returns: Clinical tags that were successfully removed.
+        :return: Clinical tags that were successfully removed.
         :rtype: list
         """
         removed_tags = []
@@ -835,7 +835,7 @@ class Project:
             - ``dict``: Only values are processed, keys are ignored.
         :type files: str | list | tuple | set | dict
 
-        :returns: Relative file paths that exist within the project
+        :return: Relative file paths that exist within the project
             folder, with paths normalized and made relative to the project
             directory.
         :rtype: set
@@ -891,7 +891,7 @@ class Project:
             ``Not Done`` are included.
         :type include_done: bool
 
-        :returns: A Dictionary containing:
+        :return: A Dictionary containing:
 
             - ``bricks``: Mapping of brick identifiers to their metadata.
             - ``outputs``: Set of output file paths relative to project
@@ -934,7 +934,7 @@ class Project:
             :param base_path: Base project directory path.
             :type base_path: str
 
-            :returns: A set of collected file paths, relative to the project
+            :return: A set of collected file paths, relative to the project
                 directory.
             :rtype: set[str]
             """
@@ -1017,7 +1017,7 @@ class Project:
         :param path: Path to the data file.
         :type path: str
 
-        :returns: History.
+        :return: History.
         :rtype: dict
         """
 
@@ -1026,7 +1026,7 @@ class Project:
     def getDate(self):
         """Return the date of creation of the project.
 
-        :returns: The date of creation of the project if it's not `Unnamed`
+        :return: The date of creation of the project if it's not `Unnamed`
             project, otherwise empty string
         :rtype: str
         """
@@ -1043,7 +1043,7 @@ class Project:
             pipeline.
         :type pipeline: Pipeline | Process
 
-        :returns: A dictionary where keys are process UUIDs (brick IDs) and
+        :return: A dictionary where keys are process UUIDs (brick IDs) and
             values are dictionaries containing the associated process
             instances.
         :rtype: dict[str, dict[str, Process]]
@@ -1109,7 +1109,7 @@ class Project:
 
         :param engine: Engine providing access to the Soma-Workflow controller.
 
-        :returns: Mapping ``brick_uuid -> job_info`` where ``job_info``
+        :return: Mapping ``brick_uuid -> job_info`` where ``job_info``
             contains:
 
                 - ``workflow`` (int): Workflow identifier.
@@ -1139,7 +1139,7 @@ class Project:
             :param job_st: Raw job status tuple as returned by Soma-Workflow.
             :type job_st: tuple
 
-            :returns: A tuple containing:
+            :return: A tuple containing:
 
                 - job_id (int): Identifier of the job.
                 - state (str): Execution state (e.g. "done", "failed",
@@ -1245,7 +1245,7 @@ class Project:
         :param target_filter: Filter name.
         :type target_filter: str
 
-        :returns: Filter object corresponding to the given name or None if not
+        :return: Filter object corresponding to the given name or None if not
             found.
         :rtype: Filter | None
         """
@@ -1258,7 +1258,7 @@ class Project:
         """
         Input box to type the name of the filter to save.
 
-        :returns: Return the name typed by the user or None if cancelled.
+        :return: Return the name typed by the user or None if cancelled.
         :rtype: str | None
         """
 
@@ -1275,7 +1275,7 @@ class Project:
     def getName(self):
         """Return the name of the project.
 
-        :returns: The name of the project if it's not `Unnamed` project,
+        :return: The name of the project if it's not `Unnamed` project,
             otherwise empty string.
         :rtype: str
         """
@@ -1290,7 +1290,7 @@ class Project:
             None, all bricks in the database are considered. Defaults to None.
         :type bricks: list | set | None
 
-        :returns: A tuple containing two sets:
+        :return: A tuple containing two sets:
 
             - `orphan`: (set) Brick IDs considered orphaned, meaning they have
               no valid or existing outputs linked to the current database.
@@ -1388,7 +1388,7 @@ class Project:
         Identifies orphaned history entries, their associated orphan bricks,
         and weak files.
 
-        :returns: A tuple containing three sets:
+        :return: A tuple containing three sets:
 
             - `orphan_hist`: (set) IDs of history entries that are no longer
               linked to any current document in the database.
@@ -1500,7 +1500,7 @@ class Project:
             existing bricks. If False, exclude such files.
         :type failed: bool
 
-        :returns: A set of filenames from the database that are not found on
+        :return: A set of filenames from the database that are not found on
             the filesystem and are not associated with existing bricks.
         :rtype: set
         """
@@ -1536,7 +1536,7 @@ class Project:
     def getSortedTag(self):
         """Return the sorted tag of the project.
 
-        :returns: Sorted tag of the project if it's not `Unnamed` project,
+        :return: Sorted tag of the project if it's not `Unnamed` project,
             otherwise empty string.
         :rtype: str
         """
@@ -1546,7 +1546,7 @@ class Project:
     def getSortOrder(self):
         """Return the sort order of the project.
 
-        :returns: Sort order of the project if it's not `Unnamed` project,
+        :return: Sort order of the project if it's not `Unnamed` project,
             otherwise empty string.
         :rtype: str
         """
@@ -1556,7 +1556,7 @@ class Project:
     def hasUnsavedModifications(self):
         """Return if the project has unsaved modifications or not.
 
-        :returns: True if the project has pending modifications, False
+        :return: True if the project has pending modifications, False
             otherwise.
         :rtype: bool
         """
@@ -1604,7 +1604,7 @@ class Project:
         This method reads the project's YAML properties file and returns
         its contents as a Python dictionary.
 
-        :returns: A dictionary containing the project properties if
+        :return: A dictionary containing the project properties if
             successfully loaded, or None if an error occurs.
         :rtype: dict | None
         """

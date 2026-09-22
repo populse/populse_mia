@@ -127,7 +127,7 @@ class ModifyTable(QDialog):
         :param field_type: Database field type constant.
         :type field_type: Any
 
-        :returns: The converted value in the appropriate type.
+        :return: The converted value in the appropriate type.
         :rtype: Any
         """
 

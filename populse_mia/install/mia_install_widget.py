@@ -343,7 +343,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
             button.
         :type tooltip: str
 
-        :returns: A QPushButton configured as an information button.
+        :return: A QPushButton configured as an information button.
         :type: QtWidgets.QPushButton
         """
 
@@ -560,7 +560,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
          repository will be cloned.
         :type mia_resources_dir: str
 
-        :returns: True if cloning succeeds, False otherwise.
+        :return: True if cloning succeeds, False otherwise.
         :rtype: bool
         """
 
@@ -616,7 +616,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         If MATLAB cannot be found or an error occurs during the process, an
         empty string is returned.
 
-        :returns: The path to the MATLAB executable if found, otherwise an
+        :return: The path to the MATLAB executable if found, otherwise an
             empty string.
         :rtype: str
 
@@ -1092,7 +1092,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         It temporarily changes the working directory to execute the
         installation command and then restores the directory.
 
-        :returns: True if the installation succeeds, False otherwise.
+        :return: True if the installation succeeds, False otherwise.
         :rtype: bool
 
         :raises FileNotFoundError: If the MATLAB installation path is invalid.
@@ -1267,7 +1267,7 @@ class MIAInstallWidget(QtWidgets.QWidget):
         :param mri_conv_dir: The directory where the repository will be cloned.
         :type mri_conv_dir: str
 
-        :returns: True if cloning succeeds, False otherwise.
+        :return: True if cloning succeeds, False otherwise.
         :rtype: bool
         """
 

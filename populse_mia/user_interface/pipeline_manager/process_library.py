@@ -134,7 +134,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param parent: (QModelIndex) The parent index (unused in this
          implementation).
 
-        :Returns: (int) The number of columns.
+        :return: (int) The number of columns.
         """
         return 1
 
@@ -146,7 +146,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param index: (QModelIndex) The index of the item.
         :param role: (Qt.ItemDataRole) The role of the data to retrieve.
 
-        :Returns: The data stored under the given role, or None if not
+        :return: The data stored under the given role, or None if not
          available.
         """
 
@@ -165,7 +165,7 @@ class DictionaryTreeModel(QAbstractItemModel):
 
         :param index: (QModelIndex) The model index to retrieve flags for.
 
-        :Returns: (Qt.ItemFlags) The corresponding item flags.
+        :return: (Qt.ItemFlags) The corresponding item flags.
         """
         node = index.internalPointer()
         base_flags = Qt.ItemIsEnabled | Qt.ItemIsSelectable
@@ -181,7 +181,7 @@ class DictionaryTreeModel(QAbstractItemModel):
 
         :param index: (QModelIndex) The index of the node.
 
-        :Returns: The Node object.
+        :return: The Node object.
         """
         node = index.internalPointer() if index.isValid() else None
         return node if node else self._rootNode
@@ -195,7 +195,7 @@ class DictionaryTreeModel(QAbstractItemModel):
          (unused in this implementation).
         :param role: (Qt.ItemDataRole) The role of the data to retrieve.
 
-        :Returns: (str) The header data, or None if not available.
+        :return: (str) The header data, or None if not available.
         """
 
         if role == Qt.DisplayRole:
@@ -216,7 +216,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param column: (int) The column number.
         :param parent: (QModelIndex) The parent index.
 
-        :Returns: (QModelIndex) The created index, or an invalid index if not
+        :return: (QModelIndex) The created index, or an invalid index if not
          available.
         """
         parentNode = self.getNode(parent)
@@ -235,7 +235,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param rows: (int) The number of rows to insert.
         :param parent: (QModelIndex) The parent index.
 
-        :Returns: (bool) True if the rows were successfully inserted, False
+        :return: (bool) True if the rows were successfully inserted, False
          otherwise.
         """
         parentNode = self.getNode(parent)
@@ -259,7 +259,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param indexes: (list of QModelIndex) The list of model indexes being
          dragged.
 
-        :Returns: (QMimeData) A QMimeData object containing serialized node
+        :return: (QMimeData) A QMimeData object containing serialized node
          information.
         """
         mimedata = QMimeData()
@@ -279,7 +279,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Returns the supported MIME types.
 
-        :Returns: (list of str) A list of supported MIME types.
+        :return: (list of str) A list of supported MIME types.
         """
         return ["component/name"]
 
@@ -289,7 +289,7 @@ class DictionaryTreeModel(QAbstractItemModel):
 
         :param index: (QModelIndex) The index of the item.
 
-        :Returns: (QModelIndex) The parent index, or an invalid index if not
+        :return: (QModelIndex) The parent index, or an invalid index if not
          available.
         """
         node = self.getNode(index)
@@ -308,7 +308,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param rows: (int) The number of rows to remove.
         :param parent: (QModelIndex) The parent index.
 
-        :Returns: (bool) True if all rows were successfully removed, False
+        :return: (bool) True if all rows were successfully removed, False
          otherwise.
         """
         parentNode = self.getNode(parent)
@@ -330,7 +330,7 @@ class DictionaryTreeModel(QAbstractItemModel):
 
         :param parent: (QModelIndex) The parent index.
 
-        :Returns: (int) The number of rows.
+        :return: (int) The number of rows.
         """
         parentNode = (
             self.getNode(parent) if parent.isValid() else self._rootNode
@@ -345,7 +345,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         :param value: The new value to set.
         :param role: (Qt.ItemDataRole) The role of the data to set.
 
-        :Returns: (bool) True if the data was successfully set, False
+        :return: (bool) True if the data was successfully set, False
          otherwise.
         """
 
@@ -360,7 +360,7 @@ class DictionaryTreeModel(QAbstractItemModel):
         """
         Converts the root node to a dictionary.
 
-        :Returns: (dict) The dictionary representation of the root node.
+        :return: (dict) The dictionary representation of the root node.
         """
         return self._rootNode.to_dict()
 
@@ -448,7 +448,7 @@ class InstallProcesses(QDialog):
         :param proc_dic: (dict) The process tree dictionary to update.
         :param module_name: (str) Name of the module to add.
 
-        :Returns: (dict) The updated process tree dictionary.
+        :return: (dict) The updated process tree dictionary.
         """
 
         if not module_name:
@@ -580,7 +580,7 @@ class InstallProcesses(QDialog):
 
         :param config_path: (str) Path to the configuration file.
 
-        :Returns: (dict) The loaded configuration or empty dict if error.
+        :return: (dict) The loaded configuration or empty dict if error.
         """
 
         try:
@@ -690,7 +690,7 @@ class InstallProcesses(QDialog):
         :param package_name: (str) Name of the package to update.
         :param processes_path: (str) Target directory for installation.
 
-        :Returns: (str) The new package name (with timestamp).
+        :return: (str) The new package name (with timestamp).
         """
         # Create timestamped name for the new version
         date = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -732,7 +732,7 @@ class InstallProcesses(QDialog):
 
         :param filename: (str) Path to the file or directory.
 
-        :Returns: (bool) True if valid, False otherwise
+        :return: (bool) True if valid, False otherwise
         """
 
         if not os.path.exists(filename):
@@ -1022,7 +1022,7 @@ class Node:
         """
         Return a string representation of the node hierarchy.
 
-        :Returns: (str) A formatted string showing the node hierarchy.
+        :return: (str) A formatted string showing the node hierarchy.
         """
         return self.log()
 
@@ -1049,7 +1049,7 @@ class Node:
         """
         Get attributes of this node as a dictionary.
 
-        :Returns: (dict) A dictionary of property names and their values.
+        :return: (dict) A dictionary of property names and their values.
         """
         classes = self.__class__.__mro__
         keyvalued = {}
@@ -1069,7 +1069,7 @@ class Node:
 
         :param row: (int) The index of the child node in the children list.
 
-        :Returns: The child node at the specified index.
+        :return: The child node at the specified index.
         """
         return self._children[row]
 
@@ -1077,7 +1077,7 @@ class Node:
         """
         Get the number of children of this node.
 
-        :Returns: (int) The number of child nodes.
+        :return: (int) The number of child nodes.
         """
         return len(self._children)
 
@@ -1088,7 +1088,7 @@ class Node:
         :param column: (int) 0 for the fully qualified name (including parent
          names), 1 for the value of this node.
 
-        :Returns: (str) The requested data (either string path or node value).
+        :return: (str) The requested data (either string path or node value).
         """
 
         if column == 0:
@@ -1112,7 +1112,7 @@ class Node:
         :param position: (int) The position at which to insert the child.
         :param child: The child node to insert.
 
-        :Returns: (bool) True if insertion was successful, False otherwise.
+        :return: (bool) True if insertion was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1128,7 +1128,7 @@ class Node:
 
         :param tabLevel: (int) The current indentation level. Defaults to -1.
 
-        :Returns: (str) A formatted string showing the node hierarchy.
+        :return: (str) A formatted string showing the node hierarchy.
         """
         tabLevel += 1
         indent = "    " * tabLevel
@@ -1144,7 +1144,7 @@ class Node:
         """
         Get the name of this node.
 
-        :Returns: (str) The name of the node.
+        :return: (str) The name of the node.
         """
         return self._name
 
@@ -1161,7 +1161,7 @@ class Node:
         """
         Get the parent of this node.
 
-        :Returns: The parent node or None if this is a root node.
+        :return: The parent node or None if this is a root node.
 
         """
         return self._parent
@@ -1173,7 +1173,7 @@ class Node:
         :param position: (int) The position of the child to remove.
         :param child: The child node to remove.
 
-        :Returns: (bool) True if removal was successful, False otherwise.
+        :return: (bool) True if removal was successful, False otherwise.
         """
 
         if position < 0 or position > len(self._children):
@@ -1189,7 +1189,7 @@ class Node:
 
         This method is a placeholder that always returns None.
 
-        :Returns: None.
+        :return: None.
         """
         return None
 
@@ -1197,7 +1197,7 @@ class Node:
         """
         Get the index of this node in its parent's children list.
 
-        :Returns: (int) The index of this node in its parent's children list,
+        :return: (int) The index of this node in its parent's children list,
          or None if this node has no parent.
         """
 
@@ -1226,7 +1226,7 @@ class Node:
 
         :param d: (dict) A dictionary to populate. Defaults to empty dict.
 
-        :Returns: (dict) A dictionary representation of the node hierarchy.
+        :return: (dict) A dictionary representation of the node hierarchy.
         """
 
         if d is None:
@@ -1241,7 +1241,7 @@ class Node:
         """
         Convert the node hierarchy to a list.
 
-        :Returns: (list) A list representation of the node hierarchy.
+        :return: (list) A list representation of the node hierarchy.
         """
         output = []
 
@@ -1260,7 +1260,7 @@ class Node:
         """
         Get the value of this node.
 
-        :Returns: The value of the node.
+        :return: The value of the node.
         """
         return self._value
 
@@ -1576,7 +1576,7 @@ class PackageLibraryDialog(QDialog):
         :param text: (str) Button text.
         :param callback: (a callable) Function to call when button is clicked.
 
-        :Returns: (QPushButton) Configured button.
+        :return: (QPushButton) Configured button.
         """
         btn = QPushButton(text, default=False, autoDefault=False)
         btn.clicked.connect(callback)
@@ -1586,7 +1586,7 @@ class PackageLibraryDialog(QDialog):
         """
         Create buttons for installing processes.
 
-        :Returns: (QHBoxLayout) Layout with install process buttons.
+        :return: (QHBoxLayout) Layout with install process buttons.
         """
         layout = QHBoxLayout()
         layout.addWidget(QLabel("Install processes from:"))
@@ -1605,7 +1605,7 @@ class PackageLibraryDialog(QDialog):
         """
         Create and configure the line edit.
 
-        :Returns: (QLineEdit) Configured line edit for package input.
+        :return: (QLineEdit) Configured line edit for package input.
         """
         line_edit = QLineEdit()
         line_edit.setPlaceholderText(
@@ -1621,7 +1621,7 @@ class PackageLibraryDialog(QDialog):
         :param list_widget: (QListWidget) List widget to add to group.
         :param reset_callback: (callable) Callback for reset button.
 
-        :Returns: (QGroupBox) Configured group box with list and reset button.
+        :return: (QGroupBox) Configured group box with list and reset button.
         """
         group = QGroupBox(title)
         layout = QHBoxLayout()
@@ -1653,7 +1653,7 @@ class PackageLibraryDialog(QDialog):
          buttons.
         :param user_mode: (bool) Whether the application is in user mode.
 
-        :Returns: (QHBoxLayout) Main layout of the dialog.
+        :return: (QHBoxLayout) Main layout of the dialog.
         """
         # Create package library and vertical layout
         self.package_library = PackageLibrary(self.packages, self.paths)
@@ -1711,7 +1711,7 @@ class PackageLibraryDialog(QDialog):
 
         :param user_mode: (bool) Whether the application is in user mode.
 
-        :Returns: (QHBoxLayout) Layout with package management buttons.
+        :return: (QHBoxLayout) Layout with package management buttons.
         """
         layout = QHBoxLayout()
         add_btn = self._create_button(
@@ -1735,7 +1735,7 @@ class PackageLibraryDialog(QDialog):
         """
         Create layout for save and cancel buttons.
 
-        :Returns: (QHBoxLayout) Layout with save and cancel buttons.
+        :return: (QHBoxLayout) Layout with save and cancel buttons.
         """
         layout = QHBoxLayout()
         layout.addStretch(1)
@@ -1749,7 +1749,7 @@ class PackageLibraryDialog(QDialog):
         """
         Create and configure the status label.
 
-        :Returns: (QLabel) Configured status label.
+        :return: (QLabel) Configured status label.
         """
         label = QLabel()
         label.setText("")
@@ -1823,7 +1823,7 @@ class PackageLibraryDialog(QDialog):
         :param init_package_tree: (bool) If True, reinitializes the entire
          package tree before adding the module. Defaults to False.
 
-        :Returns: (List[str] | str) A list of error messages encountered during
+        :return: (List[str] | str) A list of error messages encountered during
          package addition, or "No package selected!" if no module name is
          provided.
         """
@@ -2122,7 +2122,7 @@ class PackageLibraryDialog(QDialog):
         :param from_pipeline_manager: (bool) Whether deletion is initiated
          from pipeline manager. Defaults to False.
 
-        :Returns: (list[str]) A list of deleted packages/bricks (classes).
+        :return: (list[str]) A list of deleted packages/bricks (classes).
         """
         deleted_packages = []
         self.packages = self.package_library.package_tree
@@ -2543,7 +2543,7 @@ class PackageLibraryDialog(QDialog):
         """
         Loads and returns the configuration from 'process_config.yml'.
 
-        :Returns: (dict | {}) The configuration dictionary if successfully
+        :return: (dict | {}) The configuration dictionary if successfully
          loaded, otherwise None in case of an error.
         """
         config = Config()
@@ -2630,7 +2630,7 @@ class PackageLibraryDialog(QDialog):
         :param package: (str) The fully qualified module name (e.g.,
          'nipype.interfaces.spm').
 
-        :Returns: (bool) True if the package was successfully removed, False
+        :return: (bool) True if the package was successfully removed, False
          if the package was not found or no package was provided.
         """
 
@@ -2993,7 +2993,7 @@ class ProcessLibrary(QTreeView):
         """
         Return a dictionary representation of the current tree.
 
-        :Returns: The dictionary of the tree.
+        :return: The dictionary of the tree.
         """
         return self._model.to_dict()
 
@@ -3076,7 +3076,7 @@ class ProcessLibraryWidget(QWidget):
         Read the configuration from process_config.yml and return it as a
         dictionary.
         .
-        :Returns: The configuration as a dictionary.
+        :return: The configuration as a dictionary.
         """
         config = Config()
         config_path = os.path.join(
@@ -3157,7 +3157,7 @@ def import_file(full_name, path):
     :param full_name: (str) The name of the module to import.
     :param path: (str) The file path of the module.
 
-    :Returns: The imported module.
+    :return: The imported module.
     """
     spec = util.spec_from_file_location(full_name, path)
     module = util.module_from_spec(spec)
@@ -3177,7 +3177,7 @@ def node_structure_from_dict(datadict, parent=None, root_node=None):
     :param parent: The parent node of the current node. Defaults to None.
     :param root_node: The root node of the tree. Defaults to None.
 
-    :Returns: The root node of the constructed tree.
+    :return: The root node of the constructed tree.
     """
 
     if parent is None:

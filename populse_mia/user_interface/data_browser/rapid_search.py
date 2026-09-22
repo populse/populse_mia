@@ -73,7 +73,7 @@ class RapidSearch(QLineEdit):
         :param scans: List of scans to restrict the search to.
         :type scans: list[str]
 
-        :returns: SQL-like filter expression for the search.
+        :return: SQL-like filter expression for the search.
         :rtype: str
         """
         conditions = []
@@ -97,7 +97,7 @@ class RapidSearch(QLineEdit):
         :param tags: List of tags to check for null values.
         :type tags: list[str]
 
-        :returns: SQL-like filter expression for finding null values.
+        :return: SQL-like filter expression for finding null values.
         :rtype: str
         """
         conditions = []

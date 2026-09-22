@@ -345,7 +345,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param process_inputs: (dict) Parameters to be set on the process.
 
-        :Returns: The augmented attributes collection.
+        :return: The augmented attributes collection.
         """
         process_inputs = process_inputs or {}
         # Get attributes from the fallback engine
@@ -701,7 +701,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         """
         Get attribute values from the fallback engine.
 
-        :Returns: The attribute values collection.
+        :return: The attribute values collection.
         """
         return self.fallback_engine.get_attribute_values()
 
@@ -720,7 +720,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param process: The process to get the project for.
 
-        :Returns: The associated project or None if not found.
+        :return: The associated project or None if not found.
 
         """
 
@@ -741,7 +741,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
         :param parameter: (str) The parameter name associated with the
          filename.
 
-        :Returns: The path attributes.
+        :return: The path attributes.
         """
         return self.fallback_engine.path_attributes(filename, parameter)
 
@@ -751,7 +751,7 @@ class MIAProcessCompletionEngine(ProcessCompletionEngine):
 
         :param observer: The observer to remove.
 
-        :Returns: The result from the fallback engine.
+        :return: The result from the fallback engine.
 
         """
         return self.fallback_engine.remove_switch_observer(observer)
@@ -798,7 +798,7 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         :param name: (str, optional) An optional name for the completion
          engine.
 
-        :Returns: (ProcessCompletionEngine) A completion engine instance
+        :return: (ProcessCompletionEngine) A completion engine instance
          associated with the process.
         """
 
@@ -983,7 +983,7 @@ class ProcessMIA(Process):
         :param values_dict: (dict) A dictionary where each value is expected to
          be comparable to the others.
 
-        :Returns: (bool) True if all values in `values_dict` are identical or
+        :return: (bool) True if all values in `values_dict` are identical or
          if the dictionary is empty, otherwise False.
         """
 
@@ -1032,7 +1032,7 @@ class ProcessMIA(Process):
 
         :param out_file: (str) The output file to search for in user traits.
 
-        :Returns: (str | None) The name of the plug (trait) if found, otherwise
+        :return: (str | None) The name of the plug (trait) if found, otherwise
          None.
         """
 
@@ -1056,7 +1056,7 @@ class ProcessMIA(Process):
         :param file_path: (str) The absolute path of the file.
         :param base_dir: (str) The base directory to make the path relative to.
 
-        :Returns: (str) The relative file path.
+        :return: (str) The relative file path.
 
         """
         rel_path = file_path.replace(base_dir, "")

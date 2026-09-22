@@ -109,7 +109,7 @@ def brick_to_process(brick, project):
         documents.
     :type project: Project
 
-    :returns: A `Process` instance representing the brick's parameters and
+    :return: A `Process` instance representing the brick's parameters and
         values. Returns `None` if the brick is not found.
     :rtype: Process | None
     """
@@ -166,7 +166,7 @@ def data_history_pipeline(filename, project):
         details.
     :type project: Project
 
-    :returns: A `Pipeline` object representing the processing history, or
+    :return: A `Pipeline` object representing the processing history, or
         `None` if no relevant history is found.
     :rtype: Pipeline | None
     """
@@ -296,7 +296,7 @@ def data_in_value(value, filename, project):
         an attribute (`project.folder`).
     :type project: Project
 
-    :returns: True if the filename is found in the value, False otherwise.
+    :return: True if the filename is found in the value, False otherwise.
     :rtype: bool
     """
 
@@ -344,7 +344,7 @@ def find_procs_with_output(procs, filename, project):
      folder.
     :type project: Project
 
-    :Returns: A dictionary where keys are execution times and values are lists
+    :return: A dictionary where keys are execution times and values are lists
         of tuples. Each tuple contains a process and the parameter name
         associated with the filename.
         Format: `{exec_time: [(process, param_name), ...]}`.
@@ -384,7 +384,7 @@ def get_data_history(filename, project):
         details.
     :type project: Project
 
-    :returns: A dictionary with the following keys:
+    :return: A dictionary with the following keys:
 
         - `"processes"`: A set of UUIDs representing the processing bricks
           involved.
@@ -427,7 +427,7 @@ def get_data_history_bricks(filename, project):
         details.
     :type project: Project
 
-    :returns: A set of brick elements representing the "useful" processing
+    :return: A set of brick elements representing the "useful" processing
         steps that contributed to the final version of the given data file.
     :rtype: set
     """
@@ -463,7 +463,7 @@ def get_data_history_processes(filename, project):
         information.
     :type project: Project
 
-    :returns: A tuple with:
+    :return: A tuple with:
 
         - ``procs`` (dict): Mapping of process UUIDs to
           :class:`ProtoProcess` instances.
@@ -621,7 +621,7 @@ def get_direct_proc_ancestors(
         time filtering but included in the ancestor list.
     :type org_proc: ProtoProcess
 
-    :returns: A dictionary mapping brick UUIDs to `ProtoProcess` instances.
+    :return: A dictionary mapping brick UUIDs to `ProtoProcess` instances.
     :rtype: dict
     """
 
@@ -716,7 +716,7 @@ def get_filenames_in_value(value, project, allow_temp=True):
         in the results. Defaults to `True`.
     :type allow_temp: bool
 
-    :returns: A set of filenames that are valid database entries or the
+    :return: A set of filenames that are valid database entries or the
         temporary filename ``<temp>`` (if allowed).
     :rtype: set[str]
     """
@@ -762,7 +762,7 @@ def get_history_brick_process(brick_id, project, before_exec_time=None):
      executed after this timestamp are discarded.
     :type before_exec_time: str | None
 
-    :returns: A `ProtoProcess` instance representing the brick if it meets the
+    :return: A `ProtoProcess` instance representing the brick if it meets the
      criteria; otherwise, `None`.
     :rtype: ProtoProcess | None
     """
@@ -821,7 +821,7 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
         values are `ProtoProcess` instances.
     :type procs: dict
 
-    :returns: A tuple with:
+    :return: A tuple with:
 
         - new_procs (dict): Mapping of process UUIDs to :class:`ProtoProcess`
           instances.
@@ -853,7 +853,7 @@ def get_proc_ancestors_via_tmp(proc, project, procs):
             inspected.
         :type proc: ProtoProcess
 
-        :returns: (``proc``, ``param``) where ``proc`` is the process object
+        :return: (``proc``, ``param``) where ``proc`` is the process object
          and ``param`` is the name of the parameter referencing ``<temp>``.
          Returns (``None``, ``None``) if no match is found.
         :rtype: tuple

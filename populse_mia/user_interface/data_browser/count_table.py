@@ -204,7 +204,7 @@ class CountTable(QDialog):
          clicked.
         :type click_handler: Callable[[], None]
 
-        :returns: A label displaying the specified image which triggers the
+        :return: A label displaying the specified image which triggers the
          click handler when clicked.
         :rtype: ClickableLabel
         """
@@ -231,7 +231,7 @@ class CountTable(QDialog):
         :param idx: The index associated with the button for tag selection.
         :type idx: int
 
-        :returns: A configured QPushButton that triggers the tag selection when
+        :return: A configured QPushButton that triggers the tag selection when
          clicked.
         :rtype: QPushButton
         """
@@ -573,7 +573,7 @@ class CountTable(QDialog):
         :param tag_value_pairs: List of (tag_name, value) lists.
         :type tag_value_pairs: list[list[str, Any]]
 
-        :returns: Query string for database filtering.
+        :return: Query string for database filtering.
         :rtype: str
         """
         conditions = []

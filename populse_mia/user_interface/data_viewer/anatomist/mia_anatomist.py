@@ -104,7 +104,7 @@ class MiaViewer(DataViewer):
         :param name: Name of the child QObject to find.
         :type name: str
 
-        :returns: The found child QObject, or None if not found.
+        :return: The found child QObject, or None if not found.
         :rtype: Qt.QObject or None
         """
         return parent.findChild(Qt.QObject, name)
@@ -155,7 +155,7 @@ class MiaViewer(DataViewer):
         """
         Get the list of currently displayed files.
 
-        :returns: List of displayed file paths.
+        :return: List of displayed file paths.
         :rtype: list
         """
         return self.displayed

@@ -783,7 +783,7 @@ class FilterWidget(QWidget):
 
         :param scan_path: File path to normalize (absolute or relative).
 
-        :Returns: Normalized path string, relative to project root when
+        :return: Normalized path string, relative to project root when
          possible.
 
         Examples:
@@ -1361,7 +1361,7 @@ class NodeController(QWidget):
         :param in_or_out: (str) Direction of the plug ; "in" for input,
          "out" for output.
 
-        :Returns: The zero-based index of the plug if found, None otherwise.
+        :return: The zero-based index of the plug if found, None otherwise.
         """
         labels = self.labels_input if in_or_out == "in" else self.labels_output
 

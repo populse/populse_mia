@@ -296,7 +296,7 @@ class Config:
         """
         Retrieves the hashed admin password from the configuration.
 
-        :returns: The hashed admin password if found in config, False if not
+        :return: The hashed admin password if found in config, False if not
             present in config.
         :rtype: str or bool
         """
@@ -310,7 +310,7 @@ class Config:
     def get_afni_path(self):
         """Get the AFNI path.
 
-        :returns: Path to AFNI, or "" if unknown.
+        :return: Path to AFNI, or "" if unknown.
         :rtype: str
         """
 
@@ -319,7 +319,7 @@ class Config:
     def get_ants_path(self):
         """Get the ANTS path.
 
-        :returns: Path to ANTS, or "" if unknown.
+        :return: Path to ANTS, or "" if unknown.
         :rtype: str
         """
 
@@ -328,7 +328,7 @@ class Config:
     def getBackgroundColor(self):
         """Get background color.
 
-        :returns: (str) Background color, or "" if unknown.
+        :return: (str) Background color, or "" if unknown.
         :rtype: str
         """
 
@@ -353,7 +353,7 @@ class Config:
             configuration.
         :type sync_from_engine: bool
 
-        :returns: A nested dictionary containing the complete Capsul
+        :return: A nested dictionary containing the complete Capsul
             configuration, structured with the following main sections:
 
             - ``engine_modules``: List of available processing modules
@@ -608,7 +608,7 @@ class Config:
         The engine is created only once when first needed (lazy
         initialization). Subsequent calls return the same instance.
 
-        :returns: The global CapsulEngine instance.
+        :return: The global CapsulEngine instance.
         :rtype: capsul.api.capsul_engine
         """
 
@@ -623,7 +623,7 @@ class Config:
     def getChainCursors(self):
         """Get the value of the checkbox 'chain cursor' in miniviewer.
 
-        :returns: Value of the checkbox.
+        :return: Value of the checkbox.
         :rtype: bool
         """
 
@@ -632,7 +632,7 @@ class Config:
     def get_freesurfer_setup(self):
         """Get the freesurfer path.
 
-        :returns: Path to freesurfer, or "" if unknown.
+        :return: Path to freesurfer, or "" if unknown.
         :rtype: str
         """
         return self.config.get("freesurfer_setup", "")
@@ -640,7 +640,7 @@ class Config:
     def get_fsl_config(self):
         """Get the FSL config file  path.
 
-        :returns: Path to the fsl/etc/fslconf/fsl.sh file.
+        :return: Path to the fsl/etc/fslconf/fsl.sh file.
         :rtype: str
         """
 
@@ -649,7 +649,7 @@ class Config:
     def get_mainwindow_maximized(self):
         """Get the maximized (fullscreen) flag.
 
-        :returns: Maximized (fullscreen) flag.
+        :return: Maximized (fullscreen) flag.
         :rtype: bool
         """
 
@@ -658,7 +658,7 @@ class Config:
     def get_mainwindow_size(self):
         """Get the main window size.
 
-        :returns: Main window size.
+        :return: Main window size.
         :rtype: list
         """
 
@@ -668,7 +668,7 @@ class Config:
         """
         Retrieves the appropriate Matlab command based on the configuration.
 
-        :returns: The Matlab executable path or None if no path is specified.
+        :return: The Matlab executable path or None if no path is specified.
         :rtype: str or None
         """
 
@@ -700,7 +700,7 @@ class Config:
     def get_matlab_path(self):
         """Get the path to the matlab executable.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
 
@@ -709,7 +709,7 @@ class Config:
     def get_matlab_standalone_path(self):
         """Get the path to matlab compiler runtime.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
 
@@ -720,7 +720,7 @@ class Config:
         Retrieves the maximum number of projects displayed in the
         "Saved projects" menu.
 
-        :returns: The maximum number of projects. Defaults to 5 if not
+        :return: The maximum number of projects. Defaults to 5 if not
             specified.
         :rtype: int
         """
@@ -732,7 +732,7 @@ class Config:
         Retrieves the maximum number of thumbnails displayed in the mini-viewer
         at the bottom of the data browser.
 
-        :returns: The maximum number of thumbnails. Defaults to 5 if not
+        :return: The maximum number of thumbnails. Defaults to 5 if not
             specified.
         :rtype: int
         """
@@ -741,7 +741,7 @@ class Config:
     def get_mri_conv_path(self):
         """Get the MRIManager.jar path.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
 
@@ -750,7 +750,7 @@ class Config:
     def get_mrtrix_path(self):
         """Get the  mrtrix path.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
 
@@ -760,7 +760,7 @@ class Config:
         """
         Get number the maximum number of slices to display in the miniviewer.
 
-        :returns: Maximum number of slices to display in miniviewer.
+        :return: Maximum number of slices to display in miniviewer.
         :rtype: int
         """
 
@@ -769,7 +769,7 @@ class Config:
     def get_opened_projects(self):
         """Get opened projects.
 
-        :returns: Opened projects.
+        :return: Opened projects.
         :rtype: list
         """
         return self.config.get("opened_projects", [])
@@ -777,7 +777,7 @@ class Config:
     def get_projects_save_path(self):
         """Get the path where projects are saved.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
         return self.config.get("projects_save_path", "")
@@ -798,7 +798,7 @@ class Config:
         If outdated parameters (`mia_path`, `mia_user_path`) are found, they
         are automatically updated in the configuration file.
 
-        :returns: The absolute path to the properties folder.
+        :return: The absolute path to the properties folder.
         :rtype: str
         """
 
@@ -877,7 +877,7 @@ class Config:
         """
         Retrieves the chosen referential from the anatomist_2 data viewer.
 
-        :returns: "0" for World Coordinates, "1" for Image ref.
+        :return: "0" for World Coordinates, "1" for Image ref.
         :rtype: str
         """
         return self.config.get("ref", "0")
@@ -885,7 +885,7 @@ class Config:
     def get_resources_path(self):
         """Get the resources path.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
         return self.config.get("resources_path", "")
@@ -895,7 +895,7 @@ class Config:
         Get whether the show_all_slices parameters was enabled or not in
         the miniviewer.
 
-        :returns: True if the ``show_all_slices`` parameters was enabled.
+        :return: True if the ``show_all_slices`` parameters was enabled.
         :rtype: bool
         """
         return self.config.get("show_all_slices", False)
@@ -903,7 +903,7 @@ class Config:
     def getSourceImageDir(self):
         """Get the source directory for project images.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
         return self.config.get("source_image_dir", "")
@@ -911,7 +911,7 @@ class Config:
     def get_spm_path(self):
         """Get the path of SPM.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
         return self.config.get("spm", "")
@@ -919,7 +919,7 @@ class Config:
     def get_spm_standalone_path(self):
         """Get the path to the SPM12 standalone version.
 
-        :returns: A path.
+        :return: A path.
         :rtype: str
         """
         return self.config.get("spm_standalone", "")
@@ -927,7 +927,7 @@ class Config:
     def getTextColor(self):
         """Get the text color.
 
-        :returns: The text color.
+        :return: The text color.
         :rtype: str
         """
         return self.config.get("text_color", "")
@@ -935,7 +935,7 @@ class Config:
     def getThumbnailTag(self):
         """Get the tag of the thumbnail displayed in the miniviewer.
 
-        :returns: The tag of the thumbnail displayed in miniviewer.
+        :return: The tag of the thumbnail displayed in miniviewer.
         :rtype: str
         """
         return self.config.get("thumbnail_tag", "SequenceName")
@@ -943,7 +943,7 @@ class Config:
     def get_use_afni(self):
         """Get the value of "use afni" checkbox in the preferences.
 
-        :returns: The value of "use afni" checkbox.
+        :return: The value of "use afni" checkbox.
         :rtype: bool
         """
         return self.config.get("use_afni", False)
@@ -951,7 +951,7 @@ class Config:
     def get_use_ants(self):
         """Get the value of "use ants" checkbox in the preferences.
 
-        :returns: The value of "use ants" checkbox.
+        :return: The value of "use ants" checkbox.
         :rtype: bool
         """
         return self.config.get("use_ants", False)
@@ -959,7 +959,7 @@ class Config:
     def get_use_clinical(self):
         """Get the clinical mode in the preferences.
 
-        :returns: The clinical mode.
+        :return: The clinical mode.
         :rtype: bool
         """
         return self.config.get("clinical_mode", False)
@@ -967,7 +967,7 @@ class Config:
     def get_use_freesurfer(self):
         """Get the value of "use freesurfer" checkbox in the preferences.
 
-        :returns: The value of "use freesurfer" checkbox.
+        :return: The value of "use freesurfer" checkbox.
         :rtype: bool
         """
         return self.config.get("use_freesurfer", False)
@@ -975,7 +975,7 @@ class Config:
     def get_use_fsl(self):
         """Get the value of "use fsl" checkbox in the preferences.
 
-        :returns: The value of "use fsl" checkbox.
+        :return: The value of "use fsl" checkbox.
         :rtype: bool
         """
         return self.config.get("use_fsl", False)
@@ -983,7 +983,7 @@ class Config:
     def get_use_matlab(self):
         """Get the value of "use matlab" checkbox in the preferences.
 
-        :returns: The value of "use matlab" checkbox.
+        :return: The value of "use matlab" checkbox.
         :rtype: bool
         """
         return self.config.get("use_matlab", False)
@@ -992,7 +992,7 @@ class Config:
         """
         Get the value of "use matlab standalone" checkbox in the preferences.
 
-        :returns: The value of "use matlab standalone" checkbox.
+        :return: The value of "use matlab standalone" checkbox.
         :rtype: bool
         """
         return self.config.get("use_matlab_standalone", False)
@@ -1000,7 +1000,7 @@ class Config:
     def get_use_mrtrix(self):
         """Get the value of "use mrtrix" checkbox in the preferences.
 
-        :returns: The value of "use mrtrix" checkbox.
+        :return: The value of "use mrtrix" checkbox.
         :rtype: bool
         """
         return self.config.get("use_mrtrix", False)
@@ -1008,7 +1008,7 @@ class Config:
     def get_user_level(self):
         """Get the user level in the Capsul config.
 
-        :returns: The user level in the Capsul config.
+        :return: The user level in the Capsul config.
         :rtype: int
         """
         return (
@@ -1022,7 +1022,7 @@ class Config:
     def get_user_mode(self):
         """Get if user mode is disabled or enabled in the preferences.
 
-        :returns: If True, the user mode is enabled.
+        :return: If True, the user mode is enabled.
         :rtype: bool
         """
         return self.config.get("user_mode", True)
@@ -1030,7 +1030,7 @@ class Config:
     def get_use_spm(self):
         """Get the value of "use spm" checkbox in the preferences.
 
-        :returns: The value of "use spm" checkbox.
+        :return: The value of "use spm" checkbox.
         :rtype: bool
         """
         return self.config.get("use_spm", False)
@@ -1038,7 +1038,7 @@ class Config:
     def get_use_spm_standalone(self):
         """Get the value of "use spm standalone" checkbox in the preferences.
 
-        :returns: The value of "use spm standalone" checkbox.
+        :return: The value of "use spm standalone" checkbox.
         :rtype: bool
         """
         return self.config.get("use_spm_standalone", False)
@@ -1046,7 +1046,7 @@ class Config:
     def getViewerConfig(self):
         """Get the viewer config ``neuro`` or ``radio``, ``neuro`` by default.
 
-        :returns: The viewer config (``neuro`` or ``radio``).
+        :return: The viewer config (``neuro`` or ``radio``).
         :rtype: str
         """
         return self.config.get("config_NeuRad", "neuro")
@@ -1054,7 +1054,7 @@ class Config:
     def getViewerFramerate(self):
         """Get the Viewer framerate.
 
-        :returns: The Viewer framerat (ex. "5").
+        :return: The Viewer framerat (ex. "5").
         :rtype: str
         """
         return self.config.get("im_sec", "5")
@@ -1062,7 +1062,7 @@ class Config:
     def isAutoSave(self):
         """Get if the auto-save mode is enabled or not.
 
-        :returns: If True, auto-save mode is enabled.
+        :return: If True, auto-save mode is enabled.
         :rtype: bool
         """
         return self.config.get("auto_save", False)
@@ -1071,7 +1071,7 @@ class Config:
         """
         Gets whether the controller display is of type V1.
 
-        :returns: If True, V1 controller display.
+        :return: If True, V1 controller display.
         :rtype: bool
         """
         return self.config.get("control_V1", False)
@@ -1080,7 +1080,7 @@ class Config:
         """
         Get if the display in miniviewer is in radiological orientation.
 
-        :returns: If True, radiological orientation, otherwise neurological
+        :return: If True, radiological orientation, otherwise neurological
             orientation.
         :rtype: bool
         """
@@ -1093,7 +1093,7 @@ class Config:
          properties directory, decrypt it using Fernet encryption, and
          parse it as YAML.
 
-        :returns: Parsed configuration from the YAML file. Returns empty dict
+        :return: Parsed configuration from the YAML file. Returns empty dict
             if parsing fails.
         :rtype: dict
         """
@@ -1240,7 +1240,7 @@ class Config:
                 configuration for.
             :type module_name: str
 
-            :returns: The configuration dictionary of the specified module, or
+            :return: The configuration dictionary of the specified module, or
                 an empty dictionary if not found.
             :rtype: dict
             """
@@ -1760,7 +1760,7 @@ class Config:
         engine modules are loaded and configurations are properly imported
         from the saved settings.
 
-        :returns: The updated CapsulEngine object, or None if the engine is not
+        :return: The updated CapsulEngine object, or None if the engine is not
             initialized.
         :rtype: capsul.engine.CapsulEngine | None
         """

@@ -25,7 +25,7 @@ def positive_int(value: str) -> int:
     :param value: String representation of an integer.
     :type value: str
 
-    :returns: The converted integer.
+    :return: The converted integer.
     :rtype: int
 
     :raises argparse.ArgumentTypeError: If the integer is less than 1.
@@ -43,7 +43,7 @@ def parse_args():
     """
     Parse the command-line arguments for the Populse Mia application.
 
-    :returns: The parsed command-line arguments.
+    :return: The parsed command-line arguments.
     :rtype: argparse.Namespace
     """
     parser = argparse.ArgumentParser(

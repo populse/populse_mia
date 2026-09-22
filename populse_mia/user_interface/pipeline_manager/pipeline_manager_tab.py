@@ -517,7 +517,7 @@ class PipelineManagerTab(QWidget):
 
             :param item: The object to be serialized.
 
-            :Returns: JSON-serializable representation of the item.
+            :return: JSON-serializable representation of the item.
 
             :raises TypeError: If item type cannot be serialized.
             """
@@ -702,7 +702,7 @@ class PipelineManagerTab(QWidget):
         :param process: Process instance.
         :param plug_name: (str) Name of the plug to check.
 
-        :Returns: True if plug should be registered, False otherwise.
+        :return: True if plug should be registered, False otherwise.
         """
 
         if plug_name not in process.traits():
@@ -1193,7 +1193,7 @@ class PipelineManagerTab(QWidget):
 
         :param pipeline: Pipeline object containing plugs to be configured.
 
-        :Returns:
+        :return:
             Optional[Tuple[List[str], List[str]]]: A tuple containing:
                 - iterated_plugs: List of plug names marked for iteration
                 - database_plugs: List of plug names connected to database
@@ -1295,7 +1295,7 @@ class PipelineManagerTab(QWidget):
                 - A grid layout for parameter input/output controls.
                 - Standard OK/Cancel dialog buttons.
 
-            :Returns: (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]])
+            :return: (Tuple[Qt.QDialog, Qt.QGridLayout, List[List]])
                 A tuple containing:
                     - dialog (Qt.QDialog): The configured pipeline
                       configuration dialog.
@@ -1441,7 +1441,7 @@ class PipelineManagerTab(QWidget):
                 [plug_name (str), iter_checkbox (Qt.QCheckBox),
                 db_checkbox (Optional[Qt.QCheckBox])].
 
-            :Returns: (tuple[list[str], list[str]]): A tuple containing:
+            :return: (tuple[list[str], list[str]]): A tuple containing:
                 - iterated_plugs (list[str]): Names of plugs selected for
                   iteration.
                 - database_plugs (list[str]): Names of plugs with the database
@@ -1512,7 +1512,7 @@ class PipelineManagerTab(QWidget):
         The method handles both single processes and full pipelines, converting
         single processes into single-node pipelines when necessary.
 
-        :Returns: (Pipeline or None) The new iteration pipeline if successful,
+        :return: (Pipeline or None) The new iteration pipeline if successful,
          None if aborted.
 
         :raises ValueError: If Input_Filter process cannot be found in the
@@ -1681,7 +1681,7 @@ class PipelineManagerTab(QWidget):
         :param environment: (str) The target environment for checking
          configurations. Defaults to "global".
 
-        :Returns: (dict) A dictionary mapping each pipeline node to its
+        :return: (dict) A dictionary mapping each pipeline node to its
          selected configuration.
         """
 
@@ -1981,7 +1981,7 @@ class PipelineManagerTab(QWidget):
         pipeline editor tabs and configures it using the Mia configuration
         settings.
 
-        :Returns: (CapsulEngine) A configured Capsul engine instance ready for
+        :return: (CapsulEngine) A configured Capsul engine instance ready for
          pipeline execution, with settings applied from the Mia config object.
         """
         return self.pipelineEditorTabs.get_capsul_engine()
@@ -1998,7 +1998,7 @@ class PipelineManagerTab(QWidget):
         :param pipeline: (Pipeline) Optional pipeline to evaluate. If None,
          uses the currently selected pipeline from the editor GUI.
 
-        :Returns: (Pipeline | Process) The process node if pipeline contains a
+        :return: (Pipeline | Process) The process node if pipeline contains a
          single unconnected process, otherwise the pipeline itself.
         """
 
@@ -2029,7 +2029,7 @@ class PipelineManagerTab(QWidget):
         Checks each node in the pipeline for missing mandatory parameters,
         accounting for workflow job parameter overrides and temporary values.
 
-        :Returns: (list[str]) Parameter names that are missing, formatted as
+        :return: (list[str]) Parameter names that are missing, formatted as
          either 'parameter_name' for pipeline root or 'node.parameter_name' for
          other nodes.
 
@@ -2189,7 +2189,7 @@ class PipelineManagerTab(QWidget):
         :param pipeline_name: (str) The name of the parent pipeline, if
          applicable.
 
-        :Returns: (bool) True if the pipeline was successfully initialized,
+        :return: (bool) True if the pipeline was successfully initialized,
          False otherwise.
 
         Contains:
@@ -2212,7 +2212,7 @@ class PipelineManagerTab(QWidget):
 
             :param t0: The starting time.
             :type t0: float
-            :returns: The elapsed duration since `t0`, rounded according to
+            :return: The elapsed duration since `t0`, rounded according to
              the magnitude of its fractional part.
             :rtype: float
             """
@@ -2236,7 +2236,7 @@ class PipelineManagerTab(QWidget):
 
             :param node: The node object, expected to have at least a ``name``
              attribute, and optionally a ``context_name`` attribute.
-            :Returns: (str) The extracted node name with any leading
+            :return: (str) The extracted node name with any leading
              ``"Pipeline."`` prefix removed.
             """
             node_name = getattr(node, "context_name", node.name)
@@ -4112,7 +4112,7 @@ class RunProgress(QWidget):
         """
         Analyze execution results and determine appropriate user message.
 
-        :Returns: Dictionary containing message box configuration with keys:
+        :return: Dictionary containing message box configuration with keys:
          'icon', 'title', and 'text'.
         """
 
@@ -4280,7 +4280,7 @@ class RunWorker(QThread):
 
         :param engine: (CapsulEngine) Execution engine to interrupt if running.
 
-        :Returns: (bool) True if an interrupt was requested, False otherwise.
+        :return: (bool) True if an interrupt was requested, False otherwise.
         """
 
         with self.lock:

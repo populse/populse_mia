@@ -2975,7 +2975,7 @@ class PopUpPreferences(QDialog):
          widgets to the left. Defaults to True.
         :type add_stretch: bool
 
-        :Returns: The created horizontal box layout.
+        :return: The created horizontal box layout.
         :rtype: PyQt5.QtWidgets.QHBoxLayout
         """
         h_box = QHBoxLayout()
@@ -3520,7 +3520,7 @@ class PopUpPreferences(QDialog):
         :param config: The configuration object to update and save.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if the configuration is valid and successfully saved,
+        :return: True if the configuration is valid and successfully saved,
          False otherwise.
         :rtype: bool
         """
@@ -4035,7 +4035,7 @@ class PopUpPreferences(QDialog):
         :param config: The configuration object to update.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if the path is valid and updated in the configuration,
+        :return: True if the path is valid and updated in the configuration,
          False otherwise.
         :rtype: bool
         """
@@ -4115,7 +4115,7 @@ class PopUpPreferences(QDialog):
         :param config: The configuration object to update.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if the path is valid and updated in the configuration,
+        :return: True if the path is valid and updated in the configuration,
          False otherwise.
         :rtype: bool
         """
@@ -4165,7 +4165,7 @@ class PopUpPreferences(QDialog):
          settings will be stored.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if all paths and settings are valid, False otherwise.
+        :return: True if all paths and settings are valid, False otherwise.
         :rtype: bool
         """
         QApplication.setOverrideCursor(QtCore.Qt.WaitCursor)
@@ -4344,7 +4344,7 @@ class PopUpPreferences(QDialog):
          settings will be stored.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if the SPM path and Matlab path are valid, False
+        :return: True if the SPM path and Matlab path are valid, False
          otherwise.
         :rtype: bool
         """
@@ -4437,7 +4437,7 @@ class PopUpPreferences(QDialog):
          settings will be stored.
         :type config: populse_mia.software_properties.Config
 
-        :Returns: True if the SPM standalone and Matlab standalone paths are
+        :return: True if the SPM standalone and Matlab standalone paths are
          valid, False otherwise.
         :rtype: bool
         """
@@ -4598,7 +4598,7 @@ class PopUpPreferences(QDialog):
          to set the tool's path in the configuration.
         :type set_path: callable
 
-        :Returns: True if the tool's path is valid and functional, False
+        :return: True if the tool's path is valid and functional, False
          otherwise.
         :rtype: bool
         """
@@ -4912,7 +4912,7 @@ class PopUpQuit(QDialog):
         """
         Check if the application can exit.
 
-        :Returns: (bool) True if  exit is allowed.
+        :return: (bool) True if  exit is allowed.
         """
         return self._bool_exit
 
@@ -5296,7 +5296,7 @@ class PopUpSaveProjectAs(QDialog):
         Checks project name validity, handles potential naming conflicts,
         and emits a signal when a valid project name is selected.
 
-        :Returns: Full path of the new project if successful, None otherwise.
+        :return: Full path of the new project if successful, None otherwise.
         :rtype: str | None
         """
         file_name = self.new_project.text().strip()
@@ -5417,7 +5417,7 @@ class PopUpSeeAllProjects(QDialog):
         :param path: Path to the project directory.
         :type path: str
 
-        :Returns: Green checkmark if project exists, red cross if not.
+        :return: Green checkmark if project exists, red cross if not.
         :rtype: PyQt5.QtGui.QIcon
         """
         sources_images_dir = Config().getSourceImageDir()
@@ -5428,7 +5428,7 @@ class PopUpSeeAllProjects(QDialog):
         """
         Returns the path of the first selected item.
 
-        :Returns: (str) Absolute path of the selected project, or empty string
+        :return: (str) Absolute path of the selected project, or empty string
          if no selection.
 
         """
@@ -5683,7 +5683,7 @@ class PopUpTagSelection(QDialog):
         :type clicked_handler:
          :meth:`populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked`
 
-        :Returns: Configured button.
+        :return: Configured button.
         :rtype: PyQt5.QtWidgets.QPushButton
         """
         button = QPushButton(self)
@@ -5992,7 +5992,7 @@ class PopUpShowHistory(QDialog):
         :param item_idx: The starting column index for populating the table.
         :type item_idx: int
 
-        :Returns: The updated column index after processing the dictionary.
+        :return: The updated column index after processing the dictionary.
         :rtype: int
         """
 
@@ -6131,7 +6131,7 @@ class PopUpShowHistory(QDialog):
         :param node_name: The name of the node to find associated bricks for.
         :type node_name: str
 
-        :Returns: A dictionary where the keys are the full brick names and the
+        :return: A dictionary where the keys are the full brick names and the
          values are lists of associated UUIDs.
         :rtype: dict
         """
@@ -6163,7 +6163,7 @@ class PopUpShowHistory(QDialog):
         :param plug: The plug object to find the process and plug name from.
         :type plug: capsul.pipeline.pipeline_nodes.Plug
 
-        :Returns: A tuple containing the process name (str) and plug name
+        :return: A tuple containing the process name (str) and plug name
          (str).
         :rtype: tuple[str]
         """
@@ -6259,7 +6259,7 @@ class PopUpShowHistory(QDialog):
         :param value: I/O value.
         :type value: str
 
-        :Returns: The scan corresponding to the value if it exists, None
+        :return: The scan corresponding to the value if it exists, None
          otherwise.
         :rtype: str | None
         """
@@ -6455,7 +6455,7 @@ class PopUpShowHistory(QDialog):
             :param text: The text to display in the QLabel.
             :type text: str
 
-            :Returns: A QWidget containing a QLabel with the specified text,
+            :return: A QWidget containing a QLabel with the specified text,
              aligned to the top within a vertical layout.
             :rtype: PyQt5.QtWidgets.QWidget
             """
@@ -6707,7 +6707,7 @@ class PopUpVisualizedTags(QWidget):
          clicked.
         :type click_handler: A callable method
 
-        :Returns: A configured button with the specified properties.
+        :return: A configured button with the specified properties.
         :rtype: PyQt5.QtWidgets.QPushButton
         """
         button = QPushButton(self)
@@ -6734,7 +6734,7 @@ class PopUpVisualizedTags(QWidget):
         :param text: The text to be displayed on the label, will be translated.
         :type text: str
 
-        :Returns: A configured label with the specified properties.
+        :return: A configured label with the specified properties.
         :rtype: PyQt5.QtWidgets.QLabel
         """
         label = QLabel(self)
@@ -6781,7 +6781,7 @@ class PopUpVisualizedTags(QWidget):
          QListWidget.
         :type text: str
 
-        :Returns: A configured QListWidget with multi-selection mode enabled.
+        :return: A configured QListWidget with multi-selection mode enabled.
         :rtype: PyQt5.QtWidgets.QListWidget
         """
         tag_list = QListWidget(self)

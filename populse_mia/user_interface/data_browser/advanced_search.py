@@ -145,7 +145,7 @@ class AdvancedSearch(QWidget):
             :param items: Items to add to the combo box, in order.
             :type items: list[str]
 
-            :returns: The initialized combo box.
+            :return: The initialized combo box.
             :rtype: PyQt5.QtWidgets.QComboBox
             """
             combo = QComboBox()
@@ -161,7 +161,7 @@ class AdvancedSearch(QWidget):
             Retrieve the tags currently marked as visible from the project
             database.
 
-            :returns: A list of tags configured to be shown in the project.
+            :return: A list of tags configured to be shown in the project.
             :rtype: list[str]
             """
 
@@ -479,7 +479,7 @@ class AdvancedSearch(QWidget):
          "All visualized tags" text.
         :type replace_all_by_fields: bool
 
-        :returns: A 5-tuple containing:
+        :return: A 5-tuple containing:
 
             - fields: Field names to filter on
             - conditions: Comparison operators (e.g., '=', 'BETWEEN')
@@ -658,7 +658,7 @@ class AdvancedSearch(QWidget):
         :param scans: List of scan identifiers to restrict the search scope.
         :type scans: list[str]
 
-        :returns: Complete filter query string with all conditions and scan
+        :return: Complete filter query string with all conditions and scan
          restrictions.
         :rtype: str
 
@@ -874,7 +874,7 @@ class AdvancedSearch(QWidget):
             :param widget_ref: The QWidget instance to remove, or `None`.
             :type widget_ref: PyQt5.QtWidgets.QWidget | None
 
-            :returns: Always returns `None` after removing the widget.
+            :return: Always returns `None` after removing the widget.
             :rtype: None
             """
 

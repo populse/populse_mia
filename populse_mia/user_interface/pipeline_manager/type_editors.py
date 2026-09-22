@@ -80,7 +80,7 @@ class PopulseFileControlWidget(FileControlWidget):
          class.
         :param user_data (Optional[dict]): Additional user data.
 
-        :Returns: (Tuple[QWidget, QLabel]) A tuple containing the created
+        :return: (Tuple[QWidget, QLabel]) A tuple containing the created
          widget and its associated label. The widget includes a QLineEdit
          ('path') and a browse button ('browse').
 
@@ -114,7 +114,7 @@ class PopulseFileControlWidget(FileControlWidget):
 
             :param value: (str):The value to check.
 
-            :Returns: (bool) True if the value is a number, False otherwise.
+            :return: (bool) True if the value is a number, False otherwise.
             """
 
             try:
@@ -255,7 +255,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         :param user_data: (Optional[dict]) User data associated with
          the widget.
 
-        :Returns: (QWidget) The directory selection widget.
+        :return: (QWidget) The directory selection widget.
         """
 
         return PopulseFileControlWidget.create_widget(
@@ -359,7 +359,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         :param user_data: (dict) Additional data, including project, scan list,
          and connected inputs.
 
-        :Returns: (tuple) A tuple (control widget, (QLabel, QWidget)).
+        :return: (tuple) A tuple (control widget, (QLabel, QWidget)).
         """
         widget, label = OffscreenListFileControlWidget.create_widget(
             parent,
@@ -604,7 +604,7 @@ class PopulseUndefinedControlWidget:
          compatibility.
         :param control_instance: (QWidget) The control widget to validate.
 
-        :Returns: (bool) True if the control value is Undefined, False
+        :return: (bool) True if the control value is Undefined, False
          otherwise
         """
 

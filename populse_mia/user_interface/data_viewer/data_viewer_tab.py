@@ -126,7 +126,7 @@ class DataViewerTab(Qt.QWidget):
         """
         Retrieve the name of the currently active viewer.
 
-        :Returns: (str) Name of the current viewer, either from the current
+        :return: (str) Name of the current viewer, either from the current
          viewer tracking or the combobox selection.
         """
         return (

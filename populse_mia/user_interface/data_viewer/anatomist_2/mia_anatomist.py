@@ -165,7 +165,7 @@ class MiaViewer(DataViewer):
         :param current_ref: Current referential setting.
         :type current_ref: int
 
-        :returns: Configured preferences dialog.
+        :return: Configured preferences dialog.
         :rtype: PyQt5.QtWidgets.QDialog
         """
         dialog = Qt.QDialog()

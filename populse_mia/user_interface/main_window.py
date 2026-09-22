@@ -252,7 +252,7 @@ class MainWindow(QMainWindow):
         Check if there are differences between the current project and the
         database.
 
-        :returns: True if there are unsaved modifications, False otherwise.
+        :return: True if there are unsaved modifications, False otherwise.
         :rtype: bool
         """
 
@@ -602,7 +602,7 @@ class MainWindow(QMainWindow):
     def get_controller_version(self):
         """Gives the value of the controller_version_changed attribute.
 
-        :returns: The value of the controller_version_changed attribute.
+        :return: The value of the controller_version_changed attribute.
         :rtype: bool
         """
         return self.controller_version_changed
@@ -921,7 +921,7 @@ class MainWindow(QMainWindow):
         :raises RuntimeError: If QApplication instance does not exist when
          calling this method.
 
-        :returns: The created QtConsole widget instance.
+        :return: The created QtConsole widget instance.
         :rtype: RichJupyterWidget
 
         Contains:
@@ -1486,7 +1486,7 @@ class MainWindow(QMainWindow):
         :param name: Project name.
         :type name: str
 
-        :returns: True if the project was successfully switched. False
+        :return: True if the project was successfully switched. False
          otherwise.
         :rtype: bool
         """

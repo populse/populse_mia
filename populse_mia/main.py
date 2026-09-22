@@ -71,7 +71,7 @@ def add_to_sys_path(path, name, index=0):
         to 0.
     :type index: int
 
-    :returns: True if the path is a valid directory and was added to sys.path,
+    :return: True if the path is a valid directory and was added to sys.path,
         False otherwise.
     :rtype: bool
     """
@@ -94,7 +94,7 @@ def check_package(name):
     :param name: The name of the package to be imported.
     :type name: str
 
-    :returns: True if the package is imported successfully; False if the
+    :return: True if the package is imported successfully; False if the
         package is missing.
     :rtype: bool
     """

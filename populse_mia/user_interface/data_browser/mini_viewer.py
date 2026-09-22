@@ -257,7 +257,7 @@ class MiniViewer(QWidget):
             :param tooltip: Optional tooltip text.
             :type tooltip: str
 
-            :returns: Configured QCheckBox instance.
+            :return: Configured QCheckBox instance.
             :rtype: PyQt5.QtWidgets.QCheckBox
             """
             checkbox = QCheckBox(text)
@@ -521,7 +521,7 @@ class MiniViewer(QWidget):
         """
         Create a read-only field for displaying cursor position.
 
-        :returns: A disabled, center-aligned text field with fixed width (65px)
+        :return: A disabled, center-aligned text field with fixed width (65px)
          and font size (9pt) for displaying coordinate values.
         :rtype: PyQt5.QtWidgets.QLineEdit
         """
@@ -638,7 +638,7 @@ class MiniViewer(QWidget):
             :param target_size: Tuple of (height, width) for output dimensions.
             :type target_size: tuple
 
-            :returns: Resized image.
+            :return: Resized image.
             :rtype: numpy.ndarray
             """
             resize_kwargs = {"output_shape": target_size, "mode": "constant"}
@@ -670,7 +670,7 @@ class MiniViewer(QWidget):
             :param pctl: Percentile for clipping at both ends.
             :type pctl: float
 
-            :returns: Rescaled image with values in [min_val, max_val]
+            :return: Rescaled image with values in [min_val, max_val]
             :rtype: numpy.ndarray
             """
             finite_mask = np.isfinite(image)
@@ -701,7 +701,7 @@ class MiniViewer(QWidget):
             :param image: 2D numpy array to rotate.
             :type image: numpy.ndarray
 
-            :returns: Rotated image with contiguous memory layout.
+            :return: Rotated image with contiguous memory layout.
             :rtype: numpy.ndarray
 
             Note:
@@ -773,7 +773,7 @@ class MiniViewer(QWidget):
          dimension.
         :type i: int
 
-        :returns: Qt pixmap ready for display, or pixmap from empty array if
+        :return: Qt pixmap ready for display, or pixmap from empty array if
          dimensionality is unsupported.
         :rtype: PyQt5.QtGui.QPixmap
         """

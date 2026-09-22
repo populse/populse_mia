@@ -237,7 +237,7 @@ class PipelineEditor(PipelineDeveloperView):
          simultaneously. Changes return behavior and error handling. Defaults
          to False.
 
-        :Returns: (str) When multi_export is True, returns the plug name on
+        :return: (str) When multi_export is True, returns the plug name on
          success or None on failure. When multi_export is False, returns None
          after updating the UI and history.
 
@@ -971,7 +971,7 @@ class PipelineEditor(PipelineDeveloperView):
         file where this pipeline was most recently saved. If the pipeline has
         never been saved, returns an empty string.
 
-        :Returns: (str) Relative path to the pipeline file, or empty string if
+        :return: (str) Relative path to the pipeline file, or empty string if
          never saved.
         """
         filename = getattr(self, "_pipeline_filename", None)
@@ -990,7 +990,7 @@ class PipelineEditor(PipelineDeveloperView):
         :param filename: (str) Path where the pipeline should be saved. If
          None, a file dialog will be shown. Defaults to None.
 
-        :Returns: (str) The absolute path of the saved pipeline file, or None
+        :return: (str) The absolute path of the saved pipeline file, or None
          if:
             - The pipeline is empty (fewer than 2 nodes).
             - The user cancelled the save dialog.
@@ -1656,7 +1656,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         current pipeline has completion attributes, they are preserved during
         the engine setup process.
 
-        :Returns: (CapsulEngine) Configured engine instance with study
+        :return: (CapsulEngine) Configured engine instance with study
          directories set to the project's raw_data and derived_data folders.
 
         Note:
@@ -1695,7 +1695,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         """
         Return the editor corresponding to the currently selected tab.
 
-        :Returns: Editor instance for the active tab.
+        :return: Editor instance for the active tab.
         """
         return self.get_editor_by_index(self.currentIndex())
 
@@ -1706,7 +1706,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         If the pipeline has never been saved, the current tab title is
         returned.
 
-        :Returns: The filename for the current editor.
+        :return: The filename for the current editor.
         """
         return self.get_filename_by_index(self.currentIndex())
 
@@ -1716,7 +1716,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Returns None if no editor or scene is available.
 
-        :Returns: The pipeline for the current editor
+        :return: The pipeline for the current editor
         """
         editor = self.get_current_editor()
         return editor.scene.pipeline if editor and editor.scene else None
@@ -1727,7 +1727,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         Trailing "*" and "&" characters are stripped.
 
-        :Returns: The current tab name.
+        :return: The current tab name.
         """
         return self.get_tab_name_by_index(self.currentIndex())
 
@@ -1739,7 +1739,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param file_name: Name of the file the pipeline was last saved to.
 
-        :Returns: The editor corresponding to the file name.
+        :return: The editor corresponding to the file name.
         """
         return self.get_editor_by_index(self.get_index_by_filename(file_name))
 
@@ -1749,7 +1749,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param idx: Zero-based index of the editor tab, or None if not found.
 
-        :Returns: The editor widget at the specified index, or None if idx is
+        :return: The editor widget at the specified index, or None if idx is
          None or if the index corresponds to the "add tab" button (last tab) or
          if index out of range.
 
@@ -1769,7 +1769,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param tab_name: (str) The name of the tab to search for.
 
-        :Returns: The editor instance corresponding to the specified tab name,
+        :return: The editor instance corresponding to the specified tab name,
          or None if the tab is not found.
 
         :raises ValueError: If tab_name is empty or None.
@@ -1789,7 +1789,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param idx: The zero-based index of the editor tab.
 
-        :Returns: (str or None) The filename or tab title if the editor exists,
+        :return: (str or None) The filename or tab title if the editor exists,
          None if no editor exists at the given index.
         """
         editor = self.get_editor_by_index(idx)
@@ -1802,7 +1802,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param editor: The pipeline editor widget to locate.
 
-        :Returns: The zero-based index of the editor's tab, or None if not
+        :return: The zero-based index of the editor's tab, or None if not
          found.
 
         Note:
@@ -1825,7 +1825,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         :param filename: (str) The pipeline filename to search for. Can be an
          absolute or relative path; will be normalized to relative.
 
-        :Returns: (int) The zero-based index of the matching tab, or None if
+        :return: (int) The zero-based index of the matching tab, or None if
          no match is found.
 
         Note:
@@ -1857,7 +1857,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param tab_name: (str) The name of the tab to locate.
 
-        :Returns: (int) The zero-based index of the matching tab, or None if no
+        :return: (int) The zero-based index of the matching tab, or None if no
          match is found.
         """
 
@@ -1881,7 +1881,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
 
         :param idx: Zero-based index of the tab.
 
-        :Returns: (str) The cleaned tab name, or None if the index is invalid
+        :return: (str) The cleaned tab name, or None if the index is invalid
          or corresponds to the "add tab" button (last position).
         """
 
@@ -1903,7 +1903,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         contains nodes by examining the presence of plugs in the pipeline's
         root node.
 
-        :Returns: (bool) True if at least one pipeline contains nodes, False
+        :return: (bool) True if at least one pipeline contains nodes, False
          otherwise.
         """
 
@@ -1924,7 +1924,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         :param filename: (str) Path to the pipeline file to load. If None,
          prompts the user to select a file. Defaults to None.
 
-        :Returns: (None) Returns early on success, or cleans up and returns on
+        :return: (None) Returns early on success, or cleans up and returns on
          failure.
 
         Note:
@@ -2166,7 +2166,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         :param new_file_name: (str) Target filename for the pipeline. If None,
          triggers a "Save As" dialog. Defaults to None.
 
-        :Returns: (str or None) The basename of the saved file if successful,
+        :return: (str or None) The basename of the saved file if successful,
          None otherwise.
 
         Side Effects:
@@ -2417,7 +2417,7 @@ def find_filename(paths_list, packages_list, file_name):
     :param packages_list: Ordered list of package subdirectories to traverse.
     :param file_name: Base name of the sub-pipeline file (without extension).
 
-    :Returns: Absolute path to the matched file, or None if not found.
+    :return: Absolute path to the matched file, or None if not found.
     """
     extensions = (".py", ".xml")
 
@@ -2459,7 +2459,7 @@ def get_path(name, dictionary, prev_paths=None, pckg=None):
      dictionary. If None, a new path list is created.
     :param pckg: (str) If provided, navigation starts inside that package name.
 
-    :Returns: (list[str]) A list of keys representing the path to the module,
+    :return: (list[str]) A list of keys representing the path to the module,
      or None if the module is not found.
     """
 

@@ -563,7 +563,7 @@ class TestMIACase(unittest.TestCase):
         :param path: Full path to the output .jar file.
         :type path: str
 
-        :returns: 0 if creation succeeded, 1 otherwise.
+        :return: 0 if creation succeeded, 1 otherwise.
         :rtype: int
         """
 
@@ -639,7 +639,7 @@ class TestMIACase(unittest.TestCase):
         :param data: The target data to match.
         :type data: str
 
-        :returns: The matching index if found; otherwise, None.
+        :return: The matching index if found; otherwise, None.
         :rtype: QModelIndex or None
         """
 
@@ -698,7 +698,7 @@ class TestMIACase(unittest.TestCase):
         :type proc_lib_view:
          populse_mia.user_interface.pipeline_manager.process_library.ProcessLibrary
 
-        :returns: A string representing the current state:
+        :return: A string representing the current state:
 
             - 'nipype': Nipype is present, but 'interfaces' is not.
             - 'nipype.interfaces': 'interfaces' is present, but 'DataGrabber'
@@ -1112,7 +1112,7 @@ class TestMIADataBrowser(TestMIACase):
          return. Default is 0 (first QLabel found).
          :type label_index: int
 
-        :returns: The text of the QLabel, or fails the test if not found.
+        :return: The text of the QLabel, or fails the test if not found.
         :rtype: str
         """
         widget = table.cellWidget(row, column)
@@ -1140,7 +1140,7 @@ class TestMIADataBrowser(TestMIACase):
         :param tag: The name of the tag (column) to retrieve.
         :type tag: str
 
-        :returns: A 4-tuple containing:
+        :return: A 4-tuple containing:
 
             - value (Any): The current value from the database
               (COLLECTION_CURRENT).
@@ -1832,7 +1832,7 @@ class TestMIADataBrowser(TestMIACase):
             Reload the application configuration from the test properties
             directory.
 
-            :returns: A newly created configuration object initialized from
+            :return: A newly created configuration object initialized from
              ``self.properties_path``.
             :rtype: populse_mia.software_properties.Config
             """
@@ -1846,7 +1846,7 @@ class TestMIADataBrowser(TestMIACase):
             Triggers the software preferences action and returns the
             corresponding preferences widget.
 
-            :returns: The preferences dialog currently displayed.
+            :return: The preferences dialog currently displayed.
             :rtype:
              populse_mia.user_interface.pop_ups.PopUpPreferences
             """
@@ -2181,7 +2181,7 @@ class TestMIADataBrowser(TestMIACase):
             :type self:
              populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable
 
-            :returns: Always returns True to indicate the dialog was accepted.
+            :return: Always returns True to indicate the dialog was accepted.
             :rtype: bool
             """
             self.selected_tag = TAG_EXP_TYPE
@@ -2369,7 +2369,7 @@ class TestMIADataBrowser(TestMIACase):
             :param index: The index of the filter item in the list widget.
             :type index: int
 
-            :Returns: True if the filter item is visible, False if it is
+            :return: True if the filter item is visible, False if it is
              hidden.
             :rtype: bool
             """
@@ -2491,7 +2491,7 @@ class TestMIADataBrowser(TestMIACase):
             table and collects the scan names from the first column (index 0)
             of rows that are not hidden.
 
-            :Returns: A list of scan names (as strings) for all visible rows
+            :return: A list of scan names (as strings) for all visible rows
              in the table.
             :rtype: list[str]
             """
@@ -2831,7 +2831,7 @@ class TestMIADataBrowser(TestMIACase):
              fetched.
             :type tag: str
 
-            :returns: The item at row 0 of the column corresponding to `tag`.
+            :return: The item at row 0 of the column corresponding to `tag`.
             :rtype: PyQt5.QtWidgets.QTableWidgetItem
             """
             col = table.get_tag_column(tag)
@@ -2870,7 +2870,7 @@ class TestMIADataBrowser(TestMIACase):
             :param kwargs: Keyword arguments forwarded to exec_, unused here.
             :type kwargs: dict
 
-            :returns: Always returns True to simulate the user clicking "Ok".
+            :return: Always returns True to simulate the user clicking "Ok".
             :rtype: bool
             """
             # inject the new text into the dialog’s table
@@ -3173,7 +3173,7 @@ class TestMIADataBrowser(TestMIACase):
                  file and filename in the popup.
                 type relative_path: str
 
-                :returns: (MagicMock) A mocked PopUpNewProject instance with
+                :return: (MagicMock) A mocked PopUpNewProject instance with
                  predefined behaviors:
 
                     - `relative_path` attribute set to the given path.
@@ -3394,7 +3394,7 @@ class TestMIADataBrowser(TestMIACase):
              the retrieved values to ``float``. Default is ``False``.
             :type convert_to_float: bool
 
-            :returns: A named tuple containing the values from the current and
+            :return: A named tuple containing the values from the current and
              initial collections, accessible through the ``current`` and
              ``initial`` attributes.
             :rtype: namedtuple
@@ -3578,7 +3578,7 @@ class TestMIADataBrowser(TestMIACase):
             """
             Extract BandWidth values from all visible table rows.
 
-            :returns: BandWidth values from visible rows in current table
+            :return: BandWidth values from visible rows in current table
              order.
             :rtype: list[str]
             """
@@ -3944,7 +3944,7 @@ class TestMIADataBrowser(TestMIACase):
             click signal on the OK button of the last instance. It always
             returns `QMessageBox.Ok`.
 
-            :returns: The standard OK button value.
+            :return: The standard OK button value.
             :rtype: QMessageBox.StandardButton
             """
 
@@ -4001,7 +4001,7 @@ class TestMIADataBrowser(TestMIACase):
                          create.
                         :type action_label: str
 
-                        :returns: The created QAction object.
+                        :return: The created QAction object.
                         :rtype: QAction
                         """
                         action = QAction(action_label, table_data)
@@ -6189,7 +6189,7 @@ class TestMIAMainWindow(TestMIACase):
             'user_mode: true' in the PopUpPreferences config editor, mimicking
             user input.
 
-            :returns: Always returns True to simulate user acceptance.
+            :return: Always returns True to simulate user acceptance.
             :rtype: bool
             """
             editor = main_wnd.pop_up_preferences.editConf
@@ -6357,7 +6357,7 @@ class TestMIAMainWindow(TestMIACase):
                  when *failing* is ``True``.
                 :type err_msg: str
 
-                :returns: The source code of the mocked MATLAB executable.
+                :return: The source code of the mocked MATLAB executable.
                 :rtype: str
                 """
                 version_stderr = (
@@ -7421,7 +7421,7 @@ class TestMIANodeController(TestMIACase):
          should match the text of one of the items in the popup's list widget.
         :type tag_name: str
 
-        :returns: A function with the same signature as
+        :return: A function with the same signature as
          `PopUpSelectTagCountTable.exec_``.
         :rtype: function
 
@@ -7442,7 +7442,7 @@ class TestMIANodeController(TestMIACase):
             :param self: The PopUpSelectTagCountTable instance.
             :type self: PopUpSelectTagCountTable
 
-            :returns: True to simulate successful dialog execution.
+            :return: True to simulate successful dialog execution.
             :rtype: bool
             """
 
@@ -9936,7 +9936,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
              record.
             :type primary_keys: str
 
-            :Return: A deep copy of the `scan_mock` data with the 'Exp Type'
+            :return: A deep copy of the `scan_mock` data with the 'Exp Type'
              field updated if applicable.
             rtype: list[dict]
             """
@@ -11247,7 +11247,7 @@ class TestMIAPipelineManagerTab(TestMIACase):
              Included for signature compatibility with ``engine.start``.
             :type get_pipeline: bool
 
-            :returns: A tuple ``(workflow_id, pipeline)``, where
+            :return: A tuple ``(workflow_id, pipeline)``, where
              ``workflow_id`` is always ``500`` and ``pipeline`` is the input
              pipeline.
             :rtype: tuple

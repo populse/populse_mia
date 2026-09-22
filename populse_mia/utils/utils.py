@@ -150,7 +150,7 @@ class PackagesInstall:
             will be added to the pipeline library.
         :type class_name: str
 
-        :returns: Dictionary of dictionaries containing
+        :return: Dictionary of dictionaries containing
             package/subpackages/pipelines status.
             ex: {package: {subpackage: {pipeline: 'process_enabled'}}}
         :rtype: dict
@@ -277,7 +277,7 @@ def _is_valid_date(date_str, date_format):
     :param date_format: The expected date format.
     :type date_format: str
 
-    :returns: True if the string matches the format, False otherwise.
+    :return: True if the string matches the format, False otherwise.
     :rtype: bool
     """
 
@@ -322,7 +322,7 @@ def check_value_type(value, value_type, is_subvalue=False):
      validated.
     :type is_subvalue: bool
 
-    :returns: ``True`` if the value is valid for ``value_type``, ``False``
+    :return: ``True`` if the value is valid for ``value_type``, ``False``
      otherwise.
     :rtype: bool
     """
@@ -429,7 +429,7 @@ def get_db_field_value(project, document, field):
     :param field: The name of the field whose value should be retrieved.
     :type field: str
 
-    :returns: The value of the specified field for the document in the current
+    :return: The value of the specified field for the document in the current
         collection.
     """
     project_name = project.getName()
@@ -451,7 +451,7 @@ def get_document_names(project, collection):
     :param collection: The name of the collection to query.
     :type collection: str
 
-    :returns: A list of document names in the collection.
+    :return: A list of document names in the collection.
     :rtype: list[str]
     """
 
@@ -469,7 +469,7 @@ def get_field_names(project, collection):
     :param collection: The name of the collection to inspect.
     :type collection: str
 
-    :returns: A list of field names in the collection.
+    :return: A list of field names in the collection.
     :rtype: list[str]
     """
 
@@ -485,7 +485,7 @@ def get_shown_tags(project):
     :param project: The project instance containing the database.
     :type project: Project
 
-    :returns: A list of tag names marked as shown.
+    :return: A list of tag names marked as shown.
     :rtype: list[str]
     """
 
@@ -507,7 +507,7 @@ def get_value(project, collection, file_name, field):
     :param field: The name of the field whose value is to be retrieved.
     :type field: str
 
-    :returns: The value of the specified field, or None if not found.
+    :return: The value of the specified field, or None if not found.
     """
 
     with project.database.data() as database_data:
@@ -684,7 +684,7 @@ def launch_mia(MainWindow, Project, SavedProjects, Config, args):
         Projects whose directories no longer exist are removed from the saved
         projects list.
 
-        :returns: Absolute paths of deleted projects.
+        :return: Absolute paths of deleted projects.
         :rtype: list[str]
         """
         saved_projects = SavedProjects()
@@ -994,7 +994,7 @@ def set_item_data(item, value, value_type):
         :param element_type: Expected type of the list element.
         :type element_type: type
 
-        :returns: The prepared value suitable for storing in a PyQt item.
+        :return: The prepared value suitable for storing in a PyQt item.
         :rtype: Any
 
         :raises TypeError: If ``element_type`` is not supported.
@@ -1046,7 +1046,7 @@ def set_item_data(item, value, value_type):
          ``list[datetime]``.
         :type expected_type: type | types.GenericAlias
 
-        :returns: The prepared value suitable for storing in a PyQt item.
+        :return: The prepared value suitable for storing in a PyQt item.
         :rtype: Any
 
         :raises TypeError: If ``expected_type`` is not supported.
@@ -1104,7 +1104,7 @@ def table_to_database(value, value_type):
     :param value_type: Value type.
     :type value_type: type | types.GenericAlias
 
-    :returns: The value converted for the database.
+    :return: The value converted for the database.
     :rtype: Any
     """
 
@@ -1170,7 +1170,7 @@ def type_name(t) -> str:
         (e.g., ``list[str]``).
     :type t: type | types.GenericAlias
 
-    :returns: The name of the type (e.g., ``'str'``) or the string
+    :return: The name of the type (e.g., ``'str'``) or the string
         representation  of the generic alias (e.g., ``'list[str]'``).
     :rtype: str
     """
@@ -1212,7 +1212,7 @@ def update_auto_inheritance(node, job=None):
     :param job: An optional job object containing parameter values to override
         or populate the node's inputs and outputs. Defaults to None.
 
-    :returns: Auto-inheritance mapping if successful and no job provided, None
+    :return: Auto-inheritance mapping if successful and no job provided, None
         if no inheritance can be determined or job is provided (in which case
         the job object is updated in-place).
     :rtype: dict | None
@@ -1427,7 +1427,7 @@ def verCmp(first_ver, sec_ver, comp):
     :param comp: The comparator to use ('sup', 'inf', 'eq').
     :type comp: str
 
-    :returns: True if the comparison condition is satisfied, False otherwise.
+    :return: True if the comparison condition is satisfied, False otherwise.
     :rtype: bool
 
     Contains:
@@ -1442,7 +1442,7 @@ def verCmp(first_ver, sec_ver, comp):
         :param v: Version of a package (ex. 5.4.1).
         :type v: str
 
-        :returns: A list of integer (ex. [5, 4, 1]).
+        :return: A list of integer (ex. [5, 4, 1]).
         :rtype: list[int]
         """
 
@@ -1519,7 +1519,7 @@ def verify_processes(nipypeVer, miaProcVer, capsulVer, Config):
         :param new_dic: The new package configuration.
         :type new_dic: dict
 
-        :returns: True if all keys at the current level match, False if not.
+        :return: True if all keys at the current level match, False if not.
         :rtype: bool
         """
 
