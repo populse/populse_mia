@@ -39,9 +39,7 @@ class RapidSearch(QLineEdit):
     Dates should be formatted as: yyyy-mm-dd hh:mm:ss.fff.
 
     Contains:
-
         Methods:
-
             - prepare_filter: Prepares the rapid search filter.
             - prepare_not_defined_filter: Prepares the rapid search filter for
               not defined values.
@@ -52,6 +50,8 @@ class RapidSearch(QLineEdit):
         Initialize the RapidSearch widget.
 
         :param databrowser: Parent data browser widget.
+        :type databrowser:
+         populse_mia.user_interface.data_browser.data_browser.DataBrowser
         """
         super().__init__()
         self.databrowser = databrowser
@@ -66,11 +66,15 @@ class RapidSearch(QLineEdit):
         """
         Create a filter for searching text across specified tags.
 
-        :param search: (str) Search pattern to look for.
-        :param tags: (list) List of tags to search within.
-        :param scans: (list) List of scans to restrict the search to.
+        :param search: Search pattern to look for.
+        :type serch: str
+        :param tags: List of tags to search within.
+        :type tags: list[str]
+        :param scans: List of scans to restrict the search to.
+        :type scans: list[str]
 
-        :Returns (str) SQL-like filter expression for the search.
+        :returns: SQL-like filter expression for the search.
+        :rtype: str
         """
         conditions = []
 
@@ -90,9 +94,11 @@ class RapidSearch(QLineEdit):
         """
         Create a filter for finding entries with undefined values.
 
-        :param tags: (list) List of tags to check for null values.
+        :param tags: List of tags to check for null values.
+        :type tags: list[str]
 
-        :Returns (str) QL-like filter expression for finding null values.
+        :returns: SQL-like filter expression for finding null values.
+        :rtype: str
         """
         conditions = []
 

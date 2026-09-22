@@ -521,8 +521,9 @@ class MiniViewer(QWidget):
         """
         Create a read-only field for displaying cursor position.
 
-        :Returns: (QLineEdit) A disabled, center-aligned text field with fixed
-         width (65px) and font size (9pt) for displaying coordinate values.
+        :returns: A disabled, center-aligned text field with fixed width (65px)
+         and font size (9pt) for displaying coordinate values.
+        :rtype: PyQt5.QtWidgets.QLineEdit
         """
         field_value = QLineEdit()
         field_value.setEnabled(False)
@@ -637,7 +638,7 @@ class MiniViewer(QWidget):
             :param target_size: Tuple of (height, width) for output dimensions.
             :type target_size: tuple
 
-            :Returns: Resized image.
+            :returns: Resized image.
             :rtype: numpy.ndarray
             """
             resize_kwargs = {"output_shape": target_size, "mode": "constant"}
@@ -768,8 +769,8 @@ class MiniViewer(QWidget):
 
         :param im: NIfTI image object with a ``dataobj`` attribute.
         :type im: nibabel.nifti1.Nifti1Image
-        :param i: Index for slice/volume selection along the outermost
-         variable dimension.
+        :param i: Index for slice/volume selection along the outermost variable
+         dimension.
         :type i: int
 
         :returns: Qt pixmap ready for display, or pixmap from empty array if
@@ -929,9 +930,11 @@ class MiniViewer(QWidget):
         and displays it under the image frame. If the value is not defined,
         a default placeholder is used. The tooltip shows the tag name.
 
-        :param file_path_db: (str) Path of selected image in database format
+        :param file_path_db: Path of selected image in database format
          (ex. data/raw_data/mymri.nii').
-        :param idx: (int) Index of the image in the UI.
+        :type file_path_db: str
+        :param idx: Index of the image in the UI.
+        :type idx: int
         """
 
         with self.project.database.data() as database_data:
@@ -977,6 +980,7 @@ class MiniViewer(QWidget):
         :param file_paths: List of paths to neuroimaging files (NIfTI format)
          to display. Invalid or non-existent files are automatically filtered
          out with warnings.
+        :type file_paths: List[str]
 
         Side effects:
             - Modifies self.file_paths by removing invalid entries.
@@ -1260,6 +1264,7 @@ class MiniViewer(QWidget):
         enabled.
 
         :param file_paths: List or collection of selected document file paths.
+        :type file_paths: list[str]
         """
         # Refresh configuration and release memory
         self.config = Config()

@@ -59,9 +59,7 @@ class ModifyTable(QDialog):
      or remove elements.
 
     Contains:
-
          Methods:
-
              - _convert_value: Convert a text value to the appropriate type.
              - _show_error_message: Display an error message.
              - add_item: Add one more element to self.value.
@@ -75,10 +73,15 @@ class ModifyTable(QDialog):
         Initialize the ModifyTable dialog.
 
         :param project: Instance of the current project.
+        :type project: populse_mia.data_manager.project.Project
         :param value: List of values in the cell to be modified.
+        :type value: list
         :param types: Allowed value types for validation.
+        :type types: list[Any]
         :param scans: Scan identifiers corresponding to rows.
+        :type scans: list[str]
         :param tags: Tag identifiers corresponding to columns.
+        :type tags: list[str]
         """
         super().__init__()
         self.setModal(True)
@@ -120,9 +123,12 @@ class ModifyTable(QDialog):
         Convert a text value to the appropriate type based on field_type.
 
         :param text: String value to convert.
+        :type text: str
         :param field_type: Database field type constant.
+        :type field_type: Any
 
-        :Returns: The converted value in the appropriate type.
+        :returns: The converted value in the appropriate type.
+        :rtype: Any
         """
 
         if field_type == FIELD_TYPE_LIST_INTEGER:
@@ -151,7 +157,9 @@ class ModifyTable(QDialog):
         Display an error message for invalid values.
 
         :param value: The invalid value.
+        :type value: Any
         :param type_problem: The specific type that failed validation.
+        :type type_problem: Any
         """
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Warning)
@@ -228,7 +236,8 @@ class ModifyTable(QDialog):
         Validates each value against specified types and updates the database
         only if all values are valid.
 
-        :param test: (bool) Flag for testing mode, defaults to False.
+        :param test: Flag for testing mode, defaults to False.
+        :type test: bool
         """
         valid = True
 
