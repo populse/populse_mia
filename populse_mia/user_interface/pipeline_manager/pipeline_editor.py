@@ -987,24 +987,24 @@ class PipelineEditor(PipelineDeveloperView):
         method performs validation to ensure the filename is valid (doesn't
         start with a digit, has .py extension) and checks user permissions.
 
-        :param filename: (str) Path where the pipeline should be saved. If
-         None, a file dialog will be shown. Defaults to None.
+        :param filename: Path where the pipeline should be saved. If None, a
+         file dialog will be shown. Defaults to None.
+        :type filename: str
 
-        :return: (str) The absolute path of the saved pipeline file, or None
-         if:
+        :return: The absolute path of the saved pipeline file, or None if:
+
             - The pipeline is empty (fewer than 2 nodes).
             - The user cancelled the save dialog.
             - The filename is invalid.
             - The user lacks permission to overwrite an existing file.
+        :rtype: str
 
         Note:
             - pipeline_saved: Signal emitted with the filename when save is
               successful.
 
         Contains:
-
             Inner functions:
-
                 _show_warning: Display a warning message box to the user.
         """
 
@@ -1511,15 +1511,16 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
             pass
 
     def close_tab(self, idx):
-        """
+        r"""
         Close a tab and its associated editor, prompting to save if modified.
 
         Removes the specified tab and cleans up its undo/redo history. If the
-        tab contains unsaved changes (indicated by " *" suffix), prompts the
+        tab contains unsaved changes (indicated by " \*" suffix), prompts the
         user to save before closing. If all tabs are closed, creates a new
         default pipeline.
 
         :param idx: index of the tab to close.
+        :type idx: int
         """
         filename = os.path.basename(self.get_filename_by_index(idx))
         editor = self.get_editor_by_index(idx)
@@ -1871,13 +1872,14 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         )
 
     def get_tab_name_by_index(self, idx):
-        """
+        r"""
         Get the clean tab name at the specified index.
 
         Retrieves the tab text at the given index and removes formatting
         characters:
+
             - Qt keyboard shortcut indicators (ampersands).
-            - Unsaved file indicators (trailing " *").
+            - Unsaved file indicators (trailing " \*").
 
         :param idx: Zero-based index of the tab.
 
@@ -2144,6 +2146,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         This triggers an asynchronous update of the pipeline view after a
         short delay (20ms). The update strategy depends on the editor's view
         mode:
+
             - Logical view: Displays logical representations of nodes, plugs,
               and links
             - Normal view: Displays standard representations of nodes, plugs,
@@ -2289,7 +2292,7 @@ class PipelineEditorTabs(QtWidgets.QTabWidget):
         Update the iteration checkbox state based on pipeline node names.
 
         Sets the iteration checkbox to checked if any pipeline node has
-        'iterated_' in its key name, otherwise sets it to unchecked. If no
+        ``iterated_`` in its key name, otherwise sets it to unchecked. If no
         valid pipeline exists or the pipeline lacks nodes, the checkbox is
         unchecked.
         """

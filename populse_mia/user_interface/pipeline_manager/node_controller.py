@@ -511,7 +511,7 @@ class CapsulNodeController(QWidget):
 
         Renames the node in the pipeline dictionary and updates all associated
         links. For iterated processes, ensures the name starts
-        with "iterated_".
+        with ``iterated_``.
 
         :param new_node_name: (str) New name for the node. If None (when this
          method is not called from an undo/redo), reads from the line edit
