@@ -53,9 +53,7 @@ class IterationTable(QWidget):
 
 
     Contains:
-
         Methods:
-
             - _create_tag_button: Create a new tag button.
             - add_tag: Add a tag to visualize in the iteration table.
             - current_editor: Return the currently active pipeline editor
@@ -77,7 +75,6 @@ class IterationTable(QWidget):
               manager tab.
 
     Signals:
-
         - iteration_table_updated: Signal emitted when iteration scans have
           been updated or if the iteration is toggled off.
     """
@@ -89,9 +86,12 @@ class IterationTable(QWidget):
         Initialize the IterationTable widget.
 
         :param project: Current project in the software.
+        :type project: populse_mia.data_manager.project.Project
         :param scan_list: List of the selected database files. If None, all
          documents from the current collection will be used.
+        :type scan_list: list[str] | None
         :param main_window: Software's main window reference.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         # Necessary for using Mia bricks
@@ -206,8 +206,10 @@ class IterationTable(QWidget):
     def _create_tag_button(self, text, index):
         """Create a new tag button with the given text and index.
 
-        :param text: (str) Text to display on the button.
-        :param index: (int) Index of the button in the push_buttons list.
+        :param text: Text to display on the button.
+        :type text: str
+        :param index: Index of the button in the push_buttons list.
+        :type index: int
         """
         button = QPushButton(text)
         button.clicked.connect(partial(self.select_visualized_tag, index))
@@ -223,6 +225,7 @@ class IterationTable(QWidget):
         pipeline manager without repeating the full attribute chain.
 
         :return: The active pipeline editor instance.
+        :rtype: PipelineEditor
         """
         # fmt: off
         return (
@@ -267,7 +270,8 @@ class IterationTable(QWidget):
         """
         Fill values_list with unique tag values for the specified tag.
 
-        :param idx: (int) Index of the tag in push_buttons list.
+        :param idx: Index of the tag in push_buttons list.
+        :type idx: int
         """
         tag_name = self.push_buttons[idx].text()
         values = []
@@ -320,9 +324,11 @@ class IterationTable(QWidget):
         ``ast.literal_eval()``. If parsing fails, the original string is
         preserved.
 
-        :param value: (Any) The value to serialize.
+        :param value: The value to serialize.
+        :type value: Any
 
-        :return: (str) The JSON representation of the resulting value.
+        :return: The JSON representation of the resulting value.
+        :rtype: str
         """
 
         if isinstance(value, str):
@@ -402,7 +408,8 @@ class IterationTable(QWidget):
         """
         Open a dialog to select which tag to visualize in the iteration table.
 
-        :param idx: (int) Index of the clicked push button.
+        :param idx: Index of the clicked push button.
+        :type idx: int
         """
 
         with self.project.database.data() as database_data:
@@ -426,7 +433,8 @@ class IterationTable(QWidget):
         """
         Update the widget when the iterated tag is modified.
 
-        :param tag_name: (str) Name of the iterated tag.
+        :param tag_name: Name of the iterated tag.
+        :type tag_name: str
         """
 
         if not self.check_box_iterate.isChecked():
@@ -575,8 +583,9 @@ class IterationTable(QWidget):
         current collection that also exist in the scan list. Then updates the
         tag value lists in the current pipeline editor.
 
-        :param selected_tag: (str) The tag whose values should be retrieved
-         and updated.
+        :param selected_tag: The tag whose values should be retrieved and
+         updated.
+        :type selected_tag: str
         """
 
         with self.project.database.data() as database_data:

@@ -227,9 +227,13 @@ class CapsulNodeController(QWidget):
         Initialize the node controller.
 
         :param project: Current project instance.
+        :type project: populse_mia.data_manager.project.Project
         :param scan_list: List of available scans.
+        :type scan_list: list[str]
         :param pipeline_manager_tab: Parent pipeline manager tab.
+        :type pipeline_manager_tab: PipelineManagerTab
         :param main_window: Main application window.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__()
         self.project = project
@@ -260,9 +264,12 @@ class CapsulNodeController(QWidget):
         edits, labels, and control buttons. Handles special cases for pipeline
         inputs/outputs nodes.
 
-        :param node_name: (str) Name of the node to display.
+        :param node_name: Name of the node to display.
+        :type node_name: str
         :param process: Process instance associated with the node.
+        :type process: object
         :param pipeline: Current pipeline containing the node.
+        :type pipeline: capsul.pipeline.pipeline.Pipeline
         """
         self.node_name = node_name
         self.pipeline = pipeline
@@ -391,8 +398,10 @@ class CapsulNodeController(QWidget):
         each subprocess.
 
         :param node: The current node being processed.
-        :param parent_node_name: (str) The name of the parent node to be
-         included in the context name.
+        :type node: ProcessNode | PipelineNode
+        :param parent_node_name: The name of the parent node to be included in
+         the context name.
+        :type parent_node_name: str
         """
         # Get the context name or process name and split by "."
         context_name = getattr(
@@ -432,8 +441,9 @@ class CapsulNodeController(QWidget):
         Remove trait change notification from process.
 
         :param process: Process instance to remove notification from.
+        :type process: ProcessNode | PipelineNode
         :param param_changed: Callback function to remove.
-
+        :type param_changed: callable
         """
         process.on_trait_change(param_changed, remove=True)
 
@@ -442,9 +452,12 @@ class CapsulNodeController(QWidget):
         Handle parameter value changes and emit signal.
 
         :param _: Unused parameter (object instance).
-        :param plug_name: (str) Name of the changed parameter.
+        :param plug_name: Name of the changed parameter.
+        :type plug_name: str
         :param old_value: Previous parameter value.
+        :type old_value: any
         :param new_value: New parameter value.
+        :tyepe new_value: any
         """
         plug_type = type(new_value)
         self.value_changed.emit(
@@ -466,8 +479,8 @@ class CapsulNodeController(QWidget):
         selection from the filter dialog. Shows a warning if no matching
         attributes are found.
 
-        :param attributes: (dict) Dictionary of attribute names and values to
-         apply.
+        :param attributes: Dictionary of attribute names and values to apply.
+        :type attributes: dict
         """
         compl = self.process.completion_engine
         atts = compl.get_attribute_values()
@@ -513,13 +526,16 @@ class CapsulNodeController(QWidget):
         links. For iterated processes, ensures the name starts
         with ``iterated_``.
 
-        :param new_node_name: (str) New name for the node. If None (when this
-         method is not called from an undo/redo), reads from the line edit
-         widget.
-        :param old_node_name: (str) Current node name. If None (when this
-         method is not called from an undo/redo), uses self.node_name.
-        :param from_undo: (bool) True if this action is from an undo operation.
-        :param from_redo: (bool) True ifthis action is from a redo operation.
+        :param new_node_name: New name for the node. If None (when this method
+         is not called from an undo/redo), reads from the line edit widget.
+        :type new_node_name: str
+        :param old_node_name: Current node name. If None (when this method is
+         not called from an undo/redo), uses self.node_name.
+        :type old_node_name: str
+        :param from_undo: True if this action is from an undo operation.
+        :type from_undo: bool
+        :param from_redo: True if this action is from a redo operation.
+        :type from_redo: bool
         """
 
         # Ignore programmatic refresh emissions
@@ -612,6 +628,7 @@ class CapsulNodeController(QWidget):
         as the controller widget already reacts to process parameter changes.
 
         :param process: Process instance (unused).
+        :type process: ProcessNode | PipelineNode
         """
         pass
 
@@ -658,9 +675,13 @@ class FilterWidget(QWidget):
 
         :param project: Current project instance containing database and
          configuration.
+        :type project: populse_mia.data_manager.project.Project
         :param node_name: Display name of the filter node.
+        :type node_name: str
         :param node: Input_Filter node instance containing the filter process.
+        :type node: capsul.pipeline.pipeline_nodes.ProcessNode
         :param main_window: Parent main window for UI hierarchy.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__(None)
         self.setWindowTitle(f"Filter - {node_name}")
@@ -782,9 +803,11 @@ class FilterWidget(QWidget):
             3. Absolute path string (last resort).
 
         :param scan_path: File path to normalize (absolute or relative).
+        :type scan_path: str
 
         :return: Normalized path string, relative to project root when
          possible.
+        :rtype: str
 
         Examples:
             >>> normalize_scan_path('/abs/path/project/data/scans/001.tif')
@@ -906,6 +929,7 @@ class FilterWidget(QWidget):
         :param str_search: Search query string. Use empty string to show all
          scans, or NOT_DEFINED_VALUE constant to filter scans with undefined
          fields.
+        :type str_search: str
 
         Side Effects:
             - Updates self.table_data.scans_to_visualize with filtered results.
@@ -1091,9 +1115,13 @@ class NodeController(QWidget):
         interface.
 
         :param project: The current project instance.
+        :type project: populse_mia.data_manager.project.Project
         :param scan_list: The list of selected database files (scans).
+        :type scan_list: list[str]
         :param pipeline_manager_tab: The parent pipeline manager tab widget.
+        :type pipeline_manager_tab: PipelineManagerTab
         :param main_window: The main application window.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__(pipeline_manager_tab)
         # Core context
@@ -1118,8 +1146,8 @@ class NodeController(QWidget):
             - Nested layouts are emptied and scheduled for deletion.
             - The layout itself is deleted once cleared.
 
-        :param widget: (QtWidgets.QWidget) The widget whose layout should be
-         cleared.
+        :param widget: The widget whose layout should be cleared.
+        :type widget: NodeController
         """
         layout = widget.layout()
 
@@ -1155,11 +1183,15 @@ class NodeController(QWidget):
         connection.
 
         :param node_name: The name of the pipeline node containing the plug.
+        :type node_name: str
         :param plug_name: The name of the plug to filter.
+        :type plug_name: str
         :param parameters: A three-element tuple (plug_index,
          pipeline_instance, plug_value_type) that provides the context of the
          plug currently being filtered.
+        :type parameters: tuple
         :param process: The process instance associated with the node.
+        :type process: capsul.pipeline.pipeline.Pipeline
 
         Note:
             The created PlugFilter is stored in self.pop_up and remains
@@ -1197,9 +1229,12 @@ class NodeController(QWidget):
             - Parameters with userlevel > 0 are hidden from the interface.
 
         :param node_name: Identifier for the node being displayed.
+        :type node_name: str
         :param process: Node's process object containing traits and their
          values.
+        :type process: capsul.pipeline.pipeline.Pipeline
         :param pipeline: Parent pipeline instance containing this node.
+        :type pipeline: capsul.pipeline.pipeline.Pipeline
 
         Side effects:
             - Clears and rebuilds the widget layout.
@@ -1357,11 +1392,14 @@ class NodeController(QWidget):
         """
         Get the index of a plug by its name.
 
-        :param plug_name: (str) The name of the plug to find.
-        :param in_or_out: (str) Direction of the plug ; "in" for input,
-         "out" for output.
+        :param plug_name: The name of the plug to find.
+        :type plug_name: str
+        :param in_or_out: Direction of the plug ; "in" for input, "out" for
+         output.
+        :type in_or_out: str
 
         :return: The zero-based index of the plug if found, None otherwise.
+        :rtype: int
         """
         labels = self.labels_input if in_or_out == "in" else self.labels_output
 
@@ -1389,10 +1427,12 @@ class NodeController(QWidget):
             - Non-pipeline processes: "{parent_node_name}".
             - Nested subprocesses are updated recursively.
 
-        :param node: (Node) The node whose context name will be updated, along
-         with all its subprocesses.
-        :param parent_node_name: (str) The parent node's name to incorporate
-         into the context naming hierarchy.
+        :param node: The node whose context name will be updated, along with
+         all its subprocesses.
+        :type node: PipelineNode | ProcessNode
+        :param parent_node_name: The parent node's name to incorporate into the
+         context naming hierarchy.
+        :type parent_node_name: str
         """
 
         if not isinstance(node, PipelineNode):
@@ -1431,6 +1471,7 @@ class NodeController(QWidget):
         :param new_node_name: The new name for the node. If None, retrieves the
          name from the UI line edit widget. Is not None only when this method
          is called from an "undo/redo")
+        :type new_node_name: str | None
 
         :emits value_changed: Signal with node rename details for undo/redo
          tracking.
@@ -1481,6 +1522,7 @@ class NodeController(QWidget):
 
         :param process: Optional process node whose parameters should be
          displayed. If None, uses self.current_process.
+        :type process: object
         """
 
         # Resolve process
@@ -1535,14 +1577,19 @@ class NodeController(QWidget):
         evaluated. If the update fails, the previous value is restored in the
         UI and a warning dialog is shown.
 
-        :param in_or_out: (str) Direction of the plug - "in" for input plugs,
-         "out" for output plugs.
-        :param plug_name: (str) Name of the plug to update.
+        :param in_or_out: Direction of the plug; "in" for input plugs, "out"
+         for output plugs.
+        :type in_or_out: str
+        :param plug_name: Name of the plug to update.
+        :type plug_name: str
         :param pipeline: The current pipeline instance.
-        :param value_type: (type) Expected type of the plug value.
-        :param new_value: (optional) New value for the plug. If None, reads
-         from the line edit widget (is None except when this method is called
-         from an "undo/redo").
+        :type pipeline: capsul.pipeline.pipeline.Pipeline
+        :param value_type: Expected type of the plug value.
+        :type value_type: type
+        :param new_value: New value for the plug. If None, reads from the line
+         edit widget (is None except when this method is called from an
+         "undo/redo").
+        :type new_value: any
 
         Side Effects:
             - Updates the plug value in the pipeline node.
@@ -1667,8 +1714,11 @@ class NodeController(QWidget):
         plug value to the item itself rather than a list containing one item.
 
         :param plug_name: Name of the plug to update.
+        :type plug_name: str
         :param parameters: Tuple (plug_index, pipeline_instance, value_type).
+        :type parameters: tuple
         :param filter_res_list: Filtered file list to set as the plug value.
+        :type filter_res_list: list[str]
 
         Note:
             - Empty lists are preserved as empty lists
