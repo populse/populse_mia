@@ -93,9 +93,7 @@ class PlugFilter(QWidget):
     the `plug_value_changed` signal.
 
     Contains:
-
         Methods:
-
             - ok_clicked: Applies the selected files to the node plug and
               closes the widget.
             - reset_search_bar: Resets the search interface to its initial
@@ -110,7 +108,6 @@ class PlugFilter(QWidget):
               and refreshes the table view.
 
     Signals:
-
         - plug_value_changed: Signal emitted when the user confirms their
           selection.
     """
@@ -137,16 +134,23 @@ class PlugFilter(QWidget):
 
         :param project: Current project instance containing database and
          folder paths.
+        :type project: populse_mia.data_manager.project.Project
         :param scans_list: Initial list of database file paths to filter. If
          empty, all scans from COLLECTION_CURRENT are included.
+        :type scans_list: list[str]
         :param process: Process instance associated with the selected pipeline
          node.
+        :type process: capsul.pipeline.pipeline.Pipeline
         :param node_name: Display name of the current pipeline node.
+        :type node_name: str
         :param plug_name: Name of the selected node plug/connection point.
+        :type plug_name: str
         :param node_controller: Parent controller managing node visibility and
          tags.
+        :type node_controller: NodeController
         :param main_window: Main application window containing the pipeline
          manager.
+        :type main_window: populse_mia.user_interface.main_window.MainWindow
         """
         super().__init__(None)
         self.project = project
@@ -289,9 +293,10 @@ class PlugFilter(QWidget):
         Special handling is provided for the NOT_DEFINED_VALUE constant to
         filter scans with undefined tag values.
 
-        :parm str_search: (str) The search string entered by the user. An
-         empty string shows all scans, NOT_DEFINED_VALUE filters for scans with
+        :parm str_search: The search string entered by the user. An empty
+         string shows all scans, NOT_DEFINED_VALUE filters for scans with
          undefined tags, and any other value performs a rapid search filter.
+        :type str_search: str
 
         Side Effects:
             - Updates self.table_data.scans_to_visualize with filtered scan
@@ -339,12 +344,11 @@ class PlugFilter(QWidget):
         Otherwise, all filtered items are processed. For filename tags, paths
         are converted to absolute paths within the project folder.
 
-        :Emits plug_value_changed: Signal with list of extracted values.
+        :emit plug_value_changed: Signal emitted with a list of extracted
+         values.
 
         Contains:
-
             Inner functions:
-
                 - _get_scan_value: Retrieve and process a single scan value
                   from the database.
         """
@@ -354,11 +358,16 @@ class PlugFilter(QWidget):
             Retrieve and process a single scan value from the database.
 
             :param database_data: Database connection object.
+            :type database_data:
+             populse_mia.data_manager.database_mia.DatabaseMiaData
             :param scan_name: Primary key identifying the scan.
+            :type scan_name: str
             :param tag_name: Field name to retrieve.
+            :type tag_name: str
 
             :return: The field value, with absolute path conversion for
              filename tags.
+            :rtype: str
             """
             value = database_data.get_value(
                 collection_name=COLLECTION_CURRENT,

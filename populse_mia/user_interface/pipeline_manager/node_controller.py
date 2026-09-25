@@ -1473,7 +1473,7 @@ class NodeController(QWidget):
          is called from an "undo/redo")
         :type new_node_name: str | None
 
-        :emits value_changed: Signal with node rename details for undo/redo
+        :emit value_changed: Signal with node rename details for undo/redo
          tracking.
 
         Note:
