@@ -1286,7 +1286,8 @@ class PopUpClosePipeline(QDialog):
     def can_exit(self):
         """Check if the editor can be closed.
 
-        :Returns (bool) True if the editor can be closed, False otherwise.
+        :return: True if the editor can be closed, False otherwise.
+        :rtype: bool
         """
         return self.bool_exit
 

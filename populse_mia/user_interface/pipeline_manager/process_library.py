@@ -1636,7 +1636,8 @@ class PackageLibraryDialog(QDialog):
         """
         Create a list widget with extended selection mode.
 
-        :Returns (QListWidget: Configured list widget.
+        :return: Configured list widget.
+        :rtype: QListWidget
         """
         list_widget = QListWidget()
         list_widget.setSelectionMode(QAbstractItemView.ExtendedSelection)

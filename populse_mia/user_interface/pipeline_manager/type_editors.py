@@ -51,9 +51,7 @@ class PopulseFileControlWidget(FileControlWidget):
     dialog, and update plug values based on filter results.
 
     Contains:
-
         Methods:
-
             - create_widget: Method to create the file widget.
             - filter_clicked: Display a filter widget.
             - update_plug_value_from_filter: Update the plug value from
@@ -72,22 +70,26 @@ class PopulseFileControlWidget(FileControlWidget):
         """
         Creates a file selection widget.
 
-        :param parent: (QWidget) The parent widget.
-        :param control_name: (str) The name of the control to create.
-        :param control_value: (str) The default control value.
-        :param trait: (Trait) The trait associated with the control.
-        :param label_class: (Optional[Type[QWidget]]) Custom label widget
-         class.
-        :param user_data (Optional[dict]): Additional user data.
+        :param parent: The parent widget.
+        :type parent: soma.qt_gui.controller_widget.ControllerWidget
+        :param control_name: The name of the control to create.
+        :type control_name: str
+        :param control_value: The default control value.
+        :type control_value: str
+        :param trait: The trait associated with the control.
+        :type trait: traits.ctrait.CTrait
+        :param label_class: Custom label widget class.
+        :type label_class: QWidget
+        :param user_data: Additional user data.
+        :type user_data: dict
 
-        :return: (Tuple[QWidget, QLabel]) A tuple containing the created
-         widget and its associated label. The widget includes a QLineEdit
-         ('path') and a browse button ('browse').
+        :return: A tuple containing the created widget and its associated
+         label. The widget includes a QLineEdit ('path') and a browse button
+         ('browse').
+        :rtype: Tuple[QWidget, QLabel]
 
         Contains:
-
             Inner functions:
-
                 - _is_number: Checks if a value is a number.
 
         """
@@ -112,9 +114,11 @@ class PopulseFileControlWidget(FileControlWidget):
             """
             Checks if a value is a number.
 
-            :param value: (str):The value to check.
+            :param value: The value to check.
+            :type value: str
 
-            :return: (bool) True if the value is a number, False otherwise.
+            :return: True if the value is a number, False otherwise.
+            :rtype: bool
             """
 
             try:
@@ -161,9 +165,12 @@ class PopulseFileControlWidget(FileControlWidget):
         """
         Display a filter widget.
 
-        :param widget: (QWidget) The parent widget.
-        :param node_name: (str) The name of the node.
-        :param plug_name: (str) The name of the plug.
+        :param widget: The parent widget.
+        :type widget: QWidget
+        :param node_name: The name of the node.
+        :type node_name: str
+        :param plug_name: The name of the plug.
+        :type plug_name: str
         """
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -193,9 +200,12 @@ class PopulseFileControlWidget(FileControlWidget):
         """
         Updates the plug value based on a filter result.
 
-        :param widget: (QWidget) The parent widget.
-        :param plug_name: (str) The name of the plug.
-        :param filter_res_list: (List[str]) List of filtered file paths.
+        :param widget: The parent widget.
+        :type widget: QWidget
+        :param plug_name: The name of the plug.
+        :type plug_name: str
+        :param filter_res_list: List of filtered file paths.
+        :type filter_res_list: List[str]
         """
         # If the list contains only one element, setting
         # this element as the plug value
@@ -226,9 +236,7 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
     Widget for selecting a directory.
 
     Contains:
-
         Methods:
-
             - create_widget: Creates the directory selection widget.
             - filter_clicked: Displays a filtering widget.
             - update_plug_value_from_filter: Updates the plug value based on
@@ -247,15 +255,21 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         """
         Creates and returns a directory selection widget.
 
-        :param parent: (QWidget) The parent widget.
-        :param control_name: (str) The name of the control.
-        :param control_value: (Any) The initial value of the control.
-        :param trait: (Any) The trait associated with the control.
-        :param label_class: (Optional[Any]) The label class (optional).
-        :param user_data: (Optional[dict]) User data associated with
-         the widget.
+        :param parent: The parent widget.
+        :type parent: soma.qt_gui.controller_widget.ControllerWidget
+        :param control_name: The name of the control.
+        :type control_name: str
+        :param control_value: The initial value of the control.
+        :type control_value: any
+        :param trait: The trait associated with the control.
+        :type trait: traits.ctrait.CTrait
+        :param label_class: The label class (optional).
+        :type label_class: QWidget
+        :param user_data: User data associated with the widget.
+        :type user_data: dict
 
-        :return: (QWidget) The directory selection widget.
+        :return: The directory selection widget.
+        :rtype: QWidget
         """
 
         return PopulseFileControlWidget.create_widget(
@@ -272,9 +286,12 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         """
         Displays a filter widget for selecting a directory.
 
-        :param widget: (QWidget) The calling widget.
-        :param node_name: (str) The name of the node.
-        :param plug_name: (str) The name of the associated plug.
+        :param widget: The calling widget.
+        :type widget: QWidget
+        :param node_name: The name of the node.
+        :type node_name: str
+        :param plug_name: The name of the associated plug.
+        :type plug_name: str
         """
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -307,9 +324,12 @@ class PopulseDirectoryControlWidget(DirectoryControlWidget):
         If the selected element is not a directory, its parent directory
         is used.
 
-        :param widget (QWidget): The widget being updated.
-        :param plug_name (str): The name of the associated plug.
-        :param filter_res_list (list[str]): The list of filtered files.
+        :param widget: The widget being updated.
+        :type widget: QWidget
+        :param plug_name: The name of the associated plug.
+        :type plug_name: str
+        :param filter_res_list: The list of filtered files.
+        :type filter_res_list: (list[str]
         """
 
         if filter_res_list:
@@ -328,9 +348,7 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
     A control widget for entering a list of files.
 
     Contains:
-
         Methods:
-
             - create_widget: Creates the list of files widget.
             - filter_clicked: Displays a filter widget.
             - update_plug_value_from_filter: Updates the plug value based on
@@ -351,15 +369,22 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         filter button.
 
 
-        :param parent: (QWidget) The parent widget.
-        :param control_name: (str) The name of the control.
-        :param control_value: (list) The default control value.
-        :param trait: (Trait) The trait associated with the control.
-        :param label_class: (type) A Qt widget class for the label.
-        :param user_data: (dict) Additional data, including project, scan list,
-         and connected inputs.
+        :param parent: The parent widget.
+        :type parent: soma.qt_gui.controller_widget.ControllerWidget
+        :param control_name: The name of the control.
+        :type control_name: str
+        :param control_value: The default control value.
+        :type control_value: list
+        :param trait: The trait associated with the control.
+        :type trait: traits.ctrait.CTrait
+        :param label_class: A Qt widget class for the label.
+        :type label_class: PyQt5.QtWidgets.QLabel
+        :param user_data: Additional data, including project, scan list, and
+         connected inputs.
+         :type user_data: dict
 
-        :return: (tuple) A tuple (control widget, (QLabel, QWidget)).
+        :return: A tuple (QLabel, QWidget).
+        :rtype: tuple[QLabel, QWidget)]
         """
         widget, label = OffscreenListFileControlWidget.create_widget(
             parent,
@@ -412,9 +437,12 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         """
         Displays a filter widget for selecting files.
 
-        :param widget: (QWidget) The file control widget.
-        :param node_name: (str) The name of the node.
-        :param plug_name: (str) The name of the plug.
+        :param widget: The file control widget.
+        :type widget: QWidget
+        :param node_name: The name of the node.
+        :type node_name: str
+        :param plug_name: The name of the plug.
+        :type plug_name: str
         """
         project = widget.user_data.get("project")
         scan_list = widget.user_data.get("scan_list")
@@ -448,9 +476,12 @@ class PopulseOffscreenListFileControlWidget(OffscreenListFileControlWidget):
         """
         Updates the plug value based on the filter results.
 
-        :param widget: (QWidget) The file control widget.
-        :param plug_name: (str) The name of the plug.
-        :param filter_res_list: (list) The filtered file list.
+        :param widget: The file control widget.
+        :type widget: widget
+        :param plug_name: The name of the plug.
+        :type plug_name: str
+        :param filter_res_list: The filtered file list.
+        :type filter_res_list: list
 
         """
         controller = widget.parent().controller
@@ -474,9 +505,7 @@ class PopulseUndefinedControlWidget:
     that represent undefined values in a controller-based UI framework.
 
     Contains:
-
         Methods:
-
             - check: Check if a controller widget control is filled correctly.
             - connect: Connect a 'Str' or 'String' controller trait and a
               'StrControlWidget' controller widget control.
@@ -503,8 +532,10 @@ class PopulseUndefinedControlWidget:
 
         This method is a placeholder in this implementation.
 
-        :param cls: (StrControlWidget) A StrControlWidget control.
-        :param control_instance: (QLineEdit) The control widget to check.
+        :param cls:  A StrControlWidget control.
+        :type cls: StrControlWidget
+        :param control_instance: The control widget to check.
+        :type control_instance: QLineEdit
         """
         # Implementation can be added here if needed
         pass
@@ -517,11 +548,15 @@ class PopulseUndefinedControlWidget:
 
         This method is a placeholder in this implementation.
 
-        :param cls: (StrControlWidget) A StrControlWidget control.
-        :param controller_widget: (ControllerWidget) The controller widget
-         containing the controller.
-        :param control_name: (str) The name of the control to connect.
-        :param control_instance: (QWidget) The widget instance to connect.
+        :param cls: A StrControlWidget control.
+        :type cls: StrControlWidget
+        :param controller_widget: The controller widget containing the
+         controller.
+        :type controller_widget: ControllerWidget
+        :param control_name: The name of the control to connect.
+        :type control_name: str
+        :param control_instance: The widget instance to connect.
+        :type control_instance: QWidget
         """
         # Signal connections can be added here if needed
         pass
@@ -541,25 +576,31 @@ class PopulseUndefinedControlWidget:
         This method creates a read-only QLabel widget that displays a styled
         representation of undefined/null values, along with an optional label.
 
-        :param parent: (QWidget) The parent widget that will contain the
-         created widgets.
-        :param control_name: (str) The name/text for the label widget. If None,
+        :param parent: The parent widget that will contain the created widgets.
+        :type parent: QWidget
+        :param control_name: The name/text for the label widget. If None,
          no label is created.
+        :type control_name: str
         :param control_value: The undefined value to display (currently unused
          in implementation).
-        :param trait: trait: The trait object associated with this control
-         (currently unused in implementation).
+        :type control_value: str
+        :param trait: The trait object associated with this control (currently
+         unused in implementation).
+        :type trait:  traits.ctrait.CTrait
         :param label_class: The Qt widget class to use for creating the label.
          Defaults to QtGui.QLabel if None.
+        :type label_class: QtGui.QLabel
         :param user_data: Additional user-defined data (currently unused in
          implementation).
+        :type user_data: dict
 
-        :Returns (tuple): A tuple containing:
+        :return: (tuple): A tuple containing:
 
             - control_widget: A QLabel displaying the styled undefined value
               text.
             - label_widget: The associated label widget, or None if
               control_name is None.
+        :rtype: tuple.
         """
         # Create widget with styled representation of Undefined
         widget = Qt.QLabel(
@@ -585,10 +626,13 @@ class PopulseUndefinedControlWidget:
 
         This method is a placeholder in this implementation.
 
-        :param controller_widget: (ControllerWidget) The controller widget
-         containing the controller.
-        :param control_name: (str) The name of the control to disconnect.
-        :param control_instance: (QWidget) The widget instance to disconnect.
+        :param controller_widget: The controller widget containing the
+         controller.
+        :type controller_widget: ControllerWidget
+        :param control_name: The name of the control to disconnect.
+        :type control_name: str
+        :param control_instance: The widget instance to disconnect.
+        :type control_instance: QWidget
         """
         # Signal disconnections can be added here if needed
         pass
@@ -602,10 +646,11 @@ class PopulseUndefinedControlWidget:
          compatibility.
         :param **kwargs: Additional arguments. Not used, kept for interface
          compatibility.
-        :param control_instance: (QWidget) The control widget to validate.
+        :param control_instance: The control widget to validate.
+        :type control_instance: QWidget
 
-        :return: (bool) True if the control value is Undefined, False
-         otherwise
+        :return: True if the control value is Undefined, False otherwise.
+        :rtype: bool
         """
 
         # Get the control current value
@@ -634,14 +679,18 @@ class PopulseUndefinedControlWidget:
          compatibility.
         :param **kwargs: Additional arguments. Not used, kept for interface
          compatibility.
-        :param controller_widget: (ControllerWidget) The controller widget
-         containing the controller to update.
-        :param control_name: (str) The name of the control to synchronize
-         with the controller.
-        :param  control_instance: (QWidget) The widget instance to synchronize
-         with the controller.
+        :param controller_widget: The controller widget containing the
+         controller to update.
+        :type controller_widget: ControllerWidget
+        :param control_name: The name of the control to synchronize with the
+         controller.
+        :type control_name: str
+        :param control_instance: The widget instance to synchronize with the
+         controller.
+        :type control_instance: QWidget
         :param reset_invalid_value: (bool) If True and the value is invalid,
-         reset the widget to the controller's value
+         reset the widget to the controller's value.
+        :type reset_invalid_value: bool
         """
 
         # Update the controller only if the control is valid
@@ -676,10 +725,13 @@ class PopulseUndefinedControlWidget:
         'control_name' will match the controller trait value with the same
         name.
 
-        :param controller_widget: (ControllerWidget) The controller widget
-         containing the controller.
-        :param control_name: (str) The name of the control to synchronize.
-        :param control_instance: (QWidget) The widget instance to update.
+        :param controller_widget: The controller widget containing the
+         controller.
+        :type controller_widget: ControllerWidget
+        :param control_name: The name of the control to synchronize.
+        :type control_name: str
+        :param control_instance: The widget instance to update.
+        :type control_instance: QWidget
         """
         # Set the widget text to represent Undefined
         new_controller_value = str(traits.Undefined)

@@ -1234,8 +1234,9 @@ class PipelineManagerTab(QWidget):
             :param process: The process or pipeline containing the plug.
             :param plug: (str) The name of the plug to check.
 
-            :Returns (bool) True if the plug is compatible with a database
+            :return: True if the plug is compatible with a database
              filter, False otherwise.
+            :rtype: bool
             """
 
             try:
