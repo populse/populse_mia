@@ -12136,7 +12136,6 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         tests: PipelineManagerTab.update_inheritance
         """
-
         # Sets shortcuts for objects that are often used
         ppl_manager = self.main_window.pipeline_manager
         ppl_edt_tabs = ppl_manager.pipelineEditorTabs
@@ -12179,22 +12178,36 @@ class TestMIAPipelineManagerTab(TestMIACase):
 
         self.assertEqual(job.inheritance_dict, {"item": "value"})
 
-        # --- Case 2: Node name contains "Pipeline"
+        # --- Case 2: Node name contains "Pipeline" and node's name in
+        #             'node_inheritance_history'. job.param_dict value is str
         del job.inheritance_dict
         node.context_name = "Pipeline.rename_1"
+        job.param_dict = {"foo": "item"}
+        ppl_manager.project.node_inheritance_history = {
+            "rename_1": [{"item": "foo"}]
+        }
+
+        ppl_manager.update_inheritance(job, node)
+
+        self.assertEqual(job.inheritance_dict, {"item": "foo"})
+
+        # --- Case 3: Node's name in 'node_inheritance_history'. job.param_dict
+        #             value is list
+        del job.inheritance_dict
+        job.param_dict = {"foo": ["item"]}
+
+        ppl_manager.update_inheritance(job, node)
+
+        self.assertEqual(job.inheritance_dict, {"item": "foo"})
+
+        # --- Case 4: Node's name in 'node_inheritance_history'. job.param_dict
+        #             value is int
+        del job.inheritance_dict
+        job.param_dict = {"foo": 0}
 
         ppl_manager.update_inheritance(job, node)
 
         self.assertEqual(job.inheritance_dict, {"item": "value"})
-
-        # --- Case 3: Node's name in 'node_inheritance_history'
-        del job.inheritance_dict
-        ppl_manager.project.node_inheritance_history["rename_1"] = [
-            {0: "new_value"}
-        ]
-        ppl_manager.update_inheritance(job, node)
-
-        self.assertEqual(job.inheritance_dict, {0: "new_value"})
 
     def test_update_node_list(self):
         """
