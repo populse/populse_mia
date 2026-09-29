@@ -497,9 +497,7 @@ class PipelineManagerTab(QWidget):
             processes produce meaningful output data.
 
         Contains:
-
             Inner functions:
-
                 - _serialize_for_json: Serialize objects to JSON-compatible
                   format.
                 - _update_values_from_job: Update values dictionary with job
@@ -3675,6 +3673,11 @@ class PipelineManagerTab(QWidget):
         Note:
             For Pipeline nodes, the method strips the "Pipeline." prefix from
             the context_name to match against inheritance history keys.
+
+        Contains:
+            Inner functions:
+                - get_param_values: Extract string values from a parameter
+                  value.
         """
         # Extract the effective node name, handling Pipeline prefixes
         context_name = getattr(node, "context_name", node.name)
@@ -3687,10 +3690,37 @@ class PipelineManagerTab(QWidget):
         inheritance_dict = {}
 
         if node_name in self.project.node_inheritance_history:
-            param_values = {
-                tuple(v) if isinstance(v, list) else v
-                for v in job.param_dict.values()
-            }
+
+            def get_param_values(value):
+                """
+                Extract string values from a parameter value.
+
+                Recursively traverses lists to collect all string values. Other
+                value types are ignored.
+
+                :param value: Parameter value to inspect.
+
+                :return: Set of string values found in the parameter value.
+                :rtype: set[str]
+                """
+
+                if isinstance(value, str):
+                    return {value}
+
+                if isinstance(value, list):
+                    values = set()
+
+                    for item in value:
+                        values.update(get_param_values(item))
+
+                    return values
+
+                return set()
+
+            param_values = set()
+
+            for value in job.param_dict.values():
+                param_values.update(get_param_values(value))
 
             for inherit_dict in self.project.node_inheritance_history[
                 node_name
