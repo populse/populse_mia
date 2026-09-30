@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -439,9 +439,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    dialog, and update plug values based on filter results.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - create_widget: Method to create the file widget.</span>
 <span class="sd">            - filter_clicked: Display a filter widget.</span>
 <span class="sd">            - update_plug_value_from_filter: Update the plug value from</span>
@@ -462,22 +460,26 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates a file selection widget.</span>
 
-<span class="sd">        :param parent: (QWidget) The parent widget.</span>
-<span class="sd">        :param control_name: (str) The name of the control to create.</span>
-<span class="sd">        :param control_value: (str) The default control value.</span>
-<span class="sd">        :param trait: (Trait) The trait associated with the control.</span>
-<span class="sd">        :param label_class: (Optional[Type[QWidget]]) Custom label widget</span>
-<span class="sd">         class.</span>
-<span class="sd">        :param user_data (Optional[dict]): Additional user data.</span>
+<span class="sd">        :param parent: The parent widget.</span>
+<span class="sd">        :type parent: soma.qt_gui.controller_widget.ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control to create.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_value: The default control value.</span>
+<span class="sd">        :type control_value: str</span>
+<span class="sd">        :param trait: The trait associated with the control.</span>
+<span class="sd">        :type trait: traits.ctrait.CTrait</span>
+<span class="sd">        :param label_class: Custom label widget class.</span>
+<span class="sd">        :type label_class: QWidget</span>
+<span class="sd">        :param user_data: Additional user data.</span>
+<span class="sd">        :type user_data: dict</span>
 
-<span class="sd">        :Returns: (Tuple[QWidget, QLabel]) A tuple containing the created</span>
-<span class="sd">         widget and its associated label. The widget includes a QLineEdit</span>
-<span class="sd">         (&#39;path&#39;) and a browse button (&#39;browse&#39;).</span>
+<span class="sd">        :return: A tuple containing the created widget and its associated</span>
+<span class="sd">         label. The widget includes a QLineEdit (&#39;path&#39;) and a browse button</span>
+<span class="sd">         (&#39;browse&#39;).</span>
+<span class="sd">        :rtype: Tuple[QWidget, QLabel]</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _is_number: Checks if a value is a number.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -502,9 +504,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Checks if a value is a number.</span>
 
-<span class="sd">            :param value: (str):The value to check.</span>
+<span class="sd">            :param value: The value to check.</span>
+<span class="sd">            :type value: str</span>
 
-<span class="sd">            :Returns: (bool) True if the value is a number, False otherwise.</span>
+<span class="sd">            :return: True if the value is a number, False otherwise.</span>
+<span class="sd">            :rtype: bool</span>
 <span class="sd">            &quot;&quot;&quot;</span>
 
             <span class="k">try</span><span class="p">:</span>
@@ -554,9 +558,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Display a filter widget.</span>
 
-<span class="sd">        :param widget: (QWidget) The parent widget.</span>
-<span class="sd">        :param node_name: (str) The name of the node.</span>
-<span class="sd">        :param plug_name: (str) The name of the plug.</span>
+<span class="sd">        :param widget: The parent widget.</span>
+<span class="sd">        :type widget: QWidget</span>
+<span class="sd">        :param node_name: The name of the node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: The name of the plug.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -589,9 +596,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on a filter result.</span>
 
-<span class="sd">        :param widget: (QWidget) The parent widget.</span>
-<span class="sd">        :param plug_name: (str) The name of the plug.</span>
-<span class="sd">        :param filter_res_list: (List[str]) List of filtered file paths.</span>
+<span class="sd">        :param widget: The parent widget.</span>
+<span class="sd">        :type widget: QWidget</span>
+<span class="sd">        :param plug_name: The name of the plug.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param filter_res_list: List of filtered file paths.</span>
+<span class="sd">        :type filter_res_list: List[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># If the list contains only one element, setting</span>
         <span class="c1"># this element as the plug value</span>
@@ -626,9 +636,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Widget for selecting a directory.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - create_widget: Creates the directory selection widget.</span>
 <span class="sd">            - filter_clicked: Displays a filtering widget.</span>
 <span class="sd">            - update_plug_value_from_filter: Updates the plug value based on</span>
@@ -649,15 +657,21 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Creates and returns a directory selection widget.</span>
 
-<span class="sd">        :param parent: (QWidget) The parent widget.</span>
-<span class="sd">        :param control_name: (str) The name of the control.</span>
-<span class="sd">        :param control_value: (Any) The initial value of the control.</span>
-<span class="sd">        :param trait: (Any) The trait associated with the control.</span>
-<span class="sd">        :param label_class: (Optional[Any]) The label class (optional).</span>
-<span class="sd">        :param user_data: (Optional[dict]) User data associated with</span>
-<span class="sd">         the widget.</span>
+<span class="sd">        :param parent: The parent widget.</span>
+<span class="sd">        :type parent: soma.qt_gui.controller_widget.ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_value: The initial value of the control.</span>
+<span class="sd">        :type control_value: any</span>
+<span class="sd">        :param trait: The trait associated with the control.</span>
+<span class="sd">        :type trait: traits.ctrait.CTrait</span>
+<span class="sd">        :param label_class: The label class (optional).</span>
+<span class="sd">        :type label_class: QWidget</span>
+<span class="sd">        :param user_data: User data associated with the widget.</span>
+<span class="sd">        :type user_data: dict</span>
 
-<span class="sd">        :Returns: (QWidget) The directory selection widget.</span>
+<span class="sd">        :return: The directory selection widget.</span>
+<span class="sd">        :rtype: QWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="n">PopulseFileControlWidget</span><span class="o">.</span><span class="n">create_widget</span><span class="p">(</span>
@@ -677,9 +691,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting a directory.</span>
 
-<span class="sd">        :param widget: (QWidget) The calling widget.</span>
-<span class="sd">        :param node_name: (str) The name of the node.</span>
-<span class="sd">        :param plug_name: (str) The name of the associated plug.</span>
+<span class="sd">        :param widget: The calling widget.</span>
+<span class="sd">        :type widget: QWidget</span>
+<span class="sd">        :param node_name: The name of the node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: The name of the associated plug.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -715,9 +732,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If the selected element is not a directory, its parent directory</span>
 <span class="sd">        is used.</span>
 
-<span class="sd">        :param widget (QWidget): The widget being updated.</span>
-<span class="sd">        :param plug_name (str): The name of the associated plug.</span>
-<span class="sd">        :param filter_res_list (list[str]): The list of filtered files.</span>
+<span class="sd">        :param widget: The widget being updated.</span>
+<span class="sd">        :type widget: QWidget</span>
+<span class="sd">        :param plug_name: The name of the associated plug.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param filter_res_list: The list of filtered files.</span>
+<span class="sd">        :type filter_res_list: (list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">filter_res_list</span><span class="p">:</span>
@@ -740,9 +760,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    A control widget for entering a list of files.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - create_widget: Creates the list of files widget.</span>
 <span class="sd">            - filter_clicked: Displays a filter widget.</span>
 <span class="sd">            - update_plug_value_from_filter: Updates the plug value based on</span>
@@ -765,15 +783,22 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        filter button.</span>
 
 
-<span class="sd">        :param parent: (QWidget) The parent widget.</span>
-<span class="sd">        :param control_name: (str) The name of the control.</span>
-<span class="sd">        :param control_value: (list) The default control value.</span>
-<span class="sd">        :param trait: (Trait) The trait associated with the control.</span>
-<span class="sd">        :param label_class: (type) A Qt widget class for the label.</span>
-<span class="sd">        :param user_data: (dict) Additional data, including project, scan list,</span>
-<span class="sd">         and connected inputs.</span>
+<span class="sd">        :param parent: The parent widget.</span>
+<span class="sd">        :type parent: soma.qt_gui.controller_widget.ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_value: The default control value.</span>
+<span class="sd">        :type control_value: list</span>
+<span class="sd">        :param trait: The trait associated with the control.</span>
+<span class="sd">        :type trait: traits.ctrait.CTrait</span>
+<span class="sd">        :param label_class: A Qt widget class for the label.</span>
+<span class="sd">        :type label_class: PyQt5.QtWidgets.QLabel</span>
+<span class="sd">        :param user_data: Additional data, including project, scan list, and</span>
+<span class="sd">         connected inputs.</span>
+<span class="sd">         :type user_data: dict</span>
 
-<span class="sd">        :Returns: (tuple) A tuple (control widget, (QLabel, QWidget)).</span>
+<span class="sd">        :return: A tuple (QLabel, QWidget).</span>
+<span class="sd">        :rtype: tuple[QLabel, QWidget)]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">widget</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="n">OffscreenListFileControlWidget</span><span class="o">.</span><span class="n">create_widget</span><span class="p">(</span>
             <span class="n">parent</span><span class="p">,</span>
@@ -829,9 +854,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Displays a filter widget for selecting files.</span>
 
-<span class="sd">        :param widget: (QWidget) The file control widget.</span>
-<span class="sd">        :param node_name: (str) The name of the node.</span>
-<span class="sd">        :param plug_name: (str) The name of the plug.</span>
+<span class="sd">        :param widget: The file control widget.</span>
+<span class="sd">        :type widget: QWidget</span>
+<span class="sd">        :param node_name: The name of the node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: The name of the plug.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">project</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)</span>
         <span class="n">scan_list</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">user_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scan_list&quot;</span><span class="p">)</span>
@@ -868,9 +896,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Updates the plug value based on the filter results.</span>
 
-<span class="sd">        :param widget: (QWidget) The file control widget.</span>
-<span class="sd">        :param plug_name: (str) The name of the plug.</span>
-<span class="sd">        :param filter_res_list: (list) The filtered file list.</span>
+<span class="sd">        :param widget: The file control widget.</span>
+<span class="sd">        :type widget: widget</span>
+<span class="sd">        :param plug_name: The name of the plug.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param filter_res_list: The filtered file list.</span>
+<span class="sd">        :type filter_res_list: list</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">controller</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">parent</span><span class="p">()</span><span class="o">.</span><span class="n">controller</span>
@@ -898,9 +929,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    that represent undefined values in a controller-based UI framework.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - check: Check if a controller widget control is filled correctly.</span>
 <span class="sd">            - connect: Connect a &#39;Str&#39; or &#39;String&#39; controller trait and a</span>
 <span class="sd">              &#39;StrControlWidget&#39; controller widget control.</span>
@@ -929,8 +958,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This method is a placeholder in this implementation.</span>
 
-<span class="sd">        :param cls: (StrControlWidget) A StrControlWidget control.</span>
-<span class="sd">        :param control_instance: (QLineEdit) The control widget to check.</span>
+<span class="sd">        :param cls:  A StrControlWidget control.</span>
+<span class="sd">        :type cls: StrControlWidget</span>
+<span class="sd">        :param control_instance: The control widget to check.</span>
+<span class="sd">        :type control_instance: QLineEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Implementation can be added here if needed</span>
         <span class="k">pass</span></div>
@@ -946,11 +977,15 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This method is a placeholder in this implementation.</span>
 
-<span class="sd">        :param cls: (StrControlWidget) A StrControlWidget control.</span>
-<span class="sd">        :param controller_widget: (ControllerWidget) The controller widget</span>
-<span class="sd">         containing the controller.</span>
-<span class="sd">        :param control_name: (str) The name of the control to connect.</span>
-<span class="sd">        :param control_instance: (QWidget) The widget instance to connect.</span>
+<span class="sd">        :param cls: A StrControlWidget control.</span>
+<span class="sd">        :type cls: StrControlWidget</span>
+<span class="sd">        :param controller_widget: The controller widget containing the</span>
+<span class="sd">         controller.</span>
+<span class="sd">        :type controller_widget: ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control to connect.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_instance: The widget instance to connect.</span>
+<span class="sd">        :type control_instance: QWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Signal connections can be added here if needed</span>
         <span class="k">pass</span></div>
@@ -973,25 +1008,31 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method creates a read-only QLabel widget that displays a styled</span>
 <span class="sd">        representation of undefined/null values, along with an optional label.</span>
 
-<span class="sd">        :param parent: (QWidget) The parent widget that will contain the</span>
-<span class="sd">         created widgets.</span>
-<span class="sd">        :param control_name: (str) The name/text for the label widget. If None,</span>
+<span class="sd">        :param parent: The parent widget that will contain the created widgets.</span>
+<span class="sd">        :type parent: QWidget</span>
+<span class="sd">        :param control_name: The name/text for the label widget. If None,</span>
 <span class="sd">         no label is created.</span>
+<span class="sd">        :type control_name: str</span>
 <span class="sd">        :param control_value: The undefined value to display (currently unused</span>
 <span class="sd">         in implementation).</span>
-<span class="sd">        :param trait: trait: The trait object associated with this control</span>
-<span class="sd">         (currently unused in implementation).</span>
+<span class="sd">        :type control_value: str</span>
+<span class="sd">        :param trait: The trait object associated with this control (currently</span>
+<span class="sd">         unused in implementation).</span>
+<span class="sd">        :type trait:  traits.ctrait.CTrait</span>
 <span class="sd">        :param label_class: The Qt widget class to use for creating the label.</span>
 <span class="sd">         Defaults to QtGui.QLabel if None.</span>
+<span class="sd">        :type label_class: QtGui.QLabel</span>
 <span class="sd">        :param user_data: Additional user-defined data (currently unused in</span>
 <span class="sd">         implementation).</span>
+<span class="sd">        :type user_data: dict</span>
 
-<span class="sd">        :Returns (tuple): A tuple containing:</span>
+<span class="sd">        :return: (tuple): A tuple containing:</span>
 
 <span class="sd">            - control_widget: A QLabel displaying the styled undefined value</span>
 <span class="sd">              text.</span>
 <span class="sd">            - label_widget: The associated label widget, or None if</span>
 <span class="sd">              control_name is None.</span>
+<span class="sd">        :rtype: tuple.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create widget with styled representation of Undefined</span>
         <span class="n">widget</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">QLabel</span><span class="p">(</span>
@@ -1020,10 +1061,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This method is a placeholder in this implementation.</span>
 
-<span class="sd">        :param controller_widget: (ControllerWidget) The controller widget</span>
-<span class="sd">         containing the controller.</span>
-<span class="sd">        :param control_name: (str) The name of the control to disconnect.</span>
-<span class="sd">        :param control_instance: (QWidget) The widget instance to disconnect.</span>
+<span class="sd">        :param controller_widget: The controller widget containing the</span>
+<span class="sd">         controller.</span>
+<span class="sd">        :type controller_widget: ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control to disconnect.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_instance: The widget instance to disconnect.</span>
+<span class="sd">        :type control_instance: QWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Signal disconnections can be added here if needed</span>
         <span class="k">pass</span></div>
@@ -1036,14 +1080,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Validate if the control contains an Undefined value representation.</span>
 
-<span class="sd">        :param *args: Additional arguments. Not used, kept for interface</span>
-<span class="sd">         compatibility.</span>
-<span class="sd">        :param **kwargs: Additional arguments. Not used, kept for interface</span>
-<span class="sd">         compatibility.</span>
-<span class="sd">        :param control_instance: (QWidget) The control widget to validate.</span>
+<span class="sd">        :param args: Additional positional arguments, unused and kept for</span>
+<span class="sd">         interface compatibility.</span>
+<span class="sd">        :param kwargs: Additional keyword arguments, unused and kept for</span>
+<span class="sd">         interface compatibility.</span>
+<span class="sd">        :param control_instance: The control widget to validate.</span>
+<span class="sd">        :type control_instance: QWidget</span>
 
-<span class="sd">        :Returns: (bool) True if the control value is Undefined, False</span>
-<span class="sd">         otherwise</span>
+<span class="sd">        :return: True if the control value is Undefined, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Get the control current value</span>
@@ -1071,18 +1116,22 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        will match the controller widget user parameters defined in</span>
 <span class="sd">        &#39;control_instance&#39;.</span>
 
-<span class="sd">        :param *args: Additional arguments. Not used, kept for interface</span>
-<span class="sd">         compatibility.</span>
-<span class="sd">        :param **kwargs: Additional arguments. Not used, kept for interface</span>
-<span class="sd">         compatibility.</span>
-<span class="sd">        :param controller_widget: (ControllerWidget) The controller widget</span>
-<span class="sd">         containing the controller to update.</span>
-<span class="sd">        :param control_name: (str) The name of the control to synchronize</span>
-<span class="sd">         with the controller.</span>
-<span class="sd">        :param  control_instance: (QWidget) The widget instance to synchronize</span>
-<span class="sd">         with the controller.</span>
+<span class="sd">        :param args: Additional positional arguments, unused and kept for</span>
+<span class="sd">         interface compatibility.</span>
+<span class="sd">        :param kwargs: Additional keyword arguments, unused and kept for</span>
+<span class="sd">         interface compatibility.</span>
+<span class="sd">        :param controller_widget: The controller widget containing the</span>
+<span class="sd">         controller to update.</span>
+<span class="sd">        :type controller_widget: ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control to synchronize with the</span>
+<span class="sd">         controller.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_instance: The widget instance to synchronize with the</span>
+<span class="sd">         controller.</span>
+<span class="sd">        :type control_instance: QWidget</span>
 <span class="sd">        :param reset_invalid_value: (bool) If True and the value is invalid,</span>
-<span class="sd">         reset the widget to the controller&#39;s value</span>
+<span class="sd">         reset the widget to the controller&#39;s value.</span>
+<span class="sd">        :type reset_invalid_value: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Update the controller only if the control is valid</span>
@@ -1120,10 +1169,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &#39;control_name&#39; will match the controller trait value with the same</span>
 <span class="sd">        name.</span>
 
-<span class="sd">        :param controller_widget: (ControllerWidget) The controller widget</span>
-<span class="sd">         containing the controller.</span>
-<span class="sd">        :param control_name: (str) The name of the control to synchronize.</span>
-<span class="sd">        :param control_instance: (QWidget) The widget instance to update.</span>
+<span class="sd">        :param controller_widget: The controller widget containing the</span>
+<span class="sd">         controller.</span>
+<span class="sd">        :type controller_widget: ControllerWidget</span>
+<span class="sd">        :param control_name: The name of the control to synchronize.</span>
+<span class="sd">        :type control_name: str</span>
+<span class="sd">        :param control_instance: The widget instance to update.</span>
+<span class="sd">        :type control_instance: QWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Set the widget text to represent Undefined</span>
         <span class="n">new_controller_value</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">traits</span><span class="o">.</span><span class="n">Undefined</span><span class="p">)</span>

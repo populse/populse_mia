@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -441,9 +441,7 @@ window.runMermaid = runMermaid;</script>
 
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_tag_button: Create a new tag button.</span>
 <span class="sd">            - add_tag: Add a tag to visualize in the iteration table.</span>
 <span class="sd">            - current_editor: Return the currently active pipeline editor</span>
@@ -465,7 +463,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              manager tab.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - iteration_table_updated: Signal emitted when iteration scans have</span>
 <span class="sd">          been updated or if the iteration is toggled off.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -479,9 +476,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the IterationTable widget.</span>
 
 <span class="sd">        :param project: Current project in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param scan_list: List of the selected database files. If None, all</span>
 <span class="sd">         documents from the current collection will be used.</span>
+<span class="sd">        :type scan_list: list[str] | None</span>
 <span class="sd">        :param main_window: Software&#39;s main window reference.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="c1"># Necessary for using Mia bricks</span>
@@ -599,8 +599,10 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_tag_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a new tag button with the given text and index.</span>
 
-<span class="sd">        :param text: (str) Text to display on the button.</span>
-<span class="sd">        :param index: (int) Index of the button in the push_buttons list.</span>
+<span class="sd">        :param text: Text to display on the button.</span>
+<span class="sd">        :type text: str</span>
+<span class="sd">        :param index: Index of the button in the push_buttons list.</span>
+<span class="sd">        :type index: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
         <span class="n">button</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">select_visualized_tag</span><span class="p">,</span> <span class="n">index</span><span class="p">))</span>
@@ -616,7 +618,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This property provides convenient access to the current editor from the</span>
 <span class="sd">        pipeline manager without repeating the full attribute chain.</span>
 
-<span class="sd">        :Returns: The active pipeline editor instance.</span>
+<span class="sd">        :return: The active pipeline editor instance.</span>
+<span class="sd">        :rtype: PipelineEditor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># fmt: off</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -669,7 +672,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Fill values_list with unique tag values for the specified tag.</span>
 
-<span class="sd">        :param idx: (int) Index of the tag in push_buttons list.</span>
+<span class="sd">        :param idx: Index of the tag in push_buttons list.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tag_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">push_buttons</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">()</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
@@ -728,9 +732,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        ``ast.literal_eval()``. If parsing fails, the original string is</span>
 <span class="sd">        preserved.</span>
 
-<span class="sd">        :param value: (Any) The value to serialize.</span>
+<span class="sd">        :param value: The value to serialize.</span>
+<span class="sd">        :type value: Any</span>
 
-<span class="sd">        :Returns: (str) The JSON representation of the resulting value.</span>
+<span class="sd">        :return: The JSON representation of the resulting value.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
@@ -822,7 +828,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Open a dialog to select which tag to visualize in the iteration table.</span>
 
-<span class="sd">        :param idx: (int) Index of the clicked push button.</span>
+<span class="sd">        :param idx: Index of the clicked push button.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -849,7 +856,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Update the widget when the iterated tag is modified.</span>
 
-<span class="sd">        :param tag_name: (str) Name of the iterated tag.</span>
+<span class="sd">        :param tag_name: Name of the iterated tag.</span>
+<span class="sd">        :type tag_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_box_iterate</span><span class="o">.</span><span class="n">isChecked</span><span class="p">():</span>
@@ -1004,8 +1012,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        current collection that also exist in the scan list. Then updates the</span>
 <span class="sd">        tag value lists in the current pipeline editor.</span>
 
-<span class="sd">        :param selected_tag: (str) The tag whose values should be retrieved</span>
-<span class="sd">         and updated.</span>
+<span class="sd">        :param selected_tag: The tag whose values should be retrieved and</span>
+<span class="sd">         updated.</span>
+<span class="sd">        :type selected_tag: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>

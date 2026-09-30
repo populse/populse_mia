@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -75,11 +75,9 @@ attributes from input parameters (called “tags” in Mia) are added to the
 completion attributes.</p>
 <p>This engine tracks completed processes in the correct order, enabling
 other operations to be performed in the same sequence later.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_complete_mia_process: Complete parameters for Mia-specific
 processes.</p></li>
 <li><p>_complete_standard_process: Complete parameters for standard
@@ -100,8 +98,10 @@ the fallback engine.</p></li>
 <li><p>remove_switch_observe: Reimplemented since it is expects
 in switches completion engine.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fallback_engine</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/process_mia.html#MIAProcessCompletionEngine.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngine.__init__" title="Link to this definition">¶</a></dt>
@@ -109,9 +109,9 @@ in switches completion engine.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – The process instance to be completed.</p></li>
-<li><p><strong>name</strong> – (str) The name of the process.</p></li>
-<li><p><strong>fallback_engine</strong> – The fallback engine to use when Mia-specific
+<li><p><strong>process</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>) – The process instance to be completed.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the process.</p></li>
+<li><p><strong>fallback_engine</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessCompletionEngine</span></code>) – The fallback engine to use when Mia-specific
 completion is not applicable.</p></li>
 </ul>
 </dd>
@@ -125,9 +125,9 @@ completion is not applicable.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – The process to complete.</p></li>
-<li><p><strong>process_inputs</strong> – (dict) Parameters to set on the process.</p></li>
-<li><p><strong>complete_iterations</strong> – (bool) Whether to complete iteration nodes.</p></li>
+<li><p><strong>process</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>) – The process to complete.</p></li>
+<li><p><strong>process_inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters to set on the process.</p></li>
+<li><p><strong>complete_iterations</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to complete iteration nodes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -140,9 +140,9 @@ completion is not applicable.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – The Mia process to complete.</p></li>
-<li><p><strong>process_inputs</strong> – (dict) Parameters to set on the process.</p></li>
-<li><p><strong>complete_iterations</strong> – (bool) Whether to complete iteration nodes.</p></li>
+<li><p><strong>process</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA" title="populse_mia.user_interface.pipeline_manager.process_mia.ProcessMIA"><em>ProcessMIA</em></a>) – The Mia process to complete.</p></li>
+<li><p><strong>process_inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters to set on the process.</p></li>
+<li><p><strong>complete_iterations</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to complete iteration nodes.</p></li>
 </ul>
 </dd>
 </dl>
@@ -156,10 +156,13 @@ completion is not applicable.</p></li>
 and adds them to the completion attributes if matches are found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>process_inputs</strong> – (dict) Parameters to be set on the process.</p>
+<dd class="field-odd"><p><strong>process_inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters to be set on the process.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The augmented attributes collection.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessAttributes</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -173,9 +176,9 @@ on the configuration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – The process to configure.</p></li>
-<li><p><strong>output_dir</strong> – (bool) If False, the output_directory attribute
-value is not initialised.</p></li>
+<li><p><strong>process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The process to configure.</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If False, the output_directory attribute value is
+not initialised.</p></li>
 </ul>
 </dd>
 </dl>
@@ -190,13 +193,13 @@ processes, applying the appropriate completion strategy for each.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_inputs</strong> – (dict) Parameters to be set on the process. May
-include regular parameters and completion attributes (under
+<li><p><strong>process_inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters to be set on the process. May include
+regular parameters and completion attributes (under
 ‘capsul_attributes’ key).</p></li>
-<li><p><strong>complete_iterations</strong> – (bool) If False, iteration nodes in
-pipelines will not complete their parameters. This prevents
-modification of the input pipeline and avoids redundant iterations
-completion that will be done again during workflow building.</p></li>
+<li><p><strong>complete_iterations</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If False, iteration nodes in pipelines will
+not complete their parameters. This prevents modification of the input
+pipeline and avoids redundant iterations completion that will be done
+again during workflow building.</p></li>
 </ul>
 </dd>
 </dl>
@@ -212,10 +215,9 @@ indexation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process_inputs</strong> – (dict) Parameters to set on the process.</p></li>
-<li><p><strong>iteration</strong> – (bool) Whether this completion is for an iteration
-node.</p></li>
-<li><p><strong>verbose</strong> – (bool) If true, makes the method verbose</p></li>
+<li><p><strong>process_inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Parameters to set on the process.</p></li>
+<li><p><strong>iteration</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this completion is for an iteration node.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If true, makes the method verbose.</p></li>
 </ul>
 </dd>
 </dl>
@@ -229,6 +231,9 @@ node.</p></li>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The attribute values collection.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ProcessAttributes</span></code></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -240,6 +245,10 @@ node.</p></li>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The path completion engine.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>?</p>
+</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -249,10 +258,13 @@ node.</p></li>
 <dd><p>Get the project associated with a process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>process</strong> – The process to get the project for.</p>
+<dd class="field-odd"><p><strong>process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The process to get the project for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The associated project or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project">populse_mia.data_manager.project.Project</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,13 +276,16 @@ node.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> – (str) The filename to get attributes for.</p></li>
-<li><p><strong>parameter</strong> – (str) The parameter name associated with the
-filename.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The filename to get attributes for.</p></li>
+<li><p><strong>parameter</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The parameter name associated with the filename.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The path attributes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>?</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -285,6 +300,10 @@ filename.</p></li>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The result from the fallback engine.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>?</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,16 +329,16 @@ instance by setting the following 2 parameters:</p>
 distinguishing between Mia and Nipype processes. For standard processes,
 additional database operations are performed before invoking the
 underlying completion system (such as FOM or others).</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>get_completion_engine: get a ProcessCompletionEngine instance</p></li>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
+<li><p>get_completion_engine: get a ProcessCompletionEngine instance
+for a given process/node.</p></li>
 </ul>
-<p>for a given process/node.</p>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id">
 <span class="sig-name descname"><span class="pre">factory_id</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'mia_completion'</span></em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.process_mia.MIAProcessCompletionEngineFactory.factory_id" title="Link to this definition">¶</a></dt>
@@ -333,15 +352,18 @@ or node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>process</strong> – (Process or Node) The process or node for which to get
-the completion engine.</p></li>
-<li><p><strong>name</strong> – (str, optional) An optional name for the completion
+<li><p><strong>process</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>) – The process or node for which to get the completion
 engine.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – An optional name for the completion engine.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(ProcessCompletionEngine) A completion engine instance
 associated with the process.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>?</p>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -355,45 +377,49 @@ associated with the process.</p>
 <p>Extends the Capsul Process class to customize execution for Mia bricks.</p>
 <p>This class provides specialized methods for Mia bricks, including process
 initialization, output handling, and trait management.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_add_field_to_collections: Add a new field to the specified
 collection in the database.</p></li>
-<li><p>_add_or_modify_tags: Add new tags or modify existing tag values in
-the database.</p></li>
+<li><p>_add_or_modify_tags: Add new tags or modify existing tag values
+in the database.</p></li>
 <li><p>_all_values_identical: Checks if all dictionaries have identical
 content</p></li>
 <li><p>_after_run_process: Try to recover the output values, when the
 calculation has been delegated to a process in ProcessMIA.</p></li>
-<li><p>_find_plug_for_output: Find the plug name associated with the given
-output file.</p></li>
+<li><p>_find_plug_for_output: Find the plug name associated with the
+given output file.</p></li>
 <li><p>_get_relative_path: Converts an absolute file path to a relative
 path based on the project folder.</p></li>
-<li><p>_remove_tags: Remove specified tags from value dictionaries and the
-database.</p></li>
+<li><p>_remove_tags: Remove specified tags from value dictionaries and
+the database.</p></li>
 <li><p>_resolve_inheritance_ambiguity: Resolves ambiguity when multiple
 input files could provide tags.</p></li>
 <li><p>_run_process: Call the run_process_mia method in the ProcessMIA
 subclass.</p></li>
 <li><p>_save_tag_values: Save tag values to the database.</p></li>
-<li><p>init_default_traits: Automatically initialise necessary parameters
-for nipype or capsul.</p></li>
-<li><p>init_process: Instantiation of the process attribute given a process
-identifier.</p></li>
+<li><p>init_default_traits: Automatically initialise necessary
+parameters for nipype or capsul.</p></li>
+<li><p>init_process: Instantiation of the process attribute given a
+process identifier.</p></li>
 <li><p>list_outputs: Override the outputs of the process.</p></li>
-<li><p>load_nii: Return the header and the data of a nibabel image object.</p></li>
-<li><p>make_initResult: Make the final dictionary for outputs, inheritance
-and requirement from the initialisation of a brick.</p></li>
+<li><p>load_nii: Return the header and the data of a nibabel image
+object.</p></li>
+<li><p>make_initResult: Make the final dictionary for outputs,
+inheritance and requirement from the initialisation of a brick.</p></li>
 <li><p>relax_nipype_exists_constraints: Relax the exists constraint of
 the process.inputs traits.</p></li>
 <li><p>requirements: Capsul Process.requirements() implementation using
 Mia’s ProcessMIA.requirement attribute.</p></li>
-<li><p>run_process_mia: Implements specific runs for ProcessMia subclasses.</p></li>
+<li><p>run_process_mia: Implements specific runs for ProcessMia
+subclasses.</p></li>
 <li><p>tags_inheritance: Create tags for data.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -424,8 +450,8 @@ Mia’s ProcessMIA.requirement attribute.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>args</strong> – (tuple) Positional arguments passed to the parent class.</p></li>
-<li><p><strong>kwargs</strong> – (dict) Keyword arguments passed to the parent class</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – Positional arguments passed to the parent class.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Keyword arguments passed to the parent class</p></li>
 </ul>
 </dd>
 </dl>
@@ -438,11 +464,11 @@ Mia’s ProcessMIA.requirement attribute.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database_schema</strong> – The database schema context used for modifying
+<li><p><strong>database_schema</strong> (<a class="reference internal" href="populse_mia.data_manager.database_mia.html#populse_mia.data_manager.database_mia.DatabaseMiaSchema" title="populse_mia.data_manager.database_mia.DatabaseMiaSchema"><em>populse_mia.data_manager.database_mia.DatabaseMiaSchema</em></a>) – The database schema context used for modifying
 collections.</p></li>
-<li><p><strong>collection</strong> – (str) The name of the collection to which the field
-should be added.</p></li>
-<li><p><strong>tag_def</strong> – <p>(dict) Dictionary containing the field definition with
+<li><p><strong>collection</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the collection to which the field should
+be added.</p></li>
+<li><p><strong>tag_def</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>Dictionary containing the field definition with
 the following keys:</p>
 <blockquote>
 <div><ul>
@@ -469,15 +495,12 @@ collections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>own_tags</strong> – (list[dict]) List of tags to be added or modified,
-where each tag is a dictionary with ‘name’, ‘value’, ‘description’,
-etc., keys.</p></li>
-<li><p><strong>current_values</strong> – (dict) Dictionary storing the current tag
-values.</p></li>
-<li><p><strong>initial_values</strong> – (dict) Dictionary storing the initial tag
-values.</p></li>
-<li><p><strong>field_names</strong> – (set[str]) Set of field names that exist in the
-database schema.</p></li>
+<li><p><strong>own_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – List of tags to be added or modified, where each tag
+is a dictionary with ‘name’, ‘value’, ‘description’, etc., keys.</p></li>
+<li><p><strong>current_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary storing the current tag values.</p></li>
+<li><p><strong>initial_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary storing the initial tag values.</p></li>
+<li><p><strong>field_names</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Set of field names that exist in the database
+schema.</p></li>
 </ul>
 </dd>
 </dl>
@@ -489,12 +512,15 @@ database schema.</p></li>
 <dd><p>Checks if all dictionaries in <cite>values_dict</cite> have identical content.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>values_dict</strong> – (dict) A dictionary where each value is expected to
-be comparable to the others.</p>
+<dd class="field-odd"><p><strong>values_dict</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary where each value is expected to be
+comparable to the others.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if all values in <cite>values_dict</cite> are identical or
-if the dictionary is empty, otherwise False.</p>
+<dd class="field-even"><p>True if all values in <cite>values_dict</cite> are identical or if the
+dictionary is empty, otherwise False.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -505,7 +531,7 @@ if the dictionary is empty, otherwise False.</p>
 <dd><p>Retrieve output values when the process is a NipypeProcess.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>run_process_result</strong> – The result of the process execution
+<dd class="field-odd"><p><strong>run_process_result</strong> (<em>None</em>) – The result of the process execution
 (unused).</p>
 </dd>
 </dl>
@@ -517,11 +543,13 @@ if the dictionary is empty, otherwise False.</p>
 <dd><p>Find the plug name associated with the given output file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>out_file</strong> – (str) The output file to search for in user traits.</p>
+<dd class="field-odd"><p><strong>out_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The output file to search for in user traits.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str | None) The name of the plug (trait) if found, otherwise
-None.</p>
+<dd class="field-even"><p>The name of the plug (trait) if found, otherwise None.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -534,12 +562,15 @@ folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> – (str) The absolute path of the file.</p></li>
-<li><p><strong>base_dir</strong> – (str) The base directory to make the path relative to.</p></li>
+<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path of the file.</p></li>
+<li><p><strong>base_dir</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base directory to make the path relative to.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The relative file path.</p>
+<dd class="field-even"><p>The relative file path.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -551,12 +582,10 @@ folder.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>tags2del</strong> – (list[str]) List of tag names to be removed.</p></li>
-<li><p><strong>current_values</strong> – (dict) Dictionary storing the current tag
-values.</p></li>
-<li><p><strong>initial_values</strong> – (dict) Dictionary storing the initial tag
-values.</p></li>
-<li><p><strong>out_file</strong> – (str) The output file associated with the tags being
+<li><p><strong>tags2del</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of tag names to be removed.</p></li>
+<li><p><strong>current_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary storing the current tag values.</p></li>
+<li><p><strong>initial_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary storing the initial tag values.</p></li>
+<li><p><strong>out_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The output file associated with the tags being
 removed.</p></li>
 </ul>
 </dd>
@@ -581,17 +610,16 @@ use.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>all_current_values</strong> – (dict) A dictionary containing the current
-values for each possible input file.</p></li>
-<li><p><strong>all_initial_values</strong> – (dict) A dictionary containing the initial
-values for each possible input file.</p></li>
-<li><p><strong>in_files</strong> – (dict) A mapping of input file indices to their
-corresponding file paths.</p></li>
-<li><p><strong>node_name</strong> – (str) The name of the processing node.</p></li>
-<li><p><strong>plug_name</strong> – (str | None) The name of the plug (trait) causing
-the ambiguity.</p></li>
-<li><p><strong>out_file</strong> – (str) The output file for which inheritance needs to
-be resolved.</p></li>
+<li><p><strong>all_current_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary containing the current values
+for each possible input file.</p></li>
+<li><p><strong>all_initial_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary containing the initial values
+for each possible input file.</p></li>
+<li><p><strong>in_files</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A mapping of input file indices to their corresponding
+file paths.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the processing node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The name of the plug (trait) causing the ambiguity.</p></li>
+<li><p><strong>out_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The output file for which inheritance needs to be
+resolved.</p></li>
 </ul>
 </dd>
 </dl>
@@ -610,12 +638,12 @@ be resolved.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rel_out_file</strong> – (str) The relative path of the output file used
-as the document’s primary key.</p></li>
-<li><p><strong>current_values</strong> – (dict) Dictionary containing the current tag
+<li><p><strong>rel_out_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The relative path of the output file used as the
+document’s primary key.</p></li>
+<li><p><strong>current_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing the current tag
 values to be saved.</p></li>
-<li><p><strong>initial_values</strong> – (dict) Dictionary containing the initial tag
-values to be saved.</p></li>
+<li><p><strong>initial_values</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Dictionary containing the initial tag values to
+be saved.</p></li>
 </ul>
 </dd>
 </dl>
@@ -633,7 +661,7 @@ values to be saved.</p></li>
 <dd><p>Instantiate the process attribute given a process identifier.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>int_name</strong> – (str) A process identifier used to fetch the process
+<dd class="field-odd"><p><strong>int_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A process identifier used to fetch the process
 instance.</p>
 </dd>
 </dl>
@@ -672,9 +700,9 @@ a raw unscaled data matrix (as in MATLAB with
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path</strong> – (str) The path to a NIfTI file.</p></li>
-<li><p><strong>scaled</strong> – (bool) If True the data is scaled.</p></li>
-<li><p><strong>matlab_like</strong> – (bool) If True the data is rearranged to match the
+<li><p><strong>file_path</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The path to a NIfTI file.</p></li>
+<li><p><strong>scaled</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True the data is scaled.</p></li>
+<li><p><strong>matlab_like</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – If True the data is rearranged to match the
 order of the dimensions and the origin of the coordinate system in
 Matlab.</p></li>
 </ul>
@@ -719,9 +747,9 @@ modifying existing ones, or deleting unwanted tags in the process.</p>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Immediate inheritance during process execution.</p></li>
+<li><p>Deferred inheritance by storing inheritance information for
+later use during workflow generation.</p></li>
 </ol>
-<p>2. Deferred inheritance by storing inheritance information for
-later use during workflow generation.</p>
 </div></blockquote>
 </div>
 <dl class="simple">
@@ -735,7 +763,7 @@ later use during workflow generation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>in_file</strong> – <p>(str or dict) Source of tag inheritance. Either:</p>
+<li><p><strong>in_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>(str or dict) Source of tag inheritance. Either:</p>
 <ul>
 <li><p>A string representing a single input file path (unambiguous
 case).</p></li>
@@ -743,11 +771,11 @@ case).</p></li>
 (ambiguous case).</p></li>
 </ul>
 </p></li>
-<li><p><strong>out_file</strong> – (str) Path of the output file that will inherit the
+<li><p><strong>out_file</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path of the output file that will inherit the
 tags.</p></li>
-<li><p><strong>node_name</strong> – (str) Name of the processing node in the workflow.</p></li>
-<li><p><strong>own_tags</strong> – <p>(list of dict) Tags to be added or modified. Each
-dictionary must contain:</p>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the processing node in the workflow.</p></li>
+<li><p><strong>own_tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>]</em>) – <p>Tags to be added or modified. Each dictionary must
+contain:</p>
 <blockquote>
 <div><ul>
 <li><p>”name”: Tag identifier.</p></li>
@@ -761,7 +789,7 @@ dictionary must contain:</p>
 </ul>
 </div></blockquote>
 </p></li>
-<li><p><strong>tags2del</strong> – (list of str) Tags to be deleted from the output file.</p></li>
+<li><p><strong>tags2del</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Tags to be deleted from the output file.</p></li>
 </ul>
 </dd>
 </dl>

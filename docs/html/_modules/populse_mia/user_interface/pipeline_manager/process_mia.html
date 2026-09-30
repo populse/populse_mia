@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_mia &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -485,9 +485,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    other operations to be performed in the same sequence later.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _complete_mia_process: Complete parameters for Mia-specific</span>
 <span class="sd">              processes.</span>
 <span class="sd">            - _complete_standard_process: Complete parameters for standard</span>
@@ -516,9 +514,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the Mia process completion engine.</span>
 
 <span class="sd">        :param process: The process instance to be completed.</span>
-<span class="sd">        :param name: (str) The name of the process.</span>
+<span class="sd">        :type process: :class:`Pipeline &lt;capsul.pipeline.pipeline.Pipeline&gt;`</span>
+<span class="sd">        :param name: The name of the process.</span>
+<span class="sd">        :type name: str</span>
 <span class="sd">        :param fallback_engine: The fallback engine to use when Mia-specific</span>
 <span class="sd">         completion is not applicable.</span>
+<span class="sd">        :type fallback_engine:</span>
+<span class="sd">         :class:`ProcessCompletionEngine</span>
+<span class="sd">         &lt;capsul.attributes.completion_engine.ProcessCompletionEngine&gt;`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span> <span class="o">=</span> <span class="n">fallback_engine</span>
@@ -535,8 +538,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Complete parameters for standard (non-Mia) processes.</span>
 
 <span class="sd">        :param process: The process to complete.</span>
-<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
-<span class="sd">        :param complete_iterations: (bool) Whether to complete iteration nodes.</span>
+<span class="sd">        :type process: :class:`Pipeline &lt;capsul.pipeline.pipeline.Pipeline&gt;`</span>
+<span class="sd">        :param process_inputs: Parameters to set on the process.</span>
+<span class="sd">        :type process_inputs: dict</span>
+<span class="sd">        :param complete_iterations: Whether to complete iteration nodes.</span>
+<span class="sd">        :type complete_iterations: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Determine node name for logging</span>
@@ -628,8 +634,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Complete parameters for Mia-specific processes.</span>
 
 <span class="sd">        :param process: The Mia process to complete.</span>
-<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
-<span class="sd">        :param complete_iterations: (bool) Whether to complete iteration nodes.</span>
+<span class="sd">        :type process: ProcessMIA</span>
+<span class="sd">        :param process_inputs: Parameters to set on the process.</span>
+<span class="sd">        :type process_inputs: dict</span>
+<span class="sd">        :param complete_iterations: Whether to complete iteration nodes.</span>
+<span class="sd">        :type complete_iterations: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Here the process is a ProcessMIA instance. Use the specific</span>
         <span class="c1"># method.</span>
@@ -742,9 +751,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Queries the database for attributes associated with input parameters</span>
 <span class="sd">        and adds them to the completion attributes if matches are found.</span>
 
-<span class="sd">        :param process_inputs: (dict) Parameters to be set on the process.</span>
+<span class="sd">        :param process_inputs: Parameters to be set on the process.</span>
+<span class="sd">        :type process_inputs: dict</span>
 
-<span class="sd">        :Returns: The augmented attributes collection.</span>
+<span class="sd">        :return: The augmented attributes collection.</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">         :class:`ProcessAttributes</span>
+<span class="sd">         &lt;capsul.attributes.attributes_schema.ProcessAttributes&gt;`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Get attributes from the fallback engine</span>
@@ -864,8 +877,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        on the configuration.</span>
 
 <span class="sd">        :param process: The process to configure.</span>
-<span class="sd">        :param output_dir: (bool) If False, the output_directory attribute</span>
-<span class="sd">         value is not initialised.</span>
+<span class="sd">        :type process: object</span>
+<span class="sd">        :param output_dir: If False, the output_directory attribute value is</span>
+<span class="sd">         not initialised.</span>
+<span class="sd">        :type output_dir: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Test for matlab launch</span>
@@ -987,13 +1002,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method handles both standard Capsul processes and Mia-specific</span>
 <span class="sd">        processes, applying the appropriate completion strategy for each.</span>
 
-<span class="sd">        :param process_inputs: (dict) Parameters to be set on the process. May</span>
-<span class="sd">         include regular parameters and completion attributes (under</span>
+<span class="sd">        :param process_inputs: Parameters to be set on the process. May include</span>
+<span class="sd">         regular parameters and completion attributes (under</span>
 <span class="sd">         &#39;capsul_attributes&#39; key).</span>
-<span class="sd">        :param complete_iterations: (bool) If False, iteration nodes in</span>
-<span class="sd">         pipelines will not complete their parameters. This prevents</span>
-<span class="sd">         modification of the input pipeline and avoids redundant iterations</span>
-<span class="sd">         completion that will be done again during workflow building.</span>
+<span class="sd">        :type process_inputs: dict</span>
+<span class="sd">        :param complete_iterations: If False, iteration nodes in pipelines will</span>
+<span class="sd">         not complete their parameters. This prevents modification of the input</span>
+<span class="sd">         pipeline and avoids redundant iterations completion that will be done</span>
+<span class="sd">         again during workflow building.</span>
+<span class="sd">        :type complete_iterations: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Update progress tracking</span>
@@ -1038,10 +1055,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        based on input values and sets the inheritance_dict for data</span>
 <span class="sd">        indexation.</span>
 
-<span class="sd">        :param process_inputs: (dict) Parameters to set on the process.</span>
-<span class="sd">        :param iteration: (bool) Whether this completion is for an iteration</span>
-<span class="sd">         node.</span>
-<span class="sd">        :param verbose: (bool) If true, makes the method verbose</span>
+<span class="sd">        :param process_inputs: Parameters to set on the process.</span>
+<span class="sd">        :type process_inputs: dict</span>
+<span class="sd">        :param iteration: Whether this completion is for an iteration node.</span>
+<span class="sd">        :type iteration: bool</span>
+<span class="sd">        :param verbose: If true, makes the method verbose.</span>
+<span class="sd">        :type verbose: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process_inputs</span> <span class="o">=</span> <span class="n">process_inputs</span> <span class="ow">or</span> <span class="p">{}</span>
         <span class="c1"># Set input parameters</span>
@@ -1112,7 +1131,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get attribute values from the fallback engine.</span>
 
-<span class="sd">        :Returns: The attribute values collection.</span>
+<span class="sd">        :return: The attribute values collection.</span>
+<span class="sd">        :rtype:</span>
+<span class="sd">         :class:`ProcessAttributes</span>
+<span class="sd">         &lt;capsul.attributes.attributes_schema.ProcessAttributes&gt;`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span></div>
 
@@ -1124,6 +1146,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Get the path completion engine from the fallback engine.</span>
 
 <span class="sd">        :return: The path completion engine.</span>
+<span class="sd">        :rtype: ?</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">get_path_completion_engine</span><span class="p">()</span></div>
 
@@ -1136,9 +1159,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Get the project associated with a process.</span>
 
 <span class="sd">        :param process: The process to get the project for.</span>
+<span class="sd">        :type process: object</span>
 
-<span class="sd">        :Returns: The associated project or None if not found.</span>
-
+<span class="sd">        :return: The associated project or None if not found.</span>
+<span class="sd">        :rtype: populse_mia.data_manager.project.Project | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="n">ProcessNode</span><span class="p">):</span>
@@ -1157,11 +1181,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get path attributes from the fallback engine.</span>
 
-<span class="sd">        :param filename: (str) The filename to get attributes for.</span>
-<span class="sd">        :param parameter: (str) The parameter name associated with the</span>
-<span class="sd">         filename.</span>
+<span class="sd">        :param filename: The filename to get attributes for.</span>
+<span class="sd">        :type filename: str</span>
+<span class="sd">        :param parameter: The parameter name associated with the filename.</span>
+<span class="sd">        :type parameter: str</span>
 
-<span class="sd">        :Returns: The path attributes.</span>
+<span class="sd">        :return: The path attributes.</span>
+<span class="sd">        :rtype: ?</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">path_attributes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">parameter</span><span class="p">)</span></div>
 
@@ -1173,8 +1199,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Remove a switch observer from the fallback engine.</span>
 
 <span class="sd">        :param observer: The observer to remove.</span>
+<span class="sd">        :type observer: ?</span>
 
-<span class="sd">        :Returns: The result from the fallback engine.</span>
+<span class="sd">        :return: The result from the fallback engine.</span>
+<span class="sd">        :rtype: ?</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fallback_engine</span><span class="o">.</span><span class="n">remove_switch_observer</span><span class="p">(</span><span class="n">observer</span><span class="p">)</span></div>
@@ -1198,18 +1226,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        &gt;&gt;&gt; ]</span>
 <span class="sd">        &gt;&gt;&gt; study_config.process_completion = &#39;mia_completion&#39;</span>
 
-
 <span class="sd">    Once activated, the completion system is applied to all processes,</span>
 <span class="sd">    distinguishing between Mia and Nipype processes. For standard processes,</span>
 <span class="sd">    additional database operations are performed before invoking the</span>
 <span class="sd">    underlying completion system (such as FOM or others).</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - get_completion_engine: get a ProcessCompletionEngine instance</span>
-<span class="sd">            for a given process/node.</span>
+<span class="sd">              for a given process/node.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1222,13 +1247,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Retrieves a `ProcessCompletionEngine` instance for the given process</span>
 <span class="sd">        or node.</span>
 
-<span class="sd">        :param process: (Process or Node) The process or node for which to get</span>
-<span class="sd">         the completion engine.</span>
-<span class="sd">        :param name: (str, optional) An optional name for the completion</span>
+<span class="sd">        :param process: The process or node for which to get the completion</span>
 <span class="sd">         engine.</span>
+<span class="sd">        :type process:</span>
+<span class="sd">         :class:`Pipeline</span>
+<span class="sd">         &lt;capsul.pipeline.pipeline.Pipeline&gt;`</span>
+<span class="sd">        :param name: An optional name for the completion engine.</span>
+<span class="sd">        :type name: str</span>
 
-<span class="sd">        :Returns: (ProcessCompletionEngine) A completion engine instance</span>
+<span class="sd">        :return: (ProcessCompletionEngine) A completion engine instance</span>
 <span class="sd">         associated with the process.</span>
+<span class="sd">        :rtype: ?</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">process</span><span class="p">,</span> <span class="s2">&quot;completion_engine&quot;</span><span class="p">):</span>
@@ -1280,42 +1309,42 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    initialization, output handling, and trait management.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
-<span class="sd">        - _add_field_to_collections: Add a new field to the specified</span>
-<span class="sd">          collection in the database.</span>
-<span class="sd">        - _add_or_modify_tags: Add new tags or modify existing tag values in</span>
-<span class="sd">          the database.</span>
-<span class="sd">        - _all_values_identical: Checks if all dictionaries have identical</span>
-<span class="sd">          content</span>
-<span class="sd">        - _after_run_process: Try to recover the output values, when the</span>
-<span class="sd">          calculation has been delegated to a process in ProcessMIA.</span>
-<span class="sd">        - _find_plug_for_output: Find the plug name associated with the given</span>
-<span class="sd">          output file.</span>
-<span class="sd">        - _get_relative_path: Converts an absolute file path to a relative</span>
-<span class="sd">          path based on the project folder.</span>
-<span class="sd">        - _remove_tags: Remove specified tags from value dictionaries and the</span>
-<span class="sd">          database.</span>
-<span class="sd">        - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple</span>
-<span class="sd">          input files could provide tags.</span>
-<span class="sd">        - _run_process: Call the run_process_mia method in the ProcessMIA</span>
-<span class="sd">          subclass.</span>
-<span class="sd">        - _save_tag_values: Save tag values to the database.</span>
-<span class="sd">        - init_default_traits: Automatically initialise necessary parameters</span>
-<span class="sd">          for nipype or capsul.</span>
-<span class="sd">        - init_process: Instantiation of the process attribute given a process</span>
-<span class="sd">          identifier.</span>
-<span class="sd">        - list_outputs: Override the outputs of the process.</span>
-<span class="sd">        - load_nii: Return the header and the data of a nibabel image object.</span>
-<span class="sd">        - make_initResult: Make the final dictionary for outputs, inheritance</span>
-<span class="sd">          and requirement from the initialisation of a brick.</span>
-<span class="sd">        - relax_nipype_exists_constraints: Relax the exists constraint of</span>
-<span class="sd">          the process.inputs traits.</span>
-<span class="sd">        - requirements: Capsul Process.requirements() implementation using</span>
-<span class="sd">          Mia&#39;s ProcessMIA.requirement attribute.</span>
-<span class="sd">        - run_process_mia: Implements specific runs for ProcessMia subclasses.</span>
-<span class="sd">        - tags_inheritance: Create tags for data.</span>
+<span class="sd">            - _add_field_to_collections: Add a new field to the specified</span>
+<span class="sd">              collection in the database.</span>
+<span class="sd">            - _add_or_modify_tags: Add new tags or modify existing tag values</span>
+<span class="sd">              in the database.</span>
+<span class="sd">            - _all_values_identical: Checks if all dictionaries have identical</span>
+<span class="sd">              content</span>
+<span class="sd">            - _after_run_process: Try to recover the output values, when the</span>
+<span class="sd">              calculation has been delegated to a process in ProcessMIA.</span>
+<span class="sd">            - _find_plug_for_output: Find the plug name associated with the</span>
+<span class="sd">              given output file.</span>
+<span class="sd">            - _get_relative_path: Converts an absolute file path to a relative</span>
+<span class="sd">              path based on the project folder.</span>
+<span class="sd">            - _remove_tags: Remove specified tags from value dictionaries and</span>
+<span class="sd">              the database.</span>
+<span class="sd">            - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple</span>
+<span class="sd">              input files could provide tags.</span>
+<span class="sd">            - _run_process: Call the run_process_mia method in the ProcessMIA</span>
+<span class="sd">              subclass.</span>
+<span class="sd">            - _save_tag_values: Save tag values to the database.</span>
+<span class="sd">            - init_default_traits: Automatically initialise necessary</span>
+<span class="sd">              parameters for nipype or capsul.</span>
+<span class="sd">            - init_process: Instantiation of the process attribute given a</span>
+<span class="sd">              process identifier.</span>
+<span class="sd">            - list_outputs: Override the outputs of the process.</span>
+<span class="sd">            - load_nii: Return the header and the data of a nibabel image</span>
+<span class="sd">              object.</span>
+<span class="sd">            - make_initResult: Make the final dictionary for outputs,</span>
+<span class="sd">              inheritance and requirement from the initialisation of a brick.</span>
+<span class="sd">            - relax_nipype_exists_constraints: Relax the exists constraint of</span>
+<span class="sd">              the process.inputs traits.</span>
+<span class="sd">            - requirements: Capsul Process.requirements() implementation using</span>
+<span class="sd">              Mia&#39;s ProcessMIA.requirement attribute.</span>
+<span class="sd">            - run_process_mia: Implements specific runs for ProcessMia</span>
+<span class="sd">              subclasses.</span>
+<span class="sd">            - tags_inheritance: Create tags for data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Class attributes used for the inheritance dictionary</span>
@@ -1329,8 +1358,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes the process instance with default attributes.</span>
 
-<span class="sd">        :param args: (tuple) Positional arguments passed to the parent class.</span>
-<span class="sd">        :param kwargs: (dict) Keyword arguments passed to the parent class</span>
+<span class="sd">        :param args: Positional arguments passed to the parent class.</span>
+<span class="sd">        :type args: tuple</span>
+<span class="sd">        :param kwargs: Keyword arguments passed to the parent class</span>
+<span class="sd">        :type kwargs: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">requirement</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1347,10 +1378,14 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param database_schema: The database schema context used for modifying</span>
 <span class="sd">         collections.</span>
-<span class="sd">        :param collection: (str) The name of the collection to which the field</span>
-<span class="sd">         should be added.</span>
-<span class="sd">        :param tag_def: (dict) Dictionary containing the field definition with</span>
+<span class="sd">        :type database_schema:</span>
+<span class="sd">         populse_mia.data_manager.database_mia.DatabaseMiaSchema</span>
+<span class="sd">        :param collection: The name of the collection to which the field should</span>
+<span class="sd">         be added.</span>
+<span class="sd">        :type collection: str</span>
+<span class="sd">        :param tag_def: Dictionary containing the field definition with</span>
 <span class="sd">         the following keys:</span>
+
 <span class="sd">            - &#39;name&#39; (str): The name of the field.</span>
 <span class="sd">            - &#39;field_type&#39; (str): The type of the field.</span>
 <span class="sd">            - &#39;description&#39; (str): A description of the field.</span>
@@ -1358,6 +1393,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - &#39;origin&#39; (str): The origin of the field.</span>
 <span class="sd">            - &#39;unit&#39; (str): The unit associated with the field.</span>
 <span class="sd">            - &#39;default_value&#39; (Any): The default value of the field.</span>
+<span class="sd">        :type tag_def: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_config</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;field_name&quot;</span><span class="p">:</span> <span class="n">tag_def</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
@@ -1383,15 +1419,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Add new tags or modify existing tag values in the current and initial</span>
 <span class="sd">        collections.</span>
 
-<span class="sd">        :param own_tags: (list[dict]) List of tags to be added or modified,</span>
-<span class="sd">         where each tag is a dictionary with &#39;name&#39;, &#39;value&#39;, &#39;description&#39;,</span>
-<span class="sd">         etc., keys.</span>
-<span class="sd">        :param current_values: (dict) Dictionary storing the current tag</span>
-<span class="sd">         values.</span>
-<span class="sd">        :param initial_values: (dict) Dictionary storing the initial tag</span>
-<span class="sd">         values.</span>
-<span class="sd">        :param field_names: (set[str]) Set of field names that exist in the</span>
-<span class="sd">         database schema.</span>
+<span class="sd">        :param own_tags: List of tags to be added or modified, where each tag</span>
+<span class="sd">         is a dictionary with &#39;name&#39;, &#39;value&#39;, &#39;description&#39;, etc., keys.</span>
+<span class="sd">        :type own_tags: list[dict]</span>
+<span class="sd">        :param current_values: Dictionary storing the current tag values.</span>
+<span class="sd">        :type current_values: dict</span>
+<span class="sd">        :param initial_values: Dictionary storing the initial tag values.</span>
+<span class="sd">        :type initial_values: dict</span>
+<span class="sd">        :param field_names: Set of field names that exist in the database</span>
+<span class="sd">         schema.</span>
+<span class="sd">        :type field_names: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">schema</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_schema</span><span class="p">:</span>
@@ -1424,11 +1461,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks if all dictionaries in `values_dict` have identical content.</span>
 
-<span class="sd">        :param values_dict: (dict) A dictionary where each value is expected to</span>
-<span class="sd">         be comparable to the others.</span>
+<span class="sd">        :param values_dict: A dictionary where each value is expected to be</span>
+<span class="sd">         comparable to the others.</span>
+<span class="sd">        :type values_dict: dict</span>
 
-<span class="sd">        :Returns: (bool) True if all values in `values_dict` are identical or</span>
-<span class="sd">         if the dictionary is empty, otherwise False.</span>
+<span class="sd">        :return: True if all values in `values_dict` are identical or if the</span>
+<span class="sd">         dictionary is empty, otherwise False.</span>
+<span class="sd">        :rtype: bool</span>
+
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values_dict</span><span class="p">:</span>
@@ -1455,6 +1495,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param run_process_result: The result of the process execution</span>
 <span class="sd">         (unused).</span>
+<span class="sd">        :type run_process_result: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;process&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span>
@@ -1480,10 +1521,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Find the plug name associated with the given output file.</span>
 
-<span class="sd">        :param out_file: (str) The output file to search for in user traits.</span>
+<span class="sd">        :param out_file: The output file to search for in user traits.</span>
+<span class="sd">        :type out_file: str</span>
 
-<span class="sd">        :Returns: (str | None) The name of the plug (trait) if found, otherwise</span>
-<span class="sd">         None.</span>
+<span class="sd">        :return: The name of the plug (trait) if found, otherwise None.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">trait_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_traits</span><span class="p">():</span>
@@ -1506,10 +1548,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Converts an absolute file path to a relative path based on the project</span>
 <span class="sd">        folder.</span>
 
-<span class="sd">        :param file_path: (str) The absolute path of the file.</span>
-<span class="sd">        :param base_dir: (str) The base directory to make the path relative to.</span>
+<span class="sd">        :param file_path: The absolute path of the file.</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param base_dir: The base directory to make the path relative to.</span>
+<span class="sd">        :type base_dir: str</span>
 
-<span class="sd">        :Returns: (str) The relative file path.</span>
+<span class="sd">        :return: The relative file path.</span>
+<span class="sd">        :rtype: str</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">rel_path</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -1526,13 +1571,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Remove specified tags from value dictionaries and the database.</span>
 
-<span class="sd">        :param tags2del: (list[str]) List of tag names to be removed.</span>
-<span class="sd">        :param current_values: (dict) Dictionary storing the current tag</span>
-<span class="sd">         values.</span>
-<span class="sd">        :param initial_values: (dict) Dictionary storing the initial tag</span>
-<span class="sd">         values.</span>
-<span class="sd">        :param out_file: (str) The output file associated with the tags being</span>
+<span class="sd">        :param tags2del: List of tag names to be removed.</span>
+<span class="sd">        :type tags2del: list[str]</span>
+<span class="sd">        :param current_values: Dictionary storing the current tag values.</span>
+<span class="sd">        :type current_values: dict</span>
+<span class="sd">        :param initial_values: Dictionary storing the initial tag values.</span>
+<span class="sd">        :type initial_values: dict</span>
+<span class="sd">        :param out_file: The output file associated with the tags being</span>
 <span class="sd">         removed.</span>
+<span class="sd">        :type out_file: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">tag_to_del</span> <span class="ow">in</span> <span class="n">tags2del</span><span class="p">:</span>
@@ -1580,17 +1627,22 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">               resolve the ambiguity, and their decision is stored for future</span>
 <span class="sd">               use.</span>
 
-<span class="sd">        :param all_current_values: (dict) A dictionary containing the current</span>
-<span class="sd">         values for each possible input file.</span>
-<span class="sd">        :param all_initial_values: (dict) A dictionary containing the initial</span>
-<span class="sd">         values for each possible input file.</span>
-<span class="sd">        :param in_files: (dict) A mapping of input file indices to their</span>
-<span class="sd">         corresponding file paths.</span>
-<span class="sd">        :param node_name: (str) The name of the processing node.</span>
-<span class="sd">        :param plug_name: (str | None) The name of the plug (trait) causing</span>
-<span class="sd">         the ambiguity.</span>
-<span class="sd">        :param out_file: (str) The output file for which inheritance needs to</span>
-<span class="sd">         be resolved.</span>
+<span class="sd">        :param all_current_values: A dictionary containing the current values</span>
+<span class="sd">         for each possible input file.</span>
+<span class="sd">        :type all_current_values: dict</span>
+<span class="sd">        :param all_initial_values: A dictionary containing the initial values</span>
+<span class="sd">         for each possible input file.</span>
+<span class="sd">        :type all_initial_values: dict</span>
+<span class="sd">        :param in_files: A mapping of input file indices to their corresponding</span>
+<span class="sd">         file paths.</span>
+<span class="sd">        :type in_files: dict</span>
+<span class="sd">        :param node_name: The name of the processing node.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param plug_name: The name of the plug (trait) causing the ambiguity.</span>
+<span class="sd">        :type plug_name: str | None</span>
+<span class="sd">        :param out_file: The output file for which inheritance needs to be</span>
+<span class="sd">         resolved.</span>
+<span class="sd">        :type out_file: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Check if all inputs have identical tag values</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_all_values_identical</span><span class="p">(</span>
@@ -1712,12 +1764,15 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Save tag values to the CURRENT and INITIAL database collections.</span>
 
-<span class="sd">        :param rel_out_file: (str) The relative path of the output file used</span>
-<span class="sd">         as the document&#39;s primary key.</span>
-<span class="sd">        :param current_values: (dict) Dictionary containing the current tag</span>
+<span class="sd">        :param rel_out_file: The relative path of the output file used as the</span>
+<span class="sd">         document&#39;s primary key.</span>
+<span class="sd">        :type rel_out_file: str</span>
+<span class="sd">        :param current_values: Dictionary containing the current tag</span>
 <span class="sd">         values to be saved.</span>
-<span class="sd">        :param initial_values: (dict) Dictionary containing the initial tag</span>
-<span class="sd">         values to be saved.</span>
+<span class="sd">        :type current_values: dict</span>
+<span class="sd">        :param initial_values: Dictionary containing the initial tag values to</span>
+<span class="sd">         be saved.</span>
+<span class="sd">        :type initial_values: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="n">write</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1801,8 +1856,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Instantiate the process attribute given a process identifier.</span>
 
-<span class="sd">        :param int_name: (str) A process identifier used to fetch the process</span>
+<span class="sd">        :param int_name: A process identifier used to fetch the process</span>
 <span class="sd">         instance.</span>
+<span class="sd">        :type int_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ce</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">study_config</span><span class="o">.</span><span class="n">engine</span>
@@ -1835,20 +1891,25 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        data(x, y, z) in MATLAB, the equivalent in NumPy is data[y, x, z].</span>
 <span class="sd">        MATLAB and NumPy also handle the origin of the coordinate system</span>
 <span class="sd">        differently:</span>
+
 <span class="sd">            - MATLAB&#39;s coordinate system starts with the origin in the lower</span>
 <span class="sd">              left-hand corner (as in traditional matrix mathematics).</span>
 <span class="sd">            - NumPy&#39;s coordinate system starts with the origin in the top</span>
 <span class="sd">              left-hand corner.</span>
+
 <span class="sd">        When taking matlab_like=True as argument, the numpy matrix is</span>
 <span class="sd">        rearranged to follow MATLAB conventions. Using scaled=False generates</span>
 <span class="sd">        a raw unscaled data matrix (as in MATLAB with</span>
 <span class="sd">        `header = loadnifti(fnii)` and `header.reco.data`).</span>
 
-<span class="sd">        :param file_path: (str) The path to a NIfTI file.</span>
-<span class="sd">        :param scaled: (bool) If True the data is scaled.</span>
-<span class="sd">        :param matlab_like: (bool) If True the data is rearranged to match the</span>
+<span class="sd">        :param file_path: The path to a NIfTI file.</span>
+<span class="sd">        :type file_path: str</span>
+<span class="sd">        :param scaled: If True the data is scaled.</span>
+<span class="sd">        :type scaled: bool</span>
+<span class="sd">        :param matlab_like: If True the data is rearranged to match the</span>
 <span class="sd">         order of the dimensions and the origin of the coordinate system in</span>
 <span class="sd">         Matlab.</span>
+<span class="sd">        :type matlab_like: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">header</span>
@@ -1963,7 +2024,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">                1. Immediate inheritance during process execution.</span>
 <span class="sd">                2. Deferred inheritance by storing inheritance information for</span>
-<span class="sd">                later use during workflow generation.</span>
+<span class="sd">                   later use during workflow generation.</span>
 
 <span class="sd">        In ambiguous cases (multiple input files), the method will either:</span>
 <span class="sd">            - Use previously stored inheritance rules.</span>
@@ -1976,12 +2037,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              case).</span>
 <span class="sd">            - A dictionary mapping plug names to corresponding input file paths</span>
 <span class="sd">              (ambiguous case).</span>
-
-<span class="sd">        :param out_file: (str) Path of the output file that will inherit the</span>
+<span class="sd">        :type in_file: str | dict</span>
+<span class="sd">        :param out_file: Path of the output file that will inherit the</span>
 <span class="sd">         tags.</span>
-<span class="sd">        :param node_name: (str) Name of the processing node in the workflow.</span>
-<span class="sd">        :param own_tags: (list of dict) Tags to be added or modified. Each</span>
-<span class="sd">         dictionary must contain:</span>
+<span class="sd">        :type out_file: str</span>
+<span class="sd">        :param node_name: Name of the processing node in the workflow.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param own_tags: Tags to be added or modified. Each dictionary must</span>
+<span class="sd">         contain:</span>
 
 <span class="sd">            - &quot;name&quot;: Tag identifier.</span>
 <span class="sd">            - &quot;field_type&quot;: Data type of the tag.</span>
@@ -1991,8 +2054,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - &quot;unit&quot;: Unit of measurement (if applicable).</span>
 <span class="sd">            - &quot;default_value&quot;: Default value.</span>
 <span class="sd">            - &quot;value&quot;: Current value to set.</span>
-
-<span class="sd">        :param tags2del: (list of str) Tags to be deleted from the output file.</span>
+<span class="sd">        :type own_tags: list[dict]</span>
+<span class="sd">        :param tags2del: Tags to be deleted from the output file.</span>
+<span class="sd">        :type tags2del: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># 1- We want out_file to inherit all the tags from in_file.</span>

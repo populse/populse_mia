@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_editor</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -65,11 +65,9 @@ to graphically modify a pipeline.</p>
 <p>This view provides interactive tools to build pipeline graphs, connect
 nodes and plugs, edit node properties, and track modifications. It also
 handles persistence (save/export) and undo/redo history management.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_del_link: Deletes a link.</p></li>
 <li><p>_export_plug: Export a plug to a pipeline global input or output.</p></li>
 <li><p>_release_grab_link: Method called when a link is released.</p></li>
@@ -87,15 +85,15 @@ last saved to. Empty if never saved.</p></li>
 <li><p>update_node_name: Updates a node name.</p></li>
 <li><p>update_plug_value: Updates a plug value.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>pipeline_modified: Signal emitted when the pipeline is modified.</p></li>
 <li><p>pipeline_saved: Signal emitted when the pipeline is saved.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditor.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.__init__" title="Link to this definition">¶</a></dt>
@@ -105,9 +103,9 @@ undo/redo functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – The current project instance containing pipeline data
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance containing pipeline data
 and configuration.</p></li>
-<li><p><strong>main_window</strong> – The main application window instance for UI
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – The main application window instance for UI
 integration.</p></li>
 </ul>
 </dd>
@@ -124,12 +122,12 @@ records the action in history.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>link</strong> – Link specification string in the format
+<li><p><strong>link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em><em> | </em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Link specification string in the format
 “source_node.output_plug-&gt;dest_node.input_plug”. If None, uses the
 current link stored in self._current_link.</p></li>
-<li><p><strong>from_undo</strong> – Whether this deletion is being performed as part of
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this deletion is being performed as part of
 an undo operation. Affects history recording.</p></li>
-<li><p><strong>from_redo</strong> – Whether this deletion is being performed as part of
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this deletion is being performed as part of
 a redo operation. Affects history recording.</p></li>
 </ul>
 </dd>
@@ -156,32 +154,32 @@ functionality.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline_parameter</strong> – (str) Name for the exported pipeline
-parameter. If None, prompts user for a name via dialog. Defaults to
-None.</p></li>
-<li><p><strong>optional</strong> – (bool) Whether the exported plug is optional. If None,
+<li><p><strong>pipeline_parameter</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name for the exported pipeline parameter. If
+None, prompts user for a name via dialog. Defaults to None.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>) – Whether the exported plug is optional. If None,
 derived from dialog checkbox or plug configuration. Defaults to None.</p></li>
-<li><p><strong>weak_link</strong> – (bool) Whether to create a weak link (doesn’t enforce
+<li><p><strong>weak_link</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em> | </em><em>None</em>) – Whether to create a weak link (doesn’t enforce
 execution order). If None, derived from dialog or defaults to False.</p></li>
-<li><p><strong>from_undo</strong> – (bool) True when called during an undo operation.
-Used to prevent circular history updates. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – (bool) True when called during a redo operation. Used
-to prevent circular history updates. Defaults to False.</p></li>
-<li><p><strong>temp_plug_name</strong> – (tuple) A (node_name, plug_name) tuple
-specifying the plug to export. If None, uses self._temp_plug_name.
-Defaults to None.</p></li>
-<li><p><strong>multi_export</strong> – (bool) True when exporting multiple plugs
-simultaneously. Changes return behavior and error handling. Defaults
-to False.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True when called during an undo operation. Used to
+prevent circular history updates. Defaults to False.</p></li>
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True when called during a redo operation. Used to
+prevent circular history updates. Defaults to False.</p></li>
+<li><p><strong>temp_plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – A (node_name, plug_name) tuple specifying the
+plug to export. If None, uses self._temp_plug_name. Defaults to None.</p></li>
+<li><p><strong>multi_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True when exporting multiple plugs simultaneously.
+Changes return behavior and error handling. Defaults to False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) When multi_export is True, returns the plug name on
-success or None on failure. When multi_export is False, returns None
-after updating the UI and history.</p>
+<dd class="field-even"><p>When multi_export is True, returns the plug name on success or
+None on failure. When multi_export is False, returns None after
+updating the UI and history.</p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/trait_errors.html#traits.trait_errors.TraitError" title="(in traits v7.1)"><strong>TraitError</strong></a> – Logged as warning when plug
 export fails due to trait issues.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – Logged as warning when export fails due to invalid
@@ -209,7 +207,7 @@ extends the parent class behavior by recording the link addition in
 the history and displaying a status message.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>event</strong> – Mouse event corresponding to the link release.</p>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qmouseevent.html" title="(in Qt5 v5.15)"><em>QMouseEvent</em></a>) – Mouse event corresponding to the link release.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,14 +222,14 @@ unless called from an export operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>plug_names</strong> – A tuple (node_name, plug_name) or list of such
+<li><p><strong>plug_names</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a><em> | </em><em>None</em>) – A tuple (node_name, plug_name) or list of such
 tuples specifying the plug(s) to remove. If None, uses
 self._temp_plug_name.</p></li>
-<li><p><strong>from_undo</strong> – Whether this method is being called from an undo
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this method is being called from an undo
 operation.</p></li>
-<li><p><strong>from_redo</strong> – Whether this method is being called from a redo
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this method is being called from a redo
 operation.</p></li>
-<li><p><strong>from_export_plugs</strong> – Whether this method is being called from an
+<li><p><strong>from_export_plugs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this method is being called from an
 export plugs undo/redo operation. When True, history is not updated.</p></li>
 </ul>
 </dd>
@@ -253,18 +251,18 @@ destination node’s input plug. The link is represented as
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>source</strong> – A tuple of (node_name, plug_name) for the source
+<li><p><strong>source</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – A tuple of (node_name, plug_name) for the source
 connection.</p></li>
-<li><p><strong>dest</strong> – A tuple of (node_name, plug_name) for the destination
+<li><p><strong>dest</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)"><em>tuple</em></a>) – A tuple of (node_name, plug_name) for the destination
 connection.</p></li>
-<li><p><strong>active</strong> – Whether the link is currently active/enabled.</p></li>
-<li><p><strong>weak</strong> – Whether the link is a weak reference that doesn’t enforce
-strict execution dependencies.</p></li>
-<li><p><strong>from_undo</strong> – Whether this action originates from an undo
+<li><p><strong>active</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the link is currently active/enabled (unused).</p></li>
+<li><p><strong>weak</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the link is a weak reference that doesn’t enforce
+strict execution dependencies (unused).</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action originates from an undo
 operation. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – Whether this action originates from a redo operation.
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action originates from a redo operation.
 Defaults to False.</p></li>
-<li><p><strong>allow_export</strong> – Whether to allow this link in exported pipelines.
+<li><p><strong>allow_export</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to allow this link in exported pipelines.
 Defaults to False.</p></li>
 </ul>
 </dd>
@@ -290,18 +288,17 @@ the action is part of an undo/redo operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>class_process</strong> – (str) The name of the process class to
-instantiate.</p></li>
-<li><p><strong>node_name</strong> – (str) Custom name for the node. If None, the name is
+<li><p><strong>class_process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a><em>[</em><em>Process</em><em>]</em>) – The process class to instantiate.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Custom name for the node. If None, the name is
 derived from the process’s context_name or name attribute. Defaults to
 None.</p></li>
-<li><p><strong>from_undo</strong> – (bool) Whether this action is part of an undo
-operation. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – (bool) Whether this action is part of a redo
-operation. Defaults to False.</p></li>
-<li><p><strong>links</strong> – (list) List of link tuples to restore, where each tuple
-contains (source, dest, active, weak). Used during undo/redo
-operations. Defaults to None.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action is part of an undo operation.
+Defaults to False.</p></li>
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action is part of a redo operation.
+Defaults to False.</p></li>
+<li><p><strong>links</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> | </em><em>None</em>) – List of link tuples to restore, where each tuple contains
+(source, dest, active, weak). Used during undo/redo operations.
+Defaults to None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -346,11 +343,11 @@ accordingly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – (str) The name of the node to delete. If not
-provided, the currently selected node is used.</p></li>
-<li><p><strong>from_undo</strong> – (bool) True if the deletion was triggered by an undo
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – The name of the node to delete. If not provided, the
+currently selected node is used.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – True if the deletion was triggered by an undo
 operation.</p></li>
-<li><p><strong>from_redo</strong> – (bool) True if the deletion was triggered by a redo
+<li><p><strong>from_redo</strong> – True if the deletion was triggered by a redo
 operation.</p></li>
 </ul>
 </dd>
@@ -368,14 +365,14 @@ not in the pipeline’s exclusion list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – Name of the node whose plugs should be exported.</p></li>
-<li><p><strong>inputs</strong> – Whether to export input plugs. Defaults to True.</p></li>
-<li><p><strong>outputs</strong> – Whether to export output plugs. Defaults to True.</p></li>
-<li><p><strong>optional</strong> – Whether to include optional plugs in the export.
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the node whose plugs should be exported.</p></li>
+<li><p><strong>inputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to export input plugs. Defaults to True.</p></li>
+<li><p><strong>outputs</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to export output plugs. Defaults to True.</p></li>
+<li><p><strong>optional</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether to include optional plugs in the export.
 Defaults to False.</p></li>
-<li><p><strong>from_undo</strong> – Whether this call originates from an undo operation.
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this call originates from an undo operation.
 Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – Whether this call originates from a redo operation.
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this call originates from a redo operation.
 Defaults to False.</p></li>
 </ul>
 </dd>
@@ -415,22 +412,23 @@ never saved.</p>
 filename is provided, it prompts the user with a file dialog. The
 method performs validation to ensure the filename is valid (doesn’t
 start with a digit, has .py extension) and checks user permissions.</p>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – (str) Path where the pipeline should be saved. If
-None, a file dialog will be shown. Defaults to None.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Path where the pipeline should be saved. If None, a
+file dialog will be shown. Defaults to None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The absolute path of the saved pipeline file, or None
-if:</p>
-<blockquote>
-<div><ul class="simple">
+<dd class="field-even"><p><p>The absolute path of the saved pipeline file, or None if:</p>
+<ul class="simple">
 <li><p>The pipeline is empty (fewer than 2 nodes).</p></li>
 <li><p>The user cancelled the save dialog.</p></li>
 <li><p>The filename is invalid.</p></li>
 <li><p>The user lacks permission to overwrite an existing file.</p></li>
 </ul>
-</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -440,13 +438,13 @@ if:</p>
 successful.</p></li>
 </ul>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><p>_show_warning: Display a warning message box to the user.</p>
-</div></blockquote>
-</div></blockquote>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><p>_show_warning: Display a warning message box to the user.</p>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -460,14 +458,15 @@ complementary redo entries are cleaned up to maintain consistency.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>history_maker</strong> – A list describing the action, where
+<li><p><strong>history_maker</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – A list describing the action, where
 history_maker[0] is the action type (e.g., ‘add_process’,
-‘delete_process’, ‘update_node_name’) and history_maker[1] is
-typically the affected node identifier.</p></li>
-<li><p><strong>from_undo</strong> – (bool) Whether this update stems from an undo
-operation. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – (bool) Whether this update stems from a redo
-operation. Defaults to False.</p></li>
+‘delete_process’, ‘update_node_name’), history_maker[1] is
+typically the affected node identifier and history_maker[2] the
+corresponding class.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this update stems from an undo operation.
+Defaults to False.</p></li>
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this update stems from a redo operation.
+Defaults to False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -499,12 +498,12 @@ been modified.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>old_node</strong> – The node object to rename.</p></li>
-<li><p><strong>old_node_name</strong> – The current name of the node.</p></li>
-<li><p><strong>new_node_name</strong> – The desired new name for the node.</p></li>
-<li><p><strong>from_undo</strong> – Whether this action is being performed as part of an
+<li><p><strong>old_node</strong> (<em>capsul.pipeline.pipeline_nodes.ProcessNode</em>) – The node object to rename.</p></li>
+<li><p><strong>old_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The current name of the node.</p></li>
+<li><p><strong>new_node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The desired new name for the node.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action is being performed as part of an
 undo operation. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – Whether this action is being performed as part of a
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether this action is being performed as part of a
 redo operation. Defaults to False.</p></li>
 </ul>
 </dd>
@@ -526,21 +525,23 @@ redo operation. Defaults to False.</p></li>
 <span class="sig-name descname"><span class="pre">update_plug_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_undo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_redo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditor.update_plug_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor.update_plug_value" title="Link to this definition">¶</a></dt>
 <dd><p>Update a node’s plug value and record the change in history.</p>
 <p>Updates the specified plug on the given node with a new value. The
-update is recorded in the history for undo/redo operations unless it’s
-already part of an undo/redo action.</p>
+value is converted using <code class="docutils literal notranslate"><span class="pre">value_type</span></code> unless the update is part of an
+undo or redo operation. The change is recorded in the history unless it
+is already being processed as an undo or redo operation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – The name of the node containing the plug.</p></li>
-<li><p><strong>new_value</strong> – The new value to assign to the plug. Will be cast
-to value_type unless from_undo or from_redo is True.</p></li>
-<li><p><strong>plug_name</strong> – The name of the plug to update.</p></li>
-<li><p><strong>value_type</strong> – The type constructor to apply to new_value
-(e.g., int, float, str). Ignored when from_undo or from_redo is True.</p></li>
-<li><p><strong>from_undo</strong> – If True, indicates this update is from an undo
-operation. Defaults to False.</p></li>
-<li><p><strong>from_redo</strong> – If True, indicates this update is from a redo
-operation. Defaults to False.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node containing the plug.</p></li>
+<li><p><strong>new_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Value to assign to the plug. It is converted using
+<code class="docutils literal notranslate"><span class="pre">value_type</span></code> unless <code class="docutils literal notranslate"><span class="pre">from_undo</span></code> or <code class="docutils literal notranslate"><span class="pre">from_redo</span></code> is True.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the plug to update.</p></li>
+<li><p><strong>value_type</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#type" title="(in Python v3.10)"><em>type</em></a>) – Type or callable used to convert <code class="docutils literal notranslate"><span class="pre">new_value</span></code>, such
+as <code class="docutils literal notranslate"><span class="pre">int</span></code>, <code class="docutils literal notranslate"><span class="pre">float</span></code>, or <code class="docutils literal notranslate"><span class="pre">str</span></code>. Ignored during undo and redo
+operations.</p></li>
+<li><p><strong>from_undo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the update is being performed as part of an
+undo operation. Defaults to False.</p></li>
+<li><p><strong>from_redo</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Whether the update is being performed as part of a
+redo operation. Defaults to False.</p></li>
 </ul>
 </dd>
 </dl>
@@ -565,11 +566,9 @@ operation. Defaults to False.</p></li>
 <p>This widget provides a tabbed interface for creating, editing, and
 managing multiple pipeline configurations. Each tab contains a
 PipelineEditor instance with its own undo/redo history.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>check_modifications: Check if the nodes of the current pipeline
 have been modified.</p></li>
 <li><p>close_tab: Close the selected tab and editor.</p></li>
@@ -631,17 +630,17 @@ changes to the specified editor.</p></li>
 <li><p>update_scans_list: Update the list of database scans in every
 editor.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>node_clicked: Signal emitted when a node is clicked in any editor.</p></li>
 <li><p>pipeline_saved: Signal emitted when a pipeline is saved.</p></li>
 <li><p>process_clicked: Signal emitted when a process is clicked.</p></li>
 <li><p>switch_clicked: Signal emitted when a switch is clicked.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.__init__" title="Link to this definition">¶</a></dt>
@@ -649,9 +648,9 @@ editor.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project instance in the software.</p></li>
-<li><p><strong>scan_list</strong> – List of selected database files.</p></li>
-<li><p><strong>main_window</strong> – Main application window reference.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project instance in the software.</p></li>
+<li><p><strong>scan_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of selected database files.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main application window reference.</p></li>
 </ul>
 </dd>
 </dl>
@@ -665,7 +664,7 @@ editor.</p></li>
 validation for the special “add new pipeline” tab (last position).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>current_index</strong> – The index of the tab being switched to.</p>
+<dd class="field-odd"><p><strong>current_index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index of the tab being switched to.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -680,12 +679,12 @@ gracefully by catching AttributeError.</p>
 <span class="sig-name descname"><span class="pre">close_tab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.close_tab"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.close_tab" title="Link to this definition">¶</a></dt>
 <dd><p>Close a tab and its associated editor, prompting to save if modified.</p>
 <p>Removes the specified tab and cleans up its undo/redo history. If the
-tab contains unsaved changes (indicated by “ <a href="#id1"><span class="problematic" id="id2">*</span></a>” suffix), prompts the
+tab contains unsaved changes (indicated by “ *” suffix), prompts the
 user to save before closing. If all tabs are closed, creates a new
 default pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – index of the tab to close.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – index of the tab to close.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -699,8 +698,8 @@ whether the process parameter is a Process instance.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – The name of the clicked node.</p></li>
-<li><p><strong>process</strong> – The process associated with the node. If this is a
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the clicked node.</p></li>
+<li><p><strong>process</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The process associated with the node. If this is a
 Process instance, emits <cite>process_clicked</cite>; otherwise emits
 <cite>node_clicked</cite>.</p></li>
 </ul>
@@ -714,7 +713,7 @@ Process instance, emits <cite>process_clicked</cite>; otherwise emits
 <dd><p>Update the current tab title and emit the <em>pipeline_saved</em> signal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – Path to the saved pipeline file.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the saved pipeline file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -726,12 +725,12 @@ Process instance, emits <cite>process_clicked</cite>; otherwise emits
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node_name</strong> – The name of the node whose switch was clicked.</p></li>
-<li><p><strong>switch</strong> – The Switch associated with the node.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node whose switch was clicked.</p></li>
+<li><p><strong>switch</strong> (<em>capsul.pipeline.pipeline_nodes.Switch</em>) – The Switch associated with the node.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Emits<span class="colon">:</span></dt>
-<dd class="field-even"><p>switch_clicked: Signal containing the node name and the Switch.</p>
+<dt class="field-even">Emit switch_clicked<span class="colon">:</span></dt>
+<dd class="field-even"><p>Signal containing the node name and the Switch.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -745,7 +744,7 @@ link from database_scans to the node’s input. Otherwise, exports the
 node’s input parameter as database_scans at the pipeline level.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node_name</strong> – Name of the node whose input should be exported.</p>
+<dd class="field-odd"><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the node whose input should be exported.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -758,15 +757,18 @@ modification.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine">
 <span class="sig-name descname"><span class="pre">get_capsul_engine</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.get_capsul_engine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine" title="Link to this definition">¶</a></dt>
-<dd><p>Configure and return a CapsulEngine for the current pipeline.</p>
+<dd><p>Configure and return a CapsulEngine object for the current pipeline.</p>
 <p>Retrieves a CapsulEngine instance from the Mia configuration and sets
 up the study configuration with project-specific directories. If the
 current pipeline has completion attributes, they are preserved during
 the engine setup process.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(CapsulEngine) Configured engine instance with study
+<dd class="field-odd"><p>Configured engine instance with study
 directories set to the project’s raw_data and derived_data folders.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.engine.CapsulEngine</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -785,6 +787,9 @@ between pipelines.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Editor instance for the active tab.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">PipelineEditor</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -798,6 +803,9 @@ returned.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The filename for the current editor.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -809,6 +817,9 @@ returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The pipeline for the current editor</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>capsul.pipeline.pipeline.Pipeline</p>
 </dd>
 </dl>
 </dd></dl>
@@ -822,6 +833,9 @@ returned.</p>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The current tab name.</p>
 </dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -832,10 +846,13 @@ returned.</p>
 <p>The filename corresponds to the last saved location of the pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_name</strong> – Name of the file the pipeline was last saved to.</p>
+<dd class="field-odd"><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the file the pipeline was last saved to.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The editor corresponding to the file name.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">PipelineEditor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -846,12 +863,15 @@ returned.</p>
 <dd><p>Retrieve an editor widget by its tab index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Zero-based index of the editor tab, or None if not found.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> | </em><em>None</em>) – Zero-based index of the editor tab, or None if not found.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The editor widget at the specified index, or None if idx is
 None or if the index corresponds to the “add tab” button (last tab) or
 if index out of range.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">PipelineEditor</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -867,14 +887,17 @@ does not contain an editor widget.</p>
 <dd><p>Retrieve the editor instance associated with a specific tab name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tab_name</strong> – (str) The name of the tab to search for.</p>
+<dd class="field-odd"><p><strong>tab_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tab to search for.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The editor instance corresponding to the specified tab name,
 or None if the tab is not found.</p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">PipelineEditor</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
 <li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If tab_name is empty or None.</p></li>
 <li><p><a class="reference external" href="https://docs.python.org/3.10/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If no tab exists with the given name.</p></li>
 </ul>
@@ -891,11 +914,14 @@ saved. If the pipeline has never been saved, returns the tab title
 instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – The zero-based index of the editor tab.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The zero-based index of the editor tab.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str or None) The filename or tab title if the editor exists,
-None if no editor exists at the given index.</p>
+<dd class="field-even"><p>The filename or tab title if the editor exists, None if no
+editor exists at the given index.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -906,11 +932,14 @@ None if no editor exists at the given index.</p>
 <dd><p>Find the tab index for a given editor widget.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>editor</strong> – The pipeline editor widget to locate.</p>
+<dd class="field-odd"><p><strong>editor</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor"><em>PipelineEditor</em></a>) – The pipeline editor widget to locate.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The zero-based index of the editor’s tab, or None if not
 found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a> | None</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -925,12 +954,15 @@ found.</p>
 <dd><p>Get the index of the first tab with the specified filename.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – (str) The pipeline filename to search for. Can be an
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The pipeline filename to search for. Can be an
 absolute or relative path; will be normalized to relative.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based index of the matching tab, or None if
+<dd class="field-even"><p>The zero-based index of the matching tab, or None if
 no match is found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -948,11 +980,14 @@ Only searches up to count() - 1 to exclude special tabs if any.</p>
 matching the given name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tab_name</strong> – (str) The name of the tab to locate.</p>
+<dd class="field-odd"><p><strong>tab_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the tab to locate.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(int) The zero-based index of the matching tab, or None if no
-match is found.</p>
+<dd class="field-even"><p>The zero-based index of the matching tab, or None if no match
+is found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)">int</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -966,16 +1001,19 @@ characters:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Qt keyboard shortcut indicators (ampersands).</p></li>
-<li><p>Unsaved file indicators (trailing “ <a href="#id3"><span class="problematic" id="id4">*</span></a>”).</p></li>
+<li><p>Unsaved file indicators (trailing “ *”).</p></li>
 </ul>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Zero-based index of the tab.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Zero-based index of the tab.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The cleaned tab name, or None if the index is invalid
-or corresponds to the “add tab” button (last position).</p>
+<dd class="field-even"><p>The cleaned tab name, or None if the index is invalid or
+corresponds to the “add tab” button (last position).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -989,8 +1027,10 @@ contains nodes by examining the presence of plugs in the pipeline’s
 root node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(bool) True if at least one pipeline contains nodes, False
-otherwise.</p>
+<dd class="field-odd"><p>True if at least one pipeline contains nodes, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1004,12 +1044,14 @@ already open, switches to that tab. If the current tab is not empty,
 creates a new tab for the pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> – (str) Path to the pipeline file to load. If None,
-prompts the user to select a file. Defaults to None.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Path to the pipeline file to load. If None, prompts
+the user to select a file. Defaults to None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(None) Returns early on success, or cleans up and returns on
-failure.</p>
+<dd class="field-even"><p>Returns early on success, or cleans up and returns on failure.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1047,7 +1089,7 @@ first available index from 1 to 49.</p>
 associated with the given node in the current pipeline.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>node_name</strong> – The name of the node to apply filters to.</p>
+<dd class="field-odd"><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node to apply filters to.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1068,7 +1110,7 @@ custom).</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>sub_pipeline</strong> – The pipeline object to open. Must have a ‘name’
+<dd class="field-odd"><p><strong>sub_pipeline</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – The pipeline object to open. Must have a ‘name’
 attribute and ‘__module__’ attribute for package resolution.</p>
 </dd>
 </dl>
@@ -1105,12 +1147,14 @@ a filename is provided. Updates the tab text and emits a signal upon
 successful save.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_file_name</strong> – (str) Target filename for the pipeline. If None,
+<dd class="field-odd"><p><strong>new_file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – Target filename for the pipeline. If None,
 triggers a “Save As” dialog. Defaults to None.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str or None) The basename of the saved file if successful,
-None otherwise.</p>
+<dd class="field-even"><p>The basename of the saved file if successful, None otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a> | None</p>
 </dd>
 </dl>
 <dl class="simple">
@@ -1138,7 +1182,7 @@ None otherwise.</p>
 index.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>editor</strong> – The editor instance to make active. Must be an editor
+<dd class="field-odd"><p><strong>editor</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor"><em>PipelineEditor</em></a>) – The editor instance to make active. Must be an editor
 that exists within one of the managed tabs.</p>
 </dd>
 </dl>
@@ -1164,7 +1208,7 @@ activated.</p>
 <dd><p>Activate the editor tab with the specified name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tab_name</strong> – The display name of the tab to activate.</p>
+<dd class="field-odd"><p><strong>tab_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The display name of the tab to activate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1178,7 +1222,7 @@ history, and updates the current node state for the newly active
 editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>index</strong> – The zero-based index of the tab to activate.</p>
+<dd class="field-odd"><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The zero-based index of the tab to activate.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1188,7 +1232,7 @@ editor.</p>
 <span class="sig-name descname"><span class="pre">update_iteration_checkbox</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/pipeline_editor.html#PipelineEditorTabs.update_iteration_checkbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.update_iteration_checkbox" title="Link to this definition">¶</a></dt>
 <dd><p>Update the iteration checkbox state based on pipeline node names.</p>
 <p>Sets the iteration checkbox to checked if any pipeline node has
-‘<a href="#id5"><span class="problematic" id="id6">iterated_</span></a>’ in its key name, otherwise sets it to unchecked. If no
+<code class="docutils literal notranslate"><span class="pre">iterated_</span></code> in its key name, otherwise sets it to unchecked. If no
 valid pipeline exists or the pipeline lacks nodes, the checkbox is
 unchecked.</p>
 </dd></dl>
@@ -1211,7 +1255,7 @@ tab as modified by appending an asterisk to its title if not already
 present.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>editor</strong> – The editor instance whose history should be saved.</p>
+<dd class="field-odd"><p><strong>editor</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor"><em>PipelineEditor</em></a>) – The editor instance whose history should be saved.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -1228,7 +1272,7 @@ present.</p>
 list to reflect any modifications made in the pipeline editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>editor</strong> – The editor instance that was modified.</p>
+<dd class="field-odd"><p><strong>editor</strong> (<a class="reference internal" href="#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor"><em>PipelineEditor</em></a>) – The editor instance that was modified.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1260,13 +1304,16 @@ Performs case-insensitive matching to handle filesystem sensitivity issues.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>paths_list</strong> – Base directory paths from process_config.yml.</p></li>
-<li><p><strong>packages_list</strong> – Ordered list of package subdirectories to traverse.</p></li>
-<li><p><strong>file_name</strong> – Base name of the sub-pipeline file (without extension).</p></li>
+<li><p><strong>paths_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Base directory paths from process_config.yml.</p></li>
+<li><p><strong>packages_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Ordered list of package subdirectories to traverse.</p></li>
+<li><p><strong>file_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Base name of the sub-pipeline file (without extension).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Absolute path to the matched file, or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -1286,17 +1333,19 @@ and return its full path as a list of keys.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> – (str) Name of the module to locate in the tree.</p></li>
-<li><p><strong>dictionary</strong> – (dict) The nested dictionary representing the tree
-structure.</p></li>
-<li><p><strong>prev_paths</strong> – (list[str]) The accumulated path leading to the current
-dictionary. If None, a new path list is created.</p></li>
-<li><p><strong>pckg</strong> – (str) If provided, navigation starts inside that package name.</p></li>
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the module to locate in the tree.</p></li>
+<li><p><strong>dictionary</strong> – The nested dictionary representing the tree structure.</p></li>
+<li><p><strong>prev_paths</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>| </em><em>None</em>) – The accumulated path leading to the current dictionary.
+If None, a new path list is created.</p></li>
+<li><p><strong>pckg</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> | </em><em>None</em>) – If provided, navigation starts inside that package name.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(list[str]) A list of keys representing the path to the module,
-or None if the module is not found.</p>
+<dd class="field-even"><p>A list of keys representing the path to the module, or None if the
+module is not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)">list</a>[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>] | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1311,9 +1360,9 @@ extension is provided, defaults to Python format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pipeline</strong> – The pipeline object to serialize and save.</p></li>
-<li><p><strong>filename</strong> – Path to the output file. The extension determines
-the output format (.py or .xml).</p></li>
+<li><p><strong>pipeline</strong> (<em>capsul.pipeline.pipeline.Pipeline</em>) – The pipeline object to serialize and save.</p></li>
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path to the output file. The extension determines the
+output format (.py or .xml).</p></li>
 </ul>
 </dd>
 </dl>

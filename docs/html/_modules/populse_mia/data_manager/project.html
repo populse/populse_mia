@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.data_manager.project &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.project</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -970,7 +970,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_clinical_tags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add new clinical tags to the project.</span>
 
-<span class="sd">        :returns: List of clinical tags that were added.</span>
+<span class="sd">        :return: List of clinical tags that were added.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">return_tags</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1203,7 +1203,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Iterates through predefined clinical tags and removes them from both</span>
 <span class="sd">        collections if they exist in the current collection&#39;s field names.</span>
 
-<span class="sd">        :returns: Clinical tags that were successfully removed.</span>
+<span class="sd">        :return: Clinical tags that were successfully removed.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">removed_tags</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1243,7 +1243,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - ``dict``: Only values are processed, keys are ignored.</span>
 <span class="sd">        :type files: str | list | tuple | set | dict</span>
 
-<span class="sd">        :returns: Relative file paths that exist within the project</span>
+<span class="sd">        :return: Relative file paths that exist within the project</span>
 <span class="sd">            folder, with paths normalized and made relative to the project</span>
 <span class="sd">            directory.</span>
 <span class="sd">        :rtype: set</span>
@@ -1302,7 +1302,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            ``Not Done`` are included.</span>
 <span class="sd">        :type include_done: bool</span>
 
-<span class="sd">        :returns: A Dictionary containing:</span>
+<span class="sd">        :return: A Dictionary containing:</span>
 
 <span class="sd">            - ``bricks``: Mapping of brick identifiers to their metadata.</span>
 <span class="sd">            - ``outputs``: Set of output file paths relative to project</span>
@@ -1345,7 +1345,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            :param base_path: Base project directory path.</span>
 <span class="sd">            :type base_path: str</span>
 
-<span class="sd">            :returns: A set of collected file paths, relative to the project</span>
+<span class="sd">            :return: A set of collected file paths, relative to the project</span>
 <span class="sd">                directory.</span>
 <span class="sd">            :rtype: set[str]</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -1431,7 +1431,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param path: Path to the data file.</span>
 <span class="sd">        :type path: str</span>
 
-<span class="sd">        :returns: History.</span>
+<span class="sd">        :return: History.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1443,7 +1443,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getDate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the date of creation of the project.</span>
 
-<span class="sd">        :returns: The date of creation of the project if it&#39;s not `Unnamed`</span>
+<span class="sd">        :return: The date of creation of the project if it&#39;s not `Unnamed`</span>
 <span class="sd">            project, otherwise empty string</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1463,7 +1463,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            pipeline.</span>
 <span class="sd">        :type pipeline: Pipeline | Process</span>
 
-<span class="sd">        :returns: A dictionary where keys are process UUIDs (brick IDs) and</span>
+<span class="sd">        :return: A dictionary where keys are process UUIDs (brick IDs) and</span>
 <span class="sd">            values are dictionaries containing the associated process</span>
 <span class="sd">            instances.</span>
 <span class="sd">        :rtype: dict[str, dict[str, Process]]</span>
@@ -1532,7 +1532,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param engine: Engine providing access to the Soma-Workflow controller.</span>
 
-<span class="sd">        :returns: Mapping ``brick_uuid -&gt; job_info`` where ``job_info``</span>
+<span class="sd">        :return: Mapping ``brick_uuid -&gt; job_info`` where ``job_info``</span>
 <span class="sd">            contains:</span>
 
 <span class="sd">                - ``workflow`` (int): Workflow identifier.</span>
@@ -1562,7 +1562,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            :param job_st: Raw job status tuple as returned by Soma-Workflow.</span>
 <span class="sd">            :type job_st: tuple</span>
 
-<span class="sd">            :returns: A tuple containing:</span>
+<span class="sd">            :return: A tuple containing:</span>
 
 <span class="sd">                - job_id (int): Identifier of the job.</span>
 <span class="sd">                - state (str): Execution state (e.g. &quot;done&quot;, &quot;failed&quot;,</span>
@@ -1671,7 +1671,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param target_filter: Filter name.</span>
 <span class="sd">        :type target_filter: str</span>
 
-<span class="sd">        :returns: Filter object corresponding to the given name or None if not</span>
+<span class="sd">        :return: Filter object corresponding to the given name or None if not</span>
 <span class="sd">            found.</span>
 <span class="sd">        :rtype: Filter | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1687,7 +1687,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Input box to type the name of the filter to save.</span>
 
-<span class="sd">        :returns: Return the name typed by the user or None if cancelled.</span>
+<span class="sd">        :return: Return the name typed by the user or None if cancelled.</span>
 <span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1707,7 +1707,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the name of the project.</span>
 
-<span class="sd">        :returns: The name of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">        :return: The name of the project if it&#39;s not `Unnamed` project,</span>
 <span class="sd">            otherwise empty string.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1725,7 +1725,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            None, all bricks in the database are considered. Defaults to None.</span>
 <span class="sd">        :type bricks: list | set | None</span>
 
-<span class="sd">        :returns: A tuple containing two sets:</span>
+<span class="sd">        :return: A tuple containing two sets:</span>
 
 <span class="sd">            - `orphan`: (set) Brick IDs considered orphaned, meaning they have</span>
 <span class="sd">              no valid or existing outputs linked to the current database.</span>
@@ -1826,7 +1826,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Identifies orphaned history entries, their associated orphan bricks,</span>
 <span class="sd">        and weak files.</span>
 
-<span class="sd">        :returns: A tuple containing three sets:</span>
+<span class="sd">        :return: A tuple containing three sets:</span>
 
 <span class="sd">            - `orphan_hist`: (set) IDs of history entries that are no longer</span>
 <span class="sd">              linked to any current document in the database.</span>
@@ -1941,7 +1941,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            existing bricks. If False, exclude such files.</span>
 <span class="sd">        :type failed: bool</span>
 
-<span class="sd">        :returns: A set of filenames from the database that are not found on</span>
+<span class="sd">        :return: A set of filenames from the database that are not found on</span>
 <span class="sd">            the filesystem and are not associated with existing bricks.</span>
 <span class="sd">        :rtype: set</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1980,7 +1980,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortedTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sorted tag of the project.</span>
 
-<span class="sd">        :returns: Sorted tag of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">        :return: Sorted tag of the project if it&#39;s not `Unnamed` project,</span>
 <span class="sd">            otherwise empty string.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1993,7 +1993,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSortOrder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return the sort order of the project.</span>
 
-<span class="sd">        :returns: Sort order of the project if it&#39;s not `Unnamed` project,</span>
+<span class="sd">        :return: Sort order of the project if it&#39;s not `Unnamed` project,</span>
 <span class="sd">            otherwise empty string.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2006,7 +2006,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">hasUnsavedModifications</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return if the project has unsaved modifications or not.</span>
 
-<span class="sd">        :returns: True if the project has pending modifications, False</span>
+<span class="sd">        :return: True if the project has pending modifications, False</span>
 <span class="sd">            otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2060,7 +2060,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This method reads the project&#39;s YAML properties file and returns</span>
 <span class="sd">        its contents as a Python dictionary.</span>
 
-<span class="sd">        :returns: A dictionary containing the project properties if</span>
+<span class="sd">        :return: A dictionary containing the project properties if</span>
 <span class="sd">            successfully loaded, or None if an error occurs.</span>
 <span class="sd">        :rtype: dict | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>

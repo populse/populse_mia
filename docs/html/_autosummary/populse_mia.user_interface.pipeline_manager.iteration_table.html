@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.iteration_table &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.iteration_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -46,11 +46,9 @@
 <p>Widget that handles pipeline iteration.</p>
 <p>This widget allows users to select tags for iteration and visualization,
 filter values, and manage the iteration process for pipeline execution.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_tag_button: Create a new tag button.</p></li>
 <li><p>add_tag: Add a tag to visualize in the iteration table.</p></li>
 <li><p>current_editor: Return the currently active pipeline editor</p></li>
@@ -71,15 +69,15 @@ which tag to visualize in the iteration table.</p></li>
 <li><p>update_selected_tag: Update the selected tag for current pipeline
 manager tab.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>iteration_table_updated: Signal emitted when iteration scans have
 been updated or if the iteration is toggled off.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scan_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/iteration_table.html#IterationTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.iteration_table.IterationTable.__init__" title="Link to this definition">¶</a></dt>
@@ -87,10 +85,10 @@ been updated or if the iteration is toggled off.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project in the software.</p></li>
-<li><p><strong>scan_list</strong> – List of the selected database files. If None, all
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project in the software.</p></li>
+<li><p><strong>scan_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>] </em><em>| </em><em>None</em>) – List of the selected database files. If None, all
 documents from the current collection will be used.</p></li>
-<li><p><strong>main_window</strong> – Software’s main window reference.</p></li>
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Software’s main window reference.</p></li>
 </ul>
 </dd>
 </dl>
@@ -103,8 +101,8 @@ documents from the current collection will be used.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – (str) Text to display on the button.</p></li>
-<li><p><strong>index</strong> – (int) Index of the button in the push_buttons list.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Text to display on the button.</p></li>
+<li><p><strong>index</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the button in the push_buttons list.</p></li>
 </ul>
 </dd>
 </dl>
@@ -119,6 +117,9 @@ pipeline manager without repeating the full attribute chain.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The active pipeline editor instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor" title="populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditor">PipelineEditor</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -142,7 +143,7 @@ pipeline manager without repeating the full attribute chain.</p>
 <dd><p>Fill values_list with unique tag values for the specified tag.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (int) Index of the tag in push_buttons list.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the tag in push_buttons list.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -163,10 +164,13 @@ a Python literal (for example a list, dict, number, or boolean) using
 preserved.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> – (Any) The value to serialize.</p>
+<dd class="field-odd"><p><strong>value</strong> (<em>Any</em>) – The value to serialize.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(str) The JSON representation of the resulting value.</p>
+<dd class="field-even"><p>The JSON representation of the resulting value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -197,7 +201,7 @@ or removed.</p>
 <dd><p>Open a dialog to select which tag to visualize in the iteration table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (int) Index of the clicked push button.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the clicked push button.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -208,7 +212,7 @@ or removed.</p>
 <dd><p>Update the widget when the iterated tag is modified.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>tag_name</strong> – (str) Name of the iterated tag.</p>
+<dd class="field-odd"><p><strong>tag_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the iterated tag.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -228,8 +232,8 @@ current collection that also exist in the scan list. Then updates the
 tag value lists in the current pipeline editor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>selected_tag</strong> – (str) The tag whose values should be retrieved
-and updated.</p>
+<dd class="field-odd"><p><strong>selected_tag</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The tag whose values should be retrieved and
+updated.</p>
 </dd>
 </dl>
 </dd></dl>

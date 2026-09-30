@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.type_editors &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.type_editors</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -56,18 +56,18 @@
 <p>Widget control for selecting a file.</p>
 <p>Provides methods to create a file selection widget, display a filter
 dialog, and update plug values based on filter results.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>create_widget: Method to create the file widget.</p></li>
 <li><p>filter_clicked: Display a filter widget.</p></li>
 <li><p>update_plug_value_from_filter: Update the plug value from
 a filter result.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseFileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseFileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -75,30 +75,32 @@ a filter result.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control to create.</p></li>
-<li><p><strong>control_value</strong> – (str) The default control value.</p></li>
-<li><p><strong>trait</strong> – (Trait) The trait associated with the control.</p></li>
-<li><p><strong>label_class</strong> – (Optional[Type[QWidget]]) Custom label widget
-class.</p></li>
-<li><p><strong>(</strong><strong>Optional</strong><strong>[</strong><strong>dict</strong><strong>]</strong><strong>)</strong> (<em>user_data</em>) – Additional user data.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://populse.github.io/soma-base/api.html#soma.qt_gui.controller_widget.ControllerWidget" title="(in Soma-base v5.1)"><em>soma.qt_gui.controller_widget.ControllerWidget</em></a>) – The parent widget.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control to create.</p></li>
+<li><p><strong>control_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The default control value.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="(in traits v7.1)"><em>traits.ctrait.CTrait</em></a>) – The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – Custom label widget class.</p></li>
+<li><p><strong>user_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Additional user data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(Tuple[QWidget, QLabel]) A tuple containing the created
-widget and its associated label. The widget includes a QLineEdit
-(‘path’) and a browse button (‘browse’).</p>
+<dd class="field-even"><p>A tuple containing the created widget and its associated
+label. The widget includes a QLineEdit (‘path’) and a browse button
+(‘browse’).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)">QWidget</a>, <a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)">QLabel</a>]</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_is_number: Checks if a value is a number.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -108,9 +110,9 @@ widget and its associated label. The widget includes a QLineEdit
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – (QWidget) The parent widget.</p></li>
-<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
-<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
+<li><p><strong>widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The parent widget.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -123,9 +125,9 @@ widget and its associated label. The widget includes a QLineEdit
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – (QWidget) The parent widget.</p></li>
-<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
-<li><p><strong>filter_res_list</strong> – (List[str]) List of filtered file paths.</p></li>
+<li><p><strong>widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The parent widget.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the plug.</p></li>
+<li><p><strong>filter_res_list</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of filtered file paths.</p></li>
 </ul>
 </dd>
 </dl>
@@ -138,18 +140,18 @@ widget and its associated label. The widget includes a QLineEdit
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseDirectoryControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseDirectoryControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DirectoryControlWidget</span></code></p>
 <p>Widget for selecting a directory.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>create_widget: Creates the directory selection widget.</p></li>
 <li><p>filter_clicked: Displays a filtering widget.</p></li>
 <li><p>update_plug_value_from_filter: Updates the plug value based on
 the filter result.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseDirectoryControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseDirectoryControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -157,17 +159,19 @@ the filter result.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control.</p></li>
-<li><p><strong>control_value</strong> – (Any) The initial value of the control.</p></li>
-<li><p><strong>trait</strong> – (Any) The trait associated with the control.</p></li>
-<li><p><strong>label_class</strong> – (Optional[Any]) The label class (optional).</p></li>
-<li><p><strong>user_data</strong> – (Optional[dict]) User data associated with
-the widget.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://populse.github.io/soma-base/api.html#soma.qt_gui.controller_widget.ControllerWidget" title="(in Soma-base v5.1)"><em>soma.qt_gui.controller_widget.ControllerWidget</em></a>) – The parent widget.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control.</p></li>
+<li><p><strong>control_value</strong> (<em>any</em>) – The initial value of the control.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="(in traits v7.1)"><em>traits.ctrait.CTrait</em></a>) – The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The label class (optional).</p></li>
+<li><p><strong>user_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – User data associated with the widget.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QWidget) The directory selection widget.</p>
+<dd class="field-even"><p>The directory selection widget.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)">QWidget</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -179,9 +183,9 @@ the widget.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – (QWidget) The calling widget.</p></li>
-<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
-<li><p><strong>plug_name</strong> – (str) The name of the associated plug.</p></li>
+<li><p><strong>widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The calling widget.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the associated plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -197,9 +201,9 @@ is used.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>(</strong><strong>QWidget</strong><strong>)</strong> (<em>widget</em>) – The widget being updated.</p></li>
-<li><p><strong>(</strong><strong>str</strong><strong>)</strong> (<em>plug_name</em>) – The name of the associated plug.</p></li>
-<li><p><strong>(</strong><strong>list</strong><strong>[</strong><strong>str</strong><strong>]</strong><strong>)</strong> (<em>filter_res_list</em>) – The list of filtered files.</p></li>
+<li><p><strong>widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The widget being updated.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the associated plug.</p></li>
+<li><p><strong>filter_res_list</strong> (<em>(</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – The list of filtered files.</p></li>
 </ul>
 </dd>
 </dl>
@@ -212,18 +216,18 @@ is used.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">populse_mia.user_interface.pipeline_manager.type_editors.</span></span><span class="sig-name descname"><span class="pre">PopulseOffscreenListFileControlWidget</span></span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseOffscreenListFileControlWidget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OffscreenListFileControlWidget</span></code></p>
 <p>A control widget for entering a list of files.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>create_widget: Creates the list of files widget.</p></li>
 <li><p>filter_clicked: Displays a filter widget.</p></li>
 <li><p>update_plug_value_from_filter: Updates the plug value based on
 the filter result.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trait</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/type_editors.html#PopulseOffscreenListFileControlWidget.create_widget"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseOffscreenListFileControlWidget.create_widget" title="Link to this definition">¶</a></dt>
@@ -232,17 +236,21 @@ filter button.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – (QWidget) The parent widget.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control.</p></li>
-<li><p><strong>control_value</strong> – (list) The default control value.</p></li>
-<li><p><strong>trait</strong> – (Trait) The trait associated with the control.</p></li>
-<li><p><strong>label_class</strong> – (type) A Qt widget class for the label.</p></li>
-<li><p><strong>user_data</strong> – (dict) Additional data, including project, scan list,
-and connected inputs.</p></li>
+<li><p><strong>parent</strong> (<a class="reference external" href="https://populse.github.io/soma-base/api.html#soma.qt_gui.controller_widget.ControllerWidget" title="(in Soma-base v5.1)"><em>soma.qt_gui.controller_widget.ControllerWidget</em></a>) – The parent widget.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control.</p></li>
+<li><p><strong>control_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The default control value.</p></li>
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="(in traits v7.1)"><em>traits.ctrait.CTrait</em></a>) – The trait associated with the control.</p></li>
+<li><p><strong>label_class</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)"><em>QLabel</em></a>) – A Qt widget class for the label.</p></li>
+<li><p><strong>user_data</strong> – Additional data, including project, scan list, and
+connected inputs.
+:type user_data: dict</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(tuple) A tuple (control widget, (QLabel, QWidget)).</p>
+<dd class="field-even"><p>A tuple (QLabel, QWidget).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#tuple" title="(in Python v3.10)">tuple</a>[<a class="reference external" href="https://doc.qt.io/qt-5/qlabel.html" title="(in Qt5 v5.15)">QLabel</a>, <a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)">QWidget</a>)]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -254,9 +262,9 @@ and connected inputs.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – (QWidget) The file control widget.</p></li>
-<li><p><strong>node_name</strong> – (str) The name of the node.</p></li>
-<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
+<li><p><strong>widget</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The file control widget.</p></li>
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the plug.</p></li>
 </ul>
 </dd>
 </dl>
@@ -269,9 +277,9 @@ and connected inputs.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>widget</strong> – (QWidget) The file control widget.</p></li>
-<li><p><strong>plug_name</strong> – (str) The name of the plug.</p></li>
-<li><p><strong>filter_res_list</strong> – (list) The filtered file list.</p></li>
+<li><p><strong>widget</strong> (<em>widget</em>) – The file control widget.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the plug.</p></li>
+<li><p><strong>filter_res_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – The filtered file list.</p></li>
 </ul>
 </dd>
 </dl>
@@ -286,11 +294,9 @@ and connected inputs.</p></li>
 <p>Widget control for handling Undefined trait values in a Qt interface.</p>
 <p>This class provides methods to create, validate, and update Qt widgets
 that represent undefined values in a controller-based UI framework.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>check: Check if a controller widget control is filled correctly.</p></li>
 <li><p>connect: Connect a ‘Str’ or ‘String’ controller trait and a
 ‘StrControlWidget’ controller widget control.</p></li>
@@ -302,8 +308,10 @@ a ‘StrControlWidget’ controller widget control.</p></li>
 <li><p>update_controller_widget: Update one element of the controller
 widget.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.UNDEFINED_TEXT">
 <span class="sig-name descname"><span class="pre">UNDEFINED_TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&lt;undefined&gt;'</span></em><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.type_editors.PopulseUndefinedControlWidget.UNDEFINED_TEXT" title="Link to this definition">¶</a></dt>
@@ -327,8 +335,8 @@ widget.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> – (StrControlWidget) A StrControlWidget control.</p></li>
-<li><p><strong>control_instance</strong> – (QLineEdit) The control widget to check.</p></li>
+<li><p><strong>cls</strong> (<em>StrControlWidget</em>) – A StrControlWidget control.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qlineedit.html" title="(in Qt5 v5.15)"><em>QLineEdit</em></a>) – The control widget to check.</p></li>
 </ul>
 </dd>
 </dl>
@@ -343,11 +351,11 @@ controller widget control.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cls</strong> – (StrControlWidget) A StrControlWidget control.</p></li>
-<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
-containing the controller.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control to connect.</p></li>
-<li><p><strong>control_instance</strong> – (QWidget) The widget instance to connect.</p></li>
+<li><p><strong>cls</strong> (<em>StrControlWidget</em>) – A StrControlWidget control.</p></li>
+<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em>) – The controller widget containing the
+controller.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control to connect.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The widget instance to connect.</p></li>
 </ul>
 </dd>
 </dl>
@@ -362,28 +370,31 @@ representation of undefined/null values, along with an optional label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>parent</strong> – (QWidget) The parent widget that will contain the
-created widgets.</p></li>
-<li><p><strong>control_name</strong> – (str) The name/text for the label widget. If None,
+<li><p><strong>parent</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The parent widget that will contain the created widgets.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name/text for the label widget. If None,
 no label is created.</p></li>
-<li><p><strong>control_value</strong> – The undefined value to display (currently unused
+<li><p><strong>control_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The undefined value to display (currently unused
 in implementation).</p></li>
-<li><p><strong>trait</strong> – trait: The trait object associated with this control
-(currently unused in implementation).</p></li>
-<li><p><strong>label_class</strong> – The Qt widget class to use for creating the label.
+<li><p><strong>trait</strong> (<a class="reference external" href="https://docs.enthought.com/traits/traits_api_reference/ctrait.html#traits.ctrait.CTrait" title="(in traits v7.1)"><em>traits.ctrait.CTrait</em></a>) – The trait object associated with this control (currently
+unused in implementation).</p></li>
+<li><p><strong>label_class</strong> (<em>QtGui.QLabel</em>) – The Qt widget class to use for creating the label.
 Defaults to QtGui.QLabel if None.</p></li>
-<li><p><strong>user_data</strong> – Additional user-defined data (currently unused in
+<li><p><strong>user_data</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – Additional user-defined data (currently unused in
 implementation).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns (tuple)<span class="colon">:</span></dt>
-<dd class="field-even"><p>A tuple containing:</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>(tuple): A tuple containing:</p>
 <ul class="simple">
 <li><p>control_widget: A QLabel displaying the styled undefined value
 text.</p></li>
 <li><p>label_widget: The associated label widget, or None if
 control_name is None.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -397,10 +408,10 @@ control_name is None.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
-containing the controller.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control to disconnect.</p></li>
-<li><p><strong>control_instance</strong> – (QWidget) The widget instance to disconnect.</p></li>
+<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em>) – The controller widget containing the
+controller.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control to disconnect.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The widget instance to disconnect.</p></li>
 </ul>
 </dd>
 </dl>
@@ -413,18 +424,18 @@ containing the controller.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> – <p>Additional arguments. Not used, kept for interface
-compatibility.</p>
-</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional arguments. Not used, kept for interface
-compatibility.</p>
-</p></li>
-<li><p><strong>control_instance</strong> – (QWidget) The control widget to validate.</p></li>
+<li><p><strong>args</strong> – Additional positional arguments, unused and kept for
+interface compatibility.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments, unused and kept for
+interface compatibility.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The control widget to validate.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(bool) True if the control value is Undefined, False
-otherwise</p>
+<dd class="field-even"><p>True if the control value is Undefined, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)">bool</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -439,20 +450,18 @@ will match the controller widget user parameters defined in
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>*args</strong> – <p>Additional arguments. Not used, kept for interface
-compatibility.</p>
-</p></li>
-<li><p><strong>**kwargs</strong> – <p>Additional arguments. Not used, kept for interface
-compatibility.</p>
-</p></li>
-<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
-containing the controller to update.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control to synchronize
-with the controller.</p></li>
-<li><p><strong>control_instance</strong> – (QWidget) The widget instance to synchronize
-with the controller.</p></li>
-<li><p><strong>reset_invalid_value</strong> – (bool) If True and the value is invalid,
-reset the widget to the controller’s value</p></li>
+<li><p><strong>args</strong> – Additional positional arguments, unused and kept for
+interface compatibility.</p></li>
+<li><p><strong>kwargs</strong> – Additional keyword arguments, unused and kept for
+interface compatibility.</p></li>
+<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em>) – The controller widget containing the
+controller to update.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control to synchronize with the
+controller.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The widget instance to synchronize with the
+controller.</p></li>
+<li><p><strong>reset_invalid_value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – (bool) If True and the value is invalid,
+reset the widget to the controller’s value.</p></li>
 </ul>
 </dd>
 </dl>
@@ -468,10 +477,10 @@ name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>controller_widget</strong> – (ControllerWidget) The controller widget
-containing the controller.</p></li>
-<li><p><strong>control_name</strong> – (str) The name of the control to synchronize.</p></li>
-<li><p><strong>control_instance</strong> – (QWidget) The widget instance to update.</p></li>
+<li><p><strong>controller_widget</strong> (<em>ControllerWidget</em>) – The controller widget containing the
+controller.</p></li>
+<li><p><strong>control_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the control to synchronize.</p></li>
+<li><p><strong>control_instance</strong> (<a class="reference external" href="https://doc.qt.io/qt-5/qwidget.html" title="(in Qt5 v5.15)"><em>QWidget</em></a>) – The widget instance to update.</p></li>
 </ul>
 </dd>
 </dl>

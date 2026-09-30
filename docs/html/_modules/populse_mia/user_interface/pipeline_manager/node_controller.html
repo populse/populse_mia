@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.node_controller &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.node_controller</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -623,9 +623,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the node controller.</span>
 
 <span class="sd">        :param project: Current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param scan_list: List of available scans.</span>
+<span class="sd">        :type scan_list: list[str]</span>
 <span class="sd">        :param pipeline_manager_tab: Parent pipeline manager tab.</span>
+<span class="sd">        :type pipeline_manager_tab: PipelineManagerTab</span>
 <span class="sd">        :param main_window: Main application window.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -659,9 +663,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        edits, labels, and control buttons. Handles special cases for pipeline</span>
 <span class="sd">        inputs/outputs nodes.</span>
 
-<span class="sd">        :param node_name: (str) Name of the node to display.</span>
+<span class="sd">        :param node_name: Name of the node to display.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param process: Process instance associated with the node.</span>
+<span class="sd">        :type process: object</span>
 <span class="sd">        :param pipeline: Current pipeline containing the node.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipeline</span>
@@ -799,8 +806,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        each subprocess.</span>
 
 <span class="sd">        :param node: The current node being processed.</span>
-<span class="sd">        :param parent_node_name: (str) The name of the parent node to be</span>
-<span class="sd">         included in the context name.</span>
+<span class="sd">        :type node: ProcessNode | PipelineNode</span>
+<span class="sd">        :param parent_node_name: The name of the parent node to be included in</span>
+<span class="sd">         the context name.</span>
+<span class="sd">        :type parent_node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Get the context name or process name and split by &quot;.&quot;</span>
         <span class="n">context_name</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
@@ -843,8 +852,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Remove trait change notification from process.</span>
 
 <span class="sd">        :param process: Process instance to remove notification from.</span>
+<span class="sd">        :type process: ProcessNode | PipelineNode</span>
 <span class="sd">        :param param_changed: Callback function to remove.</span>
-
+<span class="sd">        :type param_changed: callable</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">process</span><span class="o">.</span><span class="n">on_trait_change</span><span class="p">(</span><span class="n">param_changed</span><span class="p">,</span> <span class="n">remove</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
@@ -856,9 +866,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Handle parameter value changes and emit signal.</span>
 
 <span class="sd">        :param _: Unused parameter (object instance).</span>
-<span class="sd">        :param plug_name: (str) Name of the changed parameter.</span>
+<span class="sd">        :param plug_name: Name of the changed parameter.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param old_value: Previous parameter value.</span>
+<span class="sd">        :type old_value: any</span>
 <span class="sd">        :param new_value: New parameter value.</span>
+<span class="sd">        :tyepe new_value: any</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plug_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">new_value</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_changed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span>
@@ -883,8 +896,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        selection from the filter dialog. Shows a warning if no matching</span>
 <span class="sd">        attributes are found.</span>
 
-<span class="sd">        :param attributes: (dict) Dictionary of attribute names and values to</span>
-<span class="sd">         apply.</span>
+<span class="sd">        :param attributes: Dictionary of attribute names and values to apply.</span>
+<span class="sd">        :type attributes: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">compl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="o">.</span><span class="n">completion_engine</span>
         <span class="n">atts</span> <span class="o">=</span> <span class="n">compl</span><span class="o">.</span><span class="n">get_attribute_values</span><span class="p">()</span>
@@ -931,15 +944,18 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Renames the node in the pipeline dictionary and updates all associated</span>
 <span class="sd">        links. For iterated processes, ensures the name starts</span>
-<span class="sd">        with &quot;iterated_&quot;.</span>
+<span class="sd">        with ``iterated_``.</span>
 
-<span class="sd">        :param new_node_name: (str) New name for the node. If None (when this</span>
-<span class="sd">         method is not called from an undo/redo), reads from the line edit</span>
-<span class="sd">         widget.</span>
-<span class="sd">        :param old_node_name: (str) Current node name. If None (when this</span>
-<span class="sd">         method is not called from an undo/redo), uses self.node_name.</span>
-<span class="sd">        :param from_undo: (bool) True if this action is from an undo operation.</span>
-<span class="sd">        :param from_redo: (bool) True ifthis action is from a redo operation.</span>
+<span class="sd">        :param new_node_name: New name for the node. If None (when this method</span>
+<span class="sd">         is not called from an undo/redo), reads from the line edit widget.</span>
+<span class="sd">        :type new_node_name: str</span>
+<span class="sd">        :param old_node_name: Current node name. If None (when this method is</span>
+<span class="sd">         not called from an undo/redo), uses self.node_name.</span>
+<span class="sd">        :type old_node_name: str</span>
+<span class="sd">        :param from_undo: True if this action is from an undo operation.</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: True if this action is from a redo operation.</span>
+<span class="sd">        :type from_redo: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Ignore programmatic refresh emissions</span>
@@ -1035,6 +1051,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        as the controller widget already reacts to process parameter changes.</span>
 
 <span class="sd">        :param process: Process instance (unused).</span>
+<span class="sd">        :type process: ProcessNode | PipelineNode</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 </div>
@@ -1087,9 +1104,13 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: Current project instance containing database and</span>
 <span class="sd">         configuration.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param node_name: Display name of the filter node.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param node: Input_Filter node instance containing the filter process.</span>
+<span class="sd">        :type node: capsul.pipeline.pipeline_nodes.ProcessNode</span>
 <span class="sd">        :param main_window: Parent main window for UI hierarchy.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Filter - </span><span class="si">{</span><span class="n">node_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1217,9 +1238,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            3. Absolute path string (last resort).</span>
 
 <span class="sd">        :param scan_path: File path to normalize (absolute or relative).</span>
+<span class="sd">        :type scan_path: str</span>
 
-<span class="sd">        :Returns: Normalized path string, relative to project root when</span>
+<span class="sd">        :return: Normalized path string, relative to project root when</span>
 <span class="sd">         possible.</span>
+<span class="sd">        :rtype: str</span>
 
 <span class="sd">        Examples:</span>
 <span class="sd">            &gt;&gt;&gt; normalize_scan_path(&#39;/abs/path/project/data/scans/001.tif&#39;)</span>
@@ -1350,6 +1373,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param str_search: Search query string. Use empty string to show all</span>
 <span class="sd">         scans, or NOT_DEFINED_VALUE constant to filter scans with undefined</span>
 <span class="sd">         fields.</span>
+<span class="sd">        :type str_search: str</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates self.table_data.scans_to_visualize with filtered results.</span>
@@ -1547,9 +1571,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        interface.</span>
 
 <span class="sd">        :param project: The current project instance.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param scan_list: The list of selected database files (scans).</span>
+<span class="sd">        :type scan_list: list[str]</span>
 <span class="sd">        :param pipeline_manager_tab: The parent pipeline manager tab widget.</span>
+<span class="sd">        :type pipeline_manager_tab: PipelineManagerTab</span>
 <span class="sd">        :param main_window: The main application window.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pipeline_manager_tab</span><span class="p">)</span>
         <span class="c1"># Core context</span>
@@ -1577,8 +1605,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Nested layouts are emptied and scheduled for deletion.</span>
 <span class="sd">            - The layout itself is deleted once cleared.</span>
 
-<span class="sd">        :param widget: (QtWidgets.QWidget) The widget whose layout should be</span>
-<span class="sd">         cleared.</span>
+<span class="sd">        :param widget: The widget whose layout should be cleared.</span>
+<span class="sd">        :type widget: NodeController</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">layout</span><span class="p">()</span>
 
@@ -1617,11 +1645,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        connection.</span>
 
 <span class="sd">        :param node_name: The name of the pipeline node containing the plug.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param plug_name: The name of the plug to filter.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param parameters: A three-element tuple (plug_index,</span>
 <span class="sd">         pipeline_instance, plug_value_type) that provides the context of the</span>
 <span class="sd">         plug currently being filtered.</span>
+<span class="sd">        :type parameters: tuple</span>
 <span class="sd">        :param process: The process instance associated with the node.</span>
+<span class="sd">        :type process: capsul.pipeline.pipeline.Pipeline</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The created PlugFilter is stored in self.pop_up and remains</span>
@@ -1662,9 +1694,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Parameters with userlevel &gt; 0 are hidden from the interface.</span>
 
 <span class="sd">        :param node_name: Identifier for the node being displayed.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param process: Node&#39;s process object containing traits and their</span>
 <span class="sd">         values.</span>
+<span class="sd">        :type process: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        :param pipeline: Parent pipeline instance containing this node.</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
 
 <span class="sd">        Side effects:</span>
 <span class="sd">            - Clears and rebuilds the widget layout.</span>
@@ -1825,11 +1860,14 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of a plug by its name.</span>
 
-<span class="sd">        :param plug_name: (str) The name of the plug to find.</span>
-<span class="sd">        :param in_or_out: (str) Direction of the plug ; &quot;in&quot; for input,</span>
-<span class="sd">         &quot;out&quot; for output.</span>
+<span class="sd">        :param plug_name: The name of the plug to find.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param in_or_out: Direction of the plug ; &quot;in&quot; for input, &quot;out&quot; for</span>
+<span class="sd">         output.</span>
+<span class="sd">        :type in_or_out: str</span>
 
-<span class="sd">        :Returns: The zero-based index of the plug if found, None otherwise.</span>
+<span class="sd">        :return: The zero-based index of the plug if found, None otherwise.</span>
+<span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_input</span> <span class="k">if</span> <span class="n">in_or_out</span> <span class="o">==</span> <span class="s2">&quot;in&quot;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels_output</span>
 
@@ -1860,10 +1898,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - Non-pipeline processes: &quot;{parent_node_name}&quot;.</span>
 <span class="sd">            - Nested subprocesses are updated recursively.</span>
 
-<span class="sd">        :param node: (Node) The node whose context name will be updated, along</span>
-<span class="sd">         with all its subprocesses.</span>
-<span class="sd">        :param parent_node_name: (str) The parent node&#39;s name to incorporate</span>
-<span class="sd">         into the context naming hierarchy.</span>
+<span class="sd">        :param node: The node whose context name will be updated, along with</span>
+<span class="sd">         all its subprocesses.</span>
+<span class="sd">        :type node: PipelineNode | ProcessNode</span>
+<span class="sd">        :param parent_node_name: The parent node&#39;s name to incorporate into the</span>
+<span class="sd">         context naming hierarchy.</span>
+<span class="sd">        :type parent_node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">node</span><span class="p">,</span> <span class="n">PipelineNode</span><span class="p">):</span>
@@ -1905,8 +1945,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param new_node_name: The new name for the node. If None, retrieves the</span>
 <span class="sd">         name from the UI line edit widget. Is not None only when this method</span>
 <span class="sd">         is called from an &quot;undo/redo&quot;)</span>
+<span class="sd">        :type new_node_name: str | None</span>
 
-<span class="sd">        :emits value_changed: Signal with node rename details for undo/redo</span>
+<span class="sd">        :emit value_changed: Signal with node rename details for undo/redo</span>
 <span class="sd">         tracking.</span>
 
 <span class="sd">        Note:</span>
@@ -1958,6 +1999,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param process: Optional process node whose parameters should be</span>
 <span class="sd">         displayed. If None, uses self.current_process.</span>
+<span class="sd">        :type process: object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Resolve process</span>
@@ -2015,14 +2057,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        evaluated. If the update fails, the previous value is restored in the</span>
 <span class="sd">        UI and a warning dialog is shown.</span>
 
-<span class="sd">        :param in_or_out: (str) Direction of the plug - &quot;in&quot; for input plugs,</span>
-<span class="sd">         &quot;out&quot; for output plugs.</span>
-<span class="sd">        :param plug_name: (str) Name of the plug to update.</span>
+<span class="sd">        :param in_or_out: Direction of the plug; &quot;in&quot; for input plugs, &quot;out&quot;</span>
+<span class="sd">         for output plugs.</span>
+<span class="sd">        :type in_or_out: str</span>
+<span class="sd">        :param plug_name: Name of the plug to update.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param pipeline: The current pipeline instance.</span>
-<span class="sd">        :param value_type: (type) Expected type of the plug value.</span>
-<span class="sd">        :param new_value: (optional) New value for the plug. If None, reads</span>
-<span class="sd">         from the line edit widget (is None except when this method is called</span>
-<span class="sd">         from an &quot;undo/redo&quot;).</span>
+<span class="sd">        :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
+<span class="sd">        :param value_type: Expected type of the plug value.</span>
+<span class="sd">        :type value_type: type</span>
+<span class="sd">        :param new_value: New value for the plug. If None, reads from the line</span>
+<span class="sd">         edit widget (is None except when this method is called from an</span>
+<span class="sd">         &quot;undo/redo&quot;).</span>
+<span class="sd">        :type new_value: any</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates the plug value in the pipeline node.</span>
@@ -2150,8 +2197,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        plug value to the item itself rather than a list containing one item.</span>
 
 <span class="sd">        :param plug_name: Name of the plug to update.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param parameters: Tuple (plug_index, pipeline_instance, value_type).</span>
+<span class="sd">        :type parameters: tuple</span>
 <span class="sd">        :param filter_res_list: Filtered file list to set as the plug value.</span>
+<span class="sd">        :type filter_res_list: list[str]</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Empty lists are preserved as empty lists</span>

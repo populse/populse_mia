@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.plug_filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -468,6 +468,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">    This widget provides a powerful interface for browsing, searching, and</span>
 <span class="sd">    filtering files from the project database. It features:</span>
+
 <span class="sd">        - A customizable data browser with tag columns.</span>
 <span class="sd">        - Rapid text search for quick filtering.</span>
 <span class="sd">        - Advanced multi-criteria filtering for precise selection.</span>
@@ -481,9 +482,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    the `plug_value_changed` signal.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - ok_clicked: Applies the selected files to the node plug and</span>
 <span class="sd">              closes the widget.</span>
 <span class="sd">            - reset_search_bar: Resets the search interface to its initial</span>
@@ -498,7 +497,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              and refreshes the table view.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - plug_value_changed: Signal emitted when the user confirms their</span>
 <span class="sd">          selection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -527,16 +525,23 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: Current project instance containing database and</span>
 <span class="sd">         folder paths.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param scans_list: Initial list of database file paths to filter. If</span>
 <span class="sd">         empty, all scans from COLLECTION_CURRENT are included.</span>
+<span class="sd">        :type scans_list: list[str]</span>
 <span class="sd">        :param process: Process instance associated with the selected pipeline</span>
 <span class="sd">         node.</span>
+<span class="sd">        :type process: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        :param node_name: Display name of the current pipeline node.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param plug_name: Name of the selected node plug/connection point.</span>
+<span class="sd">        :type plug_name: str</span>
 <span class="sd">        :param node_controller: Parent controller managing node visibility and</span>
 <span class="sd">         tags.</span>
+<span class="sd">        :type node_controller: NodeController</span>
 <span class="sd">        :param main_window: Main application window containing the pipeline</span>
 <span class="sd">         manager.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -688,9 +693,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Special handling is provided for the NOT_DEFINED_VALUE constant to</span>
 <span class="sd">        filter scans with undefined tag values.</span>
 
-<span class="sd">        :parm str_search: (str) The search string entered by the user. An</span>
-<span class="sd">         empty string shows all scans, NOT_DEFINED_VALUE filters for scans with</span>
+<span class="sd">        :parm str_search: The search string entered by the user. An empty</span>
+<span class="sd">         string shows all scans, NOT_DEFINED_VALUE filters for scans with</span>
 <span class="sd">         undefined tags, and any other value performs a rapid search filter.</span>
+<span class="sd">        :type str_search: str</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates self.table_data.scans_to_visualize with filtered scan</span>
@@ -741,12 +747,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Otherwise, all filtered items are processed. For filename tags, paths</span>
 <span class="sd">        are converted to absolute paths within the project folder.</span>
 
-<span class="sd">        :Emits plug_value_changed: Signal with list of extracted values.</span>
+<span class="sd">        :emit plug_value_changed: Signal emitted with a list of extracted</span>
+<span class="sd">         values.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _get_scan_value: Retrieve and process a single scan value</span>
 <span class="sd">                  from the database.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -756,11 +761,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Retrieve and process a single scan value from the database.</span>
 
 <span class="sd">            :param database_data: Database connection object.</span>
+<span class="sd">            :type database_data:</span>
+<span class="sd">             populse_mia.data_manager.database_mia.DatabaseMiaData</span>
 <span class="sd">            :param scan_name: Primary key identifying the scan.</span>
+<span class="sd">            :type scan_name: str</span>
 <span class="sd">            :param tag_name: Field name to retrieve.</span>
+<span class="sd">            :type tag_name: str</span>
 
-<span class="sd">            :Returns: The field value, with absolute path conversion for</span>
+<span class="sd">            :return: The field value, with absolute path conversion for</span>
 <span class="sd">             filename tags.</span>
+<span class="sd">            :rtype: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">value</span> <span class="o">=</span> <span class="n">database_data</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span>
                 <span class="n">collection_name</span><span class="o">=</span><span class="n">COLLECTION_CURRENT</span><span class="p">,</span>

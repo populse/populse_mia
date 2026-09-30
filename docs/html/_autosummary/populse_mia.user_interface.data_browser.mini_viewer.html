@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -79,11 +79,9 @@ time of the fourth dimension for each time of the fifth dimension.</p></li>
 elements.</p></li>
 </ul>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_create_layouts: Create the layouts for the MiniViewer.</p></li>
 <li><p>_create_top_bar: Create the top bar with the checkboxes and the
 orientation label.</p></li>
@@ -123,8 +121,10 @@ thumbnails.</p></li>
 <li><p>update_visualization: Update the config file and the thumbnails.</p></li>
 <li><p>verify_slices: Verify the number of selected documents.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/mini_viewer.html#MiniViewer.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.mini_viewer.MiniViewer.__init__" title="Link to this definition">¶</a></dt>
@@ -133,7 +133,7 @@ thumbnails.</p></li>
 initially hidden to maximize space for the data browser.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>project</strong> – The current project instance containing scan data and
+<dd class="field-odd"><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – The current project instance containing scan data and
 project-specific configuration.</p>
 </dd>
 </dl>
@@ -189,15 +189,15 @@ documents.</p></li>
 </dl>
 <p>Both checkboxes are initialized with their states from the current
 config and connected to their respective event handlers.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_create_checkbox: Create a configured checkbox.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -230,7 +230,7 @@ and connects each slider’s valueChanged signal to the appropriate
 position update handler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (int) The index position where sliders should be inserted.</p>
+<dd class="field-odd"><p><strong>idx</strong> – The index position where sliders should be inserted.</p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -258,8 +258,8 @@ ranges.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>idx</strong> – (int) Index of the viewer whose cursor was changed.</p></li>
-<li><p><strong>cursor_to_change</strong> – (int) Cursor identifier (1=3D, 2=4D, 3=5D).</p></li>
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the viewer whose cursor was changed.</p></li>
+<li><p><strong>cursor_to_change</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Cursor identifier (1=3D, 2=4D, 3=5D).</p></li>
 </ul>
 </dd>
 </dl>
@@ -312,7 +312,7 @@ position, configures them with a 9-point font, and sets their text
 labels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – The index position where the labels should be inserted.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The index position where the labels should be inserted.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -323,8 +323,11 @@ labels.</p>
 <dd><p>Create a read-only field for displaying cursor position.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(QLineEdit) A disabled, center-aligned text field with fixed
-width (65px) and font size (9pt) for displaying coordinate values.</p>
+<dd class="field-odd"><p>A disabled, center-aligned text field with fixed width (65px)
+and font size (9pt) for displaying coordinate values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://doc.qt.io/qt-5/qlineedit.html" title="(in Qt5 v5.15)">QLineEdit</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -336,15 +339,17 @@ width (65px) and font size (9pt) for displaying coordinate values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>minimum</strong> – The minimum value of the slider. Defaults to 0.</p></li>
-<li><p><strong>maximum</strong> – The maximum value of the slider. Defaults to 0.</p></li>
-<li><p><strong>position</strong> – The initial position/value of the slider. Defaults to
+<li><p><strong>minimum</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The minimum value of the slider. Defaults to 0.</p></li>
+<li><p><strong>maximum</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The maximum value of the slider. Defaults to 0.</p></li>
+<li><p><strong>position</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The initial position/value of the slider. Defaults to
 0.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QSlider) A configured horizontal slider widget, initially
-disabled.</p>
+<dd class="field-even"><p>A configured horizontal slider widget, initially disabled.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qslider.html" title="(in Qt5 v5.15)">QSlider</a></p>
 </dd>
 </dl>
 <div class="admonition note">
@@ -364,7 +369,7 @@ before enabling.</p>
 position (1-indexed) and maximum value in the format “current / max”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Index of the slider group to update (0-based).</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the slider group to update (0-based).</p>
 </dd>
 </dl>
 </dd></dl>
@@ -375,7 +380,7 @@ position (1-indexed) and maximum value in the format “current / max”.</p>
 <dd><p>Enable sliders at the specified index across all dimensions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Index of the sliders to enable across 3D, 4D, and 5D slider
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the sliders to enable across 3D, 4D, and 5D slider
 collections.</p>
 </dd>
 </dl>
@@ -397,8 +402,8 @@ collections.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>idx</strong> – Index of the image slice in the internal array.</p></li>
-<li><p><strong>im2D</strong> – Optional 2D numpy array to modify. If None, uses
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the image slice in the internal array.</p></li>
+<li><p><strong>im2D</strong> (<em>numpy.ndarray</em>) – Optional 2D numpy array to modify. If None, uses
 self.im_2D[idx].</p></li>
 </ul>
 </dd>
@@ -408,19 +413,19 @@ self.im_2D[idx].</p></li>
 <p>When im2D is not provided, the modified image is stored in
 self.im_2D[idx].</p>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_resize_image: Resize image with anti-aliasing handling.</p></li>
 <li><p>_rescale_intensities: Rescale image intensities using
 percentile-based normalization.</p></li>
 <li><p>_apply_rotation: Apply orientation-specific rotation to
 image.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -442,14 +447,17 @@ index 1 of the 4D volume at the 5th dimension index i.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>im</strong> – NIfTI image object with a dataobj attribute.</p></li>
-<li><p><strong>i</strong> – Index for slice/volume selection along the outermost
-variable dimension.</p></li>
+<li><p><strong>im</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – NIfTI image object with a <code class="docutils literal notranslate"><span class="pre">dataobj</span></code> attribute.</p></li>
+<li><p><strong>i</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index for slice/volume selection along the outermost variable
+dimension.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(QPixmap) Qt pixmap ready for display, or pixmap from empty
-array if dimensionality is unsupported.</p>
+<dd class="field-even"><p>Qt pixmap ready for display, or pixmap from empty array if
+dimensionality is unsupported.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://doc.qt.io/qt-5/qpixmap.html" title="(in Qt5 v5.15)">QPixmap</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -464,7 +472,7 @@ the corresponding slice from the image data. Sliders that exceed the
 image dimensionality are reset to a maximum value of 0.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – Index of the selected image.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the selected image.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -488,7 +496,7 @@ modifications, converts the image to a Qt pixmap, and displays it in
 the associated label.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – (int) Index of the image to display.</p>
+<dd class="field-odd"><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the image to display.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -517,9 +525,9 @@ a default placeholder is used. The tooltip shows the tag name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>file_path_db</strong> – (str) Path of selected image in database format
+<li><p><strong>file_path_db</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Path of selected image in database format
 (ex. data/raw_data/mymri.nii’).</p></li>
-<li><p><strong>idx</strong> – (int) Index of the image in the UI.</p></li>
+<li><p><strong>idx</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – Index of the image in the UI.</p></li>
 </ul>
 </dd>
 </dl>
@@ -545,7 +553,7 @@ image.</p></li>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_paths</strong> – List of paths to neuroimaging files (NIfTI format)
+<dd class="field-odd"><p><strong>file_paths</strong> (<em>List</em><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List of paths to neuroimaging files (NIfTI format)
 to display. Invalid or non-existent files are automatically filtered
 out with warnings.</p>
 </dd>
@@ -603,7 +611,7 @@ simultaneously. For single file selection, the checkbox remains
 enabled.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>file_paths</strong> – List or collection of selected document file paths.</p>
+<dd class="field-odd"><p><strong>file_paths</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – List or collection of selected document file paths.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.software_properties &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.software_properties &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../_static/haiku.css?v=fce32b03" />
-    <script src="../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.software_properties</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -704,7 +704,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the hashed admin password from the configuration.</span>
 
-<span class="sd">        :returns: The hashed admin password if found in config, False if not</span>
+<span class="sd">        :return: The hashed admin password if found in config, False if not</span>
 <span class="sd">            present in config.</span>
 <span class="sd">        :rtype: str or bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -721,7 +721,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_afni_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the AFNI path.</span>
 
-<span class="sd">        :returns: Path to AFNI, or &quot;&quot; if unknown.</span>
+<span class="sd">        :return: Path to AFNI, or &quot;&quot; if unknown.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -733,7 +733,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ants_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the ANTS path.</span>
 
-<span class="sd">        :returns: Path to ANTS, or &quot;&quot; if unknown.</span>
+<span class="sd">        :return: Path to ANTS, or &quot;&quot; if unknown.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -745,7 +745,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getBackgroundColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get background color.</span>
 
-<span class="sd">        :returns: (str) Background color, or &quot;&quot; if unknown.</span>
+<span class="sd">        :return: (str) Background color, or &quot;&quot; if unknown.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -773,7 +773,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            configuration.</span>
 <span class="sd">        :type sync_from_engine: bool</span>
 
-<span class="sd">        :returns: A nested dictionary containing the complete Capsul</span>
+<span class="sd">        :return: A nested dictionary containing the complete Capsul</span>
 <span class="sd">            configuration, structured with the following main sections:</span>
 
 <span class="sd">            - ``engine_modules``: List of available processing modules</span>
@@ -1031,7 +1031,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        The engine is created only once when first needed (lazy</span>
 <span class="sd">        initialization). Subsequent calls return the same instance.</span>
 
-<span class="sd">        :returns: The global CapsulEngine instance.</span>
+<span class="sd">        :return: The global CapsulEngine instance.</span>
 <span class="sd">        :rtype: capsul.api.capsul_engine</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1049,7 +1049,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getChainCursors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of the checkbox &#39;chain cursor&#39; in miniviewer.</span>
 
-<span class="sd">        :returns: Value of the checkbox.</span>
+<span class="sd">        :return: Value of the checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1061,7 +1061,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_freesurfer_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the freesurfer path.</span>
 
-<span class="sd">        :returns: Path to freesurfer, or &quot;&quot; if unknown.</span>
+<span class="sd">        :return: Path to freesurfer, or &quot;&quot; if unknown.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;freesurfer_setup&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1072,7 +1072,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_fsl_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the FSL config file  path.</span>
 
-<span class="sd">        :returns: Path to the fsl/etc/fslconf/fsl.sh file.</span>
+<span class="sd">        :return: Path to the fsl/etc/fslconf/fsl.sh file.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1084,7 +1084,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mainwindow_maximized</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the maximized (fullscreen) flag.</span>
 
-<span class="sd">        :returns: Maximized (fullscreen) flag.</span>
+<span class="sd">        :return: Maximized (fullscreen) flag.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1096,7 +1096,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mainwindow_size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the main window size.</span>
 
-<span class="sd">        :returns: Main window size.</span>
+<span class="sd">        :return: Main window size.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1109,7 +1109,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the appropriate Matlab command based on the configuration.</span>
 
-<span class="sd">        :returns: The Matlab executable path or None if no path is specified.</span>
+<span class="sd">        :return: The Matlab executable path or None if no path is specified.</span>
 <span class="sd">        :rtype: str or None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1144,7 +1144,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matlab_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path to the matlab executable.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1156,7 +1156,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_matlab_standalone_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path to matlab compiler runtime.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1170,7 +1170,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Retrieves the maximum number of projects displayed in the</span>
 <span class="sd">        &quot;Saved projects&quot; menu.</span>
 
-<span class="sd">        :returns: The maximum number of projects. Defaults to 5 if not</span>
+<span class="sd">        :return: The maximum number of projects. Defaults to 5 if not</span>
 <span class="sd">            specified.</span>
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1185,7 +1185,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Retrieves the maximum number of thumbnails displayed in the mini-viewer</span>
 <span class="sd">        at the bottom of the data browser.</span>
 
-<span class="sd">        :returns: The maximum number of thumbnails. Defaults to 5 if not</span>
+<span class="sd">        :return: The maximum number of thumbnails. Defaults to 5 if not</span>
 <span class="sd">            specified.</span>
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1197,7 +1197,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mri_conv_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the MRIManager.jar path.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1209,7 +1209,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mrtrix_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the  mrtrix path.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1222,7 +1222,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get number the maximum number of slices to display in the miniviewer.</span>
 
-<span class="sd">        :returns: Maximum number of slices to display in miniviewer.</span>
+<span class="sd">        :return: Maximum number of slices to display in miniviewer.</span>
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1234,7 +1234,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_opened_projects</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get opened projects.</span>
 
-<span class="sd">        :returns: Opened projects.</span>
+<span class="sd">        :return: Opened projects.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;opened_projects&quot;</span><span class="p">,</span> <span class="p">[])</span></div>
@@ -1245,7 +1245,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_projects_save_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path where projects are saved.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;projects_save_path&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1269,7 +1269,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If outdated parameters (`mia_path`, `mia_user_path`) are found, they</span>
 <span class="sd">        are automatically updated in the configuration file.</span>
 
-<span class="sd">        :returns: The absolute path to the properties folder.</span>
+<span class="sd">        :return: The absolute path to the properties folder.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1351,7 +1351,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves the chosen referential from the anatomist_2 data viewer.</span>
 
-<span class="sd">        :returns: &quot;0&quot; for World Coordinates, &quot;1&quot; for Image ref.</span>
+<span class="sd">        :return: &quot;0&quot; for World Coordinates, &quot;1&quot; for Image ref.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ref&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span></div>
@@ -1362,7 +1362,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_resources_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the resources path.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;resources_path&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1375,7 +1375,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Get whether the show_all_slices parameters was enabled or not in</span>
 <span class="sd">        the miniviewer.</span>
 
-<span class="sd">        :returns: True if the ``show_all_slices`` parameters was enabled.</span>
+<span class="sd">        :return: True if the ``show_all_slices`` parameters was enabled.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_all_slices&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1386,7 +1386,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getSourceImageDir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the source directory for project images.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_image_dir&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1397,7 +1397,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_spm_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path of SPM.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spm&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1408,7 +1408,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_spm_standalone_path</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the path to the SPM12 standalone version.</span>
 
-<span class="sd">        :returns: A path.</span>
+<span class="sd">        :return: A path.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;spm_standalone&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1419,7 +1419,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getTextColor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the text color.</span>
 
-<span class="sd">        :returns: The text color.</span>
+<span class="sd">        :return: The text color.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;text_color&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
@@ -1430,7 +1430,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getThumbnailTag</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the tag of the thumbnail displayed in the miniviewer.</span>
 
-<span class="sd">        :returns: The tag of the thumbnail displayed in miniviewer.</span>
+<span class="sd">        :return: The tag of the thumbnail displayed in miniviewer.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;thumbnail_tag&quot;</span><span class="p">,</span> <span class="s2">&quot;SequenceName&quot;</span><span class="p">)</span></div>
@@ -1441,7 +1441,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_afni</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use afni&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use afni&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use afni&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_afni&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1452,7 +1452,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_ants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use ants&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use ants&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use ants&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_ants&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1463,7 +1463,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_clinical</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the clinical mode in the preferences.</span>
 
-<span class="sd">        :returns: The clinical mode.</span>
+<span class="sd">        :return: The clinical mode.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clinical_mode&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1474,7 +1474,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_freesurfer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use freesurfer&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use freesurfer&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use freesurfer&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_freesurfer&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1485,7 +1485,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_fsl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use fsl&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use fsl&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use fsl&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_fsl&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1496,7 +1496,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_matlab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use matlab&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use matlab&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use matlab&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_matlab&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1508,7 +1508,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of &quot;use matlab standalone&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use matlab standalone&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use matlab standalone&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_matlab_standalone&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1519,7 +1519,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_mrtrix</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use mrtrix&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use mrtrix&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use mrtrix&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_mrtrix&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1530,7 +1530,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user_level</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the user level in the Capsul config.</span>
 
-<span class="sd">        :returns: The user level in the Capsul config.</span>
+<span class="sd">        :return: The user level in the Capsul config.</span>
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -1547,7 +1547,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_user_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if user mode is disabled or enabled in the preferences.</span>
 
-<span class="sd">        :returns: If True, the user mode is enabled.</span>
+<span class="sd">        :return: If True, the user mode is enabled.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;user_mode&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div>
@@ -1558,7 +1558,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_spm</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use spm&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use spm&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use spm&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_spm&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1569,7 +1569,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_use_spm_standalone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value of &quot;use spm standalone&quot; checkbox in the preferences.</span>
 
-<span class="sd">        :returns: The value of &quot;use spm standalone&quot; checkbox.</span>
+<span class="sd">        :return: The value of &quot;use spm standalone&quot; checkbox.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_spm_standalone&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1580,7 +1580,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getViewerConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the viewer config ``neuro`` or ``radio``, ``neuro`` by default.</span>
 
-<span class="sd">        :returns: The viewer config (``neuro`` or ``radio``).</span>
+<span class="sd">        :return: The viewer config (``neuro`` or ``radio``).</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;config_NeuRad&quot;</span><span class="p">,</span> <span class="s2">&quot;neuro&quot;</span><span class="p">)</span></div>
@@ -1591,7 +1591,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">getViewerFramerate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the Viewer framerate.</span>
 
-<span class="sd">        :returns: The Viewer framerat (ex. &quot;5&quot;).</span>
+<span class="sd">        :return: The Viewer framerat (ex. &quot;5&quot;).</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;im_sec&quot;</span><span class="p">,</span> <span class="s2">&quot;5&quot;</span><span class="p">)</span></div>
@@ -1602,7 +1602,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">isAutoSave</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get if the auto-save mode is enabled or not.</span>
 
-<span class="sd">        :returns: If True, auto-save mode is enabled.</span>
+<span class="sd">        :return: If True, auto-save mode is enabled.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;auto_save&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1614,7 +1614,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Gets whether the controller display is of type V1.</span>
 
-<span class="sd">        :returns: If True, V1 controller display.</span>
+<span class="sd">        :return: If True, V1 controller display.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;control_V1&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
@@ -1626,7 +1626,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get if the display in miniviewer is in radiological orientation.</span>
 
-<span class="sd">        :returns: If True, radiological orientation, otherwise neurological</span>
+<span class="sd">        :return: If True, radiological orientation, otherwise neurological</span>
 <span class="sd">            orientation.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1642,7 +1642,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         properties directory, decrypt it using Fernet encryption, and</span>
 <span class="sd">         parse it as YAML.</span>
 
-<span class="sd">        :returns: Parsed configuration from the YAML file. Returns empty dict</span>
+<span class="sd">        :return: Parsed configuration from the YAML file. Returns empty dict</span>
 <span class="sd">            if parsing fails.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1810,7 +1810,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">                configuration for.</span>
 <span class="sd">            :type module_name: str</span>
 
-<span class="sd">            :returns: The configuration dictionary of the specified module, or</span>
+<span class="sd">            :return: The configuration dictionary of the specified module, or</span>
 <span class="sd">                an empty dictionary if not found.</span>
 <span class="sd">            :rtype: dict</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -2444,7 +2444,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        engine modules are loaded and configurations are properly imported</span>
 <span class="sd">        from the saved settings.</span>
 
-<span class="sd">        :returns: The updated CapsulEngine object, or None if the engine is not</span>
+<span class="sd">        :return: The updated CapsulEngine object, or None if the engine is not</span>
 <span class="sd">            initialized.</span>
 <span class="sd">        :rtype: capsul.engine.CapsulEngine | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>

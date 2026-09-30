@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_manager_tab</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -218,11 +218,9 @@ Defaults to an empty string.</p></li>
 <p>Pipeline and PipelineNode instances are skipped as only leaf
 processes produce meaningful output data.</p>
 </div>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_serialize_for_json: Serialize objects to JSON-compatible
 format.</p></li>
 <li><p>_update_values_from_job: Update values dictionary with job
@@ -230,8 +228,10 @@ parameters.</p></li>
 <li><p>_serialize_dict_values: Serialize all values in a dictionary
 for JSON compatibility.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -351,26 +351,22 @@ plug:</p>
 </ul>
 </dd>
 </dl>
-<dl class="field-list">
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pipeline</strong> – Pipeline object containing plugs to be configured.</p>
+<dd class="field-odd"><p><strong>pipeline</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#object" title="(in Python v3.10)"><em>object</em></a>) – Pipeline object containing plugs to be configured.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><dl class="simple">
-<dt>Optional[Tuple[List[str], List[str]]]: A tuple containing:</dt><dd><ul class="simple">
-<li><p>iterated_plugs: List of plug names marked for iteration</p></li>
-<li><p>database_plugs: List of plug names connected to database</p></li>
-</ul>
+<dd class="field-even"><p>A tuple containing the names of the plugs marked for iteration
+and the names of the plugs connected to the database. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code>
+if the user cancels the dialog.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[Tuple[List[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>], List[<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)">str</a>]]]</p>
 </dd>
 </dl>
-<p>None if the user cancels the dialog.</p>
-</dd>
-</dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>is_database_compatible: Check if a plug can connect to a
 database filter.</p></li>
 <li><p>on_iteration_toggled: Handle iteration checkbox toggle
@@ -383,8 +379,10 @@ controls for plugs into the grid layout.</p></li>
 <li><p>extract_results: Extract the final plug configuration from
 the dialog.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -985,6 +983,16 @@ attribute.</p></li>
 <p>For Pipeline nodes, the method strips the “Pipeline.” prefix from
 the context_name to match against inheritance history keys.</p>
 </div>
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
+<li><p>get_param_values: Extract string values from a parameter
+value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

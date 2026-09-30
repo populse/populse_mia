@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.plug_filter &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.plug_filter</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -87,11 +87,9 @@ bricks to prevent circular dependencies.</p></li>
 allowing users to select and assign files to a specific node plug. When
 the selection is confirmed, the chosen files are emitted as a list via
 the <cite>plug_value_changed</cite> signal.</p>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>ok_clicked: Applies the selected files to the node plug and
 closes the widget.</p></li>
 <li><p>reset_search_bar: Resets the search interface to its initial
@@ -105,15 +103,15 @@ filtering and updates the filter button text.</p></li>
 <li><p>update_tags: Opens a dialog to update the list of visualized tags
 and refreshes the table view.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
-<p>Signals:</p>
-<blockquote>
-<div><ul class="simple">
+</dd>
+</dl>
+</dd>
+<dt>Signals:</dt><dd><ul class="simple">
 <li><p>plug_value_changed: Signal emitted when the user confirms their
 selection.</p></li>
 </ul>
-</div></blockquote>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">process</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plug_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_controller</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/pipeline_manager/plug_filter.html#PlugFilter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.pipeline_manager.plug_filter.PlugFilter.__init__" title="Link to this definition">¶</a></dt>
@@ -124,17 +122,17 @@ scans that are outputs from existing pipeline bricks.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Current project instance containing database and
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Current project instance containing database and
 folder paths.</p></li>
-<li><p><strong>scans_list</strong> – Initial list of database file paths to filter. If
+<li><p><strong>scans_list</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Initial list of database file paths to filter. If
 empty, all scans from COLLECTION_CURRENT are included.</p></li>
-<li><p><strong>process</strong> – Process instance associated with the selected pipeline
+<li><p><strong>process</strong> (<em>capsul.pipeline.pipeline.Pipeline</em>) – Process instance associated with the selected pipeline
 node.</p></li>
-<li><p><strong>node_name</strong> – Display name of the current pipeline node.</p></li>
-<li><p><strong>plug_name</strong> – Name of the selected node plug/connection point.</p></li>
-<li><p><strong>node_controller</strong> – Parent controller managing node visibility and
+<li><p><strong>node_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Display name of the current pipeline node.</p></li>
+<li><p><strong>plug_name</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Name of the selected node plug/connection point.</p></li>
+<li><p><strong>node_controller</strong> (<a class="reference internal" href="populse_mia.user_interface.pipeline_manager.node_controller.html#populse_mia.user_interface.pipeline_manager.node_controller.NodeController" title="populse_mia.user_interface.pipeline_manager.node_controller.NodeController"><em>NodeController</em></a>) – Parent controller managing node visibility and
 tags.</p></li>
-<li><p><strong>main_window</strong> – Main application window containing the pipeline
+<li><p><strong>main_window</strong> (<a class="reference internal" href="populse_mia.user_interface.main_window.html#populse_mia.user_interface.main_window.MainWindow" title="populse_mia.user_interface.main_window.MainWindow"><em>populse_mia.user_interface.main_window.MainWindow</em></a>) – Main application window containing the pipeline
 manager.</p></li>
 </ul>
 </dd>
@@ -169,8 +167,8 @@ Special handling is provided for the NOT_DEFINED_VALUE constant to
 filter scans with undefined tag values.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parm str_search<span class="colon">:</span></dt>
-<dd class="field-odd"><p>(str) The search string entered by the user. An
-empty string shows all scans, NOT_DEFINED_VALUE filters for scans with
+<dd class="field-odd"><p>The search string entered by the user. An empty
+string shows all scans, NOT_DEFINED_VALUE filters for scans with
 undefined tags, and any other value performs a rapid search filter.</p>
 </dd>
 </dl>
@@ -195,20 +193,21 @@ If items are selected in the table, only those values are extracted.
 Otherwise, all filtered items are processed. For filename tags, paths
 are converted to absolute paths within the project folder.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Emits plug_value_changed<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Signal with list of extracted values.</p>
+<dt class="field-odd">Emit plug_value_changed<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Signal emitted with a list of extracted
+values.</p>
 </dd>
 </dl>
-<p>Contains:</p>
-<blockquote>
-<div><p>Inner functions:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Inner functions:</dt><dd><ul class="simple">
 <li><p>_get_scan_value: Retrieve and process a single scan value
 from the database.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">

@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.process_library &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.process_library</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -512,7 +512,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initializes the DictionaryTreeModel with a root node.</span>
 
 <span class="sd">        :param root: The root node of the tree.</span>
-<span class="sd">        &quot;param parent: (QObject): The parent object.</span>
+<span class="sd">        :type root:</span>
+<span class="sd">         populse_mia.user_interface.pipeline_manager.process_library.Node</span>
+<span class="sd">        :param parent: The parent object.</span>
+<span class="sd">        :type parent: Qt.QObject</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span> <span class="o">=</span> <span class="n">root</span></div>
@@ -527,7 +530,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param parent: (QModelIndex) The parent index (unused in this</span>
 <span class="sd">         implementation).</span>
 
-<span class="sd">        :Returns: (int) The number of columns.</span>
+<span class="sd">        :return: (int) The number of columns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">1</span></div>
 
@@ -542,7 +545,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param index: (QModelIndex) The index of the item.</span>
 <span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to retrieve.</span>
 
-<span class="sd">        :Returns: The data stored under the given role, or None if not</span>
+<span class="sd">        :return: The data stored under the given role, or None if not</span>
 <span class="sd">         available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -564,7 +567,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param index: (QModelIndex) The model index to retrieve flags for.</span>
 
-<span class="sd">        :Returns: (Qt.ItemFlags) The corresponding item flags.</span>
+<span class="sd">        :return: (Qt.ItemFlags) The corresponding item flags.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span>
         <span class="n">base_flags</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsEnabled</span> <span class="o">|</span> <span class="n">Qt</span><span class="o">.</span><span class="n">ItemIsSelectable</span>
@@ -583,7 +586,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param index: (QModelIndex) The index of the node.</span>
 
-<span class="sd">        :Returns: The Node object.</span>
+<span class="sd">        :return: The Node object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="n">index</span><span class="o">.</span><span class="n">internalPointer</span><span class="p">()</span> <span class="k">if</span> <span class="n">index</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="k">return</span> <span class="n">node</span> <span class="k">if</span> <span class="n">node</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span></div>
@@ -600,7 +603,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         (unused in this implementation).</span>
 <span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to retrieve.</span>
 
-<span class="sd">        :Returns: (str) The header data, or None if not available.</span>
+<span class="sd">        :return: (str) The header data, or None if not available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">role</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">DisplayRole</span><span class="p">:</span>
@@ -624,7 +627,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param column: (int) The column number.</span>
 <span class="sd">        :param parent: (QModelIndex) The parent index.</span>
 
-<span class="sd">        :Returns: (QModelIndex) The created index, or an invalid index if not</span>
+<span class="sd">        :return: (QModelIndex) The created index, or an invalid index if not</span>
 <span class="sd">         available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
@@ -646,7 +649,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param rows: (int) The number of rows to insert.</span>
 <span class="sd">        :param parent: (QModelIndex) The parent index.</span>
 
-<span class="sd">        :Returns: (bool) True if the rows were successfully inserted, False</span>
+<span class="sd">        :return: (bool) True if the rows were successfully inserted, False</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
@@ -673,7 +676,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param indexes: (list of QModelIndex) The list of model indexes being</span>
 <span class="sd">         dragged.</span>
 
-<span class="sd">        :Returns: (QMimeData) A QMimeData object containing serialized node</span>
+<span class="sd">        :return: (QMimeData) A QMimeData object containing serialized node</span>
 <span class="sd">         information.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">mimedata</span> <span class="o">=</span> <span class="n">QMimeData</span><span class="p">()</span>
@@ -696,7 +699,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the supported MIME types.</span>
 
-<span class="sd">        :Returns: (list of str) A list of supported MIME types.</span>
+<span class="sd">        :return: (list of str) A list of supported MIME types.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;component/name&quot;</span><span class="p">]</span></div>
 
@@ -709,7 +712,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param index: (QModelIndex) The index of the item.</span>
 
-<span class="sd">        :Returns: (QModelIndex) The parent index, or an invalid index if not</span>
+<span class="sd">        :return: (QModelIndex) The parent index, or an invalid index if not</span>
 <span class="sd">         available.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
@@ -731,7 +734,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param rows: (int) The number of rows to remove.</span>
 <span class="sd">        :param parent: (QModelIndex) The parent index.</span>
 
-<span class="sd">        :Returns: (bool) True if all rows were successfully removed, False</span>
+<span class="sd">        :return: (bool) True if all rows were successfully removed, False</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
@@ -756,7 +759,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param parent: (QModelIndex) The parent index.</span>
 
-<span class="sd">        :Returns: (int) The number of rows.</span>
+<span class="sd">        :return: (int) The number of rows.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parentNode</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">getNode</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="k">if</span> <span class="n">parent</span><span class="o">.</span><span class="n">isValid</span><span class="p">()</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span>
@@ -774,7 +777,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param value: The new value to set.</span>
 <span class="sd">        :param role: (Qt.ItemDataRole) The role of the data to set.</span>
 
-<span class="sd">        :Returns: (bool) True if the data was successfully set, False</span>
+<span class="sd">        :return: (bool) True if the data was successfully set, False</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -792,7 +795,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Converts the root node to a dictionary.</span>
 
-<span class="sd">        :Returns: (dict) The dictionary representation of the root node.</span>
+<span class="sd">        :return: (dict) The dictionary representation of the root node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rootNode</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 </div>
@@ -889,7 +892,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param proc_dic: (dict) The process tree dictionary to update.</span>
 <span class="sd">        :param module_name: (str) Name of the module to add.</span>
 
-<span class="sd">        :Returns: (dict) The updated process tree dictionary.</span>
+<span class="sd">        :return: (dict) The updated process tree dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">module_name</span><span class="p">:</span>
@@ -1030,7 +1033,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param config_path: (str) Path to the configuration file.</span>
 
-<span class="sd">        :Returns: (dict) The loaded configuration or empty dict if error.</span>
+<span class="sd">        :return: (dict) The loaded configuration or empty dict if error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -1152,7 +1155,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param package_name: (str) Name of the package to update.</span>
 <span class="sd">        :param processes_path: (str) Target directory for installation.</span>
 
-<span class="sd">        :Returns: (str) The new package name (with timestamp).</span>
+<span class="sd">        :return: (str) The new package name (with timestamp).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create timestamped name for the new version</span>
         <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">%H%M%S&quot;</span><span class="p">)</span>
@@ -1197,7 +1200,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param filename: (str) Path to the file or directory.</span>
 
-<span class="sd">        :Returns: (bool) True if valid, False otherwise</span>
+<span class="sd">        :return: (bool) True if valid, False otherwise</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
@@ -1500,7 +1503,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a string representation of the node hierarchy.</span>
 
-<span class="sd">        :Returns: (str) A formatted string showing the node hierarchy.</span>
+<span class="sd">        :return: (str) A formatted string showing the node hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">()</span>
 
@@ -1535,7 +1538,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get attributes of this node as a dictionary.</span>
 
-<span class="sd">        :Returns: (dict) A dictionary of property names and their values.</span>
+<span class="sd">        :return: (dict) A dictionary of property names and their values.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__mro__</span>
         <span class="n">keyvalued</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1558,7 +1561,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param row: (int) The index of the child node in the children list.</span>
 
-<span class="sd">        :Returns: The child node at the specified index.</span>
+<span class="sd">        :return: The child node at the specified index.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">row</span><span class="p">]</span></div>
 
@@ -1569,7 +1572,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the number of children of this node.</span>
 
-<span class="sd">        :Returns: (int) The number of child nodes.</span>
+<span class="sd">        :return: (int) The number of child nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">)</span></div>
 
@@ -1583,7 +1586,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param column: (int) 0 for the fully qualified name (including parent</span>
 <span class="sd">         names), 1 for the value of this node.</span>
 
-<span class="sd">        :Returns: (str) The requested data (either string path or node value).</span>
+<span class="sd">        :return: (str) The requested data (either string path or node value).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">column</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -1610,7 +1613,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param position: (int) The position at which to insert the child.</span>
 <span class="sd">        :param child: The child node to insert.</span>
 
-<span class="sd">        :Returns: (bool) True if insertion was successful, False otherwise.</span>
+<span class="sd">        :return: (bool) True if insertion was successful, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
@@ -1629,7 +1632,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param tabLevel: (int) The current indentation level. Defaults to -1.</span>
 
-<span class="sd">        :Returns: (str) A formatted string showing the node hierarchy.</span>
+<span class="sd">        :return: (str) A formatted string showing the node hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tabLevel</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">indent</span> <span class="o">=</span> <span class="s2">&quot;    &quot;</span> <span class="o">*</span> <span class="n">tabLevel</span>
@@ -1646,7 +1649,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the name of this node.</span>
 
-<span class="sd">        :Returns: (str) The name of the node.</span>
+<span class="sd">        :return: (str) The name of the node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
 
@@ -1665,7 +1668,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the parent of this node.</span>
 
-<span class="sd">        :Returns: The parent node or None if this is a root node.</span>
+<span class="sd">        :return: The parent node or None if this is a root node.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span></div>
@@ -1680,7 +1683,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param position: (int) The position of the child to remove.</span>
 <span class="sd">        :param child: The child node to remove.</span>
 
-<span class="sd">        :Returns: (bool) True if removal was successful, False otherwise.</span>
+<span class="sd">        :return: (bool) True if removal was successful, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">position</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">):</span>
@@ -1699,7 +1702,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        This method is a placeholder that always returns None.</span>
 
-<span class="sd">        :Returns: None.</span>
+<span class="sd">        :return: None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -1710,7 +1713,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of this node in its parent&#39;s children list.</span>
 
-<span class="sd">        :Returns: (int) The index of this node in its parent&#39;s children list,</span>
+<span class="sd">        :return: (int) The index of this node in its parent&#39;s children list,</span>
 <span class="sd">         or None if this node has no parent.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1745,7 +1748,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param d: (dict) A dictionary to populate. Defaults to empty dict.</span>
 
-<span class="sd">        :Returns: (dict) A dictionary representation of the node hierarchy.</span>
+<span class="sd">        :return: (dict) A dictionary representation of the node hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">d</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -1763,7 +1766,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert the node hierarchy to a list.</span>
 
-<span class="sd">        :Returns: (list) A list representation of the node hierarchy.</span>
+<span class="sd">        :return: (list) A list representation of the node hierarchy.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">output</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -1783,7 +1786,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of this node.</span>
 
-<span class="sd">        :Returns: The value of the node.</span>
+<span class="sd">        :return: The value of the node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
 
@@ -2131,7 +2134,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param text: (str) Button text.</span>
 <span class="sd">        :param callback: (a callable) Function to call when button is clicked.</span>
 
-<span class="sd">        :Returns: (QPushButton) Configured button.</span>
+<span class="sd">        :return: (QPushButton) Configured button.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">btn</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">autoDefault</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">btn</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">callback</span><span class="p">)</span>
@@ -2144,7 +2147,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create buttons for installing processes.</span>
 
-<span class="sd">        :Returns: (QHBoxLayout) Layout with install process buttons.</span>
+<span class="sd">        :return: (QHBoxLayout) Layout with install process buttons.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;Install processes from:&quot;</span><span class="p">))</span>
@@ -2166,7 +2169,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the line edit.</span>
 
-<span class="sd">        :Returns: (QLineEdit) Configured line edit for package input.</span>
+<span class="sd">        :return: (QLineEdit) Configured line edit for package input.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">line_edit</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="n">line_edit</span><span class="o">.</span><span class="n">setPlaceholderText</span><span class="p">(</span>
@@ -2185,7 +2188,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param list_widget: (QListWidget) List widget to add to group.</span>
 <span class="sd">        :param reset_callback: (callable) Callback for reset button.</span>
 
-<span class="sd">        :Returns: (QGroupBox) Configured group box with list and reset button.</span>
+<span class="sd">        :return: (QGroupBox) Configured group box with list and reset button.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">QGroupBox</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -2203,7 +2206,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a list widget with extended selection mode.</span>
 
-<span class="sd">        :Returns (QListWidget: Configured list widget.</span>
+<span class="sd">        :return: Configured list widget.</span>
+<span class="sd">        :rtype: QListWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">list_widget</span> <span class="o">=</span> <span class="n">QListWidget</span><span class="p">()</span>
         <span class="n">list_widget</span><span class="o">.</span><span class="n">setSelectionMode</span><span class="p">(</span><span class="n">QAbstractItemView</span><span class="o">.</span><span class="n">ExtendedSelection</span><span class="p">)</span>
@@ -2223,7 +2227,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         buttons.</span>
 <span class="sd">        :param user_mode: (bool) Whether the application is in user mode.</span>
 
-<span class="sd">        :Returns: (QHBoxLayout) Main layout of the dialog.</span>
+<span class="sd">        :return: (QHBoxLayout) Main layout of the dialog.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Create package library and vertical layout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span> <span class="o">=</span> <span class="n">PackageLibrary</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">packages</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>
@@ -2284,7 +2288,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param user_mode: (bool) Whether the application is in user mode.</span>
 
-<span class="sd">        :Returns: (QHBoxLayout) Layout with package management buttons.</span>
+<span class="sd">        :return: (QHBoxLayout) Layout with package management buttons.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">add_btn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_button</span><span class="p">(</span>
@@ -2311,7 +2315,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create layout for save and cancel buttons.</span>
 
-<span class="sd">        :Returns: (QHBoxLayout) Layout with save and cancel buttons.</span>
+<span class="sd">        :return: (QHBoxLayout) Layout with save and cancel buttons.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
         <span class="n">layout</span><span class="o">.</span><span class="n">addStretch</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -2328,7 +2332,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create and configure the status label.</span>
 
-<span class="sd">        :Returns: (QLabel) Configured status label.</span>
+<span class="sd">        :return: (QLabel) Configured status label.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">()</span>
         <span class="n">label</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
@@ -2411,7 +2415,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param init_package_tree: (bool) If True, reinitializes the entire</span>
 <span class="sd">         package tree before adding the module. Defaults to False.</span>
 
-<span class="sd">        :Returns: (List[str] | str) A list of error messages encountered during</span>
+<span class="sd">        :return: (List[str] | str) A list of error messages encountered during</span>
 <span class="sd">         package addition, or &quot;No package selected!&quot; if no module name is</span>
 <span class="sd">         provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2716,7 +2720,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param from_pipeline_manager: (bool) Whether deletion is initiated</span>
 <span class="sd">         from pipeline manager. Defaults to False.</span>
 
-<span class="sd">        :Returns: (list[str]) A list of deleted packages/bricks (classes).</span>
+<span class="sd">        :return: (list[str]) A list of deleted packages/bricks (classes).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">deleted_packages</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">packages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">package_library</span><span class="o">.</span><span class="n">package_tree</span>
@@ -3146,7 +3150,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Loads and returns the configuration from &#39;process_config.yml&#39;.</span>
 
-<span class="sd">        :Returns: (dict | {}) The configuration dictionary if successfully</span>
+<span class="sd">        :return: (dict | {}) The configuration dictionary if successfully</span>
 <span class="sd">         loaded, otherwise None in case of an error.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
@@ -3242,7 +3246,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param package: (str) The fully qualified module name (e.g.,</span>
 <span class="sd">         &#39;nipype.interfaces.spm&#39;).</span>
 
-<span class="sd">        :Returns: (bool) True if the package was successfully removed, False</span>
+<span class="sd">        :return: (bool) True if the package was successfully removed, False</span>
 <span class="sd">         if the package was not found or no package was provided.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -3635,7 +3639,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return a dictionary representation of the current tree.</span>
 
-<span class="sd">        :Returns: The dictionary of the tree.</span>
+<span class="sd">        :return: The dictionary of the tree.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span></div>
 </div>
@@ -3733,7 +3737,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Read the configuration from process_config.yml and return it as a</span>
 <span class="sd">        dictionary.</span>
 <span class="sd">        .</span>
-<span class="sd">        :Returns: The configuration as a dictionary.</span>
+<span class="sd">        :return: The configuration as a dictionary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
         <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
@@ -3830,7 +3834,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param full_name: (str) The name of the module to import.</span>
 <span class="sd">    :param path: (str) The file path of the module.</span>
 
-<span class="sd">    :Returns: The imported module.</span>
+<span class="sd">    :return: The imported module.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">spec_from_file_location</span><span class="p">(</span><span class="n">full_name</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
     <span class="n">module</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
@@ -3853,7 +3857,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param parent: The parent node of the current node. Defaults to None.</span>
 <span class="sd">    :param root_node: The root node of the tree. Defaults to None.</span>
 
-<span class="sd">    :Returns: The root node of the constructed tree.</span>
+<span class="sd">    :return: The root node of the constructed tree.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

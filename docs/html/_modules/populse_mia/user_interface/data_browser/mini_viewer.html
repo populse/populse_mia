@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.data_browser.mini_viewer &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.mini_viewer</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -469,9 +469,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">          elements.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _create_layouts: Create the layouts for the MiniViewer.</span>
 <span class="sd">            - _create_top_bar: Create the top bar with the checkboxes and the</span>
 <span class="sd">              orientation label.</span>
@@ -523,6 +521,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: The current project instance containing scan data and</span>
 <span class="sd">         project-specific configuration.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -640,9 +639,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        config and connected to their respective event handlers.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _create_checkbox: Create a configured checkbox.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -651,11 +648,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            Create a configured checkbox with consistent styling.</span>
 
 <span class="sd">            :param text: Label text for the checkbox.</span>
+<span class="sd">            :type text: str</span>
 <span class="sd">            :param checked: Initial checked state.</span>
-<span class="sd">            :param callback: Function to call when state changes.</span>
+<span class="sd">            :type checked: bool</span>
+<span class="sd">            :param callback: Function to call when the checkbox state changes.</span>
+<span class="sd">            :type callback: callable</span>
 <span class="sd">            :param tooltip: Optional tooltip text.</span>
+<span class="sd">            :type tooltip: str</span>
 
-<span class="sd">            :Returns: Configured QCheckBox instance.</span>
+<span class="sd">            :return: Configured QCheckBox instance.</span>
+<span class="sd">            :rtype: PyQt5.QtWidgets.QCheckBox</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">checkbox</span> <span class="o">=</span> <span class="n">QCheckBox</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
             <span class="n">checkbox</span><span class="o">.</span><span class="n">setCheckState</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Checked</span> <span class="k">if</span> <span class="n">checked</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Unchecked</span><span class="p">)</span>
@@ -744,7 +746,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and connects each slider&#39;s valueChanged signal to the appropriate</span>
 <span class="sd">        position update handler.</span>
 
-<span class="sd">        :param idx: (int) The index position where sliders should be inserted.</span>
+<span class="sd">        :param idx: The index position where sliders should be inserted.</span>
+<span class="sd">        :type param: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Each slider is connected to changePosValue with dimension offsets:</span>
@@ -788,8 +791,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        scaling the value proportionally to account for different cursor</span>
 <span class="sd">        ranges.</span>
 
-<span class="sd">        :param idx: (int) Index of the viewer whose cursor was changed.</span>
-<span class="sd">        :param cursor_to_change: (int) Cursor identifier (1=3D, 2=4D, 3=5D).</span>
+<span class="sd">        :param idx: Index of the viewer whose cursor was changed.</span>
+<span class="sd">        :type idx: int</span>
+<span class="sd">        :param cursor_to_change: Cursor identifier (1=3D, 2=4D, 3=5D).</span>
+<span class="sd">        :type cursor_to_change: int</span>
 
 <span class="sd">        Notes:</span>
 <span class="sd">            - If chain mode is disabled, only updates the image for the given</span>
@@ -914,6 +919,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        labels.</span>
 
 <span class="sd">        :param idx: The index position where the labels should be inserted.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">font</span> <span class="o">=</span> <span class="n">QFont</span><span class="p">()</span>
         <span class="n">font</span><span class="o">.</span><span class="n">setPointSize</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
@@ -938,8 +944,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a read-only field for displaying cursor position.</span>
 
-<span class="sd">        :Returns: (QLineEdit) A disabled, center-aligned text field with fixed</span>
-<span class="sd">         width (65px) and font size (9pt) for displaying coordinate values.</span>
+<span class="sd">        :return: A disabled, center-aligned text field with fixed width (65px)</span>
+<span class="sd">         and font size (9pt) for displaying coordinate values.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QLineEdit</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">field_value</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">()</span>
         <span class="n">field_value</span><span class="o">.</span><span class="n">setEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -959,12 +966,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Create a horizontal slider widget.</span>
 
 <span class="sd">        :param minimum: The minimum value of the slider. Defaults to 0.</span>
+<span class="sd">        :type minimum: int</span>
 <span class="sd">        :param maximum: The maximum value of the slider. Defaults to 0.</span>
+<span class="sd">        :type maximum: int</span>
 <span class="sd">        :param position: The initial position/value of the slider. Defaults to</span>
 <span class="sd">         0.</span>
+<span class="sd">        :type position: int</span>
 
-<span class="sd">        :Returns: (QSlider) A configured horizontal slider widget, initially</span>
-<span class="sd">         disabled.</span>
+<span class="sd">        :return: A configured horizontal slider widget, initially disabled.</span>
+<span class="sd">        :rtype: PyQt5.QtWidgets.QSlider</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The slider is created with strong focus policy and a tick interval</span>
@@ -992,6 +1002,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        position (1-indexed) and maximum value in the format &quot;current / max&quot;.</span>
 
 <span class="sd">        :param idx: Index of the slider group to update (0-based).</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">slider</span><span class="p">,</span> <span class="n">text_widget</span> <span class="ow">in</span> <span class="p">[</span>
@@ -1012,6 +1023,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param idx: Index of the sliders to enable across 3D, 4D, and 5D slider</span>
 <span class="sd">         collections.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">for</span> <span class="n">slider_collection</span> <span class="ow">in</span> <span class="p">(</span>
@@ -1035,17 +1047,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            4. Applying orientation rotation (radiological/neurological).</span>
 
 <span class="sd">        :param idx: Index of the image slice in the internal array.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        :param im2D: Optional 2D numpy array to modify. If None, uses</span>
 <span class="sd">         self.im_2D[idx].</span>
+<span class="sd">        :type im2D: numpy.ndarray</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            When im2D is not provided, the modified image is stored in</span>
 <span class="sd">            self.im_2D[idx].</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                - _resize_image: Resize image with anti-aliasing handling.</span>
 <span class="sd">                - _rescale_intensities: Rescale image intensities using</span>
 <span class="sd">                  percentile-based normalization.</span>
@@ -1057,9 +1069,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Resize image with version-aware anti-aliasing handling.</span>
 
 <span class="sd">            :param image: 2D numpy array to resize.</span>
+<span class="sd">            :type image: numpy.ndarray</span>
 <span class="sd">            :param target_size: Tuple of (height, width) for output dimensions.</span>
+<span class="sd">            :type target_size: tuple</span>
 
-<span class="sd">            :Returns: (numpy.ndarray) Resized image.</span>
+<span class="sd">            :return: Resized image.</span>
+<span class="sd">            :rtype: numpy.ndarray</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">resize_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;output_shape&quot;</span><span class="p">:</span> <span class="n">target_size</span><span class="p">,</span> <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;constant&quot;</span><span class="p">}</span>
 
@@ -1082,12 +1097,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            during percentile calculations.</span>
 
 <span class="sd">            :param image: 2D numpy array to rescale (modified in-place).</span>
+<span class="sd">            :type image: numpy.ndarray</span>
 <span class="sd">            :param min_val: Minimum value for output range.</span>
+<span class="sd">            :type min_val: int</span>
 <span class="sd">            :param max_val: Maximum value for output range.</span>
+<span class="sd">            :type max_val: int</span>
 <span class="sd">            :param pctl: Percentile for clipping at both ends.</span>
+<span class="sd">            :type pctl: float</span>
 
-<span class="sd">            :Returns: (numpy.ndarray) Rescaled image with values in [min_val,</span>
-<span class="sd">             max_val]</span>
+<span class="sd">            :return: Rescaled image with values in [min_val, max_val]</span>
+<span class="sd">            :rtype: numpy.ndarray</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">finite_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
 
@@ -1115,9 +1134,10 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;Apply orientation-specific rotation to image.</span>
 
 <span class="sd">            :param image: 2D numpy array to rotate.</span>
+<span class="sd">            :type image: numpy.ndarray</span>
 
-<span class="sd">            :Returns: (numpy.ndarray) Rotated image with contiguous memory</span>
-<span class="sd">             layout.</span>
+<span class="sd">            :return: Rotated image with contiguous memory layout.</span>
+<span class="sd">            :rtype: numpy.ndarray</span>
 
 <span class="sd">            Note:</span>
 <span class="sd">                Copy is made to ensure contiguous memory (Qt compatibility).</span>
@@ -1185,12 +1205,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - 5D images: Extract middle z-slice from the 3D volume at time</span>
 <span class="sd">              index 1 of the 4D volume at the 5th dimension index i.</span>
 
-<span class="sd">        :param im: NIfTI image object with a dataobj attribute.</span>
-<span class="sd">        :param i: Index for slice/volume selection along the outermost</span>
-<span class="sd">         variable dimension.</span>
+<span class="sd">        :param im: NIfTI image object with a ``dataobj`` attribute.</span>
+<span class="sd">        :type im: nibabel.nifti1.Nifti1Image</span>
+<span class="sd">        :param i: Index for slice/volume selection along the outermost variable</span>
+<span class="sd">         dimension.</span>
+<span class="sd">        :type i: int</span>
 
-<span class="sd">        :Returns: (QPixmap) Qt pixmap ready for display, or pixmap from empty</span>
-<span class="sd">         array if dimensionality is unsupported.</span>
+<span class="sd">        :return: Qt pixmap ready for display, or pixmap from empty array if</span>
+<span class="sd">         dimensionality is unsupported.</span>
+<span class="sd">        :rtype: PyQt5.QtGui.QPixmap</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">im</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -1236,6 +1259,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        image dimensionality are reset to a maximum value of 0.</span>
 
 <span class="sd">        :param idx: Index of the selected image.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Reading the image data</span>
         <span class="n">img</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">img</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
@@ -1309,7 +1333,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        modifications, converts the image to a Qt pixmap, and displays it in</span>
 <span class="sd">        the associated label.</span>
 
-<span class="sd">        :param idx: (int) Index of the image to display.</span>
+<span class="sd">        :param idx: Index of the image to display.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Update navigation and position</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indexImage</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -1358,9 +1383,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        and displays it under the image frame. If the value is not defined,</span>
 <span class="sd">        a default placeholder is used. The tooltip shows the tag name.</span>
 
-<span class="sd">        :param file_path_db: (str) Path of selected image in database format</span>
+<span class="sd">        :param file_path_db: Path of selected image in database format</span>
 <span class="sd">         (ex. data/raw_data/mymri.nii&#39;).</span>
-<span class="sd">        :param idx: (int) Index of the image in the UI.</span>
+<span class="sd">        :type file_path_db: str</span>
+<span class="sd">        :param idx: Index of the image in the UI.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1409,6 +1436,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param file_paths: List of paths to neuroimaging files (NIfTI format)</span>
 <span class="sd">         to display. Invalid or non-existent files are automatically filtered</span>
 <span class="sd">         out with warnings.</span>
+<span class="sd">        :type file_paths: List[str]</span>
 
 <span class="sd">        Side effects:</span>
 <span class="sd">            - Modifies self.file_paths by removing invalid entries.</span>
@@ -1701,6 +1729,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        enabled.</span>
 
 <span class="sd">        :param file_paths: List or collection of selected document file paths.</span>
+<span class="sd">        :type file_paths: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Refresh configuration and release memory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>

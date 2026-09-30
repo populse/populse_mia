@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.utils.utils &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.utils.utils</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -543,7 +543,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            will be added to the pipeline library.</span>
 <span class="sd">        :type class_name: str</span>
 
-<span class="sd">        :returns: Dictionary of dictionaries containing</span>
+<span class="sd">        :return: Dictionary of dictionaries containing</span>
 <span class="sd">            package/subpackages/pipelines status.</span>
 <span class="sd">            ex: {package: {subpackage: {pipeline: &#39;process_enabled&#39;}}}</span>
 <span class="sd">        :rtype: dict</span>
@@ -674,7 +674,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param date_format: The expected date format.</span>
 <span class="sd">    :type date_format: str</span>
 
-<span class="sd">    :returns: True if the string matches the format, False otherwise.</span>
+<span class="sd">    :return: True if the string matches the format, False otherwise.</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -725,7 +725,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">     validated.</span>
 <span class="sd">    :type is_subvalue: bool</span>
 
-<span class="sd">    :returns: ``True`` if the value is valid for ``value_type``, ``False``</span>
+<span class="sd">    :return: ``True`` if the value is valid for ``value_type``, ``False``</span>
 <span class="sd">     otherwise.</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -838,7 +838,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param field: The name of the field whose value should be retrieved.</span>
 <span class="sd">    :type field: str</span>
 
-<span class="sd">    :returns: The value of the specified field for the document in the current</span>
+<span class="sd">    :return: The value of the specified field for the document in the current</span>
 <span class="sd">        collection.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">project_name</span> <span class="o">=</span> <span class="n">project</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span>
@@ -863,7 +863,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param collection: The name of the collection to query.</span>
 <span class="sd">    :type collection: str</span>
 
-<span class="sd">    :returns: A list of document names in the collection.</span>
+<span class="sd">    :return: A list of document names in the collection.</span>
 <span class="sd">    :rtype: list[str]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -884,7 +884,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param collection: The name of the collection to inspect.</span>
 <span class="sd">    :type collection: str</span>
 
-<span class="sd">    :returns: A list of field names in the collection.</span>
+<span class="sd">    :return: A list of field names in the collection.</span>
 <span class="sd">    :rtype: list[str]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -903,7 +903,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param project: The project instance containing the database.</span>
 <span class="sd">    :type project: Project</span>
 
-<span class="sd">    :returns: A list of tag names marked as shown.</span>
+<span class="sd">    :return: A list of tag names marked as shown.</span>
 <span class="sd">    :rtype: list[str]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -928,7 +928,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param field: The name of the field whose value is to be retrieved.</span>
 <span class="sd">    :type field: str</span>
 
-<span class="sd">    :returns: The value of the specified field, or None if not found.</span>
+<span class="sd">    :return: The value of the specified field, or None if not found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">with</span> <span class="n">project</span><span class="o">.</span><span class="n">database</span><span class="o">.</span><span class="n">data</span><span class="p">()</span> <span class="k">as</span> <span class="n">database_data</span><span class="p">:</span>
@@ -1108,7 +1108,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Projects whose directories no longer exist are removed from the saved</span>
 <span class="sd">        projects list.</span>
 
-<span class="sd">        :returns: Absolute paths of deleted projects.</span>
+<span class="sd">        :return: Absolute paths of deleted projects.</span>
 <span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">saved_projects</span> <span class="o">=</span> <span class="n">SavedProjects</span><span class="p">()</span>
@@ -1439,7 +1439,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param element_type: Expected type of the list element.</span>
 <span class="sd">        :type element_type: type</span>
 
-<span class="sd">        :returns: The prepared value suitable for storing in a PyQt item.</span>
+<span class="sd">        :return: The prepared value suitable for storing in a PyQt item.</span>
 <span class="sd">        :rtype: Any</span>
 
 <span class="sd">        :raises TypeError: If ``element_type`` is not supported.</span>
@@ -1491,7 +1491,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         ``list[datetime]``.</span>
 <span class="sd">        :type expected_type: type | types.GenericAlias</span>
 
-<span class="sd">        :returns: The prepared value suitable for storing in a PyQt item.</span>
+<span class="sd">        :return: The prepared value suitable for storing in a PyQt item.</span>
 <span class="sd">        :rtype: Any</span>
 
 <span class="sd">        :raises TypeError: If ``expected_type`` is not supported.</span>
@@ -1555,7 +1555,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param value_type: Value type.</span>
 <span class="sd">    :type value_type: type | types.GenericAlias</span>
 
-<span class="sd">    :returns: The value converted for the database.</span>
+<span class="sd">    :return: The value converted for the database.</span>
 <span class="sd">    :rtype: Any</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1624,7 +1624,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        (e.g., ``list[str]``).</span>
 <span class="sd">    :type t: type | types.GenericAlias</span>
 
-<span class="sd">    :returns: The name of the type (e.g., ``&#39;str&#39;``) or the string</span>
+<span class="sd">    :return: The name of the type (e.g., ``&#39;str&#39;``) or the string</span>
 <span class="sd">        representation  of the generic alias (e.g., ``&#39;list[str]&#39;``).</span>
 <span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1669,7 +1669,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param job: An optional job object containing parameter values to override</span>
 <span class="sd">        or populate the node&#39;s inputs and outputs. Defaults to None.</span>
 
-<span class="sd">    :returns: Auto-inheritance mapping if successful and no job provided, None</span>
+<span class="sd">    :return: Auto-inheritance mapping if successful and no job provided, None</span>
 <span class="sd">        if no inheritance can be determined or job is provided (in which case</span>
 <span class="sd">        the job object is updated in-place).</span>
 <span class="sd">    :rtype: dict | None</span>
@@ -1887,7 +1887,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    :param comp: The comparator to use (&#39;sup&#39;, &#39;inf&#39;, &#39;eq&#39;).</span>
 <span class="sd">    :type comp: str</span>
 
-<span class="sd">    :returns: True if the comparison condition is satisfied, False otherwise.</span>
+<span class="sd">    :return: True if the comparison condition is satisfied, False otherwise.</span>
 <span class="sd">    :rtype: bool</span>
 
 <span class="sd">    Contains:</span>
@@ -1902,7 +1902,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param v: Version of a package (ex. 5.4.1).</span>
 <span class="sd">        :type v: str</span>
 
-<span class="sd">        :returns: A list of integer (ex. [5, 4, 1]).</span>
+<span class="sd">        :return: A list of integer (ex. [5, 4, 1]).</span>
 <span class="sd">        :rtype: list[int]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1982,7 +1982,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param new_dic: The new package configuration.</span>
 <span class="sd">        :type new_dic: dict</span>
 
-<span class="sd">        :returns: True if all keys at the current level match, False if not.</span>
+<span class="sd">        :return: True if all keys at the current level match, False if not.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 

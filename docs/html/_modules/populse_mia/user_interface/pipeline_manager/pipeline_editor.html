@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pipeline_manager.pipeline_editor &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pipeline_manager.pipeline_editor</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -462,9 +462,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    handles persistence (save/export) and undo/redo history management.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - _del_link: Deletes a link.</span>
 <span class="sd">            - _export_plug: Export a plug to a pipeline global input or output.</span>
 <span class="sd">            - _release_grab_link: Method called when a link is released.</span>
@@ -483,7 +481,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            - update_plug_value: Updates a plug value.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - pipeline_modified: Signal emitted when the pipeline is modified.</span>
 <span class="sd">        - pipeline_saved: Signal emitted when the pipeline is saved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -502,8 +499,10 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param project: The current project instance containing pipeline data</span>
 <span class="sd">         and configuration.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param main_window: The main application window instance for UI</span>
 <span class="sd">         integration.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">pipeline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -534,10 +533,13 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param link: Link specification string in the format</span>
 <span class="sd">         &quot;source_node.output_plug-&gt;dest_node.input_plug&quot;. If None, uses the</span>
 <span class="sd">         current link stored in self._current_link.</span>
+<span class="sd">        :type link: bool | None | str</span>
 <span class="sd">        :param from_undo: Whether this deletion is being performed as part of</span>
 <span class="sd">         an undo operation. Affects history recording.</span>
+<span class="sd">        :type from_undo: bool</span>
 <span class="sd">        :param from_redo: Whether this deletion is being performed as part of</span>
 <span class="sd">         a redo operation. Affects history recording.</span>
+<span class="sd">        :type from_redo: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates self._current_link to the deleted link.</span>
@@ -615,27 +617,32 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        appropriate links, and maintains operation history for undo/redo</span>
 <span class="sd">        functionality.</span>
 
-<span class="sd">        :param pipeline_parameter: (str) Name for the exported pipeline</span>
-<span class="sd">         parameter. If None, prompts user for a name via dialog. Defaults to</span>
-<span class="sd">         None.</span>
-<span class="sd">        :param optional: (bool) Whether the exported plug is optional. If None,</span>
+<span class="sd">        :param pipeline_parameter: Name for the exported pipeline parameter. If</span>
+<span class="sd">         None, prompts user for a name via dialog. Defaults to None.</span>
+<span class="sd">        :type pipeline_parameter: str</span>
+<span class="sd">        :param optional: Whether the exported plug is optional. If None,</span>
 <span class="sd">         derived from dialog checkbox or plug configuration. Defaults to None.</span>
-<span class="sd">        :param weak_link: (bool) Whether to create a weak link (doesn&#39;t enforce</span>
+<span class="sd">        :type optional: bool | None</span>
+<span class="sd">        :param weak_link: Whether to create a weak link (doesn&#39;t enforce</span>
 <span class="sd">         execution order). If None, derived from dialog or defaults to False.</span>
-<span class="sd">        :param from_undo: (bool) True when called during an undo operation.</span>
-<span class="sd">         Used to prevent circular history updates. Defaults to False.</span>
-<span class="sd">        :param from_redo: (bool) True when called during a redo operation. Used</span>
-<span class="sd">         to prevent circular history updates. Defaults to False.</span>
-<span class="sd">        :param temp_plug_name: (tuple) A (node_name, plug_name) tuple</span>
-<span class="sd">         specifying the plug to export. If None, uses self._temp_plug_name.</span>
-<span class="sd">         Defaults to None.</span>
-<span class="sd">        :param multi_export: (bool) True when exporting multiple plugs</span>
-<span class="sd">         simultaneously. Changes return behavior and error handling. Defaults</span>
-<span class="sd">         to False.</span>
+<span class="sd">        :type weak_link: bool | None</span>
+<span class="sd">        :param from_undo: True when called during an undo operation. Used to</span>
+<span class="sd">         prevent circular history updates. Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: True when called during a redo operation. Used to</span>
+<span class="sd">         prevent circular history updates. Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
+<span class="sd">        :param temp_plug_name: A (node_name, plug_name) tuple specifying the</span>
+<span class="sd">         plug to export. If None, uses self._temp_plug_name. Defaults to None.</span>
+<span class="sd">        :type temp_plug_name: tuple</span>
+<span class="sd">        :param multi_export: True when exporting multiple plugs simultaneously.</span>
+<span class="sd">         Changes return behavior and error handling. Defaults to False.</span>
+<span class="sd">        :type multi_export: bool</span>
 
-<span class="sd">        :Returns: (str) When multi_export is True, returns the plug name on</span>
-<span class="sd">         success or None on failure. When multi_export is False, returns None</span>
-<span class="sd">         after updating the UI and history.</span>
+<span class="sd">        :return: When multi_export is True, returns the plug name on success or</span>
+<span class="sd">         None on failure. When multi_export is False, returns None after</span>
+<span class="sd">         updating the UI and history.</span>
+<span class="sd">        :rtype: str | None</span>
 
 <span class="sd">        :raises ~traits.trait_errors.TraitError: Logged as warning when plug</span>
 <span class="sd">         export fails due to trait issues.</span>
@@ -770,9 +777,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        the history and displaying a status message.</span>
 
 <span class="sd">        :param event: Mouse event corresponding to the link release.</span>
+<span class="sd">        :type event: PyQt5.QtGui.QMouseEvent</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># TODO: Is this method still used?</span>
-
         <span class="c1"># Retrieve the created link from parent implementation</span>
         <span class="n">link</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">_release_grab_link</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">ret</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="c1"># Record link creation in history for undo/redo functionality</span>
@@ -804,12 +810,16 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param plug_names: A tuple (node_name, plug_name) or list of such</span>
 <span class="sd">         tuples specifying the plug(s) to remove. If None, uses</span>
 <span class="sd">         self._temp_plug_name.</span>
+<span class="sd">        :type plug_names: tuple | None</span>
 <span class="sd">        :param from_undo: Whether this method is being called from an undo</span>
 <span class="sd">         operation.</span>
+<span class="sd">        :type from_undo: bool</span>
 <span class="sd">        :param from_redo: Whether this method is being called from a redo</span>
 <span class="sd">         operation.</span>
+<span class="sd">        :type from_redo: bool</span>
 <span class="sd">        :param from_export_plugs: Whether this method is being called from an</span>
 <span class="sd">         export plugs undo/redo operation. When True, history is not updated.</span>
+<span class="sd">        :type from_export_plugs: bool</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            For each removed plug, stores [plug_info, connected_plugs,</span>
@@ -894,17 +904,24 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param source: A tuple of (node_name, plug_name) for the source</span>
 <span class="sd">         connection.</span>
+<span class="sd">        :type source: tuple</span>
 <span class="sd">        :param dest: A tuple of (node_name, plug_name) for the destination</span>
 <span class="sd">         connection.</span>
-<span class="sd">        :param active: Whether the link is currently active/enabled.</span>
+<span class="sd">        :type dest: tuple</span>
+<span class="sd">        :param active: Whether the link is currently active/enabled (unused).</span>
+<span class="sd">        :type active: bool</span>
 <span class="sd">        :param weak: Whether the link is a weak reference that doesn&#39;t enforce</span>
-<span class="sd">         strict execution dependencies.</span>
+<span class="sd">         strict execution dependencies (unused).</span>
+<span class="sd">        :type weak: bool</span>
 <span class="sd">        :param from_undo: Whether this action originates from an undo</span>
 <span class="sd">         operation. Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
 <span class="sd">        :param from_redo: Whether this action originates from a redo operation.</span>
 <span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
 <span class="sd">        :param allow_export: Whether to allow this link in exported pipelines.</span>
 <span class="sd">         Defaults to False.</span>
+<span class="sd">        :type allow_export: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Adds the link to the pipeline scene.</span>
@@ -942,18 +959,22 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        according to project settings. It also handles link restoration when</span>
 <span class="sd">        the action is part of an undo/redo operation.</span>
 
-<span class="sd">        :param class_process: (str) The name of the process class to</span>
-<span class="sd">         instantiate.</span>
-<span class="sd">        :param node_name: (str) Custom name for the node. If None, the name is</span>
+<span class="sd">        :param class_process: The process class to instantiate.</span>
+<span class="sd">        :type class_process: type[Process]</span>
+<span class="sd">        :param node_name: Custom name for the node. If None, the name is</span>
 <span class="sd">         derived from the process&#39;s context_name or name attribute. Defaults to</span>
 <span class="sd">         None.</span>
-<span class="sd">        :param from_undo: (bool) Whether this action is part of an undo</span>
-<span class="sd">         operation. Defaults to False.</span>
-<span class="sd">        :param from_redo: (bool) Whether this action is part of a redo</span>
-<span class="sd">         operation. Defaults to False.</span>
-<span class="sd">        :param links: (list) List of link tuples to restore, where each tuple</span>
-<span class="sd">         contains (source, dest, active, weak). Used during undo/redo</span>
-<span class="sd">         operations. Defaults to None.</span>
+<span class="sd">        :type node_name: str | None</span>
+<span class="sd">        :param from_undo: Whether this action is part of an undo operation.</span>
+<span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: Whether this action is part of a redo operation.</span>
+<span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
+<span class="sd">        :param links: List of link tuples to restore, where each tuple contains</span>
+<span class="sd">         (source, dest, active, weak). Used during undo/redo operations.</span>
+<span class="sd">         Defaults to None.</span>
+<span class="sd">        :type links: list | None</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Adds process to the pipeline.</span>
@@ -1191,12 +1212,15 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Deletes a node from the pipeline and updates the GUI and history</span>
 <span class="sd">        accordingly.</span>
 
-<span class="sd">        :param node_name: (str) The name of the node to delete. If not</span>
-<span class="sd">         provided, the currently selected node is used.</span>
-<span class="sd">        :param from_undo: (bool) True if the deletion was triggered by an undo</span>
+<span class="sd">        :param node_name: The name of the node to delete. If not provided, the</span>
+<span class="sd">         currently selected node is used.</span>
+<span class="sd">        :type node_name: str | None</span>
+<span class="sd">        :param from_undo: True if the deletion was triggered by an undo</span>
 <span class="sd">         operation.</span>
-<span class="sd">        :param from_redo: (bool) True if the deletion was triggered by a redo</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: True if the deletion was triggered by a redo</span>
 <span class="sd">         operation.</span>
+<span class="sd">        :type from redo: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">pipeline</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span>
         <span class="n">node_name</span> <span class="o">=</span> <span class="n">node_name</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_node_name</span>
@@ -1302,14 +1326,20 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        not in the pipeline&#39;s exclusion list.</span>
 
 <span class="sd">        :param node_name: Name of the node whose plugs should be exported.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param inputs: Whether to export input plugs. Defaults to True.</span>
+<span class="sd">        :type inputs: bool</span>
 <span class="sd">        :param outputs: Whether to export output plugs. Defaults to True.</span>
+<span class="sd">        :type outputs: bool</span>
 <span class="sd">        :param optional: Whether to include optional plugs in the export.</span>
 <span class="sd">         Defaults to False.</span>
+<span class="sd">        :type optional: bool</span>
 <span class="sd">        :param from_undo: Whether this call originates from an undo operation.</span>
 <span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
 <span class="sd">        :param from_redo: Whether this call originates from a redo operation.</span>
 <span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - Only unlinked plugs are exported (outputs without links_to,</span>
@@ -1391,7 +1421,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        file where this pipeline was most recently saved. If the pipeline has</span>
 <span class="sd">        never been saved, returns an empty string.</span>
 
-<span class="sd">        :Returns: (str) Relative path to the pipeline file, or empty string if</span>
+<span class="sd">        :return: (str) Relative path to the pipeline file, or empty string if</span>
 <span class="sd">         never saved.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_pipeline_filename&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1410,24 +1440,24 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        method performs validation to ensure the filename is valid (doesn&#39;t</span>
 <span class="sd">        start with a digit, has .py extension) and checks user permissions.</span>
 
-<span class="sd">        :param filename: (str) Path where the pipeline should be saved. If</span>
-<span class="sd">         None, a file dialog will be shown. Defaults to None.</span>
+<span class="sd">        :param filename: Path where the pipeline should be saved. If None, a</span>
+<span class="sd">         file dialog will be shown. Defaults to None.</span>
+<span class="sd">        :type filename: str | None</span>
 
-<span class="sd">        :Returns: (str) The absolute path of the saved pipeline file, or None</span>
-<span class="sd">         if:</span>
+<span class="sd">        :return: The absolute path of the saved pipeline file, or None if:</span>
+
 <span class="sd">            - The pipeline is empty (fewer than 2 nodes).</span>
 <span class="sd">            - The user cancelled the save dialog.</span>
 <span class="sd">            - The filename is invalid.</span>
 <span class="sd">            - The user lacks permission to overwrite an existing file.</span>
+<span class="sd">        :rtype: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - pipeline_saved: Signal emitted with the filename when save is</span>
 <span class="sd">              successful.</span>
 
 <span class="sd">        Contains:</span>
-
 <span class="sd">            Inner functions:</span>
-
 <span class="sd">                _show_warning: Display a warning message box to the user.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1435,10 +1465,11 @@ window.runMermaid = runMermaid;</script>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Display a warning message box to the user.</span>
 
-<span class="sd">            :param title: (str) The title displayed in the warning dialog</span>
-<span class="sd">             window.</span>
-<span class="sd">            :param message: (str) The message text shown inside the warning</span>
-<span class="sd">             dialog box.</span>
+<span class="sd">            :param title: The title displayed in the warning dialog window.</span>
+<span class="sd">            :type title: str</span>
+<span class="sd">            :param message: The message text shown inside the warning dialog</span>
+<span class="sd">             box.</span>
+<span class="sd">            :type message: str</span>
 <span class="sd">            &quot;&quot;&quot;</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="p">()</span>
             <span class="n">msg</span><span class="o">.</span><span class="n">setIcon</span><span class="p">(</span><span class="n">QtWidgets</span><span class="o">.</span><span class="n">QMessageBox</span><span class="o">.</span><span class="n">Warning</span><span class="p">)</span>
@@ -1552,12 +1583,16 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param history_maker: A list describing the action, where</span>
 <span class="sd">         history_maker[0] is the action type (e.g., &#39;add_process&#39;,</span>
-<span class="sd">         &#39;delete_process&#39;, &#39;update_node_name&#39;) and history_maker[1] is</span>
-<span class="sd">         typically the affected node identifier.</span>
-<span class="sd">        :param from_undo: (bool) Whether this update stems from an undo</span>
-<span class="sd">         operation. Defaults to False.</span>
-<span class="sd">        :param from_redo: (bool) Whether this update stems from a redo</span>
-<span class="sd">         operation. Defaults to False.</span>
+<span class="sd">         &#39;delete_process&#39;, &#39;update_node_name&#39;), history_maker[1] is</span>
+<span class="sd">         typically the affected node identifier and history_maker[2] the</span>
+<span class="sd">         corresponding class.</span>
+<span class="sd">        :type history_maker: list</span>
+<span class="sd">        :param from_undo: Whether this update stems from an undo operation.</span>
+<span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: Whether this update stems from a redo operation.</span>
+<span class="sd">         Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            - &#39;update_node_name&#39; actions are not added to the undo stack.</span>
@@ -1618,12 +1653,17 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            4. Recording the action in the history for undo/redo support.</span>
 
 <span class="sd">        :param old_node: The node object to rename.</span>
+<span class="sd">        :type old_node: capsul.pipeline.pipeline_nodes.ProcessNode</span>
 <span class="sd">        :param old_node_name: The current name of the node.</span>
+<span class="sd">        :type old_node_name: str</span>
 <span class="sd">        :param new_node_name: The desired new name for the node.</span>
+<span class="sd">        :type new_node_name: str</span>
 <span class="sd">        :param from_undo: Whether this action is being performed as part of an</span>
 <span class="sd">         undo operation. Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
 <span class="sd">        :param from_redo: Whether this action is being performed as part of a</span>
 <span class="sd">         redo operation. Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates the pipeline&#39;s node registry.</span>
@@ -1720,19 +1760,27 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Update a node&#39;s plug value and record the change in history.</span>
 
 <span class="sd">        Updates the specified plug on the given node with a new value. The</span>
-<span class="sd">        update is recorded in the history for undo/redo operations unless it&#39;s</span>
-<span class="sd">        already part of an undo/redo action.</span>
+<span class="sd">        value is converted using ``value_type`` unless the update is part of an</span>
+<span class="sd">        undo or redo operation. The change is recorded in the history unless it</span>
+<span class="sd">        is already being processed as an undo or redo operation.</span>
 
 <span class="sd">        :param node_name: The name of the node containing the plug.</span>
-<span class="sd">        :param  new_value: The new value to assign to the plug. Will be cast</span>
-<span class="sd">         to value_type unless from_undo or from_redo is True.</span>
+<span class="sd">        :type node_name: str</span>
+<span class="sd">        :param new_value: Value to assign to the plug. It is converted using</span>
+<span class="sd">         ``value_type`` unless ``from_undo`` or ``from_redo`` is True.</span>
+<span class="sd">        :type new_value: object</span>
 <span class="sd">        :param plug_name: The name of the plug to update.</span>
-<span class="sd">        :param value_type: The type constructor to apply to new_value</span>
-<span class="sd">         (e.g., int, float, str). Ignored when from_undo or from_redo is True.</span>
-<span class="sd">        :param from_undo: If True, indicates this update is from an undo</span>
-<span class="sd">         operation. Defaults to False.</span>
-<span class="sd">        :param from_redo: If True, indicates this update is from a redo</span>
-<span class="sd">         operation. Defaults to False.</span>
+<span class="sd">        :type plug_name: str</span>
+<span class="sd">        :param value_type: Type or callable used to convert ``new_value``, such</span>
+<span class="sd">         as ``int``, ``float``, or ``str``. Ignored during undo and redo</span>
+<span class="sd">         operations.</span>
+<span class="sd">        :type value_type: type</span>
+<span class="sd">        :param from_undo: Whether the update is being performed as part of an</span>
+<span class="sd">         undo operation. Defaults to False.</span>
+<span class="sd">        :type from_undo: bool</span>
+<span class="sd">        :param from_redo: Whether the update is being performed as part of a</span>
+<span class="sd">         redo operation. Defaults to False.</span>
+<span class="sd">        :type from_redo: bool</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates the plug value in the pipeline.</span>
@@ -1781,9 +1829,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    PipelineEditor instance with its own undo/redo history.</span>
 
 <span class="sd">    Contains:</span>
-
 <span class="sd">        Methods:</span>
-
 <span class="sd">            - check_modifications: Check if the nodes of the current pipeline</span>
 <span class="sd">              have been modified.</span>
 <span class="sd">            - close_tab: Close the selected tab and editor.</span>
@@ -1846,7 +1892,6 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">              editor.</span>
 
 <span class="sd">    Signals:</span>
-
 <span class="sd">        - node_clicked: Signal emitted when a node is clicked in any editor.</span>
 <span class="sd">        - pipeline_saved: Signal emitted when a pipeline is saved.</span>
 <span class="sd">        - process_clicked: Signal emitted when a process is clicked.</span>
@@ -1865,8 +1910,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Initialize the pipeline editor tabs.</span>
 
 <span class="sd">        :param project: Current project instance in the software.</span>
+<span class="sd">        :type project: populse_mia.data_manager.project.Project</span>
 <span class="sd">        :param scan_list: List of selected database files.</span>
+<span class="sd">        :type scan_list: list</span>
 <span class="sd">        :param main_window: Main application window reference.</span>
+<span class="sd">        :type main_window: populse_mia.user_interface.main_window.MainWindow</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">project</span> <span class="o">=</span> <span class="n">project</span>
@@ -1933,6 +1981,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        validation for the special &quot;add new pipeline&quot; tab (last position).</span>
 
 <span class="sd">        :param current_index: The index of the tab being switched to.</span>
+<span class="sd">        :type current_index: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The last tab (&#39;+&#39; button) may not have a widget, which is handled</span>
@@ -1955,15 +2004,16 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PipelineEditorTabs.close_tab">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.close_tab">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">close_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Close a tab and its associated editor, prompting to save if modified.</span>
 
 <span class="sd">        Removes the specified tab and cleans up its undo/redo history. If the</span>
-<span class="sd">        tab contains unsaved changes (indicated by &quot; *&quot; suffix), prompts the</span>
+<span class="sd">        tab contains unsaved changes (indicated by &quot; \*&quot; suffix), prompts the</span>
 <span class="sd">        user to save before closing. If all tabs are closed, creates a new</span>
 <span class="sd">        default pipeline.</span>
 
 <span class="sd">        :param idx: index of the tab to close.</span>
+<span class="sd">        :type idx: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_filename_by_index</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
@@ -2037,9 +2087,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        whether the process parameter is a Process instance.</span>
 
 <span class="sd">        :param node_name: The name of the clicked node.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param process: The process associated with the node. If this is a</span>
 <span class="sd">         Process instance, emits `process_clicked`; otherwise emits</span>
 <span class="sd">         `node_clicked`.</span>
+<span class="sd">        :type process: object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">signal</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">process_clicked</span>
@@ -2056,6 +2108,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Update the current tab title and emit the *pipeline_saved* signal.</span>
 
 <span class="sd">        :param filename: Path to the saved pipeline file.</span>
+<span class="sd">        :type filename: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setTabText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">(),</span> <span class="n">Path</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pipeline_saved</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span></div>
@@ -2068,9 +2121,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Emit a signal when a switch is toggled.</span>
 
 <span class="sd">        :param node_name: The name of the node whose switch was clicked.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        :param switch: The Switch associated with the node.</span>
+<span class="sd">        :type switch: capsul.pipeline.pipeline_nodes.Switch</span>
 
-<span class="sd">        :Emits: switch_clicked: Signal containing the node name and the Switch.</span>
+<span class="sd">        :emit switch_clicked: Signal containing the node name and the Switch.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">switch_clicked</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">node_name</span><span class="p">,</span> <span class="n">switch</span><span class="p">)</span></div>
 
@@ -2086,6 +2141,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        node&#39;s input parameter as database_scans at the pipeline level.</span>
 
 <span class="sd">        :param node_name: Name of the node whose input should be exported.</span>
+<span class="sd">        :type node_name: str</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method automatically updates the editor scene after</span>
@@ -2108,15 +2164,16 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_capsul_engine">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_capsul_engine</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Configure and return a CapsulEngine for the current pipeline.</span>
+<span class="sd">        Configure and return a CapsulEngine object for the current pipeline.</span>
 
 <span class="sd">        Retrieves a CapsulEngine instance from the Mia configuration and sets</span>
 <span class="sd">        up the study configuration with project-specific directories. If the</span>
 <span class="sd">        current pipeline has completion attributes, they are preserved during</span>
 <span class="sd">        the engine setup process.</span>
 
-<span class="sd">        :Returns: (CapsulEngine) Configured engine instance with study</span>
+<span class="sd">        :return: Configured engine instance with study</span>
 <span class="sd">         directories set to the project&#39;s raw_data and derived_data folders.</span>
+<span class="sd">        :rtype: capsul.engine.CapsulEngine</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method temporarily saves and restores completion engine</span>
@@ -2157,7 +2214,8 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Return the editor corresponding to the currently selected tab.</span>
 
-<span class="sd">        :Returns: Editor instance for the active tab.</span>
+<span class="sd">        :return: Editor instance for the active tab.</span>
+<span class="sd">        :rtype: PipelineEditor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span></div>
 
@@ -2171,7 +2229,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        If the pipeline has never been saved, the current tab title is</span>
 <span class="sd">        returned.</span>
 
-<span class="sd">        :Returns: The filename for the current editor.</span>
+<span class="sd">        :return: The filename for the current editor.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename_by_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span></div>
 
@@ -2184,7 +2243,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Returns None if no editor or scene is available.</span>
 
-<span class="sd">        :Returns: The pipeline for the current editor</span>
+<span class="sd">        :return: The pipeline for the current editor</span>
+<span class="sd">        :rtype: capsul.pipeline.pipeline.Pipeline</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_editor</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">editor</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">pipeline</span> <span class="k">if</span> <span class="n">editor</span> <span class="ow">and</span> <span class="n">editor</span><span class="o">.</span><span class="n">scene</span> <span class="k">else</span> <span class="kc">None</span></div>
@@ -2198,7 +2258,8 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        Trailing &quot;*&quot; and &quot;&amp;&quot; characters are stripped.</span>
 
-<span class="sd">        :Returns: The current tab name.</span>
+<span class="sd">        :return: The current tab name.</span>
+<span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_tab_name_by_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIndex</span><span class="p">())</span></div>
 
@@ -2212,8 +2273,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        The filename corresponds to the last saved location of the pipeline.</span>
 
 <span class="sd">        :param file_name: Name of the file the pipeline was last saved to.</span>
+<span class="sd">        :type file_name: str</span>
 
-<span class="sd">        :Returns: The editor corresponding to the file name.</span>
+<span class="sd">        :return: The editor corresponding to the file name.</span>
+<span class="sd">        :rtype: PipelineEditor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_index_by_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span></div>
 
@@ -2225,10 +2288,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Retrieve an editor widget by its tab index.</span>
 
 <span class="sd">        :param idx: Zero-based index of the editor tab, or None if not found.</span>
+<span class="sd">        :type idx: int | None</span>
 
-<span class="sd">        :Returns: The editor widget at the specified index, or None if idx is</span>
+<span class="sd">        :return: The editor widget at the specified index, or None if idx is</span>
 <span class="sd">         None or if the index corresponds to the &quot;add tab&quot; button (last tab) or</span>
 <span class="sd">         if index out of range.</span>
+<span class="sd">        :rtype: PipelineEditor</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            The last tab position is reserved for the &quot;add tab&quot; button and</span>
@@ -2247,10 +2312,12 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the editor instance associated with a specific tab name.</span>
 
-<span class="sd">        :param tab_name: (str) The name of the tab to search for.</span>
+<span class="sd">        :param tab_name: The name of the tab to search for.</span>
+<span class="sd">        :type tab_name: str</span>
 
-<span class="sd">        :Returns: The editor instance corresponding to the specified tab name,</span>
+<span class="sd">        :return: The editor instance corresponding to the specified tab name,</span>
 <span class="sd">         or None if the tab is not found.</span>
+<span class="sd">        :rtype: PipelineEditor</span>
 
 <span class="sd">        :raises ValueError: If tab_name is empty or None.</span>
 <span class="sd">        :raises KeyError: If no tab exists with the given name.</span>
@@ -2271,9 +2338,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        instead.</span>
 
 <span class="sd">        :param idx: The zero-based index of the editor tab.</span>
+<span class="sd">        :type idx: int</span>
 
-<span class="sd">        :Returns: (str or None) The filename or tab title if the editor exists,</span>
-<span class="sd">         None if no editor exists at the given index.</span>
+<span class="sd">        :return: The filename or tab title if the editor exists, None if no</span>
+<span class="sd">         editor exists at the given index.</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">editor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_editor_by_index</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
 
@@ -2287,9 +2356,11 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Find the tab index for a given editor widget.</span>
 
 <span class="sd">        :param editor: The pipeline editor widget to locate.</span>
+<span class="sd">        :type editor: PipelineEditor</span>
 
-<span class="sd">        :Returns: The zero-based index of the editor&#39;s tab, or None if not</span>
+<span class="sd">        :return: The zero-based index of the editor&#39;s tab, or None if not</span>
 <span class="sd">         found.</span>
+<span class="sd">        :rtype: int | None</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Searches all tabs except the last one (count() - 1).</span>
@@ -2311,11 +2382,13 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the index of the first tab with the specified filename.</span>
 
-<span class="sd">        :param filename: (str) The pipeline filename to search for. Can be an</span>
+<span class="sd">        :param filename: The pipeline filename to search for. Can be an</span>
 <span class="sd">         absolute or relative path; will be normalized to relative.</span>
+<span class="sd">        :type filename: str</span>
 
-<span class="sd">        :Returns: (int) The zero-based index of the matching tab, or None if</span>
+<span class="sd">        :return: The zero-based index of the matching tab, or None if</span>
 <span class="sd">         no match is found.</span>
+<span class="sd">        :rtype: int</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            Filenames are internally stored as relative paths for consistency.</span>
@@ -2347,10 +2420,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Searches through all tabs (excluding the last one) to find a tab</span>
 <span class="sd">        matching the given name.</span>
 
-<span class="sd">        :param tab_name: (str) The name of the tab to locate.</span>
+<span class="sd">        :param tab_name: The name of the tab to locate.</span>
+<span class="sd">        :type tab_name: str</span>
 
-<span class="sd">        :Returns: (int) The zero-based index of the matching tab, or None if no</span>
-<span class="sd">         match is found.</span>
+<span class="sd">        :return: The zero-based index of the matching tab, or None if no match</span>
+<span class="sd">         is found.</span>
+<span class="sd">        :rtype: int | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">next</span><span class="p">(</span>
@@ -2366,18 +2441,21 @@ window.runMermaid = runMermaid;</script>
 <div class="viewcode-block" id="PipelineEditorTabs.get_tab_name_by_index">
 <a class="viewcode-back" href="../../../../_autosummary/populse_mia.user_interface.pipeline_manager.pipeline_editor.html#populse_mia.user_interface.pipeline_manager.pipeline_editor.PipelineEditorTabs.get_tab_name_by_index">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_tab_name_by_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the clean tab name at the specified index.</span>
 
 <span class="sd">        Retrieves the tab text at the given index and removes formatting</span>
 <span class="sd">        characters:</span>
+
 <span class="sd">            - Qt keyboard shortcut indicators (ampersands).</span>
-<span class="sd">            - Unsaved file indicators (trailing &quot; *&quot;).</span>
+<span class="sd">            - Unsaved file indicators (trailing &quot; \*&quot;).</span>
 
 <span class="sd">        :param idx: Zero-based index of the tab.</span>
+<span class="sd">        :type idx: int</span>
 
-<span class="sd">        :Returns: (str) The cleaned tab name, or None if the index is invalid</span>
-<span class="sd">         or corresponds to the &quot;add tab&quot; button (last position).</span>
+<span class="sd">        :return: The cleaned tab name, or None if the index is invalid or</span>
+<span class="sd">         corresponds to the &quot;add tab&quot; button (last position).</span>
+<span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Last tab position is reserved for the &quot;add tab&quot; button</span>
@@ -2401,8 +2479,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        contains nodes by examining the presence of plugs in the pipeline&#39;s</span>
 <span class="sd">        root node.</span>
 
-<span class="sd">        :Returns: (bool) True if at least one pipeline contains nodes, False</span>
-<span class="sd">         otherwise.</span>
+<span class="sd">        :return: True if at least one pipeline contains nodes, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span>
@@ -2422,11 +2500,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        already open, switches to that tab. If the current tab is not empty,</span>
 <span class="sd">        creates a new tab for the pipeline.</span>
 
-<span class="sd">        :param filename: (str) Path to the pipeline file to load. If None,</span>
-<span class="sd">         prompts the user to select a file. Defaults to None.</span>
+<span class="sd">        :param filename: Path to the pipeline file to load. If None, prompts</span>
+<span class="sd">         the user to select a file. Defaults to None.</span>
+<span class="sd">        :type filename: str | None</span>
 
-<span class="sd">        :Returns: (None) Returns early on success, or cleans up and returns on</span>
-<span class="sd">         failure.</span>
+<span class="sd">        :return: Returns early on success, or cleans up and returns on failure.</span>
+<span class="sd">        :rtype: None</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method is also called from `open_sub_pipeline` with a</span>
@@ -2578,6 +2657,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        associated with the given node in the current pipeline.</span>
 
 <span class="sd">        :param node_name: The name of the node to apply filters to.</span>
+<span class="sd">        :type node_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_pipeline</span><span class="p">()</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">node_name</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filter_widget</span> <span class="o">=</span> <span class="n">FilterWidget</span><span class="p">(</span>
@@ -2604,6 +2684,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param sub_pipeline: The pipeline object to open. Must have a &#39;name&#39;</span>
 <span class="sd">         attribute and &#39;__module__&#39; attribute for package resolution.</span>
+<span class="sd">        :type sub_pipeline: object</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Load process configuration</span>
         <span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
@@ -2660,6 +2741,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        This triggers an asynchronous update of the pipeline view after a</span>
 <span class="sd">        short delay (20ms). The update strategy depends on the editor&#39;s view</span>
 <span class="sd">        mode:</span>
+
 <span class="sd">            - Logical view: Displays logical representations of nodes, plugs,</span>
 <span class="sd">              and links</span>
 <span class="sd">            - Normal view: Displays standard representations of nodes, plugs,</span>
@@ -2682,11 +2764,12 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        a filename is provided. Updates the tab text and emits a signal upon</span>
 <span class="sd">        successful save.</span>
 
-<span class="sd">        :param new_file_name: (str) Target filename for the pipeline. If None,</span>
+<span class="sd">        :param new_file_name: Target filename for the pipeline. If None,</span>
 <span class="sd">         triggers a &quot;Save As&quot; dialog. Defaults to None.</span>
+<span class="sd">        :type new_file_name: str | None</span>
 
-<span class="sd">        :Returns: (str or None) The basename of the saved file if successful,</span>
-<span class="sd">         None otherwise.</span>
+<span class="sd">        :return: The basename of the saved file if successful, None otherwise.</span>
+<span class="sd">        :rtype: str | None</span>
 
 <span class="sd">        Side Effects:</span>
 <span class="sd">            - Updates the current tab text with the new filename.</span>
@@ -2767,6 +2850,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :param editor: The editor instance to make active. Must be an editor</span>
 <span class="sd">         that exists within one of the managed tabs.</span>
+<span class="sd">        :type editor: PipelineEditor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_tab_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_index_by_editor</span><span class="p">(</span><span class="n">editor</span><span class="p">))</span></div>
 
@@ -2782,6 +2866,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="sd">        :parame file_name: The name of the file whose editor tab should be</span>
 <span class="sd">         activated.</span>
+<span class="sd">        :type file_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_tab_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_index_by_filename</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span></div>
 
@@ -2793,6 +2878,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Activate the editor tab with the specified name.</span>
 
 <span class="sd">        :param tab_name: The display name of the tab to activate.</span>
+<span class="sd">        :type tab_name: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">:=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_index_by_tab_name</span><span class="p">(</span><span class="n">tab_name</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -2813,6 +2899,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        editor.</span>
 
 <span class="sd">        :param index: The zero-based index of the tab to activate.</span>
+<span class="sd">        :type index: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setCurrentIndex</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">previousIndex</span> <span class="o">=</span> <span class="n">index</span>
@@ -2826,7 +2913,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Update the iteration checkbox state based on pipeline node names.</span>
 
 <span class="sd">        Sets the iteration checkbox to checked if any pipeline node has</span>
-<span class="sd">        &#39;iterated_&#39; in its key name, otherwise sets it to unchecked. If no</span>
+<span class="sd">        ``iterated_`` in its key name, otherwise sets it to unchecked. If no</span>
 <span class="sd">        valid pipeline exists or the pipeline lacks nodes, the checkbox is</span>
 <span class="sd">        unchecked.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2890,6 +2977,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        present.</span>
 
 <span class="sd">        :param editor: The editor instance whose history should be saved.</span>
+<span class="sd">        :type editor: PipelineEditor</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This method assumes the editor is in the currently active tab.</span>
@@ -2912,6 +3000,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        list to reflect any modifications made in the pipeline editor.</span>
 
 <span class="sd">        :param editor: The editor instance that was modified.</span>
+<span class="sd">        :type editor: PipelineEditor</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_history</span><span class="p">(</span><span class="n">editor</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_scans_list</span><span class="p">()</span></div>
@@ -2967,10 +3056,14 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Performs case-insensitive matching to handle filesystem sensitivity issues.</span>
 
 <span class="sd">    :param paths_list: Base directory paths from process_config.yml.</span>
+<span class="sd">    :type paths_list: list[str]</span>
 <span class="sd">    :param packages_list: Ordered list of package subdirectories to traverse.</span>
+<span class="sd">    :type packages_list: list[str]</span>
 <span class="sd">    :param file_name: Base name of the sub-pipeline file (without extension).</span>
+<span class="sd">    :type file_name: str</span>
 
-<span class="sd">    :Returns: Absolute path to the matched file, or None if not found.</span>
+<span class="sd">    :return: Absolute path to the matched file, or None if not found.</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">extensions</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;.py&quot;</span><span class="p">,</span> <span class="s2">&quot;.xml&quot;</span><span class="p">)</span>
 
@@ -3008,15 +3101,19 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        - Intermediate nodes are dictionaries (packages),</span>
 <span class="sd">        - Leaf nodes are strings (module names).</span>
 
-<span class="sd">    :param name: (str) Name of the module to locate in the tree.</span>
-<span class="sd">    :param dictionary: (dict) The nested dictionary representing the tree</span>
-<span class="sd">     structure.</span>
-<span class="sd">    :param prev_paths: (list[str]) The accumulated path leading to the current</span>
-<span class="sd">     dictionary. If None, a new path list is created.</span>
-<span class="sd">    :param pckg: (str) If provided, navigation starts inside that package name.</span>
+<span class="sd">    :param name: Name of the module to locate in the tree.</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param dictionary: The nested dictionary representing the tree structure.</span>
+<span class="sd">    :type disctionary: dict</span>
+<span class="sd">    :param prev_paths: The accumulated path leading to the current dictionary.</span>
+<span class="sd">     If None, a new path list is created.</span>
+<span class="sd">    :type prev_paths: list[str] | None</span>
+<span class="sd">    :param pckg: If provided, navigation starts inside that package name.</span>
+<span class="sd">    :type pckg: str | None</span>
 
-<span class="sd">    :Returns: (list[str]) A list of keys representing the path to the module,</span>
-<span class="sd">     or None if the module is not found.</span>
+<span class="sd">    :return: A list of keys representing the path to the module, or None if the</span>
+<span class="sd">     module is not found.</span>
+<span class="sd">    :rtype: list[str] | None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Initialize accumulated path</span>
@@ -3066,8 +3163,10 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    extension is provided, defaults to Python format.</span>
 
 <span class="sd">    :param pipeline: The pipeline object to serialize and save.</span>
-<span class="sd">    :param filename: Path to the output file. The extension determines</span>
-<span class="sd">     the output format (.py or .xml).</span>
+<span class="sd">    :type pipeline: capsul.pipeline.pipeline.Pipeline</span>
+<span class="sd">    :param filename: Path to the output file. The extension determines the</span>
+<span class="sd">     output format (.py or .xml).</span>
+<span class="sd">    :type filename: str</span>
 
 <span class="sd">    Note:</span>
 <span class="sd">        Unrecognized extensions will default to Python source format (.py)</span>

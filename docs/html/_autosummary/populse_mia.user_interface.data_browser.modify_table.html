@@ -5,17 +5,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.data_browser.modify_table &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../_static/haiku.css?v=fce32b03" />
-    <script src="../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.data_browser.modify_table</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -55,11 +55,9 @@ database consistency.</p>
 values. It displays the list elements in a table and allows users to add
 or remove elements.</p>
 </div></blockquote>
-<p>Contains:</p>
-<blockquote>
-<div><p>Methods:</p>
-<blockquote>
-<div><ul class="simple">
+<dl class="simple">
+<dt>Contains:</dt><dd><dl class="simple">
+<dt>Methods:</dt><dd><ul class="simple">
 <li><p>_convert_value: Convert a text value to the appropriate type.</p></li>
 <li><p>_show_error_message: Display an error message.</p></li>
 <li><p>add_item: Add one more element to self.value.</p></li>
@@ -67,8 +65,10 @@ or remove elements.</p>
 <li><p>rem_last_item: Remove last element of self.value.</p></li>
 <li><p>update_table_values: Update the table in the database.</p></li>
 </ul>
-</div></blockquote>
-</div></blockquote>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">types</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scans</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/populse_mia/user_interface/data_browser/modify_table.html#ModifyTable.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#populse_mia.user_interface.data_browser.modify_table.ModifyTable.__init__" title="Link to this definition">¶</a></dt>
@@ -76,11 +76,11 @@ or remove elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>project</strong> – Instance of the current project.</p></li>
-<li><p><strong>value</strong> – List of values in the cell to be modified.</p></li>
-<li><p><strong>types</strong> – Allowed value types for validation.</p></li>
-<li><p><strong>scans</strong> – Scan identifiers corresponding to rows.</p></li>
-<li><p><strong>tags</strong> – Tag identifiers corresponding to columns.</p></li>
+<li><p><strong>project</strong> (<a class="reference internal" href="populse_mia.data_manager.project.html#populse_mia.data_manager.project.Project" title="populse_mia.data_manager.project.Project"><em>populse_mia.data_manager.project.Project</em></a>) – Instance of the current project.</p></li>
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a>) – List of values in the cell to be modified.</p></li>
+<li><p><strong>types</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><em>Any</em><em>]</em>) – Allowed value types for validation.</p></li>
+<li><p><strong>scans</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Scan identifiers corresponding to rows.</p></li>
+<li><p><strong>tags</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>]</em>) – Tag identifiers corresponding to columns.</p></li>
 </ul>
 </dd>
 </dl>
@@ -93,12 +93,15 @@ or remove elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> – String value to convert.</p></li>
-<li><p><strong>field_type</strong> – Database field type constant.</p></li>
+<li><p><strong>text</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – String value to convert.</p></li>
+<li><p><strong>field_type</strong> (<em>Any</em>) – Database field type constant.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The converted value in the appropriate type.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Any</p>
 </dd>
 </dl>
 </dd></dl>
@@ -110,8 +113,8 @@ or remove elements.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – The invalid value.</p></li>
-<li><p><strong>type_problem</strong> – The specific type that failed validation.</p></li>
+<li><p><strong>value</strong> (<em>Any</em>) – The invalid value.</p></li>
+<li><p><strong>type_problem</strong> (<em>Any</em>) – The specific type that failed validation.</p></li>
 </ul>
 </dd>
 </dl>
@@ -146,7 +149,7 @@ adjusts table size to fit content within reasonable bounds.</p>
 only if all values are valid.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>test</strong> – (bool) Flag for testing mode, defaults to False.</p>
+<dd class="field-odd"><p><strong>test</strong> (<a class="reference external" href="https://docs.python.org/3.10/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a>) – Flag for testing mode, defaults to False.</p>
 </dd>
 </dl>
 </dd></dl>

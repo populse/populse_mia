@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.user_interface.pop_ups &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.user_interface.pop_ups</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -1787,7 +1787,8 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">can_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if the editor can be closed.</span>
 
-<span class="sd">        :Returns (bool) True if the editor can be closed, False otherwise.</span>
+<span class="sd">        :return: True if the editor can be closed, False otherwise.</span>
+<span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bool_exit</span></div>
 
@@ -3704,7 +3705,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         widgets to the left. Defaults to True.</span>
 <span class="sd">        :type add_stretch: bool</span>
 
-<span class="sd">        :Returns: The created horizontal box layout.</span>
+<span class="sd">        :return: The created horizontal box layout.</span>
 <span class="sd">        :rtype: PyQt5.QtWidgets.QHBoxLayout</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">h_box</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">()</span>
@@ -4291,7 +4292,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param config: The configuration object to update and save.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if the configuration is valid and successfully saved,</span>
+<span class="sd">        :return: True if the configuration is valid and successfully saved,</span>
 <span class="sd">         False otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4857,7 +4858,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param config: The configuration object to update.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if the path is valid and updated in the configuration,</span>
+<span class="sd">        :return: True if the path is valid and updated in the configuration,</span>
 <span class="sd">         False otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4940,7 +4941,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param config: The configuration object to update.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if the path is valid and updated in the configuration,</span>
+<span class="sd">        :return: True if the path is valid and updated in the configuration,</span>
 <span class="sd">         False otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -4993,7 +4994,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         settings will be stored.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if all paths and settings are valid, False otherwise.</span>
+<span class="sd">        :return: True if all paths and settings are valid, False otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">QApplication</span><span class="o">.</span><span class="n">setOverrideCursor</span><span class="p">(</span><span class="n">QtCore</span><span class="o">.</span><span class="n">Qt</span><span class="o">.</span><span class="n">WaitCursor</span><span class="p">)</span>
@@ -5175,7 +5176,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         settings will be stored.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if the SPM path and Matlab path are valid, False</span>
+<span class="sd">        :return: True if the SPM path and Matlab path are valid, False</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -5271,7 +5272,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         settings will be stored.</span>
 <span class="sd">        :type config: populse_mia.software_properties.Config</span>
 
-<span class="sd">        :Returns: True if the SPM standalone and Matlab standalone paths are</span>
+<span class="sd">        :return: True if the SPM standalone and Matlab standalone paths are</span>
 <span class="sd">         valid, False otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -5435,7 +5436,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         to set the tool&#39;s path in the configuration.</span>
 <span class="sd">        :type set_path: callable</span>
 
-<span class="sd">        :Returns: True if the tool&#39;s path is valid and functional, False</span>
+<span class="sd">        :return: True if the tool&#39;s path is valid and functional, False</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -5770,7 +5771,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the application can exit.</span>
 
-<span class="sd">        :Returns: (bool) True if  exit is allowed.</span>
+<span class="sd">        :return: (bool) True if  exit is allowed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bool_exit</span></div>
 
@@ -6205,7 +6206,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        Checks project name validity, handles potential naming conflicts,</span>
 <span class="sd">        and emits a signal when a valid project name is selected.</span>
 
-<span class="sd">        :Returns: Full path of the new project if successful, None otherwise.</span>
+<span class="sd">        :return: Full path of the new project if successful, None otherwise.</span>
 <span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">new_project</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
@@ -6335,7 +6336,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param path: Path to the project directory.</span>
 <span class="sd">        :type path: str</span>
 
-<span class="sd">        :Returns: Green checkmark if project exists, red cross if not.</span>
+<span class="sd">        :return: Green checkmark if project exists, red cross if not.</span>
 <span class="sd">        :rtype: PyQt5.QtGui.QIcon</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">sources_images_dir</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span><span class="o">.</span><span class="n">getSourceImageDir</span><span class="p">()</span>
@@ -6349,7 +6350,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Returns the path of the first selected item.</span>
 
-<span class="sd">        :Returns: (str) Absolute path of the selected project, or empty string</span>
+<span class="sd">        :return: (str) Absolute path of the selected project, or empty string</span>
 <span class="sd">         if no selection.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -6637,7 +6638,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :type clicked_handler:</span>
 <span class="sd">         :meth:`populse_mia.user_interface.pop_ups.PopUpSelectTagCountTable.ok_clicked`</span>
 
-<span class="sd">        :Returns: Configured button.</span>
+<span class="sd">        :return: Configured button.</span>
 <span class="sd">        :rtype: PyQt5.QtWidgets.QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -6988,7 +6989,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param item_idx: The starting column index for populating the table.</span>
 <span class="sd">        :type item_idx: int</span>
 
-<span class="sd">        :Returns: The updated column index after processing the dictionary.</span>
+<span class="sd">        :return: The updated column index after processing the dictionary.</span>
 <span class="sd">        :rtype: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -7136,7 +7137,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param node_name: The name of the node to find associated bricks for.</span>
 <span class="sd">        :type node_name: str</span>
 
-<span class="sd">        :Returns: A dictionary where the keys are the full brick names and the</span>
+<span class="sd">        :return: A dictionary where the keys are the full brick names and the</span>
 <span class="sd">         values are lists of associated UUIDs.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -7171,7 +7172,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param plug: The plug object to find the process and plug name from.</span>
 <span class="sd">        :type plug: capsul.pipeline.pipeline_nodes.Plug</span>
 
-<span class="sd">        :Returns: A tuple containing the process name (str) and plug name</span>
+<span class="sd">        :return: A tuple containing the process name (str) and plug name</span>
 <span class="sd">         (str).</span>
 <span class="sd">        :rtype: tuple[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -7279,7 +7280,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param value: I/O value.</span>
 <span class="sd">        :type value: str</span>
 
-<span class="sd">        :Returns: The scan corresponding to the value if it exists, None</span>
+<span class="sd">        :return: The scan corresponding to the value if it exists, None</span>
 <span class="sd">         otherwise.</span>
 <span class="sd">        :rtype: str | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -7493,7 +7494,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            :param text: The text to display in the QLabel.</span>
 <span class="sd">            :type text: str</span>
 
-<span class="sd">            :Returns: A QWidget containing a QLabel with the specified text,</span>
+<span class="sd">            :return: A QWidget containing a QLabel with the specified text,</span>
 <span class="sd">             aligned to the top within a vertical layout.</span>
 <span class="sd">            :rtype: PyQt5.QtWidgets.QWidget</span>
 <span class="sd">            &quot;&quot;&quot;</span>
@@ -7763,7 +7764,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         clicked.</span>
 <span class="sd">        :type click_handler: A callable method</span>
 
-<span class="sd">        :Returns: A configured button with the specified properties.</span>
+<span class="sd">        :return: A configured button with the specified properties.</span>
 <span class="sd">        :rtype: PyQt5.QtWidgets.QPushButton</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">button</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -7796,7 +7797,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param text: The text to be displayed on the label, will be translated.</span>
 <span class="sd">        :type text: str</span>
 
-<span class="sd">        :Returns: A configured label with the specified properties.</span>
+<span class="sd">        :return: A configured label with the specified properties.</span>
 <span class="sd">        :rtype: PyQt5.QtWidgets.QLabel</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -7855,7 +7856,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         QListWidget.</span>
 <span class="sd">        :type text: str</span>
 
-<span class="sd">        :Returns: A configured QListWidget with multi-selection mode enabled.</span>
+<span class="sd">        :return: A configured QListWidget with multi-selection mode enabled.</span>
 <span class="sd">        :rtype: PyQt5.QtWidgets.QListWidget</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">tag_list</span> <span class="o">=</span> <span class="n">QListWidget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>

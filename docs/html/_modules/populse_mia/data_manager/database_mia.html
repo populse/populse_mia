@@ -4,10 +4,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+d87e3f52 documentation</title>
+    <title>populse_mia.data_manager.database_mia &#8212; populse_mia 3.0.0-dev+1094d167 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=47202671" />
     <link rel="stylesheet" type="text/css" href="../../../_static/haiku.css?v=fce32b03" />
-    <script src="../../../_static/documentation_options.js?v=f773bb81"></script>
+    <script src="../../../_static/documentation_options.js?v=8de605bd"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
@@ -370,7 +370,7 @@ window.runMermaid = runMermaid;</script>
     <link rel="search" title="Search" href="../../../search.html" /> 
   </head><body>
       <div class="header" role="banner"><h1 class="heading"><a href="../../../index.html">
-          <span>populse_mia 3.0.0-dev+d87e3f52 documentation</span></a></h1>
+          <span>populse_mia 3.0.0-dev+1094d167 documentation</span></a></h1>
         <h2 class="heading"><span>populse_mia.data_manager.database_mia</span></h2>
       </div>
       <div class="topnav" role="navigation" aria-label="Top">
@@ -563,7 +563,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">            with DatabaseMIA(...) as database:</span>
 <span class="sd">                ...</span>
 
-<span class="sd">        :returns: The current instance, allowing database operations within the</span>
+<span class="sd">        :return: The current instance, allowing database operations within the</span>
 <span class="sd">         context block.</span>
 <span class="sd">        :rtype: DatabaseMIA</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1106,7 +1106,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param filter_query: The filter query to apply.</span>
 <span class="sd">        :type filter_query: str</span>
 
-<span class="sd">        :returns: A list of rows matching the filter criteria.</span>
+<span class="sd">        :return: A list of rows matching the filter criteria.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1133,7 +1133,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieves a list of all collection names in the database.</span>
 
-<span class="sd">        :returns: All collection names in the database.</span>
+<span class="sd">        :return: All collection names in the database.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">collection_names</span><span class="p">()</span></div>
@@ -1161,7 +1161,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         result. If None, all fields are included.</span>
 <span class="sd">        :type fields: str | list[str]</span>
 
-<span class="sd">        :returns: A list of documents matching the specified criteria, or an</span>
+<span class="sd">        :return: A list of documents matching the specified criteria, or an</span>
 <span class="sd">         empty list if the collection does not exist.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1206,7 +1206,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         names from. The collection must already exist.</span>
 <span class="sd">        :type collection_name: str</span>
 
-<span class="sd">        :returns: A list of document names if the collection exists, otherwise</span>
+<span class="sd">        :return: A list of document names if the collection exists, otherwise</span>
 <span class="sd">         an empty list.</span>
 <span class="sd">        :rtype: list[str]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1235,7 +1235,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         retrieved.</span>
 <span class="sd">        :type field_name: str | None</span>
 
-<span class="sd">        :returns: Attributes of the specified field as a dictionary, or a list</span>
+<span class="sd">        :return: Attributes of the specified field as a dictionary, or a list</span>
 <span class="sd">         of dictionaries with attributes for all fields if `field_name` is not</span>
 <span class="sd">         provided.</span>
 <span class="sd">        :rtype: dict | list[dict] | None</span>
@@ -1283,7 +1283,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         names from. The collection must exist in the database.</span>
 <span class="sd">        :type collection_name: str</span>
 
-<span class="sd">        :returns: A list of all field names in the collection if it exists, or</span>
+<span class="sd">        :return: A list of all field names in the collection if it exists, or</span>
 <span class="sd">         `None` if the collection has no fields or does not exist.</span>
 <span class="sd">        :rtype: list | None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1304,7 +1304,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">         primary key from.</span>
 <span class="sd">        :type collection_name: str</span>
 
-<span class="sd">        :returns: The first key in the collection, representing the primary</span>
+<span class="sd">        :return: The first key in the collection, representing the primary</span>
 <span class="sd">         key.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1317,7 +1317,7 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Give the list of visible tags.</span>
 
-<span class="sd">        :returns: The list of visible tags.</span>
+<span class="sd">        :return: The list of visible tags.</span>
 <span class="sd">        :rtype: list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">visible_names</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1362,7 +1362,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param field: The name of the field within the document to retrieve.</span>
 <span class="sd">        :type field: str</span>
 
-<span class="sd">        :returns: The current value of the specified field.</span>
+<span class="sd">        :return: The current value of the specified field.</span>
 <span class="sd">        :rtype: Any</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="p">[</span><span class="n">collection_name</span><span class="p">][</span><span class="n">primary_key</span><span class="p">][</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
@@ -1377,7 +1377,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param collection_name: The name of the collection to check.</span>
 <span class="sd">        :type collection_name: str</span>
 
-<span class="sd">        :returns: `True` if the collection exists, otherwise `False`.</span>
+<span class="sd">        :return: `True` if the collection exists, otherwise `False`.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">storage_data</span><span class="o">.</span><span class="n">has_collection</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span></div>
@@ -1395,7 +1395,7 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">        :param primary_key: The primary key of the document to check.</span>
 <span class="sd">        :type primary_key: str</span>
 
-<span class="sd">        :returns: `True` if the document exists, `False` otherwise.</span>
+<span class="sd">        :return: `True` if the document exists, `False` otherwise.</span>
 <span class="sd">        :rtype: bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">documents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_document_names</span><span class="p">(</span><span class="n">collection_name</span><span class="p">)</span>
