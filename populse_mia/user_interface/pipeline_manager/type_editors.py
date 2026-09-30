@@ -642,10 +642,10 @@ class PopulseUndefinedControlWidget:
         """
         Validate if the control contains an Undefined value representation.
 
-        :param *args: Additional arguments. Not used, kept for interface
-         compatibility.
-        :param **kwargs: Additional arguments. Not used, kept for interface
-         compatibility.
+        :param args: Additional positional arguments, unused and kept for
+         interface compatibility.
+        :param kwargs: Additional keyword arguments, unused and kept for
+         interface compatibility.
         :param control_instance: The control widget to validate.
         :type control_instance: QWidget
 
@@ -675,10 +675,10 @@ class PopulseUndefinedControlWidget:
         will match the controller widget user parameters defined in
         'control_instance'.
 
-        :param *args: Additional arguments. Not used, kept for interface
-         compatibility.
-        :param **kwargs: Additional arguments. Not used, kept for interface
-         compatibility.
+        :param args: Additional positional arguments, unused and kept for
+         interface compatibility.
+        :param kwargs: Additional keyword arguments, unused and kept for
+         interface compatibility.
         :param controller_widget: The controller widget containing the
          controller to update.
         :type controller_widget: ControllerWidget

@@ -1172,6 +1172,7 @@ class PipelineManagerTab(QWidget):
         This method opens an interactive dialog that allows users to
         configure how pipeline plugs (inputs and outputs) should be handled
         during execution. Users can specify:
+
             - Which plugs should be iterated over during pipeline execution.
             - Which input plugs should be connected to database filters.
             - Interactive dependency management (database connection requires
@@ -1179,6 +1180,7 @@ class PipelineManagerTab(QWidget):
 
         The dialog presents a grid layout with checkboxes for each available
         plug:
+
             - Iteration checkbox: Mark plug for iteration during execution.
             - Database checkbox: Connect input plug to database filter
               (inputs only).
@@ -1190,17 +1192,15 @@ class PipelineManagerTab(QWidget):
             - Certain system plugs are excluded from configuration.
 
         :param pipeline: Pipeline object containing plugs to be configured.
+        :type pipeline: object
 
-        :return:
-            Optional[Tuple[List[str], List[str]]]: A tuple containing:
-                - iterated_plugs: List of plug names marked for iteration
-                - database_plugs: List of plug names connected to database
-            None if the user cancels the dialog.
+        :return: A tuple containing the names of the plugs marked for iteration
+         and the names of the plugs connected to the database. Returns ``None``
+         if the user cancels the dialog.
+        :rtype: Optional[Tuple[List[str], List[str]]]
 
         Contains:
-
             Inner functions:
-
                 - is_database_compatible: Check if a plug can connect to a
                   database filter.
                 - on_iteration_toggled: Handle iteration checkbox toggle
@@ -1755,6 +1755,7 @@ class PipelineManagerTab(QWidget):
         This method processes change signals from the pipeline editor and
         maintains an undo history for user actions. It handles two types
         of changes:
+
             - Node name updates: Updates the node name and refreshes the
               pipeline view while preserving the current view state.
             - Plug value updates: Records parameter changes while filtering
@@ -1764,6 +1765,7 @@ class PipelineManagerTab(QWidget):
         :param signal_list: A list containing change information with the
          first element being the change type ("node_name" or "plug_value"),
          followed by context-specific data:
+
             - For "node_name": ["node_name", ProcessNode_object,
               new_node_name, old_node_name]
             - For "plug_value": ["plug_value", node_name, old_value,
@@ -3186,6 +3188,7 @@ class PipelineManagerTab(QWidget):
 
         This method initializes and runs the active pipeline with the
         following steps:
+
             1. Initializes the pipeline and validates prerequisites.
             2. Sets up pipeline metadata and UI state.
             3. Configures soma-workflow connection (if enabled).

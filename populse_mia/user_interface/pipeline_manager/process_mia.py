@@ -799,7 +799,6 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
         >>> ]
         >>> study_config.process_completion = 'mia_completion'
 
-
     Once activated, the completion system is applied to all processes,
     distinguishing between Mia and Nipype processes. For standard processes,
     additional database operations are performed before invoking the
@@ -808,7 +807,7 @@ class MIAProcessCompletionEngineFactory(ProcessCompletionEngineFactory):
     Contains:
         Methods:
             - get_completion_engine: get a ProcessCompletionEngine instance
-            for a given process/node.
+              for a given process/node.
 
     """
 
@@ -878,39 +877,41 @@ class ProcessMIA(Process):
 
     Contains:
         Methods:
-        - _add_field_to_collections: Add a new field to the specified
-          collection in the database.
-        - _add_or_modify_tags: Add new tags or modify existing tag values in
-          the database.
-        - _all_values_identical: Checks if all dictionaries have identical
-          content
-        - _after_run_process: Try to recover the output values, when the
-          calculation has been delegated to a process in ProcessMIA.
-        - _find_plug_for_output: Find the plug name associated with the given
-          output file.
-        - _get_relative_path: Converts an absolute file path to a relative
-          path based on the project folder.
-        - _remove_tags: Remove specified tags from value dictionaries and the
-          database.
-        - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple
-          input files could provide tags.
-        - _run_process: Call the run_process_mia method in the ProcessMIA
-          subclass.
-        - _save_tag_values: Save tag values to the database.
-        - init_default_traits: Automatically initialise necessary parameters
-          for nipype or capsul.
-        - init_process: Instantiation of the process attribute given a process
-          identifier.
-        - list_outputs: Override the outputs of the process.
-        - load_nii: Return the header and the data of a nibabel image object.
-        - make_initResult: Make the final dictionary for outputs, inheritance
-          and requirement from the initialisation of a brick.
-        - relax_nipype_exists_constraints: Relax the exists constraint of
-          the process.inputs traits.
-        - requirements: Capsul Process.requirements() implementation using
-          Mia's ProcessMIA.requirement attribute.
-        - run_process_mia: Implements specific runs for ProcessMia subclasses.
-        - tags_inheritance: Create tags for data.
+            - _add_field_to_collections: Add a new field to the specified
+              collection in the database.
+            - _add_or_modify_tags: Add new tags or modify existing tag values
+              in the database.
+            - _all_values_identical: Checks if all dictionaries have identical
+              content
+            - _after_run_process: Try to recover the output values, when the
+              calculation has been delegated to a process in ProcessMIA.
+            - _find_plug_for_output: Find the plug name associated with the
+              given output file.
+            - _get_relative_path: Converts an absolute file path to a relative
+              path based on the project folder.
+            - _remove_tags: Remove specified tags from value dictionaries and
+              the database.
+            - _resolve_inheritance_ambiguity: Resolves ambiguity when multiple
+              input files could provide tags.
+            - _run_process: Call the run_process_mia method in the ProcessMIA
+              subclass.
+            - _save_tag_values: Save tag values to the database.
+            - init_default_traits: Automatically initialise necessary
+              parameters for nipype or capsul.
+            - init_process: Instantiation of the process attribute given a
+              process identifier.
+            - list_outputs: Override the outputs of the process.
+            - load_nii: Return the header and the data of a nibabel image
+              object.
+            - make_initResult: Make the final dictionary for outputs,
+              inheritance and requirement from the initialisation of a brick.
+            - relax_nipype_exists_constraints: Relax the exists constraint of
+              the process.inputs traits.
+            - requirements: Capsul Process.requirements() implementation using
+              Mia's ProcessMIA.requirement attribute.
+            - run_process_mia: Implements specific runs for ProcessMia
+              subclasses.
+            - tags_inheritance: Create tags for data.
     """
 
     # Class attributes used for the inheritance dictionary
@@ -946,6 +947,7 @@ class ProcessMIA(Process):
         :type collection: str
         :param tag_def: Dictionary containing the field definition with
          the following keys:
+
             - 'name' (str): The name of the field.
             - 'field_type' (str): The type of the field.
             - 'description' (str): A description of the field.
@@ -1412,10 +1414,12 @@ class ProcessMIA(Process):
         data(x, y, z) in MATLAB, the equivalent in NumPy is data[y, x, z].
         MATLAB and NumPy also handle the origin of the coordinate system
         differently:
+
             - MATLAB's coordinate system starts with the origin in the lower
               left-hand corner (as in traditional matrix mathematics).
             - NumPy's coordinate system starts with the origin in the top
               left-hand corner.
+
         When taking matlab_like=True as argument, the numpy matrix is
         rearranged to follow MATLAB conventions. Using scaled=False generates
         a raw unscaled data matrix (as in MATLAB with
@@ -1528,7 +1532,7 @@ class ProcessMIA(Process):
 
                 1. Immediate inheritance during process execution.
                 2. Deferred inheritance by storing inheritance information for
-                later use during workflow generation.
+                   later use during workflow generation.
 
         In ambiguous cases (multiple input files), the method will either:
             - Use previously stored inheritance rules.

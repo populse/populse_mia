@@ -80,6 +80,7 @@ class PlugFilter(QWidget):
 
     This widget provides a powerful interface for browsing, searching, and
     filtering files from the project database. It features:
+
         - A customizable data browser with tag columns.
         - Rapid text search for quick filtering.
         - Advanced multi-criteria filtering for precise selection.

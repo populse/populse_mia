@@ -122,7 +122,10 @@ class DictionaryTreeModel(QAbstractItemModel):
         Initializes the DictionaryTreeModel with a root node.
 
         :param root: The root node of the tree.
-        "param parent: (QObject): The parent object.
+        :type root:
+         populse_mia.user_interface.pipeline_manager.process_library.Node
+        :param parent: The parent object.
+        :type parent: Qt.QObject
         """
         super().__init__(parent)
         self._rootNode = root
